@@ -1,0 +1,1185 @@
+/* 
+    Document   : clase
+    Created on : 25/01/2011, 02:55:49 PM
+    Author     : jonnathan
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+/* 
+   TODO customize this sample style
+   Syntax recommendation http://www.w3.org/TR/REC-CSS2/
+*/
+
+root { 
+    display: block;
+}
+.login{
+    margin-right:auto;
+    margin-bottom: 100px ;
+    padding-top: 10px;
+    margin-left: auto;
+}
+.login_fondo{
+    /*height: 600px;
+    background-image: url("../../imagenes/login.png");
+    background-repeat: no-repeat;*/
+    background-color: #FFF;
+    padding: 20px;
+    border-radius: 5px;
+    margin-left: 40%;
+    margin-right: 40%;
+    height: 320px;
+    min-width: 300px;
+}
+
+.logo{
+    border: 0;
+}
+
+
+
+.limpiar{
+    clear:both;
+}
+
+.flotar_izquierda{
+    float:left;
+}
+
+.flotar_derecha{
+    float:right;
+}
+
+.flotar_izquierda_espacio{
+    float:left;
+    margin-right: 3pt;
+}
+
+.centrar_contenido{
+    text-align: center;
+}
+
+.alineado_derecha{
+    float: right;
+    margin-right: 40px;
+}
+
+.alineado_izquierda{
+    float:  left;
+    margin-left: 40px;
+}
+
+.alineado_izquierda_logo{
+    float:  left;
+    margin-left: 15%;
+    margin-top: 15px;
+}
+
+.alineado_derecha_logo{
+    float: right;
+    margin-right: 15%;
+    margin-top: 15px;
+}
+
+.contenido_pie_izquierda{
+    color: white;
+    margin-left: 100px; 
+}
+
+.contenido_pie_derecha{
+    color: white;
+    text-align: right;
+    text-decoration: none;
+    margin-right: 100px; 
+}
+
+.alineado_izquierda_tabla{
+    float:  left;
+
+}
+
+.alinear_derecha_imagenes_pantallas{
+    float: right;
+    padding-right: 20pt;
+    z-index: -1;
+}
+
+.espacioIzq10{
+    margin-left: 10pt;
+}
+.espacioDer10{
+    margin-right: 10pt;
+}
+
+.espacioCeldaBoton20{
+    height: 20pt;
+}
+.con_perfiles{
+    height: 60pt;
+}
+.sin_perfiles{
+    height: 40pt;
+}
+
+.margen_derecho_10{
+    margin-left: 5pt;
+}
+/*celda*/
+.cldCondicionActa{
+    width: 120pt;
+}
+
+.cldPropuestaEvaluador_iqz{
+    width: 150pt;
+}
+
+.cldPropuestaEvaluador_der{
+
+}
+.cldDescripcion{
+    width: 500pt;
+}
+
+.cldAccionesMantenimiento{
+    width: 130pt;
+}
+
+/*Fila*/
+.fila_seleccionada{
+    background: none repeat scroll 0 0 #FFA326;
+}
+
+/*Combos*/
+
+/*Condiciones*/
+.cmbCondicion{
+    width: 90pt;
+}
+.cmbCondicionActa{
+    width: 90pt;
+}
+/*tipos*/
+.cmbTipoPropuesta{
+    width: 110pt;
+}
+.cmbTipoDocumento{
+    width: 50pt;
+}
+
+.cmbDocumento{
+    width: 90pt;
+}
+
+.cmbSede{
+    width: 150pt;
+}
+.cmbArea{
+    width: 100pt;
+}
+
+.cmbFacultad{
+    width: 100pt;
+}
+
+.cmbEscuela{
+    width: 150pt;
+}
+
+.cmbCarrera{
+    width: 250pt;
+}
+
+.cmbPlan{
+    width: 250pt;
+}
+.cmbEnfasis{
+    width: 250pt;
+}
+
+
+
+
+/*Fuentes*/
+
+.letra_negrita{
+    font-weight:bold;
+}
+
+.letra_negrita_roja{
+    font-weight:bold;
+    color: red;
+}
+
+.txt_lista_unidades {
+    /*color: #3B86A9;*/
+    color: #41ADE7;
+    font-weight: bold;
+}
+
+/*Textos*/
+/*Estilo para mensajes obligatorios.*/
+.campoObligatorio{
+    font-size: 11px;
+
+    font-family: inherit;
+    color:#009999;
+}
+
+.campoMensajePantalla{
+    font-size: 11px;
+    font-family: inherit;
+    color:#FF0000;
+    margin-left: 5pt;
+    margin-right: 5pt;
+}
+.modificado{
+    background-color: #FFCC44;
+}
+.nuevo{
+    background-color: #a4e086;
+}
+.con_errores{
+    background-color: red;
+}
+.sin_cambios{
+    background-color: transparent;
+}
+
+.elemnto_modificado_curso
+{
+    background-color: #FFEE88;
+}
+.texto_SAE_cambios{
+    font-size: 1.7em;
+    font-family: inherit;
+    font-weight: bold;
+
+}
+
+.label{
+    font-weight:bold;
+    color:#000099;
+    font-size:0.95em;
+}
+
+.tituloInforme{
+    font-weight:bold;
+    color:#000099;
+    font-size:0.95em; 
+    text-align: center;
+}
+
+.espacioSiglaNombre{
+    float:left;
+    margin-right: 5px;
+}
+
+.titulo_etiqueta{
+    font-weight:bold;
+    color:#333333;
+    font-size:1.3em ;
+    padding:20px;
+}
+.centar{
+    text-align: center;
+}
+
+.titulo_etiqueta_pequenna{
+    font-weight:bold;
+    color:#333333;
+    font-size:0.95em ;
+    padding:20px;
+}
+
+
+.link{
+    color: navy;
+}
+
+
+.etiqueta_espaciada{
+    font-weight:bold;
+    color:#F5F5F5;
+    font-size:0.95em;
+    margin-left: 10px;
+    margin-right: 2px;
+}
+.etiqueta_cursos_modificar{
+    padding-left: 4px;
+}
+.error_inputText{
+    border: 0.2em solid #FF0000;
+    background-color: #FFE4E1;
+}
+.inputText{
+    background-color: #fff;
+    border: none;
+}
+
+.error_inputTextLogin{
+    border: 0.2em solid #FF0000;
+    background-color: #FFE4E1;
+    border-radius: 3px;
+    font-size: 16px;
+    font-weight: 200;
+    padding: 10px 0;
+    text-align: center;
+    transition: border 0.5s ease 0s;
+    width: 250px;
+}
+.inputTextLogin{
+    background-color: #ecf0f1;
+    border: 2px solid transparent;
+    border-radius: 3px;
+    font-size: 16px;
+    font-weight: 200;
+    padding: 10px 0;
+    text-align: center;
+    transition: border 0.5s ease 0s;
+    width: 250px;
+}
+
+/*campos con errores*/
+.error_campo{
+    border: 0.2em solid #FF0000;
+    background-color: #FFE4E1;
+}
+
+.menu_horizontal{
+    font-size: 16px;
+    padding: 0px;
+    white-space: nowrap;
+}
+
+.menu_horizontalItem{
+    float: left;
+    margin-right: 7pt;
+    padding: 0px;
+    height: 39px;
+}
+
+.menu_horizontalItem a{
+    height: 60px;
+    padding-left: 10px;
+    padding-right: 23px;
+    padding-top: 18px;
+    padding-bottom: 3px;
+    margin: 0 auto;
+    float: left;
+    display: block;
+    text-decoration: none;
+    white-space :normal;
+    text-align:center;
+    vertical-align:middle;
+    color: #ffffff;
+    background-image: url(../../imagenes/menu/SpryMenuBarDown.gif);
+    background-repeat: no-repeat;
+    background-position: 97% 50%;
+    font-size: 16px;
+    font-family: Arial,sans-serif;
+}
+
+.menu_horizontalItem a:hover{
+    background-color: #2980b9;
+    /*background-repeat: no-repeat;
+    background-position: 97% 50%;
+    height: 100%;
+
+    height: 43px;
+    padding-left: 10px;
+    padding-right: 23px;
+    padding-top: 18px;
+    padding-bottom: 3px;
+    margin: 0 auto;
+    */
+}
+
+.menu_horizontalItem hr {
+    border: none 0;
+    width: 100%;
+    height: 1px;
+    margin-top: 3px;
+    padding: 0px;
+    text-align: left;
+
+}
+
+.menu_horizontalSubMenu {
+    position: absolute;
+    padding: 1px;
+    height: auto;
+    display: block;
+}
+
+
+/* START PANELPOSITIONABLE */
+
+.positionPanelContainer{
+    margin: 15px;
+}
+
+.rankPanelContainer span, .rankPanelContainer span{
+    font-weight: normal;
+}
+
+.positionPanelContainer div.container{
+    background: #FFF url( '../../imagenes/panel_posicionado/panel_bgslice.gif' ) repeat-x top left;
+    color: #484848;
+    padding-left: 5px;
+    font-weight: normal;
+    width: auto !important;
+    width: 300px;
+    border: 1px solid #d9d9d9;
+}
+
+.positionPanelContainer div.moveLabel{
+    background: url("../../imagenes/panel_posicionado/move_arrows.gif")  no-repeat center left;
+    padding: 6px 0 0 25px;
+    height: 20px;
+}
+.rankPanelContainer div{
+    padding: 6px 0 0 5px;
+    border: 1px solid white;
+    height: 20px;
+}
+
+.iceMnuItm {
+    padding: 0px;
+    height: auto;
+    width: 300px;
+    white-space:  pre-wrap;
+    z-index: 100;
+}
+
+.iceMnuItm a {
+    color: #666;
+    display: block;
+    text-decoration: none;
+    padding-left: 3px;
+    padding-right: 3px;
+    padding-top: 3px;
+    padding-bottom: 3px;
+    /*border: 1px solid #CCC;*/
+    background-color:#FFF;
+    z-index: 100;
+}
+
+.iceMnuItm a:hover {
+    color: #000098;
+
+}
+
+.iceMnuItm a:hover .iceOutTxt{
+    color: #fff;
+}
+
+.iceMnuItmLabel, .menu_horizontalItemLabel {
+    padding-top: 4px;
+    display: inline;
+}
+
+.iceMnuBarItemImage {
+    width:0px;
+}
+
+.iceMnuItmImage, .menu_horizontalItemImage {
+    display:inline;
+    vertical-align: top;
+}
+
+.iceMnuBarSubMenu  {
+    height:auto;
+    padding-top:21px;
+    width:160px;
+}
+
+.menu_horizontalSubMenuInd {
+    display:inline;
+    float:right;
+    padding-top: 3px;
+    padding-right: 1px;
+}
+
+.menu-cortina {
+    margin-top: 0px !important;
+    padding-bottom:0px !important;
+    margin-top: 0px;
+    padding-bottom:20px;
+    margin-left: 0px;
+    width: 700px;
+    font-family:Verdana, Geneva, sans-serif;
+    font-size: 12px;
+    float: left;
+}
+
+.slide {
+    margin: 0;
+    padding: 0;
+    background: url(../../imagenes/menu/btn-slide.gif) no-repeat center top;
+}
+
+.btn-slide {
+    text-align: center;
+    width: 144px;
+    margin-left: 25px;
+    font: bold Arial, Helvetica, sans-serif;
+    color: #000;
+    text-decoration: none;
+}
+/* Encabezado propuesta */
+
+#osx-modal-content, #osx-modal-data {display:none;}
+
+/* Overlay */
+#osx-overlay {background-color:#000; cursor:wait;}
+
+/* Container */
+#osx-container {background-color:#123; color:#000; font: 16px/24px "Lucida Grande",Arial,sans-serif; padding-bottom:4px; width:1000px; -moz-border-radius-bottomleft:6px; -webkit-border-bottom-left-radius:6px; -moz-border-radius-bottomright:6px; -webkit-border-bottom-right-radius:6px; border-radius:0 0 6px 6px; -moz-box-shadow:0 0 64px #000; -webkit-box-shadow:0 0 64px #000; box-shadow:0 0 64px #000;}
+#osx-container a {color:#ddd;}
+#osx-container #osx-modal-title {color:#000; background-color:#ddd; border-bottom:1px solid #ccc; font-weight:bold; padding:6px 8px; text-shadow:0 1px 0 #f4f4f4;}
+#osx-container .close {display:none; position:absolute; right:0; top:0;}
+#osx-container .close a {display:block; color:#777; font-weight:bold; padding:6px 12px 0; text-decoration:none; text-shadow:0 1px 0 #f4f4f4;}
+#osx-container .close a:hover {color:#000;}
+#osx-container #osx-modal-data {font-size:15px; padding:6px 12px;}
+#osx-container h2 {margin:10px 0 6px;}
+#osx-container p {margin-bottom:10px;}
+#osx-container span {color:#08457E;}
+/* Crusos PNLSrs*/
+.cuadroCursosSrs{
+    border: 1px solid #DADADA;
+    float: left;
+    margin: 5px;
+    width: 250px;
+}
+.cuadroPanelSrs{
+    width: 525px;
+}
+/*Encabezado propuesta*/
+.encabezado_datos{
+    word-wrap: break-word;
+    display:block;
+    width: 180pt;
+    margin-bottom: 5pt;
+
+}
+
+.encabezado_datos_plan{
+    width: 108pt;
+    display: inline-block;
+}
+
+.encabezado_datos_texto_plan{
+    word-wrap: break-word;
+    display:block;
+    width: 172pt;
+    margin-bottom: 5pt;
+}
+
+.encabezado_datos_texto_enfasis{
+    word-wrap: break-word;
+    display:block;
+    width: 130pt;
+    margin-bottom: 5pt;
+}
+.encabezado_usuario{
+    word-wrap: break-word;
+    width: 50pt;
+    border: solid;
+
+}
+
+
+
+/*cursos*/
+.encabezado_tabla_mod_curso{
+    background: #38A8D8;
+    background: -webkit-gradient(linear, left top, left bottom, from(#7ED4ED), to(#38A8D8));
+    background: -moz-linear-gradient(top,  #7ED4ED,  #38A8D8);
+    filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#7ED4ED', endColorstr='#38A8D8');
+    border-right:1px solid #CCCCCC;
+    border-top:1px solid #CCCCCC;
+    color: #FFFFFF;
+    font-weight:bold;
+    font-size: 0.9em;
+    font-family: Verdana,Geneva,sans-serif;
+    padding: 6px;
+    text-align:center;
+    text-shadow: 0 2px 2px rgba(0,0,0,0.7);
+
+}
+
+.tamanno_iceInpTxt{
+    width: 250pt;
+    height: 15pt;
+}
+.tamanno_inputext_area{
+    height: 33pt;
+    width:110pt;
+    overflow-x:hidden;
+    overflow-y:scroll;
+    padding-left: 2pt;
+
+}
+
+.tamanno_inputext_area_categoria_gestion{
+    height: 30pt;
+    width:130pt;
+    overflow-x:hidden;
+    overflow-y:scroll;
+
+}
+
+
+.tamanno_inputext_area_justificacionCurso{
+    height: 33pt;
+    width:110pt;
+    overflow-x:hidden;
+    overflow-y:scroll;
+    padding-left: 2pt;
+
+}
+
+.tamanno_inputext_area_vista_curso{
+    height: 29pt;
+    width:103pt;
+    overflow-x:hidden;
+    overflow-y:scroll;
+
+}
+
+.tamanno_espacio_tipo_curso_vista_curso{
+    height: 29pt;
+    width:103pt;
+}
+
+.tamanno_inputext_area_plan{
+    height: 40pt;
+    width:103pt;
+    overflow-x:hidden;
+    overflow-y:scroll;
+
+}
+
+.cuadroJustificacionElementoCurso{
+    height: 37.1pt;
+}
+
+.cuadroJustificacion {
+    clear:both;
+    background: none repeat scroll 0 0 #FFFFFF;
+    display: block;
+    margin: 15px 15px 0 0;
+    padding: 15px;
+    border: 3px solid #3B86A9;
+    -moz-border-radius: 15px;
+    -webkit-border-radius: 15px;
+
+}
+
+.fila_horas_curso{
+    height: 76pt;
+}
+
+.fila_horas_curso_justificacion{
+    height: 60pt;
+    padding-top: 15pt;
+    width: 114pt;
+}
+
+.fila_horas{
+    height: 62pt;
+    padding-top: 10pt;
+
+}
+
+.cuadroCursos {
+    clear:both;
+    display: block;
+    margin: 15px 15px 0 0;
+    padding: 15px;
+    border: 3px solid #3B86A9;
+    -moz-border-radius: 15px;
+    -webkit-border-radius: 15px;
+    background: #C0C0C0;
+    background: -webkit-gradient(linear, left top, left bottom, from(#FFFFFF), to(#C0C0C0));
+    background: -moz-linear-gradient(top,  #FFFFFF,  #C0C0C0);
+    filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#FFFFFF', endColorstr='#C0C0C0');
+}
+/*Panel emergente*/
+.titulo_popup{
+    font-weight:bold;
+    /*color: #159615;*/
+    color: #204C6F;
+    font-style: normal;
+    padding-left: 14pt;
+}
+
+/*.popup{
+    background: white no-repeat;
+    padding: 1em;
+    -moz-border-radius: 15px;
+    -webkit-border-radius: 15px;
+     border: 2px solid #CCC;
+    width: 520px;
+}*/
+
+.popup {
+  background: white no-repeat;
+    padding: 1em;
+    -moz-border-radius: 15px;
+    -webkit-border-radius: 15px;
+     border: 2px solid #CCC;
+  position: absolute;
+  transform: translate(-0%, -40%);
+  min-width: 520px;
+}
+
+.popupancho{
+    background: white url(../../imagenes/fondoPopUp.jpg) no-repeat;
+    padding: 1em;
+    -moz-border-radius: 15px;
+    -webkit-border-radius: 15px;
+    border: 0.2em #000 solid;
+    width: 900px;
+}
+
+.popup3Colum{
+    background: white url(../../imagenes/fondoPopUp.jpg) no-repeat;
+    padding: 1em;
+    -moz-border-radius: 15px;
+    -webkit-border-radius: 15px;
+    border: 0.2em #000 solid;
+    width: 650px;
+}
+
+.popupImportarElementos{
+    background: white url(../../imagenes/fondoPopUp.jpg) no-repeat;
+    padding: 1em;
+    -moz-border-radius: 15px;
+    -webkit-border-radius: 15px;
+    border: 0.2em #000 solid;
+    width: 650pt;
+}
+
+
+.popupRequisito{
+    background: white url(../../imagenes/fondoPopUp.jpg) no-repeat;
+    padding: 1em;
+    -moz-border-radius: 15px;
+    -webkit-border-radius: 15px;
+    border: 0.2em #000 solid;
+    width: 510pt;
+}
+
+.popupRequisitoEquivalente{
+    background: white url(../../imagenes/fondoPopUp.jpg) no-repeat;
+    padding: 1em;
+    -moz-border-radius: 15px;
+    -webkit-border-radius: 15px;
+    border: 0.2em #000 solid;
+    width: 810pt;
+}
+
+.popup_asignar_encargado{
+    background: white url(../../imagenes/fondoPopUp.jpg) no-repeat;
+    padding: 1em;
+    -moz-border-radius: 15px;
+    -webkit-border-radius: 15px;
+    border: 0.2em #000 solid;
+    width: 800px;
+}
+
+.popup_asignar_carreras{
+    background: white url(../../imagenes/fondoPopUp.jpg) no-repeat;
+    padding: 1em;
+    -moz-border-radius: 15px;
+    -webkit-border-radius: 15px;
+    border: 0.2em #000 solid;
+    width: 500pt;
+}
+
+
+
+.popup_vista_curso{
+    background: white url(../../imagenes/fondoPopUp.jpg) no-repeat;
+    padding: 1em;
+    -moz-border-radius: 15px;
+    -webkit-border-radius: 15px;
+    border: 0.2em #000 solid;
+    width: 1100pt;
+
+}
+
+/*Paneles del sistema*/
+.panel_tammanno_resolucion
+{
+    width: 740pt;
+}
+.pnl_editar{
+    background: none repeat scroll 0 0 #ddeaf0;
+    margin: 15px 0 15px 0;
+    padding: 15px;
+    border: 3px solid #3B86A9;
+    -moz-border-radius: 15px;
+    -webkit-border-radius: 15px;
+
+}
+
+.pnl_flotante{
+
+    background: url(../../imagenes/menu_flotante/box.png) no-repeat;
+
+    height: 120px;
+    width: 85px;
+    border: none;
+
+}
+
+.panel_Container_editar {
+    border: 3px solid #3B86A9;
+    padding:2px 15px 20px 15px;
+    -moz-border-radius: 15px;
+    -webkit-border-radius: 15px;
+    background: none repeat scroll 0 0 #ddeaf0;
+
+}
+
+.panel_Container {
+    /*border: 3px solid #3B86A9;*/
+    border: 3px solid #41ADE7;
+    margin-top: 30px;
+    min-width: 485px;
+    -moz-border-radius: 15px;
+    -webkit-border-radius: 15px;
+
+}
+
+
+.panel_Container_Equivalentes {
+    border: 3px solid #3B86A9;
+    margin-top: 30px;
+    width: 805px;
+    -moz-border-radius: 15px;
+    -webkit-border-radius: 15px;
+
+}
+
+.panel_Container_requisitos {
+    border: 3px solid #3B86A9;
+    margin-top: 30px;
+    padding-right: 15pt;
+    width: 485pt;
+    -moz-border-radius: 15px;
+    -webkit-border-radius: 15px;
+
+}
+/*Paneles del sistema*/
+.panel_Container_asignacion_encargado {
+    border: 3px solid #3B86A9;
+    margin-top: 30px;
+    width: 780px;
+    -moz-border-radius: 15px;
+    -webkit-border-radius: 15px;
+    padding-left: 10pt;
+
+}
+.panel_Container_buzon {
+    border: 3px solid #387ea1;
+    -moz-border-radius: 15px;
+    -webkit-border-radius: 15px;
+    margin: auto auto;
+    padding: 10px;
+
+}
+.tareas_titulo{
+    color: #08457E;
+    font-weight: bold;
+}
+
+.panel_ContainerCursos {
+    border: 3px solid #3B86A9;
+    margin-top: 30px;
+    width: 1085pt;
+    -moz-border-radius: 15px;
+    -webkit-border-radius: 15px;
+
+}
+
+.panel_ContainerConsultaDatosPropuesta {
+    border: 3px solid #3B86A9;
+    margin-top: 20pt;
+    padding:2px 15px 20px 15px;
+    width: 570pt;
+    -moz-border-radius: 15px;
+    -webkit-border-radius: 15px;
+
+}
+
+.panel_ContainerActas {
+    border: 3px solid #3B86A9;
+    margin-top: 20pt;
+    margin-bottom: 50pt;
+    padding:2px 15px 20px 15px;
+    width: 680pt;
+    -moz-border-radius: 15px;
+    -webkit-border-radius: 15px;
+
+}
+
+.panel_ContainerResumenTablas {
+    border: 3px solid #3B86A9;
+    margin-top: 20pt;
+    margin-bottom: 10pt;
+    padding:2px 15px 20px 15px;
+    width: 550pt;
+    -moz-border-radius: 15px;
+    -webkit-border-radius: 15px;
+
+}
+
+.panel_ConsultaResolucionMalla{
+    border: 3px solid #3B86A9;
+    margin-top: 10pt;
+    margin-bottom: 10pt;
+    padding:2px 15px 20px 15px;
+    width: 680pt;
+    -moz-border-radius: 15px;
+    -webkit-border-radius: 15px;
+    background: none repeat scroll 0 0 #ddeaf0;
+
+}
+
+.panel_ConsultaInforme{
+    border: 3px solid #3B86A9;
+    margin-top: 10pt;
+    margin-bottom: 10pt;
+    padding:2px 15px 20px 15px;
+    width: 480pt;
+    -moz-border-radius: 15px;
+    -webkit-border-radius: 15px;
+    background: none repeat scroll 0 0 #ddeaf0;
+
+}
+
+.panel_ContainerOficios{
+    border: 3px solid #3B86A9;
+    margin-top: 20pt;
+    margin-bottom: 50pt;
+    padding:2px 15px 20px 15px;
+    width: 680pt;
+    -moz-border-radius: 15px;
+    -webkit-border-radius: 15px;
+
+}
+
+.panel_ContainerCarreras{
+    border: 3px solid #3B86A9;
+    margin-top: 20pt;
+    margin-bottom: 20pt;
+    padding:2px 15px 20px 15px;
+    width: 680pt;
+    -moz-border-radius: 15px;
+    -webkit-border-radius: 15px;
+
+}
+
+.panel_ContainerObservacionesAdicionales {
+    border: 3px solid #3B86A9;
+    margin-top: 20pt;
+    margin-bottom: 10pt;
+    padding:2px 15px 20px 15px;
+    width: 680pt;
+    -moz-border-radius: 15px;
+    -webkit-border-radius: 15px;
+
+}
+
+.panel_elementos_resolucion {
+    border: 3px solid #3B86A9;
+    margin-top: 20pt;
+    margin-bottom: 10pt;
+    padding:2px 15px 20px 15px;
+    width: 680pt;
+    -moz-border-radius: 15px;
+    -webkit-border-radius: 15px;
+
+}
+
+.panel_Container_vigencia {
+    border: 3px solid #3B86A9;
+    width: 485px;
+    padding:2px 15px 20px 15px;
+    -moz-border-radius: 15px;
+    -webkit-border-radius: 15px;
+
+
+}
+
+.panel_ContainerBloqueEvaluar {
+    border: 3px solid #3B86A9;
+    margin-bottom: 10pt;
+    padding:10px 15px 10px 15px;
+    height: 200pt;
+    -moz-border-radius: 15px;
+    -webkit-border-radius: 15px;
+
+}
+
+.panel_cursos_categoria{
+    margin-top: 10pt;
+    margin-bottom: 25pt;
+    margin-left: 15pt;
+
+}
+
+.panel_tamanno_unidades_afectadas{
+    height:350pt;
+}
+
+/*Tama�o de columnas*/
+.columna{}
+.columnaNumero{
+    width: 10pt;
+}
+.columnaAcciones{
+    width: 180pt;
+}
+
+.columnaNombreCurso{
+    width: 300pt;
+}
+
+.columnaTipoCurso{
+    width: 70pt;
+}
+.elementos_basicos{
+    padding-top: 25px;
+    padding-bottom: 25px;
+    margin: auto;
+}
+.cuadroElementos{
+    margin: auto;
+    border-spacing: 20px;
+}
+
+div#rounded-box1 {background:transparent;margin:2em auto;padding:0;width:400px;}
+.rb4 {background:#66ccff;margin:0 auto;padding:0;width:398px;height:3px;}
+.rb3 {background:#66ccff;margin:0 auto;padding:0;width:396px;height:2px;}
+.rb2 {background:#66ccff;margin:0 auto;padding:0;width:392px;height:1px;}
+.rb1 {background:#66ccff;margin:0 auto;padding:0;width:388px;height:1px;}
+.rb-content {background:#66ccff;margin:0 auto;padding:0;width:400px;}
+.rb-content p {color:#fff;margin:0 10px;padding:0;}
+
+div#rounded-box2 {
+    border: 1px solid #3B86A9;
+    background:-moz-linear-gradient(center top , #77C5D1, #BBDFF1) repeat scroll 0 0 transparent;
+    filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#77C5D1', endColorstr='#BBDFF1');
+    margin:0 auto;padding:0;width:800px;
+    border-radius:7px;
+    -moz-border-radius: 7px;
+    -webkit-border-radius : 7px;
+}
+div#rounded-box3 {
+    border: 1px solid #3B86A9;
+    background:-moz-linear-gradient(center top , #D4FAF9, #54A5F1) repeat scroll 0 0 transparent;
+    filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#D4FAF9', endColorstr='#54A5F1');
+    margin:0 auto;padding:0;width:800px;
+    border-radius:7px;
+    -moz-border-radius: 7px;
+    -webkit-border-radius : 7px;
+}
+
+.plan_nivel_encabezado{
+    width: 50pt;
+}
+.plan_sigla_encabezado{
+    width: 80pt;
+}
+.plan_curso_encabezado{
+    width: 850pt;
+}
+.plan_horas_encabezado{
+    width: 30pt;
+}
+.plan_credito_encabezado{
+    width: 10pt;
+}
+.plan_requisitos_encabezado{
+    width: 120pt;
+}
+.plan_correquisitos_encabezado{
+    width: 110pt;
+}
+.plan_nivel{
+    width: 30pt;
+}
+.plan_sigla{
+    width: 55pt;
+}
+.plan_curso{
+    width: 280pt;
+}
+.plan_horas{
+    width: 10pt;
+}
+.plan_credito{
+    width: 15pt;margin-left: 6pt;
+}
+.plan_requisitos{
+    width: 50pt;
+    margin-left: 15pt;
+}
+.plan_correquisitos{
+    width: 50pt;
+    margin-left: 40pt;
+}
+.nota_popup{
+    background-color: #ff6600; 
+    font-size: 11pt;
+    font-weight: bold;
+}
+
+
+/*estilos agregados por manuel*/
+
+.columna-50{
+    width: 50% !important;
+}
+.columna-25{
+    width: 25% !important;
+}
+.columna-60{
+    width: 60% !important;
+}
+.columna-40{
+    width: 40% !important;
+}
+.columna-33{
+    width: 33.33% !important;
+}
+.columna-30{
+    width: 30% !important;
+}
+.columna-75{
+    width: 75% !important;
+}
+.columna-70{
+    width: 70% !important;
+}
+.columna-100{
+    width: 100% !important;
+}
+.top-alignment {
+     vertical-align: top !important;
+}
+.texto-centrado{
+    text-align: center !important;
+}
+.texto-derecha{
+    text-align: right !important;
+}
+.texto-izquierda{
+    text-align: left !important;
+}
+

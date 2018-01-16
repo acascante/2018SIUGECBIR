@@ -1,0 +1,116 @@
+<ice:form id="frmDetalleNotificacion" 
+          xmlns:ice="http://www.icesoft.com/icefaces/component" 
+          xmlns:icecore="http://www.icefaces.org/icefaces/core" 
+          xmlns:h="http://java.sun.com/jsf/html" 
+          xmlns:f="http://java.sun.com/jsf/core" 
+          xmlns:ui="http://java.sun.com/jsf/facelets"
+          xmlns:c="http://java.sun.com/jstl/core">
+    <div class="contenido-pagina">
+        <div class="container">
+            <div class="row">
+                <div class='col-sm-6'>
+                    <h1 style="margin: 0;">
+                        <ice:outputFormat value="#{label['sigebi.label.notificaciones.titulo.mantenimiento']} "/>
+                    </h1>
+                </div>                
+                <div class="col-sm-6">
+                    <ice:commandButton 
+                        id="boton_regresar" 
+                        value="Regresar" 
+                        style="float:right" 
+                        partialSubmit="false" 
+                        styleClass="boton" 
+                        action="#{controllerListarNotificaciones.regresarListado}" >
+                    </ice:commandButton>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-12">
+                    <ice:outputText style="color: green;" value="#{controllerAgregarNotificaciones.mensajeExito} "/>
+                    <ice:outputText style="color: red;" value="#{controllerAgregarNotificaciones.mensaje} "/>
+                    <h:messages style="color:red;"/>
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group"> 
+                        <label class="control-label" for="txtAsunto">
+                            <ice:outputText value="#{label['sigebi.label.notificaciones.asunto']}" />
+                            <ice:outputText value="#{label['label.requerido']}" />
+                        </label>
+                        <ice:inputText id="txtAsunto" 
+                                       partialSubmit="false"
+                                       styleClass="form-control"
+                                       value="#{controllerAgregarNotificaciones.command.asunto}" />
+                    </div>                                             
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group"> 
+                        <label class="control-label" for="txtDestinatario">
+                            <ice:outputText value="#{label['sigebi.label.notificaciones.destinatario']}" />
+                            <ice:outputText value="#{label['label.requerido']}" />
+                        </label>
+                        <ice:inputText id="txtDestinatario" 
+                                       partialSubmit="false"
+                                       styleClass="form-control"
+                                       validator="#{controllerAgregarNotificaciones.validarDestinatario}"
+                                       value="#{controllerAgregarNotificaciones.command.destinatario}" />
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group"> 
+                        <label class="control-label" for="txtMensaje">
+                            <ice:outputText value="#{label['sigebi.label.notificaciones.mensaje']}" />
+                            <ice:outputText value="#{label['label.requerido']}" />
+                        </label>
+                        <ice:inputRichText id="txtMensajeCorreo"
+                                           height="200" 
+                                           language="es"
+                                           skin="silver" 
+                                           toolbar="Basic"
+                                           saveOnSubmit="true"
+                                           value="#{controllerAgregarNotificaciones.command.mensajeCorreo}" />
+                    </div>                                             
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group"> 
+                        <label class="control-label" for="txtFecha">
+                            <ice:outputText value="#{label['sigebi.label.notificaciones.fecha']}" />
+                            <ice:outputText value="#{label['label.requerido']}" />
+                        </label>
+                        <ice:selectInputDate highlightClass="dateHighlightGray" 
+                                             highlightUnit="DAY_OF_WEEK" 
+                                             highlightValue="1" 
+                                             renderAsPopup="true" 
+                                             renderMonthAsDropdown="true" 
+                                             renderYearAsDropdown="true"
+                                             partialSubmit="false"
+                                             validator="#{controllerAgregarNotificaciones.validarFecha}"
+                                             value="#{controllerAgregarNotificaciones.command.fecha}" >
+                            <f:convertDateTime pattern="#{controllerAgregarNotificaciones.command.datePattern}"  timeZone="#{controllerAgregarNotificaciones.command.timeZone}" />
+                        </ice:selectInputDate>
+                    </div>                                             
+                </div>
+            </div>
+            
+            <div class="row">
+                <div class="col-md-4">
+                    <ice:commandButton id="botonGuardar" 
+                                       value="Guardar" 
+                                       partialSubmit="true" 
+                                       styleClass="boton" 
+                                       action="#{controllerAgregarNotificaciones.guardarDatos}"/>
+                </div>
+            </div>
+        </div>
+    </div>
+</ice:form>

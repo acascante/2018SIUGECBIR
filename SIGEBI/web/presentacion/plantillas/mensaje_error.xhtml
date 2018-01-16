@@ -1,0 +1,69 @@
+<ice:panelGroup xmlns:ui="http://java.sun.com/jsf/facelets"
+                    xmlns:h="http://java.sun.com/jsf/html"
+                    xmlns:f="http://java.sun.com/jsf/core"
+                    xmlns:ice="http://www.icesoft.com/icefaces/component">
+
+    <ice:panelPopup modal="true"
+                    rendered="#{vistaMensajes.visible}" styleClass="popup_error" >
+        <f:facet name="header"/>
+        <f:facet name="body">
+            <div>
+                <div id="cabeza_popup_error">
+                    <ice:outputText value="ERROR FATAL"/>
+                </div>
+                <div id="cuerpo_popup_error">
+                    <p id="subtitulo_error">
+                    <ice:outputText value="Ha ocurrido un error inesperado"/>
+                    </p>
+                    <p id="descripcion_error">
+
+                    <ui:repeat value="#{vistaMensajes.mensaje}" var="mensaje" >
+                        <ice:outputText value="#{mensaje}" style="display:block"/>
+                    </ui:repeat>
+                    </p>
+                    <p>
+                    <ice:form>
+                        <ice:commandButton actionListener="#{vistaMensajes.cerrarPopup}"
+                                           value="Aceptar"
+                                           style="margin: auto 0;"/>
+                    </ice:form>
+                    </p>
+
+                </div>
+            </div>
+        </f:facet>
+    </ice:panelPopup>
+    
+    <div id="mensajes_generales" align="center">
+        <ice:panelGroup id="contenedor_mensajes"
+                        effect="#{vistaMensajes.efecto}"
+                        styleClass="#{vistaMensajes.estilo}"
+                        rendered="#{not vistaMensajes.acoplado}">
+            <ui:repeat value="#{vistaMensajes.mensaje}" var="mensaje" >
+                <ice:outputText value="#{mensaje}" style="display:block"/>
+            </ui:repeat>
+
+            <ice:panelGroup id="mensaje_botones" styleClass="mensaje_botones">
+                <ice:form>
+                    <ice:commandButton id="btn_cerrar_msj" value="x" actionListener="#{vistaMensajes.cerrarMensaje}" partialSubmit="true" styleClass="#{vistaMensajes.estilo}Btns" />
+                    <ice:commandButton id="btn_anclar_msj" value="o" actionListener="#{vistaMensajes.anclarMensaje}" partialSubmit="true" styleClass="#{vistaMensajes.estilo}Btns" />
+                </ice:form>
+            </ice:panelGroup>
+        </ice:panelGroup>
+
+        <ice:panelGroup id="contenedor_mensajes_acoplado"
+                        styleClass="#{vistaMensajes.estilo}"
+                        rendered="#{vistaMensajes.acoplado}">
+            <ui:repeat value="#{vistaMensajes.mensaje}" var="mensaje" >
+                <ice:outputText value="#{mensaje}" style="display:block"/>
+            </ui:repeat>
+
+            <ice:panelGroup id="mensaje_botones_acoplados" styleClass="mensaje_botones">
+                <ice:form>
+                    <ice:commandButton id="btn_cerrar_msj_a" value="x" actionListener="#{vistaMensajes.cerrarMensaje}" partialSubmit="true" styleClass="#{vistaMensajes.estilo}Btns"/>
+                </ice:form>
+            </ice:panelGroup>
+        </ice:panelGroup>
+    </div>
+    
+</ice:panelGroup>

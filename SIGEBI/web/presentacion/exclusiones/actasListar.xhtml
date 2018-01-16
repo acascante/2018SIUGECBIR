@@ -1,0 +1,197 @@
+<ice:form id="frm_listarInformeTecnico" 
+          xmlns:ice="http://www.icesoft.com/icefaces/component"
+          xmlns:h="http://java.sun.com/jsf/html"
+          xmlns:f="http://java.sun.com/jsf/core"
+          xmlns:ui="http://java.sun.com/jsf/facelets"
+          >
+    <div class="contenido-pagina">
+
+        <div class="container"> 
+            <!-- Titulo -->
+            <div class="row">
+                <div class='col-sm-10'>
+                    <h1 style="margin: 0;">
+                        <ice:outputFormat value="#{label['sigebi.Acta.Listar.Titulo']}"/>
+                    </h1>
+                </div> 
+                <div class='col-sm-2'>
+                    <ice:commandButton id="botonAbrir"
+                                       style="float: right" 
+                                       styleClass="boton" 
+                                       partialSubmit="true" 
+                                       actionListener="#{actaController.nuevoRegistro}"
+                                       value="#{label['sigebi.Bien.Btn.Nuevo']}">
+                    </ice:commandButton>
+                </div>               
+            </div>
+
+            <!-- Paginacion -->
+            <div class="row">
+                <div class="col-sm-12">
+                    <ice:outputFormat value="#{label['label.generico.paginacion.encabezado']}">
+                        <f:param value="#{actaController.cantidadRegistros}"/>
+                        <f:param value="#{actaController.cantidadRegistrosMostrados}"/>
+                        <f:param value="#{actaController.primerRegistro}"/>
+                        <f:param value="#{actaController.ultimoRegistro}"/>
+                        <f:param value="#{actaController.paginaActual}"/>
+                        <f:param value="#{actaController.cantidadPaginas}"/>
+                    </ice:outputFormat>
+                    <div>
+                        <table>
+                            <tr>
+                                <td style="padding-right: 5px;">
+                                    <ice:outputText value="#{label['label.paginacion.cantidad.pagina']} "/>
+                                </td>
+                                <td>
+                                    
+                                    <ice:selectOneMenu id="cantRegistroPorPagina"
+                                           value="#{actaController.cantRegistroPorPagina}" 
+                                           valueChangeListener="#{actaController.cambioRegistrosPorPagina}"
+                                           partialSubmit="true">
+                                            <f:selectItems id="item_pa" value="#{actaController.listaRegistrosPagina}"/>
+                                    </ice:selectOneMenu>    
+                                    
+                                </td>
+                            </tr>
+                        </table>                        
+                    </div>                    
+                    <div>
+                        <ice:commandButton image="./imagenes/botones/first.png" partialSubmit="true" actionListener="#{actaController.primero}" rendered="#{actaController.cantidadPaginas > 1}"/>
+                        <ice:commandButton image="./imagenes/botones/previos.png" partialSubmit="true" actionListener="#{actaController.anterior}" rendered="#{actaController.cantidadPaginas > 1}"/>
+                        <ui:repeat value="#{actaController.arregloPaginas}" var="pagina">
+                            <ice:commandLink value="#{pagina}" partialSubmit="true" actionListener="#{actaController.irPagina}">
+                                <f:param name="numPag" value="#{pagina}"/>
+                            </ice:commandLink>
+                        </ui:repeat>            
+                        <ice:commandButton image="./imagenes/botones/next.png" partialSubmit="true" actionListener="#{actaController.siguiente}" rendered="#{actaController.cantidadPaginas > 1}"/>
+                        <ice:commandButton image="./imagenes/botones/last.png" partialSubmit="true" actionListener="#{actaController.ultimo}" rendered="#{actaController.cantidadPaginas > 1}"/>
+                    </div>
+                </div>
+            </div>
+            
+        </div>    
+        <div class="container" style="overflow: auto; padding-bottom: 20px;">
+
+            <!-- Data Table -->
+            <div class="row" >
+                <div class="col-sm-12">
+                    <div>
+                        <ice:dataTable id="informesTecnicos"
+                                   value="#{actaController.actasRegistradas}"
+                                   var="acta"
+                                   paginator="true"
+                                   paginatorPosition="bottom"
+                                   rows="10">
+                            
+                            <ice:column id="colTipo">
+                                <f:facet name="header">
+                                    <ice:columnGroup>
+                                        <ice:headerRow>
+                                            <ice:outputText value="#{label['sigebi.ActaListar.Label.ID']}"/>
+                                        </ice:headerRow>
+                                        
+                                        <ice:headerRow>
+                                            <ice:inputText id="fltIdTraslado"
+                                                           style="width: 130px;"
+                                                           value="#{actaController.fltIdActa}"                                   
+                                                           partialSubmit="true"
+                                                           valueChangeListener="#{actaController.actasCambioFiltro}"/>
+                                        </ice:headerRow>
+                                        
+                                    </ice:columnGroup>
+                                </f:facet>                                
+                                <h:outputText id="costoCell" value="#{acta.idActa}"/>
+                            </ice:column>
+                            
+                            <ice:column id="colAutorizacion">                                 
+                                <f:facet name="header">
+                                    <ice:columnGroup>
+                                        <ice:headerRow>
+                                            <ice:outputText value="#{label['sigebi.ActaListar.Label.AUTORIZACION']}"/>
+                                        </ice:headerRow>
+                                        <ice:headerRow>
+                                            <ice:inputText id="fltAutorizacion"
+                                                           style="width: 130px;"
+                                                           value="#{actaController.fltAutorizacion}"                                   
+                                                           partialSubmit="true"
+                                                           valueChangeListener="#{actaController.actasCambioFiltro}"/>
+                                        </ice:headerRow>
+                                    </ice:columnGroup>
+                                </f:facet>
+                                <h:outputText id="idBienCell" value="#{acta.autorizacion}"/>
+                            </ice:column>
+
+                            
+                            <ice:column id="colEstado">                                 
+                                <f:facet name="header">
+                                    <ice:columnGroup>
+                                        <ice:headerRow>
+                                            <ice:outputText value="#{label['sigebi.ActaListar.Label.ESTADO']}"/>
+                                        </ice:headerRow>
+                                        <ice:headerRow>
+                                           <ice:selectOneMenu id="fltEstados"
+                                                              valueChangeListener="#{trasladoController.actasCambioFiltro}"
+                                                       value="#{trasladoController.fltEstados}"
+                                                       partialSubmit="true"
+                                                       >
+                                                <f:selectItem itemLabel="N/A" itemValue="-1"/>
+                                                <f:selectItems id="slcEstadoItem" value="#{actaController.estadosOptions}"/>
+                                            </ice:selectOneMenu>
+                                        </ice:headerRow>
+                                    </ice:columnGroup>
+                                </f:facet>
+                                <h:outputText id="idBienCell" value="#{acta.idEstado.nombre}"/>
+                            </ice:column>
+                            
+                            <ice:column id="colFecha">
+                                <f:facet name="header">
+                                    <ice:columnGroup>
+                                        <ice:headerRow>
+                                            <ice:outputText value="#{label['sigebi.ActaListar.Label.FECHA']}"/>
+                                        </ice:headerRow>
+                                        <ice:headerRow>
+                                            <ice:inputText id="fltEstado"
+                                                           style="width: 130px;"
+                                                           value="#{actaController.fltFecha}"                                   
+                                                           partialSubmit="true"
+                                                           valueChangeListener="#{actaController.actasCambioFiltro}"/>
+                                        </ice:headerRow>
+                                    </ice:columnGroup>
+                                </f:facet>                                
+                                <h:outputText id="descripcionCell" value="#{acta.fecha}"/>
+                            </ice:column>
+
+                            <ice:column id="colDetalle">
+                                <f:facet name="header">
+                                    <ice:columnGroup>
+                                        <ice:headerRow>
+                                            <ice:outputText value="#{label['sigebi.ActaListar.Label.DETALLE']}"/>
+                                        </ice:headerRow>
+                                    </ice:columnGroup>
+                                </f:facet>                                
+                                
+                                <ice:commandButton id="btnDetalle"
+                                                   style="float:right;margin-top:2%" 
+                                                   styleClass="boton" 
+                                                   partialSubmit="true"
+                                                   actionListener="#{actaController.verDetalle}"  
+                                                   value="#{label['sigebi.ActaListar.Label.VER']}"  >    
+                                    <f:attribute id="itemSeleccionado" name="itemSeleccionado"  value="#{acta}"/>                         
+                                </ice:commandButton>
+                                
+                            </ice:column>
+
+                            
+                            
+                        </ice:dataTable>
+
+                    </div>
+                </div>
+            </div>
+
+        </div>    
+    </div>
+
+
+</ice:form>
+

@@ -1,0 +1,233 @@
+<ice:form id="frm_listarInformeTecnico" 
+          xmlns:ice="http://www.icesoft.com/icefaces/component"
+          xmlns:h="http://java.sun.com/jsf/html"
+          xmlns:f="http://java.sun.com/jsf/core"
+          xmlns:ui="http://java.sun.com/jsf/facelets"
+          >
+    <div class="contenido-pagina">
+
+        <div class="container"> 
+            <!-- Titulo -->
+            <div class="row">
+                <div class='col-sm-10'>
+                    <h1 style="margin: 0;">
+                        <ice:outputFormat value="#{label['sigebi.Traslado.Listar.Titulo']}"/>
+                    </h1>
+                </div> 
+                <div class='col-sm-2'>
+                    <ice:commandButton id="botonAbrir"
+                                       style="float: right" 
+                                       styleClass="boton" 
+                                       partialSubmit="true" 
+                                       actionListener="#{trasladoController.nuevoRegistro}"
+                                       value="#{label['sigebi.Bien.Btn.Nuevo']}">
+                    </ice:commandButton>
+                </div>               
+            </div>
+
+            <!-- Paginacion -->
+            <div class="row">
+                <div class="col-sm-12">
+                    <ice:outputFormat value="#{label['label.generico.paginacion.encabezado']}">
+                        <f:param value="#{trasladoController.cantidadRegistros}"/>
+                        <f:param value="#{trasladoController.cantidadRegistrosMostrados}"/>
+                        <f:param value="#{trasladoController.primerRegistro}"/>
+                        <f:param value="#{trasladoController.ultimoRegistro}"/>
+                        <f:param value="#{trasladoController.paginaActual}"/>
+                        <f:param value="#{trasladoController.cantidadPaginas}"/>
+                    </ice:outputFormat>
+                    <div>
+                        <table>
+                            <tr>
+                                <td style="padding-right: 5px;">
+                                    <ice:outputText value="#{label['label.paginacion.cantidad.pagina']} "/>
+                                </td>
+                                <td>
+                                    
+                                    <ice:selectOneMenu id="cantRegistroPorPagina"
+                                           value="#{trasladoController.cantRegistroPorPagina}" 
+                                           valueChangeListener="#{trasladoController.trasladosCambioFiltro}"
+                                           partialSubmit="true">
+                                            <f:selectItems id="item_pa" value="#{trasladoController.listaRegistrosPagina}"/>
+                                    </ice:selectOneMenu>    
+                                    
+                                </td>
+                            </tr>
+                        </table>                        
+                    </div>                    
+                    <div>
+                        <ice:commandButton image="./imagenes/botones/first.png" 
+                                           partialSubmit="true" 
+                                           actionListener="#{trasladoController.trasladoPrimero}" 
+                                           rendered="#{actaController.cantidadPaginas > 1}"/>
+                        <ice:commandButton image="./imagenes/botones/previos.png" 
+                                           partialSubmit="true" 
+                                           actionListener="#{trasladoController.trasladoAnterior}" 
+                                           rendered="#{actaController.cantidadPaginas > 1}"/>
+                        
+                        <ui:repeat value="#{trasladoController.arregloPaginas}" var="pagina">
+                            <ice:commandLink value="#{pagina}" 
+                                             partialSubmit="true" 
+                                             actionListener="#{trasladoController.trasladoIrPagina}">
+                                <f:param name="numPag" value="#{pagina}"/>
+                            </ice:commandLink>
+                        </ui:repeat>            
+                        <ice:commandButton image="./imagenes/botones/next.png" 
+                                           partialSubmit="true" 
+                                           actionListener="#{trasladoController.trasladoSiguiente}" 
+                                           rendered="#{actaController.cantidadPaginas > 1}"/>
+                        <ice:commandButton image="./imagenes/botones/last.png" 
+                                           partialSubmit="true" 
+                                           actionListener="#{trasladoController.trasladoUltimo}" 
+                                           rendered="#{actaController.cantidadPaginas > 1}"/>
+                    </div>
+                </div>
+            </div>
+            
+        </div>    
+        <div class="container" style="overflow: auto; padding-bottom: 20px;">
+
+            <!-- Data Table -->
+            <div class="row" >
+                <div class="col-sm-12">
+                    <div>
+                        <ice:dataTable id="informesTecnicos"
+                                       value="#{trasladoController.traslados}"
+                                        var="traslado"
+                                        paginator="true"
+                                        paginatorPosition="bottom"
+                                        rows="10">
+                            
+                            <!-- COLUMNA ID TRASLADO -->
+                            <ice:column id="colTipo">
+                                <f:facet name="header">
+                                    <ice:columnGroup>
+                                        <ice:headerRow>
+                                            <ice:outputText value="#{label['sigebi.TrasladoListar.Label.ID']}"/>
+                                        </ice:headerRow>
+                                        <ice:headerRow>
+                                            <ice:inputText id="fltIdTraslado"
+                                                           style="width: 130px;"
+                                                           value="#{trasladoController.fltIdTraslado}"                                   
+                                                           partialSubmit="true"
+                                                           valueChangeListener="#{trasladoController.trasladosCambioFiltro}"/>
+                                        </ice:headerRow>
+                                    </ice:columnGroup>
+                                </f:facet>                                
+                                <h:outputText id="costoCell" value="#{traslado.idTraslado}"/>
+                            </ice:column>
+                            
+                            <!-- COLUMNA UNIDAD ORIGEN -->
+                            <ice:column id="colUnidadOrigen">                                 
+                                <f:facet name="header">
+                                    <ice:columnGroup>
+                                        <ice:headerRow>
+                                            <ice:outputText value="#{label['sigebi.TrasladoListar.Label.UnidadOrigen']}"/>
+                                        </ice:headerRow>
+                                        <ice:headerRow>
+                                            <ice:inputText id="fltUnidadOrigen"
+                                                           style="width: 130px;"
+                                                           value="#{trasladoController.fltUnidadOrigen}"                                   
+                                                           partialSubmit="true"
+                                                           valueChangeListener="#{trasladoController.trasladosCambioFiltro}"/>
+                                        </ice:headerRow>
+                                    </ice:columnGroup>
+                                </f:facet>
+                                <h:outputText id="idBienCell" value="#{traslado.numUnidadOrigen.dscUnidadEjecutora}"/>
+                            </ice:column>
+
+                            <!-- COLUMNA UNIDAD DESTINO -->
+                            <ice:column id="colUnidadDestino">
+                                <f:facet name="header">
+                                    <ice:columnGroup>
+                                        <ice:headerRow>
+                                            <ice:outputText value="#{label['sigebi.TrasladoListar.Label.UnidadDestino']}"/>
+                                        </ice:headerRow>
+                                        <ice:headerRow>
+                                            <ice:inputText id="fltUnidadDestino"
+                                                           style="width: 130px;"
+                                                           value="#{trasladoController.fltUnidadDestino}"                                   
+                                                           partialSubmit="true"
+                                                           valueChangeListener="#{trasladoController.trasladosCambioFiltro}"/>
+                                        </ice:headerRow>
+                                    </ice:columnGroup>
+                                </f:facet>                                
+                                <h:outputText id="descripcionCell" value="#{traslado.numUnidadDestino.dscUnidadEjecutora}"/>
+                            </ice:column>
+                            
+                            <!-- COLUMNA FECHA -->
+                            <ice:column id="colFecha">
+                                <f:facet name="header">
+                                    <ice:columnGroup>
+                                        <ice:headerRow>
+                                            <ice:outputText value="#{label['sigebi.TrasladoListar.Label.FECHA']}"/>
+                                        </ice:headerRow>
+                                        <ice:headerRow>
+                                            <ice:inputText id="fltFrecha"
+                                                           style="width: 130px;"
+                                                           value="#{trasladoController.fltFecha}"                                   
+                                                           partialSubmit="true"
+                                                           valueChangeListener="#{trasladoController.trasladosCambioFiltro}"/>
+                                        </ice:headerRow>
+                                    </ice:columnGroup>
+                                </f:facet>                                
+                                <h:outputText id="descripcionCell" value="#{traslado.fecha}"/>
+                            </ice:column>
+
+                            <!-- COLUMNA ESTADO -->
+                            <ice:column id="colEstado">
+                                <f:facet name="header">
+                                    <ice:columnGroup>
+                                        <ice:headerRow>
+                                            <ice:outputText value="#{label['sigebi.TrasladoListar.Label.Estado']}"/>
+                                        </ice:headerRow>
+                                        <ice:headerRow>
+                                           <ice:selectOneMenu id="fltEstados"
+                                                              valueChangeListener="#{trasladoController.trasladosCambioFiltro}"
+                                                       value="#{trasladoController.fltEstados}"
+                                                       partialSubmit="true"
+                                                       >
+                                                <f:selectItem itemLabel="N/A" itemValue="-1"/>
+                                                <f:selectItems id="slcEstadoItem" value="#{trasladoController.estadosOptions}"/>
+                                            </ice:selectOneMenu>
+                                        </ice:headerRow>
+                                    </ice:columnGroup>
+                                </f:facet>                                
+                                <h:outputText id="descripcionCell" value="#{traslado.idEstado.nombre}"/>
+                            </ice:column>
+
+                            <ice:column id="colDetalle">
+                                <f:facet name="header">
+                                    <ice:columnGroup>
+                                        <ice:headerRow>
+                                            <ice:outputText value="#{label['sigebi.ActaListar.Label.DETALLE']}"/>
+                                        </ice:headerRow>
+                                    </ice:columnGroup>
+                                </f:facet>                                
+                                
+                                <ice:commandButton id="btnSincronizar"
+                                                   style="float:right;margin-top:2%"                                             
+                                                   styleClass="boton" 
+                                                   partialSubmit="true"
+                                                   actionListener="#{trasladoController.verDetalle}"  
+                                                   value="#{label['sigebi.ActaListar.Label.VER']}"  >    
+                                    <f:attribute id="itemSeleccionado" name="itemSeleccionado"  value="#{traslado}"/>                         
+                                </ice:commandButton>
+                                
+                            </ice:column>
+
+                            
+                            
+                        </ice:dataTable>
+
+                    </div>
+                </div>
+            </div>
+
+        </div>    
+    </div>
+
+
+</ice:form>
+
+

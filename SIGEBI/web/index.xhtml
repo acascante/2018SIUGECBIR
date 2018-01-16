@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition template="presentacion/plantillas/plantillabase_index.xhtml"
+                xmlns:ice="http://www.icesoft.com/icefaces/component"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets">
+
+    <ui:define name="contenido">
+        <div class="contenido-pagina">
+            <div align="center" class="login_fondo">
+                <ice:form id="login" >
+                    <h1>Login</h1>
+                    <ice:panelGrid columns="1" styleClass="login">
+                        <table align="center">
+                            <tr>
+                                <td align="left" >
+                                    <ice:outputText value="#{label['label.usuario']}" styleClass="etiqueta"/><br/></td>
+                            </tr>
+                            <tr>
+                                <td align="left">
+                                    <ice:inputText styleClass="inputLogin" id="usuario" value="#{vistaUsuario.gUsuarioActual.idUsuario}" 
+                                                   required="true" partialSubmit="false">
+                                    </ice:inputText>
+                                    <h:message showDetail="false" showSummary="true" for="usuario" style="color:red" />
+                                    <br/>
+                                </td>
+                            </tr>
+                            <tr><td>
+                                    <ice:outputText value="#{label['label.clave']}" styleClass="etiqueta"/><br/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td align="left" >
+                                    <ice:inputSecret styleClass="inputLogin" id="clave" value="#{vistaUsuario.gUsuarioActual.codClave}" 
+                                                     required="true" partialSubmit="false" 
+                                                     action="#{vistaUsuario.ingresar}"/><br/>
+                                    <br/>
+                                </td></tr>
+                            <tr><td colspan="1" align="center">
+                                    <ice:commandButton id="boton_ingresar" value="Ingresar"  partialSubmit="true"
+                                                       styleClass="boton" style="width: 250px;" action="#{vistaUsuario.ingresar}"/>
+                                </td></tr>
+
+                            <tr><td style="text-align: center;" colspan="1">
+                                    <br/>
+                                    <ice:outputConnectionStatus
+                                        displayHourglassWhenActive="true"
+                                        showPopupOnDisconnect="true"
+                                        style="margin-left: 50pt;"/>
+                                </td></tr>
+                        </table>
+                    </ice:panelGrid>
+
+                    <!-- <<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>> -->
+                    <!-- Modal para elegir la unidad a la que se va a loguear el usuario -->
+                    <!-- <<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>> -->
+
+
+                    <ice:panelPopup
+                        modal="true" visible="#{vistaUsuario.gPopUnidades}"
+                        rendered="true" styleClass="popup"
+                        >
+                        <f:facet name="header">
+                            <ice:outputText styleClass="flotar_izquierda titulo_popup" value="#{label['label.seleccion_unidad']}"/>
+                        </f:facet>
+                        <br/>
+                        <f:facet name="body">
+                            <fieldset class="panel_Container" >
+                                <br></br>
+                                <span class="alineado_izquierda">
+                                    <ice:outputText styleClass="etiqueta" value="#{label['label.lista_unidades']}" />
+                                </span>
+                                <br/>
+                                <div>
+                                    <br/>
+                                    <span class="alineado_izquierda">
+                                        <ice:selectOneMenu id="unidades"
+                                                           value="#{vistaUsuario.mostrarIngreso}"
+                                                           valueChangeListener="#{vistaUsuario.asignarUnidadActual}"
+                                                           styleClass="campo_form" style="width: 405px" partialSubmit="true">
+                                            <f:selectItem itemLabel="#{label['label.seleccione_unidad']}" itemValue="-1" />
+                                            <f:selectItems id="item_modulo" value="#{vistaUsuario.gUnidades}"/>
+                                        </ice:selectOneMenu>
+                                       
+                                    </span>
+                                </div>
+                                <br/>
+                                <br/>
+                                <span class="alineado_izquierda">
+                                    <ice:commandButton id="btn_aceptar"
+                                                       action="#{vistaMenu.IrInicio}"
+                                                       immediate="true"
+                                                       actionListener="#{vistaMenu.cargarMenu}"
+                                                       styleClass="boton" value="Aceptar"/>
+                                </span>
+                                <span class="alineado_derecha">
+                                    <ice:commandButton id="btn_cancelar"
+                                                       partialSubmit="true"
+                                                       action="#{vistaUsuario.cerrarModalUnidad}"
+                                                       styleClass="boton"  value="Regresar" />
+                                </span>
+                                <br/><br/>
+                            </fieldset>       
+                        </f:facet>
+                    </ice:panelPopup>
+                    
+                                                       
+                </ice:form>
+            </div>
+        </div>
+        <ui:include src="presentacion/plantillas/pantilla_pie.xhtml" />
+    </ui:define>
+</ui:composition>

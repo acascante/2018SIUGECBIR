@@ -1,0 +1,162 @@
+<ice:form id="frm_listarBienes" 
+          xmlns:ice="http://www.icesoft.com/icefaces/component"
+          xmlns:h="http://java.sun.com/jsf/html"
+          xmlns:f="http://java.sun.com/jsf/core"
+          xmlns:ui="http://java.sun.com/jsf/facelets"
+          >
+    <div class="contenido-pagina">
+
+        <div class="container">
+            <div class="row">
+                <div class='col-sm-6'>
+                    <h1 style="margin: 0;">Bienes Registrados</h1>
+                </div>
+                <div class="col-sm-6">
+                    
+                    <ice:commandButton id="botonAbrir"
+                                       style="float:right" 
+                                       styleClass="boton" 
+                                       partialSubmit="true" 
+                                       actionListener="#{controllerBienes.nuevoRegistro}"
+                                       value="Nuevo"  >
+                        <!--
+                        <f:attribute id="tipoSeleccionado" name="tipoSeleccionado"  value="#{bien}"/>
+                        -->
+                    </ice:commandButton>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+
+
+            <div class="row">
+
+                <div class="col-sm-12">
+
+                    <ice:dataTable id="carTable"
+                                   value="#{controllerBienes.bienes}"
+                                   var="bien"
+                                   paginator="true"
+                                   paginatorPosition="bottom"
+                                   rows="10">
+                        
+                        
+                        <ice:column id="idBien" 
+                                    headerText="Identificación" 
+                                    sortBy="#{bien.idBien}"
+                                    filterBy="#{bien.idBien}" 
+                                    filterMatchMode="contains">
+                            <f:facet name="header">
+                                <ice:outputText value="Identificación"  />
+                                <ice:inputText id="filtroNombre"
+                                                   style="width: 130px;"
+                                                   value="#{controllerBienes.filtroNombre}"                                   
+                                                   partialSubmit="true"
+                                                   valueChangeListener="#{controllerBienes.cambioFiltro}"/>
+                            </f:facet>
+                            <h:outputText id="idBienCell" value="#{bien.idBien}"/>
+                        </ice:column>
+
+                        
+                        
+                        
+                        
+                        <ice:column id="descripcion" 
+                                    headerText="Descripción" 
+                                    sortBy="#{bien.descripcion}"
+                                    filterBy="#{bien.descripcion}" 
+                                    filterMatchMode="contains">
+                            <f:facet name="header">
+                                <ice:outputText value="Descripción"  />
+                            </f:facet>
+                            <h:outputText id="descripcionCell" value="#{bien.descripcion}"/>
+                        </ice:column>
+
+
+                        <ice:column id="colMarca" 
+                                    headerText="Marca" 
+                                    sortBy=""
+                                    filterBy="" 
+                                    filterMatchMode="contains">
+                            <f:facet name="header">
+                                <ice:outputText value="Marca"  />
+                            </f:facet>
+                            <h:outputText id="costoCell" value=""/>
+                        </ice:column>
+
+                        <ice:column id="colModelo" 
+                                    headerText="Valor Inicial" 
+                                    sortBy=""
+                                    filterBy="" 
+                                    filterMatchMode="contains">
+                            <f:facet name="header">
+                                <ice:outputText value="Modelo"  />
+                            </f:facet>
+                            <h:outputText id="costoCell" value=""/>
+                        </ice:column>
+
+                        <ice:column id="colSerie" 
+                                    headerText="Serie" 
+                                    sortBy=""
+                                    filterBy="" 
+                                    filterMatchMode="contains">
+                            <f:facet name="header">
+                                <ice:outputText value="Serie"  />
+                            </f:facet>
+                            <h:outputText id="costoCell" value=""/>
+                        </ice:column>
+
+                        
+                        <ice:column id="colEstado" 
+                                    headerText="Estado" 
+                                    sortBy="#{bien.idEstado}"
+                                    filterBy="#{bien.idEstado}" 
+                                    filterMatchMode="contains">
+                            <f:facet name="header">
+                                <ice:outputText value="Estado"  />
+                            </f:facet>
+                            <h:outputText id="costoCell" value="#{bien.idEstado}"/>
+                        </ice:column>
+
+
+                        <ice:column style="text-align: center;">
+
+                            <ice:commandButton id="botonAbrir"
+                                               style="float:right;margin-top:2%" 
+                                               styleClass="boton" 
+                                               partialSubmit="true" 
+                                               actionListener="#{controllerBienes.abrirDetalle}"
+                                               value="Detalle"  >
+                                <f:attribute id="tipoSeleccionado" name="tipoSeleccionado"  value="#{bien}"/>
+
+                            </ice:commandButton>
+
+                        </ice:column>
+
+                    </ice:dataTable>
+
+                </div>
+
+            </div>
+
+
+            <div class="row">
+
+                <div class='col-sm-6'>
+
+
+                </div>
+
+            </div>
+
+
+        </div>
+
+
+    </div>
+
+
+</ice:form>
+

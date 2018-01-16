@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="es"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ice="http://www.icesoft.com/icefaces/component">
+    <script language="javascript" src="js/detectarNavegador.js" type="text/javascript" />
+    <script language="javascript" src="js/scrips.js" type="text/javascript"/>
+
+    <ice:outputDeclaration doctypeRoot="HTML"
+                           doctypePublic="-//W3C//DTD XHTML 1.0 Strict//EN"
+                           doctypeSystem="http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"/>
+
+    <head>
+        <f:loadBundle basename="cr.ac.ucr.framework.vista.util.etiquetas_es" var="label" />
+        <ice:outputStyle href="././css/base/base.css"/>
+        <ice:outputStyle href="././css/clases/clase.css"/>
+        <ice:outputStyle href="././css/id/id.css"/>
+        <title>
+            Sistema de Información Institucional de Autoevaluación y Gestión de la Calidad
+            <ui:insert name="titulo" />
+        </title>
+        <link rel="icon" href="#{facesContext.externalContext.requestContextPath}/imagenes/ucr-favicon.png" type="image/png" />
+        <link rel="shortcut icon" type="image/x-icon" href="#{facesContext.externalContext.requestContextPath}/imagenes/ucr-favicon.ico"/>
+    </head>
+    <f:view locale="es">
+    <body class="cuerpoInicio">
+        <div class="encabezado-login">
+            <div class="derecha">
+                <div><img class="alineado_izquierda_logo" src="././imagenes/firma-ucr.png"/> <img class="alineado_derecha_logo" src="././imagenes/logo.png"/></div>
+            </div>
+        </div>
+        <div class="usuario-login">
+        </div>
+        <ui:insert name="contenido"/>
+        <div id="message">
+            <ui:insert name="message">
+                <ice:outputText value="" />
+            </ui:insert>
+        </div>
+        <ui:include src="mensaje_error.xhtml" />
+    </body>
+    </f:view>
+</html>

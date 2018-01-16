@@ -1,0 +1,43 @@
+
+<div id="cuerpoPiePagina">
+    <script type="text/javascript">
+        menu_f5();
+        function menu_f5(valido) {
+            if (document.getElementById("General_Top:cmd_boton") != null) {
+
+                if (document.getElementById("General_Top:cmd_boton").text == 'Mostrar Menú Principal') {
+                    jQuery("#panel_menu_principal").slideToggle("slow");
+                    jQuery(this).toggleClass("active");
+                    jQuery("#panel_menu_formulacion").slideToggle("slow");
+                    jQuery(this).toggleClass("active");
+                    return false;
+                }
+
+
+            }
+            if (valido) {
+                if (document.getElementById("General_Top:cmd_boton").text == 'Mostrar Menú Propuesta') {
+                    jQuery("#panel_menu_principal").slideToggle("slow");
+                    jQuery(this).toggleClass("active");
+                    jQuery("#panel_menu_formulacion").slideToggle("slow");
+                    jQuery(this).toggleClass("active");
+                    return false;
+                }
+            }
+
+        }
+    </script>
+    <table style="width: 100%; height: 100%">
+        <tr>
+            <td><div class="contenido_pie_izquierda">
+                    © 2017 Universidad de Costa Rica <br/>
+                    - Tel. 2511-1220
+                    <br/>
+                </div></td>
+                <td><img src="././imagenes/logo-ucr.png" id="icono"/> <img src="././imagenes/ejemplo-logo1.png" id="icono" /></td>
+            <td><div class="contenido_pie_derecha">
+                    <div>Ver 1.0.02062017</div>
+                </div></td>
+        </tr>
+    </table>
+</div>

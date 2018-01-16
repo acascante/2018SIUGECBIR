@@ -1,0 +1,87 @@
+<div xmlns:ice="http://www.icesoft.com/icefaces/component"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core" >
+
+    <!-- Modal para administrar un Documento -->
+    <ice:panelPopup
+        modal="true" 
+        visible="#{(controllerGestionProceso.command.presentarPanelAgregarRol || controllerGestionProceso.command.presentarPanelModificarRol)}"
+        rendered="true" 
+        styleClass="popup">
+
+        <f:facet name="header">
+            <ice:outputText styleClass="flotar_izquierda titulo_popup" value="#{label['sigebi.label.vista.gestionProceso.rol.administrar']}"/>
+        </f:facet> 
+
+        <f:facet name="body">
+
+            <fieldset class="panel_Container" >
+
+                <div class="container" style="margin-top: 30px;">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group"> 
+                                <label class="control-label" for="txtNombreRol">
+                                    <ice:outputText value="#{label['sigebi.label.vista.gestionProceso.rol.nombre']}" /> 
+                                    <ice:outputText value="#{label['label.requerido']}" />
+                                </label>
+                                <ice:inputText id="rolNombre" 
+                                               required="true"
+                                               styleClass="form-control"
+                                               value="#{controllerGestionProceso.command.rolEntity.nombre}" />
+                            </div>                                             
+                        </div>
+                    </div>
+                     <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group"> 
+                                <label class="control-label" for="txtCodigoRol">
+                                    <ice:outputText value="#{label['sigebi.label.vista.gestionProceso.rol.codigo']}" /> 
+                                    <ice:outputText value="#{label['label.requerido']}" />
+                                </label>
+                                <ice:inputText id="rolCodigo" 
+                                               required="true"
+                                               styleClass="form-control"
+                                               value="#{controllerGestionProceso.command.rolEntity.codigo}" />
+                            </div>                                             
+                        </div>
+                    </div>
+                    <div class="row" style="margin-bottom:20px;">
+                        <div class="col-md-9 col-sm-9">
+
+                            <ice:commandButton id="btnAgregarRol"
+                                               partialSubmit="true"
+                                               rendered="#{controllerGestionProceso.command.presentarPanelAgregarRol}"
+                                               action="#{controllerGestionProceso.agregarRol}"
+                                               styleClass="boton"  
+                                               value="#{label['label.aceptar']}" />
+                            
+                            <ice:commandButton id="btnModificarRol"
+                                               partialSubmit="true"
+                                               rendered="#{controllerGestionProceso.command.presentarPanelModificarRol}"
+                                               action="#{controllerGestionProceso.modificarRol}"
+                                               styleClass="boton"  
+                                               value="#{label['label.aceptar']}" />
+                        
+
+                            <ice:commandButton id="btnEliminarRol"
+                                               partialSubmit="true"
+                                               rendered="#{controllerGestionProceso.command.presentarPanelModificarRol}"
+                                               action="#{controllerGestionProceso.eliminarRol}"
+                                               styleClass="boton"  
+                                               value="#{label['label.eliminar']}" />
+                        </div>
+                        <div class="col-md-3 col-sm-3 align-content-md-end">
+                            <ice:commandButton id="btnCerrarPanelRol"
+                                               partialSubmit="true"
+                                               action="#{controllerGestionProceso.cerrarPanel}"
+                                               styleClass="boton"  
+                                               value="#{label['label.cancelar']}" />
+                        </div>
+                    </div>
+                </div>
+            </fieldset>       
+        </f:facet>  
+    </ice:panelPopup>
+</div>

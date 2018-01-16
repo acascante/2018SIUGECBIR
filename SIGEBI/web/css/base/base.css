@@ -1,0 +1,2260 @@
+/*
+    Document   : base
+    Created on : 25/01/2011, 10:10:19 AM
+    Author     : GBSYS-Adriana
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+/*
+   TODO customize this sample style
+   Syntax recommendation http://www.w3.org/TR/REC-CSS2/
+*/
+
+* {
+
+    padding: 0;
+    margin: 0;
+}
+
+html {
+}
+
+
+.boton-dis{
+    margin: 5px 0px 0px 5px;
+    padding: 3px 10px;
+}
+.contenido-pagina{
+    margin-top: 3%;
+}
+
+h1 {
+    color: #41ade7;
+    font-family: Arial,sans-serif;
+    font-size: 32px;
+    font-weight: lighter;
+    line-height: 110%;
+    margin-top: 44px;
+}
+
+
+.inputLogin {
+    background-color: #ecf0f1;
+    border: 2px solid transparent;
+    border-radius: 3px;
+    font-size: 16px;
+    font-weight: 200;
+    padding: 10px 0;
+    text-align: center;
+    transition: border 0.5s ease 0s;
+    width: 250px;
+}
+.etiqueta{
+    color: #666666;
+    font-size: 16px;
+}
+
+.etiqueta_usuario{
+    color: #FFFFFF;
+    font-weight: bold;
+    font-size: 10px;
+    font-family: Arial,sans-serif;
+    font-weight: lighter;
+}
+
+body{
+    margin: auto auto;
+    text-decoration: none;
+    font-size: 16px;
+    font: "Arial";
+    font-family: "Arial", "sans-serif";
+
+}
+.iceInpTxt:focus{
+    -moz-box-shadow: 0 0 5px 5px #709DFF;
+    box-shadow: 0 0 5px 5px #709DFF;
+    -moz-transition: border 0.5s linear 0s, -moz-box-shadow 0.5s linear 0s;
+}
+.iceDatTbl tr:hover{
+    -moz-box-shadow: 0 0 5px 5px #709DFF;
+    box-shadow: 0 0 5px 5px #709DFF;
+    -moz-transition: border 0.5s linear 0s, -moz-box-shadow 0.5s linear 0s;
+
+}
+.cuerpo{
+    background: #f5f5f5 none repeat scroll 0 0;
+    margin:0px auto;
+}
+
+.cuerpoInicio{
+    background: #f5f5f5 none repeat scroll 0 0;
+}
+
+#cuerpoPiePagina{
+    width: 100%;
+    height: 100px;
+    position: fixed;
+    bottom:0px;
+    background: #666666 none repeat scroll 0 0;
+}
+
+.titulo-login {
+    text-align: center;
+    color: #777;
+}
+
+.encabezado-login{
+    width: 100%;
+    background-color:#41ADE7;
+    height: 56px;
+}
+
+.usuario-login{
+    background-color: #249DD8;
+    height: 23px;
+    text-align: right;
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: normal;
+    font-size: 12px;
+    width: 100%;
+    color: white;
+}
+
+.estilo_link{
+    text-decoration: none;
+    color: white;
+}
+
+.btnLogout{
+    text-decoration: none;
+    color: white;
+    margin-right: 20px;
+}
+
+
+
+
+
+/*------------------ INICIO DE ESTILOS PARA MENSAJES DE ERROR ----------------*/
+
+/*<<>><<>><<>><<>><<>><<>>
+  <<>> AREA de mensajes
+  <<>><<>><<>><<>><<>><<>>*/
+#mensajes_generales{
+    position: fixed;
+    text-align: center;
+    top: 0;
+    z-index: 30000;
+    width:600pt;
+    margin-right: auto;
+    margin-left: auto;
+    padding: 0 0 0 28%;
+}
+
+
+
+
+.mensaje_botones{
+    position:absolute;
+    top:5px;
+    right:10px;
+    float:right;
+    display:block;
+}
+
+.mensaje_advertencia, .mensaje_informativo, .mensaje_error{
+    -moz-border-radius-bottomleft: 10px;
+    -moz-border-radius-bottomright: 10px;
+    font-weight: bold;
+    font-family: sans-serif;
+    display: block;
+    padding: 0.3em;
+    text-align: center;
+    padding-left: 1em;
+    padding-right: 4em;
+}
+
+.mensaje_error{
+    background: #FF0000;
+    color: #FFF;
+    border: #FF0000 solid 2px;
+}
+
+
+
+.mensaje_informativo{
+    background: #C8FFBF;
+    color: #333;
+    border: #A3EF95 solid 2px;
+}
+
+.mensaje_advertencia{
+    border: #F0E849 solid 2px;
+    background-color: #ff7f00;
+}
+
+.invisible{
+    display:none;
+}
+.visible{
+    display:block;
+}
+
+
+
+/*<<>><<><<<>><<>><<>>
+ Botones del mensaje
+  <<>><<>><<>><<>><<>>*/
+.mensaje_errorBtns{
+    background: #FF0000;
+    color: #FFF;
+    border: #FFF solid 1px;
+    margin:1px;
+}
+.mensaje_informativoBtns{
+    background: #C8FFBF;
+    color: #A3EF95;
+    border: #A3EF95 solid 1px;
+    margin:1px;
+}
+.mensaje_advertenciaBtns{
+    background: #FFFEA2;
+    color: #F0E849;
+    border: #F0E849 solid 1px;
+    margin:1px;
+}
+.mensaje_errorBtns:hover{
+    background: #FFF;
+    color: #FF0000;
+    border: #FFF solid 1px;
+    margin:1px;
+}
+.mensaje_informativoBtns:hover{
+    background: #A3EF95;
+    color: #C8FFBF;
+    border: #A3EF95 solid 1px;
+    margin:1px;
+}
+.mensaje_advertenciaBtns:hover{
+    background: #F0E849;
+    color: #FFFEA2;
+    border: #F0E849 solid 1px;
+    margin:1px;
+}
+
+
+/*<<>><<>><<>><<>><<>><<>>
+  <<>> ERROR FATAL POPUP
+  <<>><<>><<>><<>><<>><<>>*/
+
+.popup_error{
+    background: #FFF;
+    padding: 1em;
+    -moz-border-radius: 15px;
+    border: 0.2em #000 solid;
+}
+
+#cabeza_popup_error{
+    background: #FF0000;
+    color: #FFF;
+    text-align: center;
+    position: relative;
+    top: -1em;
+    width: 30em;
+    padding: 0.3em;
+    font-weight: bold;
+    text-transform: capitalize;
+}
+
+#cuerpo_popup_error{
+    font-size: 0.8em;
+    font-family: sans-serif;
+}
+
+#subtitulo_error{
+    background: transparent url('bug.png') no-repeat;
+    padding-left: 3em;
+    padding-bottom: 2em;
+}
+
+#descripcion_error{
+    background: #CFCFCF;
+    border: 1px #000 solid;
+    padding: 0.5em;
+    margin: 0.2em;
+    height: 15em;
+    overflow: auto;
+}
+
+
+
+
+
+
+
+.menu_horizontalSubMenuInd {
+    display:inline;
+    float:right;
+    padding-top: 3px;
+    padding-right: 1px;
+}
+
+.menu-cortina {
+    margin-top: 0px !important;
+    padding-bottom:0px !important;
+    margin-top: 0px;
+    padding-bottom:20px;
+    margin-left: 0px;
+    width: 700px;
+    font-family:Verdana, Geneva, sans-serif;
+    font-size: 13px;
+    float: left;
+}
+
+
+
+
+
+
+.btnEliminarProgramaCurso {
+    width: 190px;
+    height: 66px;
+    border: none;
+    margin-bottom: 10px;
+    cursor:pointer;
+}
+/*Botones*/
+.btnAceptar, .btnRegresar,.btnCancelar,.btnRevisar, .btnVerPropuesta, .btnObtenerCodigo{
+    width: 79px;
+    height: 16px;
+    border: none;
+    margin-bottom: 10px;
+    cursor:pointer;
+
+}
+.btnInforme{
+    font-size: 10pt;
+    font-weight: bold;
+    padding: 4px;
+    color: #666666;
+    border-bottom: #000;
+    text-decoration: underline;
+    border: #008DB9;
+    border-bottom-width: thin;
+}
+
+.btnCrearPropuesta,.btnCrearCurso,.btnEliminarCurso, .btnCrearMalla{
+    width: 114.5px;
+    height: 18px;
+    border: none;
+    margin-bottom: 10px;
+    cursor:pointer;
+}
+
+.btnCrearCurso,.btnEliminarCurso,.btnFusionarCurso,.btnSepararCurso{
+    width: 114.5px;
+    height: 20px;
+    border: none;
+    margin-bottom: 10px;
+    cursor:pointer;
+}
+
+.btnModificar,.btnAgregar{
+    width: 89px;
+    height: 18px;
+    border: none;
+    cursor:pointer;
+    background-repeat: no-repeat;
+}
+
+.btnAgregar,.btnGuardar,.btnBorrar{
+    border:  none;
+    width: 65px;
+    height: 18px;
+    cursor:pointer;
+}
+
+.btnSeleccionado{
+    background: transparent url(../../imagenes/botones/ver_seleccionados.png) no-repeat;
+    border: none;
+    width: 200px;
+    height: 18px;
+    cursor: pointer;
+}
+.btnUANotificadas{
+    background: transparent url(../../imagenes/botones/mostrar_UA_notificadas.png) no-repeat;
+    border: none;
+    width: 138px;
+    height: 15px;
+    cursor: pointer;
+}
+
+.btnJuicio{
+    background: transparent url(../../imagenes/botones/juicio.png) no-repeat;
+    border: none;
+    width: 66px;
+    height: 27px;
+    cursor: pointer;
+}
+
+.btnSi{
+    background: transparent url(../../imagenes/botones/si.png) no-repeat;
+    border: none;
+    width: 50px;
+    height: 18px;
+    cursor: pointer;
+}
+
+.btn_editar_fila{
+    background: transparent url(../../imagenes/acciones_tabla/editar_fila.png) no-repeat;
+    border: none;
+    width: 75px;
+    height: 25px;
+    cursor: pointer;
+}
+.btn_cancelar_cambios{
+    background: transparent url(../../imagenes/acciones_tabla/cancelar_cambios.png) no-repeat;
+    border: none;
+    width: 75px;
+    height: 25px;
+    cursor: pointer;
+}
+.btn_aceptar_cambios{
+    background: transparent url(../../imagenes/acciones_tabla/aceptar_cambios.png) no-repeat;
+    border: none;
+    width: 75px;
+    height: 25px;
+    cursor: pointer;
+}
+.btnGuardarFlotante,.btnBorrarFlotante{
+    margin-left: 25px;
+    border: none;
+    width: 32px;
+    margin-top: 10pt;
+    height: 32px;
+    cursor: pointer;
+    float: right;
+}
+.btnGuardarFlotante{
+
+    float: right;
+    margin-right: 45px;
+    background: transparent url(../../imagenes/menu_flotante/save.png) no-repeat;
+
+}
+.btnCerrarFlotante{
+    background: transparent url(../../imagenes/menu_flotante/close.png) no-repeat;
+    border: none;
+    width: 25px;
+    height: 25px;
+    cursor: pointer;
+    margin-left: 98.5%;
+}
+.btFlechaArriba{
+    background: transparent url(../../imagenes/menu_flotante/up.png) no-repeat;
+    border: none;
+    width: 48px;
+    height: 48px;
+    cursor: pointer;
+}
+
+.btnCambiarOrden{
+    background: transparent url(../../imagenes/botones/cambiar_orden.png) no-repeat;
+    border: none;
+    width: 90pt;
+    height: 18pt;
+    cursor: pointer;
+
+}
+.btnVerModal{
+    background: transparent url(../../imagenes/modal/plus.png) no-repeat;
+    border: none;
+    width: 32px;
+    height: 32px;
+    cursor: pointer;
+    float: right;
+}
+.btnVerAsociadas{
+    background: transparent url(../../imagenes/botones/ver_asociadas.png) no-repeat;
+    border: none;
+    width: 150px;
+    height: 25px;
+    cursor: pointer;
+}
+.btnCerrarModal{
+    background: transparent url(../../imagenes/modal/close.png) no-repeat;
+    border: none;
+    width: 42px;
+    height: 42px;
+    cursor: pointer;
+}
+.btnBorrarFlotante{
+    background: transparent url(../../imagenes/menu_flotante/broom.png) no-repeat;
+
+}
+.btnJustEnvRevision{
+    background: transparent url(../../imagenes/botones/env_revision.png) no-repeat;
+    border: none;
+    width: 15pt;
+    height: 15pt;
+    cursor: pointer;
+}
+
+.btnEditarNumero{
+    background: transparent url(../../imagenes/botones/editar_resolucion.png) no-repeat;
+    border: none;
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+}
+.btnCancelarEditar{
+    background: transparent url(../../imagenes/botones/cancelar_asignacion.png) no-repeat;
+    border: none;
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+}
+.btnAsignarNumero{
+    background: transparent url(../../imagenes/botones/guardar_numero.png) no-repeat;
+    border: none;
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+}
+
+.btnNo{
+    background: transparent url(../../imagenes/botones/no.png) no-repeat;
+    border: none;
+    width: 50px;
+    height: 18px;
+    cursor: pointer;
+}
+
+
+.btnFundamentacion{
+    background: transparent url(../../imagenes/botones/elementos_basicos/fundamentacion.png) no-repeat;
+    width: 80px;
+    height: 70px;
+
+    border: none;
+    margin-bottom: 10px;
+    cursor:pointer;
+}
+.btnAdministracion{
+    background: transparent url(../../imagenes/botones/elementos_basicos/administracion.png) no-repeat;
+    width: 80px;
+    height: 70px;
+    border: none;
+    margin-bottom: 10px;
+    cursor:pointer;
+}
+.btnCaracterizacion{
+    background: transparent url(../../imagenes/botones/elementos_basicos/caracterizacion.png) no-repeat;
+    width: 80px;
+    height: 70px;
+    border: none;
+    margin-bottom: 10px;
+    cursor:pointer;
+}
+.btnSuspender{
+    background: transparent url(../../imagenes/botones/suspender.png) no-repeat;
+    width: 110px;
+    height: 18px;
+    border: none;
+    margin-bottom: 10px;
+    cursor:pointer;
+}
+.btnContenidos{
+    background: transparent url(../../imagenes/botones/elementos_basicos/contenidos_seleccionados.png) no-repeat;
+    width: 80px;
+    height: 70px;
+    border: none;
+    margin-bottom: 10px;
+    cursor:pointer;
+}
+.btnEjecucion{
+    background: transparent url(../../imagenes/botones/elementos_basicos/ejecucion.png) no-repeat;
+    width: 80px;
+    height: 70px;
+    border: none;
+    margin-bottom: 10px;
+    cursor:pointer;
+}
+.btnOrganizacion{
+    background: transparent url(../../imagenes/botones/elementos_basicos/organizacion_contenidos.png) no-repeat;
+    width: 80px;
+    height: 70px;
+    border: none;
+    margin-bottom: 10px;
+    cursor:pointer;
+}
+.btnProgramas{
+    background: transparent url(../../imagenes/botones/elementos_basicos/programas_estudio.png) no-repeat;
+    width: 80px;
+    height: 70px;
+    border: none;
+    margin-bottom: 10px;
+    cursor:pointer;
+}
+.btnAsignarEvaluador{
+    background: transparent url(../../imagenes/botones/asignar_evaluador.png) no-repeat;
+    width: 110pt;
+    height: 20pt;
+    border:none;
+    cursor:pointer;
+}
+
+.btnModificarEvaluador{
+    background: transparent url(../../imagenes/botones/modificar_evaluador.png) no-repeat;
+    width: 125pt;
+    height: 20pt;
+    border: none;
+    cursor:pointer;
+}
+
+.btnAsignar{
+    background: transparent url(../../imagenes/botones/asignar.png) no-repeat;
+    width: 80px;
+    height: 20px;
+    border: none;
+    margin-bottom: 10px;
+    cursor:pointer;
+}
+.btnPropositos{
+    background: transparent url(../../imagenes/botones/elementos_basicos/propositos.png) no-repeat ;
+    width: 80px;
+    height: 70px;
+    border: none;
+    margin-bottom: 10px;
+    cursor:pointer;
+}
+.btnPropositos{
+    background: transparent url(../../imagenes/botones/elementos_basicos/propositos.png) no-repeat ;
+    width: 80px;
+    height: 70px;
+    border: none;
+    margin-bottom: 10px;
+    cursor:pointer;
+}
+.btnDescargarArchivo{
+    background: transparent url(../../imagenes/botones/descargar_archivo.png) no-repeat;
+    border: none;
+    margin-left: 10px;
+    width: 125px;
+    height: 18px;
+    cursor: pointer;
+}
+.btnCursosCategoria{
+    background: transparent url(../../imagenes/botones/cursos_categoria.png) no-repeat;
+    border: none;
+    width: 155px;
+    margin-right: 25px;
+    height: 18px;
+    cursor: pointer;
+}
+
+.btnCursosConsultar{
+    background: transparent url(../../imagenes/botones/cursos_consultar.png) no-repeat;
+    border: none;
+    width: 100pt;
+    margin-right: 25pt;
+    height: 18pt;
+    cursor: pointer;
+}
+.btnEmitirJuicio{
+    background: transparent url(../../imagenes/botones/emitir_juicio.png) no-repeat;
+    border: none;
+    width: 75pt;
+    margin-right: 25pt;
+    height: 18pt;
+    cursor: pointer;
+}
+
+.curso_requisito_equivalente{
+    background: transparent url(../../imagenes/botones/requisitos_equivalentes_editar.png) no-repeat;
+    border:none;
+    height: 16pt;
+    width: 196px;
+    margin-left: 15px;
+    cursor: pointer;
+}
+.btnGestiones{
+    background: transparent url(../../imagenes/botones/gestiones.png) no-repeat;
+    border: none;
+    width: 135px;
+    height: 18px;
+    cursor: pointer;
+}
+.btnEnviarNotificacion{
+    background: transparent url(../../imagenes/botones/enviar_notificacion.png) no-repeat;
+    border: none;
+    width: 155px;
+    height: 18px;
+    cursor: pointer;
+}
+.btnRevisar{
+    background: transparent url(../../imagenes/botones/revisar.png) no-repeat;
+    border: none;
+    width: 80px;
+    height: 18px;
+    cursor: pointer;
+}
+.btnCursosJuicio{
+    background: transparent url(../../imagenes/botones/cursos_juicio.png) no-repeat;
+    border: none;
+    width: 155px;
+    height: 28px;
+    cursor: pointer;
+}
+
+.btnSiguiente{
+    background: transparent url(../../imagenes/botones/ir-siguiente.png) no-repeat;
+    border: none;
+    width: 90px;
+    height: 18px;
+    cursor: pointer;
+
+}
+
+.btnAtras{
+    background: transparent url(../../imagenes/botones/ir-atras.png) no-repeat;
+    border: none;
+    width: 90px;
+    height: 18px;
+    cursor: pointer;
+
+}
+
+.btnReabrirPropuesta{
+    background: transparent url(../../imagenes/botones/reabrir_propuesta.png) no-repeat;
+    width: 99pt;
+    height: 20px;
+    border: none;
+    margin-bottom: 10px;
+    cursor:pointer;
+}
+
+.btnAprobar{
+    background: transparent url(../../imagenes/botones/aprobar_propuesta.png) no-repeat;
+    border: none;
+    width: 140px;
+    height: 18px;
+    cursor: pointer;
+
+}
+
+.btnTramitarPropuesta{
+    background: transparent url(../../imagenes/botones/tramitar_propuesta.png) no-repeat;
+    border: none;
+    width: 140px;
+    height: 18pt;
+    cursor: pointer;
+}
+
+
+.btnEnviarRevision{
+    background: transparent url(../../imagenes/botones/enviar_revision.png) no-repeat;
+    border: none;
+    width: 140px;
+    height: 18px;
+    cursor: pointer;
+
+}
+
+.btnEnviarRevisionDIEA{
+    background: transparent url(../../imagenes/botones/enviar_a_jef_diea.png) no-repeat;
+    border: none;
+    width: 150pt;
+    height: 18pt;
+    cursor: pointer;
+}
+.btnRechazar{
+    background: transparent url(../../imagenes/botones/rechazar_propuesta.png) no-repeat;
+    border: none;
+    width: 145px;
+    height: 18px;
+    cursor: pointer;
+
+}
+.btnVerMalla{
+    background: transparent url(../../imagenes/botones/ver_malla.png) no-repeat;
+    border: none;
+    width: 145px;
+    height: 18px;
+    cursor: pointer;
+
+}
+.btnVerResoluciones{
+    background: transparent url(../../imagenes/botones/ver_resoluciones.png) no-repeat;
+    border: none;
+    width: 135px;
+    height: 18px;
+    cursor: pointer;
+
+}
+.btnVerOficio{
+    background: transparent url(../../imagenes/botones/ver_oficio.png) no-repeat;
+    border: none;
+    width: 90px;
+    height: 18px;
+    cursor: pointer;
+
+}
+
+
+.btnVerInforme{
+    background: transparent url(../../imagenes/botones/ver_informe.png) no-repeat;
+    border: none;
+    width: 91pt;
+    height: 17pt;
+    cursor: pointer;
+}
+.btnVistaPrevia{
+    background: transparent url(../../imagenes/botones/vista_previa.png) no-repeat;
+    border: none;
+    width: 99pt;
+    height: 21pt;
+    cursor: pointer;
+}
+.btnFundamentacion-dis{
+    background: transparent url(../../imagenes/botones/elementos_basicos/fundamentacion-dis.png) no-repeat;
+    width: 80px;
+    height: 70px;
+
+    border: none;
+    margin-bottom: 10px;
+    cursor:pointer;
+}
+.btnAdministracion-dis{
+    background: transparent url(../../imagenes/botones/elementos_basicos/administracion-dis.png) no-repeat;
+    width: 80px;
+    height: 70px;
+    border: none;
+    margin-bottom: 10px;
+    cursor:pointer;
+}
+.btnCaracterizacion-dis{
+    background: transparent url(../../imagenes/botones/elementos_basicos/caracterizacion-dis.png) no-repeat;
+    width: 80px;
+    height: 80px;
+    border: none;
+    margin-bottom: 10px;
+    cursor:pointer;
+}
+.btnContenidos-dis{
+    background: transparent url(../../imagenes/botones/elementos_basicos/contenidos_seleccionados-dis.png) no-repeat;
+    width: 80px;
+    height: 80px;
+    border: none;
+    margin-bottom: 10px;
+    cursor:pointer;
+}
+.btnEjecucion-dis{
+    background: transparent url(../../imagenes/botones/elementos_basicos/ejecucion-dis.png) no-repeat;
+    width: 80px;
+    height: 80px;
+    border: none;
+    margin-bottom: 10px;
+    cursor:pointer;
+}
+.btnOrganizacion-dis{
+    background: transparent url(../../imagenes/botones/elementos_basicos/organizacion_contenidos-dis.png) no-repeat;
+    width: 80px;
+    height: 80px;
+    border: none;
+    margin-bottom: 10px;
+    cursor:pointer;
+}
+.btnProgramas-dis{
+    background: transparent url(../../imagenes/botones/elementos_basicos/programas_estudio-dis.png) no-repeat;
+    width: 80px;
+    height: 80px;
+    border: none;
+    margin-bottom: 10px;
+    cursor:pointer;
+}
+.btnPropositos-dis{
+    background: transparent url(../../imagenes/botones/elementos_basicos/propositos-dis.png) no-repeat ;
+    width: 80px;
+    height: 70px;
+    border: none;
+    margin-bottom: 10px;
+    cursor:pointer;
+}
+
+/* */
+.btnAceptar{
+    background: transparent url(../../imagenes/botones/aceptar.png) ;
+
+}
+.btnAceptarGuardar{
+    background: transparent url(../../imagenes/botones/aceptar_guardar.png) no-repeat;
+    width: 135px;
+    border: none;
+    cursor: pointer;
+
+}
+.btnCancelarRegresar{
+    background: transparent url(../../imagenes/botones/cancelar_regresar.png) no-repeat;
+    width: 145px;
+    border: none;
+    cursor: pointer;
+
+}
+
+.btnRegresar{
+    background: transparent url(../../imagenes/botones/regresar.png);
+    width: 79px;
+    height: 16px;
+}
+
+.boton{
+    border: 0 none;
+    border-radius: 2px 2px 2px 2px;
+    background: none repeat scroll 0 0 #0090D8;
+    color: #FFFFFF;
+
+    cursor: pointer;
+    display: inline-block;
+    font-family: Arial,sans-serif;
+    font-size: 16px;
+    font-weight: lighter;
+    line-height: 20px;
+    margin: 5px 0px 0px 5px;
+    padding: 7px 10px;
+    text-transform: none;
+    transition: all 0.3s ease 0s;
+    -moz-transition: all 0.3s ease 0s;
+    -webkit-transition: all 0.3s ease 0s;
+
+
+    text-align: center;
+
+    text-shadow: none;
+}
+
+.align-content-center-div {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btnObtenerCodigo{
+    background: transparent url(../../imagenes/botones/obtener_codigo.png);
+    width: 104px;
+    height: 16px;
+}
+.btnVerPropuesta{
+    background: transparent url(../../imagenes/botones/ver_propuesta.png);
+}
+/*Acciones*/
+.btnAgregar{
+    background: transparent url(../../imagenes/botones/agregar.png);
+
+}
+.btnAgregarDerecha{
+    background: transparent url(../../imagenes/botones/agregar_derecha.png) no-repeat;
+    width: 83px;
+    height: 22px;
+    border: none;
+    cursor:pointer;
+
+}
+
+.btnAgregarElemento{
+    background: transparent url(../../imagenes/botones/agregar_elemento.png);
+    width: 74.5px;
+    height: 16px;
+    border: none;
+    margin-bottom: 10px;
+    cursor:pointer;
+}
+
+.btnGuardar{
+    background: transparent url(../../imagenes/botones/guardar.png);
+    width: 65px;
+    height: 16px;
+}
+.btnModificar{
+    background: transparent url(../../imagenes/botones/modificar.png) no-repeat;
+}
+
+.btnEliminar{
+    background: transparent url(../../imagenes/botones/eliminar.png) no-repeat;
+    width: 89px;
+    height: 22px;
+    border: none;
+    cursor:pointer;
+}
+
+.btnCrearPropuesta{
+    background: transparent url(../../imagenes/botones/crear_propuesta.png);
+}
+.btnCrearMalla{
+    background: transparent url(../../imagenes/botones/crear_malla.png);
+}
+
+.btnCancelar{
+    background: transparent url(../../imagenes/botones/cancelar.png) no-repeat;
+    width: 89px;
+    height: 22px;
+    border: none;
+    cursor:pointer;
+}
+
+.btnCrearCurso{
+    background: transparent url(../../imagenes/botones/nuevo_curso.png) no-repeat;
+}
+
+
+.btnEliminarCurso{
+    background: transparent url(../../imagenes/botones/eliminar_curso.png) no-repeat;
+}
+.btnEliminarProgramaCurso{
+    background: transparent url(../../imagenes/botones/delete.png) no-repeat;
+}
+
+
+.btnAgregarCurso{
+    background: transparent url(../../imagenes/botones/agregar_curso.png) no-repeat;
+    border: none;
+    width: 150px;
+    height: 25px;
+    cursor: pointer;
+}
+
+.btnAgregarBloque{
+    background: transparent url(../../imagenes/botones/agregar_bloque.png) no-repeat;
+    border: none;
+    width: 180px;
+    height: 25px;
+    cursor: pointer;
+}
+
+.btnAgregarBloqueSigecu{
+    background: transparent url(../../imagenes/botones/agregar_bloque_sigecu.png) no-repeat;
+    border: none;
+    width: 180px;
+    height: 25px;
+    cursor: pointer;
+}
+
+
+.btnAgregarNivel{
+    background: transparent url(../../imagenes/botones/agregar_nivel.png) no-repeat;
+    border: none;
+    width: 140px;
+    height: 25px;
+    cursor: pointer;
+}
+
+.btnEliminarNivel{
+    background: transparent url(../../imagenes/botones/eliminar_nivel.png) no-repeat;
+    border: none;
+    width: 140px;
+    height: 25px;
+    cursor: pointer;
+}
+
+.btnModificarNivel{
+    background: transparent url(../../imagenes/botones/modificar_nivel.png) no-repeat;
+    border: none;
+    width: 90pt;
+    height: 16pt;
+    cursor: pointer;
+}
+.btnEliminarDelNivelEnMallaCurricular{
+    background: transparent url(../../imagenes/botones/eliminar_malla_curricular.png) no-repeat;
+    border: none;
+    width: 140pt;
+    height: 15pt;
+    cursor: pointer;
+}
+
+.btnEliminarDelNivelEnMallaTransicion{
+    background: transparent url(../../imagenes/botones/eliminar_malla_transicion.png) no-repeat;
+    border: none;
+    width: 140pt;
+    height: 15pt;
+    cursor: pointer;
+}
+.btnVerDocumento{
+    background: transparent url(../../imagenes/botones/ver_documento.png) no-repeat;
+    width: 119px;
+    height: 20px;
+    border: none;
+    margin-bottom: 10px;
+    cursor:pointer;
+}
+
+.btnVerInforme{
+
+    background: transparent url(../../imagenes/botones/ver_informe.png) no-repeat;
+    width: 119px;
+    height: 20px;
+    border: none;
+    margin-bottom: 10px;
+    cursor:pointer;
+}
+
+.btnSubirDocumento{
+    background: transparent url(../../imagenes/botones/subir_documento.png) no-repeat;
+    width: 115px;
+    height: 15px;
+    border: none;
+    margin-bottom: 10px;
+    cursor:pointer;
+
+}
+.btnConsultar{
+    background: transparent url(../../imagenes/botones/consultar.png) no-repeat;
+    width: 75px;
+    height: 16px;
+    border: none;
+    margin-bottom: 10px;
+    cursor:pointer;
+}
+
+
+.btnConsultarPropuesta{
+    background: transparent url(../../imagenes/botones/consultar_propuesta.png) no-repeat;
+    width: 119pt;
+    height: 19pt;
+    border: none;
+    margin-bottom: 10px;
+    cursor:pointer;
+}
+
+.btnGuardarPropuesta{
+    background: transparent url(../../imagenes/botones/guardar_propuesta.png) no-repeat;
+    width: 119pt;
+    height: 18pt;
+    border:none;
+    margin-bottom: 10px;
+    cursor:pointer;
+}
+
+.btnEditarDatosPropuesta{
+    background: transparent url(../../imagenes/botones/editar_datos_propuesta.png) no-repeat;
+    width: 142pt;
+    height: 18pt;
+    border:none;
+    margin-bottom: 10px;
+    cursor:pointer;
+}
+.btnEditarDatosMalla{
+    background: transparent url(../../imagenes/botones/editar_datos_propuesta.png) no-repeat;
+    width: 142pt;
+    height: 18pt;
+    border:none;
+    margin-bottom: 10px;
+    cursor:pointer;
+}
+
+.btnGenerarDocumento{
+    background: transparent url(../../imagenes/botones/generar_documento.png) no-repeat;
+    width: 135px;
+    height: 20px;
+    border: none;
+    margin-bottom: 10px;
+    cursor:pointer;
+
+}
+
+.btnActualizarEstado{
+    background: transparent url(../../imagenes/botones/actualizar_estado.png) no-repeat;
+    width: 116px;
+    height: 20px;
+    border: none;
+    margin-bottom: 10px;
+    cursor:pointer;
+}
+.btnVerificarBloque{
+    background: transparent url(../../imagenes/botones/verificar_bloque.png) no-repeat;
+    width: 116px;
+    height: 20px;
+    border: none;
+    margin-bottom: 10px;
+    cursor:pointer;
+}
+
+.btnAplicarSae{
+    background: transparent url(../../imagenes/botones/aplicar_sae.png) no-repeat;
+    width: 170px;
+    height: 25px;
+    border: none;
+    margin-bottom: 10px;
+    cursor:pointer;
+}
+
+.btnDevolverVD{
+    background: transparent url(../../imagenes/botones/devolver_vd.png) no-repeat;
+    width: 95pt;
+    height: 25px;
+    border: none;
+    margin-bottom: 10px;
+    cursor:pointer;
+
+}
+
+
+.btnAprobar_dictamen{
+    background: transparent url(../../imagenes/botones/aprobar.png) no-repeat;
+    width: 79px;
+    height: 22px;
+    border: none;
+    margin-bottom: 10px;
+    cursor:pointer;
+
+}
+
+.btnRechazar_dictamen{
+    background: transparent url(../../imagenes/botones/rechazar.png) no-repeat;
+    width: 79px;
+    height: 22px;
+    border: none;
+    margin-bottom: 10px;
+    cursor:pointer;
+
+}
+
+.btnAprobar_enviarVD{
+    background: transparent url(../../imagenes/botones/enviar_a_vd.png) no-repeat;
+    width: 170pt;
+    height: 22px;
+    border: none;
+    margin-bottom: 10px;
+    cursor:pointer;
+
+}
+
+
+.btnAprobar_enviarCEA{
+    background: transparent url(../../imagenes/botones/enviar_a_cea.png) no-repeat;
+    width: 120pt;
+    height: 22px;
+    border: none;
+    margin-bottom: 10px;
+    cursor:pointer;
+}
+
+.btnMostrarRespuestas{
+    background: transparent url(../../imagenes/botones/mostrar_respuestas.png) no-repeat;
+    border: none;
+    width: 140pt;
+    height: 15pt;
+    cursor: pointer;
+}
+.btnOcultarRespuestas{
+    background: transparent url(../../imagenes/botones/ocultar_respuestas.png) no-repeat;
+    border: none;
+    width: 140pt;
+    height: 15pt;
+    cursor: pointer;
+}
+.btnOcultar{
+    background: transparent url(../../imagenes/botones/ocultar.png) no-repeat;
+    border: none;
+    width: 140pt;
+    height: 15pt;
+    cursor: pointer;
+}
+
+
+
+
+
+/***************  MENU HORIZONTAL  ***********************************/
+
+.menu_horizontal{
+    padding: 0px;
+    white-space: nowrap;
+}
+
+.menu_horizontalItem{
+    float: left;
+    margin-right: 20px;
+    padding: 0px;
+}
+
+.menu_horizontalItem a{
+    /*
+    height: 20px;
+    padding-left: 10px;
+    padding-right: 20px;
+    padding-top: 3px;
+    padding-bottom: 3px;
+    margin: 0 auto;
+    float: left;
+    display: block;
+    text-decoration: none;
+    white-space :normal ;
+    text-align:center;
+    vertical-align:middle;
+    color: #000000;
+    background-image: url(../../imagenes/menu/SpryMenuBarDown.gif);
+    background-repeat: no-repeat;
+    background-position: 100% 50%;
+    */
+}
+
+.menu_horizontalItem a:hover{
+ /*
+    background-repeat: no-repeat;
+    background-position: 100% 50%;
+*/
+}
+
+.menu_horizontalItem hr {
+    border: none 0;
+    width: 100%;
+    height: 1px;
+    margin-top: 3px;
+    padding: 0px;
+    text-align: left;
+
+}
+
+.menu_horizontalSubMenu {
+    position: absolute;
+    padding: 1px;
+    height: auto;
+    display: block;
+}
+/*ICEFACES*/
+
+.iceSelOneRb
+{
+    border: none;
+}
+
+.iceSelOneRb-dis
+{
+    border: none;
+}
+
+.iceOutConStat{
+    border: none;
+
+}
+.iceOutConStatInactv{
+    background: no-repeat;
+    border: none;
+    width: 20pt;
+    height:20pt;
+}
+
+.iceOutConStatActv{
+    background: url( ../../imagenes/estados_sistema/connect_active.gif ) no-repeat;
+    border: none;
+    width: 20pt;
+    height:20pt;
+
+}
+
+.iceOutConStatCaution{
+    background: url( ../../imagenes/estados_sistema/connect_caution.gif )no-repeat;
+    border: none;
+    width: 20pt;
+    height:20pt;
+
+}
+
+.iceOutConStatDisconnect{
+    background: url( ../../imagenes/estados_sistema/connect_disconnected.gif )no-repeat ;
+    border: none;
+    width: 20pt;
+    height:20pt;
+
+}
+
+.iceOutTxt, .iceOutLbl {
+    font-family: Arial,sans-serif;
+    font-size: 16px;
+    padding: 2px 0;
+}
+.iceMnuItm {
+    padding: 0px;
+    height: auto;
+    width: 300px;
+    white-space:  pre-wrap;
+}
+
+.iceMnuItm a {
+    color: #000000;
+    display: block;
+    text-decoration: none;
+    padding-left: 3px;
+    padding-right: 3px;
+    padding-top: 3px;
+    padding-bottom: 3px;
+    /*border: 1px solid #CCC;*/
+    background-color:#d9f3fa;
+    -moz-transition: background 0.5s ease 0s;
+}
+
+
+.iceMnuItm a:hover {
+    color: #fff;
+    display: block;
+    text-decoration: none;
+    background: #2980B9;
+    /*-moz-box-shadow: 0 0 5px 5px #2980B9;
+    box-shadow: 0 0 5px 5px #2980B9;
+    -moz-transition: background 0.4s , -moz-box-shadow 0.4s linear 0s;*/
+}
+
+
+
+.iceMnuItmLabel, .menu_horizontalItemLabel {
+    padding-top: 4px;
+    font-size: 1.0em;
+    display: inline;
+}
+
+.iceMnuBarItemImage {
+    width:0px;
+}
+
+.iceMnuItmImage, .menu_horizontalItemImage {
+    display:inline;
+    vertical-align: top;
+}
+
+.iceMnuBarSubMenu  {
+    height:auto;
+    width:160px;
+    z-index: 1;
+}
+
+
+/*----------------------TABLA ICE FACE---------------------------------*/
+.iceDatTbl  {
+    /*background-image: url("../images/ft.png");
+    background-repeat: repeat-x;*/
+    background-color: #FFF;
+    border: 1px solid #999999;
+    border-collapse:collapse;
+    color:#fff;
+    font-size: 1em;
+    width: 100%;
+}
+
+.iceDatTbl_sin_borde  {
+    border: 1px solid #FFF !important;
+}
+
+.iceDatTbl table  {
+    border-collapse:collapse;
+}
+
+.iceDatTblColHdr1, .iceDatTblColHdr2, .iceDatTblColH3{
+    background: #38A8D8;
+    background: -moz-linear-gradient(top,  #7ED4ED,  #38A8D8);
+    filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#7ED4ED', endColorstr='#38A8D8');
+    border-right:1px solid #CCCCCC;
+    border-top:1px solid #CCCCCC;
+    color: #FFFFFF;
+    font-weight:bold;
+    font-family:Verdana, Geneva, sans-serif;
+    text-align:center;
+    text-shadow: 0 2px 2px rgba(0,0,0,0.7);
+}
+
+.iceDatTblColH3{
+
+    background-color: #99CCFF ;
+}
+.iceDatTblFtr{
+    background-color: #008DB9;
+}
+
+.iceRowSelSelected {
+    background: none repeat scroll 0 0 #E5E5E5;
+}
+.iceRowSelSelectedMouseOver {
+    background: none repeat scroll 0 0 #FFA326;
+}
+.iceRowSelMouseOver {
+    background: none repeat scroll 0 0 #00CCDD;
+    color: white;
+}
+/*FILTRO DE TABLAS*/
+.campo_form_tabla{
+    margin: 0;
+    padding: 0;
+}
+
+.iceInpTxt, .iceInpSecrt{
+    font-size: inherit;
+}
+
+.iceInpTxt-dis, .iceInpSecrt-dis {
+    color: #ABABAB;
+    cursor: default;
+    font: 11px tahoma;
+    border: 1px dotted #CCCCCC;
+    background-color:  #f4f6f8;
+}
+
+.iceInpTxtArea{
+    font: inherit;
+    font-family: "Myriad Pro", "Helvetica";
+    font-size: 1em;
+}
+
+
+.iceDatTblColHdr, .iceDatTblColHdr1, .iceDatTblColHdr2, .iceDatTblColGrpHdrCol, .iceDatTblFtr {
+    background: #38A8D8;
+    background: -moz-linear-gradient(top,  #7ED4ED,  #38A8D8);
+    filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#7ED4ED', endColorstr='#38A8D8');
+    border-right:1px solid #CCCCCC;
+    border-top:1px solid #CCCCCC;
+    color: #FFFFFF;
+    font-weight:bold;
+    font-size: 1em;
+    font-family: inherit;
+    padding: 5px;
+    text-align:center;
+    text-shadow: 0 2px 2px rgba(0,0,0,0.7);
+}
+
+/*-----------------------------inicia dataTable RowSelection-------------------------------------*/
+.iceDatTblRow1, .iceDatTblRow2 {
+    font-weight:normal;
+    font-family:Verdana, Geneva, sans-serif;
+}
+
+.iceDatTblRow2  {
+    background: #D4F6FF;
+}
+
+.iceDatTblRow2_blanco  {
+    background: #FFF;
+}
+
+.iceDatTblCol, .iceDatTblCol1, .iceDatTblCol2  {
+    border-bottom:1px  #CCCCCC;
+    border-right:1px  #CCCCCC;
+    color:#000000;
+    padding:3px 5px;
+    text-align:left;
+}
+
+.iceDatTbl td span.iceOutTxt  {
+    display:block;
+    overflow:hidden;
+    padding:2px 0;
+    font-size: 1em;
+
+}
+
+/*Panel*/
+.icePnlTbSetCnt{
+    background: url("../../imagenes/tabset/contentContainer_bg.gif") repeat-x scroll left top #FFFFFF;
+    border-bottom: 1px solid #D9D9D9;
+    border-left: 1px solid #D9D9D9;
+    border-right: 1px solid #D9D9D9;
+    border-top: 1px solid #D9D9D9;
+    padding-left: 10px;
+    padding-top: 10px;
+    padding-right: 10px;
+    padding-bottom: 10px;
+
+
+}
+
+.icePnlTbSetCnt_plan_estudios{
+    width: 100%;
+}
+/**********************************************************************/
+/*estilo en tab activado*/
+/* arriba*/
+.icePnlTbOn{
+    margin-bottom:   0;
+    height:0px;
+
+
+}
+
+
+.icePnlTbOn .LftTop {
+    background: url("../../imagenes/tabset/Tab_LftTop.png") no-repeat scroll left bottom transparent;
+    border:medium none;
+    height:4px;
+    padding:0;
+    text-align:center;
+    width:4px;
+}
+.icePnlTbOn .MidTop {
+    background:url("../../imagenes/tabset/Tab_MidTop.png") repeat-x scroll left bottom transparent;
+    border:medium none;
+    height:4px;
+    padding:0;
+    text-align:center;
+}
+.icePnlTbOn .RtTop {
+    background:url("../../imagenes/tabset/Tab_RtTop.png") no-repeat scroll left bottom transparent;
+    border:medium none;
+    height:4px;
+    padding:0;
+    text-align:center;
+    width:4px;
+}
+/*activado medio*/
+
+
+.icePnlTbOn .LftMid {
+    background: url("../../imagenes/tabset/Tab_LftMid2.png")  no-repeat top left;
+    border: none;
+    padding: 0;
+    height:0px;
+    text-align: center;
+    width: 4px;
+}
+
+.icePnlTbOn .MidMid {
+    background: url("../../imagenes/tabset/Tab_MidMid2.png") repeat scroll left bottom transparent;
+    border: none;
+
+    height:0px;
+    padding: 0;
+    text-align: center;
+}
+
+.icePnlTbOn .RtMid {
+    background: url("../../imagenes/tabset/Tab_RtMid2.png")  no-repeat top left;
+    border: none;
+    padding: 0;
+    text-align: center;
+    width: 4px;
+    height:0px;
+}
+
+
+/*activado abajo*/
+.icePnlTbOn .LftBtm {
+    background: none repeat scroll 0 0 #F7F7F7;
+    height: 0px;
+    padding: 0;
+    text-align: center;
+    border-collapse:collapse;
+}
+.icePnlTbOn .MidBtm {
+    background: none repeat scroll 0 0 #F7F7F7;
+    border: medium none;
+    height: 0px;
+    border-spacing: 0px;
+    padding: 0;
+    text-align: center;
+    border-collapse:collapse;
+}
+
+.icePnlTbOn .RtBtm {
+    background: none repeat scroll 0 0 #F7F7F7;
+    height: 0px;
+    padding: 0;
+    border-spacing: 0px;
+    text-align: center;
+    border-collapse:collapse;
+}
+/*icono cuando esta activado*/
+.icePnlTbOn .MidMid a {
+    background: url("../../imagenes/tabset/Tab_MidMid_bullet.png")  no-repeat top left;
+    border: none;
+    padding: 0px 8px 5px 28px;
+    margin: 3px;
+    text-decoration: none;
+    font-weight: bold;
+    color: #666;
+    cursor: pointer;
+    display: block;
+
+}
+
+.icePnlTbOn .MidMid td, .icePnlTbOn .MidMid div.ptfd {
+    font-weight: bold;
+    text-align: center;
+    /*
+    white-space: nowrap;*/
+}
+
+/*estilo en tab desactivado*/
+/*estilo en tab desactivado arriba*/
+.icePnlTbOff .LftTop {
+    background:url("../../imagenes/tabset/Tab_LftTop_off.gif") no-repeat scroll left bottom transparent;
+    border:medium none;
+    height:4px;
+    padding:0;
+    text-align:center;
+    width:4px;
+}
+.icePnlTbOff .MidTop {
+    background:url("../../imagenes/tabset/Tab_MidTop_off.gif") repeat-x scroll left bottom transparent;
+    border:medium none;
+    height:4px;
+    padding:0;
+    text-align:center;
+}
+.icePnlTbOff .RtTop {
+    background:url("../../imagenes/tabset/Tab_RtTop_off.gif") no-repeat scroll left bottom transparent;
+    border:medium none;
+    height:4px;
+    padding:0;
+    text-align:center;
+    width:4px;
+}
+
+
+
+/*estilo en tab desactivado medio*/
+.icePnlTbOff .LftMid, .icePnlTbOver .LftMid {
+    background: url("../../imagenes/tabset/Tab_LftMid_off2.gif")  no-repeat top left;
+    border: none;
+    padding: 0;
+    text-align: center;
+    width: 4px;
+}
+.icePnlTbOff .MidMid, .icePnlTbOver .MidMid {
+    background: url("../../imagenes/tabset/Tab_MidMid_off.gif")  repeat-x top left;
+    border: none;
+    padding: 0;
+    text-align: center;
+}
+
+.icePnlTbOff .RtMid, .icePnlTbOver .RtMid {
+    background: url("../../imagenes/tabset/Tab_RtMid_off2.gif")  no-repeat top left;
+    border: none;
+    padding: 0;
+    text-align: center;
+    width: 4px;
+}
+
+.icePnlTbOff .LftBtm, .icePnlTbOver .LftBtm {
+    background: none repeat scroll 0 0 #F7F7F7;
+    border: medium none;
+    border-top: 1px solid #D9D9D9;
+    height: 0px;
+    padding: 0;
+    text-align: center;
+    width: 4px;
+    margin: 0px;
+
+}
+
+.icePnlTbOff .MidBtm, .icePnlTbOver .MidBtm {
+    background: none repeat scroll 0 0 #F7F7F7;
+    border: medium none;
+    border-top: 1px solid #D9D9D9;
+    height: 0px;
+    padding: 0;
+    text-align: center;
+    margin: 0px;
+
+}
+
+.icePnlTbOff .RtBtm, .icePnlTbOver .RtBtm {
+    background: none repeat scroll 0 0 #F7F7F7;
+    border-top: 1px solid #D9D9D9;
+    height: 0px;
+    padding: 0;
+    text-align: center;
+    margin: 0px;
+}
+
+
+/*icono de desactivado*/
+.icePnlTbOff .MidMid a, .icePnlTbOver .MidMid a {
+    background: url("../../imagenes/tabset/Tab_MidMid_bullet_off.gif")  no-repeat top left;
+    border: medium none;
+    color: #666666;
+    cursor: pointer;
+    display: block;
+    font-weight: bold;
+    margin: 3px;
+    padding: 4px 8px 5px 28px;
+    text-decoration: none;
+}
+
+/*estilo en tab posicionado arriba*/
+.icePnlTbOver .LftTop {
+    background:url("../../imagenes/tabset/Tab_LftTop_off.gif") no-repeat scroll left bottom transparent;
+    border:medium none;
+    height:4px;
+    padding:0;
+    text-align:center;
+    width:4px;
+}
+.icePnlTbOver .MidTop {
+    background:url("../../imagenes/tabset/Tab_MidTop_off.gif") repeat-x scroll left bottom transparent;
+    border:medium none;
+    height:4px;
+    padding:0;
+    text-align:center;
+}
+.icePnlTbOver .RtTop {
+    background:url("../../imagenes/tabset/Tab_RtTop_off.gif") no-repeat scroll left bottom transparent;
+    border:medium none;
+    height:4px;
+    padding:0;
+    text-align:center;
+    width:4px;
+}
+
+.icePnlTbOver .MidMid td, .icePnlTbOver .MidMid div.ptfd {
+    font-weight: bold;
+    text-align: center;
+    white-space: nowrap;
+}
+
+.icePnlTbOver .MidMid div.ptfd {
+    padding: 1px 8px 5px 28px;
+}
+.icePnlTbOver .MidMid a:hover {
+    color: #3581A5;
+    font-weight: bold;
+}
+
+.icePnlTbSet {
+    width: 100%;
+}
+
+.icePnlTbOnBtm {
+    margin-right: 0;
+}
+
+* html .icePnlTbOff .MidMid a, * html .icePnlTbOff .MidMid a{
+    width: 1%;
+}
+/***********************************************************/
+
+.cuadropanelTab {
+    background: none repeat scroll 0 0 #FFFFFF;
+    border: 1px solid #D9D9D9;
+    display: block;
+    margin: 15px 15px 0 0;
+    padding: 15px;
+}
+
+.panelConfirm {
+    background-color: #bbdff1;
+    padding: 15px;
+    display: block;
+    border: 1px solid #D9D9D9;
+}
+
+
+/*********************************************************/
+.icePnlGrdRow1_curso{
+    background-color: #bbdff1;
+    height: 37pt;
+}
+.icePnlGrdRow2_curso{
+    background-color: #FFF;
+    height: 37pt;
+}
+
+
+.icePnlGrdRow1_curso_evaluacion{
+    background-color: #bbdff1;
+    height: 77pt;
+}
+.icePnlGrdRow2_curso_evaluacion{
+    background-color: #FFF;
+    height: 77pt;
+}
+
+.icePnlGrdCol1_curso{}
+.icePnlGrdCol2_curso_actual{
+    width: 120pt;
+}
+
+.icePnlGrdCol1_curso_revisar{
+    width: 100pt;
+}
+.icePnlGrdCol2_curso_revisar{
+    width: 220pt;
+}
+
+.iceSelMnyCb,.iceSelMnyCb-dis{
+    border: none;
+}
+
+.iceSelInpDate{
+    background-color: #ffffff;
+}
+
+.iceSelInpDatePopup {
+    min-width: 172px;
+}
+
+.iceSelInpDateInput {
+    width: 150px;
+}
+
+.iceSelInpDateOpenPopup {
+    display: inline;
+    text-decoration: none;
+    background-image: url("../../imagenes/calendario/cal_button.gif");
+    background-repeat: no-repeat;
+    text-align: center;
+    border: none;
+    width: 18px;
+    height: 18px;
+    margin-left: 5px;
+}
+
+.iceSelInpDateClosePopup {
+    display: inline;
+    text-decoration: none;
+    background-color: transparent;
+    background-image: url( "../../imagenes/calendario/cal_off.gif");
+    background-repeat: no-repeat;
+    text-align: center;
+    border: none;
+    width: 16px;
+    height: 16px;
+    margin-left: 5px;
+}
+
+.iceSelInpDateMonthYear {
+    background: #F5F5F5;
+    font-weight: bold;
+    font-size: 11px;
+    text-align: center;
+    color: #666;
+    padding-left: 1px;
+    padding-right: 1px;
+    padding-top: 4px;
+    padding-bottom: 4px;
+
+}
+
+.iceSelInpDateMoYrDropdown {
+    background: #F5F5F5;
+    font-weight: bold;
+    color: #666;
+}
+
+.iceSelInpDateMonthYear img {
+    border: none;
+    margin-left: 3px;
+    padding: 3px;
+}
+
+.iceSelInpDateMovePrev {
+    text-decoration: none;
+    display: inline;
+    background-color: transparent;
+    background-image: url( "../../imagenes/calendario/cal_arrow_left.gif");
+    background-repeat: no-repeat;
+    text-align: center;
+    border: none;
+    width: 17px;
+    height: 16px;
+}
+
+.iceSelInpDateMoveNext {
+    text-decoration: none;
+    display: inline;
+    background-color: transparent;
+    background-image: url( "../../imagenes/calendario/cal_arrow_right.gif");
+    background-repeat: no-repeat;
+    text-align: center;
+    border: none;
+    width: 17px;
+    height: 16px;
+}
+
+.iceSelInpDateWeek {
+    /* the days of the week row */
+    font-weight: normal;
+    font-size: 11px;
+    color: #666;
+    text-align: center;
+    padding: 3px;
+    border-top: 1px solid #d9d9d9;
+    border-right: 1px solid #d9d9d9;
+    border-bottom: 1px solid #d9d9d9;
+}
+
+/* set the look for the days of the week backgrounds */
+
+.iceSelInpDateDay {
+    text-align: center;
+    border-right: 1px solid #d9d9d9;
+    border-bottom: 1px solid #d9d9d9;
+    padding: 3px;
+}
+
+.iceSelInpDateCur {
+    background: #faa620;
+    text-align: center;
+    border-right: 1px solid #d9d9d9;
+    border-bottom: 1px solid #d9d9d9;
+}
+
+.iceSelInpDateCur .iceCmdLnk {
+    background: none;
+    border: none;
+    font-size: 11px;
+}
+
+.iceSelInpDateCur .iceOutTxt {
+    color: #FFFFFF;
+}
+
+.weekend {
+    background: #e9e9e9;
+}
+
+.weekend .iceOutTxt {
+    color: #666;
+}
+
+.weekend .iceCmdLnk {
+    background: none;
+    border: none;
+}
+
+/* now set the attributes for the numbers for each day of the week */
+
+.iceSelInpDateDay a {
+    /* the day text */
+    text-decoration: none;
+    background-color: #FFFFFF;
+    /*border: 1px solid #FFFFFF;*/
+    color: #000000;
+    width: 100%;
+    height: 100%;
+    padding: 0px;
+    display: block;
+}
+
+.iceSelInpDateCur a {
+    text-decoration: none;
+    background-color: #2A6CC2;
+    border: 1px solid #2A6CC2;
+    color: #FFFFFF;
+    width: 100%;
+    height: 100%;
+    padding: 0px;
+    display: block;
+}
+.iceSelOneMnu option{
+    -moz-transition: background 0.5s linear 0s;
+}
+.iceSelOneMnu option:hover{
+    -moz-transition: background 0.5s linear 0s;
+}
+/* now set the color attributes for the hover effect on non-current days */
+.iceSelInpDateDay a:hover {
+    /* the day text */
+    text-decoration: none;
+    color: #666;
+}
+
+/* Estado de conexion*/
+.estado_conexion{
+    width: 32px;
+    height: 32px;
+    border: none;
+}
+.estado_conexionInactv, .estado_conexionActv,.estado_conexionCaution, .estado_conexionDisconnect{
+    width: 36px;
+    height: 36px;
+    border: none;
+}
+.estado_conexionInactv{
+    background: url("../../imagenes/conexion/idle.gif" ) no-repeat;
+}
+
+.estado_conexionActv{
+    background: url("../../imagenes/conexion/active.gif" ) no-repeat;
+}
+
+.estado_conexionCaution{
+    background: url("../../imagenes/conexion/caution.gif" ) no-repeat;
+}
+
+.estado_conexionDisconnect{
+
+}
+.inputText{
+    background: #009999;
+    -webkit-transition:  border 0.5s linear 0s, -moz-box-shadow 0.5s linear 0s;
+    -webkit-transition:  background  0.4s;
+    -moz-transition: border 0.5s linear 0s, -moz-box-shadow 0.5s linear 0s;
+    -moz-transition: background  0.4s;
+}
+
+.inputSecret{
+    background: #009999;
+    -webkit-transition:  border 0.5s linear 0s, -moz-box-shadow 0.5s linear 0s;
+    -webkit-transition:  background  0.4s;
+    -moz-transition: border 0.5s linear 0s, -moz-box-shadow 0.5s linear 0s;
+    -moz-transition: background  0.4s;
+
+
+}
+/*Estilo para mensajes de error.*/
+.validationMessageError, .validationMessage {
+    color: #ef250e;
+    font: 11px Verdana, Geneva, sans-serif;
+    /**
+    background: url("../imagenes/warning.png")  no-repeat 3px;
+    padding: 0px 0px 0px 22px;
+    **/
+}
+
+
+
+
+.form-controlTxt {
+  display: block;
+  width: 100%;
+  padding: 0.5rem 0.75rem;
+  font-size: 1rem;
+  line-height: 1.25;
+  color: #495057;
+  background-color: #fff;
+  background-image: none;
+  background-clip: padding-box;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  border-radius: 0.25rem;
+  transition: border-color ease-in-out 0.15s, box-shadow ease-in-out 0.15s;
+}
+
+.form-controlTxt::-ms-expand {
+  background-color: transparent;
+  border: 0;
+}
+
+.form-controlTxt:focus {
+  color: #495057;
+  background-color: #fff;
+  border-color: #80bdff;
+  outline: none;
+}
+
+.form-controlTxt::-webkit-input-placeholder {
+  color: #868e96;
+  opacity: 1;
+}
+
+.form-controlTxt:-ms-input-placeholder {
+  color: #868e96;
+  opacity: 1;
+}
+
+.form-controlTxt::placeholder {
+  color: #868e96;
+  opacity: 1;
+}
+
+.form-controlTxt:disabled, .form-controlTxt[readonly] {
+  background-color: #e9ecef;
+  opacity: 1;
+}
+.btnAprobar_informe, .btnAprobar{
+    background: transparent url(../../imagenes/botones/aprobar.png) no-repeat;
+    width: 79px;
+    height: 22px;
+    border: none;
+    margin-bottom: 10px;
+    cursor:pointer;
+
+}
+
+.btnRechazar_informe, .btnRechazar{
+    background: transparent url(../../imagenes/botones/rechazar.png) no-repeat;
+    width: 79px;
+    height: 22px;
+    border: none;
+    margin-bottom: 10px;
+    cursor:pointer;
+
+}
+
+.btnEliminar_adjunto{
+    background: transparent url(../../imagenes/botones/borrar.png) no-repeat;
+    width: 79px;
+    height: 22px;
+    border: none;
+    margin-bottom: 10px;
+    cursor:pointer;
+
+}
+
+.btnEliminar_usuario{
+    background: transparent url(../../imagenes/botones/borrar.png) no-repeat;
+    width: 79px;
+    height: 22px;
+    border: none;
+    margin-bottom: 10px;
+    cursor:pointer;
+
+}
+
+.btnAgregar_usuario{
+    background: transparent url(../../imagenes/botones/agregar.png) no-repeat;
+    width: 79px;
+    height: 22px;
+    border: none;
+    margin-bottom: 10px;
+    cursor:pointer;
+}
+
+.btnAgregar_Proceso{
+    background: transparent url(../../imagenes/botones/agregar.png) no-repeat;
+    width: 79px;
+    height: 22px;
+    border: none;
+    margin-bottom: 10px;
+    cursor:pointer;
+}
+
+.btnModificar_Proceso{
+    background: transparent url(../../imagenes/botones/modificar.png) no-repeat;
+    width: 89px;
+    height: 22px;
+    border: none;
+    margin-bottom: 10px;
+    cursor:pointer;
+}
+.btnEliminar_Proceso{
+    background: transparent url(../../imagenes/botones/borrar.png) no-repeat;
+    width: 89px;
+    height: 15px;
+    border: none;
+    margin-bottom: 10px;
+    cursor:pointer;
+}
+.btnRevisar_adjunto{
+    border: none;
+    margin-bottom: 10px;
+    margin-right: 10px;
+    cursor:pointer;
+
+}
+.input_loadFile{
+    color: #FFFFFF;
+    border: 0 none;
+    border-radius: 2px 2px 2px 2px;
+    background: none repeat scroll 0 0 #0090D8;
+    cursor: pointer;
+    display: inline-block;
+    font-family: Arial,sans-serif;
+    font-size: 16px;
+    font-weight: lighter;
+    line-height: 20px;
+    margin-bottom: 0;
+    padding: 4px 10px;
+    text-transform: none;
+    transition: all 0.3s ease 0s;
+    -moz-transition: all 0.3s ease 0s;
+    -webkit-transition: all 0.3s ease 0s;
+    text-align: center;
+    text-shadow: none;
+}

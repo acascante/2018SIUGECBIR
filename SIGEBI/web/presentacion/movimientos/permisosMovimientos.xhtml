@@ -1,0 +1,39 @@
+    <ice:form id="frm_listarInformeTecnico" 
+          xmlns:ice="http://www.icesoft.com/icefaces/component"
+          xmlns:h="http://java.sun.com/jsf/html"
+          xmlns:f="http://java.sun.com/jsf/core"
+          xmlns:ui="http://java.sun.com/jsf/facelets"
+          >
+           
+    
+    
+    <div class="contenido-pagina">
+
+        <div class="container"> 
+            <!-- Titulo -->
+            <div class="row">
+                <div class='col-sm-10'>
+                    <h1 style="margin: 0;">
+                        <ice:outputFormat value="#{label['sigebi.Acta.Titulo']}"/>
+                    </h1>
+                </div> 
+                <div class='col-sm-2'>
+                    <ice:commandButton id="btnRegresar"
+                                       style="float: right" 
+                                       styleClass="boton" 
+                                       partialSubmit="true" 
+                                       actionListener="#{actaController.regresar}"
+                                       value="#{label['sigebi.Bien.Btn.Regresar']}">
+                    </ice:commandButton>
+                </div>
+                
+            </div>
+            </div>
+        </div>
+        
+        
+        
+        
+        </ice:form>ice:form
+        
+        

@@ -1,0 +1,54 @@
+/* 
+    Document   : base_safari
+    Created on : 01/07/2011, 09:33:14 AM
+    Author     : jonnathan
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+/* 
+   TODO customize this sample style
+   Syntax recommendation http://www.w3.org/TR/REC-CSS2/
+*/
+
+root { 
+    display: block;
+}
+.iceInpTxt:focus{
+    -webkit-box-shadow: 0 0 5px 5px #709DFF;
+    -webkit-transition: border 0.5s linear 0s;
+}
+.iceDatTbl tr:hover{
+    background: #709DFF;
+    -webkit-transition: background 1s ;
+
+}
+.mensaje_advertencia, .mensaje_informativo, .mensaje_error{
+    -webkit-border-bottom-right-radius: 10px;
+    -webkit-border-bottom-left-radius: 10px;
+}
+.popup_error{
+    -moz-border-radius: 15px;
+    -webkit-border-radius: 15px;
+}
+.iceMnuItm a {
+    -webkit-transition: background 0.5s ease 0s;
+}
+.iceMnuItm a:hover {
+    -webkit-box-shadow: 0 0 5px 5px#FFB739;
+    -webkit-transition: background 0.4s;
+}
+.iceDatTblColHdr1, .iceDatTblColHdr2, .iceDatTblColH3{
+    background: -webkit-gradient(linear, left top, left bottom, from(#7ED4ED), to(#38A8D8));
+}
+.iceDatTblColHdr, .iceDatTblColHdr1, .iceDatTblColHdr2, .iceDatTblColGrpHdrCol, .iceDatTblFtr {
+    background: -webkit-gradient(linear, left top, left bottom, from(#7ED4ED), to(#38A8D8));
+}
+.iceSelOneMnu option{
+    -webkit-transition: background 1s;
+}
+option:hover{
+    background: #159615;;
+    -webkit-transition: background 1s linear;
+}
+

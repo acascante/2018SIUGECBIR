@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
+
+<log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/">
+
+    <appender name="CONSOLE" class="org.apache.log4j.RollingFileAppender">
+        <param name="File"   value="C:/logs/FRAMEWORK/log.html" />
+        <param name="MaxFileSize" value="2MB" />
+        <param name="MaxBackupIndex" value="10" />
+        <layout class="org.apache.log4j.HTMLLayout"/>
+    </appender>
+
+    <logger name="net.sf.ehcache">
+        <level value="ERROR"/>
+        <appender-ref ref="CONSOLE"/>
+    </logger>
+
+    <logger name="org.apache">
+        <level value="WARN"/>
+        <appender-ref ref="CONSOLE"/>
+    </logger>
+
+    <logger name="org.dbunit.dataset.xml.FlatXmlDataSetBuilder">
+        <level value="ERROR"/>
+        <appender-ref ref="CONSOLE"/>
+    </logger>
+
+    <logger name="org.apache.velocity">
+        <level value="FATAL"/>
+        <appender-ref ref="CONSOLE"/>
+    </logger>
+
+    <logger name="org.hibernate">
+        <level value="ERROR"/>
+        <appender-ref ref="CONSOLE"/>
+    </logger>
+    <logger name="org.quartz">
+        <level value="ERROR"/>
+        <appender-ref ref="CONSOLE"/>
+    </logger>
+    <logger name="org.springframework">
+        <level value="ERROR"/>
+        <appender-ref ref="CONSOLE"/>
+    </logger>
+   
+    <logger name="cr.ac.ucr.framework.seguridad">
+        <level value="DEBUG"/>
+        <appender-ref ref="CONSOLE"/>
+    </logger>
+    
+    <logger name="cr.ac.ucr.framework">
+        <level value="DEBUG"/>
+        <appender-ref ref="CONSOLE"/>
+    </logger>
+	
+</log4j:configuration>

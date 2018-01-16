@@ -1,0 +1,65 @@
+<ice:form id="estudiante_detalle" xmlns:ice="http://www.icesoft.com/icefaces/component"
+          xmlns:h="http://java.sun.com/jsf/html"
+          xmlns:f="http://java.sun.com/jsf/core"
+          xmlns:ui="http://java.sun.com/jsf/facelets">
+    <br/>
+
+
+    <ice:outputText id="id" value="#{tipoController.id}"/>
+    <ice:outputText id="nombre" value="#{tipoController.nombre}"/>
+    <ice:outputText id="dominio" value="#{tipoController.dominio}"/>
+    <ice:outputText id="estado" value="#{tipoController.estado}"/>
+
+    <br/> 
+    <ice:outputText id="estado" value="#{vistaUsuario.gUnidadActual.unidadEjecutoraLlave.idUnidadEjecutora}"/>
+
+    <br/> <br/>
+
+
+    <div class='col-sm-6'>
+
+        <h:commandButton id="boton_ingresar" 
+                         value="Listar Bienes"  
+                         styleClass="btn btn-outline-success my-2 my-sm-0" 
+                         action="listar"/>
+
+    </div>
+
+
+    <ice:dataTable id="listaDocentes"
+                   value="#{tipoController.tipos}"
+                   var="tip">
+        <ice:column style="text-align: center;">
+            <f:facet name="header">
+                <ice:outputText value="Id"  />
+            </f:facet>
+            <ice:outputText value="#{tip.idTipo}"  />
+        </ice:column>
+        <ice:column style="text-align: center;">
+            <f:facet name="header">
+                <ice:outputText value="Nombre"  />
+            </f:facet>
+            <ice:outputText value="#{tip.nombre}"  />
+        </ice:column>
+        <ice:column style="text-align: center;">
+            <f:facet name="header">
+                <ice:outputText value="Ver"  />
+            </f:facet>
+
+            <ice:commandButton id="botonAbrir"
+                               style="float:right;margin-top:2%" 
+                               styleClass="boton" 
+                               partialSubmit="true" 
+                               actionListener="#{tipoController.abrirTipo}"
+                               value="Ver"  >
+                <f:attribute id="tipoSeleccionado" name="tipoSeleccionado"  value="#{tip}"/>
+
+            </ice:commandButton>
+
+        </ice:column>
+
+    </ice:dataTable>
+
+
+
+</ice:form>

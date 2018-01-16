@@ -1,0 +1,766 @@
+<ice:form id="frm_listarInformeTecnico" 
+          xmlns:ice="http://www.icesoft.com/icefaces/component"
+          xmlns:h="http://java.sun.com/jsf/html"
+          xmlns:f="http://java.sun.com/jsf/core"
+          xmlns:ui="http://java.sun.com/jsf/facelets"
+          >
+
+
+
+    <div class="contenido-pagina">
+
+        <div class="container"> 
+            <!-- Titulo -->
+            <div class="row">
+                <div class='col-sm-10'>
+                    <h1 style="margin: 0;">
+                        <ice:outputFormat value="#{label['sigebi.Traslado.Titulo']}"/>
+                    </h1>
+                </div> 
+                <div class='col-sm-2'>
+                    <ice:commandButton id="botonAbrir"
+                                       style="float: right" 
+                                       styleClass="boton" 
+                                       partialSubmit="true" 
+                                       actionListener="#{trasladoController.regresar}"
+                                       value="#{label['sigebi.Bien.Btn.Regresar']}">
+                    </ice:commandButton>
+                </div>
+
+            </div>
+
+
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group"> 
+                        <ice:outputText 
+                            value="#{label['sigebi.Traslado.Label.Identificacion']}"
+                            />
+                        <ice:inputText id="txtActaId" 
+                                       styleClass="form-control" 
+                                       value="#{trasladoController.traslado.idTraslado}"
+                                       readonly="true"
+                                       partialSubmit="false">
+                        </ice:inputText>
+
+
+                    </div>                                             
+                </div>
+
+                <div class="col-md-4">
+                    <div class="form-group"> 
+                        <ice:outputText 
+                            value="#{label['sigebi.Traslado.Label.Estado']}"
+                            />
+                        <ice:inputText id="txtEstadoNombre" 
+                                       styleClass="form-control" 
+                                       value="#{trasladoController.traslado.idEstado.nombre}"
+                                       readonly="true"
+                                       partialSubmit="false">
+                        </ice:inputText>
+
+                        <ice:inputHidden id="hdnEstadoId"
+                                         value="#{trasladoController.traslado.idEstado.idEstado}"
+                                         rendered="true"
+                                         >
+                        </ice:inputHidden>
+
+                    </div>                                             
+                </div>
+
+                <div class="col-md-4">
+                    <div class="form-group"> 
+                        <ice:outputText 
+                            value="#{label['sigebi.Traslado.Label.Fecha']}"
+                            />
+                        <ice:inputText id="txtActaFecha" 
+                                       styleClass="form-control" 
+                                       value="#{trasladoController.fechaRegistro}"
+                                       readonly="true"
+                                       partialSubmit="false">
+                        </ice:inputText>
+                    </div>                                             
+                </div>
+            </div>
+
+
+            <div class="row">
+
+                <div class="col-md-4">
+                    <div class="form-group"> 
+                        <ice:outputText 
+                            value="#{label['sigebi.Traslado.Label.UnidadRecibe']}"
+                            />
+                        <ice:inputText id="txtUnidadDestino" 
+                                       styleClass="form-control" 
+                                       value="#{trasladoController.traslado.numUnidadDestino.dscUnidadEjecutora}"
+                                       readonly="true"
+                                       partialSubmit="false">
+                        </ice:inputText>
+                    </div>                                             
+                </div>
+                <div class="col-md-2">
+
+                    <ice:commandButton id="btnBuscarUnidad"
+                                       styleClass="boton" 
+                                       style="margin-top: 1.5rem"
+                                       partialSubmit="true" 
+                                       rendered="#{trasladoController.permiteEdicion}"
+                                       actionListener="#{trasladoController.mostrarUnidades}"
+                                       value="#{label['sigebi.Traslado.Btn.Buscar']}">
+                    </ice:commandButton>
+                </div>
+
+
+                <div class="col-md-4">
+                    <div class="form-group"> 
+                        <ice:outputText 
+                            value="#{label['sigebi.Traslado.Label.Ubicacion']}"
+                            />
+                        <ice:inputText id="txtUbicacionNombre" 
+                                       styleClass="form-control" 
+                                       value="#{trasladoController.traslado.idUbicacion.detalle}"
+                                       readonly="true"
+                                       partialSubmit="false">
+                        </ice:inputText>
+
+                    </div>                                             
+                </div>
+                <div class="col-md-2">
+
+                    <ice:commandButton id="btnBuscarUbicacion"
+                                       style="margin-top: 1.5rem"
+                                       styleClass="boton" 
+                                       rendered="#{trasladoController.permiteEdicion}"
+                                       partialSubmit="true" 
+                                       actionListener="#{trasladoController.mostrarUbicaciones}"
+                                       value="#{label['sigebi.Traslado.Btn.Buscar']}">
+                    </ice:commandButton>
+                </div>
+
+            </div>
+
+
+            <div class="row">
+                <div class='col-sm-12'>
+                    <div class="form-group"> 
+                        <ice:outputText 
+                            value="#{label['sigebi.Traslado.Label.Observaciones']}"
+                            />
+
+                        <ice:inputTextarea id="txtObservaciones" 
+                                           styleClass="form-control"
+                                           style="resize: none"
+                                           cols="4"
+                                           readonly="#{!trasladoController.permiteEdicion}"
+                                           value="#{trasladoController.traslado.observaciones}"
+                                           partialSubmit="false">
+                        </ice:inputTextarea>
+
+
+                    </div>
+                </div>
+
+            </div>    
+
+            <div class="row">
+                <div class='col-sm-12'>
+                    <ice:commandButton id="btnGuardarTraslado"
+                                       style="float: right"
+                                       styleClass="boton" 
+                                       partialSubmit="true" 
+                                       rendered="#{trasladoController.permiteEdicion}"
+                                       actionListener="#{trasladoController.guardarTraslado}"
+                                       value="#{label['sigebi.Traslado.Btn.Guardar']}">
+                    </ice:commandButton>
+                </div>
+
+            </div>            
+
+
+
+            <!-- Listado de Bienes Asociados-->
+            <div class="row">
+                <div class="col-sm-12">
+
+                    <ice:panelGroup visible="true" style="padding-top: 1rem">
+
+
+
+                        <div class="container" style="overflow: auto; padding-bottom: 20px;">
+
+
+                            <!-- Tabla de Bienes Asociados -->
+                            <div class="row">
+
+
+                                <div class="col-sm-10">
+                                    <h4>
+                                        <ice:outputFormat
+                                            value="#{label['sigebi.Acta.Label.BienesAsociados']}"
+                                            />
+                                    </h4>
+                                </div>
+
+                                <div class="col-sm-2">
+
+                                    <ice:commandButton id="btnBuscarBienes"
+                                                       partialSubmit="true"
+                                                       style="margin-bottom: 1rem"
+                                                       action="#{trasladoController.abrirListaBienes}"
+                                                       styleClass="boton"  
+                                                       rendered="#{trasladoController.permiteEdicion}"
+                                                       value="#{label['sigebi.Acta.Btn.Buscar']}" />
+
+                                </div>
+                            </div>
+
+
+                            <!-- Data Table -->
+                            <div class="row" >
+                                <div class="col-sm-12">
+                                    <div>
+                                        <ice:dataTable id="informesTecnicos"
+                                                       value="#{trasladoController.trasladoDetalle}"
+                                                       var="detalle"
+                                                       paginator="true"
+                                                       paginatorPosition="bottom"
+                                                       rows="10">
+                                            <ice:column id="idBien">                                 
+                                                <f:facet name="header">
+                                                    <ice:columnGroup>
+                                                        <ice:headerRow>
+                                                            <ice:outputText value="#{label['sigebi.label.vista.listarBienSincronizar.identificacion']} "/>
+                                                        </ice:headerRow>
+                                                    </ice:columnGroup>
+                                                </f:facet>
+                                                <h:outputText id="idBienCell" value="#{detalle.idBien.idPlaca.placa}"/>
+                                            </ice:column>
+
+                                            <ice:column id="descripcion">
+                                                <f:facet name="header">
+                                                    <ice:columnGroup>
+                                                        <ice:headerRow>
+                                                            <ice:outputText value="#{label['sigebi.label.vista.listarBienSincronizar.descripcion']} "/>
+                                                        </ice:headerRow>
+                                                    </ice:columnGroup>
+                                                </f:facet>                                
+                                                <h:outputText id="descripcionCell" value="#{detalle.idBien.descripcion}"/>
+                                            </ice:column>
+
+
+                                            <ice:column id="colMarca">
+                                                <f:facet name="header">
+                                                    <ice:columnGroup>
+                                                        <ice:headerRow>
+                                                            <ice:outputText value="#{label['sigebi.label.vista.listarBienSincronizar.marca']} "/>
+                                                        </ice:headerRow>
+                                                    </ice:columnGroup>
+                                                </f:facet>                                
+                                                <h:outputText id="marcaCell" value="#{detalle.idBien.marca}"/>
+                                            </ice:column>
+
+                                            <ice:column id="colModelo">
+                                                <f:facet name="header">
+                                                    <ice:columnGroup>
+                                                        <ice:headerRow>
+                                                            <ice:outputText value="#{label['sigebi.label.vista.listarBienSincronizar.modelo']}"/>
+                                                        </ice:headerRow>
+                                                    </ice:columnGroup>
+                                                </f:facet>                                 
+                                                <h:outputText id="modeloCell" value="#{detalle.idBien.modelo}"/>
+                                            </ice:column>
+
+                                            <ice:column id="colSerie">
+                                                <f:facet name="header">
+                                                    <ice:columnGroup>
+                                                        <ice:headerRow>
+                                                            <ice:outputText value="#{label['sigebi.label.vista.listarBienSincronizar.estado']}"/>
+                                                        </ice:headerRow>
+                                                    </ice:columnGroup>
+                                                </f:facet>    
+                                                <h:outputText id="modeloCell" value="#{detalle.idBien.serie}"/>                            
+                                            </ice:column>
+
+                                            <!-- Columna de ACCIONES Aceptar / Rechazar -->
+                                            <ice:column id="colAcciones">
+                                                <f:facet name="header">
+                                                    <ice:columnGroup>
+                                                        <ice:headerRow>
+                                                            <ice:outputText value="#{label['sigebi.label.vista.listarBienSincronizar.acciones']}"/>
+                                                        </ice:headerRow>
+                                                    </ice:columnGroup>
+                                                </f:facet>                                
+
+                                                <h:outputText id="estadoCell" 
+                                                              rendered="#{!detalle.marcado}"
+                                                              value="#{detalle.idEstado.nombre}"/>
+                                                
+                                                <ice:commandButton id="btnAprobar"
+                                                                   style="margin-top:2%" 
+                                                                   styleClass="btnAprobar" 
+                                                                   partialSubmit="true" 
+                                                                   rendered="#{detalle.marcado}"
+                                                                   actionListener="#{trasladoController.aprobarBien}">
+                                                    <f:attribute id="bienSeleccionado" name="bienSeleccionado"  value="#{detalle}"/> 
+                                                </ice:commandButton>    
+
+
+                                                <ice:commandButton id="btnRechazar"
+                                                                   style="margin-top:2%" 
+                                                                   styleClass="btnRechazar" 
+                                                                   
+                                                                   partialSubmit="true" 
+                                                                   rendered="#{detalle.marcado}"
+                                                                   actionListener="#{trasladoController.rechazarBien}">
+                                                    <f:attribute id="bienSeleccionadoRech" name="bienSeleccionado"  value="#{detalle}"/> 
+                                                </ice:commandButton>   
+
+                                            </ice:column>
+
+
+                                        </ice:dataTable>
+
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>  
+
+
+                        <!-- Acciones  -->
+                        <div class="row" style="margin-bottom: 1rem">
+
+
+                            <div class="col-sm-8">
+                                <h4>
+                                    <ice:outputFormat
+                                        value="#{label['sigebi.Modal.General.Label.Acciones']}"
+                                        />
+                                </h4>
+                            </div>
+
+                            <div class="col-sm-2">
+
+                                <ice:commandButton id="btnAnularTraslado"
+                                                   partialSubmit="true"
+                                                   style="margin: 0.5rem"
+                                                   action="#{trasladoController.anularTraslado}"
+                                                   styleClass="boton"  
+                                                   rendered="#{trasladoController.permiteAnular}"
+                                                   value="#{label['sigebi.Traslado.Btn.Anular']}" />
+
+                            </div>
+                            <div class="col-sm-2">
+                                
+                                <ice:commandButton id="btnSolicitarCorreccion"
+                                                   partialSubmit="true"
+                                                   style="margin: 0.5rem"
+                                                   action="#{trasladoController.solicitarCorreccion}"
+                                                   styleClass="boton"  
+                                                   rendered="#{trasladoController.permiteRecibir}"
+                                                   value="#{label['sigebi.Traslado.Btn.Correciones']}" />
+                                
+                                <ice:commandButton id="btnEnviarTraslado"
+                                                   partialSubmit="true"
+                                                   style="margin: 0.5rem"
+                                                   action="#{trasladoController.enviarHaciaDestino}"
+                                                   styleClass="boton"  
+                                                   rendered="#{trasladoController.permiteEdicion}"
+                                                   value="#{label['sigebi.Traslado.Btn.Enviar']}" />
+
+                            </div>
+                        </div>
+
+                    </ice:panelGroup>
+
+
+                </div>
+            </div>
+
+
+            <!-- Modal Agregar Observacion -->
+            <ice:panelPopup
+                modal="true" 
+                visible="#{trasladoController.panelNotificacionVisible}"
+                rendered="true" 
+                styleClass="popup"
+                >
+
+                <f:facet name="header">
+                    <ice:outputText styleClass="flotar_izquierda titulo_popup" value="#{label['sigebi.Justificacion.Tit.Titulo']}"/>                
+                </f:facet> 
+
+                <f:facet name="body">
+                    <fieldset class="panel_Container" >
+
+                        <div class="container" style="margin-top: 30px;">
+
+                            <div class="row">
+                                <div class="col-md-8">
+                                    <div class="form-group"> 
+                                        <ice:outputText 
+                                            value="#{label['sigebi.Justificacion.Label.Justificacion']}"
+                                            />
+                                        <ice:inputText id="txtJustificTitulo" 
+                                                       styleClass="form-control" 
+                                                       value="#{trasladoController.justificacion.encabezado}"
+                                                       readonly="true"
+                                                       partialSubmit="false">
+                                        </ice:inputText>
+
+
+                                    </div>                                             
+                                </div>     
+
+                                <div class="col-md-4">
+                                    <div class="form-group"> 
+                                        <ice:outputText 
+                                            value="#{label['sigebi.Justificacion.Label.Fecha']}"
+                                            />
+                                        <ice:inputText id="txtJustificFecha" 
+                                                       styleClass="form-control" 
+                                                       value="#{trasladoController.justificacion.fecha}"
+                                                       readonly="true"
+                                                       partialSubmit="false">
+                                        </ice:inputText>
+
+
+                                    </div>                                             
+                                </div>  
+
+                            </div>
+
+
+                            <div class="row">
+                                <div class="col-md-8">
+                                    <div class="form-group"> 
+                                        <ice:outputText 
+                                            value="#{label['sigebi.Justificacion.Label.Usuario']}"
+                                            />
+                                        <ice:inputText id="txtJustificUsuario" 
+                                                       styleClass="form-control" 
+                                                       value="#{trasladoController.justificacion.usuarioRegistra.nombre_completo}"
+                                                       readonly="true"
+                                                       partialSubmit="false">
+                                        </ice:inputText>
+
+
+                                    </div>                                             
+                                </div>     
+
+                                <div class="col-md-4">
+                                    <div class="form-group"> 
+                                        <ice:outputText 
+                                            value="#{label['sigebi.Justificacion.Label.Bien']}"
+                                            />
+                                        <ice:inputText id="txtJustificBien" 
+                                                       styleClass="form-control" 
+                                                       value="#{trasladoController.bienDetalle.idBien.idPlaca.placa}"
+                                                       readonly="true"
+                                                       partialSubmit="false">
+                                        </ice:inputText>
+
+
+                                    </div>                                             
+                                </div>  
+
+                            </div>
+
+
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group"> 
+                                        <ice:outputText 
+                                            value="#{label['sigebi.Justificacion.Label.Observaciones']}"
+                                            />
+                                        <ice:inputTextarea  id="observacionCliente" 
+                                                            style="width: 430px; resize: none" 
+                                                            cols="2" 
+                                                            value="#{trasladoController.justificacion.observaciones}"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <br />
+                            <div class="row">
+                                <div class="col-md-6 col-sm-6 align-content-center-div">
+
+                                    <ice:commandButton id="btnCancelarObservacion"
+                                                       partialSubmit="true"
+                                                       action="#{trasladoController.cancelarJustificacion}"
+                                                       styleClass="boton"  
+                                                       value="#{label['label.cancelar']}" />
+                                </div>
+                                <div class="col-md-6 col-sm-6 align-content-center-div">
+
+                                    <ice:commandButton id="btnConfirmarObservacion"
+                                                       partialSubmit="true"
+                                                       action="#{trasladoController.agergarJustificacion}"
+                                                       styleClass="boton"  
+                                                       value="#{label['label.aceptar']}" />
+                                </div>
+                            </div>
+
+                        </div>
+                        <br />
+                        <br />
+
+                    </fieldset>       
+                </f:facet>  
+
+            </ice:panelPopup>
+
+
+
+            <!-- Modal Confirmacion -->
+            <ice:panelPopup
+                modal="true" 
+                visible="#{trasladoController.panelConfirmacionVisible}"
+                rendered="true" 
+                styleClass="popup"
+                >
+
+                <f:facet name="header">
+                    <ice:outputText styleClass="flotar_izquierda titulo_popup" value="#{label['sigebi.Traslado.Mns..Confirmacion.Titulo']}"/>                
+                </f:facet> 
+
+                <f:facet name="body">
+                    <fieldset class="panel_Container" >
+
+                        <div class="container" style="margin: 5px 20px;">
+
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <ice:outputText styleClass="flotar_izquierda titulo_popup" value="#{trasladoController.mensajeConfirmacion}"/>
+                                </div>
+                            </div>
+                            <br />
+                            <div class="row">
+                                <div class="col-sm-6 align-content-center-div">
+
+                                    <ice:commandButton id="btnCancelarConfirmacoin"
+                                                       partialSubmit="true"
+                                                       action="#{trasladoController.cerrarConfirmacion}"
+                                                       styleClass="boton"  
+                                                       value="#{label['label.cancelar']}" />
+                                </div>
+                                <div class="col-md-6 col-sm-6 align-content-center-div">
+
+                                    <ice:commandButton id="btnConfirmarConfirmacion"
+                                                       partialSubmit="true"
+                                                       action="#{trasladoController.confirmacionAceptar}"
+                                                       styleClass="boton"  
+                                                       value="#{label['label.aceptar']}" />
+                                </div>
+                            </div>
+
+                        </div>
+                        <br />
+                        <br />
+
+                    </fieldset>       
+                </f:facet>  
+
+            </ice:panelPopup>
+
+
+        </div>
+
+
+
+
+
+    </div>
+
+
+
+
+
+    <!-- Modal Listado Unidades Ejecutoras -->
+    <ice:panelPopup
+        modal="true" visible="#{trasladoController.unidadesVisible}"
+        rendered="true" styleClass="popup"
+        >
+
+        <f:facet name="header">
+            <ice:outputText styleClass="flotar_izquierda titulo_popup" value="#{label['sigebi.Modal.UnidadesEjecut.Label.ListarUnidades']}"/>
+        </f:facet>
+        <br/>
+        <f:facet name="body">
+            <fieldset class="panel_Container" >
+                <br></br>
+
+
+                <!-- Unidades Ejecutoras -->
+
+                <ice:dataTable id="unidadesTabla"
+                               value="#{trasladoController.unidadesEjecutoras}"
+                               var="unidad"
+                               paginator="true"
+                               paginatorPosition="bottom"
+                               rows="20">
+
+                    <ice:column id="colIdentificacion" >
+                        <f:facet name="header">
+                            <ice:columnGroup>
+                                <ice:headerRow>
+                                    <ice:outputText value="#{label['sigebi.Modal.General.Label.Identificacion']}"  />
+                                </ice:headerRow>
+                                <ice:headerRow>
+                                    <ice:inputText id="filtroIdentificacionUnidad"
+                                                   style="width: 130px;"
+                                                   value="#{trasladoController.fltIdUnidad}"                                   
+                                                   partialSubmit="true"
+                                                   valueChangeListener="#{trasladoController.cambioFiltroUnidad}"/>
+                                </ice:headerRow>
+                            </ice:columnGroup>
+                        </f:facet>
+                        <h:outputText id="idUnidad" value="#{unidad.idUnidadEjec}"/>
+                    </ice:column>
+
+                    <ice:column id="colNombre" >
+                        <f:facet name="header">
+                            <ice:columnGroup>
+                                <ice:headerRow>
+                                    <ice:outputText value="#{label['sigebi.Modal.General.Label.Nombre']}"  />
+                                </ice:headerRow>
+                                <ice:headerRow>
+                                    <ice:inputText id="filtroNombreUnidad"
+                                                   style="width: 130px;"
+                                                   value="#{trasladoController.fltNombreUnidad}"                                   
+                                                   partialSubmit="true"
+                                                   valueChangeListener="#{trasladoController.cambioFiltroUnidad}"/>
+                                </ice:headerRow>
+                            </ice:columnGroup>
+                        </f:facet>
+                        <h:outputText id="nombreUnidad" value="#{unidad.dscUnidadEjecutora}"/>
+                    </ice:column>
+
+
+
+                    <ice:column style="text-align: center;">
+
+                        <f:facet name="header">
+                            <ice:outputText value="#{label['sigebi.Modal.General.Label.Acciones']}"  />
+                        </f:facet>
+                        <ice:commandButton id="botonAbrirProveedor"
+                                           style="float:right;margin-top:2%" 
+                                           styleClass="boton" 
+                                           partialSubmit="true" 
+                                           actionListener="#{trasladoController.selecUnidad}"
+                                           value="#{label['sigebi.Modal.General.Label.Seleccionar']}"  >
+                            <f:attribute id="unidadSeleccionado" 
+                                         name="unidadSeleccionada"  
+                                         value="#{unidad}"/>
+                        </ice:commandButton>
+
+                    </ice:column>
+
+
+                </ice:dataTable>
+
+                <br/>
+                <br/>
+                <span class="alineado_derecha">
+                    <ice:commandButton id="btnCerrarUnidadesEjec"
+                                       styleClass="boton" 
+                                       partialSubmit="true" 
+                                       actionListener="#{trasladoController.cerrarUnidades}"
+                                       value="#{label['sigebi.Modal.Ubicaciones.btn.Cerrar']}">
+                    </ice:commandButton>
+                </span>
+                <br/><br/>
+            </fieldset>       
+        </f:facet>
+
+    </ice:panelPopup>
+
+
+
+    <!-- Modal Ubicaciones -->
+    <ice:panelPopup
+        modal="true" 
+        visible="#{trasladoController.ubicacionVisible}"
+        rendered="true" 
+        styleClass="popup"
+        >
+
+        <f:facet name="header">
+            <ice:outputFormat 
+                value="#{label['sigebi.Modal.Ubicaciones.Titulo']}"
+                />      
+        </f:facet> 
+
+        <f:facet name="body">
+            <fieldset class="panel_Container" >
+
+                <div class="container" style="margin-top: 30px;">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <h4> <ice:outputFormat 
+                                    value="#{label['sigebi.Modal.Ubicaciones.Titulo']}"
+                                    />
+                            </h4>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-2"></div>
+                        <div class="col-md-10">
+
+                            <div class="form-group">
+                                <ice:outputText
+                                    value="#{label['sigebi.Modal.Ubicaciones.Label.Ubicacion']}"
+                                    />
+                                <ice:selectOneMenu id="selUbicacion"
+                                                   styleClass="form-control"
+                                                   value="#{trasladoController.selectUbicacion}" 
+                                                   partialSubmit="true"
+                                                   valueChangeListener="#{trasladoController.ubicacionSelectCambio}"
+                                                   >
+                                    <f:selectItem itemLabel="Seleccione una Ubicación" itemValue="#{trasladoController.selectDefault}"/>
+
+                                    <f:selectItems id="optSelUbicacion" value="#{trasladoController.ubicacionOptions}"/>
+
+                                </ice:selectOneMenu>
+                            </div>
+
+                        </div>
+
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12 align-content-center">
+
+                            <span class="alineado_derecha">
+                                <ice:commandButton id="btnCerrarUbicacion"
+                                                   styleClass="boton" 
+                                                   partialSubmit="true" 
+                                                   actionListener="#{trasladoController.cerrarUbicacion}"
+                                                   value="#{label['sigebi.Modal.Ubicaciones.btn.Cerrar']}">
+                                </ice:commandButton>
+                            </span>
+
+                        </div>
+                    </div>
+
+                </div>
+
+                <br />
+                <br />
+
+            </fieldset>       
+        </f:facet>  
+
+    </ice:panelPopup>
+
+
+    <!-- Agrega el model para buscar Bienes -->
+    <ui:insert name="modalBuscarBienes">
+        <ui:include src="../plantillas/buscarBienesGeneral.xhtml" />
+    </ui:insert>
+
+
+
+</ice:form>
+
+
+

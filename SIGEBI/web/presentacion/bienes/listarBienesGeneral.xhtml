@@ -1,0 +1,144 @@
+<!-- Modal Agregar Observacion -->
+<ice:panelPopup modal="true" visible="#{controllerListarBien.panelListado}" rendered="true" styleClass="popup" >
+    <f:facet name="header">
+        <ice:outputText styleClass="flotar_izquierda titulo_popup" value="#{label['sigebi.label.vista.listarBienesGeneral.titulo']}"/>
+    </f:facet> 
+
+    <f:facet name="body">
+        <fieldset class="panel_Container" >
+            <div class="container" style="margin-top: 30px;">
+                
+                <div class="row">
+                    <div class="col-sm-12">
+                        <ice:outputFormat value="#{label['label.generico.paginacion.encabezado']}">
+                            <f:param value="#{controllerlistarBienesGeneral.cantidadRegistros}"/>
+                            <f:param value="#{controllerlistarBienesGeneral.cantidadRegistrosMostrados}"/>
+                            <f:param value="#{controllerlistarBienesGeneral.primerRegistro}"/>
+                            <f:param value="#{controllerlistarBienesGeneral.ultimoRegistro}"/>
+                            <f:param value="#{controllerlistarBienesGeneral.paginaActual}"/>
+                            <f:param value="#{controllerlistarBienesGeneral.cantidadPaginas}"/>
+                        </ice:outputFormat>
+                        <div>
+                            <table>
+                                <tr>
+                                    <td style="padding-right: 5px;">
+                                        <ice:outputText value="#{label['label.paginacion.cantidad.pagina']} "/>
+                                    </td>
+                                    <td>
+
+                                        <ice:selectOneMenu id="cantRegistroPorPagina"
+                                               value="#{controllerlistarBienesGeneral.cantRegistroPorPagina}" 
+                                               valueChangeListener="#{controllerlistarBienesGeneral.cambioRegistrosPorPagina}"
+                                               partialSubmit="true">
+                                                <f:selectItems id="item_pa" value="#{controllerlistarBienesGeneral.listaRegistrosPagina}"/>
+                                        </ice:selectOneMenu>    
+
+                                    </td>
+                                </tr>
+                            </table>                        
+                        </div>                    
+                        <div>
+                            <ice:commandButton image="./imagenes/botones/first.png" partialSubmit="true" actionListener="#{controllerlistarBienesGeneral.primero}" rendered="#{controllerlistarBienesGeneral.cantidadPaginas > 1}"/>
+                            <ice:commandButton image="./imagenes/botones/previos.png" partialSubmit="true" actionListener="#{controllerlistarBienesGeneral.anterior}" rendered="#{controllerlistarBienesGeneral.cantidadPaginas > 1}"/>
+                            <ui:repeat value="#{controllerlistarBienesGeneral.arregloPaginas}" var="pagina">
+                                <ice:commandLink value="#{pagina}" partialSubmit="true" actionListener="#{controllerlistarBienesGeneral.irPagina}">
+                                    <f:param name="numPag" value="#{pagina}"/>
+                                </ice:commandLink>
+                            </ui:repeat>            
+                            <ice:commandButton image="./imagenes/botones/next.png" partialSubmit="true" actionListener="#{controllerlistarBienesGeneral.siguiente}" rendered="#{controllerlistarBienesGeneral.cantidadPaginas > 1}"/>
+                            <ice:commandButton image="./imagenes/botones/last.png" partialSubmit="true" actionListener="#{controllerlistarBienesGeneral.ultimo}" rendered="#{controllerlistarBienesGeneral.cantidadPaginas > 1}"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12">                    
+                        <div>
+                            <ice:dataTable id="listadoBienes" value="#{controllerlistarBienesGeneral.bienes}" var="bien" paginator="true" paginatorPosition="bottom" rows="10">
+                                <f:facet name="header">
+                                    <ice:columnGroup>
+                                        <ice:headerRow>
+                                            <ice:column id="idBien" rowspan="2" style="vertical-align:top;">
+                                                <ice:outputText value="#{label['sigebi.label.listarBienesGeneral.id']} "/>
+                                                <ice:inputText id="filtroId" value="#{controllerlistarBienesGeneral.command.fltId}" validator="#{controllerlistarBienesGeneral.validarFiltroId}"valueChangeListener="#{controllerlistarBienesGeneral.cambioFiltro}"/>
+                                            </ice:column>
+
+                                            <ice:column id="cantidad" rowspan="2" style="vertical-align:top;">                                 
+                                                <ice:outputText value="#{label['sigebi.label.listarBienesGeneral.cantidad']} "/>
+                                                <ice:inputText id="filtroCantidad"  value="#{controllerlistarBienesGeneral.command.fltCantidad}" partialSubmit="true" valueChangeListener="#{controllerlistarBienesGeneral.cambioFiltro}"/>
+                                            </ice:column>
+
+                                            <ice:column id="tipo" rowspan="2" style="vertical-align:top;">
+                                                <ice:outputText value="#{label['sigebi.label.listarBienesGeneral.tipo']}"/>
+                                                <ice:selectOneMenu  id="filtroTipo"
+                                                                    valueChangeListener="#{controllerlistarBienesGeneral.cambioFiltro}"
+                                                                    value="#{controllerlistarBienesGeneral.command.fltTipo}"
+                                                                    partialSubmit="true">
+                                                    <f:selectItem itemLabel="N/A" itemValue="-1"/>
+                                                    <f:selectItems id="slcEstadoItem" value="#{controllerlistarBienesGeneral.itemsTipo}"/>
+                                                </ice:selectOneMenu>
+                                            </ice:column>
+
+                                            <ice:column id="fecha" >
+                                                <ice:outputText value="#{label['sigebi.label.listarBienesGeneral.fechaAdquisicion']} "/>
+
+                                                <ice:selectInputDate 
+                                                    highlightClass="dateHighlightGray" 
+                                                    highlightUnit="DAY_OF_WEEK" 
+                                                    highlightValue="1"
+                                                    partialSubmit="false" 
+                                                    renderAsPopup="true" 
+                                                    renderMonthAsDropdown="true" 
+                                                    renderYearAsDropdown="true"
+                                                    validator="#{controllerlistarBienesGeneral.validarFiltroFechaAdquisicion}"
+                                                    value="#{controllerlistarBienesGeneral.command.fltFechaAdquisicion}" 
+                                                    valueChangeListener="#{controllerlistarBienesGeneral.cambioFiltro}" >
+                                                    <f:convertDateTime pattern="#{controllerlistarBienesGeneral.command.datePattern}"  timeZone="#{controllerlistarBienesGeneral.command.timeZone}" />
+                                                </ice:selectInputDate>
+                                            </ice:column>
+
+                                            <ice:column id="estado" rowspan="2" style="vertical-align:top;">                                 
+                                                <ice:outputText value="#{label['sigebi.label.notificaciones.estado']}"/>
+                                                <ice:selectOneMenu  id="filtroEstado"
+                                                                    valueChangeListener="#{controllerlistarBienesGeneral.cambioFiltro}"
+                                                                    value="#{controllerlistarBienesGeneral.command.fltEstado}"
+                                                                    partialSubmit="true">
+                                                    <f:selectItem itemLabel="N/A" itemValue="-1"/>
+                                                    <f:selectItems id="slcEstadoItem" value="#{controllerlistarBienesGeneral.itemsEstado}"/>
+                                                </ice:selectOneMenu>
+                                            </ice:column>
+                                        </ice:headerRow>
+                                    </ice:columnGroup>
+                                </f:facet>
+                                <ice:column>
+                                    <h:outputText id="id" value="#{bien.idBien}"/>
+                                </ice:column>
+                                <ice:column>
+                                    <h:outputText id="cantidadCell" value="#{bien.cantidad}"/>
+                                </ice:column>
+                                <ice:column>
+                                    <h:outputText id="tipoCell" value="#{bien.tipo.nombre}"/>
+                                </ice:column>
+                                <ice:column>
+                                    <h:outputText id="fechaAdquisicionCell" value="#{bien.fechaAdquisicion}" >
+                                        <f:convertDateTime type="date" pattern="#{controllerlistarBienesGeneral.command.datePattern}" />
+                                    </h:outputText>
+                                </ice:column>
+                                <ice:column>
+                                    <h:outputText id="estadoCell" value="#{bien.estado.nombre}"/>
+                                </ice:column>
+                            </ice:dataTable>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class='col-sm-12'>
+                       <ice:commandButton id="botonAceptar" style="float:right" styleClass="boton" partialSubmit="true" actionListener="#{controllerlistarBienesGeneral.aceptar}" value="Aceptar" >
+                        </ice:commandButton>
+
+                    </div>
+                </div>
+            </div>
+        </fieldset>       
+    </f:facet>  
+</ice:panelPopup>

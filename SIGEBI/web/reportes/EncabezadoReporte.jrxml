@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="EncabezadoReporte" language="groovy" pageWidth="612" pageHeight="842" columnWidth="612" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" whenResourceMissingType="Empty">
+	<property name="ireport.zoom" value="0.75"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="pVersionPropuesta" class="java.lang.Integer"/>
+	<parameter name="pNumeroPropuesta" class="java.lang.Integer"/>
+	<parameter name="IMG_DIR" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT PT.DESCRIPCION AS TIPO_PROPUESTA, P.DESCRIPCION AS DESCRIPCION_PROPUESTA , P.Juicio
+FROM SGC_PROPUESTA P, SGC_PROPUESTA_TIPO PT
+WHERE P.NUMERO_PROPUESTA = $P{pNumeroPropuesta}
+AND P.VERSION_PROPUESTA = $P{pVersionPropuesta}
+AND P.ID_PROPUESTA_TIPO = PT.ID_PROPUESTA_TIPO]]>
+	</queryString>
+	<field name="TIPO_PROPUESTA" class="java.lang.String"/>
+	<field name="DESCRIPCION_PROPUESTA" class="java.lang.String"/>
+	<field name="JUICIO" class="java.lang.String"/>
+	<variable name="label" class="java.lang.String">
+		<initialValueExpression><![CDATA["Juicio de la propuesta"]]></initialValueExpression>
+	</variable>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="159" splitType="Stretch">
+			<staticText>
+				<reportElement x="27" y="59" width="555" height="20" forecolor="#000000" backcolor="#FFFFFF"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[SIGECU]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="-1" width="612" height="20" forecolor="#000000" backcolor="#FFFFFF"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[UNIVERSIDAD DE COSTA RICA]]></text>
+			</staticText>
+			<image>
+				<reportElement x="27" y="0" width="84" height="79"/>
+				<imageExpression class="java.lang.String"><![CDATA[$P{IMG_DIR} + "escudoUCR.jpg"]]></imageExpression>
+			</image>
+			<image>
+				<reportElement x="494" y="-1" width="105" height="80"/>
+				<imageExpression class="java.lang.String"><![CDATA[$P{IMG_DIR} + "cea.gif"]]></imageExpression>
+			</image>
+			<textField>
+				<reportElement x="211" y="79" width="93" height="20"/>
+				<textElement>
+					<font fontName="SansSerif" size="12" isBold="false"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Integer"><![CDATA[$P{pNumeroPropuesta}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="304" y="79" width="88" height="20" forecolor="#000000" backcolor="#FFFFFF"/>
+				<textElement textAlignment="Center" verticalAlignment="Top">
+					<font fontName="SansSerif" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Versión:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="392" y="79" width="93" height="20"/>
+				<textElement>
+					<font fontName="SansSerif" size="12"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Integer"><![CDATA[$P{pVersionPropuesta}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="111" y="79" width="100" height="20" forecolor="#000000" backcolor="#FFFFFF"/>
+				<textElement textAlignment="Center" verticalAlignment="Top">
+					<font fontName="SansSerif" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Propuesta:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="27" y="19" width="555" height="20" forecolor="#000000" backcolor="#FFFFFF"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="12"/>
+				</textElement>
+				<text><![CDATA[Vicerrectoría de Docencia]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="27" y="39" width="555" height="20" forecolor="#000000" backcolor="#FFFFFF"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="12"/>
+				</textElement>
+				<text><![CDATA[Centro de Evaluación Académica]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement positionType="Float" x="182" y="99" width="400" height="20" isRemoveLineWhenBlank="true" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
+				<textElement>
+					<font fontName="SansSerif" size="12"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{TIPO_PROPUESTA}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement positionType="Float" x="182" y="119" width="400" height="20" isRemoveLineWhenBlank="true" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
+				<textElement>
+					<font fontName="SansSerif" size="12"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{DESCRIPCION_PROPUESTA}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="27" y="119" width="155" height="20" forecolor="#000000" backcolor="#FFFFFF"/>
+				<textElement textAlignment="Right" verticalAlignment="Top">
+					<font fontName="SansSerif" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Descripción:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="27" y="99" width="155" height="20" forecolor="#000000" backcolor="#FFFFFF"/>
+				<textElement textAlignment="Right" verticalAlignment="Top">
+					<font fontName="SansSerif" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Tipo:]]></text>
+			</staticText>
+			<textField>
+				<reportElement positionType="Float" x="27" y="139" width="162" height="20" isRemoveLineWhenBlank="true" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
+				<textElement textAlignment="Right" verticalAlignment="Top">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[($F{JUICIO} != null ?$V{label}+":   " :"")]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement positionType="Float" x="189" y="139" width="393" height="20" isRemoveLineWhenBlank="true" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA["  "+($F{JUICIO} != null  ? $F{JUICIO} : "")]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+</jasperReport>

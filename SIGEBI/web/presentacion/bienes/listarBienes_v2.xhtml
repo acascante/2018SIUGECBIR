@@ -1,0 +1,341 @@
+<ice:form id="frm_listarBienes" 
+          xmlns:ice="http://www.icesoft.com/icefaces/component"
+          xmlns:h="http://java.sun.com/jsf/html"
+          xmlns:f="http://java.sun.com/jsf/core"
+          xmlns:ui="http://java.sun.com/jsf/facelets"
+          >
+    <div class="contenido-pagina">
+
+        <div class="container">
+            <div class="row">
+                <div class='col-sm-6'>
+                    <h1 style="margin: 0;">                       
+                        <ice:outputFormat value="#{label['sigebi.Bien.Listado.Titulo']}"/>
+                    </h1>
+                </div>
+                <div class="col-sm-6">
+
+                    <ice:commandButton id="botonAbrir"
+                                       style="float: right" 
+                                       styleClass="boton" 
+                                       partialSubmit="true" 
+                                       actionListener="#{controllerBienes.nuevoRegistro}"
+                                       value="Nuevo">
+                        <!--
+                        <f:attribute id="tipoSeleccionado" name="tipoSeleccionado"  value="#{bien}"/>
+                        -->
+                    </ice:commandButton>
+                </div>
+            </div>
+        </div>
+
+        <div class="container" style="overflow: auto; padding-bottom: 20px;">
+
+
+            <div class="row">
+                <div class="col-sm-12"><ice:outputText style="color: red;" value="#{controllerListados.error}"  /></div>
+            </div>
+
+
+            <div class="row">
+
+                <div class="col-sm-12">
+
+                    <ice:dataTable id="carTable"
+                                   value="#{controllerListados.bienes}"
+                                   var="bien"
+                                   paginator="true"
+                                   paginatorPosition="bottom"
+                                   rows="10">
+
+
+                        <ice:column id="idBien" 
+                                    headerText="Identificación" 
+                                    sortBy="#{bien.placa}"
+                                    filterBy="#{bien.placa}" 
+                                    filterMatchMode="contains">
+                            <f:facet name="header">
+                                <ice:outputText value="Identificación"  />
+                            </f:facet>
+                            <f:facet name="footer">
+                                <ice:inputText id="filtroNombre"
+                                               style="width: 130px;"
+                                               value="#{controllerListados.fltIdBien}"                                   
+                                               partialSubmit="true"
+                                               valueChangeListener="#{controllerListados.cambioFiltro}"/>
+                            </f:facet>
+                            <h:outputText id="idBienCell" value="#{bien.placa}"/>
+                        </ice:column>
+
+                        <ice:column id="descripcion" 
+                                    headerText="Descripción" 
+                                    sortBy="#{bien.descripcion}"
+                                    filterBy="#{bien.descripcion}" 
+                                    filterMatchMode="contains">
+
+                            <f:facet name="header">
+                                <ice:outputText value="Descripción"  />
+                            </f:facet>
+                            <f:facet name="footer">
+                                <ice:inputText id="filtroDescripcion"
+                                               style="width: 130px;"
+                                               value="#{controllerListados.fltDescripcion}"                                   
+                                               partialSubmit="true"
+                                               valueChangeListener="#{controllerListados.cambioFiltro}"/>
+                            </f:facet>
+                            <h:outputText id="descripcionCell" value="#{bien.descripcion}"/>
+                        </ice:column>
+
+
+                        <ice:column id="colMarca" 
+                                    headerText="Marca" 
+                                    sortBy=""
+                                    filterBy="" 
+                                    filterMatchMode="contains">
+                            <f:facet name="header">
+                                <ice:outputText value="Marca"  />
+                            </f:facet>
+
+                            <f:facet name="footer">
+                                <ice:inputText id="filtroMarca"
+                                               style="width: 130px;"
+                                               value="#{controllerListados.fltMarca}"                                   
+                                               partialSubmit="true"
+                                               valueChangeListener="#{controllerListados.cambioFiltro}"/>
+                            </f:facet>
+                            <h:outputText id="marcaCell" value="#{bien.marca}"/>
+                        </ice:column>
+
+                        <ice:column id="colModelo" 
+                                    headerText="Modelo" 
+                                    sortBy=""
+                                    filterBy="" 
+                                    filterMatchMode="contains">
+                            <f:facet name="header">
+                                <ice:outputText value="Modelo"  />
+                            </f:facet>
+
+                            <f:facet name="footer">
+                                <ice:inputText id="filtroModelo"
+                                               style="width: 130px;"
+                                               value="#{controllerListados.fltModelo}"                                   
+                                               partialSubmit="true"
+                                               valueChangeListener="#{controllerListados.cambioFiltro}"/>
+                            </f:facet>
+                            <h:outputText id="modeloCell" value="#{bien.modelo}"/>
+                        </ice:column>
+
+                        <ice:column id="colSerie" 
+                                    headerText="Serie" 
+                                    sortBy=""
+                                    filterBy="" 
+                                    filterMatchMode="contains">
+                            <f:facet name="header">
+                                <ice:outputText value="Serie"  />
+                            </f:facet>
+                            <f:facet name="footer">
+                                <ice:inputText id="filtroSerie"
+                                               style="width: 130px;"
+                                               value="#{controllerListados.fltSerie}"                                   
+                                               partialSubmit="true"
+                                               valueChangeListener="#{controllerListados.cambioFiltro}"/>
+                            </f:facet>
+                            <h:outputText id="serieCell" value="#{bien.serie}"/>
+                        </ice:column>
+
+
+                        <ice:column id="colEstado" 
+                                    headerText="Estado" 
+                                    sortBy="#{bien.estado}"
+                                    filterBy="#{bien.estado}" 
+                                    filterMatchMode="contains">
+                            <f:facet name="header">
+                                <ice:outputText value="Estado"  />
+                            </f:facet>
+
+                            <f:facet name="footer">
+                                <ice:selectOneMenu id="filtroCondicionContractual"
+                                                   valueChangeListener="#{controllerListados.cambioFiltro}"
+                                                   value="#{controllerListados.fltEstado}"
+                                                   partialSubmit="true"
+                                                   >
+                                    <f:selectItem itemLabel="N/A" itemValue="-1"/>
+                                    <f:selectItems id="slcGradoAcademicoItem" value="#{controllerListados.estadosOptions}"/>
+                                </ice:selectOneMenu>
+                            </f:facet>
+
+                            <h:outputText id="costoCell" value="#{bien.estado}"/>
+                        </ice:column>
+
+
+                        <ice:column style="text-align: center;"
+                                    >
+                            <ice:commandButton id="botonAbrir"
+                                               style="float:right;margin-top:2%" 
+                                               styleClass="boton" 
+                                               partialSubmit="true"
+                                               visible="false"
+                                               actionListener="#{controllerBienes.abrirDetalle}"
+                                               
+                                               value="Detalle"  >
+                                <f:attribute id="tipoSeleccionado" name="tipoSeleccionado"  value="#{bien}"/>                                
+                            </ice:commandButton>
+                        </ice:column>
+                        
+                        <ice:column style="text-align: center;"
+                                    rendered="false"
+                                    >
+                            <f:facet name="header">
+                                <ice:outputText value="#{label['sigebi.sincronizarBien.Lista.TituloSincronizar']}" 
+                                                style="padding: 0px 10px;"
+                                                />
+                            </f:facet>
+                            
+                            
+                            <ice:selectBooleanCheckbox id="checkSincronizar"
+                                                       rendered="#{bien.idEstado == controllerListados.estadoPendiente}" 
+                                                        partialSubmit="true" 
+                                                        valueChangeListener="#{controllerListados.checkBienPorSincronizar}"
+                                                        value="#{bien.seleccionado}"
+                                                        >
+                                <f:attribute id="bienSeleccionado" name="bienSeleccionado"  value="#{bien}"/>
+                            </ice:selectBooleanCheckbox>
+                            
+                            
+                            <f:facet name="footer">
+                                <ice:commandButton id="btnSincronizarTodo"
+                                               style="float:right;margin-top:2%"    
+                                               actionListener="#{controllerListados.sincronizarTodo}"    
+                                               styleClass="boton" 
+                                               rendered="#{controllerListados.sincronizar}"
+                                               partialSubmit="true"
+                                               value="Sincronizar"  >                             
+                                </ice:commandButton>
+                            </f:facet>
+                            
+                        </ice:column>
+                        
+                        <ice:column style="text-align: center;"
+                                    rendered="false"
+                                    >
+                            <ice:commandButton id="btnSincronizar"
+                                               style="float:right;margin-top:2%" 
+                                               rendered="#{bien.idEstado == controllerListados.estadoPendiente}"                                                styleClass="boton" 
+                                               partialSubmit="true"
+                                               actionListener="#{controllerListados.sincronizarBien}"  
+                                               value="Sincronizar"  >    
+                                <f:attribute id="bienSincronizar" name="bienSincronizar"  value="#{bien}"/>                         
+                            </ice:commandButton>
+                        </ice:column>
+                        
+
+                    </ice:dataTable>
+
+                </div>
+
+            </div>
+            
+            <!--
+            <div class="row">
+                <div class="col-sm-1">
+                    
+                    <ice:commandButton id="boton1"
+                                       style="float: left" 
+                                       styleClass="boton" 
+                                       partialSubmit="true" 
+                                       actionListener="#{controllerListados.prueba1}"
+                                       value="Pruebas"  >
+                    </ice:commandButton>
+                </div>
+            </div>
+            -->
+            <div class="row">
+
+                <div class='col-sm-1'>
+
+                </div>
+                <div class='col-sm-2'>
+                    <ice:outputLabel id="lblPagina" value="Página "></ice:outputLabel>
+                    <ice:outputLabel id="lblPaginaCurrent" value="#{controllerListados.paginaActual}"></ice:outputLabel>
+                    <ice:outputLabel id="lblDe" value=" de  "></ice:outputLabel>
+                    <ice:outputLabel id="lblCantPaginas" value="#{controllerListados.canPaginas} "></ice:outputLabel>
+                </div>
+
+                <div class='col-sm-1'>
+                            <ice:commandButton id="btn_PrimPag"
+                                               style="float: left; margin:1%" 
+                                               styleClass="boton" 
+                                                partialSubmit="true" 
+                                               disabled="#{controllerListados.esPrimeraPagina}"
+                                               actionListener="#{controllerListados.paginaPrimera}"
+                                               value="Primera"  >
+                            </ice:commandButton>
+                </div>
+                <div class='col-sm-1'>
+                            <ice:commandButton id="btn_PagAnterior"
+                                               style="float: left; margin:1%" 
+                                               styleClass="boton" 
+                                                partialSubmit="true" 
+                                               disabled="#{controllerListados.esPrimeraPagina}"
+                                               actionListener="#{controllerListados.paginaAnterior}"
+                                               value="Ant"  >
+                            </ice:commandButton>
+                </div>
+                <div class='col-sm-1' style="text-align: center">
+                    <ice:outputLabel id="lblPaginaActual"
+                                               style="margin-left: auto; margin-right: auto" 
+                                               value="#{controllerListados.paginaActual}"  >
+                            </ice:outputLabel>
+                </div>
+                <div class='col-sm-1'>
+                            <ice:commandButton id="btn_Sig"
+                                               style="float: left; margin:1%" 
+                                               styleClass="boton" 
+                                                partialSubmit="true" 
+                                               disabled="#{controllerListados.esUltimaPagina}"
+                                               actionListener="#{controllerListados.paginaSiguiente}"
+                                               value="Sig"  >
+                            </ice:commandButton>
+                </div>
+                <div class='col-sm-1'>
+                            <ice:commandButton id="btn_Ultima"
+                                               style="float: left; margin:1%" 
+                                               styleClass="boton" 
+                                                partialSubmit="true" 
+                                               disabled="#{controllerListados.esUltimaPagina}"
+                                               actionListener="#{controllerListados.paginaUltima}"
+                                               value="Ultima"  >
+                            </ice:commandButton>
+                </div>
+                <div class='col-sm-1'>
+                    <ice:outputLabel value="Registros: "/>
+                </div>
+                <div class='col-sm-2'>
+                        <ice:selectOneMenu id="selCantRegistros"
+                                           styleClass="form-control"
+                                           value="#{controllerListados.selCantRegistros}" 
+                                           valueChangeListener="#{controllerListados.cambioCantRegistros}"
+                                           partialSubmit="true"
+                                           >
+                            <f:selectItem itemLabel="5" itemValue="5"/>
+                            <f:selectItem itemLabel="10" itemValue="10"/>
+                            <f:selectItem itemLabel="15" itemValue="15"/>
+                            <f:selectItem itemLabel="25" itemValue="25"/>
+                        </ice:selectOneMenu>
+                </div>
+
+
+            </div>
+
+            
+            
+            
+            
+        </div>
+
+
+    </div>
+
+
+</ice:form>
+

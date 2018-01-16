@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-configuration PUBLIC "-//Hibernate/Hibernate Configuration DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd">
+<hibernate-configuration>
+  <session-factory>
+    <!--Mapeo de las entidades de seguridad -->
+    <property name="hibernate.dialect">org.hibernate.dialect.Oracle10gDialect</property>
+    <mapping class="cr.ac.ucr.framework.seguridad.entidades.SegElemento"/>
+    <mapping class="cr.ac.ucr.framework.seguridad.entidades.SegEmpresa"/>
+    <mapping class="cr.ac.ucr.framework.seguridad.entidades.SegModulo"/>
+    <mapping class="cr.ac.ucr.framework.seguridad.entidades.SegPerfil"/>
+    <mapping class="cr.ac.ucr.framework.seguridad.entidades.SegSistema"/>
+    <mapping class="cr.ac.ucr.framework.seguridad.entidades.SegTipoElemento"/>
+    <mapping class="cr.ac.ucr.framework.seguridad.entidades.SegTipoUnidad"/>
+    <mapping class="cr.ac.ucr.framework.seguridad.entidades.SegUnidadEjecutora"/>
+    <mapping class="cr.ac.ucr.framework.seguridad.entidades.SegUnidadUsuario"/>
+    <mapping class="cr.ac.ucr.framework.seguridad.entidades.SegUsuario"/>
+    
+    <mapping class="cr.ac.ucr.sigebi.domain.Accesorio"/>
+    <mapping class="cr.ac.ucr.sigebi.domain.Acta"/>
+    <mapping class="cr.ac.ucr.sigebi.domain.ActaDetalle"/>
+    <mapping class="cr.ac.ucr.sigebi.domain.Autorizacion"/>
+    <mapping class="cr.ac.ucr.sigebi.domain.AutorizacionRol"/>
+    <mapping class="cr.ac.ucr.sigebi.domain.AutorizacionRolPersona"/>
+    <mapping class="cr.ac.ucr.sigebi.domain.Bien"/>
+    <mapping class="cr.ac.ucr.sigebi.domain.Clasificacion"/>
+    <mapping class="cr.ac.ucr.sigebi.domain.Documento"/>
+    <mapping class="cr.ac.ucr.sigebi.domain.DocumentoAutorizacion"/>
+    <mapping class="cr.ac.ucr.sigebi.domain.Estado"/>
+    <mapping class="cr.ac.ucr.sigebi.domain.Exclusion"/>
+    <mapping class="cr.ac.ucr.sigebi.domain.ExclusionDetalle"/>
+    <mapping class="cr.ac.ucr.sigebi.domain.Identificacion"/>
+    <mapping class="cr.ac.ucr.sigebi.domain.InformeTecnico"/>
+    <mapping class="cr.ac.ucr.sigebi.domain.Moneda"/>    
+    <mapping class="cr.ac.ucr.sigebi.domain.Notificacion"/>
+    <mapping class="cr.ac.ucr.sigebi.domain.Proveedor"/>
+    <mapping class="cr.ac.ucr.sigebi.domain.Rol"/>
+    <mapping class="cr.ac.ucr.sigebi.domain.Solicitud"/>
+    <mapping class="cr.ac.ucr.sigebi.domain.SubCategoria"/>
+    <mapping class="cr.ac.ucr.sigebi.domain.SubClasificacion"/>
+    <mapping class="cr.ac.ucr.sigebi.domain.Tipo"/>
+    <mapping class="cr.ac.ucr.sigebi.domain.Ubicacion"/>
+    <mapping class="cr.ac.ucr.sigebi.domain.UnidadEjecutora"/>
+    <mapping class="cr.ac.ucr.sigebi.domain.Usuario"/>
+    
+    <mapping class="cr.ac.ucr.sigebi.entities.AccesoriosEntity"/>
+    <mapping class="cr.ac.ucr.sigebi.entities.ActaDetalleEntity"/>
+    <mapping class="cr.ac.ucr.sigebi.entities.ActaEntity"/>
+    <mapping class="cr.ac.ucr.sigebi.entities.AdjuntoEntity"/>
+    <mapping class="cr.ac.ucr.sigebi.entities.AdjuntoBienEntity"/>
+    <mapping class="cr.ac.ucr.sigebi.entities.BienEntity"/>
+    <mapping class="cr.ac.ucr.sigebi.entities.CategEntity"/>
+    <mapping class="cr.ac.ucr.sigebi.entities.ClasificacionEntity"/>
+    <mapping class="cr.ac.ucr.sigebi.entities.DatoBienEntity"/>
+    <mapping class="cr.ac.ucr.sigebi.entities.DocumentoEntity"/>
+    <mapping class="cr.ac.ucr.sigebi.entities.DocumentoRolEntity"/>
+    <mapping class="cr.ac.ucr.sigebi.entities.DocumentoRolEstadoEntity"/>
+    <mapping class="cr.ac.ucr.sigebi.entities.DocumentoRolPersonaEntity"/>
+    <mapping class="cr.ac.ucr.sigebi.entities.EstadoEntity"/>
+    <mapping class="cr.ac.ucr.sigebi.entities.ExclusionDetalleEntity"/>
+    <mapping class="cr.ac.ucr.sigebi.entities.ExclusionEntity"/>
+    <mapping class="cr.ac.ucr.sigebi.entities.InformeTecnicoEntity"/>
+    <mapping class="cr.ac.ucr.sigebi.entities.LoteEntity"/>
+    <mapping class="cr.ac.ucr.sigebi.entities.MonedaEntity"/>
+    <mapping class="cr.ac.ucr.sigebi.entities.NotaEntity"/>
+    <mapping class="cr.ac.ucr.sigebi.entities.PersonaEntity"/>
+    <mapping class="cr.ac.ucr.sigebi.entities.PlacasEntity"/>
+    <mapping class="cr.ac.ucr.sigebi.entities.ProveedorEntity"/>
+    <mapping class="cr.ac.ucr.sigebi.entities.RegistroMovimientoEntity"/>
+    <mapping class="cr.ac.ucr.sigebi.entities.RolEntity"/>
+    <mapping class="cr.ac.ucr.sigebi.entities.SubClasificacionEntity"/>
+    <mapping class="cr.ac.ucr.sigebi.entities.SubCategoriaEntity"/>
+    <mapping class="cr.ac.ucr.sigebi.entities.TipoEntity"/>
+    <mapping class="cr.ac.ucr.sigebi.entities.UbicacionBien"/>
+    <mapping class="cr.ac.ucr.sigebi.entities.UbicacionEntity"/>
+    <mapping class="cr.ac.ucr.sigebi.entities.ViewBienEntity"/>
+    <mapping class="cr.ac.ucr.sigebi.entities.SincronizarEntity"/>
+    <mapping class="cr.ac.ucr.sigebi.entities.ViewDocumAprobEntity"/>
+    <mapping class="cr.ac.ucr.sigebi.entities.TrasladoEntity"/>
+    <mapping class="cr.ac.ucr.sigebi.entities.UnidadEjecutoraEntity"/>
+    <mapping class="cr.ac.ucr.sigebi.entities.UsuarioEntity"/>
+    <mapping class="cr.ac.ucr.sigebi.entities.TrasladoDetalleEntity"/>
+    <mapping class="cr.ac.ucr.sigebi.entities.JustificacionEntity"/>
+    
+  </session-factory>
+</hibernate-configuration>

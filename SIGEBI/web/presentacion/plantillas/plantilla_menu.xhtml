@@ -1,0 +1,45 @@
+<ice:form xmlns:ice="http://www.icesoft.com/icefaces/component" >
+    <script type="text/javascript">
+        jQuery.noConflict();
+        jQuery(document).ready(function () {
+        });
+
+        function llamar(valida_envio) {
+            if (valida_envio == true) {
+                jQuery("#panel_menu_principal").slideToggle("slow");
+                jQuery(this).toggleClass("active");
+                jQuery("#panel_menu_formulacion").slideToggle("slow");
+                jQuery(this).toggleClass("active");
+                return false;
+            }
+        }
+        function mostrar_guardar() {
+            jQuery("#panel_flotante").highlightFade({color: 'maroon', speed: 700, iterator: 'exponential'});
+
+            jQuery("#panel_flotante").slideToggle("slow");
+            jQuery(this).toggleClass("active");
+            jQuery("#boton_flotante").slideToggle("slow");
+            jQuery(this).toggleClass("active");
+
+            return false;
+        }
+
+    </script>
+    <div id="menu">
+        <ice:menuBar
+            orientation="horizontal" styleClass="menu_horizontal" noIcons="true" >
+            <ice:menuItems id="opcion_menu" value="#{vistaMenu.gMenuHorizontal}" />
+        </ice:menuBar>
+    </div>
+    <div id="panel_menu_formulacion">
+        <ice:panelGrid id="menuformulacion" style="width: 100%">
+            <div id="menu_formulacion">
+                <ice:menuBar
+                    orientation="horizontal" styleClass="menu_horizontal" noIcons="true" >
+                    <ice:menuItems value="#{vistaMenu.gMenuTipoFormulacion}" />
+                </ice:menuBar>
+            </div>
+
+        </ice:panelGrid>
+    </div>  
+</ice:form>

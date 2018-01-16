@@ -1,0 +1,28 @@
+<ice:form id="estudiante_detalle" xmlns:ice="http://www.icesoft.com/icefaces/component"
+          xmlns:h="http://java.sun.com/jsf/html"
+          xmlns:f="http://java.sun.com/jsf/core"
+          xmlns:ui="http://java.sun.com/jsf/facelets">
+    <br/>
+
+    <ice:outputText id="nombre" value="#{tipoController.nombre}"/>
+
+    <div class="container">
+        <div class="row">
+
+            <div class='col-sm-6'>
+
+                <h:commandButton id="boton_ingresar" 
+                                 value="Nuevo registro"  
+                                 styleClass="btn btn-outline-success my-2 my-sm-0" 
+                                 action="#{controllerBienes.listarDatos}"/>
+
+                <h:commandButton id="boton_ejemplo" 
+                                 value="Ejemplo Tipos"  
+                                 styleClass="btn btn-outline-success my-2 my-sm-0" 
+                                 action="ejemplo"/>
+
+            </div>
+
+        </div>
+    </div>
+</ice:form>

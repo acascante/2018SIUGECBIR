@@ -1,0 +1,104 @@
+<div xmlns:ice="http://www.icesoft.com/icefaces/component"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core" >
+
+    <!-- Modal para administrar un Documento -->
+    <ice:panelPopup
+        modal="true" 
+        visible="#{(controllerGestionProceso.command.presentarPanelAgregarDocumento || controllerGestionProceso.command.presentarPanelModificarDocumento)}"
+        rendered="true" 
+        styleClass="popup">
+
+        <f:facet name="header">
+            <ice:outputText styleClass="flotar_izquierda titulo_popup" value="#{label['sigebi.label.vista.gestionProceso.documento.administrar']}"/>
+        </f:facet> 
+
+        <f:facet name="body">
+
+            <fieldset class="panel_Container" >
+
+                <div class="container" style="margin-top: 30px;">
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group"> 
+                                <label class="control-label" for="txtNombre">
+                                    <ice:outputText value="#{label['sigebi.label.vista.gestionProceso.documento.nombre']}" /> 
+                                    <ice:outputText value="#{label['label.requerido']}" />
+                                </label>
+                                <ice:inputText id="documentoNombre" 
+                                               required="true"
+                                               styleClass="form-control"
+                                               value="#{controllerGestionProceso.command.documentoEntity.nombre}" />
+                            </div>                                             
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group"> 
+                                <label class="control-label" for="txtOrden">
+                                    <ice:outputText value="#{label['sigebi.label.vista.gestionProceso.documento.orden']}" />
+                                    <ice:outputText value="#{label['label.requerido']}" />
+                                </label>
+                                <ice:inputText id="documentoOrden" 
+                                               required="true"
+                                               styleClass="form-control"
+                                               value="#{controllerGestionProceso.command.documentoEntity.orden}" />
+                            </div>                                             
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label class="control-label" for="txtDetalle">
+                                    <ice:outputText value="#{label['sigebi.label.vista.gestionProceso.documento.detalle']}"/> 
+                                    <ice:outputText value="#{label['label.requerido']}" />
+                                </label>
+                                <ice:inputTextarea  id="detalleDocumento" 
+                                                    required="true"
+                                                    styleClass="form-control"
+                                                    cols="2" 
+                                                    value="#{controllerGestionProceso.command.documentoEntity.detalle}"/>
+                            </div>
+                        </div>    
+                    </div>
+                    <div class="row" style="margin-bottom:20px;">
+                        <div class="col-md-9 col-sm-9">
+
+                            <ice:commandButton id="btnAgregarDocumento"
+                                               partialSubmit="true"
+                                               rendered="#{controllerGestionProceso.command.presentarPanelAgregarDocumento}"
+                                               action="#{controllerGestionProceso.agregarDocumento}"
+                                               styleClass="boton"  
+                                               value="#{label['label.aceptar']}" />
+                        
+
+                            <ice:commandButton id="btnModificarDocumento"
+                                               partialSubmit="true"
+                                               rendered="#{controllerGestionProceso.command.presentarPanelModificarDocumento}"
+                                               action="#{controllerGestionProceso.modificarDocumento}"
+                                               styleClass="boton"  
+                                               value="#{label['label.aceptar']}" />
+                        
+
+                            <ice:commandButton id="btnEliminarDocumento"
+                                               partialSubmit="true"
+                                               rendered="#{controllerGestionProceso.command.presentarPanelModificarDocumento}"
+                                               action="#{controllerGestionProceso.eliminarDocumento}"
+                                               styleClass="boton"  
+                                               value="#{label['label.eliminar']}" />
+                        </div>
+                        <div class="col-md-3 col-sm-3 align-content-md-end">
+                            <ice:commandButton id="btnCerrarPanel"
+                                               partialSubmit="true"
+                                               action="#{controllerGestionProceso.cerrarPanel}"
+                                               styleClass="boton"  
+                                               value="#{label['label.cancelar']}" />
+                        </div>
+                    </div>
+                </div>
+            </fieldset>       
+        </f:facet>  
+    </ice:panelPopup>
+</div>

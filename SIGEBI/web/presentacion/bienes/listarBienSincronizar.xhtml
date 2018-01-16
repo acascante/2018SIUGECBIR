@@ -1,0 +1,339 @@
+<ice:form id="frm_listarBienSincronizar" 
+          xmlns:ice="http://www.icesoft.com/icefaces/component"
+          xmlns:h="http://java.sun.com/jsf/html"
+          xmlns:f="http://java.sun.com/jsf/core"
+          xmlns:ui="http://java.sun.com/jsf/facelets"
+          >
+    <div class="contenido-pagina">
+
+        <div class="container">            
+            <div class="row">
+                <div class='col-sm-12'>
+                    <h1 style="margin: 0;">
+                        <ice:outputFormat value="#{label['sigebi.sincronizarBien.Lista.TituloSincronizar']}"/>
+                    </h1>
+                </div>                
+            </div>
+            <div class="row">
+                <div class="col-sm-12">
+                    <ice:outputFormat value="#{label['label.generico.paginacion.encabezado']}">
+                        <f:param value="#{controllerListarBienSincronizar.cantidadRegistros}"/>
+                        <f:param value="#{controllerListarBienSincronizar.cantidadRegistrosMostrados}"/>
+                        <f:param value="#{controllerListarBienSincronizar.primerRegistro}"/>
+                        <f:param value="#{controllerListarBienSincronizar.ultimoRegistro}"/>
+                        <f:param value="#{controllerListarBienSincronizar.paginaActual}"/>
+                        <f:param value="#{controllerListarBienSincronizar.cantidadPaginas}"/>
+                    </ice:outputFormat>
+                    <div>
+                        <table>
+                            <tr>
+                                <td style="padding-right: 5px;">
+                                    <ice:outputText value="#{label['label.paginacion.cantidad.pagina']} "/>
+                                </td>
+                                <td>
+                                    
+                                    <ice:selectOneMenu id="cantRegistroPorPagina"
+                                           value="#{controllerListarBienSincronizar.cantRegistroPorPagina}" 
+                                           valueChangeListener="#{controllerListarBienSincronizar.cambioRegistrosPorPagina}"
+                                           partialSubmit="true">
+                                            <f:selectItems id="item_pa" value="#{controllerListarBienSincronizar.listaRegistrosPagina}"/>
+                                    </ice:selectOneMenu>    
+                                    
+                                </td>
+                            </tr>
+                        </table>                        
+                    </div>                    
+                    <div>
+                        <ice:commandButton image="./imagenes/botones/first.png" partialSubmit="true" actionListener="#{controllerListarBienSincronizar.primero}" rendered="#{controllerListarBienSincronizar.cantidadPaginas > 1}"/>
+                        <ice:commandButton image="./imagenes/botones/previos.png" partialSubmit="true" actionListener="#{controllerListarBienSincronizar.anterior}" rendered="#{controllerListarBienSincronizar.cantidadPaginas > 1}"/>
+                        <ui:repeat value="#{controllerListarBienSincronizar.arregloPaginas}" var="pagina">
+                            <ice:commandLink value="#{pagina}" partialSubmit="true" actionListener="#{controllerListarBienSincronizar.irPagina}">
+                                <f:param name="numPag" value="#{pagina}"/>
+                            </ice:commandLink>
+                        </ui:repeat>            
+                        <ice:commandButton image="./imagenes/botones/next.png" partialSubmit="true" actionListener="#{controllerListarBienSincronizar.siguiente}" rendered="#{controllerListarBienSincronizar.cantidadPaginas > 1}"/>
+                        <ice:commandButton image="./imagenes/botones/last.png" partialSubmit="true" actionListener="#{controllerListarBienSincronizar.ultimo}" rendered="#{controllerListarBienSincronizar.cantidadPaginas > 1}"/>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-12">
+                    <div>
+                        <ice:dataTable id="bienesPendientesSincronizar"
+                                   value="#{controllerListarBienSincronizar.bienes}"
+                                   var="bien"
+                                   paginator="true"
+                                   paginatorPosition="bottom"
+                                   rows="10">
+
+                            <ice:column id="idBien">                                 
+                                <f:facet name="header">
+                                    <ice:columnGroup>
+                                        <ice:headerRow>
+                                            <ice:outputText value="#{label['sigebi.label.vista.listarBienSincronizar.identificacion']} "/>
+                                        </ice:headerRow>
+                                        <ice:headerRow>
+                                            <ice:inputText id="filtroNombre"
+                                                           style="width: 130px;"
+                                                           value="#{controllerListarBienSincronizar.fltIdBien}"                                   
+                                                           partialSubmit="true"
+                                                           valueChangeListener="#{controllerListarBienSincronizar.cambioFiltro}"/>
+                                        </ice:headerRow>
+                                    </ice:columnGroup>
+                                </f:facet>
+                                <h:outputText id="idBienCell" value="#{bien.idPlaca.placa}"/>
+                            </ice:column>
+
+                            <ice:column id="descripcion">
+                                <f:facet name="header">
+                                    <ice:columnGroup>
+                                        <ice:headerRow>
+                                            <ice:outputText value="#{label['sigebi.label.vista.listarBienSincronizar.descripcion']} "/>
+                                        </ice:headerRow>
+                                        <ice:headerRow>
+                                            <ice:inputText id="filtroDescripcion"
+                                                   style="width: 130px;"
+                                                   value="#{controllerListarBienSincronizar.fltDescripcion}"                                   
+                                                   partialSubmit="true"
+                                                   valueChangeListener="#{controllerListarBienSincronizar.cambioFiltro}"/>
+                                        </ice:headerRow>
+                                    </ice:columnGroup>
+                                </f:facet>                                
+                                <h:outputText id="descripcionCell" value="#{bien.descripcion}"/>
+                            </ice:column>
+
+
+                            <ice:column id="colMarca">
+                                <f:facet name="header">
+                                    <ice:columnGroup>
+                                        <ice:headerRow>
+                                            <ice:outputText value="#{label['sigebi.label.vista.listarBienSincronizar.marca']} "/>
+                                        </ice:headerRow>
+                                        <ice:headerRow>
+                                            <ice:inputText id="filtroMarca"
+                                                   style="width: 130px;"
+                                                   value="#{controllerListarBienSincronizar.fltMarca}"                                   
+                                                   partialSubmit="true"
+                                                   valueChangeListener="#{controllerListarBienSincronizar.cambioFiltro}"/>
+                                        </ice:headerRow>
+                                    </ice:columnGroup>
+                                </f:facet>                                
+                                <h:outputText id="costoCell" value="#{bien.marca}"/>
+                            </ice:column>
+
+                            <ice:column id="colModelo">
+                                <f:facet name="header">
+                                    <ice:columnGroup>
+                                        <ice:headerRow>
+                                            <ice:outputText value="#{label['sigebi.label.vista.listarBienSincronizar.modelo']}"/>
+                                        </ice:headerRow>
+                                        <ice:headerRow>
+                                            <ice:inputText id="filtroModelo"
+                                                   style="width: 130px;"
+                                                   value="#{controllerListarBienSincronizar.fltModelo}"                                   
+                                                   partialSubmit="true"
+                                                   valueChangeListener="#{controllerListarBienSincronizar.cambioFiltro}"/>
+                                        </ice:headerRow>
+                                    </ice:columnGroup>
+                                </f:facet>                                 
+                                <h:outputText id="costoCell" value="#{bien.modelo}"/>
+                            </ice:column>
+
+                            <ice:column id="colSerie">
+                                <f:facet name="header">
+                                    <ice:columnGroup>
+                                        <ice:headerRow>
+                                            <ice:outputText value="#{label['sigebi.label.vista.listarBienSincronizar.serie']}"/>
+                                        </ice:headerRow>
+                                        <ice:headerRow>
+                                           <ice:inputText id="filtroSerie"
+                                                   style="width: 130px;"
+                                                   value="#{controllerListarBienSincronizar.fltSerie}"                                   
+                                                   partialSubmit="true"
+                                                   valueChangeListener="#{controllerListarBienSincronizar.cambioFiltro}"/>
+                                        </ice:headerRow>
+                                    </ice:columnGroup>
+                                </f:facet>                                
+                                <h:outputText id="costoCell" value="#{bien.serie}"/>
+                            </ice:column>
+
+
+                            <ice:column id="colEstado">
+                                <f:facet name="header">
+                                    <ice:columnGroup>
+                                        <ice:headerRow>
+                                            <ice:outputText value="#{label['sigebi.label.vista.listarBienSincronizar.estado']}"/>
+                                        </ice:headerRow>
+                                        <ice:headerRow>
+                                           <ice:selectOneMenu id="filtroCondicionContractual"
+                                                       valueChangeListener="#{controllerListarBienSincronizar.cambioFiltro}"
+                                                       value="#{controllerListarBienSincronizar.fltEstado}"
+                                                       partialSubmit="true"
+                                                       >
+                                                <f:selectItem itemLabel="N/A" itemValue="-1"/>
+                                                <f:selectItems id="slcEstadoItem" value="#{controllerListarBienSincronizar.estadosOptions}"/>
+                                            </ice:selectOneMenu>
+                                        </ice:headerRow>
+                                    </ice:columnGroup>
+                                </f:facet>                                
+                                <h:outputText id="costoCell" value="#{bien.idEstado.nombre}"/>
+                            </ice:column>
+
+                            <ice:column id="sincroColum" style="text-align: center;">
+                                <f:facet name="header">
+                                    <ice:outputText value="#{label['sigebi.label.vista.listarBienSincronizar.sincronizar']}"/>
+                                </f:facet>
+                                <ice:selectBooleanCheckbox id="checkSincronizar"
+                                                   rendered="#{bien.idEstado.estado == controllerListarBienSincronizar.estadoPendiente}" 
+                                                   partialSubmit="true" 
+                                                   valueChangeListener="#{controllerListarBienSincronizar.checkBienPorSincronizar}"
+                                                   value="#{bien.seleccionado}">
+                                    <f:attribute id="bienSeleccionado" name="bienSeleccionado"  value="#{bien}"/>
+                                </ice:selectBooleanCheckbox>
+                            </ice:column>
+
+                            <ice:column id="rechaColum"  style="text-align: center;" rendered="false">
+                                <f:facet name="header">
+                                    <ice:outputText value="#{label['sigebi.label.vista.listarBienSincronizar.rechazar']}"/>
+                                </f:facet>
+                                <ice:selectBooleanCheckbox id="checkRechazar"
+                                                   rendered="#{bien.idEstado.estado == controllerListarBienSincronizar.estadoPendienteSincronizar}" 
+                                                   partialSubmit="true" 
+                                                   valueChangeListener="#{controllerListarBienSincronizar.checkBienPorRechazar}"
+                                                   value="#{bien.seleccionado}">
+                                    <f:attribute id="bienSeleccionado" name="bienSeleccionado"  value="#{bien}"/>
+                                </ice:selectBooleanCheckbox>
+                            </ice:column>
+                              
+                            
+                            <!--  Columna enviar a Sincronizar  -->
+                            <ice:column id="columnSincronizar"  style="text-align: center;">
+                                <f:facet name="header">
+                                    <ice:columnGroup>
+                                        <ice:headerRow>
+                                            <ice:outputText value="#{label['sigebi.label.vista.listarBienSincronizar.HeaderSincronizacion']}"/>
+                                        </ice:headerRow>
+                                    </ice:columnGroup>
+                                </f:facet>
+                                <ice:selectBooleanCheckbox id="checkRechazar"
+                                                   rendered="#{bien.idEstado.estado == controllerListarBienSincronizar.estadoPendienteSincronizar}" 
+                                                   partialSubmit="true" 
+                                                   valueChangeListener="#{controllerListarBienSincronizar.checkBienEnviarSincronizar}"
+                                                   value="#{bien.seleccionado}">
+                                    <f:attribute id="bienSeleccionado" name="bienSeleccionado"  value="#{bien}"/>
+                                </ice:selectBooleanCheckbox>
+                            </ice:column>
+                                     
+                            
+                            <ice:column style="text-align: center;">
+
+                                <ice:commandButton id="botonAbrir"
+                                                   style="float:right;margin-top:2%" 
+                                                   styleClass="boton" 
+                                                   partialSubmit="true" 
+                                                   actionListener="#{controllerBienes.abrirDetalleSincronizar}"
+                                                   value="#{label['sigebi.label.vista.listarBienSincronizar.detalle']}"  >
+                                    <f:attribute id="tipoSeleccionado" name="tipoSeleccionado"  value="#{bien}"/>                                
+                                </ice:commandButton>
+
+                            </ice:column>
+                        </ice:dataTable>
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class='col-sm-12'>
+                    
+                    <ice:commandButton id="btnSincronizarTodo"
+                                        style="float:right"    
+                                        actionListener="#{controllerListarBienSincronizar.sincronizarTodo}"    
+                                        styleClass="boton" 
+                                        partialSubmit="true"
+                                        disabled="#{controllerListarBienSincronizar.sincronizar}"
+                                        value="#{label['sigebi.label.vista.listarBienSincronizar.sincronizacion']}"  >                             
+                                     </ice:commandButton>            
+
+                    <ice:commandButton id="botonRechazar"
+                                       style="float:right" 
+                                       styleClass="boton" 
+                                       partialSubmit="#{controllerListarBienSincronizar.sincronizar}" 
+                                       actionListener="#{controllerListarBienSincronizar.mostrarPanelObserva}"
+                                       value="#{label['sigebi.label.vista.listarBienSincronizar.rechazar']}"
+                                       disabled="#{controllerListarBienSincronizar.sincronizar}"
+                                       >
+                    </ice:commandButton>
+                   
+                    <ice:commandButton id="botonSincronizar"
+                                       style="float:right" 
+                                       styleClass="boton" 
+                                       partialSubmit="true" 
+                                       action="#{controllerListarBienSincronizar.solicitarSincronizacion}"
+                                       value="#{label['sigebi.label.vista.listarBienSincronizar.sincronizar']}">
+                    </ice:commandButton>                    
+                
+                </div>
+            
+            </div>
+        </div>
+
+        <!-- Modal Agregar Observacion -->
+        <ice:panelPopup
+            modal="true" 
+            visible="#{controllerListarBienSincronizar.panelObservaVisible}"
+            rendered="true" 
+            styleClass="popup"
+            >
+
+            <f:facet name="header">
+                <ice:outputText styleClass="flotar_izquierda titulo_popup" value="#{label['sigebi.label.vista.listarBienSincronizar.observacion.titulo']}"/>
+            </f:facet> 
+
+            <f:facet name="body">
+                <fieldset class="panel_Container" >
+
+                    <div class="container" style="margin-top: 30px;">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <h4><ice:outputText value="#{label['sigebi.label.vista.listarBienSincronizar.observacion']}"/></h4>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <ice:inputTextarea  id="observacionCliente" style="width: 430px;" cols="2" value="#{controllerListarBienSincronizar.observacionCliente}"/>
+                            </div>
+                        </div>
+                        <br />
+                        <div class="row">
+                            <div class="col-md-6 col-sm-6 align-content-center-div">
+
+                                <ice:commandButton id="btnCancelarObservacion"
+                                                   partialSubmit="true"
+                                                   action="#{controllerListarBienSincronizar.cerrarPanelObserva}"
+                                                   styleClass="boton"  
+                                                   value="#{label['label.cancelar']}" />
+                            </div>
+                            <div class="col-md-6 col-sm-6 align-content-center-div">
+
+                                <ice:commandButton id="btnConfirmarObservacion"
+                                                   partialSubmit="true"
+                                                   action="#{controllerListarBienSincronizar.rechazarBien}"
+                                                   styleClass="boton"  
+                                                   value="#{label['label.aceptar']}" />
+                            </div>
+                        </div>
+
+                    </div>
+                    <br />
+                    <br />
+
+                </fieldset>       
+            </f:facet>  
+
+        </ice:panelPopup>
+    </div>
+
+
+</ice:form>
+

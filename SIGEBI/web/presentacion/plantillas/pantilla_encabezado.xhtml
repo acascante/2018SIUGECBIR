@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="es"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ice="http://www.icesoft.com/icefaces/component">
+    <head>
+        
+        <title>Sistema de Información Institucional de Autoevaluación y Gestión de la Calidad</title>
+        <link rel="icon" href="#{facesContext.externalContext.requestContextPath}/imagenes/ucr-favicon.png" type="image/png" />
+        <link rel="shortcut icon" type="image/x-icon" href="#{facesContext.externalContext.requestContextPath}/imagenes/ucr-favicon.ico"/>
+        <ice:outputStyle href="././css/base/base.css"/>
+        <ice:outputStyle href="././css/clases/clase.css"/>
+        <ice:outputStyle href="././css/id/id.css"/>
+        <f:loadBundle basename="cr.ac.ucr.framework.vista.util.etiquetas_es" var="label"/>
+        
+    </head>
+    <ice:panelGroup>
+        <ice:form>
+            <div class="usuario-login">
+                <span id="usuario">
+                    <strong>
+                        <ice:outputText value=" Usuario :"/>
+                        <ice:outputText style="margin-right: 20px;" id="codUsuario" value="#{vistaUsuario.gUsuarioActual.idUsuario}"/>
+                        <ice:commandLink styleClass="btnLogout" partialSubmit="true"
+                                         action="#{vistaUsuario.salir}">
+                            <ice:outputText  id="btnSalir" value="Salir"/>
+                        </ice:commandLink>
+                    </strong>
+                </span>
+            </div>
+            <div class="encabezado-login">
+                <div class="derecha">
+                    <div><img class="alineado_izquierda_logo" src="././imagenes/firma-ucr.png"/> <img class="alineado_derecha_logo" src="././imagenes/logo.png"/></div>
+                </div>
+            </div>
+        </ice:form>
+    </ice:panelGroup>
+</html>

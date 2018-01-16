@@ -1,0 +1,85 @@
+/* 
+    Document   : clase_ie8
+    Created on : 25/01/2011, 03:10:34 PM
+    Author     : jonnathan
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+/* 
+   TODO customize this sample style
+   Syntax recommendation http://www.w3.org/TR/REC-CSS2/
+*/
+
+root { 
+    display: block;
+}
+.login_fondo{
+    background-image: url("../../imagenes/login.png");
+    background-repeat: no-repeat;
+}
+
+.mensaje_error_explorador{
+    margin: 50pt auto 110pt;
+    margin-left: 110pt;
+}
+
+.flotar_izquierda{
+    float:left;
+}
+
+
+/*cursos*/
+.encabezado_tabla_mod_curso{
+    background: #38A8D8;
+    background: -webkit-gradient(linear, left top, left bottom, from(#7ED4ED), to(#38A8D8));
+    background: -moz-linear-gradient(top,  #7ED4ED,  #38A8D8);
+    filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#7ED4ED', endColorstr='#38A8D8');
+    border-right:1px solid #CCCCCC;
+    border-top:1px solid #CCCCCC;
+    color: #FFFFFF;
+    font-weight:bold;
+    font-size: 0.9em;
+    font-family: Verdana,Geneva,sans-serif;
+    padding: 5.5px;
+    text-align:center;
+    text-shadow: 0 2px 2px rgba(0,0,0,0.7);
+
+}
+
+.tamanno_inputext_area{
+    height: 25pt;
+}
+
+/*Paneles*/
+
+
+
+.panel_ContainerActas {
+    border: 3px solid #3B86A9;
+    margin-top: 20pt;
+    margin-bottom: 50pt;
+    padding:2px 15px 20px 15px;
+    width: 700pt;
+    -moz-border-radius: 15px;
+    -webkit-border-radius: 15px;
+
+}
+
+.panel_Container_Equivalentes {
+    border: 3px solid #3B86A9;
+    margin-top: 30px;
+    width: 1085px;
+    -moz-border-radius: 15px;
+    -webkit-border-radius: 15px;
+
+}
+.popupRequisitoEquivalente{
+    background: white url(../../imagenes/fondoPopUp.jpg) no-repeat;
+    padding: 1em;
+    -moz-border-radius: 15px;
+    -webkit-border-radius: 15px;
+    border: 0.2em #000 solid;
+    width: 840pt;
+}
+
