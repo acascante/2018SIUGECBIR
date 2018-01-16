@@ -16,7 +16,6 @@ import java.util.List;
 import javax.annotation.Resource;
 import org.hibernate.Query;
 import org.hibernate.Session;
-import static org.python.core.Py.RuntimeError;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.dao.DataAccessException;

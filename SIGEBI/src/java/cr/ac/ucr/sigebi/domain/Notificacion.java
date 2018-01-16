@@ -25,10 +25,10 @@ import javax.persistence.Temporal;
  * @author alvaro.cascante
  */
 @Entity(name = "Notificacion")
-@Table(name = "SIGEBI_OAF.SGB_NOTIFICACION")
+@Table(name = "SIGEBI_OAF.SIGB_NOTIFICACION")
 @SequenceGenerator(name="sqNotificaciones", sequenceName = "SIGEBI_OAF.SGB_SQ_NOTIFICACIONES", initialValue=1, allocationSize=1)
-public class Notificacion extends ObjetoBase implements Serializable {
-    //  TODO modificar nombre de la tabla
+public class Notificacion implements Serializable {
+
     //<editor-fold defaultstate="collapsed" desc="Atributos">
     @Id
     @GeneratedValue(strategy=GenerationType.SEQUENCE, generator = "sqNotificaciones")

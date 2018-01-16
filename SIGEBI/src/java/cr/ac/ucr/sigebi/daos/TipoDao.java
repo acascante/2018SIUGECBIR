@@ -12,9 +12,6 @@ import cr.ac.ucr.framework.daoImpl.GenericDaoImpl;
 /*ref para manejo de estudiantes*/
 import cr.ac.ucr.framework.utils.FWExcepcion;
 import cr.ac.ucr.sigebi.domain.Tipo;
-import cr.ac.ucr.sigebi.entities.DatoBienEntity;
-import cr.ac.ucr.sigebi.entities.TipoEntity;
-import java.util.ArrayList;
 /*ref para anotaciones*/
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -24,7 +21,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
-import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 import org.springframework.dao.DataAccessException;
 /**
@@ -77,7 +73,7 @@ public class TipoDao extends GenericDaoImpl{
             throw new FWExcepcion("sigebi.error.notificacionDao.listar", "Error obtener los registros de tipo " + this.getClass(), e.getCause());
         } finally {
             session.close();        
-        }  
+        }
     }
     
     @Transactional(readOnly = true)
