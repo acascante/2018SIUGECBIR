@@ -32,9 +32,10 @@ public class NotificacionDao extends GenericDaoImpl {
     @Autowired
     private DaoHelper dao;
     
+    @Transactional(readOnly = true)
     public List<Notificacion> listar() throws FWExcepcion {
         try {
-            return dao.getHibernateTemplate().find("from NotificacionEntity"); 
+            return dao.getHibernateTemplate().find("from Notificacion"); 
         } catch (DataAccessException e) {
             throw new FWExcepcion("sigebi.error.notificacionDao.listar", "Error obtener los registros de tipo " + this.getClass(), e.getCause());
         }

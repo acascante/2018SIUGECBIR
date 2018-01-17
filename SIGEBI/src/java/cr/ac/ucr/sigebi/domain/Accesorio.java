@@ -78,6 +78,7 @@ public class Accesorio  extends ObjetoBase implements Serializable{
     }
     //</editor-fold>
     
+    //<editor-fold defaultstate="collapsed" desc="Metodos">
     @Override
     public int hashCode() {
         int hash = 7;
@@ -103,7 +104,7 @@ public class Accesorio  extends ObjetoBase implements Serializable{
         if ((this.detalle == null) ? (other.detalle != null) : !this.detalle.equals(other.detalle)) {
             return false;
         }
-        if (this.id != other.id && (this.id == null || !this.id.equals(other.id))) {
+        if (!this.id.equals(other.id) && (this.id == null || !this.id.equals(other.id))) {
             return false;
         }
         if (this.bien != other.bien && (this.bien == null || !this.bien.equals(other.bien))) {
@@ -114,4 +115,5 @@ public class Accesorio  extends ObjetoBase implements Serializable{
         }
         return true;
     }
+    //</editor-fold>
 }

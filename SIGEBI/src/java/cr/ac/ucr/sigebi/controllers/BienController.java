@@ -12,7 +12,7 @@ import cr.ac.ucr.framework.vista.util.Mensaje;
 import cr.ac.ucr.framework.vista.util.Util;
 import cr.ac.ucr.sigebi.domain.Estado;
 import cr.ac.ucr.sigebi.domain.Tipo;
-import cr.ac.ucr.sigebi.models.AccesoriosModel;
+import cr.ac.ucr.sigebi.models.AccesorioModel;
 import cr.ac.ucr.sigebi.models.AdjuntoBienModel;
 import cr.ac.ucr.sigebi.models.BienModel;
 import cr.ac.ucr.sigebi.models.CategModel;
@@ -2166,7 +2166,7 @@ public class BienController extends BaseController{
     List<AccesoriosEntity> accesorios;
 
     @Resource
-    AccesoriosModel modelAccesorio;
+    AccesorioModel modelAccesorio;
 
     public void guardarAccesorio() {
         mensajeAccesExito = "";
