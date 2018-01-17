@@ -9,7 +9,6 @@ import cr.ac.ucr.sigebi.utils.Constantes;
 import cr.ac.ucr.framework.utils.FWExcepcion;
 import cr.ac.ucr.framework.vista.util.Mensaje;
 import cr.ac.ucr.sigebi.models.EstadoModel;
-import cr.ac.ucr.sigebi.entities.EstadoEntity;
 import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.Resource;
@@ -23,7 +22,6 @@ import cr.ac.ucr.sigebi.domain.Estado;
 import cr.ac.ucr.sigebi.domain.Tipo;
 import cr.ac.ucr.sigebi.models.InformeTecnicoModel;
 import cr.ac.ucr.sigebi.entities.InformeTecnicoEntity;
-import cr.ac.ucr.sigebi.entities.TipoEntity;
 import cr.ac.ucr.sigebi.models.TipoModel;
 import javax.annotation.PostConstruct;
 import javax.faces.event.ActionEvent;
@@ -169,7 +167,7 @@ public class ListarInformesTecnicosController extends BaseController {
         estados = estadoModel.listarPorDominio(Constantes.DOMINI0_ESTADO_INFORME_TECNICO);        
         estadosOptions = new ArrayList<SelectItem>();
         for (Estado item : estados) {
-            estadosOptions.add(new SelectItem(item.getIdEstado().toString(), item.getNombre()));
+            estadosOptions.add(new SelectItem(item.getId().toString(), item.getNombre()));
         }
 
         //Se consultan los tipos por dominio

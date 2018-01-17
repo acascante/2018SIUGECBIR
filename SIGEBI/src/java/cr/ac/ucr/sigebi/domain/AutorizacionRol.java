@@ -26,6 +26,7 @@ import javax.persistence.Table;
 @SequenceGenerator(name = "SGB_SQ_AUTORIZACION_ROL",  sequenceName = "SIGEBI_OAF.SGB_SQ_AUTORIZACION_ROL", initialValue = 1, allocationSize = 1)
 public class AutorizacionRol extends ObjetoBase implements Serializable {
    
+    //<editor-fold defaultstate="collapsed" desc="Atributos">
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SGB_SQ_AUTORIZACION_ROL")
     @Column(name = "ID_AUTORIZACION_ROL")
@@ -33,12 +34,14 @@ public class AutorizacionRol extends ObjetoBase implements Serializable {
     
     @ManyToOne
     @JoinColumn(name = "ID_AUTORIZACION", referencedColumnName = "ID_AUTORIZACION")
-    private Autorizacion idAutorizacion;
+    private Autorizacion autorizacion;
     
     @ManyToOne
     @JoinColumn(name = "ID_ROL", referencedColumnName = "ID_ROL")
-    private Rol idRol;
+    private Rol rol;
+    //</editor-fold>
 
+    //<editor-fold defaultstate="collapsed" desc="Get's y Set's">
     public Long getId() {
         return id;
     }
@@ -47,28 +50,29 @@ public class AutorizacionRol extends ObjetoBase implements Serializable {
         this.id = id;
     }
 
-    public Autorizacion getIdAutorizacion() {
-        return idAutorizacion;
+    public Autorizacion getAutorizacion() {
+        return autorizacion;
     }
 
-    public void setIdAutorizacion(Autorizacion idAutorizacion) {
-        this.idAutorizacion = idAutorizacion;
+    public void setAutorizacion(Autorizacion autorizacion) {
+        this.autorizacion = autorizacion;
     }
 
-    public Rol getIdRol() {
-        return idRol;
+    public Rol getRol() {
+        return rol;
     }
 
-    public void setIdRol(Rol idRol) {
-        this.idRol = idRol;
+    public void setRol(Rol rol) {
+        this.rol = rol;
     }
+    //</editor-fold>
 
     @Override
     public int hashCode() {
         int hash = 3;
         hash = 71 * hash + (this.id != null ? this.id.hashCode() : 0);
-        hash = 71 * hash + (this.idAutorizacion != null ? this.idAutorizacion.hashCode() : 0);
-        hash = 71 * hash + (this.idRol != null ? this.idRol.hashCode() : 0);
+        hash = 71 * hash + (this.autorizacion != null ? this.autorizacion.hashCode() : 0);
+        hash = 71 * hash + (this.rol != null ? this.rol.hashCode() : 0);
         return hash;
     }
 
@@ -87,14 +91,12 @@ public class AutorizacionRol extends ObjetoBase implements Serializable {
         if (this.id != other.id && (this.id == null || !this.id.equals(other.id))) {
             return false;
         }
-        if (this.idAutorizacion != other.idAutorizacion && (this.idAutorizacion == null || !this.idAutorizacion.equals(other.idAutorizacion))) {
+        if (this.autorizacion != other.autorizacion && (this.autorizacion == null || !this.autorizacion.equals(other.autorizacion))) {
             return false;
         }
-        if (this.idRol != other.idRol && (this.idRol == null || !this.idRol.equals(other.idRol))) {
+        if (this.rol != other.rol && (this.rol == null || !this.rol.equals(other.rol))) {
             return false;
         }
         return true;
     }
-   
-
 }

@@ -5,6 +5,7 @@
  */
 package cr.ac.ucr.sigebi.domain;
 
+import cr.ac.ucr.framework.seguridad.ObjetoBase;
 import java.io.Serializable;
 import java.util.Date;
 import javax.persistence.Column;
@@ -26,13 +27,13 @@ import javax.persistence.Temporal;
 @Entity(name = "Notificacion")
 @Table(name = "SIGEBI_OAF.SIGB_NOTIFICACION")
 @SequenceGenerator(name="sqNotificaciones", sequenceName = "SIGEBI_OAF.SGB_SQ_NOTIFICACIONES", initialValue=1, allocationSize=1)
-public class Notificacion implements Serializable {
+public class Notificacion extends ObjetoBase implements Serializable {
 
     //<editor-fold defaultstate="collapsed" desc="Atributos">
     @Id
     @GeneratedValue(strategy=GenerationType.SEQUENCE, generator = "sqNotificaciones")
     @Column(name = "ID_NOTIFICACION")
-    private Long idNotificacion;
+    private Long id;
     
     @Column(name = "ASUNTO")
     private String asunto;
@@ -58,8 +59,8 @@ public class Notificacion implements Serializable {
     //<editor-fold defaultstate="collapsed" desc="Constructores">
     public Notificacion() {}
     
-    public Notificacion(Long idNotificacion, String asunto, String mensaje, String destinatario, Estado estado, Integer prioridad, Date fecha) {
-        this.idNotificacion = idNotificacion;
+    public Notificacion(Long id, String asunto, String mensaje, String destinatario, Estado estado, Integer prioridad, Date fecha) {
+        this.id = id;
         this.asunto = asunto;
         this.mensaje = mensaje;
         this.destinatario = destinatario;
@@ -69,13 +70,13 @@ public class Notificacion implements Serializable {
     }
     //</editor-fold>
     
-    //<editor-fold defaultstate="collapsed" desc="Gets y Sets">
+    //<editor-fold defaultstate="collapsed" desc="Get's y Set's">
     public Long getIdNotificacion() {
-        return idNotificacion;
+        return id;
     }
 
-    public void setIdNotificacion(Long idNotificacion) {
-        this.idNotificacion = idNotificacion;
+    public void setIdNotificacion(Long id) {
+        this.id = id;
     }
 
     public String getAsunto() {
@@ -131,7 +132,7 @@ public class Notificacion implements Serializable {
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (idNotificacion != null ? idNotificacion.hashCode() : 0);
+        hash += (id != null ? id.hashCode() : 0);
         return hash;
     }
 
@@ -140,12 +141,12 @@ public class Notificacion implements Serializable {
         if (!(object instanceof Notificacion)) {
             return false;
         }
-        return this.idNotificacion.equals(((Notificacion)object).idNotificacion);
+        return this.id.equals(((Notificacion)object).id);
     }
 
     @Override
     public String toString() {
-        return "entidades.NotificacionEntity[id=" + this.idNotificacion + "]";
+        return "entidades.Notificacion[id=" + this.id + "]";
     }
     //</editor-fold>
 }

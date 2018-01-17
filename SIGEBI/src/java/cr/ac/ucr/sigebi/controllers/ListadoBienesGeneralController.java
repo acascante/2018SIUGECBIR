@@ -182,7 +182,7 @@ public class ListadoBienesGeneralController extends BaseController{
         estados = estadoModel.listarPorDominio(Constantes.DOMINI0_ESTADO_BIEN);
         estadosOptions = new ArrayList<SelectItem>();
         for (Estado item : estados) {
-            estadosOptions.add(new SelectItem(item.getIdEstado().toString(), item.getNombre()));
+            estadosOptions.add(new SelectItem(item.getId().toString(), item.getNombre()));
         }
         mostrarDialogBienes = false;
         

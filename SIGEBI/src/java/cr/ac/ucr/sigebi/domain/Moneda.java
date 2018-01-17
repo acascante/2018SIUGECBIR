@@ -20,12 +20,13 @@ import javax.persistence.Table;
 @Table(name = "SIGEBI_OAF.V_SIGB_MONEDA")
 public class Moneda extends ObjetoBase implements Serializable {
 
+    //<editor-fold defaultstate="collapsed" desc="Atributos">
     @Id
     @Column(name = "ID")
     private Long id;
 
     @Column(name = "NUM_EMPRESA")
-    private Integer numEmpresa;
+    private Integer numeroEmpresa;
 
     @Column(name = "DESC_MONEDA")
     private String descripcion;
@@ -38,7 +39,9 @@ public class Moneda extends ObjetoBase implements Serializable {
 
     @Column(name = "IND_OPERADOR")
     private String operador;
+    //</editor-fold>
 
+    //<editor-fold defaultstate="collapsed" desc="GET's y SET's">
     public Long getId() {
         return id;
     }
@@ -47,12 +50,12 @@ public class Moneda extends ObjetoBase implements Serializable {
         this.id = id;
     }
 
-    public Integer getNumEmpresa() {
-        return numEmpresa;
+    public Integer getNumeroEmpresa() {
+        return numeroEmpresa;
     }
 
-    public void setNumEmpresa(Integer numEmpresa) {
-        this.numEmpresa = numEmpresa;
+    public void setNumeroEmpresa(Integer numeroEmpresa) {
+        this.numeroEmpresa = numeroEmpresa;
     }
 
     public String getDescripcion() {
@@ -86,12 +89,13 @@ public class Moneda extends ObjetoBase implements Serializable {
     public void setOperador(String operador) {
         this.operador = operador;
     }
+    //</editor-fold>
 
     @Override
     public int hashCode() {
         int hash = 5;
         hash = 97 * hash + (this.id != null ? this.id.hashCode() : 0);
-        hash = 97 * hash + (this.numEmpresa != null ? this.numEmpresa.hashCode() : 0);
+        hash = 97 * hash + (this.numeroEmpresa != null ? this.numeroEmpresa.hashCode() : 0);
         hash = 97 * hash + (this.descripcion != null ? this.descripcion.hashCode() : 0);
         hash = 97 * hash + (this.signo != null ? this.signo.hashCode() : 0);
         hash = 97 * hash + (this.codigo != null ? this.codigo.hashCode() : 0);
@@ -126,7 +130,7 @@ public class Moneda extends ObjetoBase implements Serializable {
         if (this.id != other.id && (this.id == null || !this.id.equals(other.id))) {
             return false;
         }
-        if (this.numEmpresa != other.numEmpresa && (this.numEmpresa == null || !this.numEmpresa.equals(other.numEmpresa))) {
+        if (this.numeroEmpresa != other.numeroEmpresa && (this.numeroEmpresa == null || !this.numeroEmpresa.equals(other.numeroEmpresa))) {
             return false;
         }
         return true;

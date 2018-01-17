@@ -9,17 +9,19 @@ package cr.ac.ucr.sigebi.domain;
  *
  * @author alvaro.cascante
  */
+import cr.ac.ucr.framework.seguridad.ObjetoBase;
 import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-@Entity(name = "BienDetalleCaracteristicas")
+@Entity(name = "BienDetalleCaracteristica")
 @Table(name = "SIGEBI_OAF.V_SIGB_BIEN_CARACTERISTICA")
 
-public class BienDetalleCaracteristicas implements Serializable {
+public class BienDetalleCaracteristica extends ObjetoBase implements Serializable {
     
+    //<editor-fold defaultstate="collapsed" desc="Atributos">
     @Id
     @Column(name = "ID")
     private Long id;
@@ -32,8 +34,9 @@ public class BienDetalleCaracteristicas implements Serializable {
     
     @Column(name = "SERIE")
     private String serie;
+    //</editor-fold>
 
-    //<editor-fold defaultstate="collapsed" desc="Gets y Sets">
+    //<editor-fold defaultstate="collapsed" desc="GET's y SET's">
     public Long getId() {
         return id;
     }

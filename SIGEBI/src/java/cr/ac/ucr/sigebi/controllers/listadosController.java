@@ -190,7 +190,7 @@ public class listadosController {
             estados = estadoModel.listar();
             estadosOptions = new ArrayList<SelectItem>();
             for (Estado item : estados) {
-                estadosOptions.add(new SelectItem(item.getIdEstado().toString(), item.getNombre()));
+                estadosOptions.add(new SelectItem(item.getId().toString(), item.getNombre()));
             }
             fltEstado = "NA";
             fltPlaca = "";

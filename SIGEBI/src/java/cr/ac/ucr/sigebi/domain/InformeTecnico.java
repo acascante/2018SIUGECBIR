@@ -23,17 +23,20 @@ import javax.persistence.Table;
 @PrimaryKeyJoinColumn(name = "ID_INFORME_TECNICO", referencedColumnName = "ID_DOCUMENTO")
 public class InformeTecnico extends Documento implements Serializable {
     
+    //<editor-fold defaultstate="collapsed" desc="Atributos">
     @Column(name = "EVALUACION")
     private String evaluacion;
     
     @ManyToOne
     @JoinColumn(name = "ID_TIPO", referencedColumnName = "ID_TIPO")
-    private TipoEntity idTipo;
+    private Tipo tipoInforme;
     
     @ManyToOne
     @JoinColumn(name = "ID_BIEN", referencedColumnName = "ID_BIEN")
-    private BienEntity idBien;
+    private Bien bien;
+    //</editor-fold>
 
+    //<editor-fold defaultstate="collapsed" desc="GET's y SET's">
     public String getEvaluacion() {
         return evaluacion;
     }
@@ -42,28 +45,29 @@ public class InformeTecnico extends Documento implements Serializable {
         this.evaluacion = evaluacion;
     }
 
-    public TipoEntity getIdTipo() {
-        return idTipo;
+    public Tipo getTipoInforme() {
+        return tipoInforme;
     }
 
-    public void setIdTipo(TipoEntity idTipo) {
-        this.idTipo = idTipo;
+    public void setTipoInforme(Tipo tipoInforme) {
+        this.tipoInforme = tipoInforme;
     }
 
-    public BienEntity getIdBien() {
-        return idBien;
+    public Bien getBien() {
+        return bien;
     }
 
-    public void setIdBien(BienEntity idBien) {
-        this.idBien = idBien;
+    public void setBien(Bien bien) {
+        this.bien = bien;
     }
+    //</editor-fold>
 
     @Override
     public int hashCode() {
         int hash = 3;
         hash = 83 * hash + (this.evaluacion != null ? this.evaluacion.hashCode() : 0);
-        hash = 83 * hash + (this.idTipo != null ? this.idTipo.hashCode() : 0);
-        hash = 83 * hash + (this.idBien != null ? this.idBien.hashCode() : 0);
+        hash = 83 * hash + (this.tipoInforme != null ? this.tipoInforme.hashCode() : 0);
+        hash = 83 * hash + (this.bien != null ? this.bien.hashCode() : 0);
         return hash;
     }
 
@@ -82,13 +86,12 @@ public class InformeTecnico extends Documento implements Serializable {
         if ((this.evaluacion == null) ? (other.evaluacion != null) : !this.evaluacion.equals(other.evaluacion)) {
             return false;
         }
-        if (this.idTipo != other.idTipo && (this.idTipo == null || !this.idTipo.equals(other.idTipo))) {
+        if (this.tipoInforme != other.tipoInforme && (this.tipoInforme == null || !this.tipoInforme.equals(other.tipoInforme))) {
             return false;
         }
-        if (this.idBien != other.idBien && (this.idBien == null || !this.idBien.equals(other.idBien))) {
+        if (this.bien != other.bien && (this.bien == null || !this.bien.equals(other.bien))) {
             return false;
         }
         return true;
     }
-
 }

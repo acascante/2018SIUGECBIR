@@ -5,7 +5,6 @@
  */
 package cr.ac.ucr.sigebi.domain;
 
-import cr.ac.ucr.sigebi.entities.*;
 import cr.ac.ucr.framework.seguridad.ObjetoBase;
 import java.io.Serializable;
 import javax.persistence.Column;
@@ -27,10 +26,11 @@ import javax.persistence.Table;
 @SequenceGenerator(name = "SGB_SQ_UBICACION", sequenceName = "SIGEBI_OAF.SGB_SQ_UBICACION", initialValue = 1, allocationSize = 1)
 public class Ubicacion extends ObjetoBase implements Serializable {
 
+    //<editor-fold defaultstate="collapsed" desc="Atributos">
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SGB_SQ_UBICACION")
     @Column(name = "ID_UBICACION")
-    private Integer idUbicacion;
+    private Integer id;
 
     @Column(name = "DETALLE")
     private String detalle;
@@ -43,18 +43,20 @@ public class Ubicacion extends ObjetoBase implements Serializable {
 
     @ManyToOne
     @JoinColumn(name = "ID_UNIDAD_EJECUTORA", referencedColumnName = "ID")
-    private UnidadEjecutora idUnidadEjecutora;
+    private UnidadEjecutora unidadEjecutora;
 
     @ManyToOne
     @JoinColumn(name = "ID_ESTADO", referencedColumnName = "ID_ESTADO")
-    private EstadoEntity idEstado;
+    private Estado estado;
+    //</editor-fold>
 
+    //<editor-fold defaultstate="collapsed" desc="GET's y SET's">
     public Integer getIdUbicacion() {
-        return idUbicacion;
+        return id;
     }
 
-    public void setIdUbicacion(Integer idUbicacion) {
-        this.idUbicacion = idUbicacion;
+    public void setIdUbicacion(Integer id) {
+        this.id = id;
     }
 
     public String getDetalle() {
@@ -81,31 +83,32 @@ public class Ubicacion extends ObjetoBase implements Serializable {
         this.idPersona = idPersona;
     }
 
-    public UnidadEjecutora getIdUnidadEjecutora() {
-        return idUnidadEjecutora;
+    public UnidadEjecutora getUnidadEjecutora() {
+        return unidadEjecutora;
     }
 
-    public void setIdUnidadEjecutora(UnidadEjecutora idUnidadEjecutora) {
-        this.idUnidadEjecutora = idUnidadEjecutora;
+    public void setUnidadEjecutora(UnidadEjecutora unidadEjecutora) {
+        this.unidadEjecutora = unidadEjecutora;
     }
 
-    public EstadoEntity getIdEstado() {
-        return idEstado;
+    public Estado getEstado() {
+        return estado;
     }
 
-    public void setIdEstado(EstadoEntity idEstado) {
-        this.idEstado = idEstado;
+    public void setEstado(Estado estado) {
+        this.estado = estado;
     }
+    //</editor-fold>
 
     @Override
     public int hashCode() {
         int hash = 7;
-        hash = 59 * hash + (this.idUbicacion != null ? this.idUbicacion.hashCode() : 0);
+        hash = 59 * hash + (this.id != null ? this.id.hashCode() : 0);
         hash = 59 * hash + (this.detalle != null ? this.detalle.hashCode() : 0);
         hash = 59 * hash + (this.pertenece != null ? this.pertenece.hashCode() : 0);
         hash = 59 * hash + (this.idPersona != null ? this.idPersona.hashCode() : 0);
-        hash = 59 * hash + (this.idUnidadEjecutora != null ? this.idUnidadEjecutora.hashCode() : 0);
-        hash = 59 * hash + (this.idEstado != null ? this.idEstado.hashCode() : 0);
+        hash = 59 * hash + (this.unidadEjecutora != null ? this.unidadEjecutora.hashCode() : 0);
+        hash = 59 * hash + (this.estado != null ? this.estado.hashCode() : 0);
         return hash;
     }
 
@@ -124,7 +127,7 @@ public class Ubicacion extends ObjetoBase implements Serializable {
         if ((this.detalle == null) ? (other.detalle != null) : !this.detalle.equals(other.detalle)) {
             return false;
         }
-        if (this.idUbicacion != other.idUbicacion && (this.idUbicacion == null || !this.idUbicacion.equals(other.idUbicacion))) {
+        if (this.id != other.id && (this.id == null || !this.id.equals(other.id))) {
             return false;
         }
         if (this.pertenece != other.pertenece && (this.pertenece == null || !this.pertenece.equals(other.pertenece))) {
@@ -133,10 +136,10 @@ public class Ubicacion extends ObjetoBase implements Serializable {
         if (this.idPersona != other.idPersona && (this.idPersona == null || !this.idPersona.equals(other.idPersona))) {
             return false;
         }
-        if (this.idUnidadEjecutora != other.idUnidadEjecutora && (this.idUnidadEjecutora == null || !this.idUnidadEjecutora.equals(other.idUnidadEjecutora))) {
+        if (this.unidadEjecutora != other.unidadEjecutora && (this.unidadEjecutora == null || !this.unidadEjecutora.equals(other.unidadEjecutora))) {
             return false;
         }
-        if (this.idEstado != other.idEstado && (this.idEstado == null || !this.idEstado.equals(other.idEstado))) {
+        if (this.estado != other.estado && (this.estado == null || !this.estado.equals(other.estado))) {
             return false;
         }
         return true;

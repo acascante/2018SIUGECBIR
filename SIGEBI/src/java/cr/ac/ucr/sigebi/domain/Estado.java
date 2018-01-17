@@ -25,12 +25,11 @@ import javax.persistence.Table;
 @SequenceGenerator(name = "SGB_SQ_ESTADO",  sequenceName = "SIGEBI_OAF.SGB_SQ_ESTADO", initialValue = 1, allocationSize = 1)
 public class Estado extends ObjetoBase implements Serializable {
 
-    private static final long serialVersionUID = 1L;
-
+    //<editor-fold defaultstate="collapsed" desc="Atributos">
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SGB_SQ_ESTADO")
     @Column(name = "ID_ESTADO")
-    private Integer idEstado;
+    private Integer id;
 
     @Basic(optional = false)
     @Column(name = "NOMBRE")
@@ -41,13 +40,15 @@ public class Estado extends ObjetoBase implements Serializable {
 
     @Column(name = "ESTADO")
     private Integer valor;
+    //</editor-fold>
 
-    public Integer getIdEstado() {
-        return idEstado;
+    //<editor-fold defaultstate="collapsed" desc="GET's y SET's">
+    public Integer getId() {
+        return id;
     }
 
-    public void setIdEstado(Integer idEstado) {
-        this.idEstado = idEstado;
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     public String getNombre() {
@@ -73,11 +74,12 @@ public class Estado extends ObjetoBase implements Serializable {
     public void setValor(Integer valor) {
         this.valor = valor;
     }
+    //</editor-fold>
 
     @Override
     public int hashCode() {
         int hash = 7;
-        hash = 71 * hash + (this.idEstado != null ? this.idEstado.hashCode() : 0);
+        hash = 71 * hash + (this.id != null ? this.id.hashCode() : 0);
         hash = 71 * hash + (this.nombre != null ? this.nombre.hashCode() : 0);
         hash = 71 * hash + (this.dominio != null ? this.dominio.hashCode() : 0);
         hash = 71 * hash + (this.valor != null ? this.valor.hashCode() : 0);
@@ -102,7 +104,7 @@ public class Estado extends ObjetoBase implements Serializable {
         if ((this.dominio == null) ? (other.dominio != null) : !this.dominio.equals(other.dominio)) {
             return false;
         }
-        if (this.idEstado != other.idEstado && (this.idEstado == null || !this.idEstado.equals(other.idEstado))) {
+        if (this.id != other.id && (this.id == null || !this.id.equals(other.id))) {
             return false;
         }
         if (this.valor != other.valor && (this.valor == null || !this.valor.equals(other.valor))) {

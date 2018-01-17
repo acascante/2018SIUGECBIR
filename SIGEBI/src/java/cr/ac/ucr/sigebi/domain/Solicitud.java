@@ -5,6 +5,7 @@
  */
 package cr.ac.ucr.sigebi.domain;
 
+import cr.ac.ucr.framework.seguridad.ObjetoBase;
 import java.io.Serializable;
 import java.util.Date;
 import javax.persistence.Column;
@@ -31,8 +32,9 @@ import javax.persistence.Temporal;
 @Inheritance(strategy = InheritanceType.JOINED)
 @DiscriminatorColumn(name="TIPO")
 @SequenceGenerator(name="sqSolicitudes", sequenceName = "SIGEBI_OAF.SGB_SQ_SOLICITUDES", initialValue=1, allocationSize=1)
-public abstract class Solicitud implements Serializable {
+public abstract class Solicitud extends ObjetoBase implements Serializable {
     
+    //<editor-fold defaultstate="collapsed" desc="Atributos">
     @Id
     @GeneratedValue(strategy=GenerationType.SEQUENCE, generator = "sqSolicitudes")
     @Column(name = "ID_SOLICITUD")
@@ -51,6 +53,7 @@ public abstract class Solicitud implements Serializable {
     private UnidadEjecutora unidadEjecutora;
     
     private Integer tipo;
+    //</editor-fold>
 
     //<editor-fold defaultstate="collapsed" desc="Get's y Set's">
     public Long getId() {

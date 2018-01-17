@@ -26,6 +26,7 @@ import javax.persistence.Table;
 @SequenceGenerator(name = "SGB_SQ_SUB_CLASIFICACION",  sequenceName = "SIGEBI_OAF.SGB_SQ_SUB_CLASIFICACION", initialValue = 1, allocationSize = 1)
 public class SubClasificacion extends ObjetoBase implements Serializable {
      
+    //<editor-fold defaultstate="collapsed" desc="Atributos">
     @Id
     @Column(name = "ID_SUB_CLASIFICACION")
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SGB_SQ_SUB_CLASIFICACION")
@@ -33,15 +34,17 @@ public class SubClasificacion extends ObjetoBase implements Serializable {
     
     @ManyToOne
     @JoinColumn(name = "ID_CLASIFICACION", referencedColumnName = "ID_CLASIFICACION")
-    private Clasificacion idClasificacion;
+    private Clasificacion clasificacion;
 
     @Column(name = "NOMBRE")
     private String nombre;
     
     @ManyToOne
     @JoinColumn(name = "ID_ESTADO", referencedColumnName = "ID_ESTADO")
-    private Estado idEstado;
+    private Estado estado;
+    //</editor-fold>
 
+    //<editor-fold defaultstate="collapsed" desc="GET's y SET's">
     public Integer getId() {
         return id;
     }
@@ -50,12 +53,12 @@ public class SubClasificacion extends ObjetoBase implements Serializable {
         this.id = id;
     }
 
-    public Clasificacion getIdClasificacion() {
-        return idClasificacion;
+    public Clasificacion getClasificacion() {
+        return clasificacion;
     }
 
-    public void setIdClasificacion(Clasificacion idClasificacion) {
-        this.idClasificacion = idClasificacion;
+    public void setClasificacion(Clasificacion clasificacion) {
+        this.clasificacion = clasificacion;
     }
 
     public String getNombre() {
@@ -66,21 +69,22 @@ public class SubClasificacion extends ObjetoBase implements Serializable {
         this.nombre = nombre;
     }
 
-    public Estado getIdEstado() {
-        return idEstado;
+    public Estado getEstado() {
+        return estado;
     }
 
-    public void setIdEstado(Estado idEstado) {
-        this.idEstado = idEstado;
+    public void setEstado(Estado estado) {
+        this.estado = estado;
     }
+    //</editor-fold>
 
     @Override
     public int hashCode() {
         int hash = 5;
         hash = 37 * hash + (this.id != null ? this.id.hashCode() : 0);
-        hash = 37 * hash + (this.idClasificacion != null ? this.idClasificacion.hashCode() : 0);
+        hash = 37 * hash + (this.clasificacion != null ? this.clasificacion.hashCode() : 0);
         hash = 37 * hash + (this.nombre != null ? this.nombre.hashCode() : 0);
-        hash = 37 * hash + (this.idEstado != null ? this.idEstado.hashCode() : 0);
+        hash = 37 * hash + (this.estado != null ? this.estado.hashCode() : 0);
         return hash;
     }
 
@@ -102,13 +106,12 @@ public class SubClasificacion extends ObjetoBase implements Serializable {
         if (this.id != other.id && (this.id == null || !this.id.equals(other.id))) {
             return false;
         }
-        if (this.idClasificacion != other.idClasificacion && (this.idClasificacion == null || !this.idClasificacion.equals(other.idClasificacion))) {
+        if (this.clasificacion != other.clasificacion && (this.clasificacion == null || !this.clasificacion.equals(other.clasificacion))) {
             return false;
         }
-        if (this.idEstado != other.idEstado && (this.idEstado == null || !this.idEstado.equals(other.idEstado))) {
+        if (this.estado != other.estado && (this.estado == null || !this.estado.equals(other.estado))) {
             return false;
         }
         return true;
     }
-
 }

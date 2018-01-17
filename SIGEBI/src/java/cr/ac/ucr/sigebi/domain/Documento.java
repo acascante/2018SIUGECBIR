@@ -31,6 +31,7 @@ import javax.persistence.InheritanceType;
 @SequenceGenerator(name = "SGB_SQ_DOCUMENTO", sequenceName = "SIGEBI_OAF.SGB_SQ_DOCUMENTO", initialValue = 1, allocationSize = 1)
 public class Documento extends ObjetoBase implements Serializable {
     
+    //<editor-fold defaultstate="collapsed" desc="Atributos">
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SGB_SQ_DOCUMENTO")
     @Column(name = "ID_DOCUMENTO")
@@ -42,17 +43,19 @@ public class Documento extends ObjetoBase implements Serializable {
 
     @ManyToOne
     @JoinColumn(name = "ID_ESTADO", referencedColumnName = "ID_ESTADO")
-    private Estado idEstado;
+    private Estado estado;
 
     @Column(name = "TIPO")
     private Integer tipo;
+    //</editor-fold>
 
-    public Long getIdDocumento() {
+    //<editor-fold defaultstate="collapsed" desc="GET's y SET's">
+    public Long getId() {
         return id;
     }
 
-    public void setIdDocumento(Long idDocumento) {
-        this.id = idDocumento;
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public Date getFecha() {
@@ -63,12 +66,12 @@ public class Documento extends ObjetoBase implements Serializable {
         this.fecha = fecha;
     }
 
-    public Estado getIdEstado() {
-        return idEstado;
+    public Estado getEstado() {
+        return estado;
     }
 
-    public void setIdEstado(Estado idEstado) {
-        this.idEstado = idEstado;
+    public void setEstado(Estado estado) {
+        this.estado = estado;
     }
 
     public Integer getTipo() {
@@ -78,13 +81,14 @@ public class Documento extends ObjetoBase implements Serializable {
     public void setTipo(Integer tipo) {
         this.tipo = tipo;
     }
+    //</editor-fold>
 
     @Override
     public int hashCode() {
         int hash = 5;
         hash = 29 * hash + (this.id != null ? this.id.hashCode() : 0);
         hash = 29 * hash + (this.fecha != null ? this.fecha.hashCode() : 0);
-        hash = 29 * hash + (this.idEstado != null ? this.idEstado.hashCode() : 0);
+        hash = 29 * hash + (this.estado != null ? this.estado.hashCode() : 0);
         hash = 29 * hash + (this.tipo != null ? this.tipo.hashCode() : 0);
         return hash;
     }
@@ -107,7 +111,7 @@ public class Documento extends ObjetoBase implements Serializable {
         if (this.fecha != other.fecha && (this.fecha == null || !this.fecha.equals(other.fecha))) {
             return false;
         }
-        if (this.idEstado != other.idEstado && (this.idEstado == null || !this.idEstado.equals(other.idEstado))) {
+        if (this.estado != other.estado && (this.estado == null || !this.estado.equals(other.estado))) {
             return false;
         }
         if (this.tipo != other.tipo && (this.tipo == null || !this.tipo.equals(other.tipo))) {
@@ -115,5 +119,4 @@ public class Documento extends ObjetoBase implements Serializable {
         }
         return true;
     }
-
 }

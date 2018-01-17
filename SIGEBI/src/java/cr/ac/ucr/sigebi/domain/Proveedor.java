@@ -20,28 +20,31 @@ import javax.persistence.Table;
 @Table(name = "SIGEBI_OAF.V_SIGB_PROVEEDOR")
 public class Proveedor extends ObjetoBase implements Serializable{
     
+    //<editor-fold defaultstate="collapsed" desc="Atributos">
     @Id
     @Column(name = "ID")
     private Long id;
 
     @Column(name = "NUM_EMPRESA")
-    private Integer numEmpresa;
+    private Integer numeroEmpresa;
     
     @Column(name = "ID_CLASE_PROVEEDOR")
-    private String idClaseProveedor;
+    private String claseProveedor;
     
     @Column(name = "ID_PLAZO")
-    private Integer idPlazo;
+    private Integer plazo;
     
     @Column(name = "ESTADO")
     private String estado;
     
     @Column(name = "FEC_CAMBIO_ESTADO")
-    private String fecCambioEstado;
+    private String fechaCambioEstado;
     
     @Column(name = "COMENTARIOS")
     private String comentarios;
+    //</editor-fold>
 
+    //<editor-fold defaultstate="collapsed" desc="GET's y SET's">
     public Long getId() {
         return id;
     }
@@ -50,28 +53,28 @@ public class Proveedor extends ObjetoBase implements Serializable{
         this.id = id;
     }
 
-    public Integer getNumEmpresa() {
-        return numEmpresa;
+    public Integer getNumeroEmpresa() {
+        return numeroEmpresa;
     }
 
-    public void setNumEmpresa(Integer numEmpresa) {
-        this.numEmpresa = numEmpresa;
+    public void setNumeroEmpresa(Integer numeroEmpresa) {
+        this.numeroEmpresa = numeroEmpresa;
     }
 
-    public String getIdClaseProveedor() {
-        return idClaseProveedor;
+    public String getClaseProveedor() {
+        return claseProveedor;
     }
 
-    public void setIdClaseProveedor(String idClaseProveedor) {
-        this.idClaseProveedor = idClaseProveedor;
+    public void setClaseProveedor(String claseProveedor) {
+        this.claseProveedor = claseProveedor;
     }
 
-    public Integer getIdPlazo() {
-        return idPlazo;
+    public Integer getPlazo() {
+        return plazo;
     }
 
-    public void setIdPlazo(Integer idPlazo) {
-        this.idPlazo = idPlazo;
+    public void setPlazo(Integer plazo) {
+        this.plazo = plazo;
     }
 
     public String getEstado() {
@@ -82,12 +85,12 @@ public class Proveedor extends ObjetoBase implements Serializable{
         this.estado = estado;
     }
 
-    public String getFecCambioEstado() {
-        return fecCambioEstado;
+    public String getFechaCambioEstado() {
+        return fechaCambioEstado;
     }
 
-    public void setFecCambioEstado(String fecCambioEstado) {
-        this.fecCambioEstado = fecCambioEstado;
+    public void setFechaCambioEstado(String fechaCambioEstado) {
+        this.fechaCambioEstado = fechaCambioEstado;
     }
 
     public String getComentarios() {
@@ -97,16 +100,17 @@ public class Proveedor extends ObjetoBase implements Serializable{
     public void setComentarios(String comentarios) {
         this.comentarios = comentarios;
     }
+    //</editor-fold>
 
     @Override
     public int hashCode() {
         int hash = 5;
         hash = 59 * hash + (this.id != null ? this.id.hashCode() : 0);
-        hash = 59 * hash + (this.numEmpresa != null ? this.numEmpresa.hashCode() : 0);
-        hash = 59 * hash + (this.idClaseProveedor != null ? this.idClaseProveedor.hashCode() : 0);
-        hash = 59 * hash + (this.idPlazo != null ? this.idPlazo.hashCode() : 0);
+        hash = 59 * hash + (this.numeroEmpresa != null ? this.numeroEmpresa.hashCode() : 0);
+        hash = 59 * hash + (this.claseProveedor != null ? this.claseProveedor.hashCode() : 0);
+        hash = 59 * hash + (this.plazo != null ? this.plazo.hashCode() : 0);
         hash = 59 * hash + (this.estado != null ? this.estado.hashCode() : 0);
-        hash = 59 * hash + (this.fecCambioEstado != null ? this.fecCambioEstado.hashCode() : 0);
+        hash = 59 * hash + (this.fechaCambioEstado != null ? this.fechaCambioEstado.hashCode() : 0);
         hash = 59 * hash + (this.comentarios != null ? this.comentarios.hashCode() : 0);
         return hash;
     }
@@ -123,13 +127,13 @@ public class Proveedor extends ObjetoBase implements Serializable{
             return false;
         }
         final Proveedor other = (Proveedor) obj;
-        if ((this.idClaseProveedor == null) ? (other.idClaseProveedor != null) : !this.idClaseProveedor.equals(other.idClaseProveedor)) {
+        if ((this.claseProveedor == null) ? (other.claseProveedor != null) : !this.claseProveedor.equals(other.claseProveedor)) {
             return false;
         }
         if ((this.estado == null) ? (other.estado != null) : !this.estado.equals(other.estado)) {
             return false;
         }
-        if ((this.fecCambioEstado == null) ? (other.fecCambioEstado != null) : !this.fecCambioEstado.equals(other.fecCambioEstado)) {
+        if ((this.fechaCambioEstado == null) ? (other.fechaCambioEstado != null) : !this.fechaCambioEstado.equals(other.fechaCambioEstado)) {
             return false;
         }
         if ((this.comentarios == null) ? (other.comentarios != null) : !this.comentarios.equals(other.comentarios)) {
@@ -138,13 +142,12 @@ public class Proveedor extends ObjetoBase implements Serializable{
         if (this.id != other.id && (this.id == null || !this.id.equals(other.id))) {
             return false;
         }
-        if (this.numEmpresa != other.numEmpresa && (this.numEmpresa == null || !this.numEmpresa.equals(other.numEmpresa))) {
+        if (this.numeroEmpresa != other.numeroEmpresa && (this.numeroEmpresa == null || !this.numeroEmpresa.equals(other.numeroEmpresa))) {
             return false;
         }
-        if (this.idPlazo != other.idPlazo && (this.idPlazo == null || !this.idPlazo.equals(other.idPlazo))) {
+        if (this.plazo != other.plazo && (this.plazo == null || !this.plazo.equals(other.plazo))) {
             return false;
         }
         return true;
-    }
-    
+    }   
 }

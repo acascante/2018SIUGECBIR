@@ -26,6 +26,7 @@ import javax.persistence.Table;
 @SequenceGenerator(name = "SGB_SQ_CLASIFICACION",  sequenceName = "SIGEBI_OAF.SGB_SQ_CLASIFICACION", initialValue = 1, allocationSize = 1)
 public class Clasificacion extends ObjetoBase implements Serializable {
     
+    //<editor-fold defaultstate="collapsed" desc="Atributos">
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SGB_SQ_CLASIFICACION")
     @Column(name = "ID_CLASIFICACION")
@@ -39,8 +40,10 @@ public class Clasificacion extends ObjetoBase implements Serializable {
     
     @ManyToOne
     @JoinColumn(name = "ID_ESTADO", referencedColumnName = "ID_ESTADO")
-    private Estado idEstado;
+    private Estado estado;
+    //</editor-fold>
 
+    //<editor-fold defaultstate="collapsed" desc="GET's y SET's">
     public Integer getId() {
         return id;
     }
@@ -48,14 +51,39 @@ public class Clasificacion extends ObjetoBase implements Serializable {
     public void setId(Integer id) {
         this.id = id;
     }
+    
+    public String getNombre() {
+        return nombre;
+    }
 
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
+
+    public String getCodSubCategoria() {
+        return codSubCategoria;
+    }
+
+    public void setCodSubCategoria(String codSubCategoria) {
+        this.codSubCategoria = codSubCategoria;
+    }
+
+    public Estado getEstado() {
+        return estado;
+    }
+
+    public void setEstado(Estado estado) {
+        this.estado = estado;
+    }
+    //</editor-fold>
+    
     @Override
     public int hashCode() {
         int hash = 7;
         hash = 67 * hash + (this.id != null ? this.id.hashCode() : 0);
         hash = 67 * hash + (this.nombre != null ? this.nombre.hashCode() : 0);
         hash = 67 * hash + (this.codSubCategoria != null ? this.codSubCategoria.hashCode() : 0);
-        hash = 67 * hash + (this.idEstado != null ? this.idEstado.hashCode() : 0);
+        hash = 67 * hash + (this.estado != null ? this.estado.hashCode() : 0);
         return hash;
     }
 
@@ -80,35 +108,9 @@ public class Clasificacion extends ObjetoBase implements Serializable {
         if (this.id != other.id && (this.id == null || !this.id.equals(other.id))) {
             return false;
         }
-        if (this.idEstado != other.idEstado && (this.idEstado == null || !this.idEstado.equals(other.idEstado))) {
+        if (this.estado != other.estado && (this.estado == null || !this.estado.equals(other.estado))) {
             return false;
         }
         return true;
     }
-
-    public String getNombre() {
-        return nombre;
-    }
-
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
-    }
-
-    public String getCodSubCategoria() {
-        return codSubCategoria;
-    }
-
-    public void setCodSubCategoria(String codSubCategoria) {
-        this.codSubCategoria = codSubCategoria;
-    }
-
-    public Estado getIdEstado() {
-        return idEstado;
-    }
-
-    public void setIdEstado(Estado idEstado) {
-        this.idEstado = idEstado;
-    }
-    
-    
 }

@@ -80,7 +80,7 @@ public class NotificacionDao extends GenericDaoImpl {
             throw new FWExcepcion("sigebi.error.notificacionDao.listar", "Error obtener los registros de tipo " + this.getClass(), e.getCause());
         }finally{
             session.close();        
-        }        
+        }
     }
     
     @Transactional(readOnly = true)
@@ -108,7 +108,7 @@ public class NotificacionDao extends GenericDaoImpl {
         } else {
             sql.append("ne FROM Notificacion ne ");
         }
-        //Select
+        
         sql.append(" WHERE 1 = 1 ");
         if(id != null && id > 0){
            sql.append(" AND ne.idNotificacion = :idNotificacion) ");

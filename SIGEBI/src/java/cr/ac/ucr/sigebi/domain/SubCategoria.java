@@ -18,41 +18,42 @@ import javax.persistence.Table;
  */
 @Entity(name = "SubCategoria")
 @Table(name = "SIGEBI_OAF.V_SIGB_SUB_CATEGORIA")
-public class SubCategoria  extends ObjetoBase implements Serializable {
+public class SubCategoria extends ObjetoBase implements Serializable {
     
-    private static final long serialVersionUID = 1L;
-    
+    //<editor-fold defaultstate="collapsed" desc="Atributos">
     @Id
     @Column(name = "ID")
     private Long id;
 
     @Column(name = "NUM_EMPRESA")
-    private Integer numEmpresa;
+    private Integer numeroEmpresa;
     
     @Column(name = "CODIGO_SUB_CATEGORIA")
-    private String codSubCateg;
+    private String codigoSubCategoria;
     
     @Column(name = "CODIGO_CATEGORIA")
-    private String codCategoria;
+    private String codigoCategoria;
     
     @Column(name = "DESCRIPCION")
     private String descripcion;
     
     @Column(name = "CTA_CAPITALIZACION_CAT")
-    private String ctaCapitalizacionCat;
+    private String cuentaCapitalizacion;
     
     @Column(name = "CTA_PATRIMONIO_COMPRAS_CAT")
-    private String ctaPatrimonioComprasCat;
+    private String cuentaPatrimonioCompras;
     
     @Column(name = "CTA_PATRIMONIO_DONACIONES_CAT")
-    private String ctaPatrimonioDonacionesCat;
+    private String cuentaPatrimonioDonaciones;
     
     @Column(name = "CTA_DEPRECIACION_CAT")
-    private String ctaDepreciacionCat;
+    private String cuentaDepreciacion;
     
     @Column(name = "CTA_REVALUACION_CAT")
-    private String ctaRevaluacioCat;
+    private String cuentaRevaluacion;
+    //</editor-fold>
 
+    //<editor-fold defaultstate="collapsed" desc="GET's y SET's">
     public Long getId() {
         return id;
     }
@@ -61,28 +62,28 @@ public class SubCategoria  extends ObjetoBase implements Serializable {
         this.id = id;
     }
 
-    public Integer getNumEmpresa() {
-        return numEmpresa;
+    public Integer getNumeroEmpresa() {
+        return numeroEmpresa;
     }
 
-    public void setNumEmpresa(Integer numEmpresa) {
-        this.numEmpresa = numEmpresa;
+    public void setNumeroEmpresa(Integer numeroEmpresa) {
+        this.numeroEmpresa = numeroEmpresa;
     }
 
-    public String getCodSubCateg() {
-        return codSubCateg;
+    public String getCodigoSubCategoria() {
+        return codigoSubCategoria;
     }
 
-    public void setCodSubCateg(String codSubCateg) {
-        this.codSubCateg = codSubCateg;
+    public void setCodigoSubCategoria(String codigoSubCategoria) {
+        this.codigoSubCategoria = codigoSubCategoria;
     }
 
-    public String getCodCategoria() {
-        return codCategoria;
+    public String getCodigoCategoria() {
+        return codigoCategoria;
     }
 
-    public void setCodCategoria(String codCategoria) {
-        this.codCategoria = codCategoria;
+    public void setCodigoCategoria(String codigoCategoria) {
+        this.codigoCategoria = codigoCategoria;
     }
 
     public String getDescripcion() {
@@ -93,59 +94,60 @@ public class SubCategoria  extends ObjetoBase implements Serializable {
         this.descripcion = descripcion;
     }
 
-    public String getCtaCapitalizacionCat() {
-        return ctaCapitalizacionCat;
+    public String getCuentaCapitalizacion() {
+        return cuentaCapitalizacion;
     }
 
-    public void setCtaCapitalizacionCat(String ctaCapitalizacionCat) {
-        this.ctaCapitalizacionCat = ctaCapitalizacionCat;
+    public void setCuentaCapitalizacion(String cuentaCapitalizacion) {
+        this.cuentaCapitalizacion = cuentaCapitalizacion;
     }
 
-    public String getCtaPatrimonioComprasCat() {
-        return ctaPatrimonioComprasCat;
+    public String getCuentaPatrimonioCompras() {
+        return cuentaPatrimonioCompras;
     }
 
-    public void setCtaPatrimonioComprasCat(String ctaPatrimonioComprasCat) {
-        this.ctaPatrimonioComprasCat = ctaPatrimonioComprasCat;
+    public void setCuentaPatrimonioCompras(String cuentaPatrimonioCompras) {
+        this.cuentaPatrimonioCompras = cuentaPatrimonioCompras;
     }
 
-    public String getCtaPatrimonioDonacionesCat() {
-        return ctaPatrimonioDonacionesCat;
+    public String getCuentaPatrimonioDonaciones() {
+        return cuentaPatrimonioDonaciones;
     }
 
-    public void setCtaPatrimonioDonacionesCat(String ctaPatrimonioDonacionesCat) {
-        this.ctaPatrimonioDonacionesCat = ctaPatrimonioDonacionesCat;
+    public void setCuentaPatrimonioDonaciones(String cuentaPatrimonioDonaciones) {
+        this.cuentaPatrimonioDonaciones = cuentaPatrimonioDonaciones;
     }
 
-    public String getCtaDepreciacionCat() {
-        return ctaDepreciacionCat;
+    public String getCuentaDepreciacion() {
+        return cuentaDepreciacion;
     }
 
-    public void setCtaDepreciacionCat(String ctaDepreciacionCat) {
-        this.ctaDepreciacionCat = ctaDepreciacionCat;
+    public void setCuentaDepreciacion(String cuentaDepreciacion) {
+        this.cuentaDepreciacion = cuentaDepreciacion;
     }
 
-    public String getCtaRevaluacioCat() {
-        return ctaRevaluacioCat;
+    public String getCuentaRevaluacion() {
+        return cuentaRevaluacion;
     }
 
-    public void setCtaRevaluacioCat(String ctaRevaluacioCat) {
-        this.ctaRevaluacioCat = ctaRevaluacioCat;
+    public void setCuentaRevaluacion(String cuentaRevaluacion) {
+        this.cuentaRevaluacion = cuentaRevaluacion;
     }
-
+    //</editor-fold>
+    
     @Override
     public int hashCode() {
         int hash = 7;
         hash = 79 * hash + (this.id != null ? this.id.hashCode() : 0);
-        hash = 79 * hash + (this.numEmpresa != null ? this.numEmpresa.hashCode() : 0);
-        hash = 79 * hash + (this.codSubCateg != null ? this.codSubCateg.hashCode() : 0);
-        hash = 79 * hash + (this.codCategoria != null ? this.codCategoria.hashCode() : 0);
+        hash = 79 * hash + (this.numeroEmpresa != null ? this.numeroEmpresa.hashCode() : 0);
+        hash = 79 * hash + (this.codigoSubCategoria != null ? this.codigoSubCategoria.hashCode() : 0);
+        hash = 79 * hash + (this.codigoCategoria != null ? this.codigoCategoria.hashCode() : 0);
         hash = 79 * hash + (this.descripcion != null ? this.descripcion.hashCode() : 0);
-        hash = 79 * hash + (this.ctaCapitalizacionCat != null ? this.ctaCapitalizacionCat.hashCode() : 0);
-        hash = 79 * hash + (this.ctaPatrimonioComprasCat != null ? this.ctaPatrimonioComprasCat.hashCode() : 0);
-        hash = 79 * hash + (this.ctaPatrimonioDonacionesCat != null ? this.ctaPatrimonioDonacionesCat.hashCode() : 0);
-        hash = 79 * hash + (this.ctaDepreciacionCat != null ? this.ctaDepreciacionCat.hashCode() : 0);
-        hash = 79 * hash + (this.ctaRevaluacioCat != null ? this.ctaRevaluacioCat.hashCode() : 0);
+        hash = 79 * hash + (this.cuentaCapitalizacion != null ? this.cuentaCapitalizacion.hashCode() : 0);
+        hash = 79 * hash + (this.cuentaPatrimonioCompras != null ? this.cuentaPatrimonioCompras.hashCode() : 0);
+        hash = 79 * hash + (this.cuentaPatrimonioDonaciones != null ? this.cuentaPatrimonioDonaciones.hashCode() : 0);
+        hash = 79 * hash + (this.cuentaDepreciacion != null ? this.cuentaDepreciacion.hashCode() : 0);
+        hash = 79 * hash + (this.cuentaRevaluacion != null ? this.cuentaRevaluacion.hashCode() : 0);
         return hash;
     }
 
@@ -161,37 +163,36 @@ public class SubCategoria  extends ObjetoBase implements Serializable {
             return false;
         }
         final SubCategoria other = (SubCategoria) obj;
-        if ((this.codSubCateg == null) ? (other.codSubCateg != null) : !this.codSubCateg.equals(other.codSubCateg)) {
+        if ((this.codigoSubCategoria == null) ? (other.codigoSubCategoria != null) : !this.codigoSubCategoria.equals(other.codigoSubCategoria)) {
             return false;
         }
-        if ((this.codCategoria == null) ? (other.codCategoria != null) : !this.codCategoria.equals(other.codCategoria)) {
+        if ((this.codigoCategoria == null) ? (other.codigoCategoria != null) : !this.codigoCategoria.equals(other.codigoCategoria)) {
             return false;
         }
         if ((this.descripcion == null) ? (other.descripcion != null) : !this.descripcion.equals(other.descripcion)) {
             return false;
         }
-        if ((this.ctaCapitalizacionCat == null) ? (other.ctaCapitalizacionCat != null) : !this.ctaCapitalizacionCat.equals(other.ctaCapitalizacionCat)) {
+        if ((this.cuentaCapitalizacion == null) ? (other.cuentaCapitalizacion != null) : !this.cuentaCapitalizacion.equals(other.cuentaCapitalizacion)) {
             return false;
         }
-        if ((this.ctaPatrimonioComprasCat == null) ? (other.ctaPatrimonioComprasCat != null) : !this.ctaPatrimonioComprasCat.equals(other.ctaPatrimonioComprasCat)) {
+        if ((this.cuentaPatrimonioCompras == null) ? (other.cuentaPatrimonioCompras != null) : !this.cuentaPatrimonioCompras.equals(other.cuentaPatrimonioCompras)) {
             return false;
         }
-        if ((this.ctaPatrimonioDonacionesCat == null) ? (other.ctaPatrimonioDonacionesCat != null) : !this.ctaPatrimonioDonacionesCat.equals(other.ctaPatrimonioDonacionesCat)) {
+        if ((this.cuentaPatrimonioDonaciones == null) ? (other.cuentaPatrimonioDonaciones != null) : !this.cuentaPatrimonioDonaciones.equals(other.cuentaPatrimonioDonaciones)) {
             return false;
         }
-        if ((this.ctaDepreciacionCat == null) ? (other.ctaDepreciacionCat != null) : !this.ctaDepreciacionCat.equals(other.ctaDepreciacionCat)) {
+        if ((this.cuentaDepreciacion == null) ? (other.cuentaDepreciacion != null) : !this.cuentaDepreciacion.equals(other.cuentaDepreciacion)) {
             return false;
         }
-        if ((this.ctaRevaluacioCat == null) ? (other.ctaRevaluacioCat != null) : !this.ctaRevaluacioCat.equals(other.ctaRevaluacioCat)) {
+        if ((this.cuentaRevaluacion == null) ? (other.cuentaRevaluacion != null) : !this.cuentaRevaluacion.equals(other.cuentaRevaluacion)) {
             return false;
         }
         if (this.id != other.id && (this.id == null || !this.id.equals(other.id))) {
             return false;
         }
-        if (this.numEmpresa != other.numEmpresa && (this.numEmpresa == null || !this.numEmpresa.equals(other.numEmpresa))) {
+        if (this.numeroEmpresa != other.numeroEmpresa && (this.numeroEmpresa == null || !this.numeroEmpresa.equals(other.numeroEmpresa))) {
             return false;
         }
         return true;
     }
-    
 }

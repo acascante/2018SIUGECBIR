@@ -149,7 +149,7 @@ public class ListarBienSincronizarController extends BaseController {
 
         estadosOptions = new ArrayList<SelectItem>();
         for (Estado item : estados) {
-            estadosOptions.add(new SelectItem(item.getIdEstado().toString(), item.getNombre()));
+            estadosOptions.add(new SelectItem(item.getId().toString(), item.getNombre()));
         }
 
         // Se cuenta la cantidad de bienes

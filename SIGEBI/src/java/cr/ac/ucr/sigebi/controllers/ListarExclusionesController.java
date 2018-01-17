@@ -78,7 +78,7 @@ public class ListarExclusionesController extends BaseController {
         if (!estados.isEmpty()) {
             itemsEstado = new ArrayList<SelectItem>();
             for (Estado item : estados) {
-                itemsEstado.add(new SelectItem(item.getIdEstado(), item.getNombre()));
+                itemsEstado.add(new SelectItem(item.getId(), item.getNombre()));
             }
         }
         

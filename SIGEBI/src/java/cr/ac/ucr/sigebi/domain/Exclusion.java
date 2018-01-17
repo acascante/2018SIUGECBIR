@@ -25,12 +25,14 @@ import javax.persistence.Transient;
 @DiscriminatorValue("1")
 public class Exclusion extends Solicitud {
     
+    //<editor-fold defaultstate="collapsed" desc="Atributos">
     @JoinColumn(name = "ID_TIPO", referencedColumnName = "ID_TIPO")
     @ManyToOne(fetch = FetchType.EAGER)
     private Tipo tipoExclusion;
     
     @Transient
     private List<ExclusionDetalle> detalles;
+    //</editor-fold>
 
     //<editor-fold defaultstate="collapsed" desc="Get's y Set's">
     public Tipo getTipoExclusion() {

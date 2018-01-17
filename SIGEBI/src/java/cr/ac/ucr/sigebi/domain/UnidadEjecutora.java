@@ -18,10 +18,9 @@ import javax.persistence.Table;
  */
 @Entity(name = "UnidadEjecutora")
 @Table(name = "SIGEBI_OAF.V_SIGB_UNIDAD_EJECUTORA")
-public class UnidadEjecutora  extends ObjetoBase implements Serializable {
+public class UnidadEjecutora extends ObjetoBase implements Serializable {
 
-    private static final long serialVersionUID = 1L;
-    
+    //<editor-fold defaultstate="collapsed" desc="Atributos">
     @Id
     @Column(name = "ID") 
     private Long id;
@@ -33,10 +32,10 @@ public class UnidadEjecutora  extends ObjetoBase implements Serializable {
     private Integer idEmpresa;
 
     @Column(name = "NUM_UNIDAD_EJEC_SIAF") 
-    private Character nuUnidEjecSIAF;
+    private Character numeroUnidadEjecutoraSIAF;
     
     @Column(name = "COD_REFERENCIA") 
-    private Integer codReferencia;
+    private Integer codigoReferencia;
      
     @Column(name = "ID_TIPO_UNIDAD")
     private String idTipoUnidad;
@@ -52,7 +51,9 @@ public class UnidadEjecutora  extends ObjetoBase implements Serializable {
  
     @Column(name = "ORDEN")
     private Integer orden;
+    //</editor-fold>
 
+    //<editor-fold defaultstate="collapsed" desc="GET's y SET's">
     public Long getId() {
         return id;
     }
@@ -77,20 +78,20 @@ public class UnidadEjecutora  extends ObjetoBase implements Serializable {
         this.idEmpresa = idEmpresa;
     }
 
-    public Character getNuUnidEjecSIAF() {
-        return nuUnidEjecSIAF;
+    public Character getNumeroUnidadEjecutoraSIAF() {
+        return numeroUnidadEjecutoraSIAF;
     }
 
-    public void setNuUnidEjecSIAF(Character nuUnidEjecSIAF) {
-        this.nuUnidEjecSIAF = nuUnidEjecSIAF;
+    public void setNumeroUnidadEjecutoraSIAF(Character numeroUnidadEjecutoraSIAF) {
+        this.numeroUnidadEjecutoraSIAF = numeroUnidadEjecutoraSIAF;
     }
 
-    public Integer getCodReferencia() {
-        return codReferencia;
+    public Integer getCodigoReferencia() {
+        return codigoReferencia;
     }
 
-    public void setCodReferencia(Integer codReferencia) {
-        this.codReferencia = codReferencia;
+    public void setCodigoReferencia(Integer codigoReferencia) {
+        this.codigoReferencia = codigoReferencia;
     }
 
     public String getIdTipoUnidad() {
@@ -132,15 +133,16 @@ public class UnidadEjecutora  extends ObjetoBase implements Serializable {
     public void setOrden(Integer orden) {
         this.orden = orden;
     }
-
+    //</editor-fold>
+    
     @Override
     public int hashCode() {
         int hash = 7;
         hash = 67 * hash + (this.id != null ? this.id.hashCode() : 0);
         hash = 67 * hash + (this.descripcion != null ? this.descripcion.hashCode() : 0);
         hash = 67 * hash + (this.idEmpresa != null ? this.idEmpresa.hashCode() : 0);
-        hash = 67 * hash + (this.nuUnidEjecSIAF != null ? this.nuUnidEjecSIAF.hashCode() : 0);
-        hash = 67 * hash + (this.codReferencia != null ? this.codReferencia.hashCode() : 0);
+        hash = 67 * hash + (this.numeroUnidadEjecutoraSIAF != null ? this.numeroUnidadEjecutoraSIAF.hashCode() : 0);
+        hash = 67 * hash + (this.codigoReferencia != null ? this.codigoReferencia.hashCode() : 0);
         hash = 67 * hash + (this.idTipoUnidad != null ? this.idTipoUnidad.hashCode() : 0);
         hash = 67 * hash + (this.idUnidadPadre != null ? this.idUnidadPadre.hashCode() : 0);
         hash = 67 * hash + (this.indHabilitado != null ? this.indHabilitado.hashCode() : 0);
@@ -164,7 +166,7 @@ public class UnidadEjecutora  extends ObjetoBase implements Serializable {
         if ((this.descripcion == null) ? (other.descripcion != null) : !this.descripcion.equals(other.descripcion)) {
             return false;
         }
-        if ((this.codReferencia == null) ? (other.codReferencia != null) : !this.codReferencia.equals(other.codReferencia)) {
+        if ((this.codigoReferencia == null) ? (other.codigoReferencia != null) : !this.codigoReferencia.equals(other.codigoReferencia)) {
             return false;
         }
         if ((this.idTipoUnidad == null) ? (other.idTipoUnidad != null) : !this.idTipoUnidad.equals(other.idTipoUnidad)) {
@@ -182,7 +184,7 @@ public class UnidadEjecutora  extends ObjetoBase implements Serializable {
         if (this.idEmpresa != other.idEmpresa && (this.idEmpresa == null || !this.idEmpresa.equals(other.idEmpresa))) {
             return false;
         }
-        if (this.nuUnidEjecSIAF != other.nuUnidEjecSIAF && (this.nuUnidEjecSIAF == null || !this.nuUnidEjecSIAF.equals(other.nuUnidEjecSIAF))) {
+        if (this.numeroUnidadEjecutoraSIAF != other.numeroUnidadEjecutoraSIAF && (this.numeroUnidadEjecutoraSIAF == null || !this.numeroUnidadEjecutoraSIAF.equals(other.numeroUnidadEjecutoraSIAF))) {
             return false;
         }
         if (this.idUnidadPadre != other.idUnidadPadre && (this.idUnidadPadre == null || !this.idUnidadPadre.equals(other.idUnidadPadre))) {
@@ -193,5 +195,4 @@ public class UnidadEjecutora  extends ObjetoBase implements Serializable {
         }
         return true;
     }
-    
 }

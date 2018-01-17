@@ -69,7 +69,7 @@ public class ListarNotificacionesController extends BaseController {
             estados = new HashMap<Integer, Estado>();
             itemsEstado = new ArrayList<SelectItem>();
             for (Estado item : listEstados) {
-                itemsEstado.add(new SelectItem(item.getIdEstado(), item.getNombre()));  // ID + Nombre -- Usado para combo de filtro para enviar el ID al Dao para la consulta
+                itemsEstado.add(new SelectItem(item.getId(), item.getNombre()));  // ID + Nombre -- Usado para combo de filtro para enviar el ID al Dao para la consulta
                 estados.put(item.getValor(), item); // Valor + Objeto Estado -- Usado para obtener un estado al enviar una notificacion y modificar el estado de la misma
             }
         }

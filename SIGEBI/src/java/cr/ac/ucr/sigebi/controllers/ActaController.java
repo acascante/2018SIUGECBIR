@@ -763,7 +763,7 @@ public class ActaController extends ListadoBienesGeneralController {
                     rolesIncluidos.put(valor.getRolId(), valor);
                     // Los marco como marcados.
                     if(( valor.getUsuario() == null) || (valor.getUsuario().equals("")) ){
-                        if(acta.getIdEstado().getIdEstado().equals(estadoGeneralActivo.getIdEstado()))
+                        if(acta.getIdEstado().equals(estadoGeneralActivo.getIdEstado()))
                             valor.setMarcado(rolesDelUsuarioActualDonacion.containsKey(Long.parseLong(valor.getRolId().toString())));
                     }
                         
@@ -781,7 +781,7 @@ public class ActaController extends ListadoBienesGeneralController {
     }
 
     public boolean permitirEditar() {
-        return acta.getIdEstado().getIdEstado().equals(estadoGeneralPendiente.getIdEstado());
+        return acta.getIdEstado().equals(estadoGeneralPendiente.getIdEstado());
     }
 
     @Resource

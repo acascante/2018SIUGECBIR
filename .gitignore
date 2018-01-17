@@ -19,5 +19,9 @@ SIGEBI/build.xml
 SIGEBI/catalog.xml
 SIGEBI/nbbuild.xml
 SIGEBI/nbproject/
-SIGEBI/nbproject/private/private.xml
 SIGEBI/.svn/
+
+SIGEBI/nbproject/genfiles.properties
+SIGEBI/nbproject/private/private.properties
+SIGEBI/nbproject/private/private.xml
+SIGEBI/nbproject/project.xml

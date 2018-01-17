@@ -5,6 +5,7 @@
  */
 package cr.ac.ucr.sigebi.domain;
 
+import cr.ac.ucr.framework.seguridad.ObjetoBase;
 import cr.ac.ucr.sigebi.entities.*;
 import java.io.Serializable;
 import javax.persistence.Column;
@@ -24,51 +25,55 @@ import javax.persistence.Table;
 @Entity(name = "ActaDetalle")
 @Table(name = "SIGEBI_OAF.SIGB_ACTA_DETALLE")
 @SequenceGenerator(name = "SGB_SQ_ACTA_DETALLE", sequenceName = "SIGEBI_OAF.SGB_SQ_ACTA_DETALLE", initialValue = 1, allocationSize = 1)
-public class ActaDetalle implements Serializable {
+public class ActaDetalle extends ObjetoBase implements Serializable {
 
+    //<editor-fold defaultstate="collapsed" desc="Atributos">
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SGB_SQ_ACTA_DETALLE")
     @Column(name = "ID_ACTA_DETALLE")
-    private Long idActaDetalle;
+    private Long id;
 
     @ManyToOne
     @JoinColumn(name = "ID_ACTA", referencedColumnName = "ID_DOCUMENTO")
-    private Documento idActa;
+    private Acta acta;
 
     @ManyToOne
     @JoinColumn(name = "ID_BIEN", referencedColumnName = "ID_BIEN")
-    private BienEntity idBien;
+    private Bien bien;
+    //</editor-fold>
 
-    public Long getIdActaDetalle() {
-        return idActaDetalle;
+    //<editor-fold defaultstate="collapsed" desc="Get's y Set's">
+    public Long getId() {
+        return id;
     }
 
-    public void setIdActaDetalle(Long idActaDetalle) {
-        this.idActaDetalle = idActaDetalle;
+    public void setId(Long id) {
+        this.id = id;
     }
 
-    public Documento getIdActa() {
-        return idActa;
+    public Acta getActa() {
+        return acta;
     }
 
-    public void setIdActa(Documento idActa) {
-        this.idActa = idActa;
+    public void setActa(Acta acta) {
+        this.acta = acta;
     }
 
-    public BienEntity getIdBien() {
-        return idBien;
+    public Bien getBien() {
+        return bien;
     }
 
-    public void setIdBien(BienEntity idBien) {
-        this.idBien = idBien;
+    public void setBien(Bien bien) {
+        this.bien = bien;
     }
+    //</editor-fold>
 
     @Override
     public int hashCode() {
         int hash = 3;
-        hash = 83 * hash + (this.idActaDetalle != null ? this.idActaDetalle.hashCode() : 0);
-        hash = 83 * hash + (this.idActa != null ? this.idActa.hashCode() : 0);
-        hash = 83 * hash + (this.idBien != null ? this.idBien.hashCode() : 0);
+        hash = 83 * hash + (this.id != null ? this.id.hashCode() : 0);
+        hash = 83 * hash + (this.acta != null ? this.acta.hashCode() : 0);
+        hash = 83 * hash + (this.bien != null ? this.bien.hashCode() : 0);
         return hash;
     }
 
@@ -84,16 +89,15 @@ public class ActaDetalle implements Serializable {
             return false;
         }
         final ActaDetalle other = (ActaDetalle) obj;
-        if (this.idActaDetalle != other.idActaDetalle && (this.idActaDetalle == null || !this.idActaDetalle.equals(other.idActaDetalle))) {
+        if (this.id != other.id && (this.id == null || !this.id.equals(other.id))) {
             return false;
         }
-        if (this.idActa != other.idActa && (this.idActa == null || !this.idActa.equals(other.idActa))) {
+        if (this.acta != other.acta && (this.acta == null || !this.acta.equals(other.acta))) {
             return false;
         }
-        if (this.idBien != other.idBien && (this.idBien == null || !this.idBien.equals(other.idBien))) {
+        if (this.bien != other.bien && (this.bien == null || !this.bien.equals(other.bien))) {
             return false;
         }
         return true;
     }
-
 }

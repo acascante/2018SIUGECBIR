@@ -24,9 +24,10 @@ import javax.persistence.Temporal;
 @PrimaryKeyJoinColumn(name = "ID_ACTA", referencedColumnName = "ID_DOCUMENTO")
 public class Acta extends Documento implements Serializable {
 
+    //<editor-fold defaultstate="collapsed" desc="Atributos">
     @ManyToOne
     @JoinColumn(name = "ID_TIPO", referencedColumnName = "ID_TIPO")
-    private Tipo idTipo;
+    private Tipo tipoActa;
 
     @Column(name = "CEDULA")
     private String cedula;
@@ -37,20 +38,22 @@ public class Acta extends Documento implements Serializable {
     @Column(name = "AUTORIZACION")
     private String autorizacion;
 
-    @Column(name = "FECHA") // DATE  
+    @Column(name = "FECHA") // TODO revisar el campo fecha por que el documento tambien lo tiene
     @Temporal(javax.persistence.TemporalType.DATE)
     private Date fecha;
 
     @ManyToOne
     @JoinColumn(name = "ID_UNIDAD_EJECUTORA", referencedColumnName = "ID")
-    private UnidadEjecutora idUnidadEjecutora;
-
-    public Tipo getIdTipo() {
-        return idTipo;
+    private UnidadEjecutora unidadEjecutora;
+    //</editor-fold>
+    
+    //<editor-fold defaultstate="collapsed" desc="Get's y Set's">
+    public Tipo getTipoActa() {
+        return tipoActa;
     }
 
-    public void setIdTipo(Tipo idTipo) {
-        this.idTipo = idTipo;
+    public void setTipoActa(Tipo tipoActa) {
+        this.tipoActa = tipoActa;
     }
 
     public String getCedula() {
@@ -85,23 +88,24 @@ public class Acta extends Documento implements Serializable {
         this.fecha = fecha;
     }
 
-    public UnidadEjecutora getIdUnidadEjecutora() {
-        return idUnidadEjecutora;
+    public UnidadEjecutora getUnidadEjecutora() {
+        return unidadEjecutora;
     }
 
-    public void setIdUnidadEjecutora(UnidadEjecutora idUnidadEjecutora) {
-        this.idUnidadEjecutora = idUnidadEjecutora;
+    public void setUnidadEjecutora(UnidadEjecutora unidadEjecutora) {
+        this.unidadEjecutora = unidadEjecutora;
     }
+    //</editor-fold>
 
     @Override
     public int hashCode() {
         int hash = 7;
-        hash = 79 * hash + (this.idTipo != null ? this.idTipo.hashCode() : 0);
+        hash = 79 * hash + (this.tipoActa != null ? this.tipoActa.hashCode() : 0);
         hash = 79 * hash + (this.cedula != null ? this.cedula.hashCode() : 0);
         hash = 79 * hash + (this.razonSocial != null ? this.razonSocial.hashCode() : 0);
         hash = 79 * hash + (this.autorizacion != null ? this.autorizacion.hashCode() : 0);
         hash = 79 * hash + (this.fecha != null ? this.fecha.hashCode() : 0);
-        hash = 79 * hash + (this.idUnidadEjecutora != null ? this.idUnidadEjecutora.hashCode() : 0);
+        hash = 79 * hash + (this.unidadEjecutora != null ? this.unidadEjecutora.hashCode() : 0);
         return hash;
     }
 
@@ -126,16 +130,15 @@ public class Acta extends Documento implements Serializable {
         if ((this.autorizacion == null) ? (other.autorizacion != null) : !this.autorizacion.equals(other.autorizacion)) {
             return false;
         }
-        if (this.idTipo != other.idTipo && (this.idTipo == null || !this.idTipo.equals(other.idTipo))) {
+        if (this.tipoActa != other.tipoActa && (this.tipoActa == null || !this.tipoActa.equals(other.tipoActa))) {
             return false;
         }
         if (this.fecha != other.fecha && (this.fecha == null || !this.fecha.equals(other.fecha))) {
             return false;
         }
-        if (this.idUnidadEjecutora != other.idUnidadEjecutora && (this.idUnidadEjecutora == null || !this.idUnidadEjecutora.equals(other.idUnidadEjecutora))) {
+        if (this.unidadEjecutora != other.unidadEjecutora && (this.unidadEjecutora == null || !this.unidadEjecutora.equals(other.unidadEjecutora))) {
             return false;
         }
         return true;
     }
-
 }

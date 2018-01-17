@@ -26,6 +26,7 @@ import javax.persistence.Table;
 @SequenceGenerator(name = "SGB_SQ_ACCESORIO",  sequenceName = "SIGEBI_OAF.SGB_SQ_ACCESORIO", initialValue = 1, allocationSize = 1)
 public class Accesorio  extends ObjetoBase implements Serializable{
     
+    //<editor-fold defaultstate="collapsed" desc="Atributos">
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SGB_SQ_ACCESORIO")
     @Column(name = "ID_ACCESORIO")    
@@ -33,15 +34,17 @@ public class Accesorio  extends ObjetoBase implements Serializable{
     
     @ManyToOne
     @JoinColumn(name = "ID_BIEN", referencedColumnName = "ID_BIEN")
-    private Bien idBien;
+    private Bien bien;
     
     @Column(name = "DETALLE")
     private String detalle;
     
     @ManyToOne
     @JoinColumn(name = "ID_ESTADO", referencedColumnName = "ID_ESTADO")
-    private Estado idEstado;
-
+    private Estado estado;
+    //</editor-fold>
+    
+    //<editor-fold defaultstate="collapsed" desc="Get's y Set's">
     public Long getId() {
         return id;
     }
@@ -50,12 +53,12 @@ public class Accesorio  extends ObjetoBase implements Serializable{
         this.id = id;
     }
 
-    public Bien getIdBien() {
-        return idBien;
+    public Bien getBien() {
+        return bien;
     }
 
-    public void setIdBien(Bien idBien) {
-        this.idBien = idBien;
+    public void setBien(Bien bien) {
+        this.bien = bien;
     }
 
     public String getDetalle() {
@@ -66,21 +69,22 @@ public class Accesorio  extends ObjetoBase implements Serializable{
         this.detalle = detalle;
     }
 
-    public Estado getIdEstado() {
-        return idEstado;
+    public Estado getEstado() {
+        return estado;
     }
 
-    public void setIdEstado(Estado idEstado) {
-        this.idEstado = idEstado;
+    public void setEstado(Estado estado) {
+        this.estado = estado;
     }
-
+    //</editor-fold>
+    
     @Override
     public int hashCode() {
         int hash = 7;
         hash = 23 * hash + (this.id != null ? this.id.hashCode() : 0);
-        hash = 23 * hash + (this.idBien != null ? this.idBien.hashCode() : 0);
+        hash = 23 * hash + (this.bien != null ? this.bien.hashCode() : 0);
         hash = 23 * hash + (this.detalle != null ? this.detalle.hashCode() : 0);
-        hash = 23 * hash + (this.idEstado != null ? this.idEstado.hashCode() : 0);
+        hash = 23 * hash + (this.estado != null ? this.estado.hashCode() : 0);
         return hash;
     }
 
@@ -102,15 +106,12 @@ public class Accesorio  extends ObjetoBase implements Serializable{
         if (this.id != other.id && (this.id == null || !this.id.equals(other.id))) {
             return false;
         }
-        if (this.idBien != other.idBien && (this.idBien == null || !this.idBien.equals(other.idBien))) {
+        if (this.bien != other.bien && (this.bien == null || !this.bien.equals(other.bien))) {
             return false;
         }
-        if (this.idEstado != other.idEstado && (this.idEstado == null || !this.idEstado.equals(other.idEstado))) {
+        if (this.estado != other.estado && (this.estado == null || !this.estado.equals(other.estado))) {
             return false;
         }
         return true;
     }
-    
-    
-    
 }

@@ -26,6 +26,7 @@ import javax.persistence.Table;
 @SequenceGenerator(name = "SGB_SQ_ROL",  sequenceName = "SIGEBI_OAF.SGB_SQ_ROL", initialValue = 1, allocationSize = 1)
 public class Rol extends ObjetoBase implements Serializable {
     
+    //<editor-fold defaultstate="collapsed" desc="Atributos">
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SGB_SQ_ROL")
     @Column(name = "ID_ROL")
@@ -39,8 +40,10 @@ public class Rol extends ObjetoBase implements Serializable {
     
     @ManyToOne
     @JoinColumn(name = "ID_ESTADO", referencedColumnName = "ID_ESTADO")
-    private Estado idEstado;  
+    private Estado estado;  
+    //</editor-fold>
 
+    //<editor-fold defaultstate="collapsed" desc="GET's y SET's">
     public Long getId() {
         return id;
     }
@@ -65,13 +68,14 @@ public class Rol extends ObjetoBase implements Serializable {
         this.nombre = nombre;
     }
 
-    public Estado getIdEstado() {
-        return idEstado;
+    public Estado getEstado() {
+        return estado;
     }
 
-    public void setIdEstado(Estado idEstado) {
-        this.idEstado = idEstado;
+    public void setEstado(Estado estado) {
+        this.estado = estado;
     }
+    //</editor-fold>
     
     @Override
     public int hashCode() {
@@ -79,7 +83,7 @@ public class Rol extends ObjetoBase implements Serializable {
         hash = 97 * hash + (this.id != null ? this.id.hashCode() : 0);
         hash = 97 * hash + (this.codigo != null ? this.codigo.hashCode() : 0);
         hash = 97 * hash + (this.nombre != null ? this.nombre.hashCode() : 0);
-        hash = 97 * hash + (this.idEstado != null ? this.idEstado.hashCode() : 0);
+        hash = 97 * hash + (this.estado != null ? this.estado.hashCode() : 0);
         return hash;
     }
 
@@ -104,10 +108,9 @@ public class Rol extends ObjetoBase implements Serializable {
         if (this.id != other.id && (this.id == null || !this.id.equals(other.id))) {
             return false;
         }
-        if (this.idEstado != other.idEstado && (this.idEstado == null || !this.idEstado.equals(other.idEstado))) {
+        if (this.estado != other.estado && (this.estado == null || !this.estado.equals(other.estado))) {
             return false;
         }
         return true;
     }
-
 }

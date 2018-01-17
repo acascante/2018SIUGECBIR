@@ -5,6 +5,7 @@
  */
 package cr.ac.ucr.sigebi.domain;
 
+import cr.ac.ucr.framework.seguridad.ObjetoBase;
 import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -21,8 +22,9 @@ import javax.persistence.Table;
  */
 @Entity(name = "ExclusionDetalle")
 @Table(name = "SIGEBI_OAF.SIGB_EXCLUSION_DETALLE")
-public class ExclusionDetalle implements Serializable {
+public class ExclusionDetalle extends ObjetoBase implements Serializable {
     
+    //<editor-fold defaultstate="collapsed" desc="Atributos">
     @Id
     @GeneratedValue
     @Column(name = "ID_EXCLUSION_DETALLE")
@@ -39,6 +41,7 @@ public class ExclusionDetalle implements Serializable {
     @JoinColumn(name = "ID_ESTADO", referencedColumnName = "ID_ESTADO")
     @ManyToOne(fetch = FetchType.EAGER)
     private Estado estado;
+    //</editor-fold>
 
     //<editor-fold defaultstate="collapsed" desc="Constructores">
     public ExclusionDetalle() {}

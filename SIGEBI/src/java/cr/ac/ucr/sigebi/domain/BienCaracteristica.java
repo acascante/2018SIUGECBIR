@@ -5,6 +5,7 @@
  */
 package cr.ac.ucr.sigebi.domain;
 
+import cr.ac.ucr.framework.seguridad.ObjetoBase;
 import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -24,7 +25,7 @@ import javax.persistence.Table;
 @Entity(name = "BienCaracteristica")
 @Table(name = "SIGEBI_OAF.SGB_NOTIFICACION")
 @SequenceGenerator(name="sqBienCaracteristica", sequenceName = "SIGEBI_OAF.SGB_SQ_BIEN_CARACTERISTICA", initialValue=1, allocationSize=1)
-public class BienCaracteristica implements Serializable  {
+public class BienCaracteristica extends ObjetoBase implements Serializable  {
     
     //<editor-fold defaultstate="collapsed" desc="Atributos">
     @Id

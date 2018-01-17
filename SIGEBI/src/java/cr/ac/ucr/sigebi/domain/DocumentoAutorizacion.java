@@ -26,6 +26,7 @@ import javax.persistence.Table;
 @SequenceGenerator(name = "SGB_SQ_DOC_AUTORIZACION", sequenceName = "SIGEBI_OAF.SGB_SQ_DOC_AUTORIZACION", initialValue = 1, allocationSize = 1)
 public class DocumentoAutorizacion extends ObjetoBase implements Serializable {
 
+    //<editor-fold defaultstate="collapsed" desc="Atributos">
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SGB_SQ_DOC_AUTORIZACION")
     @Column(name = "ID_DOCUMENTO_AUTORIZACION")
@@ -34,22 +35,24 @@ public class DocumentoAutorizacion extends ObjetoBase implements Serializable {
     @Id
     @ManyToOne
     @JoinColumn(name = "ID_DOCUMENTO", referencedColumnName = "ID_DOCUMENTO")
-    private Documento idDocumento;
+    private Documento documento;
 
     @Id
     @ManyToOne
     @JoinColumn(name = "ID_ROL", referencedColumnName = "ID_ROL")
-    private Rol idRol;
+    private Rol rol;
 
     @Id
     @ManyToOne
     @JoinColumn(name = "ID_USUARIO", referencedColumnName = "ID_USUARIO")
-    private Usuario idUsuarioSeguridad;
+    private Usuario usuarioSeguridad;
 
     @ManyToOne
     @JoinColumn(name = "ID_UNIDAD_EJECUTORA", referencedColumnName = "ID")
-    private UnidadEjecutora idUnidadEjecutora;
+    private UnidadEjecutora unidadEjecutora;
+    //</editor-fold>
 
+    //<editor-fold defaultstate="collapsed" desc="GET's y SET's">
     public Long getId() {
         return id;
     }
@@ -58,46 +61,47 @@ public class DocumentoAutorizacion extends ObjetoBase implements Serializable {
         this.id = id;
     }
 
-    public Documento getIdDocumento() {
-        return idDocumento;
+    public Documento getDocumento() {
+        return documento;
     }
 
-    public void setIdDocumento(Documento idDocumento) {
-        this.idDocumento = idDocumento;
+    public void setDocumento(Documento documento) {
+        this.documento = documento;
     }
 
-    public Rol getIdRol() {
-        return idRol;
+    public Rol getRol() {
+        return rol;
     }
 
-    public void setIdRol(Rol idRol) {
-        this.idRol = idRol;
+    public void setRol(Rol rol) {
+        this.rol = rol;
     }
 
-    public Usuario getIdUsuarioSeguridad() {
-        return idUsuarioSeguridad;
+    public Usuario getUsuarioSeguridad() {
+        return usuarioSeguridad;
     }
 
-    public void setIdUsuarioSeguridad(Usuario idUsuarioSeguridad) {
-        this.idUsuarioSeguridad = idUsuarioSeguridad;
+    public void setUsuarioSeguridad(Usuario usuarioSeguridad) {
+        this.usuarioSeguridad = usuarioSeguridad;
     }
 
-    public UnidadEjecutora getIdUnidadEjecutora() {
-        return idUnidadEjecutora;
+    public UnidadEjecutora getUnidadEjecutora() {
+        return unidadEjecutora;
     }
 
-    public void setIdUnidadEjecutora(UnidadEjecutora idUnidadEjecutora) {
-        this.idUnidadEjecutora = idUnidadEjecutora;
+    public void setUnidadEjecutora(UnidadEjecutora unidadEjecutora) {
+        this.unidadEjecutora = unidadEjecutora;
     }
+    //</editor-fold>
 
     @Override
     public int hashCode() {
         int hash = 7;
         hash = 29 * hash + (this.id != null ? this.id.hashCode() : 0);
-        hash = 29 * hash + (this.idDocumento != null ? this.idDocumento.hashCode() : 0);
-        hash = 29 * hash + (this.idRol != null ? this.idRol.hashCode() : 0);
-        hash = 29 * hash + (this.idUsuarioSeguridad != null ? this.idUsuarioSeguridad.hashCode() : 0);
-        hash = 29 * hash + (this.idUnidadEjecutora != null ? this.idUnidadEjecutora.hashCode() : 0);
+        hash = 29 * hash + (this.documento != null ? this.documento.hashCode() : 0);
+        hash = 29 * hash + (this.rol != null ? this.rol.hashCode() : 0);
+        hash = 29 * hash + (this.usuarioSeguridad != null ? this.usuarioSeguridad.hashCode() : 0);
+        hash = 29 * hash + (this.unidadEjecutora != null ? this.unidadEjecutora.hashCode() : 0);
         return hash;
     }
 
@@ -116,19 +120,18 @@ public class DocumentoAutorizacion extends ObjetoBase implements Serializable {
         if (this.id != other.id && (this.id == null || !this.id.equals(other.id))) {
             return false;
         }
-        if (this.idDocumento != other.idDocumento && (this.idDocumento == null || !this.idDocumento.equals(other.idDocumento))) {
+        if (this.documento != other.documento && (this.documento == null || !this.documento.equals(other.documento))) {
             return false;
         }
-        if (this.idRol != other.idRol && (this.idRol == null || !this.idRol.equals(other.idRol))) {
+        if (this.rol != other.rol && (this.rol == null || !this.rol.equals(other.rol))) {
             return false;
         }
-        if (this.idUsuarioSeguridad != other.idUsuarioSeguridad && (this.idUsuarioSeguridad == null || !this.idUsuarioSeguridad.equals(other.idUsuarioSeguridad))) {
+        if (this.usuarioSeguridad != other.usuarioSeguridad && (this.usuarioSeguridad == null || !this.usuarioSeguridad.equals(other.usuarioSeguridad))) {
             return false;
         }
-        if (this.idUnidadEjecutora != other.idUnidadEjecutora && (this.idUnidadEjecutora == null || !this.idUnidadEjecutora.equals(other.idUnidadEjecutora))) {
+        if (this.unidadEjecutora != other.unidadEjecutora && (this.unidadEjecutora == null || !this.unidadEjecutora.equals(other.unidadEjecutora))) {
             return false;
         }
         return true;
     }
-
 }

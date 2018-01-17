@@ -5,10 +5,8 @@
  */
 package cr.ac.ucr.sigebi.domain;
 
-import cr.ac.ucr.sigebi.entities.*;
 import cr.ac.ucr.framework.seguridad.ObjetoBase;
 import java.io.Serializable;
-import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -22,15 +20,16 @@ import javax.persistence.Table;
 @Table(name = "SEGURIDAD_USUARIO")
 public class Usuario extends ObjetoBase implements Serializable {
     
+    //<editor-fold defaultstate="collapsed" desc="Atributos">
     @Id    
     @Column(name = "ID_USUARIO")
-    private String idUsuario;
+    private String id;
 
     @Column(name = "DSC_NOMBRE_COMPLETO")
-    private String nombre_completo;
+    private String nombreCompleto;
 
     @Column(name = "COD_CLAVE")
-    private String codClave;
+    private String codigoClave;
 
     @Column(name = "NUM_TELEFONO1")
     private String telefono1;
@@ -46,29 +45,31 @@ public class Usuario extends ObjetoBase implements Serializable {
 
     @Column(name = "DSC_EMAIL")
     private String correo;
+    //</editor-fold>
 
-    public String getIdUsuario() {
-        return idUsuario;
+    //<editor-fold defaultstate="collapsed" desc="GET's y SET's">
+    public String getId() {
+        return id;
     }
 
-    public void setIdUsuario(String idUsuario) {
-        this.idUsuario = idUsuario;
+    public void setId(String id) {
+        this.id = id;
     }
 
-    public String getNombre_completo() {
-        return nombre_completo;
+    public String getNombreCompleto() {
+        return nombreCompleto;
     }
 
-    public void setNombre_completo(String nombre_completo) {
-        this.nombre_completo = nombre_completo;
+    public void setNombreCompleto(String nombreCompleto) {
+        this.nombreCompleto = nombreCompleto;
     }
 
-    public String getCodClave() {
-        return codClave;
+    public String getCodigoClave() {
+        return codigoClave;
     }
 
-    public void setCodClave(String codClave) {
-        this.codClave = codClave;
+    public void setCodigoClave(String codigoClave) {
+        this.codigoClave = codigoClave;
     }
 
     public String getTelefono1() {
@@ -110,13 +111,14 @@ public class Usuario extends ObjetoBase implements Serializable {
     public void setCorreo(String correo) {
         this.correo = correo;
     }
+    //</editor-fold>
 
     @Override
     public int hashCode() {
         int hash = 7;
-        hash = 13 * hash + (this.idUsuario != null ? this.idUsuario.hashCode() : 0);
-        hash = 13 * hash + (this.nombre_completo != null ? this.nombre_completo.hashCode() : 0);
-        hash = 13 * hash + (this.codClave != null ? this.codClave.hashCode() : 0);
+        hash = 13 * hash + (this.id != null ? this.id.hashCode() : 0);
+        hash = 13 * hash + (this.nombreCompleto != null ? this.nombreCompleto.hashCode() : 0);
+        hash = 13 * hash + (this.codigoClave != null ? this.codigoClave.hashCode() : 0);
         hash = 13 * hash + (this.telefono1 != null ? this.telefono1.hashCode() : 0);
         hash = 13 * hash + (this.telefono2 != null ? this.telefono2.hashCode() : 0);
         hash = 13 * hash + (this.extension1 != null ? this.extension1.hashCode() : 0);
@@ -137,13 +139,13 @@ public class Usuario extends ObjetoBase implements Serializable {
             return false;
         }
         final Usuario other = (Usuario) obj;
-        if ((this.idUsuario == null) ? (other.idUsuario != null) : !this.idUsuario.equals(other.idUsuario)) {
+        if ((this.id == null) ? (other.id != null) : !this.id.equals(other.id)) {
             return false;
         }
-        if ((this.nombre_completo == null) ? (other.nombre_completo != null) : !this.nombre_completo.equals(other.nombre_completo)) {
+        if ((this.nombreCompleto == null) ? (other.nombreCompleto != null) : !this.nombreCompleto.equals(other.nombreCompleto)) {
             return false;
         }
-        if ((this.codClave == null) ? (other.codClave != null) : !this.codClave.equals(other.codClave)) {
+        if ((this.codigoClave == null) ? (other.codigoClave != null) : !this.codigoClave.equals(other.codigoClave)) {
             return false;
         }
         if ((this.telefono1 == null) ? (other.telefono1 != null) : !this.telefono1.equals(other.telefono1)) {
@@ -163,5 +165,4 @@ public class Usuario extends ObjetoBase implements Serializable {
         }
         return true;
     }
-    
 }

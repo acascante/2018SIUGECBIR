@@ -25,7 +25,7 @@ import org.hibernate.Session;
 import org.springframework.dao.DataAccessException;
 /**
  *
- * @author oscar_acuna
+ * @author alvaro.cascante
  */
 @Repository(value = "tipoDao")
 @Scope("request")
