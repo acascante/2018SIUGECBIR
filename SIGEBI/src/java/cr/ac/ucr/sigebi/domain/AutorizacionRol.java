@@ -27,7 +27,7 @@ import javax.persistence.Table;
 public class AutorizacionRol extends ObjetoBase implements Serializable {
    
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SGB_SQ_AUTORIZACION")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SGB_SQ_AUTORIZACION_ROL")
     @Column(name = "ID_AUTORIZACION_ROL")
     private Long id;
     

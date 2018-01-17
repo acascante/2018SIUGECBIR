@@ -24,7 +24,7 @@ import javax.persistence.Table;
 @Entity(name = "Autorizacion")
 @Table(name = "SIGEBI_OAF.SIGB_AUTORIZACION")
 @SequenceGenerator(name = "SGB_SQ_AUTORIZACION",  sequenceName = "SIGEBI_OAF.SGB_SQ_AUTORIZACION", initialValue = 1, allocationSize = 1)
-public class Autorizacion extends ObjetoBase implements Serializable {
+public class Autorizacion extends ObjetoBase implements Serializable {       
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SGB_SQ_AUTORIZACION")
