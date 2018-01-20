@@ -8,10 +8,7 @@ package cr.ac.ucr.sigebi.daos;
 import cr.ac.ucr.framework.daoHibernate.DaoHelper;
 import cr.ac.ucr.framework.daoImpl.GenericDaoImpl;
 import cr.ac.ucr.framework.utils.FWExcepcion;
-import cr.ac.ucr.sigebi.domain.Bien;
-import cr.ac.ucr.sigebi.domain.BienCaracteristica;
-import cr.ac.ucr.sigebi.domain.BienDetalleCaracteristica;
-import cr.ac.ucr.sigebi.domain.Tipo;
+import cr.ac.ucr.sigebi.domain.ViewResumenBien;
 import java.util.List;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
@@ -26,36 +23,36 @@ import org.springframework.transaction.annotation.Transactional;
  *
  * @author alvaro.cascante
  */
-@Repository(value = "bienCaracteristicaDao")
+@Repository(value = "bienCaracteristicaDetalleDao")
 @Scope("request")
-public class BienDetalleCaracteristicaDao extends GenericDaoImpl {
-    
+public class ViewResumenBienDao extends GenericDaoImpl {
+
     @Autowired
     private DaoHelper dao;
 
     @Transactional(readOnly = true)
-    public List<BienDetalleCaracteristica> listar() throws FWExcepcion {
+    public List<ViewResumenBien> listar() throws FWExcepcion {
         try {
-            return (List<BienDetalleCaracteristica>) dao.getHibernateTemplate().findByNamedQuery("BienDetalleCaracteristica.findAll");
+            return dao.getHibernateTemplate().find("from ViewResumenBien");
         } catch (DataAccessException e) {
             throw new FWExcepcion("sigebi.error.bienCaracteristica.dao.traerTodo", "Error obtener los registros de bienCaracteristica " + this.getClass(), e.getCause());
         }
     }
-    
+
     @Transactional(readOnly = true)
-    public BienDetalleCaracteristica buscarPorId(Long id) throws FWExcepcion {
+    public ViewResumenBien buscarPorId(Long id) throws FWExcepcion {
         Session session = dao.getSessionFactory().openSession();
         try {
-            String sql = "SELECT carac FROM BienDetalleCaracteristica carac WHERE carac.id = :id";
+            String sql = "SELECT carac FROM ViewResumenBien carac WHERE carac.id = :id";
             Query query = session.createQuery(sql);
             query.setParameter("id", id);
-            
-            return (BienDetalleCaracteristica) query.uniqueResult();
+
+            return (ViewResumenBien) query.uniqueResult();
         } catch (HibernateException e) {
             throw new FWExcepcion("sigebi.error.notificacionDao.listar", "Error obtener los registros de tipo " + this.getClass(), e.getCause());
         } finally {
-            session.close();        
-        } 
+            session.close();
+        }
     }
 
 }

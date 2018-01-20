@@ -11,8 +11,11 @@ import cr.ac.ucr.sigebi.utils.Constantes;
 import cr.ac.ucr.framework.vista.VistaUsuario;
 import cr.ac.ucr.framework.vista.util.PaginacionOracle;
 import cr.ac.ucr.framework.vista.util.Util;
+import cr.ac.ucr.sigebi.domain.Estado;
+import cr.ac.ucr.sigebi.models.EstadoModel;
 import java.util.ArrayList;
 import javax.annotation.PostConstruct;
+import javax.annotation.Resource;
 import javax.faces.model.SelectItem;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
@@ -26,24 +29,24 @@ import org.springframework.stereotype.Controller;
 public class BaseController extends PaginacionOracle {
 
     //<editor-fold defaultstate="collapsed" desc="Constantes">
-    Integer estadoPendiente = Constantes.ESTADO_BIEN_PENDIENTE;
-    Integer estadoPendienteSincronizar = Constantes.ESTADO_BIEN_PENDIENTE_SINCRONIZAR;
-    
+    Estado estadoPendiente;// = Constantes.ESTADO_BIEN_PENDIENTE;
+    Estado estadoPendienteSincronizar;// = Constantes.ESTADO_BIEN_PENDIENTE_SINCRONIZAR;
     //</editor-fold>
 
     //<editor-fold defaultstate="collapsed" desc="Variables Locales">
     VistaUsuario lVistaUsuario;
-    Integer unidadEjecutora;
+    Long unidadEjecutoraId;
     String nombreUnidad;
     String codPersonaReg;
     String usuarioRegistrado;
     String vistaOrigen;
     String vistaActual;
-
+    
+    @Resource
+    EstadoModel estadoModel;
     //</editor-fold>
-
+    
     //<editor-fold defaultstate="collapsed" desc="Get's & Set's">
-
     public String getVistaActual() {
         return vistaActual;
     }
@@ -52,14 +55,14 @@ public class BaseController extends PaginacionOracle {
         this.vistaActual = vistaActual;
     }
 
-    public Integer getEstadoPendiente() {
+    public Estado getEstadoPendiente() {
         return estadoPendiente;
     }
-    
-    public Integer getEstadoPendienteSincronizar() {
+
+    public Estado getEstadoPendienteSincronizar() {
         return estadoPendienteSincronizar;
     }
-    
+
     public VistaUsuario getlVistaUsuario() {
         return lVistaUsuario;
     }
@@ -76,12 +79,8 @@ public class BaseController extends PaginacionOracle {
         this.vistaOrigen = vistaOrigen;
     }
 
-    public int getUnidadEjecutora() {
-        return unidadEjecutora;
-    }
-
-    public void setUnidadEjecutora(int unidadEjecutora) {
-        this.unidadEjecutora = unidadEjecutora;
+    public Long getUnidadEjecutora() {
+        return unidadEjecutoraId;
     }
 
     public String getNombreUnidad() {
@@ -107,12 +106,16 @@ public class BaseController extends PaginacionOracle {
     public void setUsuarioRegistrado(String usuarioRegistrado) {
         this.usuarioRegistrado = usuarioRegistrado;
     }
-    //</editor-fold>
 
+    //</editor-fold>
+    
     //<editor-fold defaultstate="collapsed" desc="Constructor">
     public BaseController() {
+        
+        estadoPendiente = estadoModel.buscarPorDominioEstado(Constantes.DOMINI0_ESTADO_BIEN, Constantes.ESTADO_BIEN_PENDIENTE); 
+        estadoPendienteSincronizar = estadoModel.buscarPorDominioEstado(Constantes.DOMINI0_ESTADO_BIEN, Constantes.ESTADO_BIEN_PENDIENTE_SINCRONIZAR); 
+        
     }
-
     //</editor-fold>
     
     //<editor-fold defaultstate="collapsed" desc="Metodos">
@@ -120,16 +123,16 @@ public class BaseController extends PaginacionOracle {
     private void incializaBienes() {
 
         lVistaUsuario = (VistaUsuario) Util.obtenerVista("#{vistaUsuario}");
-        //Obtener Unidad Ejecutora
-        SegUnidadEjecutora unidad = lVistaUsuario.getgUnidadActual();
-        unidadEjecutora = unidad.getUnidadEjecutoraLlave().getIdUnidadEjecutora();
-        nombreUnidad = unidad.getDscUnidadEjecutora();
 
-        //Obtener Usuario
+        //Obtener el id de la unidad ejecutora
+        SegUnidadEjecutora unidad = lVistaUsuario.getgUnidadActual();
+        unidadEjecutoraId = Long.parseLong(unidad.getUnidadEjecutoraLlave().getIdUnidadEjecutora().toString());
+
+        //Obtener usuario
         SegUsuario usuario = lVistaUsuario.getgUsuarioActual();
         codPersonaReg = usuario.getIdUsuario();
         usuarioRegistrado = usuario.getNombre_completo();
-            
+
         ArrayList<SelectItem> cantPorPaginas = new ArrayList<SelectItem>();
         cantPorPaginas.add(new SelectItem(5, "5"));
         cantPorPaginas.add(new SelectItem(10, "10"));
@@ -137,6 +140,5 @@ public class BaseController extends PaginacionOracle {
         cantPorPaginas.add(new SelectItem(50, "50"));
         this.setListaRegistrosPagina(cantPorPaginas);
     }
-
     //</editor-fold>
 }

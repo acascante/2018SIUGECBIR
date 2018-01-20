@@ -263,7 +263,7 @@ public class ListadoBienesGeneralController extends BaseController{
         try {
             Long contador;
             
-            contador = viewBienMod.contarBienes(unidadEjecutora,
+            contador = viewBienMod.contarBienes(unidadEjecutoraId,
                     fltIdBien,
                     fltDescripcion,
                     fltMarca,
@@ -303,7 +303,7 @@ public class ListadoBienesGeneralController extends BaseController{
     //Listado para Sincronización
     private void listadoActas(){
         bienes.clear();
-        List<ViewBienEntity> resp  = viewBienMod.listarBienes(unidadEjecutora,
+        List<ViewBienEntity> resp  = viewBienMod.listarBienes(unidadEjecutoraId,
                     fltIdBien,
                     fltDescripcion,
                     fltMarca,
@@ -326,7 +326,7 @@ public class ListadoBienesGeneralController extends BaseController{
     private void listadoRegistro(){
         
         
-        bienes = viewBienMod.listarBienes(unidadEjecutora,
+        bienes = viewBienMod.listarBienes(unidadEjecutoraId,
                 fltIdBien,
                 fltDescripcion,                        
                 fltMarca,

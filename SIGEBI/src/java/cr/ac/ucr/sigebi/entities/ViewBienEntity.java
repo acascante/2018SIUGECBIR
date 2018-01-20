@@ -52,7 +52,7 @@ public class ViewBienEntity extends ObjetoBase implements Serializable {
     @Column(name = "ORIGEN")
     private Integer origen;
     @Column(name = "NUM_UNIDAD_EJEC")
-    private Integer numUnidadEjec;
+    private Long numUnidadEjec;
     @Column(name = "PROVEEDOR")
     private Integer proveedor;
     @Column(name = "ID_MONEDA")
@@ -156,11 +156,11 @@ public class ViewBienEntity extends ObjetoBase implements Serializable {
         this.origen = origen;
     }
 
-    public Integer getNumUnidadEjec() {
+    public Long getNumUnidadEjec() {
         return numUnidadEjec;
     }
 
-    public void setNumUnidadEjec(Integer numUnidadEjec) {
+    public void setNumUnidadEjec(Long numUnidadEjec) {
         this.numUnidadEjec = numUnidadEjec;
     }
 

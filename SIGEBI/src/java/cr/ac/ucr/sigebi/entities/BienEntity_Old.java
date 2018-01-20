@@ -6,6 +6,7 @@
 package cr.ac.ucr.sigebi.entities;
 
 import cr.ac.ucr.framework.seguridad.ObjetoBase;
+import cr.ac.ucr.sigebi.domain.Estado;
 import java.io.Serializable;
 import java.util.Date;
 import javax.persistence.Basic;
@@ -37,7 +38,7 @@ import javax.persistence.Temporal;
         
 }
 )
-public class BienEntity extends ObjetoBase implements Serializable {
+public class BienEntity_Old extends ObjetoBase implements Serializable {
 
     private static final long serialVersionUID = 1L;
     
@@ -74,7 +75,7 @@ public class BienEntity extends ObjetoBase implements Serializable {
     private Integer origen;
     
     @Column(name = "NUM_UNIDAD_EJEC")
-    private Integer numUnidadEjec;
+    private Long numUnidadEjec;
     
     @Column(name = "PROVEEDOR")
     private Integer proveedor;
@@ -119,7 +120,7 @@ public class BienEntity extends ObjetoBase implements Serializable {
     
     @JoinColumn(name = "ID_ESTADO", referencedColumnName = "ID_ESTADO")
     @ManyToOne(fetch = FetchType.EAGER)
-    private EstadoEntity idEstado;
+    private Estado idEstado;
     
     @Column(name = "ESTADO_INTERNO")
     private Integer estadoInterno;
@@ -131,7 +132,7 @@ public class BienEntity extends ObjetoBase implements Serializable {
     //<editor-fold defaultstate="collapsed" desc="Constructores">
     
     
-    public BienEntity(int idBien
+    public BienEntity_Old(int idBien
             , String descripcion
             , int cantidad
             , String codSubCategoria
@@ -139,7 +140,7 @@ public class BienEntity extends ObjetoBase implements Serializable {
             , int tipoBien
             //., String tipoBienSelec
             , int origen
-            , int numUnidadEjec
+            , Long numUnidadEjec
             , int proveedor
             , int idMoneda
             , float costo
@@ -168,8 +169,8 @@ public class BienEntity extends ObjetoBase implements Serializable {
         this.descGarantia = descGarantia;
     }
 
-    public BienEntity() {
-        idEstado = new EstadoEntity(1);
+    public BienEntity_Old() {
+        idEstado = new Estado();
     }
 
     
@@ -268,11 +269,11 @@ public class BienEntity extends ObjetoBase implements Serializable {
         this.origen = origen;
     }
 
-    public Integer getNumUnidadEjec() {
+    public Long getNumUnidadEjec() {
         return numUnidadEjec;
     }
 
-    public void setNumUnidadEjec(Integer numUnidadEjec) {
+    public void setNumUnidadEjec(Long numUnidadEjec) {
         this.numUnidadEjec = numUnidadEjec;
     }
 
@@ -340,11 +341,11 @@ public class BienEntity extends ObjetoBase implements Serializable {
         this.descGarantia = descGarantia;
     }
 
-    public EstadoEntity getIdEstado() {
+    public Estado getIdEstado() {
         return idEstado;
     }
 
-    public void setIdEstado(EstadoEntity idEstado) {
+    public void setIdEstado(Estado idEstado) {
         this.idEstado = idEstado;
     }
 
@@ -383,10 +384,10 @@ public class BienEntity extends ObjetoBase implements Serializable {
 
     @Override
     public boolean equals(Object object) {
-        if (!(object instanceof BienEntity)) {
+        if (!(object instanceof BienEntity_Old)) {
             return false;
         }
-        BienEntity other = (BienEntity) object;
+        BienEntity_Old other = (BienEntity_Old) object;
         if ((this.idBien == null && other.idBien != null) || (this.idBien != null && !this.idBien.equals(other.idBien))) {
             return false;
         }

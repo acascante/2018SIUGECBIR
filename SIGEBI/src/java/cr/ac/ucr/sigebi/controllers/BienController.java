@@ -7,11 +7,20 @@ package cr.ac.ucr.sigebi.controllers;
 
 import com.icesoft.faces.component.inputfile.FileInfo;
 import com.icesoft.faces.component.inputfile.InputFile;
-import cr.ac.ucr.sigebi.utils.Constantes;
 import cr.ac.ucr.framework.vista.util.Mensaje;
 import cr.ac.ucr.framework.vista.util.Util;
+import cr.ac.ucr.sigebi.domain.Bien;
+import cr.ac.ucr.sigebi.domain.BienCaracteristica;
+import cr.ac.ucr.sigebi.domain.Clasificacion;
 import cr.ac.ucr.sigebi.domain.Estado;
+import cr.ac.ucr.sigebi.domain.Identificacion;
+import cr.ac.ucr.sigebi.domain.Moneda;
+import cr.ac.ucr.sigebi.domain.Proveedor;
+import cr.ac.ucr.sigebi.domain.SubCategoria;
+import cr.ac.ucr.sigebi.domain.SubClasificacion;
 import cr.ac.ucr.sigebi.domain.Tipo;
+import cr.ac.ucr.sigebi.domain.Ubicacion;
+import cr.ac.ucr.sigebi.domain.UnidadEjecutora;
 import cr.ac.ucr.sigebi.models.AccesorioModel;
 import cr.ac.ucr.sigebi.models.AdjuntoBienModel;
 import cr.ac.ucr.sigebi.models.BienModel;
@@ -26,23 +35,19 @@ import cr.ac.ucr.sigebi.models.SubClasificacionModel;
 import cr.ac.ucr.sigebi.models.UbicacionModel;
 import cr.ac.ucr.sigebi.entities.AccesoriosEntity;
 import cr.ac.ucr.sigebi.entities.AdjuntoBienEntity;
-import cr.ac.ucr.sigebi.entities.BienEntity;
 import cr.ac.ucr.sigebi.entities.CategEntity;
 import cr.ac.ucr.sigebi.entities.ClasificacionEntity;
 import cr.ac.ucr.sigebi.entities.DatoBienEntity;
-import cr.ac.ucr.sigebi.entities.EstadoEntity;
-import cr.ac.ucr.sigebi.entities.LoteEntity;
 import cr.ac.ucr.sigebi.entities.MonedaEntity;
 import cr.ac.ucr.sigebi.entities.NotaEntity;
 import cr.ac.ucr.sigebi.entities.PersonaEntity;
-import cr.ac.ucr.sigebi.entities.PlacasEntity;
 import cr.ac.ucr.sigebi.entities.ProveedorEntity;
 import cr.ac.ucr.sigebi.entities.SubCategoriaEntity;
 import cr.ac.ucr.sigebi.entities.SubClasificacionEntity;
 import cr.ac.ucr.sigebi.entities.UbicacionEntity;
 import cr.ac.ucr.sigebi.entities.ViewBienEntity;
-import cr.ac.ucr.sigebi.entities.TipoEntity;
 import cr.ac.ucr.sigebi.models.TipoModel;
+import cr.ac.ucr.sigebi.utils.Constantes;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -78,7 +83,7 @@ public class BienController extends BaseController{
     TipoController tipoBienCont;
 
     // comboBox tiposBienes
-    List<BienEntity> bienes;
+    List<Bien> bienes;
 
     //<editor-fold defaultstate="collapsed" desc="Variables Listados>
     List<SelectItem> tiposBienOptions;
@@ -113,7 +118,7 @@ public class BienController extends BaseController{
     // comboBox Lotes
     List<SelectItem> loteOptions;
 
-    BienEntity bien;// = new ProveedorEntity();
+    Bien bien;// = new ProveedorEntity();
     NotaEntity nota;
     List<NotaEntity> notas;
 
@@ -152,7 +157,6 @@ public class BienController extends BaseController{
     
     boolean ubicacionVisible;
     
-    
     //</editor-fold>
 
     //<editor-fold defaultstate="collapsed" desc="Inicializa Datos">
@@ -161,8 +165,8 @@ public class BienController extends BaseController{
         super();
         
         tipoBienCont = new TipoController();
-        bienes = new ArrayList<BienEntity>();
-        bien = new BienEntity();
+        bienes = new ArrayList<Bien>();
+        bien = new Bien();
         esLote = false;
 
         tiposBienOptions = new ArrayList<SelectItem>();
@@ -186,18 +190,6 @@ public class BienController extends BaseController{
     @PostConstruct
     private void incializaBienes() {
 
-        //BienEntity bienCarga;
-        try {
-            bienes = bienMod.traerTodo(unidadEjecutora);//new ArrayList<BienEntity>();
-
-            int cant = bienes.size();
-
-            montoCapitalizable = bienMod.getMontoCapitalizable();
-
-        } catch (Exception err) {
-            mensaje = err.getMessage();
-        }
-
     }
 
     public void cargarOrigenes() {
@@ -211,12 +203,12 @@ public class BienController extends BaseController{
     }
 
     public void cargarLotes() {
-        List<LoteEntity> lotes = bienMod.getLotes();
-
-        loteOptions = new ArrayList<SelectItem>();
-        for (LoteEntity item : lotes) {
-            loteOptions.add(new SelectItem("" + item.getCodCategLote(), item.getDescripcion()));
-        }
+//        List<LoteEntity> lotes = bienMod.getLotes();
+//
+//        loteOptions = new ArrayList<SelectItem>();
+//        for (LoteEntity item : lotes) {
+//            loteOptions.add(new SelectItem("" + item.getCodCategLote(), item.getDescripcion()));
+//        }
     }
 
     private void cargarCombos() {
@@ -235,34 +227,34 @@ public class BienController extends BaseController{
             proveedores = provModel.traerTodos();
 
             //Cargar Categorias
-            List<CategEntity> categorias;
-            categorias = categoriaMod.traerTodo();
-            categoriasOptions = new ArrayList<SelectItem>();
-            for (CategEntity item : categorias) {
-                categoriasOptions.add(getCategoriaOption(item));
-            }
-
-            ubicacionOptions = new ArrayList<SelectItem>();
-            List<UbicacionEntity> ubicaciones;
-            ubicaciones = ubicModel.traerTodo();
-            for (UbicacionEntity item : ubicaciones) {
-                ubicacionOptions.add(new SelectItem(item.getIdUbicacion() + "#" + item.getDetalle().replace("#", "-"), item.getDetalle().replace("#", "-")));
-            }
+//            List<CategEntity> categorias;
+//            categorias = categoriaMod.traerTodo();
+//            categoriasOptions = new ArrayList<SelectItem>();
+//            for (CategEntity item : categorias) {
+//                categoriasOptions.add(getCategoriaOption(item));
+//            }
+//
+//            ubicacionOptions = new ArrayList<SelectItem>();
+//            List<UbicacionEntity> ubicaciones;
+//            ubicaciones = ubicModel.traerTodo();
+//            for (UbicacionEntity item : ubicaciones) {
+//                ubicacionOptions.add(new SelectItem(item.getIdUbicacion() + "#" + item.getDetalle().replace("#", "-"), item.getDetalle().replace("#", "-")));
+//            }
 
             estadosOptions = new ArrayList<SelectItem>();
             List<Estado> estados;
             // TODO verificar el dominio de estos estados
             estados = estadoModel.listar();
             for (Estado item : estados) {
-                estadosOptions.add(new SelectItem("" + item.getIdEstado(), item.getNombre()));
+                estadosOptions.add(new SelectItem("" + item.getId(), item.getNombre()));
             }
 
-            monedasOptions = new ArrayList<SelectItem>();
-            List<MonedaEntity> monedas;
-            monedas = monedaModel.traerTodo();
-            for (MonedaEntity item : monedas) {
-                monedasOptions.add(new SelectItem("" + item.getIdMoneda(), item.getDescripcion()));
-            }
+//            monedasOptions = new ArrayList<SelectItem>();
+//            List<MonedaEntity> monedas;
+//            monedas = monedaModel.traerTodo();
+//            for (MonedaEntity item : monedas) {
+//                monedasOptions.add(new SelectItem("" + item.getIdMoneda(), item.getDescripcion()));
+//            }
 
             cargarOrigenes();
             cargarLotes();
@@ -280,7 +272,7 @@ public class BienController extends BaseController{
             
             
             
-            //bien = new BienEntity();
+            //bien = new Bien();
             tipoSeleccionado = "-1";
             origenSeleccionado = "-1";
             capitalizable = "--";
@@ -357,49 +349,49 @@ public class BienController extends BaseController{
             tipoSeleccionado = bien.getTipoBien().toString();
             origenSeleccionado = bien.getOrigen().toString();
             capitalizable = bien.getCapitalizable().equals(1) ? "SI" : "NO";
-            selectEstado = bien.getIdEstado().getIdEstado().toString();
+            selectEstado = bien.getEstado().getId().toString();
 
-            esLote = bien.getNumLote() != null ;
+            esLote = bien.getNumeroLote()!= null ;
             if(esLote)
-                valorLote = bien.getNumLote();
+                valorLote = bien.getNumeroLote();
 
-            String[] subCateg = bien.getCodSubCategoria().split("-");
+            //String[] subCateg = ;
 
             String categ;
             String subCat;
             
-            if (subCateg.length > 0) {
-                categ = subCateg[0];
+            if (bien.getSubCategoria() != null) {
+                categ = bien.getSubCategoria().getCodigoCategoria();
                 //cargar Subcategorias según la categoría.
                 cargaComboSubCategoria(categ);
                 
-                subCat = subCateg[1];
+                subCat = bien.getSubCategoria().getCodigoSubCategoria();
                 cargaComboClasificacion(subCat);
                 
                 selectCategoria = categ;
                 selectSubCateg = subCat;
             }
 
-            Integer subClasif = bien.getIdSubClasificacion();
+            Integer subClasif = bien.getSubClasificacion().getId();
             //Se cargan las SubClasificaciones y sub categorias por el código de SubCategoria
             //selectCategoria = 
-            SubClasificacionEntity subClasificacion = subClasifModel.obtenerValor(subClasif);
+            SubClasificacion subClasificacion = bien.getSubClasificacion();//subClasifModel.obtenerValor(subClasif);
 
             if (subClasificacion != null) {
-                cargaComboSubClasificacion(subClasificacion.getIdClasificacion().toString());
-                selectClasificacion = subClasificacion.getIdClasificacion().toString();
-                selectSubClasif = subClasificacion.getIdSubClasificacion().toString();
+                cargaComboSubClasificacion(subClasificacion.getId().toString());
+                selectClasificacion = subClasificacion.getClasificacion().getId().toString();
+                selectSubClasif = subClasificacion.getId().toString();
             }
             
-            if(bien.getIdUbicacion() != null){
-                ubicacionId = bien.getIdUbicacion().toString();
-                ubicacionNombre = bien.getDescUbicacion();
+            if(bien.getUbicacion()!= null){
+                ubicacionId = bien.getUbicacion().getId().toString();
+                ubicacionNombre = bien.getUbicacion().getDetalle();
             }
 
             
             ProveedorEntity prov;
             if (bien.getProveedor() != null) {
-                prov = provModel.buscarProveedor(bien.getProveedor());
+                prov = provModel.buscarProveedor(Integer.parseInt( bien.getProveedor().getId().toString() ) );
 
                 provId = bien.getProveedor().toString();
                 provSelccionado = prov.getIdProveedor().getNombre();
@@ -408,25 +400,25 @@ public class BienController extends BaseController{
                 }
             }
 
-            if (bien.getFecAdquisicion() != null) {
-                fecAdiquisicion = bien.getFecAdquisicion();
+            if (bien.getFechaAdquisicion() != null) {
+                fecAdiquisicion = bien.getFechaAdquisicion();
             }
 
-            if (bien.getIdMoneda() != null) {
-                selectMoneda = bien.getIdMoneda().toString();
+            if (bien.getMoneda() != null) {
+                selectMoneda = bien.getMoneda().getId().toString();
             }
             
-            if ( (bien.getNumLote() == null) || (bien.getNumLote().equals("-1") ) )
+            if ( (bien.getNumeroLote() == null) || (bien.getNumeroLote().equals("-1") ) )
                 valorLote = "-1";
             else
-                valorLote = bien.getNumLote().toString();
+                valorLote = bien.getNumeroLote().toString();
             
             
             cargarCaracteristica();
             cargarGarantia();
-            notas = notaModel.traerTodo(bien.getIdBien());
+            notas = notaModel.traerTodo( Integer.parseInt( bien.getId().toString() ));
             cargarAdjuntos();
-            accesorios = modelAccesorio.traerAccesorios(bien.getIdBien());
+//            accesorios = modelAccesorio.listarPorBien(bien);
             
 
         } catch (Exception err) {
@@ -434,12 +426,12 @@ public class BienController extends BaseController{
         }
     }
 
-    private float getValorColones() {
+    private Double getValorColones() {
         try {
-            if (bien.getIdMoneda() == 2) {
+            if (bien.getMoneda().getId() == 2L) {
                 return bien.getCosto() * tipoCambioDollar;
             }
-            if (bien.getIdMoneda() == 3) {
+            if (bien.getMoneda().getId() == 3L) {
                 return bien.getCosto() * tipoCambioEuro;
             }
         } catch (Exception err) {
@@ -454,6 +446,8 @@ public class BienController extends BaseController{
     
     //<editor-fold defaultstate="collapsed" desc="Atributos">
 
+    
+    
     public boolean isUbicacionVisible() {
         return ubicacionVisible;
     }
@@ -728,19 +722,19 @@ public class BienController extends BaseController{
         this.tipoSeleccionado = tipoSeleccionado;
     }
 
-    public List<BienEntity> getBienes() {
+    public List<Bien> getBienes() {
         return this.bienes;
     }
 
-    public void setBienes(List<BienEntity> bienes) {
+    public void setBienes(List<Bien> bienes) {
         this.bienes = bienes;
     }
 
-    public BienEntity getBien() {
+    public Bien getBien() {
         return bien;
     }
 
-    public void setBien(BienEntity bien) {
+    public void setBien(Bien bien) {
         this.bien = bien;
     }
 
@@ -799,14 +793,14 @@ public class BienController extends BaseController{
     public void guardarDatos() {
         try {
             //FIXME
-            //if (bien.getIdBien() > 0) {
-            if (bien.getIdBien() > 0) {
+            //if (bien.getId() > 0) {
+            if (bien.getId() > 0) {
                 if (prepararBien()) {
                     actualizarBien();
                 }
                
                 if (mensaje.equals("")) {
-                    bienes = bienMod.traerTodo(unidadEjecutora);//new ArrayList<BienEntity>();
+//                    bienes = bienMod.traerTodo(unidadEjecutoraId);//new ArrayList<Bien>();
                     bienRegistrado = true;
                     Mensaje.agregarInfo(Util.getEtiquetas("sigebi.Bien.Error.ActualizacionExito"));
                     //mensajeExito = "";
@@ -823,7 +817,7 @@ public class BienController extends BaseController{
                 }
 
                 if (mensaje.equals("")) {
-                    bienes = bienMod.traerTodo(unidadEjecutora);//new ArrayList<BienEntity>();
+       //             bienes = bienMod.traerTodo(unidadEjecutoraId);//new ArrayList<Bien>();
                     bienRegistrado = true;
                     Mensaje.agregarInfo(Util.getEtiquetas("sigebi.Bien.Registro.Exito"));
                     //mensajeExito = "";
@@ -840,16 +834,16 @@ public class BienController extends BaseController{
     public void registrarNuevoBien() {
         try {
 
-            //BienEntity bien;// = new ProveedorEntity();
+            //Bien bien;// = new ProveedorEntity();
             //Mientas se ligan al select
             Integer idPlaca = buscarPlaca();
             //Asignar la placa
             if (idPlaca > 0) {
-                PlacasEntity placa = new PlacasEntity();
-                placa.setIdPlaca(idPlaca);
-                bien.setIdPlaca(placa);
+                Identificacion placa = new Identificacion();
+                placa.setId(idPlaca);
+                bien.setIdentificacion(placa);
 
-                mensaje = bienMod.guardarBien(bien);
+//                mensaje = bienMod.guardarBien(bien);
                 
             } else {
                 mensaje = Util.getEtiquetas("sigebi.Bien.Error.Placa");
@@ -875,16 +869,23 @@ public class BienController extends BaseController{
                 mensaje = Util.getEtiquetas("sigebi.Bien.Error.Tipo");
                 return false;
             }
-            bien.setTipoBien(Integer.parseInt(tipoSeleccionado));
+            Tipo tipoBien = new Tipo();
+            tipoBien.setIdTipo(Integer.parseInt(tipoSeleccionado));
+            bien.setTipoBien(tipoBien);
 
             //Origen
             if (origenSeleccionado.equals("-1")) {
                 mensaje = Util.getEtiquetas("sigebi.Bien.Error.Origen");
                 return false;
             }
-            bien.setOrigen(Integer.parseInt(origenSeleccionado));
+            
+            Tipo tipoOrigen = new Tipo();
+            tipoOrigen.setIdTipo(Integer.parseInt(origenSeleccionado));
+            bien.setOrigen(tipoOrigen);
 
-            bien.setIdMoneda(Integer.parseInt(selectMoneda));
+            Moneda moneda = new Moneda();
+            moneda.setId(Long.parseLong(selectMoneda));
+            bien.setMoneda(moneda);
             //Capitalizable loteOptions
             if (getValorColones() > montoCapitalizable) {
                 bien.setCapitalizable(1);
@@ -894,10 +895,10 @@ public class BienController extends BaseController{
 
             capitalizable = bien.getCapitalizable() == 1 ? "SI" : "NO";
 
-            EstadoEntity estado = new EstadoEntity();
-            estado.setIdEstado(Integer.parseInt(selectEstado));
+            Estado estado = new Estado();
+            estado.setId(Integer.parseInt(selectEstado));
 
-            bien.setIdEstado(estado);
+            bien.setEstado(estado);
 
             //Validar Cantidad
             if (!(bien.getCantidad() > 0)) {
@@ -907,9 +908,9 @@ public class BienController extends BaseController{
 
             //Lote
             if (valorLote.equals("-1")) {
-                bien.setNumLote(null);
+                bien.setNumeroLote(null);
             } else {
-                bien.setNumLote( valorLote );
+                bien.setNumeroLote( valorLote );
             }
 
             //Categoria Sub Categoria
@@ -917,15 +918,25 @@ public class BienController extends BaseController{
                 mensaje = Util.getEtiquetas("sigebi.Bien.Error.SubCategoria");
                 return false;
             }
-            bien.setCodSubCategoria(selectCategoria + "-" + selectSubCateg);
+            
+            SubCategoria subCat = new SubCategoria();
+            subCat.setCodigoCategoria(selectCategoria);
+            subCat.setCodigoSubCategoria(selectSubCateg);
+            
+            bien.setSubCategoria(subCat);
 
             //Categoria Sub Categoria
             if (selectSubClasif.equals("-1")) {
-                bien.setIdSubClasificacion(null); 
+                bien.setSubClasificacion(null); 
                 mensaje = Util.getEtiquetas("sigebi.Bien.Error.SubClasificacion");
                 return false;
             } else {
-                bien.setIdSubClasificacion(Integer.parseInt(selectSubClasif));
+                SubClasificacion subClas = new SubClasificacion();
+                subClas.setId(Integer.parseInt(selectSubClasif));
+                Clasificacion clasif = new Clasificacion();
+                clasif.setId(Integer.parseInt(selectClasificacion));
+                subClas.setClasificacion(clasif);
+                bien.setSubClasificacion(subClas);
             }
 
             //Ubicación (BD)
@@ -933,20 +944,23 @@ public class BienController extends BaseController{
                 mensaje = Util.getEtiquetas("sigebi.Bien.Error.Ubicacion");
                 return false;
             }
-            bien.setIdUbicacion( Integer.parseInt(ubicacionId) );
-            bien.setDescUbicacion(ubicacionNombre);
+            Ubicacion ubicacion = new Ubicacion();
+            ubicacion.setId(Integer.parseInt(ubicacionId) );
+            bien.setUbicacion( ubicacion );
 
             //Proveedor (BD)
             if (provId.equals("")) {
                 mensaje = Util.getEtiquetas("sigebi.Bien.Error.Proveedor");
                 return false;
             }
-            bien.setProveedor(Integer.parseInt(provId));
+            Proveedor prov = new Proveedor();
+            prov.setId(Long.parseLong(provId));
+            bien.setProveedor(prov);
 
             if (fecAdiquisicion == null) {
-                bien.setFecAdquisicion(null);
+                bien.setFechaAdquisicion(null);
             } else {
-                bien.setFecAdquisicion(fecAdiquisicion);
+                bien.setFechaAdquisicion(fecAdiquisicion);
             }
 
             // Moneda
@@ -955,9 +969,10 @@ public class BienController extends BaseController{
                 return false;
             }
 
-            bien.setNumPersona(1);
-
-            bien.setNumUnidadEjec(unidadEjecutora);
+            bien.setPersona(1);
+            UnidadEjecutora unidad = new UnidadEjecutora();
+            unidad.setId(unidadEjecutoraId);
+            bien.setUnidadEjecutora(unidad);
 
             return true;
         } catch (Exception err) {
@@ -969,10 +984,10 @@ public class BienController extends BaseController{
     public void actualizarBien() {
         try {
             int ubic = Integer.parseInt(ubicacionId);
-            mensaje = bienMod.actualizarBien(bien, ubic);
+//            mensaje = bienMod.actualizarBien(bien, ubic);
             //mensajeExito = "Los datos se modificaron con éxito.";
             if (mensaje.equals("")) {
-                bienes = bienMod.traerTodo(unidadEjecutora);
+//                bienes = bienMod.traerTodo(unidadEjecutoraId);
                 //mensajeExito = "";
             }
 
@@ -983,7 +998,8 @@ public class BienController extends BaseController{
     
     public int buscarPlaca() {
         boolean capitalizable = bien.getCapitalizable() == 1;
-        return bienMod.placaDisponible(unidadEjecutora, capitalizable );
+//        return bienMod.placaDisponible(unidadEjecutoraId, capitalizable );
+        return 1;
     }
     
     public String getMensajeExito() {
@@ -1008,7 +1024,7 @@ public class BienController extends BaseController{
     //<editor-fold defaultstate="collapsed" desc="Navegación del MENÚ">
     private void inicializaDatos() {
         try{
-        montoCapitalizable = bienMod.getMontoCapitalizable();
+//        montoCapitalizable = bienMod.getMontoCapitalizable();
 
         bienRegistrado = true;
         
@@ -1072,11 +1088,11 @@ public class BienController extends BaseController{
     
     private void abrirDetalle(Integer idBien) {
         try{
-        this.bien = bienMod.traerPorId(idBien);
+//        this.bien = bienMod.traerPorId(idBien);
         Util.navegar("bien_nuevo");
         limpiarDatosBien();
         inicializaDatos();
-        if (bien.getIdBien() > 0) {
+        if (bien.getId() > 0) {
             cargarDatosBien();
         }
         
@@ -1097,7 +1113,7 @@ public class BienController extends BaseController{
 
         inicializaDatos();
         this.vistaOrigen = "reg_manual";
-        bien = new BienEntity();
+        bien = new Bien();
         bienRegistrado = false;
         limpiarDatosBien();
         Util.navegar("bien_nuevo");
@@ -1251,11 +1267,11 @@ public class BienController extends BaseController{
         clasificacionOptions = new ArrayList<SelectItem>();
         if (valor.length() > 0) {
             //Cargar Sub Categorias
-            List<ClasificacionEntity> subCategorias = clasifMod.traerTodo(valor);
-            //Se cargan las Sub Categorías
-            for (ClasificacionEntity item : subCategorias) {
-                clasificacionOptions.add(getCategoriaOption(item));
-            }
+//            List<ClasificacionEntity> subCategorias = clasifMod.traerTodo(valor);
+//            //Se cargan las Sub Categorías
+//            for (ClasificacionEntity item : subCategorias) {
+//                clasificacionOptions.add(getCategoriaOption(item));
+//            }
         }
     }
 
@@ -1500,11 +1516,11 @@ public class BienController extends BaseController{
     public void guardarNota() {
         mensajeNota = "";
 
-        if (bien.getIdBien() < 1) {
+        if (bien.getId() < 1) {
             mensajeNota = Util.getEtiquetas("sigebi.Bien.Error.BienNoRegistrado");
             return;
         }
-        nota.setIdBien(bien.getIdBien());
+        nota.setIdBien(Integer.parseInt(bien.getId().toString()));
         nota.setIdEstado(1);
         nota.setDetalle(notaDetalle);
 
@@ -1519,7 +1535,7 @@ public class BienController extends BaseController{
 
         String resp = notaModel.guardarNuevo(nota);
 
-        notas = notaModel.traerTodo(bien.getIdBien());//FIXME
+        notas = notaModel.traerTodo(Integer.parseInt(bien.getId().toString()));//FIXME
 
         if (resp.length() > 0) {
             mensajeNota = Util.getEtiquetas("sigebi.Bien.Error.Nota");
@@ -1565,7 +1581,7 @@ public class BienController extends BaseController{
 
             nota = new NotaEntity();
             notas = new ArrayList<NotaEntity>();
-            notas = notaModel.traerTodo(bien.getIdBien());
+            notas = notaModel.traerTodo(Integer.parseInt(bien.getId().toString()));
             eliminarNotaVisible = false;
 
         } catch (Exception err) {
@@ -1603,16 +1619,18 @@ public class BienController extends BaseController{
             mensajeCaracteristicas = "Seleccione Caracteristica.";
             return;
         }
-        DatoBienEntity registro = new DatoBienEntity();
+        BienCaracteristica registro = new BienCaracteristica();
 
-        TipoEntity caract = new TipoEntity();
+        Tipo caract = new Tipo();
         caract.setIdTipo(Integer.parseInt(selectCaracteristica));
 
         //FIXME
-        registro.setIdBien(bien.getIdBien());
+        registro.setId(bien.getId());
         registro.setDetalle(descCaracteristica);
-        registro.setTipoCaracteristica(caract);
-        registro.setEstado(1);
+        registro.setTipo(caract);
+        Estado estado = new Estado();
+        estado.setId(Constantes.ESTADO_GENERAL_ACTIVO);
+        registro.setEstado(estado);
         
         // TODO revisar almacenamiento de caracteristicas, deberian tener su propio model y dao, no tiene por que estar en TIPO
         //mensajeCaracteristicas = tipoModel.guardarCaracteristica(registro);
@@ -1629,7 +1647,7 @@ public class BienController extends BaseController{
 
             caracteristicas = new ArrayList<DatoBienEntity>();
             //caracteristicas = tipoModel.traerCaracteristicasRegistradas(constCaracteristicas,
-            bien.getIdBien();
+            bien.getId();
 
             cargarOpcionesCaract();
             caracteristica = new DatoBienEntity();
@@ -1640,10 +1658,10 @@ public class BienController extends BaseController{
     }
 
     private void cargarOpcionesCaract() {
-        //List<TipoEntity> caract = tipoModel.traerCaracteristicas(constCaracteristicas, bien.getIdBien());//FIXME
+        //List<Tipo> caract = tipoModel.traerCaracteristicas(constCaracteristicas, bien.getId());//FIXME
 
         caracteristicasOptions = new ArrayList<SelectItem>();
-//        for (TipoEntity item : caract) {
+//        for (Tipo item : caract) {
 //            caracteristicasOptions.add(new SelectItem("" + item.getIdTipo(), item.getNombre()));
 //        }
     }
@@ -1782,10 +1800,10 @@ public class BienController extends BaseController{
                 String iniGarantia = df.format(garantiaFecIni);
                 String finGarantia = df.format(garantiaFecFin);
 
-                garantiaMensajeError = bienMod.guardarGarantia(bien.getIdBien(),
-                        iniGarantia,
-                        finGarantia,
-                        garantiaDesc);
+//                garantiaMensajeError = bienMod.guardarGarantia(bien.getId(),
+//                        iniGarantia,
+//                        finGarantia,
+//                        garantiaDesc);
 
                 if(garantiaMensajeError.equals(""))
                     garantiaMensajeExito = "Garantía guardada.";
@@ -1808,7 +1826,7 @@ public class BienController extends BaseController{
     public void cargarGarantia() {
         garantiaFecIni = bien.getInicioGarantia();
         garantiaFecFin = bien.getFinGarantia();
-        garantiaDesc = bien.getDescGarantia();
+        garantiaDesc = bien.getDescripcionGarantia();
     }
 
     public String getGarantiaMensajeError() {
@@ -1912,7 +1930,7 @@ public class BienController extends BaseController{
         mensajeAdjuntos = "";
         mensajeAdjuntosExito = "";
         try {
-            if (bien.getIdBien() < 1) {
+            if (bien.getId() < 1) {
                 mensajeAdjuntos = "El bien no ha sido registrado.";
                 return;
             }
@@ -1920,7 +1938,7 @@ public class BienController extends BaseController{
             adjunto.setDetalle(adjuntoDescripcion);
             adjunto.setIdEstado(1);
             adjunto.setIdTipo(1);
-            adjunto.setIdBien(bien.getIdBien());
+            adjunto.setIdBien(Integer.parseInt(bien.getId().toString()));
             adjunto.setUrl(urlAdjunto);
             
             adjunto.setNombre(nombreAdjunto);
@@ -1950,7 +1968,7 @@ public class BienController extends BaseController{
 
     private void cargarAdjuntos(){
         //FIXME
-        adjuntos = modelAdjunto.traerAdjuntos(bien.getIdBien());
+        adjuntos = modelAdjunto.traerAdjuntos(Integer.parseInt(bien.getId().toString()));
     }
     
     public void adjuntoMostrarDetalle(ActionEvent pEvent) {
@@ -2172,11 +2190,11 @@ public class BienController extends BaseController{
         mensajeAccesExito = "";
         mensajeAccesError = "";
         try {
-            if (bien.getIdBien() < 1) {
+            if (bien.getId() < 1) {
                 mensajeAccesError = "El bien no ha sido registrado.";
                 return;
             }
-            accesorio.setIdBien(bien.getIdBien());
+            accesorio.setIdBien(Integer.parseInt(bien.getId().toString()));
             accesorio.setIdEstado(1);
 
             String detalle = accesorio.getDetalle();
@@ -2185,17 +2203,17 @@ public class BienController extends BaseController{
             }
 
             //MEl Id se registra coando se guarda;
-            String resp = modelAccesorio.guardarAccesorio(accesorio);
-            if (resp.length() == 0) {
-                mensajeAccesExito = "El registro se guardó con éxito.";
-            }//FIXME
-            accesorios = modelAccesorio.traerAccesorios(bien.getIdBien());
+//            String resp = modelAccesorio.guardarAccesorio(accesorio);
+//            if (resp.length() == 0) {
+//                mensajeAccesExito = "El registro se guardó con éxito.";
+//            }//FIXME
+//            accesorios = modelAccesorio.traerAccesorios(bien.getId());
 
-            if (resp.length() > 0) {
-                mensajeAccesError = resp;
-            } else {
-                accesorio = new AccesoriosEntity();
-            }
+//            if (resp.length() > 0) {
+//                mensajeAccesError = resp;
+//            } else {
+//                accesorio = new AccesoriosEntity();
+//            }
         } catch (Exception err) {
             mensajeAccesError = err.getMessage();
         }
@@ -2236,14 +2254,14 @@ public class BienController extends BaseController{
 
     public void eliminarAccesorioConfirmar() {
         try {
-            mensajeAccesError = "";
-            mensajeAccesError = modelAccesorio.eliminarAccesorio(accesorio);
-
-            accesorio = new AccesoriosEntity();
-            accesorios = new ArrayList<AccesoriosEntity>();
-            //FIXME
-            accesorios = modelAccesorio.traerAccesorios(bien.getIdBien());
-            eliminarAccesorioVisible = false;
+//            mensajeAccesError = "";
+//            mensajeAccesError = modelAccesorio.eliminarAccesorio(accesorio);
+//
+//            accesorio = new AccesoriosEntity();
+//            accesorios = new ArrayList<AccesoriosEntity>();
+//            //FIXME
+//            accesorios = modelAccesorio.traerAccesorios(bien.getId());
+//            eliminarAccesorioVisible = false;
 
         } catch (Exception err) {
             mensajeAccesError = err.getMessage();

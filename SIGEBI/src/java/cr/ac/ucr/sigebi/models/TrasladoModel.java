@@ -5,8 +5,9 @@
  */
 package cr.ac.ucr.sigebi.models;
 
-import cr.ac.ucr.sigebi.daos.TrasladosDao;
-import cr.ac.ucr.sigebi.entities.EstadoEntity;
+import cr.ac.ucr.sigebi.daos.FaltaTrasladosDao;
+import cr.ac.ucr.sigebi.domain.Estado;
+import cr.ac.ucr.sigebi.domain.UnidadEjecutora;
 import cr.ac.ucr.sigebi.entities.TrasladoDetalleEntity;
 import cr.ac.ucr.sigebi.entities.TrasladoEntity;
 import cr.ac.ucr.sigebi.entities.UnidadEjecutoraEntity;
@@ -24,7 +25,7 @@ import org.springframework.stereotype.Service;
 public class TrasladoModel {
     
     @Resource
-    private TrasladosDao trasladoDao;
+    private FaltaTrasladosDao trasladoDao;
 
     
     public void guardar(TrasladoEntity obj) {
@@ -39,7 +40,7 @@ public class TrasladoModel {
         trasladoDao.guardarBien(bien);
     }
     
-    public void eliminarBienes(TrasladoEntity traslado, EstadoEntity estado){
+    public void eliminarBienes(TrasladoEntity traslado, Estado estado){
         trasladoDao.eliminarBienes(traslado, estado);
     }
     
@@ -56,7 +57,7 @@ public class TrasladoModel {
     }
     
     public List<TrasladoEntity> trasladosListado(
-    UnidadEjecutoraEntity unidadEjecutora
+    UnidadEjecutora unidadEjecutora
             , String fltIdTraslado
             , String fltUnidadOrigen
             , String fltUnidadDestino
@@ -79,7 +80,7 @@ public class TrasladoModel {
     
     
     public Long contarTrasladosListado(
-              UnidadEjecutoraEntity unidadEjecutora
+              UnidadEjecutora unidadEjecutora
             , String fltIdTraslado
             , String fltUnidadOrigen
             , String fltUnidadDestino

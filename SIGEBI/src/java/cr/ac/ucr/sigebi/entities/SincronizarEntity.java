@@ -5,6 +5,7 @@
  */
 package cr.ac.ucr.sigebi.entities;
 
+import cr.ac.ucr.sigebi.domain.Bien;
 import cr.ac.ucr.sigebi.utils.Constantes;
 import java.io.Serializable;
 import java.util.Date;
@@ -651,19 +652,19 @@ public class SincronizarEntity implements Serializable {
     public SincronizarEntity() {
     }
     
-    public SincronizarEntity(BienEntity bien) {
+    public SincronizarEntity(Bien bien) {
         numEmpresa = 1;
-        idActivo = bien.getIdBien();//FIXME;
+        idActivo = Integer.parseInt(bien.getId().toString());//FIXME;
 //        descripcion = bien.getIdSubClasificacion().toString();//.getDescripcion(); 
         indicaTipoActivo = bien.getTipoBien().toString().charAt(0);
-        codigoCategoria = bien.getCodSubCategoria().split("-")[0];
-        codigoSubCategoria = bien.getCodSubCategoria().split("-")[1];
+        codigoSubCategoria = bien.getSubCategoria().getCodigoSubCategoria();// .getCodSubCategoria().split("-")[0];
+        codigoCategoria  = bien.getSubCategoria().getCodigoCategoria();// .getCodSubCategoria().split("-")[1];
         idCustodio = 1000;//bien.getNumUnidadEjec();
-        idProveedor = bien.getProveedor();
+        idProveedor = Integer.parseInt(bien.getProveedor().getId().toString());
         origen = bien.getOrigen().toString().charAt(0);
-        valorInicialColones = bien.getCosto();
-        valorInicialOtraMo = bien.getCosto();
-        ubicacionFisica = bien.getDescUbicacion();
+        valorInicialColones = Float.parseFloat( bien.getCosto().toString());
+        valorInicialOtraMo = Float.parseFloat( bien.getCosto().toString());
+        ubicacionFisica = bien.getUbicacion().getDetalle();
 //        tipoCambioCompra = 500;
         tieneImagen = 'N';
         estadoDelActivo = Constantes.SINCRONIZAR_ESTADO_TRANSITO_ACTIVACION;
@@ -676,9 +677,9 @@ public class SincronizarEntity implements Serializable {
         
         // Datos no Obligatorios
         //placa = bien.getIdBien().get;//FIXME
-        idMoneda = bien.getIdMoneda();
-        numUnidadEjec = bien.getNumUnidadEjec();
-        fechaAdicion = bien.getFecAdquisicion();
+        idMoneda = Integer.parseInt(bien.getMoneda().getId().toString());// .getIdMoneda();
+        numUnidadEjec = Integer.parseInt(bien.getUnidadEjecutora().getId().toString());
+        fechaAdicion = bien.getFechaAdquisicion();
         //adicionadoPor = "";
     }
 

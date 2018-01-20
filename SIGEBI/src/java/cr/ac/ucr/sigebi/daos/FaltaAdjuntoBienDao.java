@@ -22,7 +22,7 @@ import org.springframework.stereotype.Repository;
  */
 @Repository(value = "adjuntoBienDao")
 @Scope("request")
-public class AdjuntoBienDao  extends GenericDaoImpl{
+public class FaltaAdjuntoBienDao  extends GenericDaoImpl{
     
     @Autowired
     private DaoHelper dao;

@@ -10,7 +10,6 @@ import cr.ac.ucr.framework.vista.util.PaginacionOracle;
 import cr.ac.ucr.framework.vista.util.Util;
 import cr.ac.ucr.sigebi.domain.Tipo;
 import cr.ac.ucr.sigebi.entities.EstadoEntity;
-import cr.ac.ucr.sigebi.entities.TipoEntity;
 import cr.ac.ucr.sigebi.models.TipoModel;
 import java.util.ArrayList;
 import java.util.List;

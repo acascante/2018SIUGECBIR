@@ -10,9 +10,7 @@ import cr.ac.ucr.framework.daoImpl.GenericDaoImpl;
 import cr.ac.ucr.framework.utils.FWExcepcion;
 import cr.ac.ucr.sigebi.domain.Bien;
 import cr.ac.ucr.sigebi.domain.Estado;
-import cr.ac.ucr.sigebi.domain.Identificacion;
 import cr.ac.ucr.sigebi.domain.UnidadEjecutora;
-import cr.ac.ucr.sigebi.entities.BienEntity;
 import java.util.List;
 import javax.annotation.Resource;
 import org.hibernate.HibernateException;
@@ -36,7 +34,7 @@ public class BienDao extends GenericDaoImpl {
     private DaoHelper dao;
     
     @Resource
-    SubClasificacionDao subClasDao;
+    FaltaSubClasificacionDao subClasDao;
     
     @Resource
     ClasificacionDao clasfDao;
@@ -44,7 +42,7 @@ public class BienDao extends GenericDaoImpl {
     @Transactional(readOnly = true)
     public List<Bien> listar() throws FWExcepcion {
         try {
-            return (List<Bien>) dao.getHibernateTemplate().findByNamedQuery("Bien.findAll");
+            return dao.getHibernateTemplate().find("from Bien");
         } catch (DataAccessException e) {
             throw new FWExcepcion("sigebi.error.bienCaracteristica.dao.traerTodo", "Error obtener los registros de bien " + this.getClass(), e.getCause());
         }
@@ -99,7 +97,7 @@ public class BienDao extends GenericDaoImpl {
     }
     
     @Transactional(readOnly = true)
-    public List<Bien> listar(Integer primerRegistro, Integer ultimoRegistro, UnidadEjecutora unidadejecutora, Identificacion identificacion, String descripcion, String marca, String modelo, String serie, Estado... estados) throws FWExcepcion{
+    public List<Bien> listar(Integer primerRegistro, Integer ultimoRegistro, UnidadEjecutora unidadejecutora, String identificacion, String descripcion, String marca, String modelo, String serie, Estado... estados) throws FWExcepcion{
         Session session = dao.getSessionFactory().openSession();
         try {
             Query query = this.creaQuery(Boolean.FALSE, session, unidadejecutora, identificacion, descripcion, marca, modelo, serie, estados);
@@ -115,7 +113,7 @@ public class BienDao extends GenericDaoImpl {
         }
     }
 
-    public Long contar(UnidadEjecutora unidadejecutora, Identificacion identificacion, String descripcion, String marca, String modelo, String serie, Estado... estados) throws FWExcepcion {
+    public Long contar(UnidadEjecutora unidadejecutora, String identificacion, String descripcion, String marca, String modelo, String serie, Estado... estados) throws FWExcepcion {
         Session session = dao.getSessionFactory().openSession();
         try {
             Query query = this.creaQuery(Boolean.TRUE, session, unidadejecutora, identificacion, descripcion, marca, modelo, serie, estados);
@@ -135,7 +133,7 @@ public class BienDao extends GenericDaoImpl {
         }
     }
 
-    public void actualizar(BienEntity bien) throws FWExcepcion {
+    public void actualizar(Bien bien) throws FWExcepcion {
         try {
             persist(bien);
         } catch (DataAccessException e) {
@@ -143,7 +141,7 @@ public class BienDao extends GenericDaoImpl {
         }
     }
 
-    private Query creaQuery(Boolean contar, Session session, UnidadEjecutora unidadEjecutora, Identificacion identificacion, String descripcion, String marca, String modelo,  String serie, Estado... estados) {
+    private Query creaQuery(Boolean contar, Session session, UnidadEjecutora unidadEjecutora, String identificacion, String descripcion, String marca, String modelo,  String serie, Estado... estados) {
         StringBuilder sql = new StringBuilder("SELECT ");
         if (contar) {
             sql.append("SELECT count(b) FROM Bien b ");
@@ -153,7 +151,7 @@ public class BienDao extends GenericDaoImpl {
         
         sql.append("WHERE b.unidadEjecutora = :unidadEjecutora ");
         if(identificacion != null){
-           sql.append(" AND b.identificacion = :identificacion ");
+           sql.append(" AND b.identificacion.identificacion = :identificacion ");
         }
         if(descripcion != null && descripcion.length() > 0){
             sql.append(" AND upper(b.descripcion) like upper(:descripcion) ");
@@ -195,7 +193,7 @@ public class BienDao extends GenericDaoImpl {
     }
     
     @Transactional
-    public void sincronizarBien( BienEntity bien,  String usaurioSincro ) throws FWExcepcion {
+    public void sincronizarBien( Bien bien,  String usaurioSincro ) throws FWExcepcion {
         // TODO revisar implementacion de sincronizacion
         // TODO Crear domain SincronizarEntity
     

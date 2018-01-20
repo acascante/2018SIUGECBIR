@@ -10,12 +10,11 @@ import cr.ac.ucr.framework.seguridad.entidades.SegUsuario;
 import cr.ac.ucr.framework.vista.VistaUsuario;
 import cr.ac.ucr.framework.vista.util.Mensaje;
 import cr.ac.ucr.framework.vista.util.Util;
+import cr.ac.ucr.sigebi.domain.Bien;
 import cr.ac.ucr.sigebi.domain.Estado;
 import cr.ac.ucr.sigebi.models.BienModel;
 import cr.ac.ucr.sigebi.models.EstadoModel;
 import cr.ac.ucr.sigebi.models.VistaBienes;
-import cr.ac.ucr.sigebi.entities.BienEntity;
-import cr.ac.ucr.sigebi.entities.EstadoEntity;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -242,16 +241,16 @@ public class listadosController {
         try {
             bienes = new ArrayList<VistaBienes>();
 
-            bienes = bienMod.traerConFiltros(unidadEjecutora,
-                     fltPlaca,
-                     fltDescripcion,
-                     fltMarca,
-                     fltModelo,
-                     fltSerie,
-                     fltEstado,
-                     paginaActual,
-                     cantRegMostrar
-            );
+//            bienes = bienMod.traerConFiltros(unidadEjecutora,
+//                     fltPlaca,
+//                     fltDescripcion,
+//                     fltMarca,
+//                     fltModelo,
+//                     fltSerie,
+//                     fltEstado,
+//                     paginaActual,
+//                     cantRegMostrar
+//            );
             validarPagina();
         } catch (Exception err) {
             error = err.getMessage();
@@ -278,13 +277,13 @@ public class listadosController {
     
     public void consultarCantidadRegistros() {
         try {
-            cantRegistros = bienMod.consultaCantidadRegistros(unidadEjecutora,
-                     fltPlaca,
-                     fltDescripcion,
-                     fltMarca,
-                     fltModelo,
-                     fltSerie,
-                     fltEstado);
+//            cantRegistros = bienMod.consultaCantidadRegistros(unidadEjecutora,
+//                     fltPlaca,
+//                     fltDescripcion,
+//                     fltMarca,
+//                     fltModelo,
+//                     fltSerie,
+//                     fltEstado);
 
             canPaginas = cantRegistros / cantRegMostrar;
             int residuo = cantRegistros % cantRegMostrar;
@@ -461,12 +460,12 @@ public class listadosController {
                 return;
             }
             // TODO revisar dominio de este ID
-            //EstadoEntity estadoSinc = modelEstado.obtenerPorId(4);
+            //Estado estadoSinc = modelEstado.obtenerPorId(4);
             String resp = "";
             for(Map.Entry<Integer, VistaBienes> bienSincro : bienesPorSincronizar.entrySet()){
-                BienEntity bien = bienMod.traerPorId(bienSincro.getKey());
+//                Bien bien = bienMod.traerPorId(bienSincro.getKey());
                 //bien.setIdEstado(estadoSinc);
-                resp += sincronizar(bien);
+               // resp += sincronizar(bien);
             }
             bienesPorSincronizar.clear();
             if(resp.equals("")){
@@ -492,29 +491,29 @@ public class listadosController {
             VistaBienes bienSincro = (VistaBienes) pEvent.getComponent().getAttributes().get("bienSincronizar");
             
             //TODO revisar cual es el dominio de este estado
-            //EstadoEntity estadoSinc = modelEstado.obtenerPorId(4);
+            //Estado estadoSinc = modelEstado.obtenerPorId(4);
             
-            BienEntity bien = bienMod.traerPorId(bienSincro.getIdBien());
+//            Bien bien = bienMod.traerPorId(bienSincro.getIdBien());
+//            
+//            //bien.setIdEstado(estadoSinc);
+//            
+//            String resp = sincronizar(bien);
             
-            //bien.setIdEstado(estadoSinc);
-            
-            String resp = sincronizar(bien);
-            
-            if(resp.equals("")){
-                Mensaje.agregarInfo(Util.getEtiquetas("sigebi.sincronizarBien.Exito"));
-            }
-            else{
-                Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.sincronizarBien.Error"));
-            }
+//            if(resp.equals("")){
+//                Mensaje.agregarInfo(Util.getEtiquetas("sigebi.sincronizarBien.Exito"));
+//            }
+//            else{
+//                Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.sincronizarBien.Error"));
+//            }
         } catch (Exception err) {
             Mensaje.agregarErrorAdvertencia(err.getMessage());
         }
     }
     
-    private String sincronizar(BienEntity bien){
+    private String sincronizar(Bien bien){
         try
         {
-            return bienMod.sincronizarBien(bien, lVistaUsuario.getgUsuarioActual().getIdUsuario());
+//            return bienMod.sincronizarBien(bien, lVistaUsuario.getgUsuarioActual().getIdUsuario());
         }
         catch(NullPointerException err)
         {
@@ -523,6 +522,7 @@ public class listadosController {
         catch(Exception err){
             return err.getMessage();
         }
+        return null;
     } 
     
     public HashMap<Integer, VistaBienes> getBienesPorSincronizar() {

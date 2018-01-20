@@ -26,63 +26,49 @@ import javax.persistence.Temporal;
  */
 @Entity(name = "ActaEntity")
 @Table(name = "SIGEBI_OAF.SGB_ACTA")
-@SequenceGenerator(name="SGB_SQ_ACTA", sequenceName = "SIGEBI_OAF.SGB_SQ_ACTA", initialValue=1, allocationSize=1)
+@SequenceGenerator(name = "SGB_SQ_ACTA", sequenceName = "SIGEBI_OAF.SGB_SQ_ACTA", initialValue = 1, allocationSize = 1)
 public class ActaEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    
+
     //<editor-fold defaultstate="collapsed" desc="Atributos">
     @Id
-    @GeneratedValue(strategy=GenerationType.SEQUENCE, generator = "SGB_SQ_ACTA")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SGB_SQ_ACTA")
     @Column(name = "ID_ACTA") // NUMBER 
     private int idActa;
 
-    
     @Column(name = "AUTORIZACION") // VARCHAR2 (100 Byte) 
     private String autorizacion;
-    
+
     @Column(name = "FECHA") // DATE  
     @Temporal(javax.persistence.TemporalType.DATE)
     private Date fecha;
-    
+
     @ManyToOne
     @JoinColumn(name = "ID_TIPO", referencedColumnName = "ID_TIPO")
     private Tipo idTipo;
-    
+
     @ManyToOne
     @JoinColumn(name = "ID_ESTADO", referencedColumnName = "ID_ESTADO")
     private Estado idEstado;
 
-
-
     @Column(name = "NUM_UNIDAD_EJEC") // VARCHAR2 (200 Byte) 
-    private int unidadEjecutora;
-    
+    private Long unidadEjecutora;
+
     @Column(name = "CEDULA") // VARCHAR2 (100 Byte) 
     private String cedula;
-    
+
     @Column(name = "RAZON_SOCIAL") // VARCHAR2 (200 Byte) 
     private String razonSocial;
 
-    
-    
     //</editor-fold>
-    
-    
     //<editor-fold defaultstate="collapsed" desc="Contructores">
-
     public ActaEntity() {
         fecha = new Date();
     }
-    
-
 
     //</editor-fold>
-    
-    
     //<editor-fold defaultstate="collapsed" desc="GETs & SETs">
-    
-    
     public int getIdActa() {
         return idActa;
     }
@@ -90,7 +76,6 @@ public class ActaEntity implements Serializable {
     public void setIdActa(int idActa) {
         this.idActa = idActa;
     }
-
 
     public String getAutorizacion() {
         return autorizacion;
@@ -124,14 +109,11 @@ public class ActaEntity implements Serializable {
         this.idEstado = idEstado;
     }
 
-    
-    
-    
-    public int getUnidadEjecutora() {
+    public Long getUnidadEjecutora() {
         return unidadEjecutora;
     }
 
-    public void setUnidadEjecutora(int unidadEjecutora) {
+    public void setUnidadEjecutora(Long unidadEjecutora) {
         this.unidadEjecutora = unidadEjecutora;
     }
 
@@ -147,15 +129,11 @@ public class ActaEntity implements Serializable {
         return razonSocial;
     }
 
-    
-    
     public void setRazonSocial(String razonSocial) {
         this.razonSocial = razonSocial;
     }
 
     //</editor-fold>
-    
-    
     //<editor-fold defaultstate="collapsed" desc="Sobrecargas">
     @Override
     public int hashCode() {
@@ -181,9 +159,6 @@ public class ActaEntity implements Serializable {
     public String toString() {
         return "cr.ac.ucr.sigebi.entities.ActaEntity[ id=" + idActa + " ]";
     }
-    
 
     //</editor-fold>
-    
-    
 }

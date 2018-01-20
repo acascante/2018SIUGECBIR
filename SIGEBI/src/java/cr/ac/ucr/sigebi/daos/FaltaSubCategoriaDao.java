@@ -21,12 +21,10 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Repository(value = "SubCategoriaDao")
 @Scope("request")
-public class SubCategoriaDao  extends GenericDaoImpl {
+public class FaltaSubCategoriaDao  extends GenericDaoImpl {
     
     @Autowired
     private DaoHelper dao;
-
-    
     
     @Transactional
     public SubCategoriaEntity traerPorId(String codCateg, String codSubCateg) {

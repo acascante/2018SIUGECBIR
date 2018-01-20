@@ -6,6 +6,7 @@
 package cr.ac.ucr.sigebi.entities;
 
 import cr.ac.ucr.framework.seguridad.ObjetoBase;
+import cr.ac.ucr.sigebi.domain.Estado;
 import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -46,7 +47,7 @@ public class TrasladoDetalleEntity  extends ObjetoBase implements Serializable  
     
     @ManyToOne
     @JoinColumn(name = "ID_ESTADO", referencedColumnName = "ID_ESTADO")
-    private EstadoEntity idEstado;
+    private  Estado idEstado;
     
     
     //</editor-fold>
@@ -59,7 +60,7 @@ public class TrasladoDetalleEntity  extends ObjetoBase implements Serializable  
 
     public TrasladoDetalleEntity( TrasladoEntity idTraslado
                                 , ViewBienEntity idBien
-                                , EstadoEntity idEstado) {
+                                ,  Estado idEstado) {
         this.idTraslado = idTraslado;
         this.idBien = idBien;
         this.idEstado = idEstado;
@@ -96,11 +97,11 @@ public class TrasladoDetalleEntity  extends ObjetoBase implements Serializable  
         this.idBien = idBien;
     }
 
-    public EstadoEntity getIdEstado() {
+    public  Estado getIdEstado() {
         return idEstado;
     }
 
-    public void setIdEstado(EstadoEntity idEstado) {
+    public void setIdEstado( Estado idEstado) {
         this.idEstado = idEstado;
     }
     

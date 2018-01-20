@@ -11,20 +11,21 @@ import cr.ac.ucr.framework.vista.util.Mensaje;
 import cr.ac.ucr.framework.vista.util.Util;
 import cr.ac.ucr.sigebi.utils.Constantes;
 import cr.ac.ucr.sigebi.commands.GestionProcesoCommand;
+import cr.ac.ucr.sigebi.domain.Autorizacion;
+import cr.ac.ucr.sigebi.domain.AutorizacionRol;
+import cr.ac.ucr.sigebi.domain.AutorizacionRolPersona;
+import cr.ac.ucr.sigebi.domain.Rol;
 import cr.ac.ucr.sigebi.domain.Tipo;
-import cr.ac.ucr.sigebi.entities.DocumentoEntity;
-import cr.ac.ucr.sigebi.entities.DocumentoRolEntity;
-import cr.ac.ucr.sigebi.entities.DocumentoRolPersonaEntity;
-import cr.ac.ucr.sigebi.entities.RolEntity;
-import cr.ac.ucr.sigebi.entities.TipoEntity;
-import cr.ac.ucr.sigebi.entities.UsuarioEntity;
-import cr.ac.ucr.sigebi.models.DocumentoModel;
-import cr.ac.ucr.sigebi.models.DocumentoRolModel;
-import cr.ac.ucr.sigebi.models.DocumentoRolPersonaModel;
+import cr.ac.ucr.sigebi.domain.UnidadEjecutora;
+import cr.ac.ucr.sigebi.domain.Usuario;
+import cr.ac.ucr.sigebi.models.AutorizacionModel;
+import cr.ac.ucr.sigebi.models.AutorizacionRolModel;
+import cr.ac.ucr.sigebi.models.AutorizacionRolPersonaModel;
 import cr.ac.ucr.sigebi.models.EstadoModel;
 import cr.ac.ucr.sigebi.models.RolModel;
 import cr.ac.ucr.sigebi.models.SegUsuarioModel;
 import cr.ac.ucr.sigebi.models.TipoModel;
+import cr.ac.ucr.sigebi.models.UnidadEjecutoraModel;
 import cr.ac.ucr.sigebi.models.UsuarioModel;
 import cr.ac.ucr.sigebi.utils.JsfUtil;
 import java.util.ArrayList;
@@ -44,45 +45,47 @@ import org.springframework.stereotype.Controller;
  */
 @Controller(value = "controllerGestionProceso")
 @Scope("session")
-public class GestionProcesosController extends BaseController{
-    
+public class GestionProcesosController extends BaseController {
+
     //<editor-fold defaultstate="collapsed" desc="Variables Locales">
-    
     @Resource
     private TipoModel tipoModel;
+
     @Resource
     private UsuarioModel usuarioModel;
 
     @Resource
-    private DocumentoModel documentoModel;
+    private AutorizacionModel autorizacionModel;
 
     @Resource
     private RolModel rolModel;
 
     @Resource
-    private DocumentoRolModel documentoRolModel;
+    private AutorizacionRolModel autorizacionRolModel;
 
     @Resource
-    private DocumentoRolPersonaModel documentoRolPersonaModel;
+    private AutorizacionRolPersonaModel autorizacionRolPersonaModel;
 
     @Resource
     private SegUsuarioModel segUsuarioModel;
 
     @Resource
     private EstadoModel estadoModel;
-    
+
+    @Resource
+    private UnidadEjecutoraModel unidadEjecutoraModel;
+
     //Listas para agregas
-    List<SelectItem> tiposProceso;    
-    List<SelectItem> documentosTipoProceso;    
+    List<SelectItem> tiposProceso;
+    List<SelectItem> autorizacionesTipoProceso;
     List<SelectItem> roles;
     List<SegUsuario> usuarios;
-    
+
     GestionProcesoCommand command;
-    
+
     //</editor-fold>
     
     //<editor-fold defaultstate="collapsed" desc="Get's & Set's">
-
     public TipoModel getTipoModel() {
         return tipoModel;
     }
@@ -91,28 +94,44 @@ public class GestionProcesosController extends BaseController{
         this.tipoModel = tipoModel;
     }
 
-    public DocumentoModel getDocumentoModel() {
-        return documentoModel;
+    public UsuarioModel getUsuarioModel() {
+        return usuarioModel;
     }
 
-    public void setDocumentoModel(DocumentoModel documentoModel) {
-        this.documentoModel = documentoModel;
+    public void setUsuarioModel(UsuarioModel usuarioModel) {
+        this.usuarioModel = usuarioModel;
     }
 
-    public DocumentoRolModel getDocumentoRolModel() {
-        return documentoRolModel;
+    public AutorizacionModel getAutorizacionModel() {
+        return autorizacionModel;
     }
 
-    public void setDocumentoRolModel(DocumentoRolModel documentoRolModel) {
-        this.documentoRolModel = documentoRolModel;
+    public void setAutorizacionModel(AutorizacionModel autorizacionModel) {
+        this.autorizacionModel = autorizacionModel;
     }
 
-    public DocumentoRolPersonaModel getDocumentoRolPersonaModel() {
-        return documentoRolPersonaModel;
+    public RolModel getRolModel() {
+        return rolModel;
     }
 
-    public void setDocumentoRolPersonaModel(DocumentoRolPersonaModel documentoRolPersonaModel) {
-        this.documentoRolPersonaModel = documentoRolPersonaModel;
+    public void setRolModel(RolModel rolModel) {
+        this.rolModel = rolModel;
+    }
+
+    public AutorizacionRolModel getAutorizacionRolModel() {
+        return autorizacionRolModel;
+    }
+
+    public void setAutorizacionRolModel(AutorizacionRolModel autorizacionRolModel) {
+        this.autorizacionRolModel = autorizacionRolModel;
+    }
+
+    public AutorizacionRolPersonaModel getAutorizacionRolPersonaModel() {
+        return autorizacionRolPersonaModel;
+    }
+
+    public void setAutorizacionRolPersonaModel(AutorizacionRolPersonaModel autorizacionRolPersonaModel) {
+        this.autorizacionRolPersonaModel = autorizacionRolPersonaModel;
     }
 
     public SegUsuarioModel getSegUsuarioModel() {
@@ -123,6 +142,14 @@ public class GestionProcesosController extends BaseController{
         this.segUsuarioModel = segUsuarioModel;
     }
 
+    public EstadoModel getEstadoModel() {
+        return estadoModel;
+    }
+
+    public void setEstadoModel(EstadoModel estadoModel) {
+        this.estadoModel = estadoModel;
+    }
+
     public List<SelectItem> getTiposProceso() {
         return tiposProceso;
     }
@@ -131,12 +158,12 @@ public class GestionProcesosController extends BaseController{
         this.tiposProceso = tiposProceso;
     }
 
-    public List<SelectItem> getDocumentosTipoProceso() {
-        return documentosTipoProceso;
+    public List<SelectItem> getAutorizacionesTipoProceso() {
+        return autorizacionesTipoProceso;
     }
 
-    public void setDocumentosTipoProceso(List<SelectItem> documentosTipoProceso) {
-        this.documentosTipoProceso = documentosTipoProceso;
+    public void setAutorizacionesTipoProceso(List<SelectItem> autorizacionesTipoProceso) {
+        this.autorizacionesTipoProceso = autorizacionesTipoProceso;
     }
 
     public List<SelectItem> getRoles() {
@@ -158,62 +185,54 @@ public class GestionProcesosController extends BaseController{
     public GestionProcesoCommand getCommand() {
         return command;
     }
-    
+
     public void setCommand(GestionProcesoCommand command) {
         this.command = command;
     }
-    public RolModel getRolModel() {
-        return rolModel;
+
+    public UnidadEjecutoraModel getUnidadEjecutoraModel() {
+        return unidadEjecutoraModel;
     }
 
-    public void setRolModel(RolModel rolModel) {
-        this.rolModel = rolModel;
-    }
-
-    public EstadoModel getEstadoModel() {
-        return estadoModel;
-    }
-
-    public void setEstadoModel(EstadoModel estadoModel) {
-        this.estadoModel = estadoModel;
+    public void setUnidadEjecutoraModel(UnidadEjecutoraModel unidadEjecutoraModel) {
+        this.unidadEjecutoraModel = unidadEjecutoraModel;
     }
 
     //</editor-fold>
-
-    //<editor-fold defaultstate="collapsed" desc="Constructor">
     
+    //<editor-fold defaultstate="collapsed" desc="Constructor">
     public GestionProcesosController() {
         super();
     }
-    
+
     @PostConstruct
     public final void inicializar() {
-        
-       //Se consultan los tipos por dominio, procesos
-       List<Tipo> lista = tipoModel.listarPorDominio(Constantes.DOMINI0_TIPO_PROCESO);
-       tiposProceso = new ArrayList<SelectItem>();
-       for (Tipo item : lista) {
-           tiposProceso.add(new SelectItem(item.getIdTipo().toString(), item.getNombre()));
-       } 
-       
-       //Se consultan los roles de la aplicacion
-       List<RolEntity> listaRoles = rolModel.listarTodos();
-       roles = new ArrayList<SelectItem>();
-       for (RolEntity item : listaRoles) {
-           roles.add(new SelectItem(item.getIdRol().toString(), item.getNombre()));
-       }
-       
-       command = new GestionProcesoCommand();
-    }
-    
-    //</editor-fold>
 
-    //<editor-fold defaultstate="collapsed" desc="Metodos">
+        //Se consultan los tipos por dominio, procesos
+        List<Tipo> lista = tipoModel.listarPorDominio(Constantes.DOMINI0_TIPO_PROCESO);
+        tiposProceso = new ArrayList<SelectItem>();
+        for (Tipo item : lista) {
+            tiposProceso.add(new SelectItem(item.getIdTipo().toString(), item.getNombre()));
+        }
+
+        //Se consultan los roles de la aplicacion
+        List<Rol> listaRoles = rolModel.listarTodos();
+        roles = new ArrayList<SelectItem>();
+        for (Rol item : listaRoles) {
+            roles.add(new SelectItem(item.getId().toString(), item.getNombre()));
+        }
+
+        command = new GestionProcesoCommand();
+    }
+
+    //</editor-fold>
     
+    //<editor-fold defaultstate="collapsed" desc="Metodos">
     /**
      * Se seleccionan el proceso
+     *
      * @param event
-     */    
+     */
     public void seleccionProceso(ValueChangeEvent event) {
 
         if (!event.getPhaseId().equals(PhaseId.INVOKE_APPLICATION)) {
@@ -225,29 +244,30 @@ public class GestionProcesosController extends BaseController{
         // Se obtiene el id del proceso
         Integer valor = Integer.parseInt(event.getNewValue().toString());
         command.setIdTipoProceso(valor);
-        
-        //Se inicializa el documento y usuarios
-        command.setIdDocumentoTipoProceso(-1L);
-        documentosTipoProceso = null;
-        
-        //Se busca a los usuarios asociados al documento y al rol
-        buscaUsuariosDocumentoRol();
 
-        if(valor > 0){
-            //Se cargan los documentos asociados al proceso
-            List<DocumentoEntity> lista = documentoModel.buscarPorTipoProceso(valor);
-            documentosTipoProceso = new ArrayList<SelectItem>();
-            for (DocumentoEntity item : lista) {
-                documentosTipoProceso.add(new SelectItem(item.getIdDocumento().toString(), item.getNombre()));
+        //Se inicializa el autorizacion y usuarios
+        command.setIdAutorizacionTipoProceso(-1L);
+        autorizacionesTipoProceso = null;
+
+        //Se busca a los usuarios asociados al autorizacion y al rol
+        buscaUsuariosAutorizacionRol();
+
+        if (valor > 0) {
+            //Se cargan los autorizacions asociados al proceso
+            List<Autorizacion> lista = autorizacionModel.buscarPorTipoProceso(valor);
+            autorizacionesTipoProceso = new ArrayList<SelectItem>();
+            for (Autorizacion item : lista) {
+                autorizacionesTipoProceso.add(new SelectItem(item.getId().toString(), item.getNombre()));
             }
-        }        
+        }
     }
-    
+
     /**
-     * Se seleccionan el documento
+     * Se seleccionan el autorizacion
+     *
      * @param event
-     */    
-    public void seleccionDocumento(ValueChangeEvent event) {
+     */
+    public void seleccionAutorizacion(ValueChangeEvent event) {
 
         if (!event.getPhaseId().equals(PhaseId.INVOKE_APPLICATION)) {
             event.setPhaseId(PhaseId.INVOKE_APPLICATION);
@@ -255,18 +275,19 @@ public class GestionProcesosController extends BaseController{
             return;
         }
 
-        // Se obtiene el id del documento
+        // Se obtiene el id del autorizacion
         Long valor = Long.parseLong(event.getNewValue().toString());
-        command.setIdDocumentoTipoProceso(valor);
+        command.setIdAutorizacionTipoProceso(valor);
 
-        //Se busca a los usuarios asociados al documento y al rol
-        this.buscaUsuariosDocumentoRol();
+        //Se busca a los usuarios asociados al autorizacion y al rol
+        this.buscaUsuariosAutorizacionRol();
     }
-            
+
     /**
      * Se selecciona el rol
+     *
      * @param event
-     */    
+     */
     public void seleccionRol(ValueChangeEvent event) {
 
         if (!event.getPhaseId().equals(PhaseId.INVOKE_APPLICATION)) {
@@ -278,22 +299,21 @@ public class GestionProcesosController extends BaseController{
         // Se obtiene el id del rol
         Long valor = Long.parseLong(event.getNewValue().toString());
         command.setIdRol(valor);
-        
-        //Se busca a los usuarios asociados al documento y al rol
-        this.buscaUsuariosDocumentoRol();
+
+        //Se busca a los usuarios asociados al autorizacion y al rol
+        this.buscaUsuariosAutorizacionRol();
     }
-    
-    private void buscaUsuariosDocumentoRol(){
+
+    private void buscaUsuariosAutorizacionRol() {
         usuarios = null;
         this.setCantidadRegistros(0);
-        if(command.getIdRol() > 0 && command.getIdDocumentoTipoProceso() > 0){
+        if (command.getIdRol() > 0 && command.getIdAutorizacionTipoProceso() > 0) {
             //Se buscan los usuarios       
             this.contarUsuarios();
             this.listarUsuarios();
-
         }
     }
-    
+
     /**
      * Lista los usuarios
      */
@@ -301,34 +321,33 @@ public class GestionProcesosController extends BaseController{
         try {
 
             //Se cargan los usuario asociados al rol
-            List<DocumentoRolPersonaEntity> personasRolDocumento = documentoRolPersonaModel.buscarPorDocumentoRol(command.getIdDocumentoTipoProceso(), command.getIdRol());
+            List<AutorizacionRolPersona> personasRolAutorizacion = autorizacionRolPersonaModel.buscarPorAutorizacionRol(command.getIdAutorizacionTipoProceso(), command.getIdRol());
 
             //Se buscan los usuarios
             this.usuarios = segUsuarioModel.listarUsuarios(command.getIdUsuario(), command.getNombreCompleto(), command.getCorreo(),
                     this.getPrimerRegistro() - 1, this.getUltimoRegistro());
-            
+
             //Se seleccionan los usuarios asociados a los roles
-            for (SegUsuario usuario : usuarios) {                
-                for (DocumentoRolPersonaEntity personaRol : personasRolDocumento) {
-                    if(personaRol.getIdUsuarioSeguridad().getIdUsuario().equals(usuario.getIdUsuario())){
+            for (SegUsuario usuario : usuarios) {
+                for (AutorizacionRolPersona personaRol : personasRolAutorizacion) {
+                    if (personaRol.getUsuarioSeguridad().getId().equals(usuario.getIdUsuario())) {
                         usuario.setMarcado(true);
                     }
                 }
             }
-            
+
         } catch (FWExcepcion e) {
             Mensaje.agregarErrorAdvertencia(e.getError_para_usuario());
         } catch (Exception e) {
             Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.error.controllerGestionProcesos.listarUsuarios"));
         }
     }
-    
-    
-    
+
     /**
      * Agregar el usuario
+     *
      * @param pEvent
-     */    
+     */
     public void agregar(ActionEvent pEvent) {
         try {
             if (!pEvent.getPhaseId().equals(PhaseId.INVOKE_APPLICATION)) {
@@ -336,37 +355,41 @@ public class GestionProcesosController extends BaseController{
                 pEvent.queue();
                 return;
             }
-            
-            //Se busca el rol documento, si no existe se crea
-            DocumentoRolEntity documentoRolEntity = documentoRolModel.buscarPorRolDocumento(command.getIdRol(), command.getIdDocumentoTipoProceso());
-            if(documentoRolEntity == null){
-                documentoRolEntity = new DocumentoRolEntity();
-                documentoRolEntity.setIdRol(rolModel.buscarPorId(command.getIdRol()));
-                documentoRolEntity.setIdDocumento(documentoModel.buscarPorId(command.getIdDocumentoTipoProceso()));  
-                documentoRolModel.agregar(documentoRolEntity);
+
+            //Se busca el rol autorizacion, si no existe se crea
+            AutorizacionRol autorizacionRol = autorizacionRolModel.buscarPorRolAutorizacion(command.getIdRol(), command.getIdAutorizacionTipoProceso());
+            if (autorizacionRol == null) {
+                autorizacionRol = new AutorizacionRol();
+                autorizacionRol.setRol(rolModel.buscarPorId(command.getIdRol()));
+                autorizacionRol.setAutorizacion(autorizacionModel.buscarPorId(command.getIdAutorizacionTipoProceso()));
+                autorizacionRolModel.agregar(autorizacionRol);
             }
-            
-            SegUsuario usuario = (SegUsuario) pEvent.getComponent().getAttributes().get("usuarioSelApro");        
-            
-            UsuarioEntity usr = usuarioModel.buscarPorId(usuario.getIdUsuario());
+
+            SegUsuario usuario = (SegUsuario) pEvent.getComponent().getAttributes().get("usuarioSelApro");
+            Usuario usr = usuarioModel.buscarPorId(usuario.getIdUsuario());
+
+            UnidadEjecutora unidadEjecutora = unidadEjecutoraModel.traerPorId(unidadEjecutoraId);
+
             //Se incluye el usuario al rol
-            DocumentoRolPersonaEntity documentoRolPersona = new DocumentoRolPersonaEntity();
-            documentoRolPersona.setIdDocumento(documentoRolEntity.getIdDocumento());
-            documentoRolPersona.setIdRol(documentoRolEntity.getIdRol());
-            documentoRolPersona.setIdUsuarioSeguridad(usr);            
-            documentoRolPersona.setNumUnidadEjec(unidadEjecutora);
-            documentoRolPersonaModel.agregar(documentoRolPersona);
+            AutorizacionRolPersona autorizacionRolPersona = new AutorizacionRolPersona();
+            autorizacionRolPersona.setAutorizacion(autorizacionRol.getAutorizacion());
+            autorizacionRolPersona.setRol(autorizacionRol.getRol());
+            autorizacionRolPersona.setUsuarioSeguridad(usr);
+            autorizacionRolPersona.setUnidadEjecutora(unidadEjecutora);
+            autorizacionRolPersonaModel.agregar(autorizacionRolPersona);
 
             usuario.setMarcado(true);
-                    
+
         } catch (Exception err) {
             Mensaje.agregarErrorAdvertencia(err.getMessage());
         }
     }
+
     /**
      * Elimina el usuario
+     *
      * @param pEvent
-     */    
+     */
     public void eliminar(ActionEvent pEvent) {
         try {
             if (!pEvent.getPhaseId().equals(PhaseId.INVOKE_APPLICATION)) {
@@ -374,30 +397,30 @@ public class GestionProcesosController extends BaseController{
                 pEvent.queue();
                 return;
             }
-            
+
             //Se busca el objeto para eliminar
-            SegUsuario usuario = (SegUsuario) pEvent.getComponent().getAttributes().get("usuarioSelRech");        
-            DocumentoRolPersonaEntity documentoRolPersonaEntity =  documentoRolPersonaModel.buscarPorRolDocumentoUsuario(command.getIdRol(), command.getIdDocumentoTipoProceso(), usuario.getIdUsuario());
-            documentoRolPersonaModel.eliminar(documentoRolPersonaEntity); 
+            SegUsuario usuario = (SegUsuario) pEvent.getComponent().getAttributes().get("usuarioSelRech");
+            AutorizacionRolPersona autorizacionRolPersona = autorizacionRolPersonaModel.buscarPorRolAutorizacionUsuario(command.getIdRol(), command.getIdAutorizacionTipoProceso(), usuario.getIdUsuario());
+            autorizacionRolPersonaModel.eliminar(autorizacionRolPersona);
             usuario.setMarcado(false);
-            
-            //Se verifica si el documento rol tiene usuarios asociados
-            if (documentoRolModel.contarPorDocumento(documentoRolPersonaModel.contarPorDocumentoRol(command.getIdDocumentoTipoProceso(), command.getIdRol())) == 0){
-                DocumentoRolEntity documentoRolEntity = documentoRolModel.buscarPorRolDocumento(command.getIdRol(), command.getIdDocumentoTipoProceso());
-                documentoRolModel.eliminar(documentoRolEntity);
-            }  
+
+            //Se verifica si el autorizacion rol tiene usuarios asociados
+            if (autorizacionRolModel.contarPorAutorizacion(autorizacionRolPersonaModel.contarPorAutorizacionRol(command.getIdAutorizacionTipoProceso(), command.getIdRol())) == 0) {
+                AutorizacionRol autorizacionRol = autorizacionRolModel.buscarPorRolAutorizacion(command.getIdRol(), command.getIdAutorizacionTipoProceso());
+                autorizacionRolModel.eliminar(autorizacionRol);
+            }
 
         } catch (Exception err) {
             Mensaje.agregarErrorAdvertencia(err.getMessage());
         }
     }
-    
+
     /**
      * Contabiliza los usuarios
      */
     private void contarUsuarios() {
         try {
-            
+
             //Se cuenta la cantidad de registros
             Long contador = segUsuarioModel.contarUsuarios(command.getIdUsuario(), command.getNombreCompleto(), command.getCorreo());
 
@@ -410,7 +433,7 @@ public class GestionProcesosController extends BaseController{
             Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.error.controllerGestionProcesos.contarUsuarios"));
         }
     }
-    
+
     /**
      * Cambia el valor de alguno de los filtros
      *
@@ -423,23 +446,24 @@ public class GestionProcesosController extends BaseController{
                 pEvent.queue();
                 return;
             }
-            
+
             this.contarUsuarios();
-            
+
             this.setPrimerRegistro(1);
 
             this.listarUsuarios();
-            
+
         } catch (Exception err) {
             Mensaje.agregarErrorAdvertencia(err.getMessage());
         }
 
     }
-    
-     /**
+
+    /**
      * Muestra el panel de acuerdo a la accion
+     *
      * @param pEvent
-     */    
+     */
     public void mostrarPanel(ActionEvent pEvent) {
         try {
             if (!pEvent.getPhaseId().equals(PhaseId.INVOKE_APPLICATION)) {
@@ -448,25 +472,23 @@ public class GestionProcesosController extends BaseController{
                 return;
             }
             //Se muestra el panel de acuerdo a la accion
-            String accion = (String) pEvent.getComponent().getAttributes().get("accion");     
+            String accion = (String) pEvent.getComponent().getAttributes().get("accion");
             command.setAccion(Integer.parseInt(accion));
-            command.setPresentarPanel(Boolean.TRUE);            
-            if(command.getPresentarPanelAgregarDocumento()){
-                command.setDocumentoEntity(new DocumentoEntity());
-            }else if(command.getPresentarPanelModificarDocumento()){
-                command.setDocumentoEntity(documentoModel.buscarPorId(command.getIdDocumentoTipoProceso()));                
-            }else if(command.getPresentarPanelAgregarRol()){
-                command.setRolEntity(new RolEntity());                
-            }else if(command.getPresentarPanelModificarRol()){
-                command.setRolEntity(rolModel.buscarPorId(command.getIdRol()));
-            }            
+            command.setPresentarPanel(Boolean.TRUE);
+            if (command.getPresentarPanelAgregarAutorizacion()) {
+                command.setAutorizacion(new Autorizacion());
+            } else if (command.getPresentarPanelModificarAutorizacion()) {
+                command.setAutorizacion(autorizacionModel.buscarPorId(command.getIdAutorizacionTipoProceso()));
+            } else if (command.getPresentarPanelAgregarRol()) {
+                command.setRol(new Rol());
+            } else if (command.getPresentarPanelModificarRol()) {
+                command.setRol(rolModel.buscarPorId(command.getIdRol()));
+            }
         } catch (Exception err) {
             Mensaje.agregarErrorAdvertencia(err.getMessage());
         }
     }
-    
-    
-    
+
     public void cerrarPanel() {
         try {
             command.setPresentarPanel(Boolean.FALSE);
@@ -478,7 +500,7 @@ public class GestionProcesosController extends BaseController{
 
     // <editor-fold defaultstate="collapsed" desc="Paginacion">
     /**
-     * Pasa a la pagina sub-set 
+     * Pasa a la pagina sub-set
      *
      * @param pEvent
      */
@@ -494,7 +516,7 @@ public class GestionProcesosController extends BaseController{
     }
 
     /**
-     * Pasa al siguiente sub-set 
+     * Pasa al siguiente sub-set
      *
      * @param pEvent
      */
@@ -509,7 +531,7 @@ public class GestionProcesosController extends BaseController{
     }
 
     /**
-     * Pasa al anterior sub-set 
+     * Pasa al anterior sub-set
      *
      * @param pEvent
      */
@@ -568,239 +590,236 @@ public class GestionProcesosController extends BaseController{
         this.setPrimerRegistro(1);
         this.listarUsuarios();
     }
-    
-        //</editor-fold>
-    
-    // <editor-fold defaultstate="collapsed" desc="Panel Popup Documento">
-    
-    /**
-     * Agregar el documento a la base de datos 
-     */    
-    public void agregarDocumento() {
-        try {
-            DocumentoEntity documentoEntity = command.getDocumentoEntity();
-            //TODO verificar si la busqueda debe ser ID
-            documentoEntity.setIdProceso(tipoModel.buscarPorId(command.getIdTipoProceso()));
-            documentoEntity.setIdEstado(estadoModel.buscarPorDominioEstado(Constantes.DOMINI0_ESTADO_GENERAL, Constantes.ESTADO_GENERAL_ACTIVO));
-            if(validarFormDocumento()){
-                documentoModel.agregar(documentoEntity);
-                documentosTipoProceso.add(new SelectItem(documentoEntity.getIdDocumento().toString(), documentoEntity.getNombre()));
-                command.setPresentarPanel(Boolean.FALSE);
-            }
-        } catch (Exception err) {
-            Mensaje.agregarErrorAdvertencia(err.getMessage());
-        }
-    }
-    
-    /**
-     * modifica el documento a la base de datos 
-     */   
-    public void modificarDocumento() {
-        try {
-            if(validarFormDocumento()){
-                documentoModel.modificar(command.getDocumentoEntity()); 
-                JsfUtil.modificarItem(documentosTipoProceso, command.getDocumentoEntity().getIdDocumento().toString(), command.getDocumentoEntity().getNombre(), null);
-                command.setPresentarPanel(Boolean.FALSE);
-            }
-        } catch (Exception err) {
-            Mensaje.agregarErrorAdvertencia(err.getMessage());
-        }
-    }
-    
-    public boolean validarFormDocumento(){
-        //Validaciones de campos
-        if (command.getDocumentoEntity().getNombre().isEmpty()) {
-            Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.error.controllerGestionProcesos.documento.nombre.requerido"));
-            return false;
-        }
-        if (command.getDocumentoEntity().getDetalle().isEmpty()) {
-            Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.error.controllerGestionProcesos.documento.detalle.requerido"));
-            return false;
-        } 
-        if (!command.getDocumentoEntity().getOrden().toString().matches(Constantes.PATTERN_NUMERIC)) {
-            Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.error.controllerGestionProcesos.documento.orden.no.numerico"));
-            return false;
-        }else if (command.getDocumentoEntity().getOrden() == null || command.getDocumentoEntity().getOrden() <= 0 ) {
-            Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.error.controllerGestionProcesos.documento.orden.requerido"));
-            return false;
-        }        
-        if (command.getDocumentoEntity().getIdEstado() == null ) {
-            Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.error.controllerGestionProcesos.documento.estado.requerido"));
-            return false;
-        }
-        if (command.getDocumentoEntity().getIdProceso() == null ) {
-            Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.error.controllerGestionProcesos.documento.proceso.requerido"));
-            return false;
-        }
-        
-        //Validaciones de datos
-        //FIXME Jairo validar error numerico
-        if(command.getPresentarPanelAgregarDocumento()){
-            
-            //Se verifica si ya existe un documento con el nombre indicado
-            if (documentoModel.contarDocumentosValidator(null, command.getIdTipoProceso(), null, command.getDocumentoEntity().getNombre()) > 0) {
-                Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.error.controllerGestionProcesos.documento.nombre.ya.existe"));
-                return false;
-            }
 
-            //Se verifica si ya existe un documento con el orden indicado
-            if (documentoModel.contarDocumentosValidator(null, command.getIdTipoProceso(), command.getDocumentoEntity().getOrden(), null) > 0) {
-                Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.error.controllerGestionProcesos.documento.orden.ya.existe"));
-                return false;
-            }    
-        }else if(command.getPresentarPanelModificarDocumento()){
-             //Se verifica si ya existe un documento con el nombre indicado
-            if (documentoModel.contarDocumentosValidator(command.getDocumentoEntity().getIdDocumento(), command.getIdTipoProceso(), null, command.getDocumentoEntity().getNombre()) > 0) {
-                Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.error.controllerGestionProcesos.documento.nombre.ya.existe"));
-                return false;
-            }
-
-            //Se verifica si ya existe un documento con el orden indicado
-            if (documentoModel.contarDocumentosValidator(command.getDocumentoEntity().getIdDocumento(), command.getIdTipoProceso(), command.getDocumentoEntity().getOrden(), null) > 0) {
-                Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.error.controllerGestionProcesos.documento.orden.ya.existe"));
-                return false;
-            } 
-        }        
-        return true;        
-    }
-    
-    /**
-     * Elimina el documento a la base de datos 
-     */   
-    public void eliminarDocumento() {
-        try {
-            if(validarFormEliminarDocumento()){
-                documentoModel.eliminar(command.getDocumentoEntity());
-                documentosTipoProceso = JsfUtil.eliminarItem(documentosTipoProceso, command.getDocumentoEntity().getIdDocumento().toString());
-                command.setPresentarPanel(Boolean.FALSE);
-                
-                command.setIdDocumentoTipoProceso(-1L);
-                
-                //Se busca los usuarios por rol y documento
-                this.buscaUsuariosDocumentoRol();                
-            }            
-        } catch (Exception err) {
-            Mensaje.agregarErrorAdvertencia(err.getMessage());
-        }
-    }
-    
-    public boolean validarFormEliminarDocumento(){
-        
-        //Se valida que el documento no este asociado a un rol
-        if (documentoRolModel.contarPorDocumento(command.getDocumentoEntity().getIdDocumento()) > 0){
-            Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.error.controllerGestionProcesos.documento.asociado.rol"));
-            return false;
-        }        
-        return true;        
-    }
-    
     //</editor-fold>
-
-    // <editor-fold defaultstate="collapsed" desc="Panel Popup Rol">
     
-     /**
-     * Agregar el rol a la base de datos 
-     */    
+    // <editor-fold defaultstate="collapsed" desc="Panel Popup Autorizacion">
+    /**
+     * Agregar el autorizacion a la base de datos
+     */
+    public void agregarAutorizacion() {
+        try {
+            Autorizacion autorizacion = command.getAutorizacion();
+            //TODO verificar si la busqueda debe ser ID
+            autorizacion.setTipoProceso(tipoModel.buscarPorId(command.getIdTipoProceso()));
+            autorizacion.setEstado(estadoModel.buscarPorDominioEstado(Constantes.DOMINI0_ESTADO_GENERAL, Constantes.ESTADO_GENERAL_ACTIVO));
+            if (validarFormAutorizacion()) {
+                autorizacionModel.agregar(autorizacion);
+                autorizacionesTipoProceso.add(new SelectItem(autorizacion.getId().toString(), autorizacion.getNombre()));
+                command.setPresentarPanel(Boolean.FALSE);
+            }
+        } catch (Exception err) {
+            Mensaje.agregarErrorAdvertencia(err.getMessage());
+        }
+    }
+
+    /**
+     * modifica el autorizacion a la base de datos
+     */
+    public void modificarAutorizacion() {
+        try {
+            if (validarFormAutorizacion()) {
+                autorizacionModel.modificar(command.getAutorizacion());
+                JsfUtil.modificarItem(autorizacionesTipoProceso, command.getAutorizacion().getId().toString(), command.getAutorizacion().getNombre(), null);
+                command.setPresentarPanel(Boolean.FALSE);
+            }
+        } catch (Exception err) {
+            Mensaje.agregarErrorAdvertencia(err.getMessage());
+        }
+    }
+
+    public boolean validarFormAutorizacion() {
+        //Validaciones de campos
+        if (command.getAutorizacion().getNombre().isEmpty()) {
+            Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.error.controllerGestionProcesos.autorizacion.nombre.requerido"));
+            return false;
+        }
+        if (command.getAutorizacion().getDetalle().isEmpty()) {
+            Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.error.controllerGestionProcesos.autorizacion.detalle.requerido"));
+            return false;
+        }
+        if (!command.getAutorizacion().getOrden().toString().matches(Constantes.PATTERN_NUMERIC)) {
+            Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.error.controllerGestionProcesos.autorizacion.orden.no.numerico"));
+            return false;
+        } else if (command.getAutorizacion().getOrden() == null || command.getAutorizacion().getOrden() <= 0) {
+            Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.error.controllerGestionProcesos.autorizacion.orden.requerido"));
+            return false;
+        }
+        if (command.getAutorizacion().getEstado() == null) {
+            Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.error.controllerGestionProcesos.autorizacion.estado.requerido"));
+            return false;
+        }
+        if (command.getAutorizacion().getTipoProceso()== null) {
+            Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.error.controllerGestionProcesos.autorizacion.proceso.requerido"));
+            return false;
+        }
+
+        //Validaciones de datos
+        if (command.getPresentarPanelAgregarAutorizacion()) {
+
+            //Se verifica si ya existe un autorizacion con el nombre indicado
+            if (autorizacionModel.contarAutorizacionsValidator(null, command.getIdTipoProceso(), null, command.getAutorizacion().getNombre()) > 0) {
+                Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.error.controllerGestionProcesos.autorizacion.nombre.ya.existe"));
+                return false;
+            }
+
+            //Se verifica si ya existe un autorizacion con el orden indicado
+            if (autorizacionModel.contarAutorizacionsValidator(null, command.getIdTipoProceso(), command.getAutorizacion().getOrden(), null) > 0) {
+                Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.error.controllerGestionProcesos.autorizacion.orden.ya.existe"));
+                return false;
+            }
+        } else if (command.getPresentarPanelModificarAutorizacion()) {
+            //Se verifica si ya existe un autorizacion con el nombre indicado
+            if (autorizacionModel.contarAutorizacionsValidator(command.getAutorizacion().getId(), command.getIdTipoProceso(), null, command.getAutorizacion().getNombre()) > 0) {
+                Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.error.controllerGestionProcesos.autorizacion.nombre.ya.existe"));
+                return false;
+            }
+
+            //Se verifica si ya existe un autorizacion con el orden indicado
+            if (autorizacionModel.contarAutorizacionsValidator(command.getAutorizacion().getId(), command.getIdTipoProceso(), command.getAutorizacion().getOrden(), null) > 0) {
+                Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.error.controllerGestionProcesos.autorizacion.orden.ya.existe"));
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * Elimina el autorizacion a la base de datos
+     */
+    public void eliminarAutorizacion() {
+        try {
+            if (validarFormEliminarAutorizacion()) {
+                autorizacionModel.eliminar(command.getAutorizacion());
+                autorizacionesTipoProceso = JsfUtil.eliminarItem(autorizacionesTipoProceso, command.getAutorizacion().getId().toString());
+                command.setPresentarPanel(Boolean.FALSE);
+
+                command.setIdAutorizacionTipoProceso(-1L);
+
+                //Se busca los usuarios por rol y autorizacion
+                this.buscaUsuariosAutorizacionRol();
+            }
+        } catch (Exception err) {
+            Mensaje.agregarErrorAdvertencia(err.getMessage());
+        }
+    }
+
+    public boolean validarFormEliminarAutorizacion() {
+
+        //Se valida que el autorizacion no este asociado a un rol
+        if (autorizacionRolModel.contarPorAutorizacion(command.getAutorizacion().getId()) > 0) {
+            Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.error.controllerGestionProcesos.autorizacion.asociado.rol"));
+            return false;
+        }
+        return true;
+    }
+
+    //</editor-fold>
+    
+    // <editor-fold defaultstate="collapsed" desc="Panel Popup Rol">
+    /**
+     * Agregar el rol a la base de datos
+     */
     public void agregarRol() {
         try {
-            RolEntity rolEntity = command.getRolEntity();
-            rolEntity.setIdEstado(estadoModel.buscarPorDominioEstado(Constantes.DOMINI0_ESTADO_GENERAL, Constantes.ESTADO_GENERAL_ACTIVO));
-            if(validarFormRol()){
-                rolModel.agregar(rolEntity);            
-                roles.add(new SelectItem(rolEntity.getIdRol(), rolEntity.getNombre()));
+            Rol rol = command.getRol();
+            rol.setEstado(estadoModel.buscarPorDominioEstado(Constantes.DOMINI0_ESTADO_GENERAL, Constantes.ESTADO_GENERAL_ACTIVO));
+            if (validarFormRol()) {
+                rolModel.agregar(rol);
+                roles.add(new SelectItem(rol.getId(), rol.getNombre()));
                 command.setPresentarPanel(Boolean.FALSE);
             }
         } catch (Exception err) {
             Mensaje.agregarErrorAdvertencia(err.getMessage());
         }
     }
-    
+
     /**
-     * modifica el rol a la base de datos 
-     */   
+     * modifica el rol a la base de datos
+     */
     public void modificarRol() {
         try {
-            if(validarFormRol()){
-                RolEntity rolEntity = command.getRolEntity();
-                rolModel.modificar(rolEntity); 
-                JsfUtil.modificarItem(roles, rolEntity.getIdRol().toString(), rolEntity.getNombre(), null);
+            if (validarFormRol()) {
+                Rol rol = command.getRol();
+                rolModel.modificar(rol);
+                JsfUtil.modificarItem(roles, rol.getId().toString(), rol.getNombre(), null);
                 command.setPresentarPanel(Boolean.FALSE);
             }
         } catch (Exception err) {
             Mensaje.agregarErrorAdvertencia(err.getMessage());
         }
     }
-    
-    public boolean validarFormRol(){
+
+    public boolean validarFormRol() {
         //Validaciones de campos
-        if (command.getRolEntity().getCodigo().isEmpty()) {
-            Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.error.controllerGestionProcesos.documento.rol.codigo.requerido"));
+        if (command.getRol().getCodigo().isEmpty()) {
+            Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.error.controllerGestionProcesos.autorizacion.rol.codigo.requerido"));
             return false;
         }
-        if (command.getRolEntity().getNombre().isEmpty()) {
-            Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.error.controllerGestionProcesos.documento.rol.nombre.requerido"));
+        if (command.getRol().getNombre().isEmpty()) {
+            Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.error.controllerGestionProcesos.autorizacion.rol.nombre.requerido"));
             return false;
         }
-        
-        if(command.getPresentarPanelAgregarRol()){
-            
+
+        if (command.getPresentarPanelAgregarRol()) {
+
             //Se verifica si ya existe un rol con el nombre indicado
-            if (rolModel.contarRolesValidator(null, null, command.getRolEntity().getNombre()) > 0) {
+            if (rolModel.contarRolesValidator(null, null, command.getRol().getNombre()) > 0) {
                 Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.error.controllerGestionProcesos.rol.nombre.ya.existe"));
                 return false;
             }
 
-            //Se verifica si ya existe un documento con el codigo indicado
-            if (rolModel.contarRolesValidator(null, command.getRolEntity().getCodigo(), null) > 0) {
+            //Se verifica si ya existe un autorizacion con el codigo indicado
+            if (rolModel.contarRolesValidator(null, command.getRol().getCodigo(), null) > 0) {
                 Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.error.controllerGestionProcesos.rol.codigo.ya.existe"));
                 return false;
-            }    
-        }else if(command.getPresentarPanelModificarRol()){
-             //Se verifica si ya existe un rol con el nombre indicado
-            if (rolModel.contarRolesValidator(command.getRolEntity().getIdRol(), null, command.getRolEntity().getNombre()) > 0) {
+            }
+        } else if (command.getPresentarPanelModificarRol()) {
+            //Se verifica si ya existe un rol con el nombre indicado
+            if (rolModel.contarRolesValidator(command.getRol().getId(), null, command.getRol().getNombre()) > 0) {
                 Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.error.controllerGestionProcesos.rol.nombre.ya.existe"));
                 return false;
             }
 
             //Se verifica si ya existe un rol con el codigo indicado
-            if (rolModel.contarRolesValidator(command.getRolEntity().getIdRol(), command.getRolEntity().getCodigo(), null) > 0) {
+            if (rolModel.contarRolesValidator(command.getRol().getId(), command.getRol().getCodigo(), null) > 0) {
                 Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.error.controllerGestionProcesos.rol.codigo.ya.existe"));
                 return false;
-            } 
-        }  
-        return true;        
+            }
+        }
+        return true;
     }
-    
+
     /**
-     * Elimina el rol a la base de datos 
-     */   
+     * Elimina el rol a la base de datos
+     */
     public void eliminarRol() {
         try {
-            if(validarFormEliminarRol()){
-                 RolEntity rolEntity = command.getRolEntity();
-                 roles = JsfUtil.eliminarItem(roles, rolEntity.getIdRol().toString());
-                 rolModel.eliminar(rolEntity); 
+            if (validarFormEliminarRol()) {
+                Rol rol = command.getRol();
+                roles = JsfUtil.eliminarItem(roles, rol.getId().toString());
+                rolModel.eliminar(rol);
 
-                 command.setPresentarPanel(Boolean.FALSE);
-                 command.setIdRol(-1L);
+                command.setPresentarPanel(Boolean.FALSE);
+                command.setIdRol(-1L);
 
-                 //Se busca los usuarios por rol y documento
-                 this.buscaUsuariosDocumentoRol();                
+                //Se busca los usuarios por rol y autorizacion
+                this.buscaUsuariosAutorizacionRol();
 
-            }            
+            }
         } catch (Exception err) {
             Mensaje.agregarErrorAdvertencia(err.getMessage());
         }
     }
-    
-    public boolean validarFormEliminarRol(){
-        
-        if (rolModel.verificaRolUso(command.getRolEntity().getIdRol()) > 0){
+
+    public boolean validarFormEliminarRol() {
+
+        if (rolModel.verificaRolUso(command.getRol().getId()) > 0) {
             Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.error.controllerGestionProcesos.rol.asociado"));
             return false;
-        }        
-        return true;        
+        }
+        return true;
     }
     //</editor-fold>
-    
+
 }

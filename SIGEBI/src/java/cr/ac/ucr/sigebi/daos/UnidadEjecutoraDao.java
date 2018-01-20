@@ -7,11 +7,11 @@ package cr.ac.ucr.sigebi.daos;
 
 import cr.ac.ucr.framework.daoHibernate.DaoHelper;
 import cr.ac.ucr.framework.daoImpl.GenericDaoImpl;
-import cr.ac.ucr.sigebi.entities.UnidadEjecutoraEntity;
-import java.util.ArrayList;
+import cr.ac.ucr.framework.utils.FWExcepcion;
+import cr.ac.ucr.sigebi.domain.UnidadEjecutora;
 import java.util.List;
+import org.hibernate.HibernateException;
 import org.hibernate.Query;
-import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -20,63 +20,48 @@ import org.springframework.transaction.annotation.Transactional;
 
 /**
  *
- * @author jorge.serrano
+ * @author jairo.cisneros
  */
 @Repository(value = "UnidadEjecutoraDao")
 @Scope("request")
-public class UnidadEjecutoraDao  extends GenericDaoImpl {
-    
+public class UnidadEjecutoraDao extends GenericDaoImpl {
+
     @Autowired
     private DaoHelper dao;
-    
-    @Transactional
-    public UnidadEjecutoraEntity traerPorId(Integer pId) {
-        Session session = dao.getSessionFactory().openSession();
-        UnidadEjecutoraEntity resp = new UnidadEjecutoraEntity();
+
+    @Transactional(readOnly = true)
+    public UnidadEjecutora traerPorId(Long id) throws FWExcepcion{
+        Session session = this.dao.getSessionFactory().openSession();
         try {
-            // De momento utilizamos la referencia como el id del bien
-            String sql = "FROM UnidadEjecutoraEntity s "
-                    + "WHERE s.idUnidadEjec = :pidUnidadEjec";
-            Query q = session.createQuery(sql);
-            q.setParameter("pidUnidadEjec",pId);
-            
-            List l = q.list();
-            resp = (UnidadEjecutoraEntity) l.get(0);
-            
+            String sql = "SELECT obj FROM UnidadEjecutora obj WHERE obj.id = :id";
+            Query query = session.createQuery(sql);
+            query.setParameter("id", id);
+
+            //Se obtienen los resutltados
+            return (UnidadEjecutora) query.list().get(0);
+
+        } catch (HibernateException e) {
+            throw new FWExcepcion("sigebi.error.unidadEejecutora.dao.traerPorId", "Error obtener el registro de tipo " + this.getClass(), e.getCause());
+        } finally {
             session.close();
-            return resp;
-        } catch (Exception e) {
-            if(session.isOpen())
-                session.close();
-            return resp;
         }
     }
-    
-    
-    public List<UnidadEjecutoraEntity> listarUnidades(String idUnidad, String nombUnidad) {
+
+    @Transactional(readOnly = true)
+    public List<UnidadEjecutora> listarUnidades(String idUnidad, String nombUnidad) throws FWExcepcion{
         Session session = dao.getSessionFactory().openSession();
-        List<UnidadEjecutoraEntity> resp = new ArrayList<UnidadEjecutoraEntity>();
         try {
-            // De momento utilizamos la referencia como el id del bien
-            String sql = " SELECT UN.* \n" +
-                         " FROM SEGURIDAD_UNIDAD_EJECUTORA UN \n" +
-                         " WHERE TO_CHAR(ID_UNIDAD_EJECUTORA) LIKE '%"+idUnidad+"%'\n" +
-                         "   AND UPPER(DSC_UNIDAD_EJECUTORA) LIKE '%"+nombUnidad+"%'\n"+
-                         "   AND ROWNUM <= 10";
-            SQLQuery q = session.createSQLQuery(sql);
-            q.addEntity(UnidadEjecutoraEntity.class);
-            
-            List tipos = q.list();
-            resp = tipos;
-            
+            String sql = "SELECT obj FROM UnidadEjecutora obj WHERE TO_CHAR(obj.id) LIKE '%" + idUnidad + "%'";
+            sql = sql + " AND UPPER(obj.descripcion) LIKE '%" + nombUnidad + "%'";
+            Query query = session.createQuery(sql);
+            query.setParameter("idUnidad", idUnidad);
+            query.setParameter("nombUnidad", nombUnidad);
+
+            return (List<UnidadEjecutora>) query.list();
+        } catch (HibernateException e) {
+            throw new FWExcepcion("sigebi.error.unidadEejecutora.dao.listarUnidades", "Error obtener los registros de tipo " + this.getClass(), e.getCause());
+        } finally {
             session.close();
-            return resp;
-        } catch (Exception e) {
-            if(session.isOpen())
-                session.close();
-            return resp;
         }
     }
-    
-    
 }

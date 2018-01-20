@@ -33,7 +33,7 @@ public class AccesorioDao  extends GenericDaoImpl{
     @Transactional(readOnly = true)
     public List<Accesorio> listar() throws FWExcepcion {
         try {
-            return find(Accesorio.class);            
+            return dao.getHibernateTemplate().find("from Accesorio"); 
         } catch (DataAccessException e) {
             throw new FWExcepcion("sigebi.error.notificacionDao.listar", "Error obtener los registros de tipo " + this.getClass(), e.getCause());
         }

@@ -9,8 +9,8 @@ import cr.ac.ucr.framework.daoHibernate.DaoHelper;
 import cr.ac.ucr.framework.daoImpl.GenericDaoImpl;
 import cr.ac.ucr.framework.seguridad.entidades.SegUsuario;
 import cr.ac.ucr.framework.utils.FWExcepcion;
-import cr.ac.ucr.sigebi.entities.DocumentoEntity;
 import java.util.List;
+import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,7 +35,7 @@ public class SegUsuarioDao extends GenericDaoImpl {
             String correo,            
             Integer pPrimerRegistro,
             Integer pUltimoRegistro
-    ) {
+    ) throws FWExcepcion{
         Session session = this.dao.getSessionFactory().openSession();
         try {
             //Se genera el query para la busqueda
@@ -49,8 +49,7 @@ public class SegUsuarioDao extends GenericDaoImpl {
             //Se obtienen los resutltados
             return (List<SegUsuario>) q.list();
 
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (HibernateException e) {
             throw new FWExcepcion("sigebi.error.dao.segUsuario.listarUsuarios",
                     "Error obtener los registros de tipo " + this.getClass(), e.getCause());
         } finally {
@@ -62,7 +61,7 @@ public class SegUsuarioDao extends GenericDaoImpl {
     public Long contarUsuarios(String idUsuario,
             String nombreCompleto,
             String correo
-    ) {
+    ) throws FWExcepcion{
         Session session = dao.getSessionFactory().openSession();
         try {
 
@@ -72,8 +71,7 @@ public class SegUsuarioDao extends GenericDaoImpl {
             //Se obtienen los resutltados
             return (Long) q.uniqueResult();
 
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (HibernateException e) {
             throw new FWExcepcion("sigebi.error.dao.segUsuario.contarUsuarios",
                     "Error obtener los registros de tipo " + this.getClass(), e.getCause());
         } finally {

@@ -59,7 +59,7 @@
                                         />
                                 <ice:inputText id="txtBienId" 
                                                styleClass="form-control" 
-                                               value="#{controllerBienes.bien.idPlaca.placa}"
+                                               value="#{controllerBienes.bien.identificacion.identificacion}"
                                                readonly="true"
                                                partialSubmit="false">
                                 </ice:inputText>
@@ -413,7 +413,7 @@
                             <ice:commandButton id="botonSincronizar"
                                        style="float:right" 
                                        styleClass="boton" 
-                                       rendered="#{controllerBienes.bien.idEstado.estado == controllerBienes.estadoPendiente}"
+                                       rendered="#{controllerBienes.bien.estado.id == controllerBienes.estadoPendiente.id}"
                                        partialSubmit="true" 
                                        action="#{controllerBienes.solicitarSincronizacion}"
                                        value="#{label['sigebi.Bien.Btn.Sincronizacion']}"  >
@@ -422,7 +422,7 @@
                             <ice:commandButton id="botonRechazar"
                                                style="float:right" 
                                                styleClass="boton" 
-                                               rendered="#{controllerBienes.bien.idEstado.estado == controllerBienes.estadoPendienteSincronizar}"
+                                               rendered="#{controllerBienes.bien.idEstado.id == controllerBienes.estadoPendienteSincronizar.id}"
                                                partialSubmit="true" 
                                                actionListener="#{controllerBienes.mostrarPanelObserva}"
                                                value="#{label['sigebi.Bien.Btn.Rechazar']}"  >

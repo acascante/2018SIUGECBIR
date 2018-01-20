@@ -8,9 +8,9 @@ package cr.ac.ucr.sigebi.controllers;
 import cr.ac.ucr.framework.utils.FWExcepcion;
 import cr.ac.ucr.framework.vista.util.Mensaje;
 import cr.ac.ucr.framework.vista.util.Util;
+import cr.ac.ucr.sigebi.domain.Bien;
 import cr.ac.ucr.sigebi.domain.Estado;
 import cr.ac.ucr.sigebi.domain.Tipo;
-import cr.ac.ucr.sigebi.entities.BienEntity;
 import cr.ac.ucr.sigebi.enums.BienEstadoInternoEnum;
 import cr.ac.ucr.sigebi.models.BienModel;
 import cr.ac.ucr.sigebi.models.EstadoModel;
@@ -51,7 +51,7 @@ public class ListarBienesController extends BaseController {
     
     BienEstadoInternoEnum estadoInterno;
     
-    List<BienEntity> bienes;
+    List<Bien> bienes;
     List<SelectItem> itemsEstado;
     List<SelectItem> itemsTipo;
    
@@ -83,7 +83,7 @@ public class ListarBienesController extends BaseController {
 
     private void contarBienes() {
         try {
-            Long contador = bienModel.contarBienes(BienEstadoInternoEnum.NORMAL.ordinal());
+            Long contador = 0l; //bienModel.contarBienes(BienEstadoInternoEnum.NORMAL.ordinal());
             this.setCantidadRegistros(contador.intValue());
         } catch (FWExcepcion e) {
             Mensaje.agregarErrorAdvertencia(e.getError_para_usuario());
@@ -94,7 +94,7 @@ public class ListarBienesController extends BaseController {
     
     private void listarBienes() {
         try {
-            this.bienes = bienModel.listarBienesEstadoInterno(this.getPrimerRegistro()-1, this.getUltimoRegistro(), BienEstadoInternoEnum.NORMAL.ordinal());
+           // this.bienes = bienModel.listarBienesEstadoInterno(this.getPrimerRegistro()-1, this.getUltimoRegistro(), BienEstadoInternoEnum.NORMAL.ordinal());
         } catch (FWExcepcion e) {
             Mensaje.agregarErrorAdvertencia(e.getError_para_usuario());
         } catch (NumberFormatException e) {
@@ -155,11 +155,11 @@ public class ListarBienesController extends BaseController {
         this.estadoInterno = estadoInterno;
     }
 
-    public List<BienEntity> getBienes() {
+    public List<Bien> getBienes() {
         return bienes;
     }
 
-    public void setBienes(List<BienEntity> bienes) {
+    public void setBienes(List<Bien> bienes) {
         this.bienes = bienes;
     }
 

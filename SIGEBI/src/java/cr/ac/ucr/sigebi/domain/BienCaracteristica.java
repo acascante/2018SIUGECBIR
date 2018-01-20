@@ -1,3 +1,4 @@
+
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -23,7 +24,7 @@ import javax.persistence.Table;
  * @author alvaro.cascante
  */
 @Entity(name = "BienCaracteristica")
-@Table(name = "SIGEBI_OAF.SGB_NOTIFICACION")
+@Table(name = "SIGEBI_OAF.SGB_DATO_BIEN")
 @SequenceGenerator(name="sqBienCaracteristica", sequenceName = "SIGEBI_OAF.SGB_SQ_BIEN_CARACTERISTICA", initialValue=1, allocationSize=1)
 public class BienCaracteristica extends ObjetoBase implements Serializable  {
     

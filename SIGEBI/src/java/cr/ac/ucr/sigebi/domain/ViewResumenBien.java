@@ -16,14 +16,13 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-@Entity(name = "BienDetalleCaracteristica")
+@Entity(name = "ViewResumenBien")
 @Table(name = "SIGEBI_OAF.V_SIGB_BIEN_CARACTERISTICA")
-
-public class BienDetalleCaracteristica extends ObjetoBase implements Serializable {
+public class ViewResumenBien extends ObjetoBase implements Serializable {
     
     //<editor-fold defaultstate="collapsed" desc="Atributos">
     @Id
-    @Column(name = "ID")
+    @Column(name = "ID_BIEN")
     private Long id;
 
     @Column(name = "MARCA")

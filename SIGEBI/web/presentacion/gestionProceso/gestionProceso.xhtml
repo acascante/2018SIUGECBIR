@@ -37,21 +37,21 @@
                 </div>
                 <div class="col-md-4">
                     <div class="form-group"> 
-                        <label class="control-label" for="txtDocumento">
-                            <ice:outputText value="#{label['sigebi.label.vista.gestionProceso.documento']}" />
+                        <label class="control-label" for="txtAutorizacion">
+                            <ice:outputText value="#{label['sigebi.label.vista.gestionProceso.autorizacion']}" />
                             <ice:outputText value="#{label['label.requerido']}" />
                         </label>                                               
 
-                        <ice:selectOneMenu id="documentoSelec"                                           
+                        <ice:selectOneMenu id="autorizacionSelec"                                           
                                            styleClass="form-control"
                                            partialSubmit="true"
-                                           value="#{controllerGestionProceso.command.idDocumentoTipoProceso}"
-                                           valueChangeListener="#{controllerGestionProceso.seleccionDocumento}">
+                                           value="#{controllerGestionProceso.command.idAutorizacionTipoProceso}"
+                                           valueChangeListener="#{controllerGestionProceso.seleccionAutorizacion}">
                                            <f:selectItem itemLabel="N/A" itemValue="-1"/>
-                                           <f:selectItems id="documentoSelecItem" value="#{controllerGestionProceso.documentosTipoProceso}"/>
+                                           <f:selectItems id="autorizacionSelecItem" value="#{controllerGestionProceso.autorizacionesTipoProceso}"/>
                         </ice:selectOneMenu>
 
-                        <ice:commandButton id="botonAgregarDocumento"
+                        <ice:commandButton id="botonAgregarAutorizacion"
                                                    style="margin-top:2%" 
                                                    styleClass="btnAgregar_Proceso" 
                                                    partialSubmit="true"
@@ -59,11 +59,11 @@
                                                    actionListener="#{controllerGestionProceso.mostrarPanel}">
                             <f:attribute id="accion" name="accion"  value="1"/>
                         </ice:commandButton>
-                        <ice:commandButton id="botonModificarDocumento"
+                        <ice:commandButton id="botonModificarAutorizacion"
                                                    style="margin-top:2%" 
                                                    styleClass="btnModificar_Proceso" 
                                                    partialSubmit="true"
-                                                   rendered="#{controllerGestionProceso.command.idDocumentoTipoProceso > 0}"
+                                                   rendered="#{controllerGestionProceso.command.idAutorizacionTipoProceso > 0}"
                                                    actionListener="#{controllerGestionProceso.mostrarPanel}">
                             <f:attribute id="accion" name="accion"  value="2"/>
                         </ice:commandButton>
@@ -224,13 +224,13 @@
         </div>
     </div>
     
-    <!-- Agrega el model para administrar documentos -->
-    <ui:insert name="modalDocumentos">
-        <ui:include src="../gestionProceso/panelDocumento.xhtml" />
+    <!-- Agrega el model para administrar autorizaciones-->
+    <ui:insert name="modalAutorizacions">
+        <ui:include src="../gestionProceso/panelAutorizacion.xhtml" />
     </ui:insert>
 
-    <!-- Agrega el model para administrar roles -->
-    <ui:insert name="modalDocumentos">
+    <!-- Agrega el model para administrar roles-->
+    <ui:insert name="modalAutorizacions">
         <ui:include src="../gestionProceso/panelRol.xhtml" />
     </ui:insert>
 </ice:form>

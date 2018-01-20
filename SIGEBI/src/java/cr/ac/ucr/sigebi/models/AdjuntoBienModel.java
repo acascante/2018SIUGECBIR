@@ -5,7 +5,7 @@
  */
 package cr.ac.ucr.sigebi.models;
 
-import cr.ac.ucr.sigebi.daos.AdjuntoBienDao;
+import cr.ac.ucr.sigebi.daos.FaltaAdjuntoBienDao;
 import cr.ac.ucr.sigebi.entities.AdjuntoBienEntity;
 import java.util.List;
 import javax.annotation.Resource;
@@ -21,7 +21,7 @@ import org.springframework.stereotype.Service;
 public class AdjuntoBienModel {
      
     @Resource
-    private AdjuntoBienDao adjuntoBienDao;
+    private FaltaAdjuntoBienDao adjuntoBienDao;
     
     public String guardarAdjunto( AdjuntoBienEntity dato ){
         return adjuntoBienDao.guardarAdjunto(dato);

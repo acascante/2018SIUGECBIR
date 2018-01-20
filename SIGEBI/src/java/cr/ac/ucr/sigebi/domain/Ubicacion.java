@@ -50,12 +50,12 @@ public class Ubicacion extends ObjetoBase implements Serializable {
     private Estado estado;
     //</editor-fold>
 
-    //<editor-fold defaultstate="collapsed" desc="GET's y SET's">
-    public Integer getIdUbicacion() {
+    //<editor-fold defaultstate="collapsed" desc="Get's y Set's">
+    public Integer getId() {
         return id;
     }
 
-    public void setIdUbicacion(Integer id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -99,7 +99,8 @@ public class Ubicacion extends ObjetoBase implements Serializable {
         this.estado = estado;
     }
     //</editor-fold>
-
+    
+    //<editor-fold defaultstate="collapsed" desc="Metodos">
     @Override
     public int hashCode() {
         int hash = 7;
@@ -144,4 +145,5 @@ public class Ubicacion extends ObjetoBase implements Serializable {
         }
         return true;
     }
+    //</editor-fold>
 }

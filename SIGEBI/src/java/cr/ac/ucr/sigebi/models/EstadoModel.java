@@ -8,7 +8,6 @@ package cr.ac.ucr.sigebi.models;
 import cr.ac.ucr.framework.utils.FWExcepcion;
 import cr.ac.ucr.sigebi.daos.EstadoDao;
 import cr.ac.ucr.sigebi.domain.Estado;
-import cr.ac.ucr.sigebi.entities.EstadoEntity;
 import java.util.List;
 import javax.annotation.Resource;
 import org.springframework.context.annotation.Scope;

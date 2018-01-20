@@ -8,8 +8,11 @@ package cr.ac.ucr.sigebi.daos;
 import cr.ac.ucr.framework.daoHibernate.DaoHelper;
 import cr.ac.ucr.framework.daoImpl.GenericDaoImpl;
 import cr.ac.ucr.framework.utils.FWExcepcion;
-import cr.ac.ucr.sigebi.entities.ClasificacionEntity;
+import cr.ac.ucr.sigebi.domain.Clasificacion;
 import java.util.List;
+import org.hibernate.HibernateException;
+import org.hibernate.Query;
+import org.hibernate.Session;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Repository;
@@ -22,46 +25,38 @@ import org.springframework.transaction.annotation.Transactional;
 @Repository(value = "clasificacionDao")
 @Scope("request")
 public class ClasificacionDao extends GenericDaoImpl {
-    
+
     @Autowired
     private DaoHelper dao;
 
-    
-    
-    @Transactional
-    public ClasificacionEntity traerPorId(Integer pId) {
-        ClasificacionEntity tipoAux = new ClasificacionEntity();
+    @Transactional(readOnly = true)
+    public Clasificacion traerPorId(String idClasificacion) throws FWExcepcion {
+        Session session = dao.getSessionFactory().openSession();
         try {
-            String[] nameParams = new String[1];
-            nameParams[0] = "PID_CLASIFICACION";
-            Object[] params = new Object[1];
-            params[0] = pId;
-            tipoAux = (ClasificacionEntity) dao.getHibernateTemplate().findByNamedQueryAndNamedParam("ClasificacionEntity.findById", nameParams, params).get(0);
-        } catch (Exception e) {
-            throw new FWExcepcion ("sigebi.error.buscarClasificacion",
-                    "Error obtener los registros de tipo " + this.getClass(), e.getCause());
+            String sql = "SELECT obj FROM Clasificacion obj WHERE obj.id = :idClasificacion";
+            Query query = session.createQuery(sql);
+            query.setParameter("idClasificacion", idClasificacion);
+            return (Clasificacion) query.uniqueResult();
+        } catch (HibernateException e) {
+            throw new FWExcepcion("sigebi.error.tipo.dao.buscarPorId", "Error obtener los registros de tipo " + this.getClass(), e.getCause());
+        } finally {
+            session.close();
         }
-        return tipoAux;
     }
-    
-    @Transactional
-    public List<ClasificacionEntity> traerTodo(String codSubCateg) {
-        try {
-            String[] nameParams = new String[1];
-            nameParams[0] = "PCODIGO_SUB_CATEGORIA";
-            Object[] params = new Object[1];
-            params[0] = codSubCateg;
-            return (List<ClasificacionEntity>) dao.getHibernateTemplate().findByNamedQueryAndNamedParam("ClasificacionEntity.findAll", nameParams, params);
-        
-        } catch (Exception e) {
-            throw new FWExcepcion ("sigebi.error.listaClasificacion",
-                    "Error obtener los registros de tipo " + this.getClass(), e.getCause());
-        }
 
+    @Transactional(readOnly = true)
+    public List<Clasificacion> listarPorCodigoSubCategoria(String codSubCategoria) throws FWExcepcion {
+        Session session = dao.getSessionFactory().openSession();
+        try {
+            String sql = "SELECT obj FROM Clasificacion obj WHERE obj.codSubCategoria = :codSubCategoria";
+            Query query = session.createQuery(sql);
+            query.setParameter("codSubCategoria", codSubCategoria);
+
+            return (List<Clasificacion>) query.list();
+        } catch (HibernateException e) {
+            throw new FWExcepcion("sigebi.error.clasificacionDao.listarPorDominio", "Error obtener los registros de tipo " + this.getClass(), e.getCause());
+        } finally {
+            session.close();
+        }
     }
-    
 }
-/*
-
-            
-*/

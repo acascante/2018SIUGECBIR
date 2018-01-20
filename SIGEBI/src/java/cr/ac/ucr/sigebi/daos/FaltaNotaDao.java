@@ -23,7 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Repository(value = "notaDao")
 @Scope("request")
-public class NotaDao extends GenericDaoImpl {
+public class FaltaNotaDao extends GenericDaoImpl {
     
     @Autowired
     private DaoHelper dao;

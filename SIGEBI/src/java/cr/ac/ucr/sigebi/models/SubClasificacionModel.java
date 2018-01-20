@@ -6,7 +6,7 @@
 package cr.ac.ucr.sigebi.models;
 
 import cr.ac.ucr.framework.utils.FWExcepcion;
-import cr.ac.ucr.sigebi.daos.SubClasificacionDao;
+import cr.ac.ucr.sigebi.daos.FaltaSubClasificacionDao;
 import cr.ac.ucr.sigebi.entities.SubClasificacionEntity;
 import java.util.List;
 import javax.annotation.Resource;
@@ -22,7 +22,7 @@ import org.springframework.stereotype.Service;
 public class SubClasificacionModel {
     
     @Resource
-    private SubClasificacionDao subClasificacionDao;
+    private FaltaSubClasificacionDao subClasificacionDao;
 
     public SubClasificacionEntity obtenerValor(Integer pId) {
         SubClasificacionEntity respAux = new SubClasificacionEntity();

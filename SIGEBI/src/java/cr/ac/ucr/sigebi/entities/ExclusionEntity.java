@@ -6,6 +6,7 @@
 package cr.ac.ucr.sigebi.entities;
 
 import cr.ac.ucr.framework.seguridad.ObjetoBase;
+import cr.ac.ucr.sigebi.domain.Bien;
 import cr.ac.ucr.sigebi.utils.Constantes;
 import java.io.Serializable;
 import java.util.Date;
@@ -41,7 +42,7 @@ public class ExclusionEntity extends ObjetoBase implements Serializable {
     private Integer idExclusion;
     
     @Column(name = "NUM_UNIDAD_EJEC")
-    private Integer unidadEjecutora;
+    private Long unidadEjecutora;
     
     @Column(name = "FECHA")
     @Temporal(javax.persistence.TemporalType.DATE)
@@ -56,13 +57,14 @@ public class ExclusionEntity extends ObjetoBase implements Serializable {
     private TipoEntity tipo;
     
     @Transient
-    private List<BienEntity> bienes;
+    private List<Bien> bienes;
+    
     //</editor-fold>
     
     //<editor-fold defaultstate="collapsed" desc="Constructores">
     public ExclusionEntity() {}
 
-    public ExclusionEntity(Integer idExclusion, Integer unidadEjecutora, Date fecha, EstadoEntity estado, TipoEntity tipo, List<BienEntity> bienes) {
+    public ExclusionEntity(Integer idExclusion, Long unidadEjecutora, Date fecha, EstadoEntity estado, TipoEntity tipo, List<Bien> bienes) {
         this.idExclusion = idExclusion;
         this.unidadEjecutora = unidadEjecutora;
         this.fecha = fecha;
@@ -81,11 +83,11 @@ public class ExclusionEntity extends ObjetoBase implements Serializable {
         this.idExclusion = idExclusion;
     }
 
-    public Integer getUnidadEjecutora() {
+    public Long getUnidadEjecutora() {
         return unidadEjecutora;
     }
 
-    public void setUnidadEjecutora(Integer unidadEjecutora) {
+    public void setUnidadEjecutora(Long unidadEjecutora) {
         this.unidadEjecutora = unidadEjecutora;
     }
 
@@ -113,11 +115,11 @@ public class ExclusionEntity extends ObjetoBase implements Serializable {
         this.tipo = tipo;
     }
 
-    public List<BienEntity> getBienes() {
+    public List<Bien> getBienes() {
         return bienes;
     }
 
-    public void setBienes(List<BienEntity> bienes) {
+    public void setBienes(List<Bien> bienes) {
         this.bienes = bienes;
     }
     //</editor-fold>

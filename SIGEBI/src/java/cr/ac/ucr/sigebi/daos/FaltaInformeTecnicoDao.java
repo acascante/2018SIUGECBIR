@@ -23,7 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Repository(value = "informeTecnicoDao")
 @Scope("request")
-public class InformeTecnicoDao extends GenericDaoImpl {
+public class FaltaInformeTecnicoDao extends GenericDaoImpl {
 
     @Autowired
     private DaoHelper dao;
@@ -39,7 +39,7 @@ public class InformeTecnicoDao extends GenericDaoImpl {
     }
 
     @Transactional(readOnly = true)
-    public List<InformeTecnicoEntity> listarInformes(Integer unidEjecutora,
+    public List<InformeTecnicoEntity> listarInformes(Long unidadEjecutora,
             Integer fltIdTipo,
             String fltIdBien,
             String fltDescripcion,
@@ -50,7 +50,7 @@ public class InformeTecnicoDao extends GenericDaoImpl {
         Session session = this.dao.getSessionFactory().openSession();
         try {
             //Se genera el query para la busqueda
-            Query q = this.creaQueryListarInformes(unidEjecutora, fltIdTipo, fltIdBien, fltDescripcion, fltEstado, false, session);
+            Query q = this.creaQueryListarInformes(unidadEjecutora, fltIdTipo, fltIdBien, fltDescripcion, fltEstado, false, session);
 
             //Paginacion
             if (!(pPrimerRegistro.equals(1) && pUltimoRegistro.equals(1))) {
@@ -70,7 +70,7 @@ public class InformeTecnicoDao extends GenericDaoImpl {
     }
 
     @Transactional(readOnly = true)
-    public Long contarInformes(Integer unidEjecutora,
+    public Long contarInformes(Long unidadEjecutora,
             Integer fltIdTipo,
             String fltIdBien,
             String fltDescripcion,
@@ -80,7 +80,7 @@ public class InformeTecnicoDao extends GenericDaoImpl {
         try {
 
             //Se genera el query para la busqueda de los bienes
-            Query q = this.creaQueryListarInformes(unidEjecutora, fltIdTipo, fltIdBien, fltDescripcion, fltEstado, true, session);
+            Query q = this.creaQueryListarInformes(unidadEjecutora, fltIdTipo, fltIdBien, fltDescripcion, fltEstado, true, session);
 
             //Se obtienen los resutltados
             return (Long) q.uniqueResult();
@@ -94,7 +94,7 @@ public class InformeTecnicoDao extends GenericDaoImpl {
         }
     }
 
-    private Query creaQueryListarInformes(Integer unidEjecutora,
+    private Query creaQueryListarInformes(Long unidadEjecutora,
             Integer fltTipo,
             String fltIdBien,
             String fltDescripcion,
@@ -124,7 +124,7 @@ public class InformeTecnicoDao extends GenericDaoImpl {
         }
 
         Query q = session.createQuery(sql);
-        q.setParameter("pnumUnidadEjec", unidEjecutora);
+        q.setParameter("pnumUnidadEjec", unidadEjecutora);
         if (fltTipo != null && fltTipo> 0) {
             q.setParameter("fltTipo", fltTipo);
         }

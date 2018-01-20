@@ -73,7 +73,7 @@ public class ExclusionDao extends GenericDaoImpl {
     }
     
     @Transactional(readOnly = true)
-    public Long contar(Integer unidadEjecutora, Long id, Date fecha, Integer estado, Integer tipoExclusion) throws FWExcepcion {
+    public Long contar(Long unidadEjecutora, Long id, Date fecha, Integer estado, Integer tipoExclusion) throws FWExcepcion {
         Session session = dao.getSessionFactory().openSession();
         try {
             Query query = this.queryListar(session, true, unidadEjecutora, id, fecha, estado, tipoExclusion);
@@ -87,7 +87,7 @@ public class ExclusionDao extends GenericDaoImpl {
     }
     
     @Transactional(readOnly = true)
-    public List<Exclusion> listar(Integer primerRegistro, Integer ultimoRegistro, Integer unidadEjecutora, Long id, Date fecha, Integer estado, Integer tipo) throws FWExcepcion {
+    public List<Exclusion> listar(Integer primerRegistro, Integer ultimoRegistro, Long unidadEjecutora, Long id, Date fecha, Integer estado, Integer tipo) throws FWExcepcion {
         Session session = dao.getSessionFactory().openSession();
         try {
             Query query = this.queryListar(session, false, unidadEjecutora, id, fecha, estado, tipo);
@@ -103,7 +103,7 @@ public class ExclusionDao extends GenericDaoImpl {
         }        
     }
     
-    private Query queryListar(Session session, Boolean contar, Integer unidadEjecutora, Long id, Date fecha, Integer estado, Integer tipoExclusion) {
+    private Query queryListar(Session session, Boolean contar, Long unidadEjecutora, Long id, Date fecha, Integer estado, Integer tipoExclusion) {
         StringBuilder sql = new StringBuilder("SELECT ");
         if (contar) {
             sql.append("COUNT(exc) FROM Exclusion exc ");

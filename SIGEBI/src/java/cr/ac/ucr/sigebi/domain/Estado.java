@@ -22,7 +22,7 @@ import javax.persistence.Table;
  */
 @Entity(name = "Estado")
 @Table(name = "SIGEBI_OAF.SIGB_ESTADO")
-@SequenceGenerator(name = "SGB_SQ_ESTADO",  sequenceName = "SIGEBI_OAF.SGB_SQ_ESTADO", initialValue = 1, allocationSize = 1)
+@SequenceGenerator(name = "SGB_SQ_ESTADO", sequenceName = "SIGEBI_OAF.SGB_SQ_ESTADO", initialValue = 1, allocationSize = 1)
 public class Estado extends ObjetoBase implements Serializable {
 
     //<editor-fold defaultstate="collapsed" desc="Atributos">
@@ -42,7 +42,7 @@ public class Estado extends ObjetoBase implements Serializable {
     private Integer valor;
     //</editor-fold>
 
-    //<editor-fold defaultstate="collapsed" desc="GET's y SET's">
+    //<editor-fold defaultstate="collapsed" desc="Get's y Set's">
     public Integer getId() {
         return id;
     }
@@ -76,6 +76,7 @@ public class Estado extends ObjetoBase implements Serializable {
     }
     //</editor-fold>
 
+    //<editor-fold defaultstate="collapsed" desc="Metodos">
     @Override
     public int hashCode() {
         int hash = 7;
@@ -112,5 +113,5 @@ public class Estado extends ObjetoBase implements Serializable {
         }
         return true;
     }
-
+    //</editor-fold>
 }

@@ -35,7 +35,7 @@ public class BienCaracteristicaDao extends GenericDaoImpl {
     @Transactional(readOnly = true)
     public List<BienCaracteristica> listar() throws FWExcepcion {
         try {
-            return (List<BienCaracteristica>) dao.getHibernateTemplate().findByNamedQuery("BienCaracteristica.findAll");
+            return dao.getHibernateTemplate().find("from BienCaracteristica");
         } catch (DataAccessException e) {
             throw new FWExcepcion("sigebi.error.bienCaracteristica.dao.traerTodo", "Error obtener los registros de bienCaracteristica " + this.getClass(), e.getCause());
         }

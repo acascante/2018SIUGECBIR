@@ -5,9 +5,8 @@
  */
 package cr.ac.ucr.sigebi.commands;
 
-import cr.ac.ucr.sigebi.entities.DocumentoEntity;
-import cr.ac.ucr.sigebi.entities.DocumentoRolEntity;
-import cr.ac.ucr.sigebi.entities.RolEntity;
+import cr.ac.ucr.sigebi.domain.Autorizacion;
+import cr.ac.ucr.sigebi.domain.Rol;
 import cr.ac.ucr.sigebi.utils.Constantes;
 
 /**
@@ -18,7 +17,7 @@ public class GestionProcesoCommand {
 
     //<editor-fold defaultstate="collapsed" desc="Atributos">
     Integer idTipoProceso;
-    Long idDocumentoTipoProceso;
+    Long idAutorizacionTipoProceso;
     Long idRol;
 
     //Busqueda listado de usuarios
@@ -31,51 +30,26 @@ public class GestionProcesoCommand {
     Boolean presentarPanel = false;
 
     //Valores de formulario
-    DocumentoEntity documentoEntity;
-    RolEntity rolEntity;
-    
+    Autorizacion autorizacion;
+    Rol rol;
+
     //</editor-fold>
     
     //<editor-fold defaultstate="collapsed" desc="Constructores">
     public GestionProcesoCommand() {
         super();
         idTipoProceso = -1;
-        idDocumentoTipoProceso = -1L;
+        idAutorizacionTipoProceso = -1L;
         idRol = -1L;
         idUsuario = null;
         nombreCompleto = null;
         correo = null;
-        documentoEntity= new DocumentoEntity();
-        rolEntity = new RolEntity();
+        autorizacion = new Autorizacion();
+        rol = new Rol();
     }
     //</editor-fold>
 
     //<editor-fold defaultstate="collapsed" desc="Get's & Set's">
-
-    public DocumentoEntity getDocumentoEntity() {
-        return documentoEntity;
-    }
-
-    public void setDocumentoEntity(DocumentoEntity documentoEntity) {
-        this.documentoEntity = documentoEntity;
-    }
-
-    public RolEntity getRolEntity() {
-        return rolEntity;
-    }
-
-    public void setRolEntity(RolEntity rolEntity) {
-        this.rolEntity = rolEntity;
-    }
-
-    public Long getIdRol() {
-        return idRol;
-    }
-
-    public void setIdRol(Long idRol) {
-        this.idRol = idRol;
-    }
-
     public Integer getIdTipoProceso() {
         return idTipoProceso;
     }
@@ -84,12 +58,20 @@ public class GestionProcesoCommand {
         this.idTipoProceso = idTipoProceso;
     }
 
-    public Long getIdDocumentoTipoProceso() {
-        return idDocumentoTipoProceso;
+    public Long getIdAutorizacionTipoProceso() {
+        return idAutorizacionTipoProceso;
     }
 
-    public void setIdDocumentoTipoProceso(Long idDocumentoTipoProceso) {
-        this.idDocumentoTipoProceso = idDocumentoTipoProceso;
+    public void setIdAutorizacionTipoProceso(Long idAutorizacionTipoProceso) {
+        this.idAutorizacionTipoProceso = idAutorizacionTipoProceso;
+    }
+
+    public Long getIdRol() {
+        return idRol;
+    }
+
+    public void setIdRol(Long idRol) {
+        this.idRol = idRol;
     }
 
     public String getIdUsuario() {
@@ -132,11 +114,27 @@ public class GestionProcesoCommand {
         this.presentarPanel = presentarPanel;
     }
 
-    public Boolean getPresentarPanelAgregarDocumento() {
+    public Autorizacion getAutorizacion() {
+        return autorizacion;
+    }
+
+    public void setAutorizacion(Autorizacion autorizacion) {
+        this.autorizacion = autorizacion;
+    }
+
+    public Rol getRol() {
+        return rol;
+    }
+
+    public void setRol(Rol rol) {
+        this.rol = rol;
+    }
+
+    public Boolean getPresentarPanelAgregarAutorizacion() {
         return this.presentarPanel && this.accion.equals(Constantes.ACCION_PROCESO_AGREGA_DOCUMENTO);
     }
 
-    public Boolean getPresentarPanelModificarDocumento() {
+    public Boolean getPresentarPanelModificarAutorizacion() {
         return this.presentarPanel && this.accion.equals(Constantes.ACCION_PROCESO_MODIFICAR_DOCUMENTO);
     }
 

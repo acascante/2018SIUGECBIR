@@ -6,7 +6,7 @@
 package cr.ac.ucr.sigebi.models;
 
 import cr.ac.ucr.framework.utils.FWExcepcion;
-import cr.ac.ucr.sigebi.daos.ActaDao;
+import cr.ac.ucr.sigebi.daos.FaltaActaDao;
 import cr.ac.ucr.sigebi.entities.ActaDetalleEntity;
 import cr.ac.ucr.sigebi.entities.ActaEntity;
 import cr.ac.ucr.sigebi.entities.ViewBienEntity;
@@ -24,7 +24,7 @@ import org.springframework.stereotype.Service;
 public class ActaModel {
     
     @Resource
-    private ActaDao actaDao;
+    private FaltaActaDao actaDao;
     
     
     public void guardar(ActaEntity actaEntity){
@@ -44,14 +44,14 @@ public class ActaModel {
     }
     
     
-    public Long consultaCantidadRegistros(int unidEjecutora,
+    public Long consultaCantidadRegistros(Long unidadEjecutora,
                                         String fltIdActa,
                                         String fltAutorizacion,
                                         String fltEstado ,
                                         String fltFecha         
     ){
         try{
-            return actaDao.contarActas(unidEjecutora
+            return actaDao.contarActas(unidadEjecutora
                                     , fltIdActa
                                     , fltAutorizacion
                                     , fltEstado
@@ -64,7 +64,7 @@ public class ActaModel {
         }
     }
     
-    public List<ActaEntity> listarActas(Integer unidEjecutora,
+    public List<ActaEntity> listarActas(Long unidadEjecutora,
                                         String fltIdTipo,
                                         String fltAutorizacion,
                                         String fltEstado,
@@ -73,7 +73,7 @@ public class ActaModel {
                                         Integer pUltimoRegistro
     ){
         try {
-            return actaDao.listarActas(unidEjecutora,
+            return actaDao.listarActas(unidadEjecutora,
                                          fltIdTipo,
                                          fltAutorizacion,
                                          fltEstado,

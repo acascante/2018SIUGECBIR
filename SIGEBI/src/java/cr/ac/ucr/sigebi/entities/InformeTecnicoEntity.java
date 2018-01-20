@@ -6,6 +6,7 @@
 package cr.ac.ucr.sigebi.entities;
 
 import cr.ac.ucr.framework.seguridad.ObjetoBase;
+import cr.ac.ucr.sigebi.domain.Bien;
 import cr.ac.ucr.sigebi.domain.Estado;
 import cr.ac.ucr.sigebi.domain.Tipo;
 import java.io.Serializable;
@@ -37,7 +38,7 @@ public class InformeTecnicoEntity extends ObjetoBase implements Serializable {
 
     @ManyToOne
     @JoinColumn(name = "ID_BIEN", referencedColumnName = "ID_BIEN")
-    private BienEntity idBien;
+    private Bien idBien;
     
     @Column(name = "EVALUACION")
     private String evaluacion;
@@ -57,7 +58,7 @@ public class InformeTecnicoEntity extends ObjetoBase implements Serializable {
     public InformeTecnicoEntity() {       
     }
 
-    public InformeTecnicoEntity(BienEntity bien, Estado idEstado) {     
+    public InformeTecnicoEntity(Bien bien, Estado idEstado) {     
          this.idBien = bien;
          this.idEstado = idEstado;
          this.evaluacion = "";
@@ -74,11 +75,11 @@ public class InformeTecnicoEntity extends ObjetoBase implements Serializable {
         this.idInformeTecnico = idInformeTecnico;
     }
 
-    public BienEntity getIdBien() {
+    public Bien getIdBien() {
         return idBien;
     }
 
-    public void setIdBien(BienEntity idBien) {
+    public void setIdBien(Bien idBien) {
         this.idBien = idBien;
     }
 

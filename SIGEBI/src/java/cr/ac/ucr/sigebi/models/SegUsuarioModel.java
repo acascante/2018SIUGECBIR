@@ -6,6 +6,7 @@
 package cr.ac.ucr.sigebi.models;
 
 import cr.ac.ucr.framework.seguridad.entidades.SegUsuario;
+import cr.ac.ucr.framework.utils.FWExcepcion;
 import cr.ac.ucr.sigebi.daos.SegUsuarioDao;
 import java.util.List;
 import javax.annotation.Resource;
@@ -28,11 +29,11 @@ public class SegUsuarioModel {
             String correo,
             Integer pPrimerRegistro,
             Integer pUltimoRegistro
-    ) {
+    ) throws FWExcepcion{
         return segUsuarioDao.listarUsuarios(idUsuario, nombreCompleto, correo, pPrimerRegistro, pUltimoRegistro);
     }
 
-    public Long contarUsuarios(String idUsuario, String nombreCompleto,String correo ) {
+    public Long contarUsuarios(String idUsuario, String nombreCompleto,String correo ) throws FWExcepcion{
         return segUsuarioDao.contarUsuarios(idUsuario, nombreCompleto, correo);
     }
 

@@ -26,7 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Repository(value = "proveedorDao")
 @Scope("request")
-public class ProveedorDao extends GenericDaoImpl {
+public class FaltaProveedorDao extends GenericDaoImpl {
     
     @Autowired
     private DaoHelper dao;
@@ -119,7 +119,7 @@ public class ProveedorDao extends GenericDaoImpl {
     
     /*
     
-    SELECT s FROM BienEntity s WHERE s.numUnidadEjec = :pnumUnidadEjec "
+    SELECT s FROM Biens WHERE s.numUnidadEjec = :pnumUnidadEjec "
                             + " AND str(s.idBien) like :fltIdBien "
                             + " AND upper(s.descripcion) like upper(:fltDescripcion) "
                             + " AND str(s.idEstado) like :fltEstado 

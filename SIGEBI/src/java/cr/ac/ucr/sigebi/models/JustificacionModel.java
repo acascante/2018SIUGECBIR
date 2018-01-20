@@ -5,7 +5,7 @@
  */
 package cr.ac.ucr.sigebi.models;
 
-import cr.ac.ucr.sigebi.daos.JustificacionDao;
+import cr.ac.ucr.sigebi.daos.FaltaJustificacionDao;
 import cr.ac.ucr.sigebi.entities.JustificacionEntity;
 import java.util.List;
 import javax.annotation.Resource;
@@ -21,7 +21,7 @@ import org.springframework.stereotype.Service;
 public class JustificacionModel {
     
     @Resource
-    JustificacionDao justificacionDao;
+    FaltaJustificacionDao justificacionDao;
     
     public void guardar(JustificacionEntity valor){
         justificacionDao.guardar(valor);

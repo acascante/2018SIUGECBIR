@@ -6,7 +6,8 @@
 package cr.ac.ucr.sigebi.models;
 
 import cr.ac.ucr.framework.utils.FWExcepcion;
-import cr.ac.ucr.sigebi.daos.CategDao;
+import cr.ac.ucr.sigebi.daos.CategoriaDao;
+import cr.ac.ucr.sigebi.domain.SubCategoria;
 import cr.ac.ucr.sigebi.entities.CategEntity;
 import java.util.List;
 import javax.annotation.Resource;
@@ -22,13 +23,13 @@ import org.springframework.stereotype.Service;
 public class CategModel {
     
     @Resource
-    private CategDao categDao;
+    private CategoriaDao categDao;
 
     
-    public CategEntity obtenerValor(String pCodCateg) {
-        CategEntity respAux = new CategEntity();
+    public SubCategoria obtenerValor(Integer pCodCateg) {
+        SubCategoria respAux = new SubCategoria();
         try {
-            respAux = categDao.traerPorId(pCodCateg);
+            respAux = categDao.traerPorCodigo(pCodCateg);
 
         } catch (FWExcepcion e) {
             throw e;
@@ -41,7 +42,7 @@ public class CategModel {
     }
     
     
-    public List<CategEntity> traerTodo() {
+    public List<SubCategoria> traerTodo() {
 
         try {
 

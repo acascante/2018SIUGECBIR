@@ -67,6 +67,7 @@ public class ActaDetalle extends ObjetoBase implements Serializable {
     }
     //</editor-fold>
 
+    //<editor-fold defaultstate="collapsed" desc="Metodos">
     @Override
     public int hashCode() {
         int hash = 3;
@@ -99,4 +100,5 @@ public class ActaDetalle extends ObjetoBase implements Serializable {
         }
         return true;
     }
+    //</editor-fold>
 }

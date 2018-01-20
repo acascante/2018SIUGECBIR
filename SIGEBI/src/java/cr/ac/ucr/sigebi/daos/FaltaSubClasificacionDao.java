@@ -20,7 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Repository(value = "subClasificacionDao")
 @Scope("request")
-public class SubClasificacionDao {
+public class FaltaSubClasificacionDao {
     
     @Autowired
     private DaoHelper dao;

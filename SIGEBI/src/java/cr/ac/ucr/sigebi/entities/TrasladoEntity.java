@@ -6,6 +6,8 @@
 package cr.ac.ucr.sigebi.entities;
 
 import cr.ac.ucr.framework.seguridad.ObjetoBase;
+import cr.ac.ucr.sigebi.domain.Estado;
+import cr.ac.ucr.sigebi.domain.UnidadEjecutora;
 import java.io.Serializable;
 import java.util.Date;
 import javax.persistence.Column;
@@ -44,10 +46,10 @@ public class TrasladoEntity  extends ObjetoBase implements Serializable  {
     
     @ManyToOne
     @JoinColumns ({
-        @JoinColumn(name="NUM_UNIDAD_EJEC", referencedColumnName = "ID_UNIDAD_EJECUTORA"),
+        @JoinColumn(name="NUM_UNIDAD_EJEC", referencedColumnName = "ID"),
         @JoinColumn(name="EMPRESA_ORIGEN", referencedColumnName = "ID_EMPRESA")
     })
-    private UnidadEjecutoraEntity numUnidadOrigen;
+    private UnidadEjecutora numUnidadOrigen;
 //    @Column(name = "NUM_UNIDAD_EJEC") // VARCHAR2 (500 Byte)
 //    private Integer numUnidadOrigen;
 //    @Column(name = "EMPRESA_ORIGEN") // VARCHAR2 (500 Byte)
@@ -64,7 +66,7 @@ public class TrasladoEntity  extends ObjetoBase implements Serializable  {
         @JoinColumn(name="NUM_UNIDAD_EJEC_RECIBE", referencedColumnName = "ID_UNIDAD_EJECUTORA"),
         @JoinColumn(name="EMPRESA_DESTINO", referencedColumnName = "ID_EMPRESA")
     })
-    private UnidadEjecutoraEntity numUnidadDestino;
+    private UnidadEjecutora numUnidadDestino;
 //    @Column(name = "NUM_UNIDAD_EJEC_RECIBE") // VARCHAR2 (500 Byte)
 //    private Integer numUnidadDestino;
 //    @Column(name = "EMPRESA_DESTINO") // VARCHAR2 (500 Byte)
@@ -81,7 +83,7 @@ public class TrasladoEntity  extends ObjetoBase implements Serializable  {
     
     @ManyToOne
     @JoinColumn(name = "ID_ESTADO", referencedColumnName = "ID_ESTADO")
-    private EstadoEntity idEstado;
+    private  Estado idEstado;
     
     @Column(name = "OBSERVACIONES") // VARCHAR2 (500 Byte) 
     private String observaciones;
@@ -107,11 +109,11 @@ public class TrasladoEntity  extends ObjetoBase implements Serializable  {
         this.fecha = fecha;
     }
 
-    public UnidadEjecutoraEntity getNumUnidadOrigen() {
+    public UnidadEjecutora getNumUnidadOrigen() {
         return numUnidadOrigen;
     }
 
-    public void setNumUnidadOrigen(UnidadEjecutoraEntity numUnidadOrigen) {
+    public void setNumUnidadOrigen(UnidadEjecutora numUnidadOrigen) {
         this.numUnidadOrigen = numUnidadOrigen;
     }
 
@@ -123,11 +125,11 @@ public class TrasladoEntity  extends ObjetoBase implements Serializable  {
         this.idPersona = idPersona;
     }
 
-    public UnidadEjecutoraEntity getNumUnidadDestino() {
+    public UnidadEjecutora getNumUnidadDestino() {
         return numUnidadDestino;
     }
 
-    public void setNumUnidadDestino(UnidadEjecutoraEntity numUnidadDestino) {
+    public void setNumUnidadDestino(UnidadEjecutora numUnidadDestino) {
         this.numUnidadDestino = numUnidadDestino;
     }
 
@@ -147,11 +149,11 @@ public class TrasladoEntity  extends ObjetoBase implements Serializable  {
         this.idUbicacion = idUbicacion;
     }
 
-    public EstadoEntity getIdEstado() {
+    public  Estado getIdEstado() {
         return idEstado;
     }
 
-    public void setIdEstado(EstadoEntity idEstado) {
+    public void setIdEstado( Estado idEstado) {
         this.idEstado = idEstado;
     }
 

@@ -6,6 +6,7 @@
 package cr.ac.ucr.sigebi.entities;
 
 import cr.ac.ucr.framework.seguridad.ObjetoBase;
+import cr.ac.ucr.sigebi.domain.Estado;
 import java.io.Serializable;
 import javax.persistence.Basic;
 import javax.persistence.Column;
@@ -45,10 +46,10 @@ public class PlacasEntity extends ObjetoBase implements Serializable {
     
     @JoinColumn(name = "ID_ESTADO", referencedColumnName = "ID_ESTADO")
     @ManyToOne(fetch = FetchType.EAGER)
-    private EstadoEntity estado;
+    private Estado estado;
     
     @Column(name = "NUM_UNIDAD_EJEC")
-    private Integer unidadEjecutora;
+    private Long unidadEjecutora;
     
     
     //</editor-fold>
@@ -101,19 +102,19 @@ public class PlacasEntity extends ObjetoBase implements Serializable {
         this.placa = placa;
     }
 
-    public EstadoEntity getEstado() {
+    public Estado getEstado() {
         return estado;
     }
 
-    public void setEstado(EstadoEntity estado) {
+    public void setEstado(Estado estado) {
         this.estado = estado;
     }
     
-    public Integer getUnidadEjecutora() {
+    public Long getUnidadEjecutora() {
         return unidadEjecutora;
     }
 
-    public void setUnidadEjecutora(Integer unidadEjecutora) {
+    public void setUnidadEjecutora(Long unidadEjecutora) {
         this.unidadEjecutora = unidadEjecutora;
     }
    

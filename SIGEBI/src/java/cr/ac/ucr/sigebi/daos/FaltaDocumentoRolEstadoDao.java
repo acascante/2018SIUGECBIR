@@ -23,7 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Repository(value = "documentoRolEstadoDao")
 @Scope("request")
-public class DocumentoRolEstadoDao extends GenericDaoImpl {
+public class FaltaDocumentoRolEstadoDao extends GenericDaoImpl {
 
     @Autowired
     private DaoHelper dao;
@@ -39,7 +39,11 @@ public class DocumentoRolEstadoDao extends GenericDaoImpl {
     }
     
     @Transactional(readOnly = true)
-    public List<DocumentoRolEstadoEntity> buscarDocumentosUsuario(String idUsuario, Integer numUnidadEjec, Long idReferencia, Long idDocumento) {
+    public List<DocumentoRolEstadoEntity> buscarDocumentosUsuario(String idUsuario
+                                                                , Long numUnidadEjec
+                                                                , Long idReferencia
+                                                                , Long idDocumento
+    ) {
         Session session = this.dao.getSessionFactory().openSession();
         try {
             String sql = "SELECT obj FROM DocumentoRolEstadoEntity obj, DocumentoRolPersonaEntity per "

@@ -5,7 +5,7 @@
  */
 package cr.ac.ucr.sigebi.models;
 
-import cr.ac.ucr.sigebi.daos.DocumentoRolEstadoDao;
+import cr.ac.ucr.sigebi.daos.FaltaDocumentoRolEstadoDao;
 import cr.ac.ucr.sigebi.entities.DocumentoRolEstadoEntity;
 import java.util.List;
 import javax.annotation.Resource;
@@ -21,7 +21,7 @@ import org.springframework.stereotype.Service;
 public class DocumentoRolEstadoModel {
     
     @Resource
-    private DocumentoRolEstadoDao documentoRolEstadoDao;
+    private FaltaDocumentoRolEstadoDao documentoRolEstadoDao;
 
     
     public void agregar(DocumentoRolEstadoEntity documentoRolEstadoEntity){
@@ -32,11 +32,18 @@ public class DocumentoRolEstadoModel {
         documentoRolEstadoDao.modificar(documentoRolEstadoEntity);
     }
     
-    public List<DocumentoRolEstadoEntity> buscarDocumentosUsuario(String idUsuario, Integer numUnidadEjec, Long idReferencia, Long idDocumento) {
-        return documentoRolEstadoDao.buscarDocumentosUsuario(idUsuario, numUnidadEjec, idReferencia, idDocumento);
+    public List<DocumentoRolEstadoEntity> buscarDocumentosUsuario(String idUsuario
+                                                                , Long numUnidadEjec
+                                                                , Long idReferencia
+                                                                , Long idDocumento
+                                                        ) {
+        return documentoRolEstadoDao.buscarDocumentosUsuario(idUsuario
+                                                            , numUnidadEjec
+                                                            , idReferencia
+                                                            , idDocumento);
     }
     
-    public List<DocumentoRolEstadoEntity> buscarDocumentosTipoDocumento(Long idReferencia, Long idDocumento) {
+    public List<DocumentoRolEstadoEntity> buscarDocumentosTipoDocumento(Long idReferencia , Long idDocumento) {
         return documentoRolEstadoDao.buscarDocumentosTipoDocumento(idReferencia, idDocumento);
     }
 }

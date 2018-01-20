@@ -10,18 +10,18 @@ import com.icesoft.faces.component.inputfile.InputFile;
 import cr.ac.ucr.framework.vista.util.Mensaje;
 import cr.ac.ucr.sigebi.utils.Constantes;
 import cr.ac.ucr.framework.vista.util.Util;
+import cr.ac.ucr.sigebi.domain.AutorizacionRolPersona;
 import cr.ac.ucr.sigebi.domain.Estado;
 import cr.ac.ucr.sigebi.domain.Tipo;
+import cr.ac.ucr.sigebi.domain.Usuario;
 import cr.ac.ucr.sigebi.entities.AdjuntoEntity;
 import cr.ac.ucr.sigebi.models.DocumentoRolEstadoModel;
 import cr.ac.ucr.sigebi.models.EstadoModel;
 import cr.ac.ucr.sigebi.models.InformeTecnicoModel;
 import cr.ac.ucr.sigebi.entities.DocumentoRolEstadoEntity;
-import cr.ac.ucr.sigebi.entities.DocumentoRolPersonaEntity;
 import cr.ac.ucr.sigebi.entities.InformeTecnicoEntity;
-import cr.ac.ucr.sigebi.entities.UsuarioEntity;
 import cr.ac.ucr.sigebi.models.AdjuntoModel;
-import cr.ac.ucr.sigebi.models.DocumentoRolPersonaModel;
+import cr.ac.ucr.sigebi.models.AutorizacionRolPersonaModel;
 import cr.ac.ucr.sigebi.models.TipoModel;
 import cr.ac.ucr.sigebi.models.UsuarioModel;
 import java.io.File;
@@ -55,7 +55,7 @@ public class InformeTecnicoController extends BaseController{
     private DocumentoRolEstadoModel documentoRolEstadoModel;
     
     @Resource
-    private DocumentoRolPersonaModel documentoRolPersonaModel;
+    private AutorizacionRolPersonaModel autorizacionRolPersonaModel;
 
     @Resource
     private EstadoModel estadoModel;
@@ -81,7 +81,7 @@ public class InformeTecnicoController extends BaseController{
     boolean aprobacionEnTramite = false;
     boolean rolPermiteModificar = false;
     
-    UsuarioEntity usr;
+    Usuario usr;
     //</editor-fold>
     
     //<editor-fold defaultstate="collapsed" desc="Get's & Set's">
@@ -94,12 +94,12 @@ public class InformeTecnicoController extends BaseController{
         this.informeTecnicoModel = informeTecnicoModel;
     }
 
-    public DocumentoRolPersonaModel getDocumentoRolPersonaModel() {
-        return documentoRolPersonaModel;
+    public AutorizacionRolPersonaModel getDocumentoRolPersonaModel() {
+        return autorizacionRolPersonaModel;
     }
 
-    public void setDocumentoRolPersonaModel(DocumentoRolPersonaModel documentoRolPersonaModel) {
-        this.documentoRolPersonaModel = documentoRolPersonaModel;
+    public void setDocumentoRolPersonaModel(AutorizacionRolPersonaModel documentoRolPersonaModel) {
+        this.autorizacionRolPersonaModel = documentoRolPersonaModel;
     }
 
     public TipoModel getTipoModel() {
@@ -218,6 +218,7 @@ public class InformeTecnicoController extends BaseController{
     @PostConstruct
     public final void inicializar() {
 
+          //FIXME Jairo se deve verificar la consulta
           usr = usuarioModel.buscarPorId(lVistaUsuario.getgUsuarioActual().getIdUsuario());
           //Se consultan los tipos por dominio
           tipos = tipoModel.listarPorDominio(Constantes.DOMINI0_TIPO_INFORME_TECNICO);
@@ -250,7 +251,7 @@ public class InformeTecnicoController extends BaseController{
             
             //Se buscan cuales documentos se pueden aceptar segun el usuario y rol 
             documentosPorRolPorAceptar = documentoRolEstadoModel.buscarDocumentosUsuario(lVistaUsuario.getgUsuarioActual().getIdUsuario(), 
-                    unidadEjecutora, informe.getIdInformeTecnico(), Constantes.ID_DOCUMENTO_INFORME_TECNICO);
+                    unidadEjecutoraId, informe.getIdInformeTecnico(), Constantes.ID_DOCUMENTO_INFORME_TECNICO);
             for(DocumentoRolEstadoEntity documento : documentosPorRol){
                 documento.setMarcado(this.permiteAceptarRechazar(documento.getIdDocumento().getIdDocumento(), documento.getIdRol().getIdRol()));
             }
@@ -284,7 +285,9 @@ public class InformeTecnicoController extends BaseController{
             DocumentoRolEstadoEntity documento = (DocumentoRolEstadoEntity) pEvent.getComponent().getAttributes().get("documentoSelApro");            
             documento.setIdEstado(estadoModel.buscarPorDominioEstado(Constantes.DOMINI0_ESTADO_INFORME_TECNICO, Constantes.ESTADO_INFORME_TECNICO_APROBADO));
             documento.setFecha(new Date());
-            documento.setIdUsuarioSeguridad(usr);
+            
+            //FIXME Jairo Verificar el usuario que se esta asignando
+            //documento.setIdUsuarioSeguridad(usr);
             
             //Se modifica el documento
             documentoRolEstadoModel.modificar(documento);
@@ -313,7 +316,9 @@ public class InformeTecnicoController extends BaseController{
             DocumentoRolEstadoEntity documento = (DocumentoRolEstadoEntity) pEvent.getComponent().getAttributes().get("documentoSelRech");            
             documento.setIdEstado(estadoModel.buscarPorDominioEstado(Constantes.DOMINI0_ESTADO_INFORME_TECNICO, Constantes.ESTADO_INFORME_TECNICO_RECHAZADO));
             documento.setFecha(new Date());
-            documento.setIdUsuarioSeguridad(usr);
+            
+            //FIXME Jairo verificar el usuario que se esta asignando
+            //documento.setIdUsuarioSeguridad(usr);
 
             //Se modifica el documento
             documentoRolEstadoModel.modificar(documento);
@@ -370,7 +375,7 @@ public class InformeTecnicoController extends BaseController{
 
             if (aprobacionEnTramite) {
                 //Solo se permite modificar si el usuario tiene un rol de tecnico asociado al documento
-                DocumentoRolPersonaEntity autorizado = documentoRolPersonaModel.buscarAutorizacionDocumentoRolUsuario(Constantes.CODIGO_ROL_TECNICO, 
+                AutorizacionRolPersona autorizado = autorizacionRolPersonaModel.buscarAutorizacionPorAutorizacionRolUsuario(Constantes.CODIGO_ROL_TECNICO, 
                         Constantes.ID_DOCUMENTO_INFORME_TECNICO, lVistaUsuario.getgUsuarioActual().getIdUsuario());
                 rolPermiteModificar = autorizado != null;
             } else {

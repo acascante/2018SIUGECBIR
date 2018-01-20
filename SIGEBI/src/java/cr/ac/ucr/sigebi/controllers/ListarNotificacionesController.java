@@ -5,14 +5,16 @@
  */
 package cr.ac.ucr.sigebi.controllers;
 
-import cr.ac.ucr.sigebi.utils.Constantes;
 import cr.ac.ucr.framework.utils.FWExcepcion;
 import cr.ac.ucr.framework.vista.util.Mensaje;
 import cr.ac.ucr.framework.vista.util.Util;
+import cr.ac.ucr.sigebi.utils.Constantes;
 import cr.ac.ucr.sigebi.models.NotificacionModel;
 import cr.ac.ucr.sigebi.commands.ListarNotificacionesCommand;
+import cr.ac.ucr.sigebi.domain.Accesorio;
 import cr.ac.ucr.sigebi.domain.Estado;
 import cr.ac.ucr.sigebi.domain.Notificacion;
+import cr.ac.ucr.sigebi.models.AccesorioModel;
 import cr.ac.ucr.sigebi.models.EstadoModel;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -45,6 +47,9 @@ public class ListarNotificacionesController extends BaseController {
     private NotificacionModel notificacionModel;
     
     @Resource
+    private AccesorioModel accesorioModel;
+    
+    @Resource
     private EstadoModel estadoModel;
     
     private List<Notificacion> notificaciones;
@@ -72,6 +77,15 @@ public class ListarNotificacionesController extends BaseController {
                 itemsEstado.add(new SelectItem(item.getId(), item.getNombre()));  // ID + Nombre -- Usado para combo de filtro para enviar el ID al Dao para la consulta
                 estados.put(item.getValor(), item); // Valor + Objeto Estado -- Usado para obtener un estado al enviar una notificacion y modificar el estado de la misma
             }
+        }
+        try {
+        List<Accesorio> accesorios = accesorioModel.listar();
+        List<Accesorio> accesoriosBien = accesorioModel.listarPorBien(accesorios.get(0).getBien());
+        Accesorio accesorio = accesorioModel.buscarPorId(accesorios.get(1).getId());
+        Accesorio newAccesorio = new Accesorio(null, accesorios.get(0).getBien(), "Mouse", accesorios.get(0).getEstado());
+        accesorioModel.almacenar(newAccesorio);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
     

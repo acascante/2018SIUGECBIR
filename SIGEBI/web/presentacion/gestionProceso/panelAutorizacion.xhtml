@@ -3,15 +3,15 @@
       xmlns:h="http://java.sun.com/jsf/html"
       xmlns:f="http://java.sun.com/jsf/core" >
 
-    <!-- Modal para administrar un Documento -->
+    <!-- Modal para administrar un Autorizacion -->
     <ice:panelPopup
         modal="true" 
-        visible="#{(controllerGestionProceso.command.presentarPanelAgregarDocumento || controllerGestionProceso.command.presentarPanelModificarDocumento)}"
+        visible="#{(controllerGestionProceso.command.presentarPanelAgregarAutorizacion || controllerGestionProceso.command.presentarPanelModificarAutorizacion)}"
         rendered="true" 
         styleClass="popup">
 
         <f:facet name="header">
-            <ice:outputText styleClass="flotar_izquierda titulo_popup" value="#{label['sigebi.label.vista.gestionProceso.documento.administrar']}"/>
+            <ice:outputText styleClass="flotar_izquierda titulo_popup" value="#{label['sigebi.label.vista.gestionProceso.autorizacion.administrar']}"/>
         </f:facet> 
 
         <f:facet name="body">
@@ -24,13 +24,13 @@
                         <div class="col-md-12">
                             <div class="form-group"> 
                                 <label class="control-label" for="txtNombre">
-                                    <ice:outputText value="#{label['sigebi.label.vista.gestionProceso.documento.nombre']}" /> 
+                                    <ice:outputText value="#{label['sigebi.label.vista.gestionProceso.autorizacion.nombre']}" /> 
                                     <ice:outputText value="#{label['label.requerido']}" />
                                 </label>
-                                <ice:inputText id="documentoNombre" 
+                                <ice:inputText id="autorizacionNombre" 
                                                required="true"
                                                styleClass="form-control"
-                                               value="#{controllerGestionProceso.command.documentoEntity.nombre}" />
+                                               value="#{controllerGestionProceso.command.autorizacion.nombre}" />
                             </div>                                             
                         </div>
                     </div>
@@ -38,13 +38,13 @@
                         <div class="col-md-12">
                             <div class="form-group"> 
                                 <label class="control-label" for="txtOrden">
-                                    <ice:outputText value="#{label['sigebi.label.vista.gestionProceso.documento.orden']}" />
+                                    <ice:outputText value="#{label['sigebi.label.vista.gestionProceso.autorizacion.orden']}" />
                                     <ice:outputText value="#{label['label.requerido']}" />
                                 </label>
-                                <ice:inputText id="documentoOrden" 
+                                <ice:inputText id="autorizacionOrden" 
                                                required="true"
                                                styleClass="form-control"
-                                               value="#{controllerGestionProceso.command.documentoEntity.orden}" />
+                                               value="#{controllerGestionProceso.command.autorizacion.orden}" />
                             </div>                                             
                         </div>
                     </div>
@@ -52,40 +52,40 @@
                         <div class="col-md-12">
                             <div class="form-group">
                                 <label class="control-label" for="txtDetalle">
-                                    <ice:outputText value="#{label['sigebi.label.vista.gestionProceso.documento.detalle']}"/> 
+                                    <ice:outputText value="#{label['sigebi.label.vista.gestionProceso.autorizacion.detalle']}"/> 
                                     <ice:outputText value="#{label['label.requerido']}" />
                                 </label>
-                                <ice:inputTextarea  id="detalleDocumento" 
+                                <ice:inputTextarea  id="detalleAutorizacion" 
                                                     required="true"
                                                     styleClass="form-control"
                                                     cols="2" 
-                                                    value="#{controllerGestionProceso.command.documentoEntity.detalle}"/>
+                                                    value="#{controllerGestionProceso.command.autorizacion.detalle}"/>
                             </div>
                         </div>    
                     </div>
                     <div class="row" style="margin-bottom:20px;">
                         <div class="col-md-9 col-sm-9">
 
-                            <ice:commandButton id="btnAgregarDocumento"
+                            <ice:commandButton id="btnAgregarAutorizacion"
                                                partialSubmit="true"
-                                               rendered="#{controllerGestionProceso.command.presentarPanelAgregarDocumento}"
-                                               action="#{controllerGestionProceso.agregarDocumento}"
+                                               rendered="#{controllerGestionProceso.command.presentarPanelAgregarAutorizacion}"
+                                               action="#{controllerGestionProceso.agregarAutorizacion}"
                                                styleClass="boton"  
                                                value="#{label['label.aceptar']}" />
                         
 
-                            <ice:commandButton id="btnModificarDocumento"
+                            <ice:commandButton id="btnModificarAutorizacion"
                                                partialSubmit="true"
-                                               rendered="#{controllerGestionProceso.command.presentarPanelModificarDocumento}"
-                                               action="#{controllerGestionProceso.modificarDocumento}"
+                                               rendered="#{controllerGestionProceso.command.presentarPanelModificarAutorizacion}"
+                                               action="#{controllerGestionProceso.modificarAutorizacion}"
                                                styleClass="boton"  
                                                value="#{label['label.aceptar']}" />
                         
 
-                            <ice:commandButton id="btnEliminarDocumento"
+                            <ice:commandButton id="btnEliminarAutorizacion"
                                                partialSubmit="true"
-                                               rendered="#{controllerGestionProceso.command.presentarPanelModificarDocumento}"
-                                               action="#{controllerGestionProceso.eliminarDocumento}"
+                                               rendered="#{controllerGestionProceso.command.presentarPanelModificarAutorizacion}"
+                                               action="#{controllerGestionProceso.eliminarAutorizacion}"
                                                styleClass="boton"  
                                                value="#{label['label.eliminar']}" />
                         </div>

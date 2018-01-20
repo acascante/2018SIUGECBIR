@@ -6,9 +6,10 @@
 package cr.ac.ucr.sigebi.models;
 
 import cr.ac.ucr.framework.utils.FWExcepcion;
-import cr.ac.ucr.sigebi.daos.InformeTecnicoDao;
+import cr.ac.ucr.sigebi.daos.FaltaInformeTecnicoDao;
+import cr.ac.ucr.sigebi.domain.AutorizacionRol;
+import cr.ac.ucr.sigebi.domain.Bien;
 import cr.ac.ucr.sigebi.domain.Estado;
-import cr.ac.ucr.sigebi.entities.BienEntity;
 import cr.ac.ucr.sigebi.entities.DocumentoRolEntity;
 import cr.ac.ucr.sigebi.entities.DocumentoRolEstadoEntity;
 import cr.ac.ucr.sigebi.entities.InformeTecnicoEntity;
@@ -28,13 +29,13 @@ import org.springframework.stereotype.Service;
 public class InformeTecnicoModel {
     
     @Resource
-    private InformeTecnicoDao informeTecnicoDao;
+    private FaltaInformeTecnicoDao informeTecnicoDao;
 
     @Resource
     private EstadoModel estadoModel;
     
     @Resource
-    private DocumentoRolModel documentoRolModel;
+    private AutorizacionRolModel documentoRolModel;
 
     @Resource
     private DocumentoRolEstadoModel documentoRolEstadoModel;
@@ -47,33 +48,35 @@ public class InformeTecnicoModel {
         informeTecnicoDao.agregar(informeTecnicoEntity);
     }
 
-    public void agregarAprobacionSolicitudExclusion(ArrayList<BienEntity> bienes){
+    public void agregarAprobacionSolicitudExclusion(ArrayList<Bien> bienes){
         InformeTecnicoEntity informe = null;
-        List<DocumentoRolEntity> documentos = documentoRolModel.buscarPorDocumento(Constantes.ID_DOCUMENTO_INFORME_TECNICO);
+        List<AutorizacionRol> documentos = documentoRolModel.buscarPorAutorizacion(Constantes.ID_DOCUMENTO_INFORME_TECNICO);
         Estado estadoInfome = estadoModel.buscarPorDominioEstado(Constantes.DOMINI0_ESTADO_INFORME_TECNICO, Constantes.ESTADO_INFORME_TECNICO_NUEVO);
         Estado estadoDocumento = estadoModel.buscarPorDominioEstado(Constantes.DOMINI0_ESTADO_INFORME_TECNICO, Constantes.ESTADO_INFORME_TECNICO_PROCESO);
         
-        for (BienEntity bien : bienes) {
+        for (Bien bien : bienes) {
             
             informe = new InformeTecnicoEntity(bien, estadoInfome);
             this.agregar(informe);
             
-            for (DocumentoRolEntity documentoRol : documentos) {
+            for (AutorizacionRol documentoRol : documentos) {
                 documentoRolEstadoModel.agregar(
-                   new DocumentoRolEstadoEntity(informe.getIdInformeTecnico(), documentoRol.getIdDocumento(), documentoRol.getIdRol(), estadoDocumento)
+                   //FIXME Jairo se debe verificar     
+                   //new DocumentoRolEstadoEntity(informe.getIdInformeTecnico(), documentoRol.getId(), documentoRol.getId(), estadoDocumento)
+                   null
                 );
             }
         }
     }
     
-    public Long consultaCantidadRegistros(int unidEjecutora,
+    public Long consultaCantidadRegistros(Long unidadEjecutora,
             String fltIdTipo,
             String fltIdBien,
             String fltDescripcion,
             String fltEstado            
     ){
         try{
-            return informeTecnicoDao.contarInformes(unidEjecutora, Integer.parseInt(fltIdTipo), fltIdBien, fltDescripcion, Integer.parseInt(fltEstado));
+            return informeTecnicoDao.contarInformes(unidadEjecutora, Integer.parseInt(fltIdTipo), fltIdBien, fltDescripcion, Integer.parseInt(fltEstado));
         }catch (FWExcepcion e) {
             throw e;
         } catch (Exception ex) {
@@ -82,7 +85,7 @@ public class InformeTecnicoModel {
         }
     }
     
-    public List<InformeTecnicoEntity> listarInformes(Integer unidEjecutora,
+    public List<InformeTecnicoEntity> listarInformes(Long unidadEjecutora,
             String fltIdTipo,
             String fltIdBien,
             String fltDescripcion,
@@ -91,7 +94,7 @@ public class InformeTecnicoModel {
             Integer pUltimoRegistro
     ){
         try {
-            return informeTecnicoDao.listarInformes(unidEjecutora, Integer.parseInt(fltIdTipo), fltIdBien, fltDescripcion, Integer.parseInt(fltEstado), pPrimerRegistro, pUltimoRegistro);
+            return informeTecnicoDao.listarInformes(unidadEjecutora, Integer.parseInt(fltIdTipo), fltIdBien, fltDescripcion, Integer.parseInt(fltEstado), pPrimerRegistro, pUltimoRegistro);
         } catch (FWExcepcion e) {
             throw e;
         } catch (Exception ex) {

@@ -33,12 +33,12 @@ public class EstadoDao extends GenericDaoImpl {
     @Transactional(readOnly = true)
     public List<Estado> listar() throws FWExcepcion {
         try {
-            return (List<Estado>) dao.getHibernateTemplate().findByNamedQuery("Estado.findAll");
+            return dao.getHibernateTemplate().find("from Estado");
         } catch (DataAccessException e) {
             throw new FWExcepcion("sigebi.error.estado.dao.traerTodo", "Error obtener los registros de estado " + this.getClass(), e.getCause());
         }
     }
-    
+
     @Transactional(readOnly = true)
     public List<Estado> listarPorDominio(String dominio) throws FWExcepcion {
         Session session = dao.getSessionFactory().openSession();
@@ -46,13 +46,13 @@ public class EstadoDao extends GenericDaoImpl {
             String sql = "SELECT est FROM Estado est WHERE est.dominio = :dominio";
             Query query = session.createQuery(sql);
             query.setParameter("dominio", dominio);
-            
+
             return (List<Estado>) query.list();
         } catch (HibernateException e) {
             throw new FWExcepcion("sigebi.error.notificacionDao.listar", "Error obtener los registros de tipo " + this.getClass(), e.getCause());
         } finally {
-            session.close();        
-        }        
+            session.close();
+        }
     }
 
     @Transactional(readOnly = true)
@@ -63,13 +63,13 @@ public class EstadoDao extends GenericDaoImpl {
             Query query = session.createQuery(sql);
             query.setParameter("dominio", dominio);
             query.setParameter("estado", estado);
-            
+
             return (Estado) query.uniqueResult();
         } catch (HibernateException e) {
             throw new FWExcepcion("sigebi.error.notificacionDao.listar", "Error obtener los registros de tipo " + this.getClass(), e.getCause());
         } finally {
-            session.close();        
-        }        
+            session.close();
+        }
     }
 
     @Transactional(readOnly = true)
@@ -80,12 +80,12 @@ public class EstadoDao extends GenericDaoImpl {
             Query query = session.createQuery(sql);
             query.setParameter("dominio", dominio);
             query.setParameter("nombre", nombre);
-            
+
             return (Estado) query.uniqueResult();
         } catch (HibernateException e) {
             throw new FWExcepcion("sigebi.error.notificacionDao.listar", "Error obtener los registros de tipo " + this.getClass(), e.getCause());
         } finally {
-            session.close();        
-        }        
+            session.close();
+        }
     }
 }

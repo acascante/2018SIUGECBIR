@@ -56,6 +56,10 @@ public class Bien extends ObjetoBase implements Serializable {
     private Tipo tipoBien;
     
     @ManyToOne
+    @JoinColumn(name = "ID_BIEN", referencedColumnName = "ID_BIEN")
+    private ViewResumenBien resumenBien;
+     
+    @ManyToOne
     @JoinColumn(name = "ID_ORIGEN", referencedColumnName = "ID_TIPO")
     private Tipo origen;
     
@@ -220,6 +224,14 @@ public class Bien extends ObjetoBase implements Serializable {
         return fechaAdquisicion;
     }
 
+    public ViewResumenBien getResumenBien() {
+        return resumenBien;
+    }
+
+    public void setResumenBien(ViewResumenBien resumenBien) {
+        this.resumenBien = resumenBien;
+    }
+
     public void setFechaAdquisicion(Date fechaAdquisicion) {
         this.fechaAdquisicion = fechaAdquisicion;
     }
@@ -337,6 +349,7 @@ public class Bien extends ObjetoBase implements Serializable {
     }
     //</editor-fold>
     
+    //<editor-fold defaultstate="collapsed" desc="Metodos">
     @Override
     public int hashCode() {
         int hash = 7;
@@ -452,5 +465,6 @@ public class Bien extends ObjetoBase implements Serializable {
             return false;
         }
         return true;
-    }   
+    }
+    //</editor-fold>
 }

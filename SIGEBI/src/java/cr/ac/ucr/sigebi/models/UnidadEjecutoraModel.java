@@ -5,8 +5,9 @@
  */
 package cr.ac.ucr.sigebi.models;
 
+import cr.ac.ucr.framework.utils.FWExcepcion;
 import cr.ac.ucr.sigebi.daos.UnidadEjecutoraDao;
-import cr.ac.ucr.sigebi.entities.UnidadEjecutoraEntity;
+import cr.ac.ucr.sigebi.domain.UnidadEjecutora;
 import java.util.List;
 import javax.annotation.Resource;
 import org.springframework.context.annotation.Scope;
@@ -19,21 +20,16 @@ import org.springframework.stereotype.Service;
 @Service(value = "UnidadEjecutoraModel")
 @Scope("request")
 public class UnidadEjecutoraModel {
-    
+
     @Resource
     private UnidadEjecutoraDao unidadDao;
-    
-    
-    
-    public UnidadEjecutoraEntity traerPorId(Integer pId) {
-        return unidadDao.traerPorId(pId);
+
+    public UnidadEjecutora traerPorId(Long id) throws FWExcepcion{
+        return unidadDao.traerPorId(id);
     }
-    
-    
-    public List<UnidadEjecutoraEntity> listarUnidades(String idUnidad, String nombUnidad) {
+
+    public List<UnidadEjecutora> listarUnidades(String idUnidad, String nombUnidad) throws FWExcepcion{
         return unidadDao.listarUnidades(idUnidad, nombUnidad);
     }
-    
-    
-    
+
 }

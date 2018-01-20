@@ -218,7 +218,7 @@ public class ListarInformesTecnicosController extends BaseController {
         try {
 
             //Se cuenta la cantidad de registros
-            Long contador = informeTecnicoModel.consultaCantidadRegistros(unidadEjecutora, 
+            Long contador = informeTecnicoModel.consultaCantidadRegistros(unidadEjecutoraId, 
                     fltIdTipo, fltIdBien, fltDescripcion, fltEstado);
             
 
@@ -236,7 +236,7 @@ public class ListarInformesTecnicosController extends BaseController {
      */
     private void listarInformes() {
         try {
-            this.informes = informeTecnicoModel.listarInformes(unidadEjecutora, 
+            this.informes = informeTecnicoModel.listarInformes(unidadEjecutoraId, 
                     fltIdTipo, fltIdBien, fltDescripcion, fltEstado, this.getPrimerRegistro() - 1, this.getUltimoRegistro());
         } catch (FWExcepcion e) {
             Mensaje.agregarErrorAdvertencia(e.getError_para_usuario());

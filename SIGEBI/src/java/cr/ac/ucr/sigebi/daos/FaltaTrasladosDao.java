@@ -8,7 +8,8 @@ package cr.ac.ucr.sigebi.daos;
 import cr.ac.ucr.framework.daoHibernate.DaoHelper;
 import cr.ac.ucr.framework.daoImpl.GenericDaoImpl;
 import cr.ac.ucr.framework.utils.FWExcepcion;
-import cr.ac.ucr.sigebi.entities.EstadoEntity;
+import cr.ac.ucr.sigebi.domain.Estado;
+import cr.ac.ucr.sigebi.domain.UnidadEjecutora;
 import cr.ac.ucr.sigebi.entities.TrasladoDetalleEntity;
 import cr.ac.ucr.sigebi.entities.TrasladoEntity;
 import cr.ac.ucr.sigebi.entities.UnidadEjecutoraEntity;
@@ -28,13 +29,13 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Repository(value = "trasladoDao")
 @Scope("request")
-public class TrasladosDao extends GenericDaoImpl {
+public class FaltaTrasladosDao extends GenericDaoImpl {
     
     @Autowired
     private DaoHelper dao;
     
     @Resource
-    private ViewBienDao viewBienDao;
+    private FaltaViewBienDao viewBienDao;
     
     @Transactional
     public void guardar(TrasladoEntity obj) {
@@ -74,7 +75,7 @@ public class TrasladosDao extends GenericDaoImpl {
     }
     
     @Transactional
-    public void eliminarBienes(TrasladoEntity traslado, EstadoEntity estado){
+    public void eliminarBienes(TrasladoEntity traslado, Estado estado){
         Session session = dao.getSessionFactory().openSession();
         try {
             //idTraslado
@@ -159,7 +160,7 @@ public class TrasladosDao extends GenericDaoImpl {
     
     @Transactional
     public List<TrasladoEntity> trasladosListado(
-              UnidadEjecutoraEntity unidadEjecutora
+              UnidadEjecutora unidadEjecutora
             , String fltIdTraslado
             , String fltUnidadOrigen
             , String fltUnidadDestino
@@ -206,7 +207,7 @@ public class TrasladosDao extends GenericDaoImpl {
     
     @Transactional
     public Long contarTrasladosListado(
-              UnidadEjecutoraEntity unidadEjecutora
+              UnidadEjecutora unidadEjecutora
             , String fltIdTraslado
             , String fltUnidadOrigen
             , String fltUnidadDestino
@@ -240,7 +241,7 @@ public class TrasladosDao extends GenericDaoImpl {
     }
     
     private Query prepararConsultaListado(
-              UnidadEjecutoraEntity unidadEjecutora
+              UnidadEjecutora unidadEjecutora
             , String fltIdTraslado
             , String fltUnidadOrigen
             , String fltUnidadDestino

@@ -81,7 +81,7 @@
                                         </ice:headerRow>
                                     </ice:columnGroup>
                                 </f:facet>
-                                <h:outputText id="idBienCell" value="#{bien.idPlaca.placa}"/>
+                                <h:outputText id="idBienCell" value="#{bien.identificacion.identificacion}"/>
                             </ice:column>
 
                             <ice:column id="descripcion">
@@ -118,7 +118,7 @@
                                         </ice:headerRow>
                                     </ice:columnGroup>
                                 </f:facet>                                
-                                <h:outputText id="costoCell" value="#{bien.marca}"/>
+                                <h:outputText id="costoCell" value="#{bien.resumenBien.marca}"/>
                             </ice:column>
 
                             <ice:column id="colModelo">
@@ -136,7 +136,7 @@
                                         </ice:headerRow>
                                     </ice:columnGroup>
                                 </f:facet>                                 
-                                <h:outputText id="costoCell" value="#{bien.modelo}"/>
+                                <h:outputText id="costoCell" value="#{bien.resumenBien.modelo}"/>
                             </ice:column>
 
                             <ice:column id="colSerie">
@@ -154,7 +154,7 @@
                                         </ice:headerRow>
                                     </ice:columnGroup>
                                 </f:facet>                                
-                                <h:outputText id="costoCell" value="#{bien.serie}"/>
+                                <h:outputText id="costoCell" value="#{bien.resumenBien.serie}"/>
                             </ice:column>
 
 
@@ -176,7 +176,7 @@
                                         </ice:headerRow>
                                     </ice:columnGroup>
                                 </f:facet>                                
-                                <h:outputText id="costoCell" value="#{bien.idEstado.nombre}"/>
+                                <h:outputText id="costoCell" value="#{bien.estado.nombre}"/>
                             </ice:column>
 
                             <ice:column id="sincroColum" style="text-align: center;">
@@ -184,7 +184,7 @@
                                     <ice:outputText value="#{label['sigebi.label.vista.listarBienSincronizar.sincronizar']}"/>
                                 </f:facet>
                                 <ice:selectBooleanCheckbox id="checkSincronizar"
-                                                   rendered="#{bien.idEstado.estado == controllerListarBienSincronizar.estadoPendiente}" 
+                                                   rendered="#{bien.estado.id == controllerListarBienSincronizar.estadoPendiente}" 
                                                    partialSubmit="true" 
                                                    valueChangeListener="#{controllerListarBienSincronizar.checkBienPorSincronizar}"
                                                    value="#{bien.seleccionado}">
@@ -197,7 +197,7 @@
                                     <ice:outputText value="#{label['sigebi.label.vista.listarBienSincronizar.rechazar']}"/>
                                 </f:facet>
                                 <ice:selectBooleanCheckbox id="checkRechazar"
-                                                   rendered="#{bien.idEstado.estado == controllerListarBienSincronizar.estadoPendienteSincronizar}" 
+                                                   rendered="#{bien.estado.id == controllerListarBienSincronizar.estadoPendienteSincronizar}" 
                                                    partialSubmit="true" 
                                                    valueChangeListener="#{controllerListarBienSincronizar.checkBienPorRechazar}"
                                                    value="#{bien.seleccionado}">
@@ -216,7 +216,7 @@
                                     </ice:columnGroup>
                                 </f:facet>
                                 <ice:selectBooleanCheckbox id="checkRechazar"
-                                                   rendered="#{bien.idEstado.estado == controllerListarBienSincronizar.estadoPendienteSincronizar}" 
+                                                   rendered="#{bien.estado.id == controllerListarBienSincronizar.estadoPendienteSincronizar}" 
                                                    partialSubmit="true" 
                                                    valueChangeListener="#{controllerListarBienSincronizar.checkBienEnviarSincronizar}"
                                                    value="#{bien.seleccionado}">

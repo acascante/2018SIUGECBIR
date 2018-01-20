@@ -8,7 +8,7 @@ package cr.ac.ucr.sigebi.daos;
 import cr.ac.ucr.framework.daoHibernate.DaoHelper;
 import cr.ac.ucr.framework.daoImpl.GenericDaoImpl;
 import cr.ac.ucr.framework.utils.FWExcepcion;
-import cr.ac.ucr.sigebi.domain.Moneda;
+import cr.ac.ucr.sigebi.domain.SubCategoria;
 import java.util.List;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
@@ -22,36 +22,38 @@ import org.springframework.transaction.annotation.Transactional;
  *
  * @author jorge.serrano
  */
-@Repository(value = "monedaDao")
+@Repository(value = "subCategoriaDao")
 @Scope("request")
-public class MonedaDao extends GenericDaoImpl {
+public class CategoriaDao extends GenericDaoImpl {
 
     @Autowired
     private DaoHelper dao;
 
     @Transactional(readOnly = true)
-    public Moneda traerPorId(String idMoneda) throws FWExcepcion {
+    public SubCategoria traerPorCodigo(Integer codigoCategoria) throws FWExcepcion {
         Session session = dao.getSessionFactory().openSession();
         try {
-            String sql = "SELECT obj FROM Moneda obj WHERE obj.id = :idMoneda";
+            String sql = "SELECT obj FROM SubCategoria obj WHERE obj.codigoCategoria = :codigoCategoria";
             Query query = session.createQuery(sql);
-            query.setParameter("idMoneda", idMoneda);
-            return (Moneda) query.uniqueResult();
+            query.setParameter("codigoCategoria", codigoCategoria);
+
+            return (SubCategoria) query.uniqueResult();
         } catch (HibernateException e) {
-            throw new FWExcepcion("sigebi.error.monedaDao.buscarPorId", "Error obtener los registros de tipo " + this.getClass(), e.getCause());
+            throw new FWExcepcion("sigebi.error.subCategoriaDao.traerPorCodigo", "Error obtener los registros de tipo " + this.getClass(), e.getCause());
         } finally {
             session.close();
         }
     }
 
-    @Transactional(readOnly = true)
-    public List<Moneda> traerTodo() throws FWExcepcion {
+    @Transactional
+    public List<SubCategoria> traerTodo() {
         try {
-            return dao.getHibernateTemplate().find("from Moneda");
+            return dao.getHibernateTemplate().find("from SubCategoria");
         } catch (HibernateException e) {
-            throw new FWExcepcion("sigebi.error.monedaDao.traerTodo",
+            throw new FWExcepcion("sigebi.error.subCategoriaDao.traerTodo",
                     "Error obtener los registros de tipo " + this.getClass(), e.getCause());
         }
+
     }
 
 }

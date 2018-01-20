@@ -8,8 +8,9 @@ package cr.ac.ucr.sigebi.daos;
 import cr.ac.ucr.framework.daoHibernate.DaoHelper;
 import cr.ac.ucr.framework.daoImpl.GenericDaoImpl;
 import cr.ac.ucr.framework.utils.FWExcepcion;
-import cr.ac.ucr.sigebi.entities.DocumentoEntity;
+import cr.ac.ucr.sigebi.domain.Autorizacion;
 import java.util.List;
+import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,81 +22,76 @@ import org.springframework.transaction.annotation.Transactional;
  *
  * @author jairo.cisneros
  */
-@Repository(value = "documentoDao")
+@Repository(value = "autorizacionDao")
 @Scope("request")
-public class DocumentoDao extends GenericDaoImpl {
+public class AutorizacionDao extends GenericDaoImpl {
 
     @Autowired
     private DaoHelper dao;
 
     @Transactional
-    public void agregar(DocumentoEntity obj) {
+    public void agregar(Autorizacion obj) throws FWExcepcion{
         try {
             this.persist(obj);
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new FWExcepcion("sigebi.error.dao.documento.agregar",
+        } catch (HibernateException e) {
+            throw new FWExcepcion("sigebi.error.dao.autorizacion.agregar",
                     "Error obtener los registros de tipo " + this.getClass(), e.getCause());
         }
     }
 
     @Transactional
-    public void modificar(DocumentoEntity obj) {       
+    public void modificar(Autorizacion obj) throws FWExcepcion {    
         try {
              this.persist(obj);
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new FWExcepcion("sigebi.error.dao.documento.modificar",
+        } catch (HibernateException e) {
+            throw new FWExcepcion("sigebi.error.dao.autorizacion.modificar",
                     "Error obtener los registros de tipo " + this.getClass(), e.getCause());
         }
     }
     
     @Transactional
-    public void eliminar(DocumentoEntity obj) {       
+    public void eliminar(Autorizacion obj) throws FWExcepcion {  
         try {
              this.delete(obj);
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new FWExcepcion("sigebi.error.dao.documento.eliminar",
+        } catch (HibernateException e) {
+            throw new FWExcepcion("sigebi.error.dao.autorizacion.eliminar",
                     "Error obtener los registros de tipo " + this.getClass(), e.getCause());
         }
     }
 
     @Transactional(readOnly = true)
-    public DocumentoEntity buscarPorId(Long idDocumento) {
+    public Autorizacion buscarPorId(Long idAutorizacion) throws FWExcepcion {
         Session session = this.dao.getSessionFactory().openSession();
         try {
-            String sql = "SELECT obj FROM DocumentoEntity obj WHERE obj.idDocumento = :idDocumento";
+            String sql = "SELECT obj FROM Autorizacion obj WHERE obj.id = :idAutorizacion";
             Query query = session.createQuery(sql);
-            query.setParameter("idDocumento", idDocumento);
+            query.setParameter("idAutorizacion", idAutorizacion);
 
             //Se obtienen los resutltados
-            return (DocumentoEntity) query.list().get(0);
+            return (Autorizacion) query.list().get(0);
 
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new FWExcepcion("sigebi.error.dao.documento.buscarPorId",
+        } catch (HibernateException e) {
+            throw new FWExcepcion("sigebi.error.dao.autorizacion.buscarPorId",
                     "Error obtener los registros de tipo " + this.getClass(), e.getCause());
         } finally {
             session.close();
         }
     }
     
-    
+    //FIXME
     @Transactional(readOnly = true)
-    public List<DocumentoEntity> buscarPorTipoProceso(Integer idTipoProceso) {
+    public List<Autorizacion> buscarPorTipoProceso(Integer idTipoProceso) throws FWExcepcion {
         Session session = this.dao.getSessionFactory().openSession();
         try {
-            String sql = "SELECT obj FROM DocumentoEntity obj WHERE obj.idProceso.idTipo = :idTipoProceso";
+            String sql = "SELECT obj FROM Autorizacion obj WHERE obj.tipoProceso.idTipo = :idTipoProceso";
             Query query = session.createQuery(sql);
             query.setParameter("idTipoProceso", idTipoProceso);
 
             //Se obtienen los resutltados
-            return (List<DocumentoEntity>) query.list();
+            return (List<Autorizacion>) query.list();
 
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new FWExcepcion("sigebi.error.dao.documento.buscarPorDocumento",
+        } catch (HibernateException e) {
+            throw new FWExcepcion("sigebi.error.dao.autorizacion.buscarPorAutorizacion",
                     "Error obtener los registros de tipo " + this.getClass(), e.getCause());
         } finally {
             session.close();
@@ -103,34 +99,33 @@ public class DocumentoDao extends GenericDaoImpl {
     }
 
     @Transactional(readOnly = true)
-    public Long contarDocumentosValidator(Long idDocumento, Integer idProceso,Integer orden,String nombre) {
+    public Long contarAutorizacionsValidator(Long idAutorizacion, Integer idProceso,Integer orden,String nombre) throws FWExcepcion {
         Session session = dao.getSessionFactory().openSession();
         try {
 
             //Se genera el query para la busqueda
-            Query q = this.creaQueryContar(idDocumento, idProceso, orden, nombre, session);
+            Query q = this.creaQueryContar(idAutorizacion, idProceso, orden, nombre, session);
 
             //Se obtienen los resutltados
             return (Long) q.uniqueResult();
 
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new FWExcepcion("sigebi.error.dao.documento.contarDocumentos",
+        } catch (HibernateException e) {
+            throw new FWExcepcion("sigebi.error.dao.autorizacion.contarAutorizacions",
                     "Error obtener los registros de tipo " + this.getClass(), e.getCause());
         } finally {
             session.close();
         }
     }
 
-    private Query creaQueryContar(Long idDocumento, Integer idProceso,Integer orden,String nombre,Session session) {
-        String sql = "SELECT count(obj) FROM DocumentoEntity obj ";        
+    private Query creaQueryContar(Long idAutorizacion, Integer idProceso,Integer orden,String nombre,Session session) {
+        String sql = "SELECT count(obj) FROM Autorizacion obj ";        
         //Select
         sql = sql + " WHERE  1 = 1 ";
-        if (idDocumento != null && idDocumento> 0) {
-            sql = sql + " AND obj.idDocumento != :idDocumento ";
+        if (idAutorizacion != null && idAutorizacion> 0) {
+            sql = sql + " AND obj.id != :idAutorizacion ";
         }
         if (idProceso != null && idProceso> 0) {
-            sql = sql + " AND obj.idProceso.idTipo = :idProceso ";
+            sql = sql + " AND obj.tipoProceso.idTipo = :idProceso ";
         }
         if (orden != null && orden> 0) {
             sql = sql + " AND obj.orden = :orden ";
@@ -140,8 +135,8 @@ public class DocumentoDao extends GenericDaoImpl {
         }
         
         Query q = session.createQuery(sql);
-        if (idDocumento != null && idDocumento> 0) {
-            q.setParameter("idDocumento", idDocumento);
+        if (idAutorizacion != null && idAutorizacion> 0) {
+            q.setParameter("idAutorizacion", idAutorizacion);
         }
         if (idProceso != null && idProceso> 0) {
             q.setParameter("idProceso", idProceso);

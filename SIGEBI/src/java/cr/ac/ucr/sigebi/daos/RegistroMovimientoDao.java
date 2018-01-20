@@ -7,8 +7,9 @@ package cr.ac.ucr.sigebi.daos;
 
 import cr.ac.ucr.framework.daoImpl.GenericDaoImpl;
 import cr.ac.ucr.framework.utils.FWExcepcion;
-import cr.ac.ucr.sigebi.entities.RegistroMovimientoEntity;
+import cr.ac.ucr.sigebi.domain.RegistroMovimiento;
 import org.springframework.context.annotation.Scope;
+import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,11 +22,11 @@ import org.springframework.transaction.annotation.Transactional;
 public class RegistroMovimientoDao extends GenericDaoImpl {
 
     @Transactional
-    public void agregar(RegistroMovimientoEntity registro) {
+    public void agregar(RegistroMovimiento registro) throws FWExcepcion {
         try {
             this.persist(registro);
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (DataAccessException e) {
+            throw new FWExcepcion("sigebi.error.registroMovimientoDao.agregar", "Error guardando registro de tipo " + this.getClass(), e.getCause());
         }
     }
 }

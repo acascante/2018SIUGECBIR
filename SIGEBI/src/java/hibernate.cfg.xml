@@ -41,8 +41,9 @@
     <mapping class="cr.ac.ucr.sigebi.domain.Ubicacion"/>
     <mapping class="cr.ac.ucr.sigebi.domain.UnidadEjecutora"/>
     <mapping class="cr.ac.ucr.sigebi.domain.Usuario"/>
+    <mapping class="cr.ac.ucr.sigebi.domain.RegistroMovimiento"/>
     
-    <mapping class="cr.ac.ucr.sigebi.entities.AccesoriosEntity"/>
+    <!--<mapping class="cr.ac.ucr.sigebi.entities.AccesoriosEntity"/>
     <mapping class="cr.ac.ucr.sigebi.entities.ActaDetalleEntity"/>
     <mapping class="cr.ac.ucr.sigebi.entities.ActaEntity"/>
     <mapping class="cr.ac.ucr.sigebi.entities.AdjuntoEntity"/>
@@ -79,7 +80,7 @@
     <mapping class="cr.ac.ucr.sigebi.entities.UnidadEjecutoraEntity"/>
     <mapping class="cr.ac.ucr.sigebi.entities.UsuarioEntity"/>
     <mapping class="cr.ac.ucr.sigebi.entities.TrasladoDetalleEntity"/>
-    <mapping class="cr.ac.ucr.sigebi.entities.JustificacionEntity"/>
+    <mapping class="cr.ac.ucr.sigebi.entities.JustificacionEntity"/> -->
     
   </session-factory>
 </hibernate-configuration>

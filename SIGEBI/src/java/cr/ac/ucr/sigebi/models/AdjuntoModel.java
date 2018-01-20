@@ -5,7 +5,7 @@
  */
 package cr.ac.ucr.sigebi.models;
 
-import cr.ac.ucr.sigebi.daos.AdjuntoDao;
+import cr.ac.ucr.sigebi.daos.FaltaAdjuntoDao;
 import cr.ac.ucr.sigebi.entities.AdjuntoEntity;
 import java.util.List;
 import javax.annotation.Resource;
@@ -21,7 +21,7 @@ import org.springframework.stereotype.Service;
 public class AdjuntoModel {
     
     @Resource
-    private AdjuntoDao adjuntoDao;
+    private FaltaAdjuntoDao adjuntoDao;
 
     public void agregar(AdjuntoEntity adjunto){
         adjuntoDao.agregar(adjunto);

@@ -27,6 +27,7 @@ import javax.persistence.Table;
 public class AutorizacionRolPersona extends ObjetoBase implements Serializable {
 
     //<editor-fold defaultstate="collapsed" desc="Atributos">
+    
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SGB_SQ_AUTORI_ROL_PER")
     @Column(name = "ID_AUTORIZACION_ROL_PERSONA")
@@ -47,6 +48,7 @@ public class AutorizacionRolPersona extends ObjetoBase implements Serializable {
     @ManyToOne
     @JoinColumn(name = "ID_UNIDAD_EJECUTORA", referencedColumnName = "ID")
     private UnidadEjecutora unidadEjecutora;
+    
     //</editor-fold>
 
     //<editor-fold defaultstate="collapsed" desc="Get's y Set's">
@@ -91,6 +93,7 @@ public class AutorizacionRolPersona extends ObjetoBase implements Serializable {
     }
     //</editor-fold>
 
+    //<editor-fold defaultstate="collapsed" desc="Metodos">
     @Override
     public int hashCode() {
         int hash = 7;
@@ -131,4 +134,5 @@ public class AutorizacionRolPersona extends ObjetoBase implements Serializable {
         }
         return true;
     }
+    //</editor-fold>
 }

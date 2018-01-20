@@ -5,8 +5,9 @@
  */
 package cr.ac.ucr.sigebi.models;
 
+import cr.ac.ucr.framework.utils.FWExcepcion;
 import cr.ac.ucr.sigebi.daos.RegistroMovimientoDao;
-import cr.ac.ucr.sigebi.entities.RegistroMovimientoEntity;
+import cr.ac.ucr.sigebi.domain.RegistroMovimiento;
 import javax.annotation.Resource;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
@@ -18,13 +19,12 @@ import org.springframework.stereotype.Service;
 @Service(value = "registroMovimientoModel")
 @Scope("request")
 public class RegistroMovimientoModel {
-    
+
     @Resource
     private RegistroMovimientoDao registroMovimientoDao;
-    
-    
-    public void agregar(RegistroMovimientoEntity registroMovimientoEntity){
+
+    public void agregar(RegistroMovimiento registroMovimientoEntity) throws FWExcepcion {
         registroMovimientoDao.agregar(registroMovimientoEntity);
     }
-    
+
 }

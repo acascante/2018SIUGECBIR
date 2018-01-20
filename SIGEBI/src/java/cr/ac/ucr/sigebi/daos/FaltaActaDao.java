@@ -28,14 +28,13 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Repository(value = "ActaDao")
 @Scope("request")
-public class ActaDao extends GenericDaoImpl {
+public class FaltaActaDao extends GenericDaoImpl {
     
     @Autowired
     private DaoHelper dao;
     
-    
     @Resource
-    private ViewBienDao viewBienDao;
+    private FaltaViewBienDao viewBienDao;
     
     @Transactional
     public ActaEntity traerPorId(Integer pId) {
@@ -60,7 +59,7 @@ public class ActaDao extends GenericDaoImpl {
     }
     
     
-    public List<ActaEntity> listar(Integer unidadEjecutora) {
+    public List<ActaEntity> listar(Long unidadEjecutora) {
         try {
             return dao.getHibernateTemplate().find("from ActaEntity"); 
         } catch (DataAccessException e) {
@@ -158,7 +157,7 @@ public class ActaDao extends GenericDaoImpl {
     
     
     @Transactional(readOnly = true)
-    public Long contarActas(Integer unidEjecutora,
+    public Long contarActas(Long unidadEjecutora,
                                         String fltIdTipo,
                                         String fltAutorizacion,
                                         String fltEstado,
@@ -168,7 +167,7 @@ public class ActaDao extends GenericDaoImpl {
         try {
 
             //Se genera el query para la busqueda de los bienes
-            Query q = this.creaQueryActasConsultar(unidEjecutora
+            Query q = this.creaQueryActasConsultar(unidadEjecutora
                                                 , fltIdTipo
                                                 , fltAutorizacion
                                                 , fltEstado
@@ -190,7 +189,7 @@ public class ActaDao extends GenericDaoImpl {
 
     
     @Transactional(readOnly = true)
-    public List<ActaEntity> listarActas(Integer unidEjecutora,
+    public List<ActaEntity> listarActas(Long unidadEjecutora,
                                         String fltIdTipo,
                                         String fltAutorizacion,
                                         String fltEstado,
@@ -201,7 +200,7 @@ public class ActaDao extends GenericDaoImpl {
         Session session = this.dao.getSessionFactory().openSession();
         try {
             //Se genera el query para la busqueda
-            Query q = this.creaQueryActasConsultar(unidEjecutora
+            Query q = this.creaQueryActasConsultar(unidadEjecutora
                                                 , fltIdTipo
                                                 , fltAutorizacion
                                                 , fltEstado
@@ -227,7 +226,7 @@ public class ActaDao extends GenericDaoImpl {
     }
 
     
-    private Query creaQueryActasConsultar(Integer unidEjecutora,
+    private Query creaQueryActasConsultar(Long unidadEjecutora,
                                         String fltIdTipo,
                                         String fltAutorizacion,
                                         String fltEstado,
@@ -253,7 +252,7 @@ public class ActaDao extends GenericDaoImpl {
                sql = sql +  " AND upper(s.fecha) like upper(:fltFecha) ";
 
         Query q = session.createQuery(sql);
-        q.setParameter("pnumUnidadEjec", unidEjecutora);
+        q.setParameter("pnumUnidadEjec", unidadEjecutora);
         if (fltIdTipo != null && fltIdTipo.length() > 0) 
             q.setParameter("fltIdTipo", '%' + fltIdTipo + '%');
         if (fltAutorizacion != null && fltAutorizacion.length() > 0) 

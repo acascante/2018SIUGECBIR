@@ -6,7 +6,7 @@
 package cr.ac.ucr.sigebi.models;
 
 import cr.ac.ucr.framework.utils.FWExcepcion;
-import cr.ac.ucr.sigebi.daos.ProveedorDao;
+import cr.ac.ucr.sigebi.daos.FaltaProveedorDao;
 import cr.ac.ucr.sigebi.entities.PersonaEntity;
 import cr.ac.ucr.sigebi.entities.ProveedorEntity;
 import java.util.ArrayList;
@@ -25,7 +25,7 @@ import org.springframework.stereotype.Service;
 public class ProveedorModel {
     
     @Resource
-    private ProveedorDao proveedorDao;
+    private FaltaProveedorDao proveedorDao;
     
     
      /**

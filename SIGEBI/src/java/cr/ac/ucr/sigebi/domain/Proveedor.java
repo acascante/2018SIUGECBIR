@@ -102,6 +102,7 @@ public class Proveedor extends ObjetoBase implements Serializable{
     }
     //</editor-fold>
 
+    //<editor-fold defaultstate="collapsed" desc="Metodos">
     @Override
     public int hashCode() {
         int hash = 5;
@@ -149,5 +150,6 @@ public class Proveedor extends ObjetoBase implements Serializable{
             return false;
         }
         return true;
-    }   
+    }
+    //</editor-fold>
 }

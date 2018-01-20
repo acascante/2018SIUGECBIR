@@ -23,7 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Repository(value = "viewBienDao")
 @Scope("request")
-public class ViewBienDao  extends GenericDaoImpl {
+public class FaltaViewBienDao  extends GenericDaoImpl {
     
     @Autowired
     private DaoHelper dao;
@@ -50,7 +50,7 @@ public class ViewBienDao  extends GenericDaoImpl {
     }
     
     @Transactional
-    public List<ViewBienEntity> listarBienes(Integer unidEjecutora,
+    public List<ViewBienEntity> listarBienes(Long unidadEjecutora,
             String fltIdBien,
             String fltDescripcion,
             String fltMarca,
@@ -64,7 +64,7 @@ public class ViewBienDao  extends GenericDaoImpl {
         try {
 
             //Se genera el query para la busqueda de los bienes
-            Query q = this.creaQueryListarBienes(unidEjecutora, fltIdBien, fltDescripcion, fltMarca, fltModelo, fltSerie, fltEstadosBienes, false, session);
+            Query q = this.creaQueryListarBienes(unidadEjecutora, fltIdBien, fltDescripcion, fltMarca, fltModelo, fltSerie, fltEstadosBienes, false, session);
             
             //Paginacion
             if(!(pPrimerRegistro.equals(1)&& pUltimoRegistro.equals(1))){
@@ -85,7 +85,7 @@ public class ViewBienDao  extends GenericDaoImpl {
     }
     
     @Transactional(readOnly = true)
-    public Long contarBienes(Integer unidEjecutora,
+    public Long contarBienes(Long unidadEjecutora,
             String fltIdBien,
             String fltDescripcion,
             String fltMarca,
@@ -97,7 +97,7 @@ public class ViewBienDao  extends GenericDaoImpl {
         try {
             
             //Se genera el query para la busqueda de los bienes
-            Query q = this.creaQueryListarBienes(unidEjecutora, fltIdBien, fltDescripcion, fltMarca, fltModelo, fltSerie, fltEstadosBienes, true, session);
+            Query q = this.creaQueryListarBienes(unidadEjecutora, fltIdBien, fltDescripcion, fltMarca, fltModelo, fltSerie, fltEstadosBienes, true, session);
 
             //Se obtienen los resutltados
             return (Long)q.uniqueResult();
@@ -111,7 +111,7 @@ public class ViewBienDao  extends GenericDaoImpl {
         }        
     }
     
-    private Query creaQueryListarBienes(Integer unidEjecutora,
+    private Query creaQueryListarBienes(Long unidadEjecutora,
             String fltIdBien,
             String fltDescripcion,
             String fltMarca,
@@ -148,7 +148,7 @@ public class ViewBienDao  extends GenericDaoImpl {
         }
         
         Query q = session.createQuery(sql);
-        q.setParameter("pnumUnidadEjec", unidEjecutora);
+        q.setParameter("pnumUnidadEjec", unidadEjecutora);
         if(fltIdBien != null && fltIdBien.length() > 0){
             q.setParameter("fltIdBien", '%' + fltIdBien + '%');
         }

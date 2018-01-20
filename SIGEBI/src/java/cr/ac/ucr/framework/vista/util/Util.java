@@ -4,8 +4,6 @@ import cr.ac.ucr.framework.seguridad.entidades.SegElemento;
 import cr.ac.ucr.framework.seguridad.entidades.SegUnidadEjecutora;
 import cr.ac.ucr.framework.utils.FWExcepcion;
 import cr.ac.ucr.framework.vista.VistaNavegacion;
-import java.io.IOException;
-import java.io.InputStream;
 
 import java.math.BigDecimal;
 
@@ -21,10 +19,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.MissingResourceException;
-import java.util.Properties;
 import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;

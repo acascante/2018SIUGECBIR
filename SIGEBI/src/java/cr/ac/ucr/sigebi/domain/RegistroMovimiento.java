@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package cr.ac.ucr.sigebi.entities;
+package cr.ac.ucr.sigebi.domain;
 
 import cr.ac.ucr.framework.seguridad.ObjetoBase;
 import java.io.Serializable;
@@ -24,10 +24,10 @@ import javax.persistence.TemporalType;
  *
  * @author jairo.cisneros
  */
-@Entity(name = "RegistroMovimientoEntity")
-@Table(name = "SIGEBI_OAF.SGB_REGISTRO_MOVIMIENTO")
-@SequenceGenerator(name = "SGB_SQ_REG_MOV_ID_REG_MOV",  sequenceName = "SIGEBI_OAF.SGB_SQ_REG_MOV_ID_REG_MOV", initialValue = 1, allocationSize = 1)
-public class RegistroMovimientoEntity   extends ObjetoBase implements Serializable {
+@Entity(name = "RegistroMovimiento")
+@Table(name = "SIGEBI_OAF.SIGB_REGISTRO_MOVIMIENTO")
+@SequenceGenerator(name = "SGB_SQ_REG_MOV_ID_REG_MOV", sequenceName = "SIGEBI_OAF.SGB_SQ_REG_MOV_ID_REG_MOV", initialValue = 1, allocationSize = 1)
+public class RegistroMovimiento extends ObjetoBase implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -35,14 +35,15 @@ public class RegistroMovimientoEntity   extends ObjetoBase implements Serializab
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SGB_SQ_REG_MOV_ID_REG_MOV")
     @Column(name = "ID_REGISTRO_MOVIMIENTO")
-    private Integer idRegistro;
-
-    @Column(name = "ID_TIPO")
-    private Integer idTipo;
+    private Integer id;
 
     @ManyToOne
     @JoinColumn(name = "ID_BIEN", referencedColumnName = "ID_BIEN")
-    private BienEntity idBien;
+    private Tipo tipo;
+
+    @ManyToOne
+    @JoinColumn(name = "ID_BIEN", referencedColumnName = "ID_BIEN")
+    private Bien bien;
 
     @Column(name = "OBSERVACION")
     private String observacion;
@@ -56,39 +57,32 @@ public class RegistroMovimientoEntity   extends ObjetoBase implements Serializab
 
     @ManyToOne
     @JoinColumn(name = "ID_ESTADO", referencedColumnName = "ID_ESTADO")
-    private EstadoEntity idEstado;
-
+    private Estado estado;
     //</editor-fold>
-    
-    //<editor-fold defaultstate="collapsed" desc="Constructores">
-    public RegistroMovimientoEntity() {
+
+    //<editor-fold defaultstate="collapsed" desc="GET's y SET's">
+    public Integer getId() {
+        return id;
     }
 
-    //</editor-fold>
-        
-    //<editor-fold defaultstate="collapsed" desc="Sets y Gets">
-    public Integer getIdRegistro() {
-        return idRegistro;
+    public void setId(Integer id) {
+        this.id = id;
     }
 
-    public void setIdRegistro(Integer idRegistro) {
-        this.idRegistro = idRegistro;
+    public Tipo getTipo() {
+        return tipo;
     }
 
-    public Integer getIdTipo() {
-        return idTipo;
+    public void setTipo(Tipo tipo) {
+        this.tipo = tipo;
     }
 
-    public void setIdTipo(Integer idTipo) {
-        this.idTipo = idTipo;
+    public Bien getBien() {
+        return bien;
     }
 
-    public BienEntity getIdBien() {
-        return idBien;
-    }
-
-    public void setIdBien(BienEntity idBien) {
-        this.idBien = idBien;
+    public void setBien(Bien bien) {
+        this.bien = bien;
     }
 
     public String getObservacion() {
@@ -115,24 +109,26 @@ public class RegistroMovimientoEntity   extends ObjetoBase implements Serializab
         this.numeroPersona = numeroPersona;
     }
 
-    public EstadoEntity getIdEstado() {
-        return idEstado;
+    public Estado getEstado() {
+        return estado;
     }
 
-    public void setIdEstado(EstadoEntity idEstado) {
-        this.idEstado = idEstado;
+    public void setEstado(Estado estado) {
+        this.estado = estado;
     }
-
     //</editor-fold>
-    
-    //<editor-fold defaultstate="collapsed" desc="Sobrecargas">
+
+    //<editor-fold defaultstate="collapsed" desc="Metodos">
     @Override
     public int hashCode() {
-        int hash = 3;
-        hash = 97 * hash + (this.idRegistro != null ? this.idRegistro.hashCode() : 0);
-        hash = 97 * hash + (this.idTipo != null ? this.idTipo.hashCode() : 0);
-        hash = 97 * hash + (this.idBien != null ? this.idBien.hashCode() : 0);
-        hash = 97 * hash + (this.observacion != null ? this.observacion.hashCode() : 0);
+        int hash = 5;
+        hash = 23 * hash + (this.id != null ? this.id.hashCode() : 0);
+        hash = 23 * hash + (this.tipo != null ? this.tipo.hashCode() : 0);
+        hash = 23 * hash + (this.bien != null ? this.bien.hashCode() : 0);
+        hash = 23 * hash + (this.observacion != null ? this.observacion.hashCode() : 0);
+        hash = 23 * hash + (this.fecha != null ? this.fecha.hashCode() : 0);
+        hash = 23 * hash + (this.numeroPersona != null ? this.numeroPersona.hashCode() : 0);
+        hash = 23 * hash + (this.estado != null ? this.estado.hashCode() : 0);
         return hash;
     }
 
@@ -147,17 +143,26 @@ public class RegistroMovimientoEntity   extends ObjetoBase implements Serializab
         if (getClass() != obj.getClass()) {
             return false;
         }
-        final RegistroMovimientoEntity other = (RegistroMovimientoEntity) obj;
+        final RegistroMovimiento other = (RegistroMovimiento) obj;
         if ((this.observacion == null) ? (other.observacion != null) : !this.observacion.equals(other.observacion)) {
             return false;
         }
-        if (this.idRegistro != other.idRegistro && (this.idRegistro == null || !this.idRegistro.equals(other.idRegistro))) {
+        if (this.id != other.id && (this.id == null || !this.id.equals(other.id))) {
             return false;
         }
-        if (this.idTipo != other.idTipo && (this.idTipo == null || !this.idTipo.equals(other.idTipo))) {
+        if (this.tipo != other.tipo && (this.tipo == null || !this.tipo.equals(other.tipo))) {
             return false;
         }
-        if (this.idBien != other.idBien && (this.idBien == null || !this.idBien.equals(other.idBien))) {
+        if (this.bien != other.bien && (this.bien == null || !this.bien.equals(other.bien))) {
+            return false;
+        }
+        if (this.fecha != other.fecha && (this.fecha == null || !this.fecha.equals(other.fecha))) {
+            return false;
+        }
+        if (this.numeroPersona != other.numeroPersona && (this.numeroPersona == null || !this.numeroPersona.equals(other.numeroPersona))) {
+            return false;
+        }
+        if (this.estado != other.estado && (this.estado == null || !this.estado.equals(other.estado))) {
             return false;
         }
         return true;

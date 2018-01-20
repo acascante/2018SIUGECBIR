@@ -38,7 +38,7 @@ public class Identificacion extends ObjetoBase implements Serializable {
         
     @ManyToOne
     @JoinColumn(name = "ID_TIPO", referencedColumnName = "ID_TIPO")
-    private Tipo tipoPlaca;
+    private Tipo tipo;
     
     @Column(name = "NUMERO_IDENTIFICACION")
     private String identificacion;
@@ -52,7 +52,7 @@ public class Identificacion extends ObjetoBase implements Serializable {
     private UnidadEjecutora unidadEjecutora;
     //</editor-fold>
 
-    //<editor-fold defaultstate="collapsed" desc="GET's y SET's">
+    //<editor-fold defaultstate="collapsed" desc="Get's y Set's">
     public Integer getId() {
         return id;
     }
@@ -69,12 +69,12 @@ public class Identificacion extends ObjetoBase implements Serializable {
         this.bien = bien;
     }
 
-    public Tipo getTipoPlaca() {
-        return tipoPlaca;
+    public Tipo getTipo() {
+        return tipo;
     }
 
-    public void setTipoPlaca(Tipo tipoPlaca) {
-        this.tipoPlaca = tipoPlaca;
+    public void setTipo(Tipo tipo) {
+        this.tipo = tipo;
     }
 
     public String getIdentificacion() {
@@ -101,13 +101,14 @@ public class Identificacion extends ObjetoBase implements Serializable {
         this.unidadEjecutora = unidadEjecutora;
     }
     //</editor-fold>
-
+    
+    //<editor-fold defaultstate="collapsed" desc="Metodos">
     @Override
     public int hashCode() {
         int hash = 7;
         hash = 29 * hash + (this.id != null ? this.id.hashCode() : 0);
         hash = 29 * hash + (this.bien != null ? this.bien.hashCode() : 0);
-        hash = 29 * hash + (this.tipoPlaca != null ? this.tipoPlaca.hashCode() : 0);
+        hash = 29 * hash + (this.tipo != null ? this.tipo.hashCode() : 0);
         hash = 29 * hash + (this.identificacion != null ? this.identificacion.hashCode() : 0);
         hash = 29 * hash + (this.estado != null ? this.estado.hashCode() : 0);
         hash = 29 * hash + (this.unidadEjecutora != null ? this.unidadEjecutora.hashCode() : 0);
@@ -135,7 +136,7 @@ public class Identificacion extends ObjetoBase implements Serializable {
         if (this.bien != other.bien && (this.bien == null || !this.bien.equals(other.bien))) {
             return false;
         }
-        if (this.tipoPlaca != other.tipoPlaca && (this.tipoPlaca == null || !this.tipoPlaca.equals(other.tipoPlaca))) {
+        if (this.tipo != other.tipo && (this.tipo == null || !this.tipo.equals(other.tipo))) {
             return false;
         }
         if (this.estado != other.estado && (this.estado == null || !this.estado.equals(other.estado))) {
@@ -146,4 +147,5 @@ public class Identificacion extends ObjetoBase implements Serializable {
         }
         return true;
     }
+    //</editor-fold>
 }

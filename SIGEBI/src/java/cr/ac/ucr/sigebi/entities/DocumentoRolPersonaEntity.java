@@ -41,7 +41,7 @@ public class DocumentoRolPersonaEntity extends ObjetoBase implements Serializabl
     private UsuarioEntity idUsuarioSeguridad;
 
     @Column(name = "NUM_UNIDAD_EJEC")
-    private Integer numUnidadEjec;
+    private Long numUnidadEjec;
     //</editor-fold>
  
     //<editor-fold defaultstate="collapsed" desc="Constructores">
@@ -77,11 +77,11 @@ public class DocumentoRolPersonaEntity extends ObjetoBase implements Serializabl
         this.idUsuarioSeguridad = idUsuarioSeguridad;
     }
 
-    public Integer getNumUnidadEjec() {
+    public Long getNumUnidadEjec() {
         return numUnidadEjec;
     }
 
-    public void setNumUnidadEjec(Integer numUnidadEjec) {
+    public void setNumUnidadEjec(Long numUnidadEjec) {
         this.numUnidadEjec = numUnidadEjec;
     }
     

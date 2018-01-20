@@ -6,7 +6,7 @@
 package cr.ac.ucr.sigebi.models;
 
 import cr.ac.ucr.framework.utils.FWExcepcion;
-import cr.ac.ucr.sigebi.daos.ViewBienDao;
+import cr.ac.ucr.sigebi.daos.FaltaViewBienDao;
 import cr.ac.ucr.sigebi.entities.ViewBienEntity;
 import java.util.List;
 import javax.annotation.Resource;
@@ -22,11 +22,11 @@ import org.springframework.stereotype.Service;
 public class ViewBienModel {
     
     @Resource
-    private ViewBienDao viewBienDao;
+    private FaltaViewBienDao viewBienDao;
     
     
 
-    public List<ViewBienEntity> listarBienes(Integer unidEjecutora,
+    public List<ViewBienEntity> listarBienes(Long unidadEjecutora,
              String fltIdBien,
              String fltDescripcion,
              String fltMarca,
@@ -38,7 +38,7 @@ public class ViewBienModel {
     ) {
 
         try {
-            return viewBienDao.listarBienes(unidEjecutora, 
+            return viewBienDao.listarBienes(unidadEjecutora, 
                     fltIdBien, 
                     fltDescripcion, 
                     fltMarca, 
@@ -58,7 +58,7 @@ public class ViewBienModel {
         }
     }
 
-    public Long contarBienes(Integer unidEjecutora,
+    public Long contarBienes(Long unidadEjecutora,
              String fltIdBien,
              String fltDescripcion,
              String fltMarca,
@@ -68,7 +68,7 @@ public class ViewBienModel {
     ) {
 
         try {
-            return viewBienDao.contarBienes(unidEjecutora, fltIdBien, fltDescripcion, fltMarca, fltModelo, fltSerie, fltEstadosBienes);
+            return viewBienDao.contarBienes(unidadEjecutora, fltIdBien, fltDescripcion, fltMarca, fltModelo, fltSerie, fltEstadosBienes);
 
         } catch (FWExcepcion e) {
             throw e;

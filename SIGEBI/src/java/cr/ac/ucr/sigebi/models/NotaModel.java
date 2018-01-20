@@ -6,7 +6,7 @@
 package cr.ac.ucr.sigebi.models;
 
 import cr.ac.ucr.framework.utils.FWExcepcion;
-import cr.ac.ucr.sigebi.daos.NotaDao;
+import cr.ac.ucr.sigebi.daos.FaltaNotaDao;
 import cr.ac.ucr.sigebi.entities.NotaEntity;
 import java.util.List;
 import javax.annotation.Resource;
@@ -22,7 +22,7 @@ import org.springframework.stereotype.Service;
 public class NotaModel {
 
     @Resource
-    private NotaDao notaDao;
+    private FaltaNotaDao notaDao;
 
     public NotaEntity obtenerValor(Integer pId) {
         NotaEntity respAux = new NotaEntity();

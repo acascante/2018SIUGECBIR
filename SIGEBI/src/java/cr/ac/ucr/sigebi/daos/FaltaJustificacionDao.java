@@ -24,7 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Repository(value = "JustificacionDao")
 @Scope("request")
-public class JustificacionDao extends GenericDaoImpl {
+public class FaltaJustificacionDao extends GenericDaoImpl {
     
     @Autowired
     private DaoHelper dao;

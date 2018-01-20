@@ -19,9 +19,9 @@ import javax.persistence.Table;
 @Entity(name = "Usuario")
 @Table(name = "SEGURIDAD_USUARIO")
 public class Usuario extends ObjetoBase implements Serializable {
-    
+
     //<editor-fold defaultstate="collapsed" desc="Atributos">
-    @Id    
+    @Id
     @Column(name = "ID_USUARIO")
     private String id;
 
@@ -47,7 +47,7 @@ public class Usuario extends ObjetoBase implements Serializable {
     private String correo;
     //</editor-fold>
 
-    //<editor-fold defaultstate="collapsed" desc="GET's y SET's">
+    //<editor-fold defaultstate="collapsed" desc="Get's y Set's">
     public String getId() {
         return id;
     }
@@ -112,7 +112,8 @@ public class Usuario extends ObjetoBase implements Serializable {
         this.correo = correo;
     }
     //</editor-fold>
-
+    
+    //<editor-fold defaultstate="collapsed" desc="Metodos">
     @Override
     public int hashCode() {
         int hash = 7;
@@ -165,4 +166,5 @@ public class Usuario extends ObjetoBase implements Serializable {
         }
         return true;
     }
+    //</editor-fold>
 }

@@ -8,9 +8,10 @@ package cr.ac.ucr.sigebi.daos;
 import cr.ac.ucr.framework.daoHibernate.DaoHelper;
 import cr.ac.ucr.framework.daoImpl.GenericDaoImpl;
 import cr.ac.ucr.framework.utils.FWExcepcion;
-import cr.ac.ucr.sigebi.entities.DocumentoRolEntity;
+import cr.ac.ucr.sigebi.domain.AutorizacionRol;
 import cr.ac.ucr.sigebi.entities.ViewDocumAprobEntity;
 import java.util.List;
+import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,60 +23,56 @@ import org.springframework.transaction.annotation.Transactional;
  *
  * @author jairo.cisneros
  */
-@Repository(value = "documentoRolDao")
+@Repository(value = "autorizacionRolDao")
 @Scope("request")
-public class DocumentoRolDao extends GenericDaoImpl {
+public class AutorizacionRolDao extends GenericDaoImpl {
 
     @Autowired
     private DaoHelper dao;
 
     @Transactional
-    public void agregar(DocumentoRolEntity obj) {
+    public void agregar(AutorizacionRol obj) throws FWExcepcion {
         try {
             this.persist(obj);
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new FWExcepcion("sigebi.error.dao.documentoRol.agregar",
+        } catch (HibernateException e) {
+            throw new FWExcepcion("sigebi.error.dao.autorizacionRol.agregar",
                     "Error obtener los registros de tipo " + this.getClass(), e.getCause());
         }
     }
 
     @Transactional
-    public void modificar(DocumentoRolEntity obj) {
+    public void modificar(AutorizacionRol obj) throws FWExcepcion {
         try {
             this.persist(obj);
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new FWExcepcion("sigebi.error.dao.documentoRol.modificar",
+        } catch (HibernateException e) {
+            throw new FWExcepcion("sigebi.error.dao.autorizacionRol.modificar",
                     "Error obtener los registros de tipo " + this.getClass(), e.getCause());
         }
     }
 
     @Transactional
-    public void eliminar(DocumentoRolEntity obj) {
+    public void eliminar(AutorizacionRol obj) throws FWExcepcion {
         try {
             this.delete(obj);
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new FWExcepcion("sigebi.error.dao.documentoRol.eliminar",
+        } catch (HibernateException e) {
+            throw new FWExcepcion("sigebi.error.dao.autorizacionRol.eliminar",
                     "Error obtener los registros de tipo " + this.getClass(), e.getCause());
         }
     }
 
     @Transactional(readOnly = true)
-    public List<DocumentoRolEntity> buscarPorDocumento(Long idDocumento) {
+    public List<AutorizacionRol> buscarPorAutorizacion(Long idAutorizacion) throws FWExcepcion {
         Session session = this.dao.getSessionFactory().openSession();
         try {
-            String sql = "SELECT obj FROM DocumentoRolEntity obj WHERE obj.idDocumento.idDocumento = :idDocumento";
+            String sql = "SELECT obj FROM AutorizacionRol obj WHERE obj.autorizacion.id = :idAutorizacion";
             Query query = session.createQuery(sql);
-            query.setParameter("idDocumento", idDocumento);
+            query.setParameter("idAutorizacion", idAutorizacion);
 
             //Se obtienen los resutltados
-            return (List<DocumentoRolEntity>) query.list();
+            return (List<AutorizacionRol>) query.list();
 
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new FWExcepcion("sigebi.error.dao.documentoRol.buscarPorDocumento",
+        } catch (HibernateException e) {
+            throw new FWExcepcion("sigebi.error.dao.autorizacionRol.buscarPorAutorizacion",
                     "Error obtener los registros de tipo " + this.getClass(), e.getCause());
         } finally {
             session.close();
@@ -83,72 +80,68 @@ public class DocumentoRolDao extends GenericDaoImpl {
     }
 
     @Transactional(readOnly = true)
-    public Long contarPorDocumento(Long idDocumento) {
+    public Long contarPorAutorizacion(Long idAutorizacion) throws FWExcepcion {
         Session session = this.dao.getSessionFactory().openSession();
         try {
-            String sql = "SELECT count(obj.idDocumento) FROM DocumentoRolEntity obj WHERE obj.idDocumento.idDocumento = :idDocumento";
+            String sql = "SELECT count(obj.idAutorizacion) FROM AutorizacionRol obj WHERE obj.autorizacion.id = :idAutorizacion";
             Query query = session.createQuery(sql);
-            query.setParameter("idDocumento", idDocumento);
-            
-            //Se obtienen los resutltados
-             return (Long) query.uniqueResult();
+            query.setParameter("idAutorizacion", idAutorizacion);
 
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new FWExcepcion("sigebi.error.dao.documentoRol.contarPorDocumento",
+            //Se obtienen los resutltados
+            return (Long) query.uniqueResult();
+
+        } catch (HibernateException e) {
+            throw new FWExcepcion("sigebi.error.dao.autorizacionRol.contarPorAutorizacion",
                     "Error obtener los registros de tipo " + this.getClass(), e.getCause());
         } finally {
             session.close();
         }
     }
-    
+
     @Transactional(readOnly = true)
-    public DocumentoRolEntity buscarPorRolDocumento(Long idRol, Long idDocumento) {
+    public AutorizacionRol buscarPorRolAutorizacion(Long idRol, Long idAutorizacion) throws FWExcepcion {
         try {
             Session session = this.dao.getSessionFactory().openSession();
-            String sql = "select obj from DocumentoRolEntity obj ";
-            sql = sql + " where obj.idRol.idRol = :idRol";
-            sql = sql + " and obj.idDocumento.idDocumento = :idDocumento";
+            String sql = "select obj from AutorizacionRol obj ";
+            sql = sql + " where obj.rol.id = :idRol";
+            sql = sql + " and obj.autorizacion.id = :idAutorizacion";
             Query query = session.createQuery(sql);
-            query.setParameter("idDocumento", idDocumento);
+            query.setParameter("idAutorizacion", idAutorizacion);
             query.setParameter("idRol", idRol);
-            List<DocumentoRolEntity> results = query.list();
+            List<AutorizacionRol> results = query.list();
             if (!results.isEmpty()) {
-                return (DocumentoRolEntity) results.get(0);
+                return (AutorizacionRol) results.get(0);
             } else {
                 return null;
             }
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new FWExcepcion("sigebi.error.dao.documentoRol.buscarPorRolDocumento",
+        } catch (HibernateException e) {
+            throw new FWExcepcion("sigebi.error.dao.autorizacionRol.buscarPorRolAutorizacion",
                     "Error obtener los registros de tipo " + this.getClass(), e.getCause());
         }
     }
-    
-    
+
+    //FIXME JAIRO se debe coordinar con JORGE si se elimina la vista
     @Transactional(readOnly = true)
-    public List<ViewDocumAprobEntity> buscarRolDocumId( int idTipoDocumento, int idDocumento) {
+    public List<ViewDocumAprobEntity> buscarRolDocumId(int idTipoAutorizacion, int idAutorizacion) throws FWExcepcion {
         Session session = this.dao.getSessionFactory().openSession();
         try {
             String sql = "SELECT obj FROM ViewDocumAprobEntity obj "
-                        + " WHERE obj.idDocumento = :idTipoDocum "
-                        + " AND (obj.idReferencia = :idDocumento "
-                        + "     OR obj.idReferencia IS NULL) ";
+                    + " WHERE obj.idAutorizacion = :idTipoDocum "
+                    + " AND (obj.idReferencia = :idAutorizacion "
+                    + "     OR obj.idReferencia IS NULL) ";
             Query query = session.createQuery(sql);
-            query.setParameter("idTipoDocum", idTipoDocumento);
-            query.setParameter("idDocumento", idDocumento);
+            query.setParameter("idTipoDocum", idTipoAutorizacion);
+            query.setParameter("idAutorizacion", idAutorizacion);
 
             //Se obtienen los resutltados
             return (List<ViewDocumAprobEntity>) query.list();
 
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new FWExcepcion("sigebi.error.dao.documentoRol.buscarRolDocumId",
+        } catch (HibernateException e) {
+            throw new FWExcepcion("sigebi.error.dao.autorizacionRol.buscarRolDocumId",
                     "Error obtener los registros de tipo " + this.getClass(), e.getCause());
         } finally {
             session.close();
         }
     }
 
-    
 }

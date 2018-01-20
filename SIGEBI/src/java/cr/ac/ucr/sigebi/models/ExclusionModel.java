@@ -35,11 +35,11 @@ public class ExclusionModel {
         exclusionDao.salvarDetalles(exclusion.getDetalles());
     }
         
-    public Long contar(Integer unidadEjecutora, Long id, Date fecha, Integer estado, Integer tipoExclusion) throws FWExcepcion {
+    public Long contar(Long unidadEjecutora, Long id, Date fecha, Integer estado, Integer tipoExclusion) throws FWExcepcion {
         return exclusionDao.contar(unidadEjecutora, id, fecha, estado, tipoExclusion);
     }
     
-    public List<Exclusion> listar(Integer primerRegistro, Integer ultimoRegistro, Integer unidadEjecutora, Long id, Date fecha, Integer estado, Integer tipo) throws FWExcepcion {
+    public List<Exclusion> listar(Integer primerRegistro, Integer ultimoRegistro, Long unidadEjecutora, Long id, Date fecha, Integer estado, Integer tipo) throws FWExcepcion {
         return exclusionDao.listar(primerRegistro, ultimoRegistro, unidadEjecutora, id, fecha, estado, tipo);
     }
     
