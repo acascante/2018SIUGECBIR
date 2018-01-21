@@ -44,7 +44,7 @@ public class Bien extends ObjetoBase implements Serializable {
     private Integer cantidad;
     
     @ManyToOne
-    @JoinColumn(name = "CODIGO_SUB_CATEGORIA", referencedColumnName = "ID")
+    @JoinColumn(name = "ID_SUB_CATEGORIA", referencedColumnName = "ID")
     private SubCategoria subCategoria;
     
     @ManyToOne
@@ -56,13 +56,13 @@ public class Bien extends ObjetoBase implements Serializable {
     private Tipo tipoBien;
     
     @ManyToOne
-    @JoinColumn(name = "ID_BIEN", referencedColumnName = "ID_BIEN")
-    private ViewResumenBien resumenBien;
-     
-    @ManyToOne
     @JoinColumn(name = "ID_ORIGEN", referencedColumnName = "ID_TIPO")
     private Tipo origen;
     
+    @ManyToOne
+    @JoinColumn(name = "ID_BIEN", referencedColumnName = "ID", insertable=false, updatable=false)
+    private ViewResumenBien resumenBien;
+     
     @ManyToOne
     @JoinColumn(name = "ID_UNIDAD_EJECUTORA", referencedColumnName = "ID")
     private UnidadEjecutora unidadEjecutora;
@@ -122,8 +122,8 @@ public class Bien extends ObjetoBase implements Serializable {
     
     @JoinColumn(name = "ID_IDENTIFICACION", referencedColumnName = "ID_IDENTIFICACION")
     @ManyToOne(fetch = FetchType.EAGER)
-    private Identificacion identificacion;
-    
+    private Identificacion identificacion;    
+
     @Transient
     private List<Accesorio> accesorios;
     

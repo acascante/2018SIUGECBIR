@@ -38,7 +38,7 @@ public class RegistroMovimiento extends ObjetoBase implements Serializable {
     private Integer id;
 
     @ManyToOne
-    @JoinColumn(name = "ID_BIEN", referencedColumnName = "ID_BIEN")
+    @JoinColumn(name = "ID_TIPO", referencedColumnName = "ID_TIPO")
     private Tipo tipo;
 
     @ManyToOne

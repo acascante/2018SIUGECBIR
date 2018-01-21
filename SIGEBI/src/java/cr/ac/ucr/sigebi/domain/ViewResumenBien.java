@@ -22,7 +22,7 @@ public class ViewResumenBien extends ObjetoBase implements Serializable {
     
     //<editor-fold defaultstate="collapsed" desc="Atributos">
     @Id
-    @Column(name = "ID_BIEN")
+    @Column(name = "ID")
     private Long id;
 
     @Column(name = "MARCA")

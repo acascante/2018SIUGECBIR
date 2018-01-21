@@ -398,7 +398,7 @@ public class BienController extends BaseController{
 //                if (prov.getId().getPrimerApellido() != null) {
 //                    provSelccionado += " " + prov.getId().getPrimerApellido();
 //                }
-//            }
+            }
 
             if (bien.getFechaAdquisicion() != null) {
                 fecAdiquisicion = bien.getFechaAdquisicion();
