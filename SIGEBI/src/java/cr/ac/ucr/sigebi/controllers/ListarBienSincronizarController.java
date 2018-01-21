@@ -262,7 +262,7 @@ public class ListarBienSincronizarController extends BaseController {
         bienesEnviarSincronizar = new HashMap<Long, Bien>();
         estadosBienes = new HashMap<Integer, Estado>();
         
-        unidadEjec = unidadModel.traerPorId(unidadEjecutoraId);
+        unidadEjec = unidadModel.buscarPorId(unidadEjecutoraId);
 
         //Cargar Estados Filtros
         Estado estado = estadoModel.buscarPorDominioEstado(Constantes.DOMINI0_ESTADO_BIEN, Constantes.ESTADO_BIEN_PENDIENTE);

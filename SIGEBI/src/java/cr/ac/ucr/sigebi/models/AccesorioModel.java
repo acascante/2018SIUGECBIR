@@ -25,16 +25,8 @@ public class AccesorioModel {
     @Resource
     private AccesorioDao accesorioDao;
     
-    public List<Accesorio> listar() throws FWExcepcion {
-        return accesorioDao.listar();
-    }
-    
     public List<Accesorio> listarPorBien(Bien bien) throws FWExcepcion {
         return accesorioDao.listarPorBien(bien);
-    }
-    
-    public Accesorio buscarPorId(Long id) throws FWExcepcion {
-        return accesorioDao.buscarPorId(id);
     }
     
     public void almacenar(Accesorio accesorio) throws FWExcepcion {

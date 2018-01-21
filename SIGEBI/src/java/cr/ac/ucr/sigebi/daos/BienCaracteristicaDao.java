@@ -88,4 +88,22 @@ public class BienCaracteristicaDao extends GenericDaoImpl {
             session.close();        
         } 
     }
+    
+    @Transactional
+    public void almacenar(BienCaracteristica caracteristica) throws FWExcepcion {
+        try {
+            persist(caracteristica);
+        } catch (DataAccessException e) {
+            throw new FWExcepcion("sigebi.error.notificacionDao.salvar", "Error guardando registro de tipo " + this.getClass(), e.getCause());
+        }
+    }
+
+    @Transactional
+    public void eliminar(BienCaracteristica caracteristica)throws FWExcepcion {
+        try {
+            delete(caracteristica);
+        } catch (DataAccessException e) {
+            throw new FWExcepcion("sigebi.error.notificacionDao.salvar", "Error guardando registro de tipo " + this.getClass(), e.getCause());
+        }
+    }
 }

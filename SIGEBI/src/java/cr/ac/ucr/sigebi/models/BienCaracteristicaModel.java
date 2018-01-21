@@ -22,10 +22,6 @@ public class BienCaracteristicaModel {
     @Resource
     private BienCaracteristicaDao bienCaracteristicaDao;
     
-    public List<BienCaracteristica> listar() throws FWExcepcion {
-        return bienCaracteristicaDao.listar();
-    }
-    
     public List<BienCaracteristica> listarPorBien(Bien bien) throws FWExcepcion {
         return bienCaracteristicaDao.listarPorBien(bien);
     }
@@ -36,5 +32,13 @@ public class BienCaracteristicaModel {
 
     public BienCaracteristica buscarPorBienTipo(Bien bien, Tipo tipo) throws FWExcepcion {
         return bienCaracteristicaDao.buscarPorBienTipo(bien, tipo);
+    }
+
+    public void almacenar(BienCaracteristica caracteristica) throws FWExcepcion {
+        bienCaracteristicaDao.almacenar(caracteristica);
+    }
+
+    public void eliminar(BienCaracteristica caracteristica)throws FWExcepcion {
+        bienCaracteristicaDao.eliminar(caracteristica);
     }
 }

@@ -224,7 +224,7 @@ public class BienController extends BaseController{
             }
 
             proveedores = new ArrayList<PersonaEntity>();
-            proveedores = provModel.traerTodos();
+//            proveedores = provModel.listar();
 
             //Cargar Categorias
 //            List<CategEntity> categorias;
@@ -389,16 +389,16 @@ public class BienController extends BaseController{
             }
 
             
-            ProveedorEntity prov;
+            Proveedor prov;
             if (bien.getProveedor() != null) {
-                prov = provModel.buscarProveedor(Integer.parseInt( bien.getProveedor().getId().toString() ) );
-
-                provId = bien.getProveedor().toString();
-                provSelccionado = prov.getIdProveedor().getNombre();
-                if (prov.getIdProveedor().getPrimerApellido() != null) {
-                    provSelccionado += " " + prov.getIdProveedor().getPrimerApellido();
-                }
-            }
+//                prov = provModel.buscarPorId(bien.getProveedor().getId());
+//
+//                provId = bien.getProveedor().toString();
+//                provSelccionado = prov.getId().getNombre();
+//                if (prov.getId().getPrimerApellido() != null) {
+//                    provSelccionado += " " + prov.getId().getPrimerApellido();
+//                }
+//            }
 
             if (bien.getFechaAdquisicion() != null) {
                 fecAdiquisicion = bien.getFechaAdquisicion();
@@ -1254,11 +1254,11 @@ public class BienController extends BaseController{
         subCategoriaOptions = new ArrayList<SelectItem>();
         if (valor.length() > 0) {
             //Cargar Sub Categorias
-            List<SubCategoriaEntity> subCategorias = subCategModel.traerTodo(valor);
-            //Se cargan las Sub Categorías
-            for (SubCategoriaEntity item : subCategorias) {
-                subCategoriaOptions.add(getCategoriaOption(item));
-            }
+//            List<SubCategoriaEntity> subCategorias = subCategModel.traerTodo(valor);
+//            //Se cargan las Sub Categorías
+//            for (SubCategoriaEntity item : subCategorias) {
+//                subCategoriaOptions.add(getCategoriaOption(item));
+//            }
 
         }
     }
@@ -1281,11 +1281,11 @@ public class BienController extends BaseController{
         if (valor.length() > 0) {
             int clasif = parseInt(valor);
             //Cargar SubClasificación
-            List<SubClasificacionEntity> subClasif = subClasifModel.traerTodo(clasif);
-            //Se cargan las Sub Clasificacion
-            for (SubClasificacionEntity item : subClasif) {
-                subClasifOptions.add(getCategoriaOption(item));
-            }
+//            List<SubClasificacionEntity> subClasif = subClasifModel.traerTodo(clasif);
+//            //Se cargan las Sub Clasificacion
+//            for (SubClasificacionEntity item : subClasif) {
+//                subClasifOptions.add(getCategoriaOption(item));
+//            }
         }
     }
 
@@ -1322,7 +1322,7 @@ public class BienController extends BaseController{
             return;
         }
         mensajeProveedores = "";
-        proveedores = provModel.traerTodos();
+//        proveedores = provModel.listar();
         mensajeProveedores = "Cargados";
     }
 
@@ -1335,7 +1335,7 @@ public class BienController extends BaseController{
         try {
 
             proveedores = new ArrayList<PersonaEntity>();
-            proveedores = provModel.filtroProveedores(provIdentificacion, provNombre);
+ //           proveedores = provModel.filtroProveedores(provIdentificacion, provNombre);
 
             mensajeProveedores = "Filtros Busqueda";
         } catch (Exception err) {

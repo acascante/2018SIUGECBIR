@@ -24,12 +24,11 @@ public class MonedaModel {
     @Resource
     private MonedaDao monedaDao;
 
-    public Moneda obtenerValor(String pCodCateg) throws FWExcepcion {
-        return monedaDao.traerPorId(pCodCateg);
+    public List<Moneda> listar() throws FWExcepcion {
+        return monedaDao.listar();
     }
-
-    public List<Moneda> traerTodo() throws FWExcepcion {
-        return monedaDao.traerTodo();
+    
+    public Moneda buscarPorId(Long id) throws FWExcepcion {
+        return monedaDao.buscarPorId(id);
     }
-
 }

@@ -8,7 +8,7 @@ package cr.ac.ucr.sigebi.daos;
 import cr.ac.ucr.framework.daoHibernate.DaoHelper;
 import cr.ac.ucr.framework.daoImpl.GenericDaoImpl;
 import cr.ac.ucr.framework.utils.FWExcepcion;
-import cr.ac.ucr.sigebi.domain.Moneda;
+import cr.ac.ucr.sigebi.domain.SubClasificacion;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -20,24 +20,24 @@ import org.springframework.transaction.annotation.Transactional;
  *
  * @author jorge.serrano
  */
-@Repository(value = "MonedaDao")
+@Repository(value = "subClasificacionDao")
 @Scope("request")
-public class MonedaDao extends GenericDaoImpl {
-
+public class SubClasificacionDao extends GenericDaoImpl{
+    
     @Autowired
     private DaoHelper dao;
 
     @Transactional(readOnly = true)
-    public List<Moneda> listar() throws FWExcepcion {
+    public List<SubClasificacion> listar() throws FWExcepcion {
         try {
-            return dao.getHibernateTemplate().find("from Moneda"); 
+            return dao.getHibernateTemplate().find("from SubClasificacion"); 
         } catch (DataAccessException e) {
             throw new FWExcepcion("sigebi.error.notificacionDao.listar", "Error obtener los registros de tipo " + this.getClass(), e.getCause());
         }
     }
     
     @Transactional(readOnly = true)
-    public Moneda buscarPorId(Long id) throws FWExcepcion {
-        return load(Moneda.class, id);
+    public SubClasificacion buscarPorId(Long id) throws FWExcepcion {
+        return load(SubClasificacion.class, id);
     }
 }

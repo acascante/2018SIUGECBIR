@@ -34,7 +34,7 @@ public class BienDao extends GenericDaoImpl {
     private DaoHelper dao;
     
     @Resource
-    FaltaSubClasificacionDao subClasDao;
+    SubClasificacionDao subClasDao;
     
     @Resource
     ClasificacionDao clasfDao;

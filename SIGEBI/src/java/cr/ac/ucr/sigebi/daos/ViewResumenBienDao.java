@@ -46,7 +46,6 @@ public class ViewResumenBienDao extends GenericDaoImpl {
             String sql = "SELECT carac FROM ViewResumenBien carac WHERE carac.id = :id";
             Query query = session.createQuery(sql);
             query.setParameter("id", id);
-
             return (ViewResumenBien) query.uniqueResult();
         } catch (HibernateException e) {
             throw new FWExcepcion("sigebi.error.notificacionDao.listar", "Error obtener los registros de tipo " + this.getClass(), e.getCause());
@@ -54,5 +53,4 @@ public class ViewResumenBienDao extends GenericDaoImpl {
             session.close();
         }
     }
-
 }

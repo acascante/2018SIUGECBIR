@@ -4,18 +4,15 @@
  * and open the template in the editor.
  */
 package cr.ac.ucr.sigebi.models;
-//ref para usar otras clases
 
-//manejo de excepciones
 import cr.ac.ucr.sigebi.daos.TipoDao;
 import cr.ac.ucr.framework.utils.FWExcepcion;
 import cr.ac.ucr.sigebi.domain.Tipo;
-/*ref para usar anotaciones*/
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
-/*utilidades*/
 import java.util.List;
+
 /**
  *
  * @author oscar_acuna

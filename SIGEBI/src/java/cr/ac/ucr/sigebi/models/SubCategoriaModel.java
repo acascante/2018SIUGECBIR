@@ -6,9 +6,8 @@
 package cr.ac.ucr.sigebi.models;
 
 import cr.ac.ucr.framework.utils.FWExcepcion;
-import cr.ac.ucr.sigebi.daos.FaltaSubCategoriaDao;
-import cr.ac.ucr.sigebi.entities.ClasificacionEntity;
-import cr.ac.ucr.sigebi.entities.SubCategoriaEntity;
+import cr.ac.ucr.sigebi.daos.SubCategoriaDao;
+import cr.ac.ucr.sigebi.domain.SubCategoria;
 import java.util.List;
 import javax.annotation.Resource;
 import org.springframework.context.annotation.Scope;
@@ -23,37 +22,13 @@ import org.springframework.stereotype.Service;
 public class SubCategoriaModel {
     
     @Resource
-    private FaltaSubCategoriaDao subCategoriaDao;
+    private SubCategoriaDao subCategoriaDao;
 
-    
-    public SubCategoriaEntity obtenerValor(String codCateg, String codSubCateg) {
-        SubCategoriaEntity respAux = new SubCategoriaEntity();
-        try {
-            respAux = subCategoriaDao.traerPorId(codCateg, codSubCateg);
-
-        } catch (FWExcepcion e) {
-            throw e;
-        } catch (Exception ex) {
-            throw new FWExcepcion("sigebi.error.obteneClasificacion",
-                    "Error obtener los datos de un tipo, error generado en la clase " + this.getClass()
-                    + " en el método obtenerTipo(Integer pIdTipo)", ex);
-        }
-        return respAux;
+    public List<SubCategoria> listar() throws FWExcepcion {
+        return subCategoriaDao.listar();
     }
     
-    public List<SubCategoriaEntity> traerTodo(String codCat){
-    
-    try {
-            return subCategoriaDao.traerTodo(codCat);
-
-        } catch (FWExcepcion e) {
-            throw e;
-        } catch (Exception ex) {
-            throw new FWExcepcion("sigebi.error.obtenerTodoCategoria",
-                    "Error obtener los datos de un tipo, error generado en la clase " + this.getClass()
-                    + " en el método obtenerTipo(Integer pIdTipo)", ex);
-        }
+    public SubCategoria buscarPorId(Long id) throws FWExcepcion {
+        return subCategoriaDao.buscarPorId(id);
     }
-    
-    
 }

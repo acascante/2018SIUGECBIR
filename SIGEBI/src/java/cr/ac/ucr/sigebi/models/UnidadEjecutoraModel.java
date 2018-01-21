@@ -24,12 +24,16 @@ public class UnidadEjecutoraModel {
     @Resource
     private UnidadEjecutoraDao unidadDao;
 
-    public UnidadEjecutora traerPorId(Long id) throws FWExcepcion{
-        return unidadDao.traerPorId(id);
+    
+    public List<UnidadEjecutora> listar() throws FWExcepcion{
+        return unidadDao.listar();
     }
 
-    public List<UnidadEjecutora> listarUnidades(String idUnidad, String nombUnidad) throws FWExcepcion{
-        return unidadDao.listarUnidades(idUnidad, nombUnidad);
+    public List<UnidadEjecutora> listar(String idUnidad, String nombreUnidad) throws FWExcepcion{
+        return unidadDao.listar(idUnidad, nombreUnidad);
     }
-
+    
+    public UnidadEjecutora buscarPorId(Long id) throws FWExcepcion{
+        return unidadDao.buscarPorId(id);
+    }
 }

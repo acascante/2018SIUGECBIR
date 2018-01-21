@@ -20,6 +20,11 @@ import javax.persistence.Table;
 @Table(name = "SIGEBI_OAF.V_SIGB_PROVEEDOR")
 public class Proveedor extends ObjetoBase implements Serializable{
     
+    /**
+     * TODO -- Verificar de donde se debe obtener el nombre y datos del proveedor
+     * 
+     */
+     
     //<editor-fold defaultstate="collapsed" desc="Atributos">
     @Id
     @Column(name = "ID")

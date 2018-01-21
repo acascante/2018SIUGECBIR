@@ -368,7 +368,7 @@ public class GestionProcesosController extends BaseController {
             SegUsuario usuario = (SegUsuario) pEvent.getComponent().getAttributes().get("usuarioSelApro");
             Usuario usr = usuarioModel.buscarPorId(usuario.getIdUsuario());
 
-            UnidadEjecutora unidadEjecutora = unidadEjecutoraModel.traerPorId(unidadEjecutoraId);
+            UnidadEjecutora unidadEjecutora = unidadEjecutoraModel.buscarPorId(unidadEjecutoraId);
 
             //Se incluye el usuario al rol
             AutorizacionRolPersona autorizacionRolPersona = new AutorizacionRolPersona();

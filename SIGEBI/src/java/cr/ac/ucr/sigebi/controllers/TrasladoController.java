@@ -280,7 +280,7 @@ public class TrasladoController extends ListadoBienesGeneralController {
             ubicacionVisible = false;
             unidadDestino = new UnidadEjecutora();
 
-            unidadOrigen = unidadModel.traerPorId(unidadEjecutoraId);
+            unidadOrigen = unidadModel.buscarPorId(unidadEjecutoraId);
             formatter = new SimpleDateFormat("dd/MM/yyyy");
             //Date actaFecha = formatter.parse(formatter.format(traslado.getFecha()));
             fechaRegistro = formatter.format(traslado.getFecha());
@@ -915,7 +915,7 @@ public class TrasladoController extends ListadoBienesGeneralController {
     private void buscarUnidades() {
         try {
             unidadesEjecutoras = new ArrayList<UnidadEjecutora>();
-            unidadesEjecutoras = unidadModel.listarUnidades(fltIdUnidad.toUpperCase(), fltNombreUnidad.toUpperCase());
+            unidadesEjecutoras = unidadModel.listar(fltIdUnidad.toUpperCase(), fltNombreUnidad.toUpperCase());
             //Mensaje.agregarInfo(unidadesEjecutoras.size()+ " unidades encontradas ");
         } catch (Exception err) {
             Mensaje.agregarErrorFatal(err.getMessage());

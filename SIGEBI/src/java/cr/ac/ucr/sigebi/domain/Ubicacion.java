@@ -26,6 +26,10 @@ import javax.persistence.Table;
 @SequenceGenerator(name = "SGB_SQ_UBICACION", sequenceName = "SIGEBI_OAF.SGB_SQ_UBICACION", initialValue = 1, allocationSize = 1)
 public class Ubicacion extends ObjetoBase implements Serializable {
 
+    /**
+     * TODO -- Verificar si la ubicacion debe tener un objeto UbicacionPadre que es de tipo Ubicacion
+     * 
+     */
     //<editor-fold defaultstate="collapsed" desc="Atributos">
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SGB_SQ_UBICACION")

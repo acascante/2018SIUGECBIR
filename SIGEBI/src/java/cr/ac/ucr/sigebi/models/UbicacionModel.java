@@ -22,13 +22,21 @@ import org.springframework.stereotype.Service;
 public class UbicacionModel {
 
     @Resource
-    private UbicacionDao ubicDao;
+    private UbicacionDao ubicacionDao;
 
-    public Ubicacion obtenerValor(Integer id) throws FWExcepcion {
-        return ubicDao.traerPorId(id);
+    public List<Ubicacion> listar() throws FWExcepcion {
+        return ubicacionDao.listar();
+    }
+    
+    public Ubicacion buscarPorId(Long id) throws FWExcepcion {
+        return ubicacionDao.buscarPorId(id);
+    }
+    
+    public void almacenar(Ubicacion ubicacion) throws FWExcepcion {
+        ubicacionDao.almacenar(ubicacion);
     }
 
-    public List<Ubicacion> traerTodo() {
-        return ubicDao.traerTodo();
+    public void eliminar(Ubicacion ubicacion)throws FWExcepcion {
+        ubicacionDao.eliminar(ubicacion);
     }
 }

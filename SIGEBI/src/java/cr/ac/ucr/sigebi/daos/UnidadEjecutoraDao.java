@@ -15,6 +15,7 @@ import org.hibernate.Query;
 import org.hibernate.Session;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
+import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,36 +31,42 @@ public class UnidadEjecutoraDao extends GenericDaoImpl {
     private DaoHelper dao;
 
     @Transactional(readOnly = true)
-    public UnidadEjecutora traerPorId(Long id) throws FWExcepcion{
+    public List<UnidadEjecutora> listar() throws FWExcepcion {
+        try {
+            return dao.getHibernateTemplate().find("from UnidadEjecutora"); 
+        } catch (DataAccessException e) {
+            throw new FWExcepcion("sigebi.error.notificacionDao.listar", "Error obtener los registros de tipo " + this.getClass(), e.getCause());
+        }
+    }
+    
+    @Transactional(readOnly = true)
+    public List<UnidadEjecutora> listar(String idUnidad, String nombreUnidad) throws FWExcepcion{
+        Session session = dao.getSessionFactory().openSession();
+        try {
+            StringBuilder sql = new StringBuilder ("SELECT obj FROM UnidadEjecutora obj WHERE TO_CHAR(obj.id) LIKE :idUnidad");
+            sql.append("AND UPPER(obj.descripcion) LIKE :nombreUnidad");
+            Query query = session.createQuery(sql.toString());
+            query.setParameter("idUnidad", idUnidad);
+            query.setParameter("nombreUnidad", nombreUnidad);
+
+            return (List<UnidadEjecutora>) query.list();
+        } catch (HibernateException e) {
+            throw new FWExcepcion("sigebi.error.unidadEejecutora.dao.listarUnidades", "Error obtener los registros de tipo " + this.getClass(), e.getCause());
+        } finally {
+            session.close();
+        }
+    }
+    
+    @Transactional(readOnly = true)
+    public UnidadEjecutora buscarPorId(Long id) throws FWExcepcion{
         Session session = this.dao.getSessionFactory().openSession();
         try {
             String sql = "SELECT obj FROM UnidadEjecutora obj WHERE obj.id = :id";
             Query query = session.createQuery(sql);
             query.setParameter("id", id);
-
-            //Se obtienen los resutltados
             return (UnidadEjecutora) query.list().get(0);
-
         } catch (HibernateException e) {
             throw new FWExcepcion("sigebi.error.unidadEejecutora.dao.traerPorId", "Error obtener el registro de tipo " + this.getClass(), e.getCause());
-        } finally {
-            session.close();
-        }
-    }
-
-    @Transactional(readOnly = true)
-    public List<UnidadEjecutora> listarUnidades(String idUnidad, String nombUnidad) throws FWExcepcion{
-        Session session = dao.getSessionFactory().openSession();
-        try {
-            String sql = "SELECT obj FROM UnidadEjecutora obj WHERE TO_CHAR(obj.id) LIKE '%" + idUnidad + "%'";
-            sql = sql + " AND UPPER(obj.descripcion) LIKE '%" + nombUnidad + "%'";
-            Query query = session.createQuery(sql);
-            query.setParameter("idUnidad", idUnidad);
-            query.setParameter("nombUnidad", nombUnidad);
-
-            return (List<UnidadEjecutora>) query.list();
-        } catch (HibernateException e) {
-            throw new FWExcepcion("sigebi.error.unidadEejecutora.dao.listarUnidades", "Error obtener los registros de tipo " + this.getClass(), e.getCause());
         } finally {
             session.close();
         }
