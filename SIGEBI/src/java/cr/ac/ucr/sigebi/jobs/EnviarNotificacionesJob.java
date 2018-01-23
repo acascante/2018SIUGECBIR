@@ -37,7 +37,7 @@ public class EnviarNotificacionesJob implements Job {
         try {
             LOG.info("Inicio proceso de envio automatico de notificaciones " + SDF.format(new Date()));
             Calendar calendar = Calendar.getInstance();
-            List<Notificacion> notificaciones = notificacionModel.listar(calendar.getTime(), Constantes.DOMINI0_NOTIFICACION, Constantes.ESTADO_NOTIFICACION_CREADA, Constantes.ESTADO_NOTIFICACION_ENVIO_FALLIDO);
+            List<Notificacion> notificaciones = notificacionModel.listar(calendar.getTime(), Constantes.DOMINIO_NOTIFICACION, Constantes.ESTADO_NOTIFICACION_CREADA, Constantes.ESTADO_NOTIFICACION_ENVIO_FALLIDO);
             for (Notificacion notificacion : notificaciones) {
                 notificacionModel.enviarCorreo(notificacion);
                 LOG.info("-- ID: " + notificacion.getIdNotificacion() + " -- Correo: " + notificacion.getDestinatario());

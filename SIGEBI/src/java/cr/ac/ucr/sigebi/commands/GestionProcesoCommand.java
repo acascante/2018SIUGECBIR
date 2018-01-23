@@ -139,7 +139,7 @@ public class GestionProcesoCommand {
     }
 
     public Boolean getPresentarPanelAgregarRol() {
-        return this.presentarPanel && this.accion.equals(Constantes.ACCION_PROCESO_AGREGA_ROl);
+        return this.presentarPanel && this.accion.equals(Constantes.ACCION_PROCESO_AGREGA_ROL);
     }
 
     public Boolean getPresentarPanelModificarRol() {

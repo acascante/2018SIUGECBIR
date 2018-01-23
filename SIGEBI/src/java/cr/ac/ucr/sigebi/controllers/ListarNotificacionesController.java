@@ -64,7 +64,7 @@ public class ListarNotificacionesController extends BaseController {
         this.listarNotificaciones();
         this.vistaOrigen = Constantes.VISTA_NOTIFICACION_LISTADO;
         
-        List<Estado> listEstados = estadoModel.listarPorDominio(Constantes.DOMINI0_NOTIFICACION);
+        List<Estado> listEstados = estadoModel.listarPorDominio(Constantes.DOMINIO_NOTIFICACION);
         if (!listEstados.isEmpty()) {
             estados = new HashMap<Integer, Estado>();
             itemsEstado = new ArrayList<SelectItem>();

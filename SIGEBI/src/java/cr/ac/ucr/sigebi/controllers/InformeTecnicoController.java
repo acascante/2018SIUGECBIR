@@ -221,10 +221,10 @@ public class InformeTecnicoController extends BaseController{
           //FIXME Jairo se deve verificar la consulta
           usr = usuarioModel.buscarPorId(lVistaUsuario.getgUsuarioActual().getIdUsuario());
           //Se consultan los tipos por dominio
-          tipos = tipoModel.listarPorDominio(Constantes.DOMINI0_TIPO_INFORME_TECNICO);
+          tipos = tipoModel.listarPorDominio(Constantes.DOMINIO_INFORME_TECNICO);
           tipoOptions = new ArrayList<SelectItem>();
           for (Tipo item : tipos) {
-              tipoOptions.add(new SelectItem(item.getIdTipo().toString(), item.getNombre()));
+              tipoOptions.add(new SelectItem(item.getId().toString(), item.getNombre()));
           }    
       }
     
@@ -283,7 +283,7 @@ public class InformeTecnicoController extends BaseController{
             
             //Se obtiene el documento a modificar
             DocumentoRolEstadoEntity documento = (DocumentoRolEstadoEntity) pEvent.getComponent().getAttributes().get("documentoSelApro");            
-            documento.setIdEstado(estadoModel.buscarPorDominioEstado(Constantes.DOMINI0_ESTADO_INFORME_TECNICO, Constantes.ESTADO_INFORME_TECNICO_APROBADO));
+            documento.setIdEstado(estadoModel.buscarPorDominioEstado(Constantes.DOMINIO_INFORME_TECNICO, Constantes.ESTADO_INFORME_TECNICO_APROBADO));
             documento.setFecha(new Date());
             
             //FIXME Jairo Verificar el usuario que se esta asignando
@@ -314,7 +314,7 @@ public class InformeTecnicoController extends BaseController{
             
             //Se obtiene el documento a modificar
             DocumentoRolEstadoEntity documento = (DocumentoRolEstadoEntity) pEvent.getComponent().getAttributes().get("documentoSelRech");            
-            documento.setIdEstado(estadoModel.buscarPorDominioEstado(Constantes.DOMINI0_ESTADO_INFORME_TECNICO, Constantes.ESTADO_INFORME_TECNICO_RECHAZADO));
+            documento.setIdEstado(estadoModel.buscarPorDominioEstado(Constantes.DOMINIO_INFORME_TECNICO, Constantes.ESTADO_INFORME_TECNICO_RECHAZADO));
             documento.setFecha(new Date());
             
             //FIXME Jairo verificar el usuario que se esta asignando
@@ -365,11 +365,11 @@ public class InformeTecnicoController extends BaseController{
             }
 
             if(aprobar){
-                informe.setIdEstado(estadoModel.buscarPorDominioEstado(Constantes.DOMINI0_ESTADO_INFORME_TECNICO, Constantes.ESTADO_INFORME_TECNICO_APROBADO));
+                informe.setIdEstado(estadoModel.buscarPorDominioEstado(Constantes.DOMINIO_INFORME_TECNICO, Constantes.ESTADO_INFORME_TECNICO_APROBADO));
                 informeTecnicoModel.modificar(informe);
             }
             if(rechazar){
-                informe.setIdEstado(estadoModel.buscarPorDominioEstado(Constantes.DOMINI0_ESTADO_INFORME_TECNICO, Constantes.ESTADO_INFORME_TECNICO_RECHAZADO));
+                informe.setIdEstado(estadoModel.buscarPorDominioEstado(Constantes.DOMINIO_INFORME_TECNICO, Constantes.ESTADO_INFORME_TECNICO_RECHAZADO));
                 informeTecnicoModel.modificar(informe);
             }    
 
@@ -397,10 +397,10 @@ public class InformeTecnicoController extends BaseController{
                 Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.error.informeTecnicoController.adjunto.requerido"));
             }else {
                 AdjuntoEntity adjunto = new AdjuntoEntity();
-                adjunto.setIdEstado(estadoModel.buscarPorDominioEstado(Constantes.DOMINI0_ESTADO_GENERAL, Constantes.ESTADO_GENERAL_ACTIVO));
+                adjunto.setIdEstado(estadoModel.buscarPorDominioEstado(Constantes.DOMINIO_GENERAL, Constantes.ESTADO_GENERAL_ACTIVO));
                 adjunto.setIdReferencia(informe.getIdInformeTecnico());                
-                //adjunto.setIdTipo(tipoModel.buscarPorDominioTipo(Constantes.DOMINI0_TIPO_ADJUNTO, Constantes.TIPO_ADJUNTO_INFORME_TECNICO));
-                //adjunto.setIdTipoDocumento(tipoModel.buscarPorDominioTipo(Constantes.DOMINI0_TIPO_DOCUMENTO, Constantes.TIPO_DOCUMENTO_INFORME_TECNICO));
+                //adjunto.setIdTipo(tipoModel.buscarPorDominioTipo(Constantes.DOMINIO_TIPO_ADJUNTO, Constantes.TIPO_ADJUNTO_INFORME_TECNICO));
+                //adjunto.setIdTipoDocumento(tipoModel.buscarPorDominioTipo(Constantes.DOMINIO_TIPO_DOCUMENTO, Constantes.TIPO_DOCUMENTO_INFORME_TECNICO));
                 adjunto.setUrl("upload/informesTecnicos/" + fileInfo.getFileName());
                 if(detalleAdjunto != null && detalleAdjunto.length() > 0){
                    adjunto.setDetalle(detalleAdjunto);
@@ -461,7 +461,7 @@ public class InformeTecnicoController extends BaseController{
                 //Si existe alguna aprobacion en tramite se debe eliminar ya que se cambiaron los valores
                 if(aprobacionEnTramite){
                     aprobacionEnTramite = false; 
-                    Estado estadoPendiente = estadoModel.buscarPorDominioEstado(Constantes.DOMINI0_ESTADO_INFORME_TECNICO, Constantes.ESTADO_INFORME_TECNICO_PROCESO);
+                    Estado estadoPendiente = estadoModel.buscarPorDominioEstado(Constantes.DOMINIO_INFORME_TECNICO, Constantes.ESTADO_INFORME_TECNICO_PROCESO);
                     for(DocumentoRolEstadoEntity documento : documentosPorRol){
                         if(!documento.getIdEstado().getValor().equals(Constantes.ESTADO_INFORME_TECNICO_PROCESO)){
                             documento.setIdEstado(estadoPendiente);
@@ -494,7 +494,7 @@ public class InformeTecnicoController extends BaseController{
             Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.error.informeTecnicoController.evaluacion.requerido"));
             return false;
         }
-        if (informe.getIdTipo() == null || informe.getIdTipo().getIdTipo() <= 0 ) {
+        if (informe.getIdTipo() == null || informe.getIdTipo().getId() <= 0 ) {
             Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.error.informeTecnicoController.tipo.requerido"));
             return false;
         }

@@ -4,9 +4,9 @@
  * and open the template in the editor.
  */
 package cr.ac.ucr.sigebi.daos;
-elper;
+
+import cr.ac.ucr.framework.daoHibernate.DaoHelper;
 import cr.ac.ucr.framework.daoImpl.GenericDaoImpl;
-import cr.ac.ucr.framework.daoHibernate.DaoH
 import cr.ac.ucr.framework.utils.FWExcepcion;
 import cr.ac.ucr.sigebi.domain.SubClasificacion;
 import java.util.List;

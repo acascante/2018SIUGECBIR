@@ -16,7 +16,7 @@ import javax.persistence.Table;
  *
  * @author jairo.cisneros
  */
-    @Entity(name = "Moneda")
+@Entity(name = "Moneda")
 @Table(name = "SIGEBI_OAF.V_SIGB_MONEDA")
 public class Moneda extends ObjetoBase implements Serializable {
 

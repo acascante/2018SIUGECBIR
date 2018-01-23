@@ -12,11 +12,15 @@ import cr.ac.ucr.sigebi.domain.BienCaracteristica;
 import cr.ac.ucr.sigebi.domain.Tipo;
 import java.util.List;
 import javax.annotation.Resource;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Service;
 
 /**
  *
  * @author alvaro.cascante
  */
+@Service(value = "bienCaracteristicaModel")
+@Scope("request")
 public class BienCaracteristicaModel {
     
     @Resource

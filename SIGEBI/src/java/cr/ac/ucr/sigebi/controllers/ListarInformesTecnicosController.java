@@ -164,17 +164,17 @@ public class ListarInformesTecnicosController extends BaseController {
     public final void inicializar() {
 
         //Se consultan los estados por dominio
-        estados = estadoModel.listarPorDominio(Constantes.DOMINI0_ESTADO_INFORME_TECNICO);        
+        estados = estadoModel.listarPorDominio(Constantes.DOMINIO_INFORME_TECNICO);        
         estadosOptions = new ArrayList<SelectItem>();
         for (Estado item : estados) {
             estadosOptions.add(new SelectItem(item.getId().toString(), item.getNombre()));
         }
 
         //Se consultan los tipos por dominio
-        tipos = tipoModel.listarPorDominio(Constantes.DOMINI0_TIPO_INFORME_TECNICO);
+        tipos = tipoModel.listarPorDominio(Constantes.DOMINIO_INFORME_TECNICO);
         tipoOptions = new ArrayList<SelectItem>();
         for (Tipo item : tipos) {
-            tipoOptions.add(new SelectItem(item.getIdTipo().toString(), item.getNombre()));
+            tipoOptions.add(new SelectItem(item.getId().toString(), item.getNombre()));
         }
         
         // Se cuenta la cantidad de informes

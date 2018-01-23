@@ -10,8 +10,6 @@ import cr.ac.ucr.sigebi.daos.FaltaInformeTecnicoDao;
 import cr.ac.ucr.sigebi.domain.AutorizacionRol;
 import cr.ac.ucr.sigebi.domain.Bien;
 import cr.ac.ucr.sigebi.domain.Estado;
-import cr.ac.ucr.sigebi.entities.DocumentoRolEntity;
-import cr.ac.ucr.sigebi.entities.DocumentoRolEstadoEntity;
 import cr.ac.ucr.sigebi.entities.InformeTecnicoEntity;
 import cr.ac.ucr.sigebi.utils.Constantes;
 import java.util.ArrayList;
@@ -51,8 +49,8 @@ public class InformeTecnicoModel {
     public void agregarAprobacionSolicitudExclusion(ArrayList<Bien> bienes){
         InformeTecnicoEntity informe = null;
         List<AutorizacionRol> documentos = documentoRolModel.buscarPorAutorizacion(Constantes.ID_DOCUMENTO_INFORME_TECNICO);
-        Estado estadoInfome = estadoModel.buscarPorDominioEstado(Constantes.DOMINI0_ESTADO_INFORME_TECNICO, Constantes.ESTADO_INFORME_TECNICO_NUEVO);
-        Estado estadoDocumento = estadoModel.buscarPorDominioEstado(Constantes.DOMINI0_ESTADO_INFORME_TECNICO, Constantes.ESTADO_INFORME_TECNICO_PROCESO);
+        Estado estadoInfome = estadoModel.buscarPorDominioEstado(Constantes.DOMINIO_INFORME_TECNICO, Constantes.ESTADO_INFORME_TECNICO_NUEVO);
+        Estado estadoDocumento = estadoModel.buscarPorDominioEstado(Constantes.DOMINIO_INFORME_TECNICO, Constantes.ESTADO_INFORME_TECNICO_PROCESO);
         
         for (Bien bien : bienes) {
             

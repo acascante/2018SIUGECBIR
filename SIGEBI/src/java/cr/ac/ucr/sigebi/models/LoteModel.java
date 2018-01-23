@@ -6,8 +6,8 @@
 package cr.ac.ucr.sigebi.models;
 
 import cr.ac.ucr.framework.utils.FWExcepcion;
-import cr.ac.ucr.sigebi.daos.ViewResumenBienDao;
-import cr.ac.ucr.sigebi.domain.ViewResumenBien;
+import cr.ac.ucr.sigebi.daos.LoteDao;
+import cr.ac.ucr.sigebi.domain.Lote;
 import java.util.List;
 import javax.annotation.Resource;
 import org.springframework.context.annotation.Scope;
@@ -15,20 +15,20 @@ import org.springframework.stereotype.Service;
 
 /**
  *
- * @author alvaro.cascante
+ * @author aocc
  */
-@Service(value = "viewResumenBienModel")
+@Service(value = "loteModel")
 @Scope("request")
-public class ViewResumenBienModel {
+public class LoteModel {
     
     @Resource
-    private ViewResumenBienDao viewResumenBienDao;
-    
-    public List<ViewResumenBien> listar() throws FWExcepcion {
-        return viewResumenBienDao.listar();
+    private LoteDao monedaDao;
+
+    public List<Lote> listar() throws FWExcepcion {
+        return monedaDao.listar();
     }
     
-    public ViewResumenBien buscarPorId(Long id) throws FWExcepcion {
-        return viewResumenBienDao.buscarPorId(id);
+    public Lote buscarPorId(Long id) throws FWExcepcion {
+        return monedaDao.buscarPorId(id);
     }
 }

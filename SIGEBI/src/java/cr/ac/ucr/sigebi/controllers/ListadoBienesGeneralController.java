@@ -179,7 +179,7 @@ public class ListadoBienesGeneralController extends BaseController{
         
         //Cargar Estados Filtros
         List<Estado> estados = new ArrayList<Estado>();
-        estados = estadoModel.listarPorDominio(Constantes.DOMINI0_ESTADO_BIEN);
+        estados = estadoModel.listarPorDominio(Constantes.DOMINIO_BIEN);
         estadosOptions = new ArrayList<SelectItem>();
         for (Estado item : estados) {
             estadosOptions.add(new SelectItem(item.getId().toString(), item.getNombre()));

@@ -23,13 +23,17 @@ public class ClasificacionModel {
 
     @Resource
     private ClasificacionDao clasificacionDao;
-
-    public Clasificacion traerPorId(String idClasificacion) throws FWExcepcion {
-        return clasificacionDao.traerPorId(idClasificacion);
+    
+    public List<Clasificacion> listar() throws FWExcepcion {
+        return clasificacionDao.listar();
+        
     }
 
-    public List<Clasificacion> traerTodo(String codSubCateg) {
-        return clasificacionDao.listarPorCodigoSubCategoria(codSubCateg);
+    public Clasificacion buscarPorId(Long id) throws FWExcepcion {
+        return clasificacionDao.buscarPorId(id);
     }
 
+    public List<Clasificacion> listarPorCodigoSubCategoria(String codigoSubCategoria) throws FWExcepcion {
+        return clasificacionDao.listarPorCodigoSubCategoria(codigoSubCategoria);
+    }
 }

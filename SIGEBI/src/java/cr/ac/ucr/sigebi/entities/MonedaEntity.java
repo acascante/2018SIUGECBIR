@@ -5,6 +5,7 @@
  */
 package cr.ac.ucr.sigebi.entities;
 
+import cr.ac.ucr.sigebi.domain.Categoria;
 import cr.ac.ucr.framework.seguridad.ObjetoBase;
 import java.io.Serializable;
 import javax.persistence.Basic;
@@ -133,7 +134,7 @@ public class MonedaEntity  extends ObjetoBase implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof CategEntity)) {
+        if (!(object instanceof Categoria)) {
             return false;
         }
         MonedaEntity other = (MonedaEntity) object;

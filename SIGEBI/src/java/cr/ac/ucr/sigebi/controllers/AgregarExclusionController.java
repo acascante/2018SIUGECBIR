@@ -67,7 +67,7 @@ public class AgregarExclusionController extends ListarBienesController {
             String messageValidacion = validarForm(root, component);
             if (Constantes.OK.equals(messageValidacion)) {
                 //TODO verificar estado de exclusion, y estados de detalles de exclusion
-                command.setEstado(estadoModel.buscarPorDominioNombre(Constantes.DOMINI0_EXCLUSION, Constantes.ESTADO_EXCLUSION_CREADA_DESC));
+                command.setEstado(estadoModel.buscarPorDominioNombre(Constantes.DOMINIO_EXCLUSION, Constantes.ESTADO_EXCLUSION_CREADA_DESC));
                 exclusionModel.salvar(command.getExclusion(command.getEstado()));
                 //TODO Actualizar bienes con nuevo estado en Solicitud de SolicitudExclusion
                 if (command.getIdExclusion() == null || command.getIdExclusion() == 0) {

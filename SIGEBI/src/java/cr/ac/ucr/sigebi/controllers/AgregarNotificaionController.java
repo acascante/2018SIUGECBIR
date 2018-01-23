@@ -68,7 +68,7 @@ public class AgregarNotificaionController {
             UIInput component =  new UIInput();
             String messageValidacion = validarForm(root, component);
             if (Constantes.OK.equals(messageValidacion)) {
-                command.setEstado(estadoModel.buscarPorDominioNombre(Constantes.DOMINI0_NOTIFICACION, Constantes.ESTADO_NOTIFICACION_CREADA_DESC));
+                command.setEstado(estadoModel.buscarPorDominioNombre(Constantes.DOMINIO_NOTIFICACION, Constantes.ESTADO_NOTIFICACION_CREADA_DESC));
                 if (command.getIdNotificacion() == null || command.getIdNotificacion() == 0) {
                     notificacionModel.salvar(command.getNotificacion());
                     mensajeExito = "Los datos se salvaron con éxito.";

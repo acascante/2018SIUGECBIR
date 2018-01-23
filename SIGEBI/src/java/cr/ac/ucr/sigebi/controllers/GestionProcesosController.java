@@ -209,10 +209,10 @@ public class GestionProcesosController extends BaseController {
     public final void inicializar() {
 
         //Se consultan los tipos por dominio, procesos
-        List<Tipo> lista = tipoModel.listarPorDominio(Constantes.DOMINI0_TIPO_PROCESO);
+        List<Tipo> lista = tipoModel.listarPorDominio(Constantes.DOMINIO_PROCESO);
         tiposProceso = new ArrayList<SelectItem>();
         for (Tipo item : lista) {
-            tiposProceso.add(new SelectItem(item.getIdTipo().toString(), item.getNombre()));
+            tiposProceso.add(new SelectItem(item.getId().toString(), item.getNombre()));
         }
 
         //Se consultan los roles de la aplicacion
@@ -600,7 +600,7 @@ public class GestionProcesosController extends BaseController {
         try {
             Autorizacion autorizacion = command.getAutorizacion();
             autorizacion.setTipoProceso(tipoModel.buscarPorId(command.getIdTipoProceso()));
-            autorizacion.setEstado(estadoModel.buscarPorDominioEstado(Constantes.DOMINI0_ESTADO_GENERAL, Constantes.ESTADO_GENERAL_ACTIVO));
+            autorizacion.setEstado(estadoModel.buscarPorDominioEstado(Constantes.DOMINIO_GENERAL, Constantes.ESTADO_GENERAL_ACTIVO));
             if (validarFormAutorizacion()) {
                 autorizacionModel.agregar(autorizacion);
                 autorizacionesTipoProceso.add(new SelectItem(autorizacion.getId().toString(), autorizacion.getNombre()));
@@ -721,7 +721,7 @@ public class GestionProcesosController extends BaseController {
     public void agregarRol() {
         try {
             Rol rol = command.getRol();
-            rol.setEstado(estadoModel.buscarPorDominioEstado(Constantes.DOMINI0_ESTADO_GENERAL, Constantes.ESTADO_GENERAL_ACTIVO));
+            rol.setEstado(estadoModel.buscarPorDominioEstado(Constantes.DOMINIO_GENERAL, Constantes.ESTADO_GENERAL_ACTIVO));
             if (validarFormRol()) {
                 rolModel.agregar(rol);
                 roles.add(new SelectItem(rol.getId(), rol.getNombre()));

@@ -21,7 +21,7 @@ import cr.ac.ucr.sigebi.entities.PersonaEntity;
 import cr.ac.ucr.sigebi.models.AccesorioModel;
 import cr.ac.ucr.sigebi.models.AdjuntoBienModel;
 import cr.ac.ucr.sigebi.models.BienModel;
-import cr.ac.ucr.sigebi.models.CategModel;
+import cr.ac.ucr.sigebi.models.CategoriaModel;
 import cr.ac.ucr.sigebi.models.ClasificacionModel;
 import cr.ac.ucr.sigebi.models.EstadoModel;
 import cr.ac.ucr.sigebi.models.MonedaModel;
@@ -102,7 +102,7 @@ public class BienController_Adicional extends BaseController{
     
     //<editor-fold defaultstate="collapsed" desc="Acceso a Datos">
     @Resource
-    private CategModel categoriaMod;
+    private CategoriaModel categoriaMod;
 
     @Resource
     private ClasificacionModel clasifMod;
@@ -465,7 +465,7 @@ public class BienController_Adicional extends BaseController{
         BienCaracteristica registro = new BienCaracteristica();
 
         Tipo caract = new Tipo();
-        caract.setIdTipo(Integer.parseInt(selectCaracteristica));
+        caract.setId(Integer.parseInt(selectCaracteristica));
 
         //FIXME
         registro.setId(bien.getId());

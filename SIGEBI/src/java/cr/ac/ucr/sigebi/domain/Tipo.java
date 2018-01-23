@@ -43,11 +43,11 @@ public class Tipo extends ObjetoBase implements Serializable {
     //</editor-fold>
 
     //<editor-fold defaultstate="collapsed" desc="GET's y SET's">
-    public Integer getIdTipo() {
+    public Integer getId() {
         return id;
     }
 
-    public void setIdTipo(Integer id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 

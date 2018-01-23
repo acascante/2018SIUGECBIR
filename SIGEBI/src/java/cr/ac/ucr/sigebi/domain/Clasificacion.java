@@ -36,7 +36,7 @@ public class Clasificacion extends ObjetoBase implements Serializable {
     private String nombre;
     
     @Column(name = "CODIGO_SUB_CATEGORIA")
-    private String codSubCategoria;
+    private String codigoSubCategoria;
     
     @ManyToOne
     @JoinColumn(name = "ID_ESTADO", referencedColumnName = "ID_ESTADO")
@@ -60,12 +60,12 @@ public class Clasificacion extends ObjetoBase implements Serializable {
         this.nombre = nombre;
     }
 
-    public String getCodSubCategoria() {
-        return codSubCategoria;
+    public String getCodigoSubCategoria() {
+        return codigoSubCategoria;
     }
 
-    public void setCodSubCategoria(String codSubCategoria) {
-        this.codSubCategoria = codSubCategoria;
+    public void setCodigoSubCategoria(String codigoSubCategoria) {
+        this.codigoSubCategoria = codigoSubCategoria;
     }
 
     public Estado getEstado() {
@@ -83,7 +83,7 @@ public class Clasificacion extends ObjetoBase implements Serializable {
         int hash = 7;
         hash = 67 * hash + (this.id != null ? this.id.hashCode() : 0);
         hash = 67 * hash + (this.nombre != null ? this.nombre.hashCode() : 0);
-        hash = 67 * hash + (this.codSubCategoria != null ? this.codSubCategoria.hashCode() : 0);
+        hash = 67 * hash + (this.codigoSubCategoria != null ? this.codigoSubCategoria.hashCode() : 0);
         hash = 67 * hash + (this.estado != null ? this.estado.hashCode() : 0);
         return hash;
     }
@@ -103,7 +103,7 @@ public class Clasificacion extends ObjetoBase implements Serializable {
         if ((this.nombre == null) ? (other.nombre != null) : !this.nombre.equals(other.nombre)) {
             return false;
         }
-        if ((this.codSubCategoria == null) ? (other.codSubCategoria != null) : !this.codSubCategoria.equals(other.codSubCategoria)) {
+        if ((this.codigoSubCategoria == null) ? (other.codigoSubCategoria != null) : !this.codigoSubCategoria.equals(other.codigoSubCategoria)) {
             return false;
         }
         if (this.id != other.id && (this.id == null || !this.id.equals(other.id))) {

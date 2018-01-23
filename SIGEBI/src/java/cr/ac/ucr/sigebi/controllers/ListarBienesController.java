@@ -65,14 +65,14 @@ public class ListarBienesController extends BaseController {
         this.contarBienes();
         this.listarBienes();
         
-        List<Estado> listEstados = estadoModel.listarPorDominio(Constantes.DOMINI0_ESTADO_BIEN);
+        List<Estado> listEstados = estadoModel.listarPorDominio(Constantes.DOMINIO_BIEN);
         if (!listEstados.isEmpty()) {
             itemsEstado = new ArrayList<SelectItem>();
             for (Estado item : listEstados) {
                 itemsEstado.add(new SelectItem(item.getValor(), item.getNombre()));
             }
         }
-        List<Tipo> listTipos = tipoModel.listarPorDominio(Constantes.DOMINI0_ESTADO_BIEN);
+        List<Tipo> listTipos = tipoModel.listarPorDominio(Constantes.DOMINIO_BIEN);
         if (!listTipos.isEmpty()) {
             itemsTipo = new ArrayList<SelectItem>();
             for (Tipo item : listTipos) {

@@ -265,10 +265,10 @@ public class ListarBienSincronizarController extends BaseController {
         unidadEjec = unidadModel.buscarPorId(unidadEjecutoraId);
 
         //Cargar Estados Filtros
-        Estado estado = estadoModel.buscarPorDominioEstado(Constantes.DOMINI0_ESTADO_BIEN, Constantes.ESTADO_BIEN_PENDIENTE);
+        Estado estado = estadoModel.buscarPorDominioEstado(Constantes.DOMINIO_BIEN, Constantes.ESTADO_BIEN_PENDIENTE);
         estadosBienes.put(estado.getValor(), estado);
         
-        estado = estadoModel.buscarPorDominioEstado(Constantes.DOMINI0_ESTADO_BIEN, Constantes.ESTADO_BIEN_PENDIENTE_SINCRONIZAR);
+        estado = estadoModel.buscarPorDominioEstado(Constantes.DOMINIO_BIEN, Constantes.ESTADO_BIEN_PENDIENTE_SINCRONIZAR);
         estadosBienes.put(estado.getValor(), estado);
 
         estadosOptions = new ArrayList<SelectItem>();

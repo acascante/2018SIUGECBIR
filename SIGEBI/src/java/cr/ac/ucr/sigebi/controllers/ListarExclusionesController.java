@@ -74,7 +74,7 @@ public class ListarExclusionesController extends BaseController {
         
         this.vistaOrigen = Constantes.VISTA_EXCLUSION_LISTADO;
         
-        estados = estadoModel.listarPorDominio(Constantes.DOMINI0_EXCLUSION);
+        estados = estadoModel.listarPorDominio(Constantes.DOMINIO_EXCLUSION);
         if (!estados.isEmpty()) {
             itemsEstado = new ArrayList<SelectItem>();
             for (Estado item : estados) {
@@ -82,11 +82,11 @@ public class ListarExclusionesController extends BaseController {
             }
         }
         
-        tipos = tipoModel.listarPorDominio(Constantes.DOMINI0_EXCLUSION);
+        tipos = tipoModel.listarPorDominio(Constantes.DOMINIO_EXCLUSION);
         if (!tipos.isEmpty()) {
             itemsTipo = new ArrayList<SelectItem>();
             for (Tipo item : tipos) {
-                itemsTipo.add(new SelectItem(item.getIdTipo(), item.getNombre()));
+                itemsTipo.add(new SelectItem(item.getId(), item.getNombre()));
             }
         }
     }

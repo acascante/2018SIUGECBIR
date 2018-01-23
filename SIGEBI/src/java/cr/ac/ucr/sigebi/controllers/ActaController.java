@@ -114,10 +114,11 @@ public class ActaController extends ListadoBienesGeneralController {
     @PostConstruct
     private void incializaDatos() {
         try{
-            estadoGeneralActivo = estadoModel.buscarPorDominioEstado( Constantes.DOMINI0_ESTADO_GENERAL, Constantes.ESTADO_GENERAL_ACTIVO);
-            estadoGeneralPendiente = estadoModel.buscarPorDominioEstado( Constantes.DOMINI0_ESTADO_GENERAL, Constantes.ESTADO_GENERAL_PENDIENTE);
-            estadoGeneralAprobado = estadoModel.buscarPorDominioEstado( Constantes.DOMINI0_ESTADO_GENERAL, Constantes.ESTADO_GENERAL_APROBADO);
-            estadoGeneralRechazado = estadoModel.buscarPorDominioEstado( Constantes.DOMINI0_ESTADO_GENERAL, Constantes.ESTADO_GENERAL_RECHAZADO);
+            // TODO manejar los estados en un List por dominio
+//            estadoGeneralActivo = estadoModel.buscarPorDominioEstado( Constantes.DOMINI0_ESTADO_GENERAL, Constantes.ESTADO_GENERAL_ACTIVO);
+//            estadoGeneralPendiente = estadoModel.buscarPorDominioEstado( Constantes.DOMINI0_ESTADO_GENERAL, Constantes.ESTADO_GENERAL_PENDIENTE);
+//            estadoGeneralAprobado = estadoModel.buscarPorDominioEstado( Constantes.DOMINI0_ESTADO_GENERAL, Constantes.ESTADO_GENERAL_APROBADO);
+//            estadoGeneralRechazado = estadoModel.buscarPorDominioEstado( Constantes.DOMINI0_ESTADO_GENERAL, Constantes.ESTADO_GENERAL_RECHAZADO);
     //      
             usuarioRegistrado = usuarioModel.buscarPorId(codPersonaReg);
             rolesDelUsuarioActualDesecho = new HashMap<Long, Rol>();

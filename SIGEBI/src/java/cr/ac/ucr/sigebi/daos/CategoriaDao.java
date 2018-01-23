@@ -8,13 +8,15 @@ package cr.ac.ucr.sigebi.daos;
 import cr.ac.ucr.framework.daoHibernate.DaoHelper;
 import cr.ac.ucr.framework.daoImpl.GenericDaoImpl;
 import cr.ac.ucr.framework.utils.FWExcepcion;
-import cr.ac.ucr.sigebi.domain.SubCategoria;
+import cr.ac.ucr.sigebi.domain.Categoria;
+import cr.ac.ucr.sigebi.domain.Categoria;
 import java.util.List;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
+import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,30 +32,32 @@ public class CategoriaDao extends GenericDaoImpl {
     private DaoHelper dao;
 
     @Transactional(readOnly = true)
-    public SubCategoria traerPorCodigo(Integer codigoCategoria) throws FWExcepcion {
+    public List<Categoria> listar() throws FWExcepcion {
+        try {
+            return dao.getHibernateTemplate().find("from Categoria"); 
+        } catch (DataAccessException e) {
+            throw new FWExcepcion("sigebi.error.notificacionDao.listar", "Error obtener los registros de tipo " + this.getClass(), e.getCause());
+        }
+    }
+    
+    @Transactional(readOnly = true)
+    public Categoria buscarPorId(Long id) throws FWExcepcion {
+        return load(Categoria.class, id);
+    }
+    
+    @Transactional(readOnly = true)
+    public Categoria buscarPorCodigoCategoria(String codigoCategoria) throws FWExcepcion {
         Session session = dao.getSessionFactory().openSession();
         try {
-            String sql = "SELECT obj FROM SubCategoria obj WHERE obj.codigoCategoria = :codigoCategoria";
+            String sql = "SELECT cat FROM Categoria cat WHERE cat.codigoCategoria = :codigoCategoria";
             Query query = session.createQuery(sql);
             query.setParameter("codigoCategoria", codigoCategoria);
 
-            return (SubCategoria) query.uniqueResult();
+            return (Categoria) query.uniqueResult();
         } catch (HibernateException e) {
-            throw new FWExcepcion("sigebi.error.subCategoriaDao.traerPorCodigo", "Error obtener los registros de tipo " + this.getClass(), e.getCause());
+            throw new FWExcepcion("sigebi.error.notificacionDao.listar", "Error obtener los registros de tipo " + this.getClass(), e.getCause());
         } finally {
             session.close();
         }
     }
-
-    @Transactional
-    public List<SubCategoria> traerTodo() {
-        try {
-            return dao.getHibernateTemplate().find("from SubCategoria");
-        } catch (HibernateException e) {
-            throw new FWExcepcion("sigebi.error.subCategoriaDao.traerTodo",
-                    "Error obtener los registros de tipo " + this.getClass(), e.getCause());
-        }
-
-    }
-
 }
