@@ -143,7 +143,7 @@ public class BienDao extends GenericDaoImpl {
     }
 
     private Query creaQuery(Boolean contar, Session session, UnidadEjecutora unidadEjecutora, String identificacion, String descripcion, String marca, String modelo,  String serie, Estado... estados) {
-        StringBuilder sql = new StringBuilder("SELECT ");
+        StringBuilder sql = new StringBuilder(" ");
         if (contar) {
             sql.append("SELECT count(b) FROM Bien b ");
         } else {
@@ -151,28 +151,29 @@ public class BienDao extends GenericDaoImpl {
         }
         
         sql.append("WHERE b.unidadEjecutora = :unidadEjecutora ");
-        if(identificacion != null){
+        if(identificacion != null && identificacion.length() > 0){
            sql.append(" AND b.identificacion.identificacion = :identificacion ");
         }
         if(descripcion != null && descripcion.length() > 0){
             sql.append(" AND upper(b.descripcion) like upper(:descripcion) ");
         }
         if(marca != null && marca.length() > 0){
-            sql.append(" AND upper(b.marca) like upper(:marca) ");
+            sql.append(" AND upper(b.resumenBien.marca) like upper(:marca) ");
         }
         if(modelo != null && modelo.length() > 0){
-            sql.append(" AND upper(b.modelo) like upper(:modelo) ");
+            sql.append(" AND upper(b.resumenBien.modelo) like upper(:modelo) ");
         }
         if(serie != null && serie.length() > 0){
-            sql.append(" AND upper(b.serie) like upper(:serie) ");
+            sql.append(" AND upper(b.resumenBien.serie) like upper(:serie) ");
         }
         if(estados != null && estados.length > 0){
-            sql.append(" AND b.estado in (:estados)");
+            //sql.append(" AND b.estado in (:estados)");
         }
-        
+        System.out.println("---------------------   " + sql.toString());
+
         Query q = session.createQuery(sql.toString());
         q.setParameter("unidadEjecutora", unidadEjecutora);
-        if(identificacion != null){
+        if(identificacion != null && identificacion.length() > 0){
             q.setParameter("identificacion", identificacion);
         }
         if(descripcion != null && descripcion.length() > 0){
@@ -188,13 +189,15 @@ public class BienDao extends GenericDaoImpl {
             q.setParameter("serie", '%' + serie + '%');
         }
         if(estados != null && estados.length > 0){
-            q.setParameterList("estados", estados);
+            //q.setParameterList("estados", estados);
         }
+        
+        System.out.println("---------------------   " + q.getQueryString());
         return q;
     }
     
     @Transactional
-    public void sincronizarBien( Bien bien,  String usaurioSincro ) throws FWExcepcion {
+    public void sincronizarBien(Bien bien,  String usaurioSincro ) throws FWExcepcion {
         // TODO revisar implementacion de sincronizacion
         // TODO Crear domain SincronizarEntity
     

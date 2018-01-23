@@ -7,7 +7,6 @@ package cr.ac.ucr.sigebi.models;
 
 import cr.ac.ucr.framework.utils.FWExcepcion;
 import cr.ac.ucr.sigebi.daos.CategoriaDao;
-import cr.ac.ucr.sigebi.domain.SubCategoria;
 import cr.ac.ucr.sigebi.domain.Categoria;
 import java.util.List;
 import javax.annotation.Resource;
@@ -18,7 +17,7 @@ import org.springframework.stereotype.Service;
  *
  * @author jorge.serrano
  */
-@Service(value = "categModel")
+@Service(value = "categoriaModel")
 @Scope("request")
 public class CategoriaModel {
     

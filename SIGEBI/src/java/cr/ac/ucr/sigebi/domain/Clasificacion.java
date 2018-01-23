@@ -35,8 +35,9 @@ public class Clasificacion extends ObjetoBase implements Serializable {
     @Column(name = "NOMBRE")
     private String nombre;
     
-    @Column(name = "CODIGO_SUB_CATEGORIA")
-    private String codigoSubCategoria;
+    @ManyToOne
+    @JoinColumn(name = "ID_SUB_CATEGORIA", referencedColumnName = "ID")
+    private SubCategoria subCategoria;
     
     @ManyToOne
     @JoinColumn(name = "ID_ESTADO", referencedColumnName = "ID_ESTADO")
@@ -51,21 +52,13 @@ public class Clasificacion extends ObjetoBase implements Serializable {
     public void setId(Integer id) {
         this.id = id;
     }
-    
+
     public String getNombre() {
         return nombre;
     }
 
     public void setNombre(String nombre) {
         this.nombre = nombre;
-    }
-
-    public String getCodigoSubCategoria() {
-        return codigoSubCategoria;
-    }
-
-    public void setCodigoSubCategoria(String codigoSubCategoria) {
-        this.codigoSubCategoria = codigoSubCategoria;
     }
 
     public Estado getEstado() {
@@ -83,7 +76,6 @@ public class Clasificacion extends ObjetoBase implements Serializable {
         int hash = 7;
         hash = 67 * hash + (this.id != null ? this.id.hashCode() : 0);
         hash = 67 * hash + (this.nombre != null ? this.nombre.hashCode() : 0);
-        hash = 67 * hash + (this.codigoSubCategoria != null ? this.codigoSubCategoria.hashCode() : 0);
         hash = 67 * hash + (this.estado != null ? this.estado.hashCode() : 0);
         return hash;
     }
@@ -103,9 +95,6 @@ public class Clasificacion extends ObjetoBase implements Serializable {
         if ((this.nombre == null) ? (other.nombre != null) : !this.nombre.equals(other.nombre)) {
             return false;
         }
-        if ((this.codigoSubCategoria == null) ? (other.codigoSubCategoria != null) : !this.codigoSubCategoria.equals(other.codigoSubCategoria)) {
-            return false;
-        }
         if (this.id != other.id && (this.id == null || !this.id.equals(other.id))) {
             return false;
         }
@@ -116,3 +105,4 @@ public class Clasificacion extends ObjetoBase implements Serializable {
     }
     //</editor-fold>
 }
+        

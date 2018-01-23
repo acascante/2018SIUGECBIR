@@ -9,12 +9,16 @@ import cr.ac.ucr.framework.daoHibernate.DaoHelper;
 import cr.ac.ucr.framework.daoImpl.GenericDaoImpl;
 import cr.ac.ucr.framework.utils.FWExcepcion;
 import cr.ac.ucr.sigebi.domain.Ubicacion;
+import java.util.Iterator;
 import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
+import org.hibernate.Query;
+import org.hibernate.Session;
 
 /**
  *
@@ -28,9 +32,17 @@ public class UbicacionDao extends GenericDaoImpl {
     private DaoHelper dao;
 
     @Transactional(readOnly = true)
-    public List<Ubicacion> listar() throws FWExcepcion {
+    public List<Ubicacion> listar(Long idUnidadEjec) throws FWExcepcion {
+        Session session = dao.getSessionFactory().openSession();
         try {
-            return dao.getHibernateTemplate().find("from Ubicacion"); 
+            
+            String sql = "SELECT ub FROM Ubicacion ub WHERE ub.idUnidadEjecutora.id = :unidad ";
+            Query query = session.createQuery(sql);
+            query.setParameter("unidad", idUnidadEjec);
+            
+            return (List<Ubicacion>) query.list();
+
+            //return dao.getHibernateTemplate().find("from Ubicacion s WHERE s.idUnidadEjecutora = :idUnidadEjec "); 
         } catch (DataAccessException e) {
             throw new FWExcepcion("sigebi.error.notificacionDao.listar", "Error obtener los registros de tipo " + this.getClass(), e.getCause());
         }

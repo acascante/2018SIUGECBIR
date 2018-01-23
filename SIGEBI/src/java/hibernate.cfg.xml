@@ -24,6 +24,7 @@
     <mapping class="cr.ac.ucr.sigebi.domain.AutorizacionRolPersona"/>
     <mapping class="cr.ac.ucr.sigebi.domain.Bien"/>
     <mapping class="cr.ac.ucr.sigebi.domain.BienCaracteristica"/>
+    <mapping class="cr.ac.ucr.sigebi.domain.Categoria"/>
     <mapping class="cr.ac.ucr.sigebi.domain.Clasificacion"/>
     <mapping class="cr.ac.ucr.sigebi.domain.Documento"/>
     <mapping class="cr.ac.ucr.sigebi.domain.DocumentoActa"/>
@@ -32,6 +33,7 @@
     <mapping class="cr.ac.ucr.sigebi.domain.DocumentoInformeTecnico"/>
     <mapping class="cr.ac.ucr.sigebi.domain.Estado"/>
     <mapping class="cr.ac.ucr.sigebi.domain.Identificacion"/>
+    <mapping class="cr.ac.ucr.sigebi.domain.Lote"/>
     <mapping class="cr.ac.ucr.sigebi.domain.Moneda"/>
     <mapping class="cr.ac.ucr.sigebi.domain.Notificacion"/>
     <mapping class="cr.ac.ucr.sigebi.domain.Proveedor"/>

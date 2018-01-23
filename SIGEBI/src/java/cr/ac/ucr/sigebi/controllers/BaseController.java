@@ -112,12 +112,12 @@ public class BaseController extends PaginacionOracle {
         
         estadoPendiente = Constantes.ESTADO_BIEN_PENDIENTE; 
         estadoPendienteSincronizar = Constantes.ESTADO_BIEN_PENDIENTE_SINCRONIZAR; 
-        
+        incializaBienes();
     }
     //</editor-fold>
     
     //<editor-fold defaultstate="collapsed" desc="Metodos">
-    @PostConstruct
+    //@PostConstruct
     private void incializaBienes() {
 
         lVistaUsuario = (VistaUsuario) Util.obtenerVista("#{vistaUsuario}");

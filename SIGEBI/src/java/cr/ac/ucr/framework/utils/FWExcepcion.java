@@ -24,6 +24,8 @@ public final class FWExcepcion extends RuntimeException {
 //-----------------------------------------------------------------------------------------------------------------------------  Constructores
     public FWExcepcion() {
         this("Error general", "No se especificó un mensaje de error", 1);
+        this.printStackTrace();
+
     }   //constructor
 
     /**
@@ -35,10 +37,12 @@ public final class FWExcepcion extends RuntimeException {
      */
     public FWExcepcion(final String error_usuario, final String error_programador, final int codigo) {
         this(Util.getEtiquetas(error_usuario), error_programador, codigo, null);
+        this.printStackTrace();
     }   //constructor
 
     public FWExcepcion(final String error_para_usuario, final String error_para_programador, final Throwable causa) {
         this(Util.getEtiquetas(error_para_usuario), error_para_programador, 0, causa);
+        this.printStackTrace();
     }
 
     /**

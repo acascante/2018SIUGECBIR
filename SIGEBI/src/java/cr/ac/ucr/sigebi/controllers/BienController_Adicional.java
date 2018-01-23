@@ -13,6 +13,7 @@ import cr.ac.ucr.sigebi.domain.Bien;
 import cr.ac.ucr.sigebi.domain.BienCaracteristica;
 import cr.ac.ucr.sigebi.domain.Estado;
 import cr.ac.ucr.sigebi.domain.Tipo;
+import cr.ac.ucr.sigebi.domain.Ubicacion;
 import cr.ac.ucr.sigebi.entities.AccesoriosEntity;
 import cr.ac.ucr.sigebi.entities.AdjuntoBienEntity;
 import cr.ac.ucr.sigebi.entities.DatoBienEntity;
@@ -41,7 +42,9 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Pattern;
 import javax.annotation.Resource;
 import javax.faces.context.FacesContext;
@@ -62,8 +65,6 @@ public class BienController_Adicional extends BaseController{
     
     Bien bien;// = new ProveedorEntity();
     
-    // comboBox subCategorias
-    List<SelectItem> ubicacionOptions;
 
     // comboBox subCategorias
     List<SelectItem> provedooresOptions;
@@ -84,7 +85,6 @@ public class BienController_Adicional extends BaseController{
         
         super();
         
-
         notas = new ArrayList<NotaEntity>();
         nota = new NotaEntity();
 
@@ -92,10 +92,10 @@ public class BienController_Adicional extends BaseController{
 
         adjuntoDescripcion = "";
 
-        
         caracteristica = new DatoBienEntity();
+        
     }
-
+    
     //</editor-fold>
     
     
@@ -139,6 +139,9 @@ public class BienController_Adicional extends BaseController{
     
     //<editor-fold defaultstate="collapsed" desc="Proveedores">
     
+    void inicializaProveedores(){
+        
+    }
     
     public void cargarProveedor(ActionEvent pEvent) {
 
@@ -245,6 +248,10 @@ public class BienController_Adicional extends BaseController{
     
     //<editor-fold defaultstate="collapsed" desc="Ubicacion">
     
+    
+    // comboBox subCategorias
+    List<SelectItem> ubicacionOptions;
+    
     String ubicacionId;
     String ubicacionNombre;
     
@@ -306,6 +313,22 @@ public class BienController_Adicional extends BaseController{
         
     }
 
+    
+    Map<Integer, Ubicacion> ubicaciones = new HashMap<Integer, Ubicacion>();
+    
+    protected void inicializaUbicaciones(){
+        //ubicaciones = ;
+        ubicaciones = new HashMap<Integer, Ubicacion>();
+        ubicacionOptions = new ArrayList<SelectItem>();
+        
+        List<Ubicacion> ubicacionesList;
+        ubicacionesList = ubicModel.listar(unidadEjecutoraId);
+        for (Ubicacion item : ubicacionesList) {
+            ubicaciones.put(item.getId(), item);
+            ubicacionOptions.add(new SelectItem(item.getId(), item.getDetalle()));
+        }
+    }
+    
     
     public String getUbicacionId() {
         return ubicacionId;

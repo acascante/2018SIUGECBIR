@@ -180,12 +180,12 @@ public class ActaController extends ListadoBienesGeneralController {
     void cargarTipo() {
         try {
             //Aqui traemos los tipos de bienes para los Select
-            List<Tipo> tipoEntity = tipoModel.listarPorDominio(Constantes.DOMINI0_ESTADO_ACTA);
+            List<Tipo> tipoEntity = tipoModel.listarPorDominio(Constantes.DOMINIO_ACTA);
             for (Tipo item : tipoEntity) {
                 if (item.getNombre().toUpperCase().contains("DONAC")) {
-                    valorDonacion = item.getIdTipo().toString();
+                    valorDonacion = item.getId().toString();
                 }
-                tiposActaOptions.add(new SelectItem("" + item.getIdTipo(), item.getNombre()));
+                tiposActaOptions.add(new SelectItem("" + item.getId(), item.getNombre()));
             }
         } catch (Exception err) {
             Mensaje.agregarErrorAdvertencia(err.getMessage());
@@ -310,7 +310,7 @@ public class ActaController extends ListadoBienesGeneralController {
             ActaEntity item = (ActaEntity) pEvent.getComponent().getAttributes().get("itemSeleccionado");
             if (item.getIdActa() > 0) {
                 acta = item;
-                tipoActaSeleccionada = acta.getIdTipo().getIdTipo().toString();
+                tipoActaSeleccionada = acta.getIdTipo().getId().toString();
                 esDonacion = tipoActaSeleccionada.equals(Constantes.ACTA_ID_TIPO_DONACION);
                 tipoSeleccionado = acta.getIdTipo();
                 

@@ -24,8 +24,8 @@ public class UbicacionModel {
     @Resource
     private UbicacionDao ubicacionDao;
 
-    public List<Ubicacion> listar() throws FWExcepcion {
-        return ubicacionDao.listar();
+    public List<Ubicacion> listar(Long idUnidadEjec) throws FWExcepcion {
+        return ubicacionDao.listar(idUnidadEjec);
     }
     
     public Ubicacion buscarPorId(Long id) throws FWExcepcion {
