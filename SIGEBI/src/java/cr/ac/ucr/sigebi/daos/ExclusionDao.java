@@ -8,8 +8,8 @@ package cr.ac.ucr.sigebi.daos;
 import cr.ac.ucr.framework.daoHibernate.DaoHelper;
 import cr.ac.ucr.framework.daoImpl.GenericDaoImpl;
 import cr.ac.ucr.framework.utils.FWExcepcion;
-import cr.ac.ucr.sigebi.domain.Exclusion;
-import cr.ac.ucr.sigebi.domain.ExclusionDetalle;
+import cr.ac.ucr.sigebi.domain.SolicitudExclusion;
+import cr.ac.ucr.sigebi.domain.SolicitudDetalle;
 import cr.ac.ucr.sigebi.domain.UnidadEjecutora;
 import java.util.Date;
 import java.util.List;
@@ -35,12 +35,12 @@ public class ExclusionDao extends GenericDaoImpl {
     private DaoHelper dao;
 
     @Transactional(readOnly = true)
-    public List<Exclusion> listar() throws FWExcepcion {
+    public List<SolicitudExclusion> listar() throws FWExcepcion {
         Session session = dao.getSessionFactory().openSession();
         try {
             String sql = "SELECT exc FROM Exclusion exc";
             Query query = session.createQuery(sql);
-            return (List<Exclusion>) query.list();
+            return (List<SolicitudExclusion>) query.list();
         } catch (DataAccessException e) {
             throw new FWExcepcion("sigebi.error.exclusionDao.listar", "Error obtener los registros de tipo " + this.getClass(), e.getCause());
         } finally {
@@ -49,13 +49,13 @@ public class ExclusionDao extends GenericDaoImpl {
     }
     
     @Transactional(readOnly = true)
-    public List<Exclusion> listar(UnidadEjecutora unidadEjecutora) throws FWExcepcion {
+    public List<SolicitudExclusion> listar(UnidadEjecutora unidadEjecutora) throws FWExcepcion {
         Session session = dao.getSessionFactory().openSession();
         try {
             String sql = "SELECT exc FROM Exclusion exc WHERE exc.unidadEjecutora = :unidadEjecutora";
             Query query = session.createQuery(sql);
             query.setParameter("unidadEjecutora", unidadEjecutora);
-            return (List<Exclusion>) query.list();
+            return (List<SolicitudExclusion>) query.list();
         } catch (DataAccessException e) {
             throw new FWExcepcion("sigebi.error.exclusionDao.listar", "Error obtener los registros de tipo " + this.getClass(), e.getCause());
         } finally {
@@ -64,7 +64,7 @@ public class ExclusionDao extends GenericDaoImpl {
     }
     
     @Transactional
-    public void salvar(Exclusion exclusion) throws FWExcepcion {
+    public void salvar(SolicitudExclusion exclusion) throws FWExcepcion {
         try {
             persist(exclusion);
         } catch (DataAccessException e) {
@@ -87,7 +87,7 @@ public class ExclusionDao extends GenericDaoImpl {
     }
     
     @Transactional(readOnly = true)
-    public List<Exclusion> listar(Integer primerRegistro, Integer ultimoRegistro, Long unidadEjecutora, Long id, Date fecha, Integer estado, Integer tipo) throws FWExcepcion {
+    public List<SolicitudExclusion> listar(Integer primerRegistro, Integer ultimoRegistro, Long unidadEjecutora, Long id, Date fecha, Integer estado, Integer tipo) throws FWExcepcion {
         Session session = dao.getSessionFactory().openSession();
         try {
             Query query = this.queryListar(session, false, unidadEjecutora, id, fecha, estado, tipo);
@@ -95,7 +95,7 @@ public class ExclusionDao extends GenericDaoImpl {
                 query.setFirstResult(primerRegistro);
                 query.setMaxResults(ultimoRegistro - primerRegistro);
             }
-            return (List<Exclusion>) query.list();
+            return (List<SolicitudExclusion>) query.list();
         } catch (HibernateException e) {
             throw new FWExcepcion("sigebi.error.exclusionDao.listar", "Error obtener los registros de tipo " + this.getClass(), e.getCause());
         }finally{
@@ -150,7 +150,7 @@ public class ExclusionDao extends GenericDaoImpl {
     }
     
     @Transactional
-    public void salvarDetalles(List<ExclusionDetalle> detalles) throws FWExcepcion {
+    public void salvarDetalles(List<SolicitudDetalle> detalles) throws FWExcepcion {
         try {
             dao.getHibernateTemplate().saveOrUpdateAll(detalles);
             dao.getHibernateTemplate().flush();
@@ -160,7 +160,7 @@ public class ExclusionDao extends GenericDaoImpl {
     }
     
     @Transactional(readOnly = true)
-    public Long contarDetalles(Exclusion exclusion) throws FWExcepcion {
+    public Long contarDetalles(SolicitudExclusion exclusion) throws FWExcepcion {
         Session session = dao.getSessionFactory().openSession();
         try {
             Query query = this.queryListarDetalles(session, true, exclusion);
@@ -174,11 +174,11 @@ public class ExclusionDao extends GenericDaoImpl {
     }
     
     @Transactional(readOnly = true)
-    public List<ExclusionDetalle> listarDetalles(Exclusion exclusion) throws FWExcepcion {
+    public List<SolicitudDetalle> listarDetalles(SolicitudExclusion exclusion) throws FWExcepcion {
         Session session = dao.getSessionFactory().openSession();
         try {
             Query query = this.queryListarDetalles(session, false, exclusion);
-            return (List<ExclusionDetalle>) query.list();
+            return (List<SolicitudDetalle>) query.list();
         } catch (HibernateException e) {
             throw new FWExcepcion("sigebi.error.exclusionDao.listar", "Error obtener los registros de tipo " + this.getClass(), e.getCause());
         }finally{
@@ -186,7 +186,7 @@ public class ExclusionDao extends GenericDaoImpl {
         }        
     }
     
-    private Query queryListarDetalles(Session session, Boolean contar, Exclusion exclusion) throws FWExcepcion {
+    private Query queryListarDetalles(Session session, Boolean contar, SolicitudExclusion exclusion) throws FWExcepcion {
         StringBuilder sql = new StringBuilder("SELECT ");
         if (contar) {
             sql.append("COUNT(det) FROM ExclusionDetalle det ");

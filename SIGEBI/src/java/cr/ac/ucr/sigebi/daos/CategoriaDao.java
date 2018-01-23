@@ -22,7 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
  *
  * @author jorge.serrano
  */
-@Repository(value = "subCategoriaDao")
+@Repository(value = "categoriaDao")
 @Scope("request")
 public class CategoriaDao extends GenericDaoImpl {
 

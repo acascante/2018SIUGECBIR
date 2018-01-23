@@ -399,8 +399,8 @@ public class InformeTecnicoController extends BaseController{
                 AdjuntoEntity adjunto = new AdjuntoEntity();
                 adjunto.setIdEstado(estadoModel.buscarPorDominioEstado(Constantes.DOMINI0_ESTADO_GENERAL, Constantes.ESTADO_GENERAL_ACTIVO));
                 adjunto.setIdReferencia(informe.getIdInformeTecnico());                
-                adjunto.setIdTipo(tipoModel.buscarPorDominioTipo(Constantes.DOMINI0_TIPO_ADJUNTO, Constantes.TIPO_ADJUNTO_INFORME_TECNICO));
-                adjunto.setIdTipoDocumento(tipoModel.buscarPorDominioTipo(Constantes.DOMINI0_TIPO_DOCUMENTO, Constantes.TIPO_DOCUMENTO_INFORME_TECNICO));
+                //adjunto.setIdTipo(tipoModel.buscarPorDominioTipo(Constantes.DOMINI0_TIPO_ADJUNTO, Constantes.TIPO_ADJUNTO_INFORME_TECNICO));
+                //adjunto.setIdTipoDocumento(tipoModel.buscarPorDominioTipo(Constantes.DOMINI0_TIPO_DOCUMENTO, Constantes.TIPO_DOCUMENTO_INFORME_TECNICO));
                 adjunto.setUrl("upload/informesTecnicos/" + fileInfo.getFileName());
                 if(detalleAdjunto != null && detalleAdjunto.length() > 0){
                    adjunto.setDetalle(detalleAdjunto);

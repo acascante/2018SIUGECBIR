@@ -78,12 +78,11 @@ public class AutorizacionDao extends GenericDaoImpl {
         }
     }
     
-    //FIXME
     @Transactional(readOnly = true)
     public List<Autorizacion> buscarPorTipoProceso(Integer idTipoProceso) throws FWExcepcion {
         Session session = this.dao.getSessionFactory().openSession();
         try {
-            String sql = "SELECT obj FROM Autorizacion obj WHERE obj.tipoProceso.idTipo = :idTipoProceso";
+            String sql = "SELECT obj FROM Autorizacion obj WHERE obj.tipoProceso.id = :idTipoProceso";
             Query query = session.createQuery(sql);
             query.setParameter("idTipoProceso", idTipoProceso);
 
@@ -125,7 +124,7 @@ public class AutorizacionDao extends GenericDaoImpl {
             sql = sql + " AND obj.id != :idAutorizacion ";
         }
         if (idProceso != null && idProceso> 0) {
-            sql = sql + " AND obj.tipoProceso.idTipo = :idProceso ";
+            sql = sql + " AND obj.tipoProceso.id = :idProceso ";
         }
         if (orden != null && orden> 0) {
             sql = sql + " AND obj.orden = :orden ";

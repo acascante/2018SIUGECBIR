@@ -7,6 +7,7 @@ package cr.ac.ucr.sigebi.domain;
 
 import cr.ac.ucr.framework.seguridad.ObjetoBase;
 import java.io.Serializable;
+import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -16,6 +17,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 /**
  *
@@ -32,26 +35,24 @@ public class DocumentoAutorizacion extends ObjetoBase implements Serializable {
     @Column(name = "ID_DOCUMENTO_AUTORIZACION")
     private Long id;
 
-    @Id
     @ManyToOne
     @JoinColumn(name = "ID_DOCUMENTO", referencedColumnName = "ID_DOCUMENTO")
     private Documento documento;
 
-    @Id
     @ManyToOne
-    @JoinColumn(name = "ID_ROL", referencedColumnName = "ID_ROL")
-    private Rol rol;
-
-    @Id
-    @ManyToOne
-    @JoinColumn(name = "ID_USUARIO", referencedColumnName = "ID_USUARIO")
-    private Usuario usuarioSeguridad;
+    @JoinColumn(name = "ID_AUTORIZACION_ROL_PERSONA", referencedColumnName = "ID_AUTORIZACION_ROL_PERSONA")
+    private AutorizacionRolPersona autorizacionRolPersona;
 
     @ManyToOne
-    @JoinColumn(name = "ID_UNIDAD_EJECUTORA", referencedColumnName = "ID")
-    private UnidadEjecutora unidadEjecutora;
+    @JoinColumn(name = "ID_ESTADO", referencedColumnName = "ID_ESTADO")
+    private Estado estado;
+
+    @Column(name = "FECHA_HORA")
+    @Temporal(TemporalType.DATE)
+    private Date fecha;
+
     //</editor-fold>
-
+    
     //<editor-fold defaultstate="collapsed" desc="GET's y SET's">
     public Long getId() {
         return id;
@@ -69,40 +70,40 @@ public class DocumentoAutorizacion extends ObjetoBase implements Serializable {
         this.documento = documento;
     }
 
-    public Rol getRol() {
-        return rol;
+    public AutorizacionRolPersona getAutorizacionRolPersona() {
+        return autorizacionRolPersona;
     }
 
-    public void setRol(Rol rol) {
-        this.rol = rol;
+    public void setAutorizacionRolPersona(AutorizacionRolPersona autorizacionRolPersona) {
+        this.autorizacionRolPersona = autorizacionRolPersona;
     }
 
-    public Usuario getUsuarioSeguridad() {
-        return usuarioSeguridad;
+    public Estado getEstado() {
+        return estado;
     }
 
-    public void setUsuarioSeguridad(Usuario usuarioSeguridad) {
-        this.usuarioSeguridad = usuarioSeguridad;
+    public void setEstado(Estado estado) {
+        this.estado = estado;
     }
 
-    public UnidadEjecutora getUnidadEjecutora() {
-        return unidadEjecutora;
+    public Date getFecha() {
+        return fecha;
     }
 
-    public void setUnidadEjecutora(UnidadEjecutora unidadEjecutora) {
-        this.unidadEjecutora = unidadEjecutora;
+    public void setFecha(Date fecha) {
+        this.fecha = fecha;
     }
     //</editor-fold>
 
     //<editor-fold defaultstate="collapsed" desc="Metodos">
     @Override
     public int hashCode() {
-        int hash = 7;
-        hash = 29 * hash + (this.id != null ? this.id.hashCode() : 0);
-        hash = 29 * hash + (this.documento != null ? this.documento.hashCode() : 0);
-        hash = 29 * hash + (this.rol != null ? this.rol.hashCode() : 0);
-        hash = 29 * hash + (this.usuarioSeguridad != null ? this.usuarioSeguridad.hashCode() : 0);
-        hash = 29 * hash + (this.unidadEjecutora != null ? this.unidadEjecutora.hashCode() : 0);
+        int hash = 5;
+        hash = 59 * hash + (this.id != null ? this.id.hashCode() : 0);
+        hash = 59 * hash + (this.documento != null ? this.documento.hashCode() : 0);
+        hash = 59 * hash + (this.autorizacionRolPersona != null ? this.autorizacionRolPersona.hashCode() : 0);
+        hash = 59 * hash + (this.estado != null ? this.estado.hashCode() : 0);
+        hash = 59 * hash + (this.fecha != null ? this.fecha.hashCode() : 0);
         return hash;
     }
 
@@ -124,16 +125,17 @@ public class DocumentoAutorizacion extends ObjetoBase implements Serializable {
         if (this.documento != other.documento && (this.documento == null || !this.documento.equals(other.documento))) {
             return false;
         }
-        if (this.rol != other.rol && (this.rol == null || !this.rol.equals(other.rol))) {
+        if (this.autorizacionRolPersona != other.autorizacionRolPersona && (this.autorizacionRolPersona == null || !this.autorizacionRolPersona.equals(other.autorizacionRolPersona))) {
             return false;
         }
-        if (this.usuarioSeguridad != other.usuarioSeguridad && (this.usuarioSeguridad == null || !this.usuarioSeguridad.equals(other.usuarioSeguridad))) {
+        if (this.estado != other.estado && (this.estado == null || !this.estado.equals(other.estado))) {
             return false;
         }
-        if (this.unidadEjecutora != other.unidadEjecutora && (this.unidadEjecutora == null || !this.unidadEjecutora.equals(other.unidadEjecutora))) {
+        if (this.fecha != other.fecha && (this.fecha == null || !this.fecha.equals(other.fecha))) {
             return false;
         }
         return true;
     }
+
     //</editor-fold>
 }

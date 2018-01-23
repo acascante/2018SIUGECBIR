@@ -31,4 +31,5 @@ public class SubClasificacionModel {
     public SubClasificacion buscarPorId(Long id) throws FWExcepcion {
         return subClasificacionDao.buscarPorId(id);
     }
+    
 }

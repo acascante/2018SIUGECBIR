@@ -16,8 +16,9 @@
     <mapping class="cr.ac.ucr.framework.seguridad.entidades.SegUsuario"/>
     
     <mapping class="cr.ac.ucr.sigebi.domain.Accesorio"/>
-    <mapping class="cr.ac.ucr.sigebi.domain.Acta"/>
-    <mapping class="cr.ac.ucr.sigebi.domain.ActaDetalle"/>
+    <mapping class="cr.ac.ucr.sigebi.domain.Adjunto"/>
+    <mapping class="cr.ac.ucr.sigebi.domain.AdjuntoBien"/>
+    <mapping class="cr.ac.ucr.sigebi.domain.AdjuntoDocumento"/>
     <mapping class="cr.ac.ucr.sigebi.domain.Autorizacion"/>
     <mapping class="cr.ac.ucr.sigebi.domain.AutorizacionRol"/>
     <mapping class="cr.ac.ucr.sigebi.domain.AutorizacionRolPersona"/>
@@ -25,18 +26,21 @@
     <mapping class="cr.ac.ucr.sigebi.domain.BienCaracteristica"/>
     <mapping class="cr.ac.ucr.sigebi.domain.Clasificacion"/>
     <mapping class="cr.ac.ucr.sigebi.domain.Documento"/>
+    <mapping class="cr.ac.ucr.sigebi.domain.DocumentoActa"/>
     <mapping class="cr.ac.ucr.sigebi.domain.DocumentoAutorizacion"/>
+    <mapping class="cr.ac.ucr.sigebi.domain.DocumentoDetalle"/>
+    <mapping class="cr.ac.ucr.sigebi.domain.DocumentoInformeTecnico"/>
     <mapping class="cr.ac.ucr.sigebi.domain.Estado"/>
-    <mapping class="cr.ac.ucr.sigebi.domain.Exclusion"/>
-    <mapping class="cr.ac.ucr.sigebi.domain.ExclusionDetalle"/>
     <mapping class="cr.ac.ucr.sigebi.domain.Identificacion"/>
-    <mapping class="cr.ac.ucr.sigebi.domain.InformeTecnico"/>
-    <mapping class="cr.ac.ucr.sigebi.domain.Moneda"/>    
+    <mapping class="cr.ac.ucr.sigebi.domain.Moneda"/>
     <mapping class="cr.ac.ucr.sigebi.domain.Notificacion"/>
     <mapping class="cr.ac.ucr.sigebi.domain.Proveedor"/>
     <mapping class="cr.ac.ucr.sigebi.domain.RegistroMovimiento"/>
     <mapping class="cr.ac.ucr.sigebi.domain.Rol"/>
     <mapping class="cr.ac.ucr.sigebi.domain.Solicitud"/>
+    <mapping class="cr.ac.ucr.sigebi.domain.SolicitudDetalle"/>
+    <mapping class="cr.ac.ucr.sigebi.domain.SolicitudExclusion"/>
+    <mapping class="cr.ac.ucr.sigebi.domain.SolicitudTraslado"/>
     <mapping class="cr.ac.ucr.sigebi.domain.SubCategoria"/>
     <mapping class="cr.ac.ucr.sigebi.domain.SubClasificacion"/>
     <mapping class="cr.ac.ucr.sigebi.domain.Tipo"/>
@@ -44,6 +48,7 @@
     <mapping class="cr.ac.ucr.sigebi.domain.UnidadEjecutora"/>
     <mapping class="cr.ac.ucr.sigebi.domain.Usuario"/>
     <mapping class="cr.ac.ucr.sigebi.domain.ViewResumenBien"/>
+    
     
     <!--<mapping class="cr.ac.ucr.sigebi.entities.AccesoriosEntity"/>
     <mapping class="cr.ac.ucr.sigebi.entities.ActaDetalleEntity"/>

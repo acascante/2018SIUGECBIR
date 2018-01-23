@@ -7,6 +7,7 @@ package cr.ac.ucr.sigebi.domain;
 
 import java.io.Serializable;
 import javax.persistence.Column;
+import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -17,10 +18,11 @@ import javax.persistence.Table;
  *
  * @author jairo.cisneros
  */
-@Entity(name = "InformeTecnico")
-@Table(name = "SIGEBI_OAF.SIGB_INFORME_TECNICO")
-@PrimaryKeyJoinColumn(name = "ID_INFORME_TECNICO", referencedColumnName = "ID_DOCUMENTO")
-public class InformeTecnico extends Documento implements Serializable {
+@Entity(name = "DocumentoInformeTecnico")
+@Table(name = "SIGEBI_OAF.SIGB_DOCUMENTO_INFOR_TECNICO")
+@DiscriminatorValue("1")
+@PrimaryKeyJoinColumn(name = "ID_DOCUMENTO", referencedColumnName = "ID_DOCUMENTO")
+public class DocumentoInformeTecnico extends Documento implements Serializable {
     
     //<editor-fold defaultstate="collapsed" desc="Atributos">
     @Column(name = "EVALUACION")
@@ -82,7 +84,7 @@ public class InformeTecnico extends Documento implements Serializable {
         if (getClass() != obj.getClass()) {
             return false;
         }
-        final InformeTecnico other = (InformeTecnico) obj;
+        final DocumentoInformeTecnico other = (DocumentoInformeTecnico) obj;
         if ((this.evaluacion == null) ? (other.evaluacion != null) : !this.evaluacion.equals(other.evaluacion)) {
             return false;
         }

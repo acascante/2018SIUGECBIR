@@ -12,16 +12,13 @@ import cr.ac.ucr.framework.vista.util.Util;
 import cr.ac.ucr.sigebi.models.ExclusionModel;
 import cr.ac.ucr.sigebi.commands.ExclusionCommand;
 import cr.ac.ucr.sigebi.commands.ListarExclusionesCommand;
-import cr.ac.ucr.sigebi.domain.Exclusion;
-import cr.ac.ucr.sigebi.entities.ExclusionEntity;
-import java.util.List;
+import cr.ac.ucr.sigebi.domain.SolicitudExclusion;
 import javax.annotation.Resource;
 import javax.faces.component.UIInput;
 import javax.faces.component.UIViewRoot;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 import javax.faces.event.PhaseId;
-import javax.faces.model.SelectItem;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
@@ -45,7 +42,7 @@ public class AgregarExclusionController extends ListarBienesController {
         super();
     }
     
-    private void inicializar(Exclusion exclusion) {
+    private void inicializar(SolicitudExclusion exclusion) {
         this.command = new ExclusionCommand(exclusion, exclusionModel.listarDetalles(exclusion));
         this.init();
     }
@@ -72,7 +69,7 @@ public class AgregarExclusionController extends ListarBienesController {
                 //TODO verificar estado de exclusion, y estados de detalles de exclusion
                 command.setEstado(estadoModel.buscarPorDominioNombre(Constantes.DOMINI0_EXCLUSION, Constantes.ESTADO_EXCLUSION_CREADA_DESC));
                 exclusionModel.salvar(command.getExclusion(command.getEstado()));
-                //TODO Actualizar bienes con nuevo estado en Solicitud de Exclusion
+                //TODO Actualizar bienes con nuevo estado en Solicitud de SolicitudExclusion
                 if (command.getIdExclusion() == null || command.getIdExclusion() == 0) {
                     mensajeExito = "Los datos se salvaron con éxito.";
                 } else {
@@ -104,7 +101,7 @@ public class AgregarExclusionController extends ListarBienesController {
     
     public void detalleRegistro(ActionEvent event) {
         try{
-            Exclusion exclusion = (Exclusion) event.getComponent().getAttributes().get(ListarExclusionesCommand.KEY_EXCLUSION);
+            SolicitudExclusion exclusion = (SolicitudExclusion) event.getComponent().getAttributes().get(ListarExclusionesCommand.KEY_EXCLUSION);
             if (!event.getPhaseId().equals(PhaseId.INVOKE_APPLICATION)) {
                 event.setPhaseId(PhaseId.INVOKE_APPLICATION);
                 event.queue();

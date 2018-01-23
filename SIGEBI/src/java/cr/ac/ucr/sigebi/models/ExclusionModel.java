@@ -7,8 +7,8 @@ package cr.ac.ucr.sigebi.models;
 
 import cr.ac.ucr.framework.utils.FWExcepcion;
 import cr.ac.ucr.sigebi.daos.ExclusionDao;
-import cr.ac.ucr.sigebi.domain.Exclusion;
-import cr.ac.ucr.sigebi.domain.ExclusionDetalle;
+import cr.ac.ucr.sigebi.domain.SolicitudDetalle;
+import cr.ac.ucr.sigebi.domain.SolicitudExclusion;
 import java.util.Date;
 import java.util.List;
 import javax.annotation.Resource;
@@ -26,11 +26,11 @@ public class ExclusionModel {
     @Resource
     private ExclusionDao exclusionDao;
     
-    public List<Exclusion> listar() throws FWExcepcion {
+    public List<SolicitudExclusion> listar() throws FWExcepcion {
         return exclusionDao.listar();
     }
     
-    public void salvar(Exclusion exclusion) throws FWExcepcion {
+    public void salvar(SolicitudExclusion exclusion) throws FWExcepcion {
         exclusionDao.salvar(exclusion);
         exclusionDao.salvarDetalles(exclusion.getDetalles());
     }
@@ -39,15 +39,15 @@ public class ExclusionModel {
         return exclusionDao.contar(unidadEjecutora, id, fecha, estado, tipoExclusion);
     }
     
-    public List<Exclusion> listar(Integer primerRegistro, Integer ultimoRegistro, Long unidadEjecutora, Long id, Date fecha, Integer estado, Integer tipo) throws FWExcepcion {
+    public List<SolicitudExclusion> listar(Integer primerRegistro, Integer ultimoRegistro, Long unidadEjecutora, Long id, Date fecha, Integer estado, Integer tipo) throws FWExcepcion {
         return exclusionDao.listar(primerRegistro, ultimoRegistro, unidadEjecutora, id, fecha, estado, tipo);
     }
     
-    public Long contarDetalles(Exclusion exclusion) throws FWExcepcion {
+    public Long contarDetalles(SolicitudExclusion exclusion) throws FWExcepcion {
         return exclusionDao.contarDetalles(exclusion);
     }
     
-    public List<ExclusionDetalle> listarDetalles(Exclusion exclusion) throws FWExcepcion {
+    public List<SolicitudDetalle> listarDetalles(SolicitudExclusion exclusion) throws FWExcepcion {
         return exclusionDao.listarDetalles(exclusion);
     }
 }

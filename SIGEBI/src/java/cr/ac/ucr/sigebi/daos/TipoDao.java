@@ -59,7 +59,7 @@ public class TipoDao extends GenericDaoImpl {
     public Tipo buscarPorId(Integer idTipo) throws FWExcepcion {
         Session session = dao.getSessionFactory().openSession();
         try {
-            String sql = "SELECT tip FROM Tipo tip WHERE tip.idTipo = :idTipo";
+            String sql = "SELECT tip FROM Tipo tip WHERE tip.id = :idTipo";
             Query query = session.createQuery(sql);
             query.setParameter("idTipo", idTipo);
 

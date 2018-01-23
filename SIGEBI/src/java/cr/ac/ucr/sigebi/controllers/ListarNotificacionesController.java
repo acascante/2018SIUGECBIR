@@ -44,6 +44,8 @@ public class ListarNotificacionesController extends BaseController {
     
     @Resource
     private NotificacionModel notificacionModel;
+    @Resource
+    private EstadoModel estadoModel;
     
     private List<Notificacion> notificaciones;
     private Map<Integer, Estado> estados;

@@ -8,7 +8,9 @@ package cr.ac.ucr.sigebi.domain;
 import cr.ac.ucr.framework.seguridad.ObjetoBase;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 import javax.persistence.Column;
+import javax.persistence.DiscriminatorColumn;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -20,6 +22,7 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
+import javax.persistence.Transient;
 
 /**
  *
@@ -28,16 +31,17 @@ import javax.persistence.InheritanceType;
 @Entity(name = "Documento")
 @Table(name = "SIGEBI_OAF.SIGB_DOCUMENTO")
 @Inheritance(strategy = InheritanceType.JOINED)
+@DiscriminatorColumn(name="discriminator")
 @SequenceGenerator(name = "SGB_SQ_DOCUMENTO", sequenceName = "SIGEBI_OAF.SGB_SQ_DOCUMENTO", initialValue = 1, allocationSize = 1)
 public class Documento extends ObjetoBase implements Serializable {
-    
+
     //<editor-fold defaultstate="collapsed" desc="Atributos">
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SGB_SQ_DOCUMENTO")
     @Column(name = "ID_DOCUMENTO")
     private Long id;
 
-    @Column(name = "FECHA") 
+    @Column(name = "FECHA")
     @Temporal(javax.persistence.TemporalType.DATE)
     private Date fecha;
 
@@ -45,10 +49,16 @@ public class Documento extends ObjetoBase implements Serializable {
     @JoinColumn(name = "ID_ESTADO", referencedColumnName = "ID_ESTADO")
     private Estado estado;
 
-    @Column(name = "TIPO")
-    private Integer tipo;
-    //</editor-fold>
+    @Column(name = "DISCRIMINATOR")
+    private Integer discriminator;
 
+    @Transient
+    private List<DocumentoDetalle> detallesDocumento;
+
+    @Transient
+    private List<DocumentoAutorizacion> autorizacionesDocumento;
+
+    //</editor-fold>
     //<editor-fold defaultstate="collapsed" desc="GET's y SET's">
     public Long getId() {
         return id;
@@ -74,15 +84,31 @@ public class Documento extends ObjetoBase implements Serializable {
         this.estado = estado;
     }
 
-    public Integer getTipo() {
-        return tipo;
+    public Integer getDiscriminator() {
+        return discriminator;
     }
 
-    public void setTipo(Integer tipo) {
-        this.tipo = tipo;
+    public void setDiscriminator(Integer discriminator) {
+        this.discriminator = discriminator;
     }
+
+    public List<DocumentoDetalle> getDetallesDocumento() {
+        return detallesDocumento;
+    }
+
+    public void setDetallesDocumento(List<DocumentoDetalle> detallesDocumento) {
+        this.detallesDocumento = detallesDocumento;
+    }
+
+    public List<DocumentoAutorizacion> getAutorizacionesDocumento() {
+        return autorizacionesDocumento;
+    }
+
+    public void setAutorizacionesDocumento(List<DocumentoAutorizacion> autorizacionesDocumento) {
+        this.autorizacionesDocumento = autorizacionesDocumento;
+    }
+
     //</editor-fold>
-
     //<editor-fold defaultstate="collapsed" desc="Metodos">
     @Override
     public int hashCode() {
@@ -90,7 +116,7 @@ public class Documento extends ObjetoBase implements Serializable {
         hash = 29 * hash + (this.id != null ? this.id.hashCode() : 0);
         hash = 29 * hash + (this.fecha != null ? this.fecha.hashCode() : 0);
         hash = 29 * hash + (this.estado != null ? this.estado.hashCode() : 0);
-        hash = 29 * hash + (this.tipo != null ? this.tipo.hashCode() : 0);
+        hash = 29 * hash + (this.discriminator != null ? this.discriminator.hashCode() : 0);
         return hash;
     }
 
@@ -115,7 +141,7 @@ public class Documento extends ObjetoBase implements Serializable {
         if (this.estado != other.estado && (this.estado == null || !this.estado.equals(other.estado))) {
             return false;
         }
-        if (this.tipo != other.tipo && (this.tipo == null || !this.tipo.equals(other.tipo))) {
+        if (this.discriminator != other.discriminator && (this.discriminator == null || !this.discriminator.equals(other.discriminator))) {
             return false;
         }
         return true;

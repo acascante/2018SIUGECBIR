@@ -12,6 +12,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
@@ -21,26 +23,31 @@ import javax.persistence.Table;
  *
  * @author jairo.cisneros
  */
-@Entity(name = "ActaDetalle")
-@Table(name = "SIGEBI_OAF.SIGB_ACTA_DETALLE")
-@SequenceGenerator(name = "SGB_SQ_ACTA_DETALLE", sequenceName = "SIGEBI_OAF.SGB_SQ_ACTA_DETALLE", initialValue = 1, allocationSize = 1)
-public class ActaDetalle extends ObjetoBase implements Serializable {
+@Entity(name = "DocumentoDetalleBien")
+@Table(name = "SIGEBI_OAF.SIGB_DOCUMENTO_DETALLE")
+@Inheritance(strategy = InheritanceType.JOINED)
+@SequenceGenerator(name = "SGB_SQ_DOCUMENTO_DETALLE", sequenceName = "SIGEBI_OAF.SGB_SQ_DOCUMENTO_DETALLE", initialValue = 1, allocationSize = 1)
+public class DocumentoDetalle extends ObjetoBase implements Serializable {
 
     //<editor-fold defaultstate="collapsed" desc="Atributos">
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SGB_SQ_ACTA_DETALLE")
-    @Column(name = "ID_ACTA_DETALLE")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SGB_SQ_DOCUMENTO_DETALLE")
+    @Column(name = "ID_DOCUMENTO_DETALLE")
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "ID_ACTA", referencedColumnName = "ID_DOCUMENTO")
-    private Acta acta;
+    @JoinColumn(name = "ID_DOCUMENTO", referencedColumnName = "ID_DOCUMENTO")
+    private Documento documento;
 
     @ManyToOne
     @JoinColumn(name = "ID_BIEN", referencedColumnName = "ID_BIEN")
     private Bien bien;
-    //</editor-fold>
 
+    @Column(name = "DISCRIMINATOR")
+    private Integer discriminator;
+
+    //</editor-fold>
+    
     //<editor-fold defaultstate="collapsed" desc="Get's y Set's">
     public Long getId() {
         return id;
@@ -50,14 +57,21 @@ public class ActaDetalle extends ObjetoBase implements Serializable {
         this.id = id;
     }
 
-    public Acta getActa() {
-        return acta;
+    public Documento getDocumento() {
+        return documento;
     }
 
-    public void setActa(Acta acta) {
-        this.acta = acta;
+    public void setDocumento(Documento documento) {
+        this.documento = documento;
     }
 
+    public Integer getDiscriminator() {
+        return discriminator;
+    }
+
+    public void setDiscriminator(Integer discriminator) {
+        this.discriminator = discriminator;
+    }
     public Bien getBien() {
         return bien;
     }
@@ -70,10 +84,10 @@ public class ActaDetalle extends ObjetoBase implements Serializable {
     //<editor-fold defaultstate="collapsed" desc="Metodos">
     @Override
     public int hashCode() {
-        int hash = 3;
-        hash = 83 * hash + (this.id != null ? this.id.hashCode() : 0);
-        hash = 83 * hash + (this.acta != null ? this.acta.hashCode() : 0);
-        hash = 83 * hash + (this.bien != null ? this.bien.hashCode() : 0);
+        int hash = 5;
+        hash = 71 * hash + (this.id != null ? this.id.hashCode() : 0);
+        hash = 71 * hash + (this.documento != null ? this.documento.hashCode() : 0);
+        hash = 71 * hash + (this.discriminator != null ? this.discriminator.hashCode() : 0);
         return hash;
     }
 
@@ -88,14 +102,14 @@ public class ActaDetalle extends ObjetoBase implements Serializable {
         if (getClass() != obj.getClass()) {
             return false;
         }
-        final ActaDetalle other = (ActaDetalle) obj;
+        final DocumentoDetalle other = (DocumentoDetalle) obj;
         if (this.id != other.id && (this.id == null || !this.id.equals(other.id))) {
             return false;
         }
-        if (this.acta != other.acta && (this.acta == null || !this.acta.equals(other.acta))) {
+        if (this.documento != other.documento && (this.documento == null || !this.documento.equals(other.documento))) {
             return false;
         }
-        if (this.bien != other.bien && (this.bien == null || !this.bien.equals(other.bien))) {
+        if (this.discriminator != other.discriminator && (this.discriminator == null || !this.discriminator.equals(other.discriminator))) {
             return false;
         }
         return true;

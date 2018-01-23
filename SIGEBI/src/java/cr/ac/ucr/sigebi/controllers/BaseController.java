@@ -29,8 +29,8 @@ import org.springframework.stereotype.Controller;
 public class BaseController extends PaginacionOracle {
 
     //<editor-fold defaultstate="collapsed" desc="Constantes">
-    Estado estadoPendiente;// = Constantes.ESTADO_BIEN_PENDIENTE;
-    Estado estadoPendienteSincronizar;// = Constantes.ESTADO_BIEN_PENDIENTE_SINCRONIZAR;
+    Integer estadoPendiente;// = Constantes.ESTADO_BIEN_PENDIENTE;
+    Integer estadoPendienteSincronizar;// = Constantes.ESTADO_BIEN_PENDIENTE_SINCRONIZAR;
     //</editor-fold>
 
     //<editor-fold defaultstate="collapsed" desc="Variables Locales">
@@ -42,8 +42,6 @@ public class BaseController extends PaginacionOracle {
     String vistaOrigen;
     String vistaActual;
     
-    @Resource
-    EstadoModel estadoModel;
     //</editor-fold>
     
     //<editor-fold defaultstate="collapsed" desc="Get's & Set's">
@@ -55,11 +53,11 @@ public class BaseController extends PaginacionOracle {
         this.vistaActual = vistaActual;
     }
 
-    public Estado getEstadoPendiente() {
+    public Integer getEstadoPendiente() {
         return estadoPendiente;
     }
 
-    public Estado getEstadoPendienteSincronizar() {
+    public Integer getEstadoPendienteSincronizar() {
         return estadoPendienteSincronizar;
     }
 
@@ -112,8 +110,8 @@ public class BaseController extends PaginacionOracle {
     //<editor-fold defaultstate="collapsed" desc="Constructor">
     public BaseController() {
         
-        estadoPendiente = estadoModel.buscarPorDominioEstado(Constantes.DOMINI0_ESTADO_BIEN, Constantes.ESTADO_BIEN_PENDIENTE); 
-        estadoPendienteSincronizar = estadoModel.buscarPorDominioEstado(Constantes.DOMINI0_ESTADO_BIEN, Constantes.ESTADO_BIEN_PENDIENTE_SINCRONIZAR); 
+        estadoPendiente = Constantes.ESTADO_BIEN_PENDIENTE; 
+        estadoPendienteSincronizar = Constantes.ESTADO_BIEN_PENDIENTE_SINCRONIZAR; 
         
     }
     //</editor-fold>

@@ -1,5 +1,15 @@
 <!-- Modal Agregar Observacion -->
-<ice:panelPopup modal="true" visible="#{controllerListarBien.panelListado}" rendered="true" styleClass="popup" >
+<ice:panelPopup modal="true" 
+                
+                xmlns:ice="http://www.icesoft.com/icefaces/component"
+                xmlns:icecore="http://www.icefaces.org/icefaces/core" 
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                
+                visible="#{controllerListarBien.panelListado}" 
+                rendered="true" 
+                styleClass="popup" >
     <f:facet name="header">
         <ice:outputText styleClass="flotar_izquierda titulo_popup" value="#{label['sigebi.label.vista.listarBienesGeneral.titulo']}"/>
     </f:facet> 

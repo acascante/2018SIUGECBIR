@@ -7,10 +7,11 @@ package cr.ac.ucr.sigebi.commands;
 
 import cr.ac.ucr.sigebi.domain.Bien;
 import cr.ac.ucr.sigebi.domain.Estado;
-import cr.ac.ucr.sigebi.domain.Exclusion;
-import cr.ac.ucr.sigebi.domain.ExclusionDetalle;
+import cr.ac.ucr.sigebi.domain.SolicitudExclusion;
+import cr.ac.ucr.sigebi.domain.SolicitudDetalle;
 import cr.ac.ucr.sigebi.domain.Tipo;
 import cr.ac.ucr.sigebi.domain.UnidadEjecutora;
+import cr.ac.ucr.sigebi.utils.Constantes;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -43,7 +44,7 @@ public class ExclusionCommand extends ListarBienesCommand {
         this.bienes = new HashMap<Long, Bien>();
     }
 
-    public ExclusionCommand(Exclusion exclusion) {
+    public ExclusionCommand(SolicitudExclusion exclusion) {
         super();
         this.idExclusion = exclusion.getId();
         this.unidadEjecutora = exclusion.getUnidadEjecutora();
@@ -52,29 +53,29 @@ public class ExclusionCommand extends ListarBienesCommand {
         this.tipo = exclusion.getTipoExclusion();
     }
     
-    public ExclusionCommand(Exclusion exclusion, List<ExclusionDetalle> detalles) {
+    public ExclusionCommand(SolicitudExclusion exclusion, List<SolicitudDetalle> detalles) {
         this.idExclusion = exclusion.getId();
         this.unidadEjecutora = exclusion.getUnidadEjecutora();
         this.estado = exclusion.getEstado();
         this.fecha = exclusion.getFecha();
         this.tipo = exclusion.getTipoExclusion();
         
-        for (ExclusionDetalle detalle : detalles) {
+        for (SolicitudDetalle detalle : detalles) {
             this.bienes.put(detalle.getBien().getId(), detalle.getBien());
         }
     }
     //</editor-fold>
 
     //<editor-fold defaultstate="collapsed" desc="Metodos">
-    public Exclusion getExclusion(Estado estado) {
-        Exclusion exclusion = new Exclusion();
+    public SolicitudExclusion getExclusion(Estado estado) {
+        SolicitudExclusion exclusion = new SolicitudExclusion();
         exclusion.setUnidadEjecutora(this.unidadEjecutora);
         exclusion.setEstado(this.estado);
         exclusion.setFecha(this.fecha);
         exclusion.setTipoExclusion(this.tipo);
         
         for (Bien bien : this.bienes.values()) {
-            exclusion.getDetalles().add(new ExclusionDetalle(exclusion, bien, estado));
+            exclusion.getDetalles().add(new SolicitudDetalle(exclusion, bien, estado, Constantes.DISCRIMINATOR_SOLICITUD_EXCLUSION));
         }
         return exclusion;
     }

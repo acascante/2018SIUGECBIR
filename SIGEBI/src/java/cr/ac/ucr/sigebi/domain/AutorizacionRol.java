@@ -7,6 +7,7 @@ package cr.ac.ucr.sigebi.domain;
 
 import cr.ac.ucr.framework.seguridad.ObjetoBase;
 import java.io.Serializable;
+import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -16,6 +17,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 /**
  *
@@ -39,6 +41,10 @@ public class AutorizacionRol extends ObjetoBase implements Serializable {
     @ManyToOne
     @JoinColumn(name = "ID_ROL", referencedColumnName = "ID_ROL")
     private Rol rol;
+    
+    @Transient
+    private List<AutorizacionRolPersona> autorizacionesRolPersona;
+    
     //</editor-fold>
 
     //<editor-fold defaultstate="collapsed" desc="Get's y Set's">
@@ -65,6 +71,15 @@ public class AutorizacionRol extends ObjetoBase implements Serializable {
     public void setRol(Rol rol) {
         this.rol = rol;
     }
+
+    public List<AutorizacionRolPersona> getAutorizacionesRolPersona() {
+        return autorizacionesRolPersona;
+    }
+
+    public void setAutorizacionesRolPersona(List<AutorizacionRolPersona> autorizacionesRolPersona) {
+        this.autorizacionesRolPersona = autorizacionesRolPersona;
+    }
+    
     //</editor-fold>
 
     //<editor-fold defaultstate="collapsed" desc="Metodos">

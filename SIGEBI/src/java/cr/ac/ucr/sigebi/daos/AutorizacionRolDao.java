@@ -83,7 +83,7 @@ public class AutorizacionRolDao extends GenericDaoImpl {
     public Long contarPorAutorizacion(Long idAutorizacion) throws FWExcepcion {
         Session session = this.dao.getSessionFactory().openSession();
         try {
-            String sql = "SELECT count(obj.idAutorizacion) FROM AutorizacionRol obj WHERE obj.autorizacion.id = :idAutorizacion";
+            String sql = "SELECT count(obj.id) FROM AutorizacionRol obj WHERE obj.autorizacion.id = :idAutorizacion";
             Query query = session.createQuery(sql);
             query.setParameter("idAutorizacion", idAutorizacion);
 

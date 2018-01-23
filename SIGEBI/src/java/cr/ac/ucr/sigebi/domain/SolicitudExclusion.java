@@ -5,7 +5,6 @@
  */
 package cr.ac.ucr.sigebi.domain;
 
-import java.util.List;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -13,27 +12,24 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
-import javax.persistence.Transient;
 
 /**
  *
  * @author alvaro.cascante
  */
-@Entity(name = "Exclusion")
-@Table(name = "SIGEBI_OAF.SIGB_EXCLUSION")
-@PrimaryKeyJoinColumn(name="ID_SOLICITUD", referencedColumnName = "ID_SOLICITUD")
+@Entity(name = "SolicitudExclusion")
+@Table(name = "SIGEBI_OAF.SIGB_SOLITUD_EXCLUSION")
+@PrimaryKeyJoinColumn(name = "ID_SOLICITUD", referencedColumnName = "ID_SOLICITUD")
 @DiscriminatorValue("1")
-public class Exclusion extends Solicitud {
-    
+public class SolicitudExclusion extends Solicitud {
+
     //<editor-fold defaultstate="collapsed" desc="Atributos">
     @JoinColumn(name = "ID_TIPO", referencedColumnName = "ID_TIPO")
     @ManyToOne(fetch = FetchType.EAGER)
     private Tipo tipoExclusion;
-    
-    @Transient
-    private List<ExclusionDetalle> detalles;
-    //</editor-fold>
 
+    //</editor-fold>
+    
     //<editor-fold defaultstate="collapsed" desc="Get's y Set's">
     public Tipo getTipoExclusion() {
         return tipoExclusion;
@@ -43,12 +39,5 @@ public class Exclusion extends Solicitud {
         this.tipoExclusion = tipoExclusion;
     }
 
-    public List<ExclusionDetalle> getDetalles() {
-        return detalles;
-    }
-
-    public void setDetalles(List<ExclusionDetalle> detalles) {
-        this.detalles = detalles;
-    }
     //</editor-fold> 
 }

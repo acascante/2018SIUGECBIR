@@ -8,6 +8,7 @@ package cr.ac.ucr.sigebi.domain;
 import java.io.Serializable;
 import java.util.Date;
 import javax.persistence.Column;
+import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -19,16 +20,13 @@ import javax.persistence.Temporal;
  *
  * @author jairo.cisneros
  */
-@Entity(name = "Acta")
-@Table(name = "SIGEBI_OAF.SIGB_ACTA")
-@PrimaryKeyJoinColumn(name = "ID_ACTA", referencedColumnName = "ID_DOCUMENTO")
-public class Acta extends Documento implements Serializable {
+@Entity(name = "DocumentoActa")
+@Table(name = "SIGEBI_OAF.SIGB_DOCUMENTO_ACTA")
+@DiscriminatorValue("2")
+@PrimaryKeyJoinColumn(name = "ID_DOCUMENTO", referencedColumnName = "ID_DOCUMENTO")
+public class DocumentoActa extends Documento implements Serializable {
 
     //<editor-fold defaultstate="collapsed" desc="Atributos">
-    @ManyToOne
-    @JoinColumn(name = "ID_TIPO", referencedColumnName = "ID_TIPO")
-    private Tipo tipoActa;
-
     @Column(name = "CEDULA")
     private String cedula;
 
@@ -45,17 +43,14 @@ public class Acta extends Documento implements Serializable {
     @ManyToOne
     @JoinColumn(name = "ID_UNIDAD_EJECUTORA", referencedColumnName = "ID")
     private UnidadEjecutora unidadEjecutora;
+
+    @ManyToOne
+    @JoinColumn(name = "ID_TIPO", referencedColumnName = "ID_TIPO")
+    private Tipo tipoActa;
+    
     //</editor-fold>
     
     //<editor-fold defaultstate="collapsed" desc="Get's y Set's">
-    public Tipo getTipoActa() {
-        return tipoActa;
-    }
-
-    public void setTipoActa(Tipo tipoActa) {
-        this.tipoActa = tipoActa;
-    }
-
     public String getCedula() {
         return cedula;
     }
@@ -95,13 +90,20 @@ public class Acta extends Documento implements Serializable {
     public void setUnidadEjecutora(UnidadEjecutora unidadEjecutora) {
         this.unidadEjecutora = unidadEjecutora;
     }
+
+    public Tipo getTipoActa() {
+        return tipoActa;
+    }
+
+    public void setTipoActa(Tipo tipoActa) {
+        this.tipoActa = tipoActa;
+    }
     //</editor-fold>
 
     //<editor-fold defaultstate="collapsed" desc="Metodos">
     @Override
     public int hashCode() {
         int hash = 7;
-        hash = 79 * hash + (this.tipoActa != null ? this.tipoActa.hashCode() : 0);
         hash = 79 * hash + (this.cedula != null ? this.cedula.hashCode() : 0);
         hash = 79 * hash + (this.razonSocial != null ? this.razonSocial.hashCode() : 0);
         hash = 79 * hash + (this.autorizacion != null ? this.autorizacion.hashCode() : 0);
@@ -121,7 +123,7 @@ public class Acta extends Documento implements Serializable {
         if (getClass() != obj.getClass()) {
             return false;
         }
-        final Acta other = (Acta) obj;
+        final DocumentoActa other = (DocumentoActa) obj;
         if ((this.cedula == null) ? (other.cedula != null) : !this.cedula.equals(other.cedula)) {
             return false;
         }
@@ -129,9 +131,6 @@ public class Acta extends Documento implements Serializable {
             return false;
         }
         if ((this.autorizacion == null) ? (other.autorizacion != null) : !this.autorizacion.equals(other.autorizacion)) {
-            return false;
-        }
-        if (this.tipoActa != other.tipoActa && (this.tipoActa == null || !this.tipoActa.equals(other.tipoActa))) {
             return false;
         }
         if (this.fecha != other.fecha && (this.fecha == null || !this.fecha.equals(other.fecha))) {

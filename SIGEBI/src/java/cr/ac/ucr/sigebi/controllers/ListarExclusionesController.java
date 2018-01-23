@@ -11,7 +11,7 @@ import cr.ac.ucr.framework.vista.util.Mensaje;
 import cr.ac.ucr.framework.vista.util.Util;
 import cr.ac.ucr.sigebi.commands.ListarExclusionesCommand;
 import cr.ac.ucr.sigebi.domain.Estado;
-import cr.ac.ucr.sigebi.domain.Exclusion;
+import cr.ac.ucr.sigebi.domain.SolicitudExclusion;
 import cr.ac.ucr.sigebi.domain.Tipo;
 import cr.ac.ucr.sigebi.models.EstadoModel;
 import cr.ac.ucr.sigebi.models.ExclusionModel;
@@ -50,7 +50,7 @@ public class ListarExclusionesController extends BaseController {
     @Resource
     private TipoModel tipoModel;
     
-    private List<Exclusion> exclusiones;
+    private List<SolicitudExclusion> exclusiones;
     
     private ListarExclusionesCommand command;
    
@@ -156,11 +156,11 @@ public class ListarExclusionesController extends BaseController {
     }
     
     // <editor-fold defaultstate="collapsed" desc="Get's y Set's">
-    public List<Exclusion> getExclusiones() {
+    public List<SolicitudExclusion> getExclusiones() {
         return exclusiones;
     }
 
-    public void setExclusiones(List<Exclusion> exclusiones) {
+    public void setExclusiones(List<SolicitudExclusion> exclusiones) {
         this.exclusiones = exclusiones;
     }
 

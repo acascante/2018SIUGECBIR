@@ -64,8 +64,8 @@ public class AutorizacionRolPersonaDao extends GenericDaoImpl {
         Session session = this.dao.getSessionFactory().openSession();
         try {
             String sql = "SELECT obj FROM AutorizacionRolPersona obj "
-                    + " WHERE obj.autorizacion.id = :idAutorizacion"
-                    + " and obj.rol.id = :idRol";
+                    + " WHERE obj.autorizacionRol.autorizacion.id = :idAutorizacion"
+                    + " and obj.autorizacionRol.rol.id = :idRol";
             Query query = session.createQuery(sql);
             query.setParameter("idAutorizacion", idAutorizacion);
             query.setParameter("idRol", idRol);
@@ -86,7 +86,7 @@ public class AutorizacionRolPersonaDao extends GenericDaoImpl {
         Session session = this.dao.getSessionFactory().openSession();
         try {
             String sql = "SELECT obj FROM AutorizacionRolPersona obj "
-                    + " WHERE obj.autorizacion.id = :idAutorizacion"
+                    + " WHERE obj.autorizacionRol.autorizacion.id = :idAutorizacion"
                     + " and obj.unidadEjecutora.id = :numUnidadEjec";
             Query query = session.createQuery(sql);
             query.setParameter("idAutorizacion", idAutorizacion);
@@ -107,9 +107,9 @@ public class AutorizacionRolPersonaDao extends GenericDaoImpl {
     public Long contarPorAutorizacionRol(Long idAutorizacion, Long idRol) throws FWExcepcion {
         Session session = this.dao.getSessionFactory().openSession();
         try {
-            String sql = "SELECT count(obj.idAutorizacion) FROM AutorizacionRolPersona obj "
-                    + " WHERE obj.autorizacion.id = :idAutorizacion"
-                    + " and obj.rol.id = :idRol";
+            String sql = "SELECT count(obj.id) FROM AutorizacionRolPersona obj "
+                    + " WHERE obj.autorizacionRol.autorizacion.id = :idAutorizacion"
+                    + " and obj.autorizacionRol.rol.id = :idRol";
             Query query = session.createQuery(sql);
             query.setParameter("idAutorizacion", idAutorizacion);
             query.setParameter("idRol", idRol);
@@ -133,8 +133,8 @@ public class AutorizacionRolPersonaDao extends GenericDaoImpl {
         try {
             Session session = this.dao.getSessionFactory().openSession();
             String sql = "select obj from AutorizacionRolPersona obj ";
-            sql = sql + " where obj.rol.id = :idRol";
-            sql = sql + " and obj.autorizacion.id = :idAutorizacion";
+            sql = sql + " where obj.autorizacionRol.rol.id = :idRol";
+            sql = sql + " and obj.autorizacionRol.autorizacion.id = :idAutorizacion";
             sql = sql + " and obj.usuarioSeguridad.id = :idUsuario";
             Query query = session.createQuery(sql);
             query.setParameter("idAutorizacion", idAutorizacion);
@@ -160,8 +160,8 @@ public class AutorizacionRolPersonaDao extends GenericDaoImpl {
         try {
             Session session = this.dao.getSessionFactory().openSession();
             String sql = "select obj from AutorizacionRolPersona obj ";
-            sql = sql + " where obj.rol.codigo = :codigoRol";
-            sql = sql + " and obj.autorizacion.id = :idAutorizacion";
+            sql = sql + " where obj.autorizacionRol.rol.codigo = :codigoRol";
+            sql = sql + " and obj.autorizacionRol.autorizacion.id = :idAutorizacion";
             sql = sql + " and obj.usuarioSeguridad.id = :idUsuario";
             Query query = session.createQuery(sql);
             query.setParameter("idAutorizacion", idAutorizacion);
@@ -188,7 +188,7 @@ public class AutorizacionRolPersonaDao extends GenericDaoImpl {
         try {
             Session session = this.dao.getSessionFactory().openSession();
             String sql = "select obj from AutorizacionRolPersona obj ";
-            sql = sql + " where obj.autorizacion.id = :idAutorizacion";
+            sql = sql + " where obj.autorizacionRol.autorizacion.id = :idAutorizacion";
             sql = sql + " and obj.usuarioSeguridad.id = :idUsuario";
             sql = sql + " and obj.unidadEjecutora.id = :unidadEjecutora";
             Query query = session.createQuery(sql);

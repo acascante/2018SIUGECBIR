@@ -263,7 +263,7 @@ public class GestionProcesosController extends BaseController {
     }
 
     /**
-     * Se seleccionan el autorizacion
+     * Se seleccion la autorizacion
      *
      * @param event
      */
@@ -324,8 +324,8 @@ public class GestionProcesosController extends BaseController {
             List<AutorizacionRolPersona> personasRolAutorizacion = autorizacionRolPersonaModel.buscarPorAutorizacionRol(command.getIdAutorizacionTipoProceso(), command.getIdRol());
 
             //Se buscan los usuarios
-            this.usuarios = segUsuarioModel.listarUsuarios(command.getIdUsuario(), command.getNombreCompleto(), command.getCorreo(),
-                    this.getPrimerRegistro() - 1, this.getUltimoRegistro());
+            this.usuarios = segUsuarioModel.listarUsuarios(command.getIdUsuario(), command.getNombreCompleto(), 
+                    command.getCorreo(), this.getPrimerRegistro() - 1, this.getUltimoRegistro());
 
             //Se seleccionan los usuarios asociados a los roles
             for (SegUsuario usuario : usuarios) {
@@ -372,8 +372,7 @@ public class GestionProcesosController extends BaseController {
 
             //Se incluye el usuario al rol
             AutorizacionRolPersona autorizacionRolPersona = new AutorizacionRolPersona();
-            autorizacionRolPersona.setAutorizacion(autorizacionRol.getAutorizacion());
-            autorizacionRolPersona.setRol(autorizacionRol.getRol());
+            autorizacionRolPersona.setAutorizacionRol(autorizacionRol);            
             autorizacionRolPersona.setUsuarioSeguridad(usr);
             autorizacionRolPersona.setUnidadEjecutora(unidadEjecutora);
             autorizacionRolPersonaModel.agregar(autorizacionRolPersona);
@@ -404,8 +403,8 @@ public class GestionProcesosController extends BaseController {
             autorizacionRolPersonaModel.eliminar(autorizacionRolPersona);
             usuario.setMarcado(false);
 
-            //Se verifica si el autorizacion rol tiene usuarios asociados
-            if (autorizacionRolModel.contarPorAutorizacion(autorizacionRolPersonaModel.contarPorAutorizacionRol(command.getIdAutorizacionTipoProceso(), command.getIdRol())) == 0) {
+            //Se verifica si la autorizacion rol tiene usuarios asociados
+            if (autorizacionRolPersonaModel.contarPorAutorizacionRol(command.getIdAutorizacionTipoProceso(), command.getIdRol()) == 0) {
                 AutorizacionRol autorizacionRol = autorizacionRolModel.buscarPorRolAutorizacion(command.getIdRol(), command.getIdAutorizacionTipoProceso());
                 autorizacionRolModel.eliminar(autorizacionRol);
             }
@@ -600,7 +599,6 @@ public class GestionProcesosController extends BaseController {
     public void agregarAutorizacion() {
         try {
             Autorizacion autorizacion = command.getAutorizacion();
-            //TODO verificar si la busqueda debe ser ID
             autorizacion.setTipoProceso(tipoModel.buscarPorId(command.getIdTipoProceso()));
             autorizacion.setEstado(estadoModel.buscarPorDominioEstado(Constantes.DOMINI0_ESTADO_GENERAL, Constantes.ESTADO_GENERAL_ACTIVO));
             if (validarFormAutorizacion()) {

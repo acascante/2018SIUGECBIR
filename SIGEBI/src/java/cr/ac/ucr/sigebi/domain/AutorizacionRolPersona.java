@@ -23,23 +23,18 @@ import javax.persistence.Table;
  */
 @Entity(name = "AutorizacionRolPersona")
 @Table(name = "SIGEBI_OAF.SIGB_AUTORIZACION_ROL_PERSONA")
-@SequenceGenerator(name = "SGB_SQ_AUTORI_ROL_PER",  sequenceName = "SIGEBI_OAF.SGB_SQ_AUTORI_ROL_PER", initialValue = 1, allocationSize = 1)
+@SequenceGenerator(name = "SGB_SQ_AUTORI_ROL_PER", sequenceName = "SIGEBI_OAF.SGB_SQ_AUTORI_ROL_PER", initialValue = 1, allocationSize = 1)
 public class AutorizacionRolPersona extends ObjetoBase implements Serializable {
 
     //<editor-fold defaultstate="collapsed" desc="Atributos">
-    
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SGB_SQ_AUTORI_ROL_PER")
     @Column(name = "ID_AUTORIZACION_ROL_PERSONA")
     private Long id;
-    
+
     @ManyToOne
-    @JoinColumn(name = "ID_AUTORIZACION", referencedColumnName = "ID_AUTORIZACION")
-    private Autorizacion autorizacion;
-    
-    @ManyToOne
-    @JoinColumn(name = "ID_ROL", referencedColumnName = "ID_ROL")
-    private Rol rol;
+    @JoinColumn(name = "ID_AUTORIZACION_ROL", referencedColumnName = "ID_AUTORIZACION_ROL")
+    private AutorizacionRol autorizacionRol;
 
     @ManyToOne
     @JoinColumn(name = "ID_USUARIO", referencedColumnName = "ID_USUARIO")
@@ -48,9 +43,9 @@ public class AutorizacionRolPersona extends ObjetoBase implements Serializable {
     @ManyToOne
     @JoinColumn(name = "ID_UNIDAD_EJECUTORA", referencedColumnName = "ID")
     private UnidadEjecutora unidadEjecutora;
-    
-    //</editor-fold>
 
+    //</editor-fold>
+    
     //<editor-fold defaultstate="collapsed" desc="Get's y Set's">
     public Long getId() {
         return id;
@@ -60,20 +55,12 @@ public class AutorizacionRolPersona extends ObjetoBase implements Serializable {
         this.id = id;
     }
 
-    public Autorizacion getAutorizacion() {
-        return autorizacion;
+    public AutorizacionRol getAutorizacionRol() {
+        return autorizacionRol;
     }
 
-    public void setAutorizacion(Autorizacion autorizacion) {
-        this.autorizacion = autorizacion;
-    }
-
-    public Rol getRol() {
-        return rol;
-    }
-
-    public void setRol(Rol rol) {
-        this.rol = rol;
+    public void setAutorizacionRol(AutorizacionRol autorizacionRol) {
+        this.autorizacionRol = autorizacionRol;
     }
 
     public Usuario getUsuarioSeguridad() {
@@ -96,12 +83,11 @@ public class AutorizacionRolPersona extends ObjetoBase implements Serializable {
     //<editor-fold defaultstate="collapsed" desc="Metodos">
     @Override
     public int hashCode() {
-        int hash = 7;
-        hash = 29 * hash + (this.id != null ? this.id.hashCode() : 0);
-        hash = 29 * hash + (this.autorizacion != null ? this.autorizacion.hashCode() : 0);
-        hash = 29 * hash + (this.rol != null ? this.rol.hashCode() : 0);
-        hash = 29 * hash + (this.usuarioSeguridad != null ? this.usuarioSeguridad.hashCode() : 0);
-        hash = 29 * hash + (this.unidadEjecutora != null ? this.unidadEjecutora.hashCode() : 0);
+        int hash = 5;
+        hash = 23 * hash + (this.id != null ? this.id.hashCode() : 0);
+        hash = 23 * hash + (this.autorizacionRol != null ? this.autorizacionRol.hashCode() : 0);
+        hash = 23 * hash + (this.usuarioSeguridad != null ? this.usuarioSeguridad.hashCode() : 0);
+        hash = 23 * hash + (this.unidadEjecutora != null ? this.unidadEjecutora.hashCode() : 0);
         return hash;
     }
 
@@ -120,10 +106,7 @@ public class AutorizacionRolPersona extends ObjetoBase implements Serializable {
         if (this.id != other.id && (this.id == null || !this.id.equals(other.id))) {
             return false;
         }
-        if (this.autorizacion != other.autorizacion && (this.autorizacion == null || !this.autorizacion.equals(other.autorizacion))) {
-            return false;
-        }
-        if (this.rol != other.rol && (this.rol == null || !this.rol.equals(other.rol))) {
+        if (this.autorizacionRol != other.autorizacionRol && (this.autorizacionRol == null || !this.autorizacionRol.equals(other.autorizacionRol))) {
             return false;
         }
         if (this.usuarioSeguridad != other.usuarioSeguridad && (this.usuarioSeguridad == null || !this.usuarioSeguridad.equals(other.usuarioSeguridad))) {
@@ -135,4 +118,5 @@ public class AutorizacionRolPersona extends ObjetoBase implements Serializable {
         return true;
     }
     //</editor-fold>
+
 }

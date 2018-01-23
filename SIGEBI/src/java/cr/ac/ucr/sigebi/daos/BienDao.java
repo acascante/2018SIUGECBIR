@@ -33,6 +33,7 @@ public class BienDao extends GenericDaoImpl {
     @Autowired
     private DaoHelper dao;
     
+    
     @Resource
     SubClasificacionDao subClasDao;
     

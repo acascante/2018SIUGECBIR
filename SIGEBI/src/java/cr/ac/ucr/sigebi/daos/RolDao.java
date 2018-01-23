@@ -73,7 +73,6 @@ public class RolDao extends GenericDaoImpl {
         try {
             this.delete(obj);
         } catch (Exception e) {
-            e.printStackTrace();
             throw new FWExcepcion("sigebi.error.dao.rol.eliminar",
                     "Error obtener los registros de tipo " + this.getClass(), e.getCause());
         }
@@ -102,7 +101,8 @@ public class RolDao extends GenericDaoImpl {
         Session session = this.dao.getSessionFactory().openSession();
         try {
             String sql = "SELECT obj FROM Rol obj ";
-            sql = sql + " where 0 = (select count(docu.rol) from DocumentoAutorizacion docu where docu.rol.id = obj.id and docu.documento.id = :idDocumento)";
+            sql = sql + " where 0 = (select count(docu.rol) from DocumentoAutorizacion docu "
+                    + "where docu.autorizacionRolPersona.autorizacionRol.rol.id = obj.id and docu.documento.id = :idDocumento)";
             Query query = session.createQuery(sql);
             query.setParameter("idDocumento", idDocumento);
 
@@ -255,9 +255,10 @@ public class RolDao extends GenericDaoImpl {
         Session session = this.dao.getSessionFactory().openSession();
         try {
             String sql = "SELECT COUNT(*) FROM Rol obj";
-            sql = sql + " WHERE obj.id = :idRol and ((SELECT COUNT(obj1.idRol) from DocumentoAutorizacion obj1 where obj1.rol.id = :idRol) > 0 ";
-            sql = sql + " or (SELECT COUNT(obj1.idRol) from AutorizacionRol obj1 where obj1.rol.id = :idRol) > 0 ";
-            sql = sql + " or (SELECT COUNT(obj1.idRol) from AutorizacionRolPersona obj1 where obj1.rol.id = :idRol) > 0) ";
+            sql = sql + " WHERE obj.id = :idRol and ";
+            sql = sql + "((SELECT COUNT(obj1.id) from DocumentoAutorizacion obj1 where obj1.autorizacionRolPersona.autorizacionRol.rol.id = :idRol) > 0 ";
+            sql = sql + " or (SELECT COUNT(obj1.id) from AutorizacionRol obj1 where obj1.rol.id = :idRol) > 0 ";
+            sql = sql + " or (SELECT COUNT(obj1.id) from AutorizacionRolPersona obj1 where obj1.autorizacionRol.rol.id = :idRol) > 0) ";
             Query query = session.createQuery(sql);
             query.setParameter("idRol", idRol);
 
@@ -265,7 +266,7 @@ public class RolDao extends GenericDaoImpl {
             return (Long) query.uniqueResult();
 
         } catch (HibernateException e) {
-            throw new FWExcepcion("sigebi.error.dao.documentoRol.verificaRolUso",
+            throw new FWExcepcion("sigebi.error.dao.rol.verificaRolUso",
                     "Error obtener los registros de tipo " + this.getClass(), e.getCause());
         } finally {
             session.close();
