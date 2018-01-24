@@ -19,6 +19,7 @@ import cr.ac.ucr.sigebi.domain.Tipo;
 import cr.ac.ucr.sigebi.domain.Ubicacion;
 import cr.ac.ucr.sigebi.domain.UnidadEjecutora;
 import cr.ac.ucr.sigebi.domain.ViewResumenBien;
+import cr.ac.ucr.sigebi.utils.Constantes;
 import java.util.Date;
 import java.util.List;
 
@@ -160,6 +161,10 @@ public class BienCommand {
     //</editor-fold>
     
     //<editor-fold defaultstate="collapsed" desc="GET's y SET's">
+    public String getKeyVistaOrigen() {
+        return Constantes.KEY_VISTA_ORIGEN; 
+    }
+
     public Long getId() {
         return id;
     }

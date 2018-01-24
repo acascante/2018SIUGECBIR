@@ -5,21 +5,16 @@
  */
 package cr.ac.ucr.sigebi.controllers;
 
+import cr.ac.ucr.framework.utils.FWExcepcion;
 import cr.ac.ucr.framework.vista.util.Mensaje;
 import cr.ac.ucr.framework.vista.util.Util;
 import cr.ac.ucr.sigebi.commands.BienCommand;
-import cr.ac.ucr.sigebi.domain.Bien;
+import cr.ac.ucr.sigebi.commands.NotificacionCommand;
 import cr.ac.ucr.sigebi.domain.Clasificacion;
-import cr.ac.ucr.sigebi.domain.Estado;
 import cr.ac.ucr.sigebi.domain.Identificacion;
 import cr.ac.ucr.sigebi.domain.Lote;
 import cr.ac.ucr.sigebi.domain.Moneda;
-import cr.ac.ucr.sigebi.domain.Proveedor;
-import cr.ac.ucr.sigebi.domain.SubCategoria;
-import cr.ac.ucr.sigebi.domain.SubClasificacion;
 import cr.ac.ucr.sigebi.domain.Tipo;
-import cr.ac.ucr.sigebi.domain.Ubicacion;
-import cr.ac.ucr.sigebi.domain.UnidadEjecutora;
 import cr.ac.ucr.sigebi.models.CategoriaModel;
 import cr.ac.ucr.sigebi.models.ClasificacionModel;
 import cr.ac.ucr.sigebi.models.MonedaModel;
@@ -29,7 +24,6 @@ import cr.ac.ucr.sigebi.models.BienModel;
 import cr.ac.ucr.sigebi.models.LoteModel;
 import cr.ac.ucr.sigebi.models.TipoModel;
 import cr.ac.ucr.sigebi.utils.Constantes;
-import static java.lang.Integer.parseInt;
 import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.Resource;
@@ -44,9 +38,9 @@ import org.springframework.stereotype.Controller;
  *
  * @author jorge.serrano
  */
-@Controller(value = "controllerBienes")
+@Controller(value = "controllerAgregarBienes")
 @Scope("session")
-public class BienController extends BaseController {
+public class AgregarBienController extends BaseController {
     
     //<editor-fold defaultstate="collapsed" desc="Variables de la Clase">
     List<SelectItem> tiposBienOptions;
@@ -80,9 +74,9 @@ public class BienController extends BaseController {
     
 
     //<editor-fold defaultstate="collapsed" desc="Inicializa Datos">
-    public BienController() {
+    public AgregarBienController() {
         super();
-        command = new BienCommand();
+
         cargarCombos();
     }
 
@@ -141,6 +135,26 @@ public class BienController extends BaseController {
         }
     }
 
+    public void nuevoRegistro(ActionEvent event) {
+        try{
+            if (!event.getPhaseId().equals(PhaseId.INVOKE_APPLICATION)) {
+                event.setPhaseId(PhaseId.INVOKE_APPLICATION);
+                event.queue();
+                return;
+            }
+            inicializar();
+            this.vistaOrigen = event.getComponent().getAttributes().get(Constantes.KEY_VISTA_ORIGEN).toString();
+            Util.navegar(Constantes.VISTA_NOTIFICACION_NUEVA);
+        } catch (FWExcepcion err) {
+            mensaje = err.getMessage();
+        }
+    }
+    
+    private void inicializar() {
+        this.mensajeExito = "";
+        this.mensaje = "";
+        this.command = new BienCommand();
+    }
     private Double getValorColones() {
         //TODO como se va a manejar el tipo de cambio?
         try {

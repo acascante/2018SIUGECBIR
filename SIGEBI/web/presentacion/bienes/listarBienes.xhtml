@@ -2,30 +2,18 @@
           xmlns:ice="http://www.icesoft.com/icefaces/component"
           xmlns:h="http://java.sun.com/jsf/html"
           xmlns:f="http://java.sun.com/jsf/core"
-          xmlns:ui="http://java.sun.com/jsf/facelets"
-          >
+          xmlns:ui="http://java.sun.com/jsf/facelets">
     <div class="contenido-pagina">
-
         <div class="container">            
             <div class="row">
-                
                 <div class='col-sm-6'>
                     <h1 style="margin: 0;">                       
                         <ice:outputFormat value="#{label['sigebi.Bien.Listado.Titulo']}"/>
                     </h1>
                 </div>
                 <div class="col-sm-6">
-
-                    
-                    <ice:commandButton id="btnNuevo"
-                                       style="float: right" 
-                                       styleClass="boton" 
-                                       partialSubmit="true" 
-                                       actionListener="#{controllerBienes.nuevoRegistro}"
-                                       value="Nuevo">
-                        <!--
-                        <f:attribute id="tipoSeleccionado" name="tipoSeleccionado"  value="#{bien}"/>
-                        -->
+                    <ice:commandButton id="botonNuevo" style="float:right" styleClass="boton" partialSubmit="true" actionListener="#{controllerAgregarBienes.nuevoRegistro}" value="Nuevo" >
+                       <f:attribute id="vistaOrigen" name="#{controllerAgregarBienes.command.keyVistaOrigen}"  value="#{controllerAgregarBienes.vistaOrigen}"/>
                     </ice:commandButton>
                 </div>              
             </div>
@@ -46,14 +34,9 @@
                                     <ice:outputText value="#{label['label.paginacion.cantidad.pagina']} "/>
                                 </td>
                                 <td>
-                                    
-                                    <ice:selectOneMenu id="cantRegistroPorPagina"
-                                           value="#{controllerListarBien.cantRegistroPorPagina}" 
-                                           valueChangeListener="#{controllerListarBien.cambioRegistrosPorPagina}"
-                                           partialSubmit="true">
-                                            <f:selectItems id="item_pa" value="#{controllerListarBien.listaRegistrosPagina}"/>
+                                    <ice:selectOneMenu id="cantRegistroPorPagina" value="#{controllerListarBien.cantRegistroPorPagina}" valueChangeListener="#{controllerListarBien.cambioRegistrosPorPagina}" partialSubmit="true">
+                                        <f:selectItems id="item_pa" value="#{controllerListarBien.listaRegistrosPagina}"/>
                                     </ice:selectOneMenu>    
-                                    
                                 </td>
                             </tr>
                         </table>                        
@@ -74,14 +57,8 @@
             <div class="row">
                 <div class="col-sm-12">
                     <div>
-                        <ice:dataTable id="bienesPendientesSincronizar"
-                                   value="#{controllerListarBien.bienes}"
-                                   var="bien"
-                                   paginator="true"
-                                   paginatorPosition="bottom"
-                                   rows="10">
-
-                            <ice:column id="idBien">                                 
+                        <ice:dataTable id="bienesPendientesSincronizar" value="#{controllerListarBien.bienes}" var="bien" paginator="true" paginatorPosition="bottom" rows="10">
+                            <ice:column id="idBien">
                                 <f:facet name="header">
                                     <ice:columnGroup>
                                         <ice:headerRow>
@@ -90,13 +67,13 @@
                                         <ice:headerRow>
                                             <ice:inputText id="filtroNombre"
                                                            style="width: 130px;"
-                                                           value="#{controllerListarBien.fltIdBien}"                                   
+                                                           value="#{controllerListarBien.fltIdBien}"
                                                            partialSubmit="true"
                                                            valueChangeListener="#{controllerListarBien.cambioFiltro}"/>
                                         </ice:headerRow>
                                     </ice:columnGroup>
                                 </f:facet>
-                                <h:outputText id="idBienCell" value="#{bien.idPlaca.placa}"/>
+                                <h:outputText id="idBienCell" value="#{bien.id}"/>
                             </ice:column>
 
                             <ice:column id="descripcion">
@@ -108,15 +85,14 @@
                                         <ice:headerRow>
                                             <ice:inputText id="filtroDescripcion"
                                                    style="width: 130px;"
-                                                   value="#{controllerListarBien.fltDescripcion}"                                   
+                                                   value="#{controllerListarBien.fltDescripcion}"
                                                    partialSubmit="true"
                                                    valueChangeListener="#{controllerListarBien.cambioFiltro}"/>
                                         </ice:headerRow>
                                     </ice:columnGroup>
-                                </f:facet>                                
+                                </f:facet>
                                 <h:outputText id="descripcionCell" value="#{bien.descripcion}"/>
                             </ice:column>
-
 
                             <ice:column id="colMarca">
                                 <f:facet name="header">
@@ -127,13 +103,13 @@
                                         <ice:headerRow>
                                             <ice:inputText id="filtroMarca"
                                                    style="width: 130px;"
-                                                   value="#{controllerListarBien.fltMarca}"                                   
+                                                   value="#{controllerListarBien.fltMarca}"
                                                    partialSubmit="true"
                                                    valueChangeListener="#{controllerListarBien.cambioFiltro}"/>
                                         </ice:headerRow>
                                     </ice:columnGroup>
-                                </f:facet>                                
-                                <h:outputText id="costoCell" value="#{bien.marca}"/>
+                                </f:facet>
+                                <h:outputText id="costoCell" value="#{bien.resumenBien.marca}"/>
                             </ice:column>
 
                             <ice:column id="colModelo">
@@ -145,13 +121,13 @@
                                         <ice:headerRow>
                                             <ice:inputText id="filtroModelo"
                                                    style="width: 130px;"
-                                                   value="#{controllerListarBien.fltModelo}"                                   
+                                                   value="#{controllerListarBien.fltModelo}"
                                                    partialSubmit="true"
                                                    valueChangeListener="#{controllerListarBien.cambioFiltro}"/>
                                         </ice:headerRow>
                                     </ice:columnGroup>
                                 </f:facet>                                 
-                                <h:outputText id="costoCell" value="#{bien.modelo}"/>
+                                <h:outputText id="costoCell" value="#{bien.resumenBien.modelo}"/>
                             </ice:column>
 
                             <ice:column id="colSerie">
@@ -163,15 +139,14 @@
                                         <ice:headerRow>
                                            <ice:inputText id="filtroSerie"
                                                    style="width: 130px;"
-                                                   value="#{controllerListarBien.fltSerie}"                                   
+                                                   value="#{controllerListarBien.fltSerie}"
                                                    partialSubmit="true"
                                                    valueChangeListener="#{controllerListarBien.cambioFiltro}"/>
                                         </ice:headerRow>
                                     </ice:columnGroup>
-                                </f:facet>                                
-                                <h:outputText id="costoCell" value="#{bien.serie}"/>
+                                </f:facet>
+                                <h:outputText id="costoCell" value="#{bien.resumenBien.serie}"/>
                             </ice:column>
-
 
                             <ice:column id="colEstado">
                                 <f:facet name="header">
@@ -183,42 +158,27 @@
                                            <ice:selectOneMenu id="filtroCondicionContractual"
                                                        valueChangeListener="#{controllerListarBien.cambioFiltroEstado}"
                                                        value="#{controllerListarBien.fltEstado}"
-                                                       partialSubmit="true"
-                                                       >
+                                                       partialSubmit="true">
                                                 <f:selectItem itemLabel="N/A" itemValue="-1"/>
                                                 <f:selectItems id="slcEstadoItem" value="#{controllerListarBien.estadosOptions}"/>
                                             </ice:selectOneMenu>
                                         </ice:headerRow>
                                     </ice:columnGroup>
-                                </f:facet>                                
+                                </f:facet>
                                 <h:outputText id="costoCell" value="#{bien.idEstado.nombre}"/>
                             </ice:column>
 
-                            
                             <ice:column style="text-align: center;">
-
-                            <ice:commandButton id="botonAbrir"
-                                               style="float:right;margin-top:2%" 
-                                               styleClass="boton" 
-                                               partialSubmit="true"
-                                               visible="false"
-                                               actionListener="#{controllerBienes.abrirDetalle}"
-                                               
-                                               value="#{label['sigebi.Bien.Listado.Detalle']}"  >
-                                <f:attribute id="tipoSeleccionado" name="tipoSeleccionado"  value="#{bien}"/>                                
-                            </ice:commandButton>
-                                
+                                <ice:commandButton id="botonAbrir" style="float:right;margin-top:2%" styleClass="boton" partialSubmit="true" visible="false"
+                                                   actionListener="#{controllerBienes.abrirDetalle}"
+                                                   value="#{label['sigebi.Bien.Listado.Detalle']}"  >
+                                    <f:attribute id="tipoSeleccionado" name="tipoSeleccionado"  value="#{bien}"/>
+                                </ice:commandButton>
                             </ice:column>
                         </ice:dataTable>
-
                     </div>
                 </div>
             </div>
-
-            
         </div>
-
     </div>
-
-
 </ice:form>

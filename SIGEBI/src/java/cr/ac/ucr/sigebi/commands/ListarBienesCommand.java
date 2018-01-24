@@ -16,25 +16,26 @@ import java.util.TimeZone;
 public class ListarBienesCommand {
     
     //<editor-fold defaultstate="collapsed" desc="Atributos">
-    private boolean selected;
-    private String fltId;
-    private String fltCantidad;
-    private Integer fltTipo;
+    private String fltIdBien;
+    private String fltDescripcion;
+    private String fltMarca;
+    private String fltModelo;
+    private String fltSerie;
     private Integer fltEstado;
-    private Date fltFecha;
     //</editor-fold>
     
     //<editor-fold defaultstate="collapsed" desc="Constructores">
-    public ListarBienesCommand() { 
-        super();
-        this.fltId = new String();
-        this.fltCantidad = new String();
-        this.fltTipo = -1;
-        this.fltEstado = -1;
-        this.fltFecha = null;
+    public ListarBienesCommand() {}
+
+    public ListarBienesCommand(String fltIdBien, String fltDescripcion, String fltMarca, String fltSerie, Integer fltEstado) {
+        this.fltIdBien = fltIdBien;
+        this.fltDescripcion = fltDescripcion;
+        this.fltMarca = fltMarca;
+        this.fltSerie = fltSerie;
+        this.fltEstado = fltEstado;
     }
     //</editor-fold>
- 
+    
     //<editor-fold defaultstate="collapsed" desc="Gets y Sets">
     public String getDatePattern() {
         return Constantes.DEFAULT_DATE_PATTERN;
@@ -48,19 +49,52 @@ public class ListarBienesCommand {
         return Constantes.DEFAULT_TIME_ZONE;
     }
     
-    public Integer getFltIdCodigo() {
-        if (this.fltId.isEmpty()) {
-            return 0;
+        
+    public Long getFltIdCodigo() {
+        if (this.fltIdBien.isEmpty()) {
+            return 0L; 
         }
-        return Integer.valueOf(fltId);
+        return Long.valueOf(fltIdBien);
     }
     
-    public String getFltId() {
-        return fltId;
+    public String getFltIdBien() {
+        return fltIdBien;
     }
 
-    public void setFltId(String fltId) {
-        this.fltId = fltId;
+    public void setFltIdBien(String fltIdBien) {
+        this.fltIdBien = fltIdBien;
+    }
+
+    public String getFltDescripcion() {
+        return fltDescripcion;
+    }
+
+    public void setFltDescripcion(String fltDescripcion) {
+        this.fltDescripcion = fltDescripcion;
+    }
+
+    public String getFltMarca() {
+        return fltMarca;
+    }
+
+    public void setFltMarca(String fltMarca) {
+        this.fltMarca = fltMarca;
+    }
+
+    public String getFltModelo() {
+        return fltModelo;
+    }
+
+    public void setFltModelo(String fltModelo) {
+        this.fltModelo = fltModelo;
+    }
+
+    public String getFltSerie() {
+        return fltSerie;
+    }
+
+    public void setFltSerie(String fltSerie) {
+        this.fltSerie = fltSerie;
     }
 
     public Integer getFltEstado() {
@@ -69,45 +103,6 @@ public class ListarBienesCommand {
 
     public void setFltEstado(Integer fltEstado) {
         this.fltEstado = fltEstado;
-    }
-
-    public Date getFltFecha() {
-        return fltFecha;
-    }
-
-    public void setFltFecha(Date fltFecha) {
-        this.fltFecha = fltFecha;
-    }
-    
-    public Integer getCantidad() {
-        if (this.fltCantidad.isEmpty()) {
-            return 0;
-        }
-        return Integer.valueOf(fltCantidad);
-    }
-
-    public boolean isSelected() {
-        return selected;
-    }
-
-    public void setSelected(boolean selected) {
-        this.selected = selected;
-    }
-
-    public String getFltCantidad() {
-        return fltCantidad;
-    }
-
-    public void setFltCantidad(String fltCantidad) {
-        this.fltCantidad = fltCantidad;
-    }
-
-    public Integer getFltTipo() {
-        return fltTipo;
-    }
-
-    public void setFltTipo(Integer fltTipo) {
-        this.fltTipo = fltTipo;
     }
     //</editor-fold>
 }

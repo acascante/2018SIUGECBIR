@@ -100,7 +100,8 @@ public class Bien extends ObjetoBase implements Serializable {
     @ManyToOne(fetch = FetchType.EAGER)
     private Estado estado;
     
-    @Column(name = "NUMERO_LOTE")
+    @JoinColumn(name = "ID_LOTE", referencedColumnName = "ID_LOTE")
+    @ManyToOne(fetch = FetchType.EAGER)
     private Lote lote;
     
     @Column(name = "CAPITALIZABLE")

@@ -98,10 +98,10 @@ public class BienDao extends GenericDaoImpl {
     }
     
     @Transactional(readOnly = true)
-    public List<Bien> listar(Integer primerRegistro, Integer ultimoRegistro, UnidadEjecutora unidadejecutora, String identificacion, String descripcion, String marca, String modelo, String serie, Estado... estados) throws FWExcepcion{
+    public List<Bien> listar(Integer primerRegistro, Integer ultimoRegistro, UnidadEjecutora unidadejecutora, Integer id, String identificacion, String descripcion, String marca, String modelo, String serie, Estado... estados) throws FWExcepcion{
         Session session = dao.getSessionFactory().openSession();
         try {
-            Query query = this.creaQuery(Boolean.FALSE, session, unidadejecutora, identificacion, descripcion, marca, modelo, serie, estados);
+            Query query = this.creaQuery(Boolean.FALSE, session, unidadejecutora, id, identificacion, descripcion, marca, modelo, serie, estados);
             if(!(primerRegistro.equals(1) && ultimoRegistro.equals(1))) {
                 query.setFirstResult(primerRegistro);
                 query.setMaxResults(ultimoRegistro - primerRegistro);
@@ -114,10 +114,10 @@ public class BienDao extends GenericDaoImpl {
         }
     }
 
-    public Long contar(UnidadEjecutora unidadejecutora, String identificacion, String descripcion, String marca, String modelo, String serie, Estado... estados) throws FWExcepcion {
+    public Long contar(UnidadEjecutora unidadejecutora, Integer id, String identificacion, String descripcion, String marca, String modelo, String serie, Estado... estados) throws FWExcepcion {
         Session session = dao.getSessionFactory().openSession();
         try {
-            Query query = this.creaQuery(Boolean.TRUE, session, unidadejecutora, identificacion, descripcion, marca, modelo, serie, estados);
+            Query query = this.creaQuery(Boolean.TRUE, session, unidadejecutora, id, identificacion, descripcion, marca, modelo, serie, estados);
             return (Long)query.uniqueResult();
         } catch (HibernateException e) {
             throw new FWExcepcion("sigebi.error.notificacionDao.contarNotificaciones", "Error contando los registros de tipo " + this.getClass(), e.getCause());
@@ -142,7 +142,7 @@ public class BienDao extends GenericDaoImpl {
         }
     }
 
-    private Query creaQuery(Boolean contar, Session session, UnidadEjecutora unidadEjecutora, String identificacion, String descripcion, String marca, String modelo,  String serie, Estado... estados) {
+    private Query creaQuery(Boolean contar, Session session, UnidadEjecutora unidadEjecutora, Integer id, String identificacion, String descripcion, String marca, String modelo,  String serie, Estado... estados) {
         StringBuilder sql = new StringBuilder(" ");
         if (contar) {
             sql.append("SELECT count(b) FROM Bien b ");
@@ -151,25 +151,28 @@ public class BienDao extends GenericDaoImpl {
         }
         
         sql.append("WHERE b.unidadEjecutora = :unidadEjecutora ");
-        if(identificacion != null && identificacion.length() > 0){
-           sql.append(" AND b.identificacion.identificacion = :identificacion ");
+        if(id != null && id > 0){
+           sql.append(" AND ne.idNotificacion = :idNotificacion) ");
+        } else {
+            if(identificacion != null && identificacion.length() > 0){
+               sql.append(" AND b.identificacion.identificacion = :identificacion ");
+            }
+            if(descripcion != null && descripcion.length() > 0){
+                sql.append(" AND upper(b.descripcion) like upper(:descripcion) ");
+            }
+            if(marca != null && marca.length() > 0){
+                sql.append(" AND upper(b.resumenBien.marca) like upper(:marca) ");
+            }
+            if(modelo != null && modelo.length() > 0){
+                sql.append(" AND upper(b.resumenBien.modelo) like upper(:modelo) ");
+            }
+            if(serie != null && serie.length() > 0){
+                sql.append(" AND upper(b.resumenBien.serie) like upper(:serie) ");
+            }
+            if(estados != null && estados.length > 0){
+                sql.append(" AND b.estado in (:estados)");
+            }
         }
-        if(descripcion != null && descripcion.length() > 0){
-            sql.append(" AND upper(b.descripcion) like upper(:descripcion) ");
-        }
-        if(marca != null && marca.length() > 0){
-            sql.append(" AND upper(b.resumenBien.marca) like upper(:marca) ");
-        }
-        if(modelo != null && modelo.length() > 0){
-            sql.append(" AND upper(b.resumenBien.modelo) like upper(:modelo) ");
-        }
-        if(serie != null && serie.length() > 0){
-            sql.append(" AND upper(b.resumenBien.serie) like upper(:serie) ");
-        }
-        if(estados != null && estados.length > 0){
-            //sql.append(" AND b.estado in (:estados)");
-        }
-        System.out.println("---------------------   " + sql.toString());
 
         Query q = session.createQuery(sql.toString());
         q.setParameter("unidadEjecutora", unidadEjecutora);
@@ -193,6 +196,93 @@ public class BienDao extends GenericDaoImpl {
         }
         
         System.out.println("---------------------   " + q.getQueryString());
+        return q;
+    }
+    
+    public List<Bien> listar(Integer primerRegistro, Integer ultimoRegistro, UnidadEjecutora unidadejecutora, Integer id, String identificacion, String descripcion, String marca, String modelo, String serie, Estado estado) throws FWExcepcion{
+        Session session = dao.getSessionFactory().openSession();
+        try {
+            Query query = this.creaQuery(Boolean.FALSE, session, unidadejecutora, id, identificacion, descripcion, marca, modelo, serie, estados);
+            if(!(primerRegistro.equals(1) && ultimoRegistro.equals(1))) {
+                query.setFirstResult(primerRegistro);
+                query.setMaxResults(ultimoRegistro - primerRegistro);
+            }            
+            return (List<Bien>) query.list();
+        } catch (HibernateException e) {
+            throw new FWExcepcion("sigebi.error.notificacionDao.listar", "Error obtener los registros de tipo " + this.getClass(), e.getCause());
+        }finally{
+            session.close();        
+        }
+    }
+
+    public Long contar(UnidadEjecutora unidadejecutora, Integer id, String identificacion, String descripcion, String marca, String modelo, String serie, Estado estado) throws FWExcepcion {
+        Session session = dao.getSessionFactory().openSession();
+        try {
+            Query query = this.creaQuery(Boolean.TRUE, session, unidadejecutora, id, identificacion, descripcion, marca, modelo, serie, estados);
+            return (Long)query.uniqueResult();
+        } catch (HibernateException e) {
+            throw new FWExcepcion("sigebi.error.notificacionDao.contarNotificaciones", "Error contando los registros de tipo " + this.getClass(), e.getCause());
+        } finally {
+            session.close();        
+        }
+    }
+
+    private Query creaQuery(Boolean contar, Session session, UnidadEjecutora unidadEjecutora, Integer id, String identificacion, String descripcion, String marca, String modelo,  String serie, Estado estado) {
+        StringBuilder sql = new StringBuilder(" ");
+        if (contar) {
+            sql.append("SELECT count(b) FROM Bien b ");
+        } else {
+            sql.append("SELECT b FROM Bien b ");
+        }
+        
+        sql.append("WHERE b.unidadEjecutora = :unidadEjecutora ");
+        if(id != null && id > 0) {
+           sql.append(" AND ne.id = :id ");
+        } else {
+            if(identificacion != null && identificacion.length() > 0){
+               sql.append(" AND b.identificacion.identificacion = :identificacion ");
+            }
+            if(descripcion != null && descripcion.length() > 0){
+                sql.append(" AND upper(b.descripcion) like upper(:descripcion) ");
+            }
+            if(marca != null && marca.length() > 0){
+                sql.append(" AND upper(b.resumenBien.marca) like upper(:marca) ");
+            }
+            if(modelo != null && modelo.length() > 0){
+                sql.append(" AND upper(b.resumenBien.modelo) like upper(:modelo) ");
+            }
+            if(serie != null && serie.length() > 0){
+                sql.append(" AND upper(b.resumenBien.serie) like upper(:serie) ");
+            }
+            if(id != null && id > 0){
+                sql.append(" AND b.estado = :estado");
+            }
+        }
+
+        Query q = session.createQuery(sql.toString());
+        q.setParameter("unidadEjecutora", unidadEjecutora);
+        if(id != null && id > 0) {
+           q.setParameter("id", id);
+        } else {
+            if(identificacion != null && identificacion.length() > 0){
+                q.setParameter("identificacion", identificacion);
+            }
+            if(descripcion != null && descripcion.length() > 0){
+                q.setParameter("descripcion", '%' + descripcion + '%');
+            }
+            if(marca != null && marca.length() > 0){
+                q.setParameter("marca", '%' + marca + '%');
+            }
+            if(modelo != null && modelo.length() > 0){
+                q.setParameter("modelo", '%' + modelo + '%');
+            }
+            if(serie != null && serie.length() > 0){
+                q.setParameter("serie", '%' + serie + '%');
+            }
+            if(id != null && id > 0){
+                q.setParameter("estado", estado);
+            }
+        }        
         return q;
     }
     

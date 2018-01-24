@@ -59,7 +59,7 @@ public class ListarNotificacionesCommand {
     
     public Long getFltIdCodigo() {
         if (this.fltId.isEmpty()) {
-            return 0l;
+            return 0L;
         }
         return Long.valueOf(fltId);
     }

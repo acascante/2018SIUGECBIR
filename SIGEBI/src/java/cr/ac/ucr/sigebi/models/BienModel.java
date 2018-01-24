@@ -48,27 +48,19 @@ public class BienModel {
         return bienDao.buscarPorId(id);
     }
 
-    public List<Bien> listar(Integer primerRegistro,
-             Integer ultimoRegistro,
-             UnidadEjecutora unidadejecutora,
-             String identificacion,
-             String descripcion,
-             String marca,
-             String modelo,
-             String serie,
-             Estado... estados
-    ) throws FWExcepcion {
+    public List<Bien> listar(Integer primerRegistro, Integer ultimoRegistro, UnidadEjecutora unidadejecutora, Integer id, String identificacion, String descripcion, String marca, String modelo, String serie, Estado... estados) throws FWExcepcion {
         return bienDao.listar(primerRegistro, ultimoRegistro, unidadejecutora, identificacion, descripcion, marca, modelo, serie, estados);
     }
 
-    public Long contar(UnidadEjecutora unidadejecutora,
-             String identificacion,
-             String descripcion,
-             String marca,
-             String modelo,
-             String serie,
-             Estado... estados
-    ) throws FWExcepcion {
+    public Long contar(UnidadEjecutora unidadejecutora, Integer id, String identificacion, String descripcion, String marca, String modelo, String serie, Estado... estados) throws FWExcepcion {
+        return bienDao.contar(unidadejecutora, identificacion, descripcion, marca, modelo, serie, estados);
+    }
+
+    public List<Bien> listar(Integer primerRegistro, Integer ultimoRegistro, UnidadEjecutora unidadejecutora, Integer id, String identificacion, String descripcion, String marca, String modelo, String serie, Estado estado) throws FWExcepcion {
+        return bienDao.listar(primerRegistro, ultimoRegistro, unidadejecutora, identificacion, descripcion, marca, modelo, serie, estados);
+    }
+
+    public Long contar(UnidadEjecutora unidadejecutora, Integer id, String identificacion, String descripcion, String marca, String modelo, String serie, Estado estado) throws FWExcepcion {
         return bienDao.contar(unidadejecutora, identificacion, descripcion, marca, modelo, serie, estados);
     }
 
