@@ -6,12 +6,13 @@ import cr.ac.ucr.framework.seguridad.entidades.SegUnidadUsuario;
 import cr.ac.ucr.framework.seguridad.entidades.SegUsuario;
 import cr.ac.ucr.framework.seguridad.utils.SHA256;
 import cr.ac.ucr.framework.seguridad.utils.UTF8;
-import cr.ac.ucr.framework.daoHibernate.DaoHelper;
 
 import cr.ac.ucr.framework.service.SeguridadMgr;
 import cr.ac.ucr.framework.utils.FWExcepcion;
 import cr.ac.ucr.framework.vista.util.Mensaje;
 import cr.ac.ucr.framework.vista.util.Util;
+import cr.ac.ucr.sigebi.domain.UnidadEjecutora;
+import cr.ac.ucr.sigebi.models.UnidadEjecutoraModel;
 
 import java.util.ArrayList;
 import java.util.Hashtable;
@@ -21,12 +22,12 @@ import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 
 import javax.faces.context.FacesContext;
-import javax.faces.event.ActionEvent;
 import javax.faces.event.PhaseId;
 import javax.faces.event.ValueChangeEvent;
 import javax.faces.model.SelectItem;
 
 import javax.servlet.http.HttpSession;
+import oracle.net.aso.i;
 
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
@@ -39,6 +40,10 @@ public class VistaUsuario {
     //Manager de seguridad
     @Resource
     private SeguridadMgr seguridadMgr;
+    @Resource
+    private UnidadEjecutoraModel unidadEjecutoraModel;
+    
+    private UnidadEjecutora unidadEjecutoraSIGEBI;
 
     private boolean gLoginDirecto = true;
     //Variable para almacenar los datos del usuario del sistema
@@ -296,6 +301,11 @@ public class VistaUsuario {
             for (SegUnidadEjecutora temp : gUnidadesUsuario) {
                 if (temp.getSisUnidadEjecutoraPK().getIdUnidadEjecutora().equals(unidadEjecSelect)) {
                     gUnidadActual = temp;
+
+                    //Se asigna la unidad ejecutora
+                    Long id = Long.parseLong(gUnidadActual.getUnidadEjecutoraLlave().getIdUnidadEjecutora().toString());
+                    this.unidadEjecutoraSIGEBI = unidadEjecutoraModel.buscarPorId(id);
+
                     //limpar las variables para llegar al recinto
                     gUnidadEjecutoraPadre = null;
                     this.gSucesores = new ArrayList<SegUnidadEjecutora>();
@@ -397,10 +407,6 @@ public class VistaUsuario {
         inicializar();
         return "index";
     }
-    
-  
-
-
 
     // </editor-fold>
     // <editor-fold defaultstate="collapsed" desc="Sets y Gets">
@@ -545,6 +551,22 @@ public class VistaUsuario {
 
     public void setgSede(SegUnidadEjecutora gSede) {
         this.gSede = gSede;
+    }
+
+    public UnidadEjecutora getUnidadEjecutoraSIGEBI() {
+        return unidadEjecutoraSIGEBI;
+    }
+
+    public UnidadEjecutoraModel getUnidadEjecutoraModel() {
+        return unidadEjecutoraModel;
+    }
+
+    public void setUnidadEjecutoraModel(UnidadEjecutoraModel unidadEjecutoraModel) {
+        this.unidadEjecutoraModel = unidadEjecutoraModel;
+    }
+
+    public void setUnidadEjecutoraSIGEBI(UnidadEjecutora unidadEjecutoraSIGEBI) {
+        this.unidadEjecutoraSIGEBI = unidadEjecutoraSIGEBI;
     }
     // </editor-fold>
 

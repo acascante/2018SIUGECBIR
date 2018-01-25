@@ -6,7 +6,7 @@
 package cr.ac.ucr.sigebi.models;
 
 import cr.ac.ucr.framework.utils.FWExcepcion;
-import cr.ac.ucr.sigebi.daos.FaltaProveedorDao;
+import cr.ac.ucr.sigebi.daos.ProveedorDao;
 import cr.ac.ucr.sigebi.domain.Proveedor;
 import java.util.List;
 
@@ -23,7 +23,7 @@ import org.springframework.stereotype.Service;
 public class ProveedorModel {
     
     @Resource
-    private FaltaProveedorDao proveedorDao;
+    private ProveedorDao proveedorDao;
     
     public List<Proveedor> listar() throws FWExcepcion {
         return proveedorDao.listar();

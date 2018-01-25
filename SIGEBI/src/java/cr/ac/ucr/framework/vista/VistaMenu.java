@@ -14,6 +14,8 @@ import cr.ac.ucr.framework.utils.FWExcepcion;
 import cr.ac.ucr.framework.vista.util.Mensaje;
 import cr.ac.ucr.framework.vista.util.MenuItemPrincipal;
 import cr.ac.ucr.framework.vista.util.Util;
+import cr.ac.ucr.sigebi.domain.UnidadEjecutora;
+import cr.ac.ucr.sigebi.models.UnidadEjecutoraModel;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -43,6 +45,9 @@ public class VistaMenu {
 
     @Resource
     private SeguridadMgr gSeguridadMgr;
+    @Resource
+    private UnidadEjecutoraModel unidadEjecutoraModel;
+    
     //variable para armar el menú horizontal que le aparecera al usuario
     private List<MenuItemPrincipal> gMenuHorizontal;
     /**
@@ -351,6 +356,11 @@ public class VistaMenu {
                         if (lUnidadesUsuario.get(i).
                                 getUnidadEjecutoraLlave().getIdUnidadEjecutora().equals(id_unidad)) {
                             lvistaUsuario.setgUnidadActual(lUnidadesUsuario.get(i));
+                            //Se asigna la unidad ejecutora
+                            Long id  = Long.parseLong(lUnidadesUsuario.get(i).getUnidadEjecutoraLlave().getIdUnidadEjecutora().toString());
+                            UnidadEjecutora unidadEjecutora = unidadEjecutoraModel.buscarPorId(id);
+                            lvistaUsuario.setUnidadEjecutoraSIGEBI(unidadEjecutora);
+                            
                             break;
                         }
                     }
@@ -490,6 +500,14 @@ public class VistaMenu {
 
     public void setgMenuSeleccionado(boolean gMenuSeleccionado) {
         this.gMenuSeleccionado = gMenuSeleccionado;
+    }
+
+    public UnidadEjecutoraModel getUnidadEjecutoraModel() {
+        return unidadEjecutoraModel;
+    }
+
+    public void setUnidadEjecutoraModel(UnidadEjecutoraModel unidadEjecutoraModel) {
+        this.unidadEjecutoraModel = unidadEjecutoraModel;
     }
 
     public List<MenuItemPrincipal> getgMenuHorizontal() {

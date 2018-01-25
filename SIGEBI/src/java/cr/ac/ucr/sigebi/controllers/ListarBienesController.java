@@ -8,18 +8,20 @@ package cr.ac.ucr.sigebi.controllers;
 import cr.ac.ucr.framework.utils.FWExcepcion;
 import cr.ac.ucr.framework.vista.util.Mensaje;
 import cr.ac.ucr.framework.vista.util.Util;
+import cr.ac.ucr.sigebi.commands.ListarBienesCommand;
 import cr.ac.ucr.sigebi.domain.Bien;
 import cr.ac.ucr.sigebi.domain.Estado;
 import cr.ac.ucr.sigebi.domain.Tipo;
-import cr.ac.ucr.sigebi.enums.BienEstadoInternoEnum;
+import cr.ac.ucr.sigebi.domain.UnidadEjecutora;
 import cr.ac.ucr.sigebi.models.BienModel;
 import cr.ac.ucr.sigebi.models.EstadoModel;
 import cr.ac.ucr.sigebi.models.TipoModel;
 import cr.ac.ucr.sigebi.utils.Constantes;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import javax.faces.component.UIComponent;
 import javax.faces.component.UIInput;
@@ -40,50 +42,61 @@ import org.springframework.stereotype.Controller;
 @Scope("session")
 public class ListarBienesController extends BaseController {
  
-    @Resource
-    protected EstadoModel estadoModel;
-    
-    @Resource
-    protected TipoModel tipoModel;
-    
-    @Resource
-    protected BienModel bienModel;
-    
-    BienEstadoInternoEnum estadoInterno;
+    @Resource protected EstadoModel estadoModel;
+    @Resource protected TipoModel tipoModel;
+    @Resource protected BienModel bienModel;
     
     List<Bien> bienes;
     List<SelectItem> itemsEstado;
     List<SelectItem> itemsTipo;
+    Map<Integer, Estado> mapEstados;
+    Map<Integer, Tipo> mapTipos;
+    
+    ListarBienesCommand command;
    
     public ListarBienesController() {
         super();
+        inicializarDatos();
     }
     
-    protected void init() {
-        
-        this.setPrimerRegistro(1);
-        this.contarBienes();
-        this.listarBienes();
+    @PostConstruct
+    protected void inicializar() {
+        this.inicializarListado();
         
         List<Estado> listEstados = estadoModel.listarPorDominio(Constantes.DOMINIO_BIEN);
         if (!listEstados.isEmpty()) {
+            mapEstados = new HashMap<Integer, Estado>();
             itemsEstado = new ArrayList<SelectItem>();
             for (Estado item : listEstados) {
                 itemsEstado.add(new SelectItem(item.getValor(), item.getNombre()));
+                mapEstados.put(item.getValor(), item);
             }
         }
         List<Tipo> listTipos = tipoModel.listarPorDominio(Constantes.DOMINIO_BIEN);
         if (!listTipos.isEmpty()) {
+            mapTipos = new HashMap<Integer, Tipo>();
             itemsTipo = new ArrayList<SelectItem>();
             for (Tipo item : listTipos) {
                 itemsTipo.add(new SelectItem(item.getValor(), item.getNombre()));
+                mapTipos.put(item.getValor(), item);
             }
         }
     }
 
+    private void inicializarDatos() {
+        this.vistaOrigen = Constantes.VISTA_NOTIFICACION_LISTADO;
+        this.command = new ListarBienesCommand();
+    }
+    
+    private void inicializarListado() {
+        this.setPrimerRegistro(1);
+        this.contarBienes();
+        this.listarBienes();
+    }
+    
     private void contarBienes() {
         try {
-            Long contador = 0l; //bienModel.contarBienes(BienEstadoInternoEnum.NORMAL.ordinal());
+            Long contador = bienModel.contar(unidadEjecutora, command.getFltIdCodigo(), command.getFltIdentificacion(), command.getFltDescripcion(), command.getFltMarca(), command.getFltModelo(), command.getFltSerie(), getFltTipo(), getFltEstadoArray());
             this.setCantidadRegistros(contador.intValue());
         } catch (FWExcepcion e) {
             Mensaje.agregarErrorAdvertencia(e.getError_para_usuario());
@@ -94,12 +107,29 @@ public class ListarBienesController extends BaseController {
     
     private void listarBienes() {
         try {
-           // this.bienes = bienModel.listarBienesEstadoInterno(this.getPrimerRegistro()-1, this.getUltimoRegistro(), BienEstadoInternoEnum.NORMAL.ordinal());
+            this.bienes = bienModel.listar(this.getPrimerRegistro()-1, this.getUltimoRegistro(), unidadEjecutora, command.getFltIdCodigo(), command.getFltIdentificacion(), command.getFltDescripcion(), command.getFltMarca(), command.getFltModelo(), command.getFltSerie(), getFltTipo(), getFltEstadoArray());
         } catch (FWExcepcion e) {
             Mensaje.agregarErrorAdvertencia(e.getError_para_usuario());
         } catch (NumberFormatException e) {
             Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.error.controllerListarNotificaciones.listarNotificaciones"));
+        } catch (Exception e) {
+            Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.error.controllerListarNotificaciones.listarNotificaciones"));
         }
+    }
+    
+    private Estado[] getFltEstadoArray() {
+        if (command.getFltEstado() > 0) {
+            Estado[] array = {mapEstados.get(command.getFltEstado())};
+            return array;
+        }
+        return null;
+    }
+    
+    private Tipo getFltTipo() {
+        if (command.getFltTipo() > 0) {
+            return mapTipos.get(command.getFltTipo());
+        }
+        return null;
     }
     
     public void cambioFiltro(ValueChangeEvent pEvent) {
@@ -109,9 +139,7 @@ public class ListarBienesController extends BaseController {
                 pEvent.queue();
                 return;
             }
-            this.contarBienes();
-            this.setPrimerRegistro(1);
-            this.listarBienes();
+            this.inicializarListado();
         } catch (Exception err) {
             Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.error.controllerListarNotificaciones.cambioFiltro"));
         }
@@ -126,35 +154,7 @@ public class ListarBienesController extends BaseController {
         }
     }
 
-    public void validarFiltroCantidad(FacesContext context, UIComponent component, Object value) throws ValidatorException {
-        try {
-            Integer.parseInt(value.toString());
-        } catch (NumberFormatException e){
-            Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.error.controllerListarNotificaciones.cambioFiltro.id"));
-            ((UIInput) component).setValid(false);
-        }
-    }
-
-    public void validarFiltroFecha(FacesContext context, UIComponent component, Object value) throws ValidatorException {
-        try {
-            Calendar calendar = Calendar.getInstance();
-            calendar.setTime((Date) value);
-            calendar.getTime();
-        } catch (Exception e){
-            Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.error.controllerListarExclusiones.cambioFiltro.fecha"));
-            ((UIInput) component).setValid(false);
-        }
-    }
-    
     // <editor-fold defaultstate="collapsed" desc="Get's y Set's">
-    public BienEstadoInternoEnum getEstadoInterno() {
-        return estadoInterno;
-    }
-
-    public void setEstadoInterno(BienEstadoInternoEnum estadoInterno) {
-        this.estadoInterno = estadoInterno;
-    }
-
     public List<Bien> getBienes() {
         return bienes;
     }
@@ -177,6 +177,18 @@ public class ListarBienesController extends BaseController {
 
     public void setItemsTipo(List<SelectItem> itemsTipo) {
         this.itemsTipo = itemsTipo;
+    }
+
+    public ListarBienesCommand getCommand() {
+        return command;
+    }
+
+    public void setCommand(ListarBienesCommand command) {
+        this.command = command;
+    }
+    
+    public void setUnidadEjecutora(UnidadEjecutora unidadEjecutora) {
+        this.unidadEjecutora = unidadEjecutora;
     }
     // </editor-fold>
    

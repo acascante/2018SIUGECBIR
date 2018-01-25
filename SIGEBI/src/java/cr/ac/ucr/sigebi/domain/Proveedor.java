@@ -5,11 +5,11 @@
  */
 package cr.ac.ucr.sigebi.domain;
 
-import cr.ac.ucr.framework.seguridad.ObjetoBase;
 import java.io.Serializable;
 import javax.persistence.Column;
+import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
 
 /**
@@ -18,18 +18,12 @@ import javax.persistence.Table;
  */
 @Entity(name = "Proveedor")
 @Table(name = "SIGEBI_OAF.V_SIGB_PROVEEDOR")
-public class Proveedor extends ObjetoBase implements Serializable{
-    
-    /**
-     * TODO -- Verificar de donde se debe obtener el nombre y datos del proveedor
-     * 
-     */
+@DiscriminatorValue("1")
+@PrimaryKeyJoinColumn(name = "ID", referencedColumnName = "NUM_PERSONA")
+public class Proveedor extends Persona implements Serializable{
      
     //<editor-fold defaultstate="collapsed" desc="Atributos">
-    @Id
-    @Column(name = "ID")
-    private Long id;
-
+    
     @Column(name = "NUM_EMPRESA")
     private Integer numeroEmpresa;
     
@@ -47,16 +41,10 @@ public class Proveedor extends ObjetoBase implements Serializable{
     
     @Column(name = "COMENTARIOS")
     private String comentarios;
+    
     //</editor-fold>
 
-    //<editor-fold defaultstate="collapsed" desc="GET's y SET's">
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
+    //<editor-fold defaultstate="collapsed" desc="GET's y SET's">    
 
     public Integer getNumeroEmpresa() {
         return numeroEmpresa;
@@ -111,7 +99,6 @@ public class Proveedor extends ObjetoBase implements Serializable{
     @Override
     public int hashCode() {
         int hash = 5;
-        hash = 59 * hash + (this.id != null ? this.id.hashCode() : 0);
         hash = 59 * hash + (this.numeroEmpresa != null ? this.numeroEmpresa.hashCode() : 0);
         hash = 59 * hash + (this.claseProveedor != null ? this.claseProveedor.hashCode() : 0);
         hash = 59 * hash + (this.plazo != null ? this.plazo.hashCode() : 0);
@@ -145,9 +132,7 @@ public class Proveedor extends ObjetoBase implements Serializable{
         if ((this.comentarios == null) ? (other.comentarios != null) : !this.comentarios.equals(other.comentarios)) {
             return false;
         }
-        if (this.id != other.id && (this.id == null || !this.id.equals(other.id))) {
-            return false;
-        }
+        
         if (this.numeroEmpresa != other.numeroEmpresa && (this.numeroEmpresa == null || !this.numeroEmpresa.equals(other.numeroEmpresa))) {
             return false;
         }

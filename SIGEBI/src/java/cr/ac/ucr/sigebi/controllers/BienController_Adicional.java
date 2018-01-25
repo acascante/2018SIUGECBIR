@@ -12,24 +12,18 @@ import cr.ac.ucr.framework.vista.util.Util;
 import cr.ac.ucr.sigebi.domain.Bien;
 import cr.ac.ucr.sigebi.domain.BienCaracteristica;
 import cr.ac.ucr.sigebi.domain.Estado;
+import cr.ac.ucr.sigebi.domain.Proveedor;
 import cr.ac.ucr.sigebi.domain.Tipo;
 import cr.ac.ucr.sigebi.domain.Ubicacion;
 import cr.ac.ucr.sigebi.entities.AccesoriosEntity;
 import cr.ac.ucr.sigebi.entities.AdjuntoBienEntity;
-import cr.ac.ucr.sigebi.entities.DatoBienEntity;
 import cr.ac.ucr.sigebi.entities.NotaEntity;
-import cr.ac.ucr.sigebi.entities.PersonaEntity;
 import cr.ac.ucr.sigebi.models.AccesorioModel;
 import cr.ac.ucr.sigebi.models.AdjuntoBienModel;
+import cr.ac.ucr.sigebi.models.BienCaracteristicaModel;
 import cr.ac.ucr.sigebi.models.BienModel;
-import cr.ac.ucr.sigebi.models.CategoriaModel;
-import cr.ac.ucr.sigebi.models.ClasificacionModel;
-import cr.ac.ucr.sigebi.models.EstadoModel;
-import cr.ac.ucr.sigebi.models.MonedaModel;
 import cr.ac.ucr.sigebi.models.NotaModel;
 import cr.ac.ucr.sigebi.models.ProveedorModel;
-import cr.ac.ucr.sigebi.models.SubCategoriaModel;
-import cr.ac.ucr.sigebi.models.SubClasificacionModel;
 import cr.ac.ucr.sigebi.models.TipoModel;
 import cr.ac.ucr.sigebi.models.UbicacionModel;
 import cr.ac.ucr.sigebi.utils.Constantes;
@@ -72,17 +66,25 @@ public class BienController_Adicional extends BaseController{
     NotaEntity nota;
     List<NotaEntity> notas;
 
-    List<PersonaEntity> proveedores;
-    String provSelccionado;
-    String provId;
-    
-    
-    
     //</editor-fold>
+    
+    
+    //<editor-fold defaultstate="collapsed" desc="Gets & Sets">
+    public void setBien(Bien bien) {
+        this.bien = bien;
+    }
+    
+    public Bien getBien() {
+        
+        return bien;
+        
+    }
 
+    //<editor-fold>
+    
+    
     //<editor-fold defaultstate="collapsed" desc="Inicializa Datos">
     public BienController_Adicional() {
-        
         super();
         
         notas = new ArrayList<NotaEntity>();
@@ -91,68 +93,48 @@ public class BienController_Adicional extends BaseController{
         eliminarNotaVisible = false;
 
         adjuntoDescripcion = "";
-
-        caracteristica = new DatoBienEntity();
+        
+        caracteristica = new BienCaracteristica();
+        
+        bien = new Bien();
+        
+        
         
     }
-    
     //</editor-fold>
     
     
     
     //<editor-fold defaultstate="collapsed" desc="Acceso a Datos">
-    @Resource
-    private CategoriaModel categoriaMod;
 
-    @Resource
-    private ClasificacionModel clasifMod;
-
-    @Resource
-    private BienModel bienMod;
-
-    @Resource
-    private TipoModel tipoModel;
-
-    @Resource
-    private SubClasificacionModel subClasifModel;
-
-    @Resource
-    private SubCategoriaModel subCategModel;
-
-    @Resource
-    private NotaModel notaModel;
-
-    @Resource
-    private ProveedorModel provModel;
-
-    @Resource
-    private UbicacionModel ubicModel;
-
-    @Resource
-    private EstadoModel estadoModel;
-
-    @Resource
-    private MonedaModel monedaModel;
-
+    @Resource private NotaModel notaModel;
+    @Resource private ProveedorModel provModel;
+    @Resource private UbicacionModel ubicModel;
+    @Resource private BienModel bienModel;
     // </editor-fold>
     
     
     //<editor-fold defaultstate="collapsed" desc="Proveedores">
     
+    List<Proveedor> proveedores;
+    String provSelccionado;
+    String provId;
+    
+    
     void inicializaProveedores(){
         
     }
     
-    public void cargarProveedor(ActionEvent pEvent) {
-
-        if (!pEvent.getPhaseId().equals(PhaseId.INVOKE_APPLICATION)) {
-            pEvent.setPhaseId(PhaseId.INVOKE_APPLICATION);
-            pEvent.queue();
-            return;
-        }
+    public void cargarProveedores() {
+        
+        try {
+        proveedores = new ArrayList<Proveedor>();
         mensajeProveedores = "";
-//        proveedores = provModel.listar();
-        mensajeProveedores = "Cargados";
+        proveedores = provModel.listar();
+        //mensajeProveedores = "Cargados";
+        } catch (Exception err) {
+            Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.Bien.Error.ProveedorCarga"));
+        }
     }
 
     public void filtroProveedor(ValueChangeEvent pEvent) {
@@ -163,7 +145,7 @@ public class BienController_Adicional extends BaseController{
         }
         try {
 
-            proveedores = new ArrayList<PersonaEntity>();
+            proveedores = new ArrayList<Proveedor>();
  //           proveedores = provModel.filtroProveedores(provIdentificacion, provNombre);
 
             mensajeProveedores = "Filtros Busqueda";
@@ -182,7 +164,7 @@ public class BienController_Adicional extends BaseController{
             pEvent.queue();
             return;
         }
-        PersonaEntity prov = (PersonaEntity) pEvent.getComponent().getAttributes().get("provSeleccionado");
+        Proveedor prov = (Proveedor) pEvent.getComponent().getAttributes().get("provSeleccionado");
         provId = prov.getNumPersona().toString();
         provSelccionado = prov.getNombre() + " " + prov.getPrimerApellido();
 
@@ -242,6 +224,13 @@ public class BienController_Adicional extends BaseController{
         this.provNombre = provNombre;
     }
 
+    public List<Proveedor> getProveedores() {
+        return proveedores;
+    }
+
+    public void setProveedores(List<Proveedor> proveedores) {
+        this.proveedores = proveedores;
+    }
     //</editor-fold>
     
     
@@ -318,14 +307,25 @@ public class BienController_Adicional extends BaseController{
     
     protected void inicializaUbicaciones(){
         //ubicaciones = ;
+        try{
         ubicaciones = new HashMap<Integer, Ubicacion>();
         ubicacionOptions = new ArrayList<SelectItem>();
         
         List<Ubicacion> ubicacionesList;
-        ubicacionesList = ubicModel.listar(unidadEjecutoraId);
+        ubicacionesList = ubicModel.listar(unidadEjecutora.getId());
         for (Ubicacion item : ubicacionesList) {
             ubicaciones.put(item.getId(), item);
             ubicacionOptions.add(new SelectItem(item.getId(), item.getDetalle()));
+        }
+        
+        //Carga un bien 21 para pruebas 
+        bien = bienModel.buscarPorId(21L);
+        
+        cargarCaracteristicasBien();
+        
+        Mensaje.agregarInfo("Se cargo el bien: "+bien.getDescripcion());
+        }catch(Exception err){
+            Mensaje.agregarErrorAdvertencia(err.getMessage());
         }
     }
     
@@ -473,7 +473,21 @@ public class BienController_Adicional extends BaseController{
     
     
     //<editor-fold defaultstate="collapsed" desc="Tab Características">
-    
+    String mensajeCaracteristicas;
+    String selectCaracteristica;
+    String descCaracteristica;
+    String constCaracteristicas = "CARACTERISTICA";
+    // comboBox subCategorias
+    List<SelectItem> caracteristicasOptions;
+
+    List<BienCaracteristica> caracteristicas;
+    List<Tipo> caracteristicasObjOptions;
+    Map<Integer, BienCaracteristica> caracteristicasRegistradas = new HashMap<Integer, BienCaracteristica>();
+    BienCaracteristica caracteristica;
+    boolean modifCaracterVisible;
+
+    @Resource private TipoModel tipoModel;
+    @Resource private BienCaracteristicaModel bienCaracModel;
     
     public void guardarCaracteristica() {
 
@@ -503,35 +517,39 @@ public class BienController_Adicional extends BaseController{
         if (mensajeCaracteristicas.length() == 0) {
             descCaracteristica = "";
         }
-        cargarCaracteristica();
+        actualizarOpcionesCaracteristicas();
         //mensajeCaracteristicas = "Pendiente de implementar.";
     }
 
-    public void cargarCaracteristica() {
+    public void cargarCaracteristicasBien() {
         try{
             modifCaracterVisible = false;
 
-            caracteristicas = new ArrayList<DatoBienEntity>();
-            //caracteristicas = tipoModel.traerCaracteristicasRegistradas(constCaracteristicas,
-            bien.getId();
+            caracteristicas = new ArrayList<BienCaracteristica>();
+            caracteristicas = bienCaracModel.listarPorBien(bien);
 
-            cargarOpcionesCaract();
-            caracteristica = new DatoBienEntity();
+            actualizarOpcionesCaracteristicas();
+            caracteristica = new BienCaracteristica();
             //mensajeCaracteristicas = "Debo llenar el select de características";
         }catch(Exception err){
             Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.Bien.Error.cargarCaracteristica"));
         }
     }
 
-    private void cargarOpcionesCaract() {
-        //List<Tipo> caract = tipoModel.traerCaracteristicas(constCaracteristicas, bien.getId());//FIXME
+    protected void cargarOpcionesCaract() {
+        caracteristicasObjOptions = tipoModel.listarPorDominio(constCaracteristicas);//FIXME
 
-        caracteristicasOptions = new ArrayList<SelectItem>();
-//        for (Tipo item : caract) {
-//            caracteristicasOptions.add(new SelectItem("" + item.getIdTipo(), item.getNombre()));
-//        }
     }
-
+    
+    protected void actualizarOpcionesCaracteristicas(){
+        caracteristicasOptions = new ArrayList<SelectItem>();
+        for (Tipo item : caracteristicasObjOptions) {
+            if(bien.getId() > 0)
+                if( ! caracteristicasRegistradas.containsKey(item.getId()) )
+                    caracteristicasOptions.add(new SelectItem("" + item.getId(), item.getNombre()));
+        }
+    }
+    
     public void modificarCaracteristica(ActionEvent pEvent) {
         try {
             if (!pEvent.getPhaseId().equals(PhaseId.INVOKE_APPLICATION)) {
@@ -539,9 +557,9 @@ public class BienController_Adicional extends BaseController{
                 pEvent.queue();
                 return;
             }
-            caracteristica = new DatoBienEntity();
+            caracteristica = new BienCaracteristica();
             mensajeCaracteristicas = "";
-            caracteristica = (DatoBienEntity) pEvent.getComponent().getAttributes().get("caracteristicaSelccionada");
+            caracteristica = (BienCaracteristica) pEvent.getComponent().getAttributes().get("caracteristicaSelccionada");
 
             modifCaracterVisible = true;
         } catch (Exception err) {
@@ -553,13 +571,13 @@ public class BienController_Adicional extends BaseController{
 
         //mensajeCaracteristicas = tipoModel.eliminarCaracteristica(caracteristica);
 
-        cargarCaracteristica();
+        actualizarOpcionesCaracteristicas();
     }
 
     public void actualizarCaracteristica() {
 
         //mensajeCaracteristicas = tipoModel.modificarCaracteristica(caracteristica);
-        cargarCaracteristica();
+        actualizarOpcionesCaracteristicas();
     }
 
     public void cancelarCaracteristica() {
@@ -568,17 +586,7 @@ public class BienController_Adicional extends BaseController{
     }
 
     //<editor-fold defaultstate="collapsed" desc="Variables Características">
-    String mensajeCaracteristicas;
-    String selectCaracteristica;
-    String descCaracteristica;
-    String constCaracteristicas = "CARACTERISTICA";
-    // comboBox subCategorias
-    List<SelectItem> caracteristicasOptions;
-
-    List<DatoBienEntity> caracteristicas;
-    DatoBienEntity caracteristica;
-    boolean modifCaracterVisible;
-
+   
     public boolean isModifCaracterVisible() {
         return modifCaracterVisible;
     }
@@ -587,27 +595,19 @@ public class BienController_Adicional extends BaseController{
         this.modifCaracterVisible = modifCaracterVisible;
     }
 
-    public DatoBienEntity getCaracteristica() {
+    public BienCaracteristica getCaracteristica() {
         return caracteristica;
     }
 
-    public void setCaracteristica(DatoBienEntity caracteristica) {
+    public void setCaracteristica(BienCaracteristica caracteristica) {
         this.caracteristica = caracteristica;
     }
 
-    public BienModel getBienMod() {
-        return bienMod;
-    }
-
-    public void setBienMod(BienModel bienMod) {
-        this.bienMod = bienMod;
-    }
-
-    public List<DatoBienEntity> getCaracteristicas() {
+    public List<BienCaracteristica> getCaracteristicas() {
         return caracteristicas;
     }
 
-    public void setCaracteristicas(List<DatoBienEntity> caracteristicas) {
+    public void setCaracteristicas(List<BienCaracteristica> caracteristicas) {
         this.caracteristicas = caracteristicas;
     }
 

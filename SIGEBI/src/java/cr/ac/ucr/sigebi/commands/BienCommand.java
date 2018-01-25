@@ -34,7 +34,7 @@ public class BienCommand {
     private String descripcion;
     private Integer cantidad;
     private Boolean capitalizable;
-    private Lote lote;
+    private Lote lote; //Lote lote;
     
     private SubCategoria subCategoria;
     private SubClasificacion subClasificacion;
@@ -53,7 +53,7 @@ public class BienCommand {
     private Integer referencia;
     private Identificacion identificacion;    
 
-    private Tipo tipoBien;
+    private Tipo tipo;
     private Tipo origen;
 
     private Estado estadoInterno;
@@ -66,7 +66,7 @@ public class BienCommand {
     //<editor-fold defaultstate="collapsed" desc="Constructores">
     public BienCommand() {}
 
-    public BienCommand(Long id, String descripcion, Integer cantidad, Boolean capitalizable, Lote lote, SubCategoria subCategoria, SubClasificacion subClasificacion, ViewResumenBien resumenBien, UnidadEjecutora unidadEjecutora, Proveedor proveedor, Moneda moneda, Double costo, Date fechaAdquisicion, Integer persona, Date inicioGarantia, Date finGarantia, String descripcionGarantia, Ubicacion ubicacion, String descripcionUbicacion, Integer referencia, Identificacion identificacion, Tipo tipoBien, Tipo origen, Estado estadoInterno, Estado estado, List<Accesorio> accesorios, List<BienCaracteristica> caracteristicas) {
+    public BienCommand(Long id, String descripcion, Integer cantidad, Boolean capitalizable, Lote lote, SubCategoria subCategoria, SubClasificacion subClasificacion, ViewResumenBien resumenBien, UnidadEjecutora unidadEjecutora, Proveedor proveedor, Moneda moneda, Double costo, Date fechaAdquisicion, Integer persona, Date inicioGarantia, Date finGarantia, String descripcionGarantia, Ubicacion ubicacion, String descripcionUbicacion, Integer referencia, Identificacion identificacion, Tipo tipo, Tipo origen, Estado estadoInterno, Estado estado, List<Accesorio> accesorios, List<BienCaracteristica> caracteristicas) {
         this.id = id;
         this.descripcion = descripcion;
         this.cantidad = cantidad;
@@ -88,7 +88,7 @@ public class BienCommand {
         this.descripcionUbicacion = descripcionUbicacion;
         this.referencia = referencia;
         this.identificacion = identificacion;
-        this.tipoBien = tipoBien;
+        this.tipo = tipo;
         this.origen = origen;
         this.estadoInterno = estadoInterno;
         this.estado = estado;
@@ -118,7 +118,7 @@ public class BienCommand {
         this.descripcionUbicacion = bien.getDescripcionUbicacion();
         this.referencia = bien.getReferencia();
         this.identificacion = bien.getIdentificacion();
-        this.tipoBien = bien.getTipoBien();
+        this.tipo = bien.getTipo();
         this.origen = bien.getOrigen();
         this.estadoInterno = bien.getEstadoInterno();
         this.estado = bien.getEstado();
@@ -150,7 +150,7 @@ public class BienCommand {
         bien.setUbicacion(this.ubicacion);
         bien.setDescripcionUbicacion(this.descripcionUbicacion);
         bien.setIdentificacion(this.identificacion);
-        bien.setTipoBien(this.tipoBien);
+        bien.setTipo(this.tipo);
         bien.setOrigen(this.origen);
         bien.setEstadoInterno(this.estadoInterno);
         bien.setEstado(this.estado);
@@ -204,7 +204,7 @@ public class BienCommand {
     public void setLote(Lote lote) {
         this.lote = lote;
     }
-
+    
     public SubCategoria getSubCategoria() {
         return subCategoria;
     }
@@ -333,12 +333,12 @@ public class BienCommand {
         this.identificacion = identificacion;
     }
 
-    public Tipo getTipoBien() {
-        return tipoBien;
+    public Tipo getTipo() {
+        return tipo;
     }
 
-    public void setTipoBien(Tipo tipoBien) {
-        this.tipoBien = tipoBien;
+    public void setTipo(Tipo tipo) {
+        this.tipo = tipo;
     }
 
     public Tipo getOrigen() {

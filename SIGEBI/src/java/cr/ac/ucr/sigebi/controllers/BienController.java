@@ -5,7 +5,6 @@
  */
 package cr.ac.ucr.sigebi.controllers;
 
-import cr.ac.ucr.framework.utils.FWExcepcion;
 import cr.ac.ucr.framework.vista.util.Mensaje;
 import cr.ac.ucr.framework.vista.util.Util;
 import cr.ac.ucr.sigebi.commands.BienCommand;
@@ -24,6 +23,7 @@ import cr.ac.ucr.sigebi.models.LoteModel;
 import cr.ac.ucr.sigebi.models.TipoModel;
 import cr.ac.ucr.sigebi.utils.Constantes;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import javax.annotation.Resource;
 import javax.faces.event.ActionEvent;
@@ -37,9 +37,9 @@ import org.springframework.stereotype.Controller;
  *
  * @author jorge.serrano
  */
-@Controller(value = "controllerAgregarBienes")
+@Controller(value = "controllerBienes")
 @Scope("session")
-public class AgregarBienController extends BaseController {
+public class BienController extends BienController_Adicional {
     
     //<editor-fold defaultstate="collapsed" desc="Variables de la Clase">
     List<SelectItem> tiposBienOptions;
@@ -73,14 +73,19 @@ public class AgregarBienController extends BaseController {
     
 
     //<editor-fold defaultstate="collapsed" desc="Inicializa Datos">
-    public AgregarBienController() {
+    public BienController() {
         super();
-
-        cargarCombos();
+        command = new BienCommand();
+        bienRegistrado = true;
     }
 
     private void cargarCombos() {
         try {
+            
+            cargarOpcionesCaract();
+            inicializaUbicaciones();
+            //cargarProveedores();
+            
             List<Tipo> tipos = tipoModel.listarPorDominio(Constantes.DOMINIO_BIEN);
             if (!tipos.isEmpty()) {
                 tiposBienOptions = new ArrayList<SelectItem>();
@@ -129,31 +134,13 @@ public class AgregarBienController extends BaseController {
                     monedasOptions.add(new SelectItem(item.getId(), item.getDescripcion()));  // ID + Nombre -- Usado para combo de filtro para enviar el ID al Dao para la consulta
                 }
             }
+            
+            
         } catch (Exception err) {
             mensaje = err.getMessage();
         }
     }
 
-    public void nuevoRegistro(ActionEvent event) {
-        try{
-            if (!event.getPhaseId().equals(PhaseId.INVOKE_APPLICATION)) {
-                event.setPhaseId(PhaseId.INVOKE_APPLICATION);
-                event.queue();
-                return;
-            }
-            inicializar();
-            this.vistaOrigen = event.getComponent().getAttributes().get(Constantes.KEY_VISTA_ORIGEN).toString();
-            Util.navegar(Constantes.VISTA_NOTIFICACION_NUEVA);
-        } catch (FWExcepcion err) {
-            mensaje = err.getMessage();
-        }
-    }
-    
-    private void inicializar() {
-        this.mensajeExito = "";
-        this.mensaje = "";
-        this.command = new BienCommand();
-    }
     private Double getValorColones() {
         //TODO como se va a manejar el tipo de cambio?
         try {
@@ -194,7 +181,7 @@ public class AgregarBienController extends BaseController {
             Integer idPlaca = buscarPlaca();
             if (idPlaca > 0) {
                 Identificacion placa = new Identificacion();
-//                placa.setId(idPlaca);
+             //   placa.setId(idPlaca);
                 command.setIdentificacion(placa);
             } else {
                 mensaje = Util.getEtiquetas("sigebi.Bien.Error.Placa");
@@ -269,6 +256,9 @@ public class AgregarBienController extends BaseController {
             this.vistaOrigen = "reg_manual";
             
             this.abrirDetalle(item.getIdBien());
+            
+            cargarCombos();
+            
         } catch (Exception err) {
             mensaje = err.getMessage();
         }
@@ -281,6 +271,9 @@ public class AgregarBienController extends BaseController {
                 pEvent.queue();
                 return;
             }
+            
+            
+            cargarCombos();
             
             ViewBienEntity item = (ViewBienEntity) pEvent.getComponent().getAttributes().get("tipoSeleccionado");
             this.vistaOrigen = "sincronizar";
@@ -296,20 +289,23 @@ public class AgregarBienController extends BaseController {
     
     private void abrirDetalle(Integer idBien) {
         try{
-        this.vistaOrigen = "reg_manual";
-
+            this.vistaOrigen = "reg_manual";
+        
+            cargarCombos();
         } catch (Exception err) {
             mensaje = err.getMessage();
         }
     }
     
-    public void nuevoRegistro1(ActionEvent pEvent) {
+    public void nuevoRegistro(ActionEvent pEvent) {
         try{
             if (!pEvent.getPhaseId().equals(PhaseId.INVOKE_APPLICATION)) {
                 pEvent.setPhaseId(PhaseId.INVOKE_APPLICATION);
                 pEvent.queue();
                 return;
             }
+            
+            cargarCombos();
             this.vistaOrigen = "reg_manual";
             Util.navegar("bien_nuevo");
         } catch (Exception err) {
@@ -449,4 +445,279 @@ public class AgregarBienController extends BaseController {
         this.observacionCliente = observacionCliente;
     }
     //</editor-fold>
+    
+    
+    
+    
+    
+    
+    
+    
+    //<editor-fold defaultstate="collapsed" desc="Gets & Sets">
+
+    String idSelectUbicacion;
+    public String getIdSelectUbicacion() {
+        return idSelectUbicacion;
+    }
+
+    public void setIdSelectUbicacion(String idSelectUbicacion) {
+        this.idSelectUbicacion = idSelectUbicacion;
+    }
+    List<SelectItem> loteOptions;
+    public void setLoteOptions(List<SelectItem> LoteOptions) {
+        this.loteOptions = LoteOptions;
+    }
+
+    public List<SelectItem> getLoteOptions() {
+        return loteOptions;
+    }
+
+    public String getValorLote() {
+        return valorLote;
+    }
+    String valorLote;
+    public void setValorLote(String valorLote) {
+        this.valorLote = valorLote;
+    }
+    List<SelectItem> origenOptions;
+    public List<SelectItem> getOrigenOptions() {
+        return origenOptions;
+    }
+
+    public void setOrigenOptions(List<SelectItem> origenOptions) {
+        this.origenOptions = origenOptions;
+    }
+
+
+    public String getProvSelccionado() {
+        return provSelccionado;
+    }
+
+    public void setProvSelccionado(String provSelccionado) {
+        this.provSelccionado = provSelccionado;
+    }
+
+    public String getProvId() {
+        return provId;
+    }
+
+    public void setProvId(String provId) {
+        this.provId = provId;
+    }
+
+    public String getSelectUbicacion() {
+        return selectUbicacion;
+    }
+    String selectUbicacion;
+    public void setSelectUbicacion(String selectUbicacion) {
+        this.selectUbicacion = selectUbicacion;
+    }
+
+    public String getSelectProveedor() {
+        return selectProveedor;
+    }
+    String selectProveedor;
+    public void setSelectProveedor(String selectProveedor) {
+        this.selectProveedor = selectProveedor;
+    }
+
+    public String getSelectEstado() {
+        return selectEstado;
+    }
+    String selectEstado;
+    public void setSelectEstado(String selectEstado) {
+        this.selectEstado = selectEstado;
+    }
+
+    public String getSelectMoneda() {
+        return selectMoneda;
+    }
+    String selectMoneda;
+    public void setSelectMoneda(String selectMoneda) {
+        this.selectMoneda = selectMoneda;
+    }
+
+    public List<SelectItem> getUbicacionOptions() {
+        return ubicacionOptions;
+    }
+
+    public void setUbicacionOptions(List<SelectItem> ubicacionOptions) {
+        this.ubicacionOptions = ubicacionOptions;
+    }
+
+    public List<SelectItem> getProvedooresOptions() {
+        return provedooresOptions;
+    }
+
+    public void setProvedooresOptions(List<SelectItem> provedooresOptions) {
+        this.provedooresOptions = provedooresOptions;
+    }
+
+    public List<SelectItem> getEstadosOptions() {
+        return estadosOptions;
+    }
+    List<SelectItem> estadosOptions;
+    public void setEstadosOptions(List<SelectItem> estadosOptions) {
+        this.estadosOptions = estadosOptions;
+    }
+
+    public List<SelectItem> getMonedasOptions() {
+        return monedasOptions;
+    }
+
+    public void setMonedasOptions(List<SelectItem> monedasOptions) {
+        this.monedasOptions = monedasOptions;
+    }
+
+    public List<SelectItem> getClasificacionOptions() {
+        return clasificacionOptions;
+    }
+    List<SelectItem> clasificacionOptions;
+    public void setClasificacionOptions(List<SelectItem> clasificacionOptions) {
+        this.clasificacionOptions = clasificacionOptions;
+    }
+
+    public String getSelectClasificacion() {
+        return selectClasificacion;
+    }
+    String selectClasificacion;
+    public void setSelectClasificacion(String selectClasificacion) {
+        this.selectClasificacion = selectClasificacion;
+    }
+
+    public String getSelectSubCateg() {
+        return selectSubCateg;
+    }
+    String selectSubCateg;
+    public void setSelectSubCateg(String selectSubCateg) {
+        this.selectSubCateg = selectSubCateg;
+    }
+
+    public String getSelectSubClasif() {
+        return selectSubClasif;
+    }
+    String selectSubClasif;
+    public void setSelectSubClasif(String selectSubClasif) {
+        this.selectSubClasif = selectSubClasif;
+    }
+
+    public String getSelectCategoria() {
+        return selectCategoria;
+    }
+    String selectCategoria;
+    public void setSelectCategoria(String selectCategoria) {
+        this.selectCategoria = selectCategoria;
+    }
+
+    public List<SelectItem> getCategoriasOptions() {
+        return categoriasOptions;
+    }
+
+    public void setCategoriasOptions(List<SelectItem> categoriasOptions) {
+        this.categoriasOptions = categoriasOptions;
+    }
+
+    public List<SelectItem> getSubClasifOptions() {
+        return subClasifOptions;
+    }
+    List<SelectItem> subClasifOptions;
+    public void setSubClasifOptions(List<SelectItem> subClasifOptions) {
+        this.subClasifOptions = subClasifOptions;
+    }
+
+    public List<SelectItem> getSubCategoriaOptions() {
+        return subCategoriaOptions;
+    }
+    List<SelectItem> subCategoriaOptions;
+    public void setSubCategoriaOptions(List<SelectItem> subCategoriaOptions) {
+        this.subCategoriaOptions = subCategoriaOptions;
+    }
+
+    public String getCapitalizable() {
+        return capitalizable;
+    }
+    String capitalizable;
+    public void setCapitalizable(String capitalizable) {
+        this.capitalizable = capitalizable;
+    }
+
+    public String getMensaje() {
+        return mensaje;
+    }
+
+    public void setMensaje(String mensaje) {
+        this.mensaje = mensaje;
+    }
+
+//    public NotaEntity getCatacteristica() {
+//        return catacteristica;
+//    }
+//
+//    public void setCatacteristica(NotaEntity catacteristica) {
+//        this.catacteristica = catacteristica;
+//    }
+    public String getOrigenSeleccionado() {
+        return origenSeleccionado;
+    }
+    String origenSeleccionado;
+    public void setOrigenSeleccionado(String origenSeleccionado) {
+        this.origenSeleccionado = origenSeleccionado;
+    }
+
+    public List<SelectItem> getTiposBienOptions() {
+        return tiposBienOptions;
+    }
+
+    public void setTiposBienOptions(List<SelectItem> tiposBienOptions) {
+        this.tiposBienOptions = tiposBienOptions;
+    }
+
+    public Date getFecAdiquisicion() {
+        return fecAdiquisicion;
+    }
+    Date fecAdiquisicion;
+    public void setFecAdiquisicion(Date fecAdiquisicion) {
+        this.fecAdiquisicion = fecAdiquisicion;
+    }
+
+    public boolean isEsLote() {
+        return esLote;
+    }
+    boolean esLote;
+    public void setEsLote(boolean esLote) {
+        this.esLote = esLote;
+    }
+
+    
+    
+    
+    public String getTipoSeleccionado() {
+        return tipoSeleccionado;
+    }
+    String tipoSeleccionado;
+    public void setTipoSeleccionado(String tipoSeleccionado) {
+        this.tipoSeleccionado = tipoSeleccionado;
+    }
+
+
+    public String getMensajeNota() {
+        return mensajeNota;
+    }
+
+    public void setMensajeNota(String mensajeNota) {
+        this.mensajeNota = mensajeNota;
+    }
+
+    
+    
+    
+    
+
+    //</editor-fold>
+    
+    
+    
+    
+    
+    
 }

@@ -112,7 +112,7 @@ public class NotificacionDao extends GenericDaoImpl {
         
         sql.append(" WHERE 1 = 1 ");
         if(id != null && id > 0){
-           sql.append(" AND ne.idNotificacion = :idNotificacion) ");
+           sql.append(" AND ne.id = :id ");
         } else {
             if(asunto != null && asunto.length() > 0){
                 sql.append(" AND UPPER(ne.asunto) LIKE UPPER(:asunto) ");
@@ -127,14 +127,14 @@ public class NotificacionDao extends GenericDaoImpl {
                 sql.append(" AND ne.fecha = :fecha ");
             }
             if(estado != null && estado > 0){
-                sql.append(" AND ne.estado.idEstado = :estado ");
+                sql.append(" AND ne.estado.id = :estado ");
             }
         }
         sql.append(" ORDER BY ne.fecha desc");
         
         Query query = session.createQuery(sql.toString());
         if(id != null && id > 0){
-            query.setParameter("idNotificacion", id);
+            query.setParameter("id", id);
         } else {
             if(asunto != null && asunto.length() > 0){
                 query.setParameter("asunto", '%' + asunto + '%');

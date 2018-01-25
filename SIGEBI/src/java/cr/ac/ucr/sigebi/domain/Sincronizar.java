@@ -3,9 +3,8 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package cr.ac.ucr.sigebi.entities;
+package cr.ac.ucr.sigebi.domain;
 
-import cr.ac.ucr.sigebi.domain.Bien;
 import cr.ac.ucr.sigebi.utils.Constantes;
 import java.io.Serializable;
 import java.util.Date;
@@ -20,9 +19,9 @@ import javax.persistence.Temporal;
  *
  * @author jorge.serrano
  */
-@Entity(name = "SincronizarEntity")
+@Entity(name = "Sincronizar")
 @Table(name = "SF_INTERFAZ_SIGEBI")
-public class SincronizarEntity implements Serializable {
+public class Sincronizar implements Serializable {
 
     private static final long serialVersionUID = 1L;
     
@@ -71,9 +70,6 @@ public class SincronizarEntity implements Serializable {
     private double deprecacumRevaluac;
     @Column(name = "PLACA_TEMP") // VARCHAR2 (1 Byte) 
     private char placaTemp;
-    
-    
-    
     @Column(name = "INDICA_PLACA") // VARCHAR2 (1 Byte) 
     private char indicaPlaca;
     @Column(name = "PLACA") // VARCHAR2 (20 Byte) 
@@ -156,10 +152,7 @@ public class SincronizarEntity implements Serializable {
     private Date fechaAdicion;
     @Column(name = "ADICIONADO_POR") // VARCHAR2 (50 Byte) 
     private String adicionadoPor;
-
     //</editor-fold>
-    
-    
     
     //<editor-fold defaultstate="collapsed" desc="SET's y GET's ">
 
@@ -642,32 +635,29 @@ public class SincronizarEntity implements Serializable {
     public void setAdicionadoPor(String adicionadoPor) {
         this.adicionadoPor = adicionadoPor;
     }
-    
-    
     //</editor-fold>
     
     //<editor-fold defaultstate="collapsed" desc="Constructores">
     
-    
-    public SincronizarEntity() {
+    public Sincronizar() {
     }
     
-    public SincronizarEntity(Bien bien) {
+    public Sincronizar(Bien bien) {
         numEmpresa = 1;
-        idActivo = Integer.parseInt(bien.getId().toString());//FIXME;
-//        descripcion = bien.getIdSubClasificacion().toString();//.getDescripcion(); 
+        idActivo = Integer.parseInt(bien.getId().toString());
+        descripcion = bien.getSubClasificacion().getNombre();
         indicaTipoActivo = bien.getTipo().toString().charAt(0);
-        codigoSubCategoria = bien.getSubCategoria().getCodigoSubCategoria();// .getCodSubCategoria().split("-")[0];
-        codigoCategoria  = bien.getSubCategoria().getCodigoCategoria();// .getCodSubCategoria().split("-")[1];
+        codigoSubCategoria = bien.getSubCategoria().getCodigoSubCategoria();
+        codigoCategoria  = bien.getSubCategoria().getCodigoCategoria();
         idCustodio = 1000;//bien.getNumUnidadEjec();
         idProveedor = Integer.parseInt(bien.getProveedor().getNumPersona().toString());
         origen = bien.getOrigen().toString().charAt(0);
         valorInicialColones = Float.parseFloat( bien.getCosto().toString());
         valorInicialOtraMo = Float.parseFloat( bien.getCosto().toString());
         ubicacionFisica = bien.getUbicacion().getDetalle();
-//        tipoCambioCompra = 500;
         tieneImagen = 'N';
         estadoDelActivo = Constantes.SINCRONIZAR_ESTADO_TRANSITO_ACTIVACION;
+//        tipoCambioCompra = 500;
 //        valorMejoras = 0;
 //        valorRevaluaciones = 0;
 //        deprecacum = 0;
@@ -676,8 +666,8 @@ public class SincronizarEntity implements Serializable {
 //        placaTemp = 'N';
         
         // Datos no Obligatorios
-        //placa = bien.getIdBien().get;//FIXME
-        idMoneda = Integer.parseInt(bien.getMoneda().getId().toString());// .getIdMoneda();
+        placa = bien.getIdentificacion().getIdentificacion();
+        idMoneda = Integer.parseInt(bien.getMoneda().getId().toString());
         numUnidadEjec = Integer.parseInt(bien.getUnidadEjecutora().getId().toString());
         fechaAdicion = bien.getFechaAdquisicion();
         //adicionadoPor = "";
@@ -689,10 +679,10 @@ public class SincronizarEntity implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof SincronizarEntity)) {
+        if (!(object instanceof Sincronizar)) {
             return false;
         }
-        SincronizarEntity other = (SincronizarEntity) object;
+        Sincronizar other = (Sincronizar) object;
         if (this.placa != other.placa) {
             return false;
         }

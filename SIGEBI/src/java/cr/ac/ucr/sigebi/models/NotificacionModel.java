@@ -83,7 +83,7 @@ public class NotificacionModel {
     
     public void enviarCorreo(Notificacion notificacion) throws FWExcepcion {
         try {
-            LOG.info("-- ID: " + notificacion.getIdNotificacion() + " -- Correo: " + notificacion.getDestinatario());
+            LOG.info("-- ID: " + notificacion.getId() + " -- Correo: " + notificacion.getDestinatario());
             String to = notificacion.getDestinatario();
             
             Properties properties = new Properties();

@@ -11,11 +11,8 @@ import cr.ac.ucr.sigebi.utils.Constantes;
 import cr.ac.ucr.framework.vista.VistaUsuario;
 import cr.ac.ucr.framework.vista.util.PaginacionOracle;
 import cr.ac.ucr.framework.vista.util.Util;
-import cr.ac.ucr.sigebi.domain.Estado;
-import cr.ac.ucr.sigebi.models.EstadoModel;
+import cr.ac.ucr.sigebi.domain.UnidadEjecutora;
 import java.util.ArrayList;
-import javax.annotation.PostConstruct;
-import javax.annotation.Resource;
 import javax.faces.model.SelectItem;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
@@ -35,12 +32,12 @@ public class BaseController extends PaginacionOracle {
 
     //<editor-fold defaultstate="collapsed" desc="Variables Locales">
     VistaUsuario lVistaUsuario;
-    Long unidadEjecutoraId;
     String nombreUnidad;
     String codPersonaReg;
     String usuarioRegistrado;
     String vistaOrigen;
     String vistaActual;
+    UnidadEjecutora unidadEjecutora;
     
     //</editor-fold>
     
@@ -77,8 +74,12 @@ public class BaseController extends PaginacionOracle {
         this.vistaOrigen = vistaOrigen;
     }
 
-    public Long getUnidadEjecutora() {
-        return unidadEjecutoraId;
+    public UnidadEjecutora getUnidadEjecutora() {
+        return unidadEjecutora;
+    }
+
+    public void setUnidadEjecutora(UnidadEjecutora unidadEjecutora) {
+        this.unidadEjecutora = unidadEjecutora;
     }
 
     public String getNombreUnidad() {
@@ -124,7 +125,7 @@ public class BaseController extends PaginacionOracle {
 
         //Obtener el id de la unidad ejecutora
         SegUnidadEjecutora unidad = lVistaUsuario.getgUnidadActual();
-        unidadEjecutoraId = Long.parseLong(unidad.getUnidadEjecutoraLlave().getIdUnidadEjecutora().toString());
+        unidadEjecutora = lVistaUsuario.getUnidadEjecutoraSIGEBI();
 
         //Obtener usuario
         SegUsuario usuario = lVistaUsuario.getgUsuarioActual();

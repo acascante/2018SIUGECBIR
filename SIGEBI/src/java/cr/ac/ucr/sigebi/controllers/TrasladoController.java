@@ -18,7 +18,6 @@ import cr.ac.ucr.sigebi.domain.Usuario;
 import cr.ac.ucr.sigebi.entities.TrasladoDetalleEntity;
 import cr.ac.ucr.sigebi.entities.TrasladoEntity;
 import cr.ac.ucr.sigebi.entities.UbicacionEntity;
-import cr.ac.ucr.sigebi.entities.ViewBienEntity;
 import cr.ac.ucr.sigebi.models.BienModel;
 import cr.ac.ucr.sigebi.models.AutorizacionModel;
 import cr.ac.ucr.sigebi.models.AutorizacionRolPersonaModel;
@@ -245,12 +244,12 @@ public class TrasladoController extends ListadoBienesGeneralController {
         usuarioRegistrado = usuarioModel.buscarPorId(codPersonaReg);
 
         //TODO cambiar implementacion de consulta de estados, VER ListarNotificacionesController
-        estadoGeneralPendiente = estadoModel.buscarPorDominioEstado(Constantes.DOMINI0_ESTADO_GENERAL, Constantes.ESTADO_GENERAL_PENDIENTE);
-        estadoGeneralActivo = estadoModel.buscarPorDominioEstado(Constantes.DOMINI0_ESTADO_GENERAL, Constantes.ESTADO_GENERAL_ACTIVO);
-        estadoGeneralAnulado = estadoModel.buscarPorDominioEstado(Constantes.DOMINI0_ESTADO_GENERAL, Constantes.ESTADO_GENERAL_ANULADO); //ESTADO_GENERAL_ANULADO;
+        estadoGeneralPendiente = estadoModel.buscarPorDominioEstado(Constantes.DOMINIO_GENERAL, Constantes.ESTADO_GENERAL_PENDIENTE);
+        estadoGeneralActivo = estadoModel.buscarPorDominioEstado(Constantes.DOMINIO_GENERAL, Constantes.ESTADO_GENERAL_ACTIVO);
+        estadoGeneralAnulado = estadoModel.buscarPorDominioEstado(Constantes.DOMINIO_GENERAL, Constantes.ESTADO_GENERAL_ANULADO); //ESTADO_GENERAL_ANULADO;
 
-        estadoGeneralAprobado = estadoModel.buscarPorDominioEstado(Constantes.DOMINI0_ESTADO_GENERAL, Constantes.ESTADO_GENERAL_APROBADO);
-        estadoGeneralRechazado = estadoModel.buscarPorDominioEstado(Constantes.DOMINI0_ESTADO_GENERAL, Constantes.ESTADO_GENERAL_RECHAZADO);
+        estadoGeneralAprobado = estadoModel.buscarPorDominioEstado(Constantes.DOMINIO_GENERAL, Constantes.ESTADO_GENERAL_APROBADO);
+        estadoGeneralRechazado = estadoModel.buscarPorDominioEstado(Constantes.DOMINIO_GENERAL, Constantes.ESTADO_GENERAL_RECHAZADO);
 
         estadosOptions = new ArrayList<SelectItem>();
 
@@ -280,7 +279,7 @@ public class TrasladoController extends ListadoBienesGeneralController {
             ubicacionVisible = false;
             unidadDestino = new UnidadEjecutora();
 
-            unidadOrigen = unidadModel.buscarPorId(unidadEjecutoraId);
+            unidadOrigen = unidadModel.buscarPorId(unidadEjecutora.getId());
             formatter = new SimpleDateFormat("dd/MM/yyyy");
             //Date actaFecha = formatter.parse(formatter.format(traslado.getFecha()));
             fechaRegistro = formatter.format(traslado.getFecha());
@@ -290,17 +289,17 @@ public class TrasladoController extends ListadoBienesGeneralController {
             //Asigno Unidad Origen
             traslado.setNumUnidadOrigen(unidadOrigen);
 
-            estadosBienes = null;
-            consultaBienes = 2;
-            inicializaBuscarBienes();
+//            estadosBienes = null;
+//            consultaBienes = 2;
+//            inicializaBuscarBienes();
 
             usuariosEnviar = new HashMap<String, Usuario>();
             usuariosRecibir = new HashMap<String, Usuario>();
 
             // Busco Usuarios Enviar y Recibir
-            tipoProcesoTraslado = tipoModel.buscarPorDominioNombre(Constantes.DOMINI0_TIPO_PROCESO, Constantes.DOCUMENTO_TRASLADO);
+            tipoProcesoTraslado = tipoModel.buscarPorDominioNombre(Constantes.DOMINIO_PROCESO, Constantes.DOCUMENTO_TRASLADO);
 
-            List<Autorizacion> acciones = autorizacionModel.buscarPorTipoProceso(tipoProcesoTraslado.getIdTipo());
+            List<Autorizacion> acciones = autorizacionModel.buscarPorTipoProceso(tipoProcesoTraslado.getId());
             for (Autorizacion item : acciones) {
                 if (item.getNombre().toUpperCase().equals(Constantes.DOCUMENTO_ENVIAR)) {
                     autorizacionEnviar = item;
@@ -309,13 +308,23 @@ public class TrasladoController extends ListadoBienesGeneralController {
                     autorizacionRecibir = item;
                 }
             }
+//TODO arreglar unidad ejecutora
+//            List<AutorizacionRolPersona> usrsEnviar = autorizacionRolPersonaModel.buscarUsuariosPorAutorizacion(autorizacionEnviar.getId(), unidadEjecutoraId);
+//            for (AutorizacionRolPersona usr : usrsEnviar) {
+//                usuariosEnviar.put(usr.getUsuarioSeguridad().getId(), usr.getUsuarioSeguridad());
+//            }
+//
+//            List<AutorizacionRolPersona> usrsRecibir = autorizacionRolPersonaModel.buscarUsuariosPorAutorizacion(autorizacionRecibir.getId(), unidadEjecutoraId);
+//            for (AutorizacionRolPersona usr : usrsRecibir) {
+//                usuariosRecibir.put(usr.getUsuarioSeguridad().getId(), usr.getUsuarioSeguridad());
+//            }
 
-            List<AutorizacionRolPersona> usrsEnviar = autorizacionRolPersonaModel.buscarUsuariosPorAutorizacion(autorizacionEnviar.getId(), unidadEjecutoraId);
+            List<AutorizacionRolPersona> usrsEnviar = autorizacionRolPersonaModel.buscarUsuariosPorAutorizacion(autorizacionEnviar.getId(), unidadEjecutora.getId());
             for (AutorizacionRolPersona usr : usrsEnviar) {
                 usuariosEnviar.put(usr.getUsuarioSeguridad().getId(), usr.getUsuarioSeguridad());
             }
 
-            List<AutorizacionRolPersona> usrsRecibir = autorizacionRolPersonaModel.buscarUsuariosPorAutorizacion(autorizacionRecibir.getId(), unidadEjecutoraId);
+            List<AutorizacionRolPersona> usrsRecibir = autorizacionRolPersonaModel.buscarUsuariosPorAutorizacion(autorizacionRecibir.getId(), unidadEjecutora.getId());
             for (AutorizacionRolPersona usr : usrsRecibir) {
                 usuariosRecibir.put(usr.getUsuarioSeguridad().getId(), usr.getUsuarioSeguridad());
             }
@@ -360,8 +369,8 @@ public class TrasladoController extends ListadoBienesGeneralController {
 //                        valor.setMarcado(permiteRecibir);
 //                    }
 
-                    bienesAsociados.add(valor.getIdBien());
-                    bienesSeleccionados.put(valor.getIdBien().getIdBien(), valor.getIdBien());
+//                    bienesAsociados.add(valor.getIdBien());
+//                    bienesSeleccionados.put(valor.getIdBien().getIdBien(), valor.getIdBien());
 
                     bienesAsociadosTraslados.put(valor.getIdBien().getIdBien(), valor);
 
@@ -738,7 +747,7 @@ public class TrasladoController extends ListadoBienesGeneralController {
 
     private boolean permitirEdicion() {
         //Verifica Unidad de Origen
-        if (!traslado.getNumUnidadOrigen().getId().equals(unidadEjecutoraId)) {
+        if (!traslado.getNumUnidadOrigen().getId().equals(unidadEjecutora.getId())) {
             return false;
         }
         //Verifica permisos en DocumentoRolPersona
@@ -753,7 +762,7 @@ public class TrasladoController extends ListadoBienesGeneralController {
 
     private boolean permitirRecibir() {
         //Verifica Unidad de Destino
-        if (!traslado.getNumUnidadDestino().getId().equals(unidadEjecutoraId)) {
+        if (!traslado.getNumUnidadDestino().getId().equals(unidadEjecutora.getId())) {
             return false;
         }
         //Verifica permisos en DocumentoRolPersona
@@ -1139,17 +1148,17 @@ public class TrasladoController extends ListadoBienesGeneralController {
             }
 
             //bienesAsociados_1 = new ArrayList<ViewBienEntity>();
-            ViewBienEntity bien = (ViewBienEntity) pEvent.getComponent().getAttributes().get("bienSeleccionado");
-            if (bienesSeleccionados.containsKey(bien.getIdBien())) {
-                bienesSeleccionados.remove(bien.getIdBien());
-                bienesAsociadosTraslados.remove(bien.getIdBien());
-            } else {
-                bienesSeleccionados.put(bien.getIdBien(), bien);
-                bienesAsociadosTraslados.put(bien.getIdBien(), new TrasladoDetalleEntity(traslado, bien, estadoGeneralPendiente));
-            }
-            //bienesAsociados_1 = new Array<>(bienesSeleccionados_1.values());
-            bienesAsociados = new ArrayList<ViewBienEntity>(bienesSeleccionados.values());
-            trasladoDetalle = new ArrayList<TrasladoDetalleEntity>(bienesAsociadosTraslados.values());
+//            ViewBienEntity bien = (ViewBienEntity) pEvent.getComponent().getAttributes().get("bienSeleccionado");
+//            if (bienesSeleccionados.containsKey(bien.getIdBien())) {
+//                bienesSeleccionados.remove(bien.getIdBien());
+//                bienesAsociadosTraslados.remove(bien.getIdBien());
+//            } else {
+//                bienesSeleccionados.put(bien.getIdBien(), bien);
+//                bienesAsociadosTraslados.put(bien.getIdBien(), new TrasladoDetalleEntity(traslado, bien, estadoGeneralPendiente));
+//            }
+//            //bienesAsociados_1 = new Array<>(bienesSeleccionados_1.values());
+//            bienesAsociados = new ArrayList<ViewBienEntity>(bienesSeleccionados.values());
+//            trasladoDetalle = new ArrayList<TrasladoDetalleEntity>(bienesAsociadosTraslados.values());
         } catch (Exception err) {
             Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.error.controllerListarBienSincronizar.checkBienPorSincronizar"));
         }

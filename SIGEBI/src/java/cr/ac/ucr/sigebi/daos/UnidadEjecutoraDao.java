@@ -40,7 +40,7 @@ public class UnidadEjecutoraDao extends GenericDaoImpl {
     }
     
     @Transactional(readOnly = true)
-    public List<UnidadEjecutora> listar(String idUnidad, String nombreUnidad) throws FWExcepcion{
+    public List<UnidadEjecutora> listar(String idUnidad, String nombreUnidad) throws FWExcepcion {
         Session session = dao.getSessionFactory().openSession();
         try {
             StringBuilder sql = new StringBuilder ("SELECT obj FROM UnidadEjecutora obj WHERE TO_CHAR(obj.id) LIKE :idUnidad");
@@ -58,7 +58,7 @@ public class UnidadEjecutoraDao extends GenericDaoImpl {
     }
     
     @Transactional(readOnly = true)
-    public UnidadEjecutora buscarPorId(Long id) throws FWExcepcion{
+    public UnidadEjecutora buscarPorId(Long id) throws FWExcepcion {
         Session session = this.dao.getSessionFactory().openSession();
         try {
             String sql = "SELECT obj FROM UnidadEjecutora obj WHERE obj.id = :id";

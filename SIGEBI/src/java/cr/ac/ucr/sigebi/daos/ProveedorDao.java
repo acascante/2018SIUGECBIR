@@ -9,12 +9,7 @@ import cr.ac.ucr.framework.daoHibernate.DaoHelper;
 import cr.ac.ucr.framework.daoImpl.GenericDaoImpl;
 import cr.ac.ucr.framework.utils.FWExcepcion;
 import cr.ac.ucr.sigebi.domain.Proveedor;
-import cr.ac.ucr.sigebi.domain.Proveedor;
-import cr.ac.ucr.sigebi.entities.PersonaEntity;
-import java.util.ArrayList;
 import java.util.List;
-import org.hibernate.SQLQuery;
-import org.hibernate.Session;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.dao.DataAccessException;
@@ -27,7 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Repository(value = "proveedorDao")
 @Scope("request")
-public class FaltaProveedorDao extends GenericDaoImpl {
+public class ProveedorDao extends GenericDaoImpl {
     
     @Autowired
     private DaoHelper dao;

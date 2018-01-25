@@ -49,7 +49,7 @@ public class TipoController extends PaginacionOracle {
         //TODO verificar dominio para este tipo
         Tipo tipoEntity = tipoModel.buscarPorDominioTipo("Tipo", 1);
         
-        this.setId(tipoEntity.getIdTipo());
+        this.setId(tipoEntity.getId());
         this.setNombre(tipoEntity.getNombre());
         this.setDominio(tipoEntity.getDominio());
         
@@ -99,7 +99,7 @@ public class TipoController extends PaginacionOracle {
             return;
         }
         this.tipoSeleccionado = (Tipo) pEvent.getComponent().getAttributes().get("tipoSeleccionado");
-        this.setId(tipoSeleccionado.getIdTipo());
+        this.setId(tipoSeleccionado.getId());
         this.setNombre(tipoSeleccionado.getNombre());
         this.setDominio(tipoSeleccionado.getDominio());
         Util.navegar("tipo_detalle");

@@ -218,12 +218,12 @@ public class ListarInformesTecnicosController extends BaseController {
         try {
 
             //Se cuenta la cantidad de registros
-            Long contador = informeTecnicoModel.consultaCantidadRegistros(unidadEjecutoraId, 
+            Long contador = informeTecnicoModel.consultaCantidadRegistros(unidadEjecutora.getId(), 
                     fltIdTipo, fltIdBien, fltDescripcion, fltEstado);
             
 
             //Se actualiza la cantidad de registros segun los filtros
-            this.setCantidadRegistros(contador.intValue());
+            //this.setCantidadRegistros(contador.intValue());
 
         } catch (FWExcepcion e) {
             Mensaje.agregarErrorAdvertencia(e.getError_para_usuario());
@@ -236,7 +236,7 @@ public class ListarInformesTecnicosController extends BaseController {
      */
     private void listarInformes() {
         try {
-            this.informes = informeTecnicoModel.listarInformes(unidadEjecutoraId, 
+            this.informes = informeTecnicoModel.listarInformes(unidadEjecutora.getId(), 
                     fltIdTipo, fltIdBien, fltDescripcion, fltEstado, this.getPrimerRegistro() - 1, this.getUltimoRegistro());
         } catch (FWExcepcion e) {
             Mensaje.agregarErrorAdvertencia(e.getError_para_usuario());

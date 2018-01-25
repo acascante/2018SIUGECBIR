@@ -13,7 +13,6 @@ import cr.ac.ucr.sigebi.models.NotificacionModel;
 import cr.ac.ucr.sigebi.commands.ListarNotificacionesCommand;
 import cr.ac.ucr.sigebi.domain.Estado;
 import cr.ac.ucr.sigebi.domain.Notificacion;
-import cr.ac.ucr.sigebi.models.AccesorioModel;
 import cr.ac.ucr.sigebi.models.EstadoModel;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -42,10 +41,8 @@ import org.springframework.stereotype.Controller;
 @Scope("session")
 public class ListarNotificacionesController extends BaseController {
     
-    @Resource
-    private NotificacionModel notificacionModel;
-    @Resource
-    private EstadoModel estadoModel;
+    @Resource private NotificacionModel notificacionModel;
+    @Resource private EstadoModel estadoModel;
     
     private List<Notificacion> notificaciones;
     private Map<Integer, Estado> estados;
@@ -54,16 +51,12 @@ public class ListarNotificacionesController extends BaseController {
    
     public ListarNotificacionesController() {
         super();
+        this.inicializarDatos();
     }
     
     @PostConstruct
     public final void inicializar() {
-        command = new ListarNotificacionesCommand();
-        this.setPrimerRegistro(1);
-        this.contarNotificaciones();
-        this.listarNotificaciones();
-        this.vistaOrigen = Constantes.VISTA_NOTIFICACION_LISTADO;
-        
+        this.inicializarListado();
         List<Estado> listEstados = estadoModel.listarPorDominio(Constantes.DOMINIO_NOTIFICACION);
         if (!listEstados.isEmpty()) {
             estados = new HashMap<Integer, Estado>();
@@ -77,7 +70,19 @@ public class ListarNotificacionesController extends BaseController {
     
     public void regresarListado() {
         Util.navegar(vistaOrigen);
-        inicializar();
+        this.inicializarDatos();
+        this.inicializarListado();
+    }
+    
+    private void inicializarDatos() {
+        this.vistaOrigen = Constantes.VISTA_NOTIFICACION_LISTADO;
+        this.command = new ListarNotificacionesCommand();
+    }
+    
+    private void inicializarListado() {
+        this.setPrimerRegistro(1);
+        this.contarNotificaciones();
+        this.listarNotificaciones();
     }
     
     private void contarNotificaciones() {
@@ -123,9 +128,7 @@ public class ListarNotificacionesController extends BaseController {
                 pEvent.queue();
                 return;
             }
-            this.contarNotificaciones();
-            this.setPrimerRegistro(1);
-            this.listarNotificaciones();
+            this.inicializarListado();
         } catch (Exception err) {
             Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.error.controllerListarNotificaciones.cambioFiltro"));
         }

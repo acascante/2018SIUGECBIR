@@ -16,11 +16,13 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+
 @Entity(name = "ViewResumenBien")
 @Table(name = "SIGEBI_OAF.V_SIGB_BIEN_CARACTERISTICA")
 public class ViewResumenBien extends ObjetoBase implements Serializable {
     
     //<editor-fold defaultstate="collapsed" desc="Atributos">
+    
     @Id
     @Column(name = "ID")
     private Long id;
@@ -33,6 +35,7 @@ public class ViewResumenBien extends ObjetoBase implements Serializable {
     
     @Column(name = "SERIE")
     private String serie;
+    
     //</editor-fold>
 
     //<editor-fold defaultstate="collapsed" desc="GET's y SET's">

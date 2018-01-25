@@ -6,7 +6,6 @@
 package cr.ac.ucr.sigebi.commands;
 
 import cr.ac.ucr.sigebi.utils.Constantes;
-import java.util.Date;
 import java.util.TimeZone;
 
 /**
@@ -17,22 +16,25 @@ public class ListarBienesCommand {
     
     //<editor-fold defaultstate="collapsed" desc="Atributos">
     private String fltIdBien;
+    private String fltIdentificacion;
     private String fltDescripcion;
     private String fltMarca;
     private String fltModelo;
     private String fltSerie;
     private Integer fltEstado;
+    private Integer fltTipo;
     //</editor-fold>
     
     //<editor-fold defaultstate="collapsed" desc="Constructores">
-    public ListarBienesCommand() {}
-
-    public ListarBienesCommand(String fltIdBien, String fltDescripcion, String fltMarca, String fltSerie, Integer fltEstado) {
-        this.fltIdBien = fltIdBien;
-        this.fltDescripcion = fltDescripcion;
-        this.fltMarca = fltMarca;
-        this.fltSerie = fltSerie;
-        this.fltEstado = fltEstado;
+    public ListarBienesCommand() {
+        super();
+        this.fltIdBien =  new String();
+        this.fltIdentificacion =  new String();
+        this.fltDescripcion =  new String();
+        this.fltMarca =  new String();
+        this.fltSerie =  new String();
+        this.fltEstado = -1;
+        this.fltTipo = -1;
     }
     //</editor-fold>
     
@@ -49,7 +51,6 @@ public class ListarBienesCommand {
         return Constantes.DEFAULT_TIME_ZONE;
     }
     
-        
     public Long getFltIdCodigo() {
         if (this.fltIdBien.isEmpty()) {
             return 0L; 
@@ -63,6 +64,14 @@ public class ListarBienesCommand {
 
     public void setFltIdBien(String fltIdBien) {
         this.fltIdBien = fltIdBien;
+    }
+
+    public String getFltIdentificacion() {
+        return fltIdentificacion;
+    }
+
+    public void setFltIdentificacion(String fltIdentificacion) {
+        this.fltIdentificacion = fltIdentificacion;
     }
 
     public String getFltDescripcion() {
@@ -103,6 +112,14 @@ public class ListarBienesCommand {
 
     public void setFltEstado(Integer fltEstado) {
         this.fltEstado = fltEstado;
+    }
+    
+    public Integer getFltTipo() {
+        return fltTipo;
+    }
+
+    public void setFltTipo(Integer fltTipo) {
+        this.fltTipo = fltTipo;
     }
     //</editor-fold>
 }

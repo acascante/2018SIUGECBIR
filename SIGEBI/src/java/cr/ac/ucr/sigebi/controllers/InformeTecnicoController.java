@@ -251,7 +251,7 @@ public class InformeTecnicoController extends BaseController{
             
             //Se buscan cuales documentos se pueden aceptar segun el usuario y rol 
             documentosPorRolPorAceptar = documentoRolEstadoModel.buscarDocumentosUsuario(lVistaUsuario.getgUsuarioActual().getIdUsuario(), 
-                    unidadEjecutoraId, informe.getIdInformeTecnico(), Constantes.ID_DOCUMENTO_INFORME_TECNICO);
+                    unidadEjecutora.getId(), informe.getIdInformeTecnico(), Constantes.ID_DOCUMENTO_INFORME_TECNICO);
             for(DocumentoRolEstadoEntity documento : documentosPorRol){
                 documento.setMarcado(this.permiteAceptarRechazar(documento.getIdDocumento().getIdDocumento(), documento.getIdRol().getIdRol()));
             }

@@ -32,7 +32,7 @@ import org.springframework.stereotype.Controller;
  *
  * @author jorge.serrano
  */
-@Controller(value = "controllerListarBien")
+@Controller(value = "ListadoBienesGeneralController")
 @Scope("session")
 public class ListadoBienesGeneralController extends BaseController{
     
@@ -170,8 +170,21 @@ public class ListadoBienesGeneralController extends BaseController{
     
     private void contarBienes() {       
         try {
-            Long contador = bienModel.contarBienes(unidadEjecutoraId,  command.getFltIdCodigo(), command.getFltDescripcion(), command.getFltMarca(), command.getFltModelo(), command.getFltSerie(), command.getFltEstado());
+            Long contador = 0l;
+            
+//            contador = viewBienMod.contarBienes(unidadEjecutora.getId(),
+//                     Long.valueOf(fltIdBien),
+//                        null,
+//                    fltDescripcion,
+//                    fltMarca,
+//                    fltModelo,
+//                    fltSerie,
+//                    estadosBienes
+//            );
+            
+            //Se actualiza la cantidad de registros segun los filtros
             this.setCantidadRegistros(contador.intValue());
+            
         } catch (FWExcepcion e) {
             Mensaje.agregarErrorAdvertencia(e.getError_para_usuario());
         } catch (Exception e) {
@@ -200,22 +213,22 @@ public class ListadoBienesGeneralController extends BaseController{
     //Listado para Sincronización
     private void listadoActas(){
         bienes.clear();
-        List<ViewBienEntity> resp  = viewBienMod.listarBienes(unidadEjecutoraId,
-                    fltIdBien,
-                    fltDescripcion,
-                    fltMarca,
-                    fltModelo,
-                    fltSerie,
-                    estadosBienes,
-                    this.getPrimerRegistro()-1, 
-                    this.getUltimoRegistro()
-            );
-
-        for(ViewBienEntity valor : resp) {     // foreach grade in grades
-            //revisa que el bien este seleccionado
-            valor.setSeleccionado(bienesSeleccionados.containsKey(valor.getIdBien()));
-            bienes.add(valor);
-        }
+//        List<ViewBienEntity> resp  = viewBienMod.listarBienes(unidadEjecutora.getId(),
+//                    fltIdBien,
+//                    fltDescripcion,
+//                    fltMarca,
+//                    fltModelo,
+//                    fltSerie,
+//                    estadosBienes,
+//                    this.getPrimerRegistro()-1, 
+//                    this.getUltimoRegistro()
+//            );
+//
+//        for(ViewBienEntity valor : resp) {     // foreach grade in grades
+//            //revisa que el bien este seleccionado
+//            valor.setSeleccionado(bienesSeleccionados.containsKey(valor.getIdBien()));
+//            bienes.add(valor);
+//        }
     }
     
     
@@ -223,17 +236,17 @@ public class ListadoBienesGeneralController extends BaseController{
     private void listadoRegistro(){
         
         
-        bienes = viewBienMod.listarBienes(unidadEjecutoraId,
-                fltIdBien,
-                fltDescripcion,                        
-                fltMarca,
-
-                fltModelo,
-                fltSerie,
-                estadosBienes,
-                this.getPrimerRegistro()-1, 
-                this.getUltimoRegistro()
-        );
+//        bienes = viewBienMod.listarBienes(unidadEjecutora.getId(),
+//                fltIdBien,
+//                fltDescripcion,                        
+//                fltMarca,
+//
+//                fltModelo,
+//                fltSerie,
+//                estadosBienes,
+//                this.getPrimerRegistro()-1, 
+//                this.getUltimoRegistro()
+//        );
     }
     
     //</editor-fold>
@@ -254,10 +267,10 @@ public class ListadoBienesGeneralController extends BaseController{
             if(bienesSeleccionados.containsKey(bien.getIdBien())){
                 bienesSeleccionados.remove(bien.getIdBien());
             }else{
-                bienesSeleccionados.put(bien.getIdBien(), bien);
+           //     bienesSeleccionados.put(bien.getIdBien(), bien);
             }
             //bienesAsociados = new Array<>(bienesSeleccionados.values());
-            bienesAsociados = new ArrayList<ViewBienEntity>( bienesSeleccionados.values() );
+           // bienesAsociados = new ArrayList<ViewBienEntity>( bienesSeleccionados.values() );
         } catch (Exception err) {
             Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.error.controllerListarBienSincronizar.checkBienPorSincronizar"));
         }

@@ -16,7 +16,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 /**
@@ -25,7 +24,6 @@ import javax.persistence.Table;
  */
 @Entity(name = "AdjuntoEntity")
 @Table(name = "SIGEBI_OAF.SGB_ADJUNTO")
-@SequenceGenerator(name = "SGB_SQ_ADJUNTO",  sequenceName = "SIGEBI_OAF.SGB_SQ_ADJUNTO", initialValue = 1, allocationSize = 1)
 public class AdjuntoEntity  extends ObjetoBase implements Serializable{
     
     private static final long serialVersionUID = 1L;

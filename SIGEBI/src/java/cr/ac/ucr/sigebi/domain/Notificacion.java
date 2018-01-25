@@ -71,11 +71,11 @@ public class Notificacion extends ObjetoBase implements Serializable {
     //</editor-fold>
     
     //<editor-fold defaultstate="collapsed" desc="Get's y Set's">
-    public Long getIdNotificacion() {
+    public Long getId() {
         return id;
     }
 
-    public void setIdNotificacion(Long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

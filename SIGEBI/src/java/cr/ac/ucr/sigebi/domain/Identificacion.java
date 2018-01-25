@@ -1,3 +1,4 @@
+
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -7,6 +8,7 @@ package cr.ac.ucr.sigebi.domain;
 
 import cr.ac.ucr.framework.seguridad.ObjetoBase;
 import java.io.Serializable;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -30,11 +32,7 @@ public class Identificacion extends ObjetoBase implements Serializable {
     @Id    
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SGB_SQ_IDENTIFICACION")
     @Column(name = "ID_IDENTIFICACION")
-    private Integer id;
-   
-    @ManyToOne
-    @JoinColumn(name = "ID_BIEN", referencedColumnName = "ID_BIEN")
-    private Bien bien;
+    private Long id;
         
     @ManyToOne
     @JoinColumn(name = "ID_TIPO", referencedColumnName = "ID_TIPO")
@@ -53,20 +51,12 @@ public class Identificacion extends ObjetoBase implements Serializable {
     //</editor-fold>
 
     //<editor-fold defaultstate="collapsed" desc="Get's y Set's">
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
-    }
-
-    public Bien getBien() {
-        return bien;
-    }
-
-    public void setBien(Bien bien) {
-        this.bien = bien;
     }
 
     public Tipo getTipo() {
@@ -107,7 +97,6 @@ public class Identificacion extends ObjetoBase implements Serializable {
     public int hashCode() {
         int hash = 7;
         hash = 29 * hash + (this.id != null ? this.id.hashCode() : 0);
-        hash = 29 * hash + (this.bien != null ? this.bien.hashCode() : 0);
         hash = 29 * hash + (this.tipo != null ? this.tipo.hashCode() : 0);
         hash = 29 * hash + (this.identificacion != null ? this.identificacion.hashCode() : 0);
         hash = 29 * hash + (this.estado != null ? this.estado.hashCode() : 0);
@@ -131,9 +120,6 @@ public class Identificacion extends ObjetoBase implements Serializable {
             return false;
         }
         if (this.id != other.id && (this.id == null || !this.id.equals(other.id))) {
-            return false;
-        }
-        if (this.bien != other.bien && (this.bien == null || !this.bien.equals(other.bien))) {
             return false;
         }
         if (this.tipo != other.tipo && (this.tipo == null || !this.tipo.equals(other.tipo))) {

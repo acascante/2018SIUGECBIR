@@ -36,7 +36,7 @@ public class NotificacionCommand {
     }
 
     public NotificacionCommand(Notificacion notificacion) {
-        this.idNotificacion = notificacion.getIdNotificacion();
+        this.idNotificacion = notificacion.getId();
         this.asunto = notificacion.getAsunto();
         this.mensajeCorreo = notificacion.getMensaje();
         this.destinatario = notificacion.getDestinatario();

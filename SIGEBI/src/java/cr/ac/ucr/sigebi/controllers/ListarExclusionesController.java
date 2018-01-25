@@ -99,7 +99,7 @@ public class ListarExclusionesController extends BaseController {
     private void contarExclusiones() {
         try {
             //TODO definir si se va a utilizar solo el numero de la unidad ejecutora o todo el objeto
-            Long contador = exclusionModel.contar(unidadEjecutoraId, command.getFltIdCodigo(), command.getFltFecha(), command.getFltEstado(), command.getFltTipo());
+            Long contador = exclusionModel.contar(unidadEjecutora.getId(), command.getFltIdCodigo(), command.getFltFecha(), command.getFltEstado(), command.getFltTipo());
             this.setCantidadRegistros(contador.intValue());
         } catch (FWExcepcion e) {
             Mensaje.agregarErrorAdvertencia(e.getError_para_usuario());
@@ -110,7 +110,7 @@ public class ListarExclusionesController extends BaseController {
     
     private void listarExclusiones() {
         try {
-            this.exclusiones = exclusionModel.listar(this.getPrimerRegistro()-1, this.getUltimoRegistro(), unidadEjecutoraId, command.getFltIdCodigo(), command.getFltFecha(), command.getFltEstado(), command.getFltTipo());
+            this.exclusiones = exclusionModel.listar(this.getPrimerRegistro()-1, this.getUltimoRegistro(), unidadEjecutora.getId(), command.getFltIdCodigo(), command.getFltFecha(), command.getFltEstado(), command.getFltTipo());
         } catch (FWExcepcion e) {
             Mensaje.agregarErrorAdvertencia(e.getError_para_usuario());
         } catch (NumberFormatException e) {

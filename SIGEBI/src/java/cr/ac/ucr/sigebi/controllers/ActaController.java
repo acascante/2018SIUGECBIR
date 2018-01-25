@@ -124,8 +124,8 @@ public class ActaController extends ListadoBienesGeneralController {
             rolesDelUsuarioActualDesecho = new HashMap<Long, Rol>();
             rolesDelUsuarioActualDonacion = new HashMap<Long, Rol>();
 
-            List<AutorizacionRolPersona> rolesAprobacionDonacion =  autorizacionRolPersonaModel.buscarRolesPorAutorizacionUsuario(Constantes.ID_DOCUMENTO_ACTA_DONACION, usuarioRegistrado.getId(), unidadEjecutoraId);     
-            List<AutorizacionRolPersona> rolesAprobacionDesecho =  autorizacionRolPersonaModel.buscarRolesPorAutorizacionUsuario(Constantes.ID_DOCUMENTO_ACTA_DESECHO, usuarioRegistrado.getId(), unidadEjecutoraId);     
+            List<AutorizacionRolPersona> rolesAprobacionDonacion =  autorizacionRolPersonaModel.buscarRolesPorAutorizacionUsuario(Constantes.ID_DOCUMENTO_ACTA_DONACION, usuarioRegistrado.getId(), unidadEjecutora.getId());     
+            List<AutorizacionRolPersona> rolesAprobacionDesecho =  autorizacionRolPersonaModel.buscarRolesPorAutorizacionUsuario(Constantes.ID_DOCUMENTO_ACTA_DESECHO, usuarioRegistrado.getId(), unidadEjecutora.getId());     
 
 
             //Estos son los roles registrados para este USUARIO en cada DOCUMENTO
@@ -147,7 +147,7 @@ public class ActaController extends ListadoBienesGeneralController {
             tiposActaOptions = new ArrayList<SelectItem>();
             cargarTipo();
             acta = new ActaEntity();
-            acta.setUnidadEjecutora(unidadEjecutoraId);
+            acta.setUnidadEjecutora(unidadEjecutora.getId());
 
             acta.setIdEstado(estadoGeneralPendiente);
 
@@ -162,12 +162,12 @@ public class ActaController extends ListadoBienesGeneralController {
 
             actaNombreEstado = estadoGeneralPendiente.getNombre();
 
-            bienesAsociados = new ArrayList<ViewBienEntity>();
-
-            //Indica el n�mero de consulta que voy a utilizar en el popUp de Bienes
-            estadosBienes = null;
-            consultaBienes = 2;
-            inicializaBuscarBienes();
+//            bienesAsociados = new ArrayList<ViewBienEntity>();
+//
+//            //Indica el n�mero de consulta que voy a utilizar en el popUp de Bienes
+//            estadosBienes = null;
+//            consultaBienes = 2;
+//            inicializaBuscarBienes();
             
             documentoRoles = new ArrayList<ViewDocumAprobEntity>();
             permitirEdicion = permitirEditar();
@@ -317,11 +317,11 @@ public class ActaController extends ListadoBienesGeneralController {
                 actaFecha = formatter.parse(formatter.format(acta.getFecha()));
                 fechaRegistro = formatter.format(acta.getFecha());
 
-                bienesAsociados = actaModel.traerBienesActa(acta.getIdActa());
-
-                for (ViewBienEntity valor : bienesAsociados) {
-                    bienesSeleccionados.put(valor.getIdBien(), valor);
-                }
+//                bienesAsociados = actaModel.traerBienesActa(acta.getIdActa());
+//
+//                for (ViewBienEntity valor : bienesAsociados) {
+//                    bienesSeleccionados.put(valor.getIdBien(), valor);
+//                }
 
                 listarRolesAprobacion();
                 permitirEdicion = permitirEditar();
@@ -398,7 +398,7 @@ public class ActaController extends ListadoBienesGeneralController {
 //                    , this.getUltimoRegistro()
 //                    );
 
-                actasRegistradas = actaModel.listarActas(unidadEjecutoraId
+                actasRegistradas = actaModel.listarActas(unidadEjecutora.getId()
                         , fltIdActa
                         , fltAutorizacion
                         , fltEstados
@@ -427,9 +427,9 @@ public class ActaController extends ListadoBienesGeneralController {
     
     public void listadoCantidadRegistros(){
         try{
-            Long contador;
+            Long contador = 0L;
             
-            contador = actaModel.consultaCantidadRegistros(unidadEjecutoraId
+            contador = actaModel.consultaCantidadRegistros(unidadEjecutora.getId()
                         , fltIdActa
                         , fltAutorizacion
                         , fltEstados
@@ -706,7 +706,7 @@ public class ActaController extends ListadoBienesGeneralController {
             }
         }
 
-        bienesAsociados = new ArrayList<ViewBienEntity>(bienesSeleccionados.values());
+        //bienesAsociados = new ArrayList<ViewBienEntity>(bienesSeleccionados.values());
 
         return true;
 
@@ -714,13 +714,13 @@ public class ActaController extends ListadoBienesGeneralController {
 
     private List<ActaDetalleEntity> getBienesAsoc() {
         List<ActaDetalleEntity> detalle = new ArrayList<ActaDetalleEntity>();
-        for (ViewBienEntity bn : bienesAsociados) {     // foreach grade in grades
-            //Bien bien = bienModel.traerPorId(bn.getIdBien());
-            ActaDetalleEntity valor = new ActaDetalleEntity(acta.getIdActa(),
-                     bn.getIdBien(),
-                     estadoGeneralPendiente.getId());
-            detalle.add(valor);
-        }
+//        for (ViewBienEntity bn : bienesAsociados) {     // foreach grade in grades
+//            //Bien bien = bienModel.traerPorId(bn.getIdBien());
+//            ActaDetalleEntity valor = new ActaDetalleEntity(acta.getIdActa(),
+//                     bn.getIdBien(),
+//                     estadoGeneralPendiente.getId());
+//            detalle.add(valor);
+//        }
 
         return detalle;
     }

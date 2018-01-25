@@ -44,19 +44,6 @@ public class AgregarExclusionController extends ListarBienesController {
     
     private void inicializar(SolicitudExclusion exclusion) {
         this.command = new ExclusionCommand(exclusion, exclusionModel.listarDetalles(exclusion));
-        this.init();
-    }
-    
-    private void inicializar() {
-        this.command = new ExclusionCommand();
-        this.init();
-    }
-    
-    @Override
-    protected final void init() {
-        super.init();
-        this.mensajeExito = "";
-        this.mensaje = "";
     }
     
     public void guardarDatos() {

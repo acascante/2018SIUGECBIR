@@ -40,7 +40,7 @@ public class EnviarNotificacionesJob implements Job {
             List<Notificacion> notificaciones = notificacionModel.listar(calendar.getTime(), Constantes.DOMINIO_NOTIFICACION, Constantes.ESTADO_NOTIFICACION_CREADA, Constantes.ESTADO_NOTIFICACION_ENVIO_FALLIDO);
             for (Notificacion notificacion : notificaciones) {
                 notificacionModel.enviarCorreo(notificacion);
-                LOG.info("-- ID: " + notificacion.getIdNotificacion() + " -- Correo: " + notificacion.getDestinatario());
+                LOG.info("-- ID: " + notificacion.getId() + " -- Correo: " + notificacion.getDestinatario());
             }
         } catch (FWExcepcion err) {
             LOG.error("Error al enviar notificaciones automaticas: " + err.getMessage());

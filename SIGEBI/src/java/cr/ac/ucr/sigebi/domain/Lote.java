@@ -19,8 +19,8 @@ import javax.persistence.Temporal;
  *
  * @author jorge.serrano
  */
-@Entity(name = "LoteEntity")
-@Table(name = "V_SIGB_LOTE")
+@Entity(name = "Lote")
+@Table(name = "SIGEBI_OAF.V_SIGB_LOTE")
 public class Lote extends ObjetoBase implements Serializable {
     
     //<editor-fold defaultstate="collapsed" desc="Atributos">
@@ -31,7 +31,6 @@ public class Lote extends ObjetoBase implements Serializable {
     @Column(name = "NUMERO_EMPRESA")
     private Integer numeroEmpresa;
 
-    @Basic(optional = false)
     @Column(name = "CODIGO_CATEGORIA")
     private String codigoCategoria;//
     

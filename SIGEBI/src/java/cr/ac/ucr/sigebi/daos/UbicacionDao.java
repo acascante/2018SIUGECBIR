@@ -36,7 +36,7 @@ public class UbicacionDao extends GenericDaoImpl {
         Session session = dao.getSessionFactory().openSession();
         try {
             
-            String sql = "SELECT ub FROM Ubicacion ub WHERE ub.idUnidadEjecutora.id = :unidad ";
+            String sql = "SELECT ub FROM Ubicacion ub WHERE ub.unidadEjecutora.id = :unidad ";
             Query query = session.createQuery(sql);
             query.setParameter("unidad", idUnidadEjec);
             
