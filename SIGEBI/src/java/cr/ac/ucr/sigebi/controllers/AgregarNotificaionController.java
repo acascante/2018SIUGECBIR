@@ -12,7 +12,6 @@ import cr.ac.ucr.framework.vista.util.Util;
 import cr.ac.ucr.sigebi.models.EstadoModel;
 import cr.ac.ucr.sigebi.models.NotificacionModel;
 import cr.ac.ucr.sigebi.commands.NotificacionCommand;
-import cr.ac.ucr.sigebi.domain.Notificacion;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.regex.Matcher;
@@ -42,8 +41,6 @@ public class AgregarNotificaionController {
     
     @Resource
     private EstadoModel estadoModel;
-
-    private Notificacion notificacion;
     
     private NotificacionCommand command;
     
@@ -178,14 +175,6 @@ public class AgregarNotificaionController {
 
     public void setCommand(NotificacionCommand notificacionCommand) {
         this.command = notificacionCommand;
-    }
-
-    public Notificacion getNotificacion() {
-        return notificacion;
-    }
-
-    public void setNotificacion(Notificacion notificacion) {
-        this.notificacion = notificacion;
     }
 
     public String getMensajeExito() {

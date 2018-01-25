@@ -5,12 +5,11 @@
  */
 package cr.ac.ucr.sigebi.controllers;
 
-import cr.ac.ucr.framework.utils.FWExcepcion;
 import cr.ac.ucr.framework.vista.util.Mensaje;
 import cr.ac.ucr.framework.vista.util.Util;
 import cr.ac.ucr.sigebi.commands.BienCommand;
+import cr.ac.ucr.sigebi.domain.Bien;
 import cr.ac.ucr.sigebi.domain.Clasificacion;
-import cr.ac.ucr.sigebi.domain.Identificacion;
 import cr.ac.ucr.sigebi.domain.Lote;
 import cr.ac.ucr.sigebi.domain.Moneda;
 import cr.ac.ucr.sigebi.domain.Tipo;
@@ -18,14 +17,24 @@ import cr.ac.ucr.sigebi.models.CategoriaModel;
 import cr.ac.ucr.sigebi.models.ClasificacionModel;
 import cr.ac.ucr.sigebi.models.MonedaModel;
 import cr.ac.ucr.sigebi.domain.Categoria;
-import cr.ac.ucr.sigebi.entities.ViewBienEntity;
+import cr.ac.ucr.sigebi.domain.Estado;
+import cr.ac.ucr.sigebi.domain.SubCategoria;
+import cr.ac.ucr.sigebi.domain.SubClasificacion;
 import cr.ac.ucr.sigebi.models.BienModel;
+import cr.ac.ucr.sigebi.models.EstadoModel;
+import cr.ac.ucr.sigebi.models.IdentificacionModel;
 import cr.ac.ucr.sigebi.models.LoteModel;
+import cr.ac.ucr.sigebi.models.SubCategoriaModel;
+import cr.ac.ucr.sigebi.models.SubClasificacionModel;
 import cr.ac.ucr.sigebi.models.TipoModel;
 import cr.ac.ucr.sigebi.utils.Constantes;
 import java.util.ArrayList;
 import java.util.List;
+import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
+import javax.faces.component.UIInput;
+import javax.faces.component.UIViewRoot;
+import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 import javax.faces.event.PhaseId;
 import javax.faces.event.ValueChangeEvent;
@@ -42,43 +51,65 @@ import org.springframework.stereotype.Controller;
 public class AgregarBienController extends BaseController {
     
     //<editor-fold defaultstate="collapsed" desc="Variables de la Clase">
-    List<SelectItem> tiposBienOptions;
-    List<SelectItem> origenesBienOptions;
-    List<SelectItem> lotesOptions;
-    List<SelectItem> categoriasOptions;
-    List<SelectItem> clasificacionesOptions;
-    List<SelectItem> monedasOptions;
+    private List<SelectItem> tiposBienOptions;
+    private List<SelectItem> origenesBienOptions;
+    private List<SelectItem> lotesOptions;
+    private List<SelectItem> categoriasOptions;
+    private List<SelectItem> clasificacionesOptions;
+    private List<SelectItem> monedasOptions;
+    private List<SelectItem> subClasificacionesOptions;
+    private List<SelectItem> subCategoriasOptions;
     
-    List<SelectItem> subClasificacionesOptions;
-    List<SelectItem> subCategoriasOptions;
-    
-    @Resource private TipoModel tipoModel;
-    @Resource private LoteModel loteModel;
-    @Resource private CategoriaModel categoriaModel;
-    @Resource private ClasificacionModel clasificacionModel;
-    @Resource private MonedaModel monedaModel;
     @Resource private BienModel bienModel;
+    @Resource private ClasificacionModel clasificacionModel;
+    @Resource private CategoriaModel categoriaModel;
+    @Resource private EstadoModel estadoModel;
+    @Resource private IdentificacionModel identificacionModel;
+    @Resource private LoteModel loteModel;
+    @Resource private MonedaModel monedaModel;
+    @Resource private SubCategoriaModel subCategoriaModel;
+    @Resource private SubClasificacionModel subClasificacionModel;
+    @Resource private TipoModel tipoModel;
     
-    String mensaje;
-    String mensajeNota;
+    private BienCommand command;
+
+    private String mensajeExito;
+    private String mensaje;
     
     float tipoCambioDollar = 570;
     float tipoCambioEuro = 640;
     
-    String mensajeExito;
-    boolean bienRegistrado;
+    private boolean enableComboSubCategorias;
+    private boolean enableComboClasificaciones;
+    private boolean enableComboSubClasificaciones;
 
-    private BienCommand command;
     //</editor-fold>
     
-
     //<editor-fold defaultstate="collapsed" desc="Inicializa Datos">
     public AgregarBienController() {
         super();
-
-        cargarCombos();
+        inicializarDatos();
     }
 
+    @PostConstruct
+    protected void inicializar() {
+        cargarCombos();
+    }
+    
+    private void inicializarDatos() {
+        this.command = new BienCommand();
+        this.mensajeExito = "";
+        this.mensaje = "";
+        
+        enableComboSubCategorias = true;
+        enableComboClasificaciones = true;
+        enableComboSubClasificaciones = true;
+    }
+    
+    private void inicializarDatos(Bien bien) {
+        this.command = new BienCommand(bien);
+    }
+    
     private void cargarCombos() {
         try {
             List<Tipo> tipos = tipoModel.listarPorDominio(Constantes.DOMINIO_BIEN);
@@ -113,16 +144,7 @@ public class AgregarBienController extends BaseController {
                 }
             }
             
-            List<Clasificacion> clasificaciones = clasificacionModel.listar();
-            if (!clasificaciones.isEmpty()) {
-                clasificacionesOptions = new ArrayList<SelectItem>();
-                for (Clasificacion item : clasificaciones) {
-                    clasificacionesOptions.add(new SelectItem(item.getId(), item.getNombre()));  // ID + Nombre -- Usado para combo de filtro para enviar el ID al Dao para la consulta
-                }
-            }
-            
             List<Moneda> monedas = monedaModel.listar();
-            
             if (!monedas.isEmpty()) {
                 monedasOptions = new ArrayList<SelectItem>();
                 for (Moneda item : monedas) {
@@ -133,27 +155,7 @@ public class AgregarBienController extends BaseController {
             mensaje = err.getMessage();
         }
     }
-
-    public void nuevoRegistro(ActionEvent event) {
-        try{
-            if (!event.getPhaseId().equals(PhaseId.INVOKE_APPLICATION)) {
-                event.setPhaseId(PhaseId.INVOKE_APPLICATION);
-                event.queue();
-                return;
-            }
-            inicializar();
-            this.vistaOrigen = event.getComponent().getAttributes().get(Constantes.KEY_VISTA_ORIGEN).toString();
-            Util.navegar(Constantes.VISTA_NOTIFICACION_NUEVA);
-        } catch (FWExcepcion err) {
-            mensaje = err.getMessage();
-        }
-    }
     
-    private void inicializar() {
-        this.mensajeExito = "";
-        this.mensaje = "";
-        this.command = new BienCommand();
-    }
     private Double getValorColones() {
         //TODO como se va a manejar el tipo de cambio?
         try {
@@ -165,226 +167,121 @@ public class AgregarBienController extends BaseController {
             }
         } catch (Exception err) {
             mensaje = err.getMessage();
-
         }
         return command.getCosto();
     }
 
-    public void guardarDatos() {
-        try {
-            if (prepararBien()) {
-                
-            }
-               
-            if (mensaje.equals("")) {
-                bienModel.almacenar(command.getBien());
-                bienRegistrado = true;
-                Mensaje.agregarInfo(Util.getEtiquetas("sigebi.Bien.Error.ActualizacionExito"));
-            }
-            else {
-                Mensaje.agregarErrorAdvertencia(mensaje);
-            }
-        } catch (Exception err) {
-            mensaje = err.getMessage();
+    public String validarForm(UIViewRoot root, UIInput component) {
+        if(command.getDescripcion().length() < 4){
+            component = (UIInput) root.findComponent("frmDetalleNotificacion:txtDescripcion");
+            return Util.getEtiquetas("sigebi.Bien.Error.IngresoDescripcion");
         }
-    }
-
-    public void registrarNuevoBien() {
-        try {
-            Integer idPlaca = buscarPlaca();
-            if (idPlaca > 0) {
-                Identificacion placa = new Identificacion();
-//                placa.setId(idPlaca);
-                command.setIdentificacion(placa);
-            } else {
-                mensaje = Util.getEtiquetas("sigebi.Bien.Error.Placa");
-            }
-        } catch (Exception err) {
-            Mensaje.agregarErrorAdvertencia(err.getMessage());
+        if (!(command.getCantidad() > 0)) {
+            component = (UIInput) root.findComponent("frmDetalleNotificacion:txtDescripcion");
+            return Util.getEtiquetas("sigebi.Bien.Error.Cantidad");
         }
+        
+        return Constantes.OK;
     }
-
-    public boolean prepararBien() {
-        try {
+    
+    public void agregarBien() {
+        FacesContext context = FacesContext.getCurrentInstance();
+        UIViewRoot root = context.getViewRoot();
+        UIInput component =  new UIInput();
+        String messageValidacion = validarForm(root, component);
+        if (Constantes.OK.equals(messageValidacion)) {
+            Estado estado = estadoModel.buscarPorDominioNombre(Constantes.DOMINIO_IDENTIFICACION, Constantes.IDENTIFICACION_ESTADO_DISPONIBLE);
+            command.setIdentificacion(identificacionModel.siguienteDisponible(estado));
+            Bien bien = command.getBien();
+            bienModel.actualizar(bien);
             
-            //Descripción
-            if(command.getDescripcion().length() < 4){
-                mensaje = Util.getEtiquetas("sigebi.Bien.Error.IngresoDescripcion");
-                return false;
-            }
-
-            //TODO Monto Capitalizable
-//            if (getValorColones() > montoCapitalizable) {
-//                command.setCapitalizable(true);
-//            } else {
-//                command.setCapitalizable(false);
-//            }
-
-            //Validar Cantidad
-            if (!(command.getCantidad() > 0)) {
-                mensaje = Util.getEtiquetas("sigebi.Bien.Error.Cantidad");
-                return false;
-            }
-            return true;
-        } catch (Exception err) {
-            mensaje = err.getMessage();
-            return false;
+            command.getIdentificacion().setEstado(estadoModel.buscarPorDominioNombre(Constantes.DOMINIO_IDENTIFICACION, Constantes.IDENTIFICACION_ESTADO_OCUPADA));
+            identificacionModel.actualizar(command.getIdentificacion());
+        } else {
+            component.setValid(false);
+            Mensaje.agregarErrorAdvertencia(messageValidacion);
         }
     }
-
-    public int buscarPlaca() {
-        // TODO Como se va a manejar la asignacion de placas
-        return 1;
-    }
-    
-    public String getMensajeExito() {
-        return mensajeExito;
-    }
-
-    public void setMensajeExito(String mensajeExito) {
-        this.mensajeExito = mensajeExito;
-    }
-
-    public boolean isBienRegistrado() {
-        return bienRegistrado;
-    }
-
-    public void setBienRegistrado(boolean bienRegistrado) {
-        this.bienRegistrado = bienRegistrado;
-    }
-
     //</editor-fold>
-    
-    
+     
     //<editor-fold defaultstate="collapsed" desc="Navegación del MENÚ">
-    public void abrirDetalle(ActionEvent pEvent) {
-        try {
-            if (!pEvent.getPhaseId().equals(PhaseId.INVOKE_APPLICATION)) {
-                pEvent.setPhaseId(PhaseId.INVOKE_APPLICATION);
-                pEvent.queue();
-                return;
-            }
-
-            ViewBienEntity item = (ViewBienEntity) pEvent.getComponent().getAttributes().get("tipoSeleccionado");
-            this.vistaOrigen = "reg_manual";
-            
-            this.abrirDetalle(item.getIdBien());
-        } catch (Exception err) {
-            mensaje = err.getMessage();
-        }
-    }
-
-    public void abrirDetalleSincronizar(ActionEvent pEvent) {
-        try {
-            if (!pEvent.getPhaseId().equals(PhaseId.INVOKE_APPLICATION)) {
-                pEvent.setPhaseId(PhaseId.INVOKE_APPLICATION);
-                pEvent.queue();
-                return;
-            }
-            
-            ViewBienEntity item = (ViewBienEntity) pEvent.getComponent().getAttributes().get("tipoSeleccionado");
-            this.vistaOrigen = "sincronizar";
-            
-            this.abrirDetalle(item.getIdBien());
-            Util.navegar("bien_nuevo");
-
-
-        } catch (Exception err) {
-            mensaje = err.getMessage();
-        }
-    }
-    
-    private void abrirDetalle(Integer idBien) {
+    public void nuevoRegistro(ActionEvent event) {
         try{
-        this.vistaOrigen = "reg_manual";
-
-        } catch (Exception err) {
-            mensaje = err.getMessage();
-        }
-    }
-    
-    public void nuevoRegistro1(ActionEvent pEvent) {
-        try{
-            if (!pEvent.getPhaseId().equals(PhaseId.INVOKE_APPLICATION)) {
-                pEvent.setPhaseId(PhaseId.INVOKE_APPLICATION);
-                pEvent.queue();
+            if (!event.getPhaseId().equals(PhaseId.INVOKE_APPLICATION)) {
+                event.setPhaseId(PhaseId.INVOKE_APPLICATION);
+                event.queue();
                 return;
             }
-            this.vistaOrigen = "reg_manual";
-            Util.navegar("bien_nuevo");
+            inicializarDatos();
+            this.vistaOrigen = event.getComponent().getAttributes().get(Constantes.KEY_VISTA_ORIGEN).toString();
+            Util.navegar(Constantes.VISTA_NOTIFICACION_NUEVA);
         } catch (Exception err) {
             mensaje = err.getMessage();
         }
     }
-
-    public void regresarListado() {
-        if(vistaOrigen != null){
-            Util.navegar(vistaOrigen);
-        }else{
-            Util.navegar("reg_manual");
-        }
-    }
-
     //</editor-fold>
     
+    public void cambioCategoria(ValueChangeEvent event) {
+        if (!event.getPhaseId().equals(PhaseId.INVOKE_APPLICATION)) {
+            event.setPhaseId(PhaseId.INVOKE_APPLICATION);
+            event.queue();
+            return;
+        }
+        cargarSubCategorias(command.getCategoria());
+    }
+
+    public void cambioSubCategoria(ValueChangeEvent event) {
+        if (!event.getPhaseId().equals(PhaseId.INVOKE_APPLICATION)) {
+            event.setPhaseId(PhaseId.INVOKE_APPLICATION);
+            event.queue();
+            return;
+        }
+        cargarClasificaciones(command.getSubCategoria());
+    }
+
+    public void cambioClasificacion(ValueChangeEvent event) {
+        if (!event.getPhaseId().equals(PhaseId.INVOKE_APPLICATION)) {
+            event.setPhaseId(PhaseId.INVOKE_APPLICATION);
+            event.queue();
+            return;
+        }
+        cargarSubClasificaciones(command.getClasificacion());
+    }
+
+    private void cargarSubCategorias (Categoria categoria) {
+        List<SubCategoria> subCategorias = subCategoriaModel.listar(categoria.getCodigoCategoria());
+        if (!subCategorias.isEmpty()) {
+            subCategoriasOptions = new ArrayList<SelectItem>();
+            for (SubCategoria item : subCategorias) {
+                subCategoriasOptions.add(new SelectItem(item.getId(), item.getDescripcion()));  // ID + Nombre -- Usado para combo de filtro para enviar el ID al Dao para la consulta
+            }
+            enableComboSubCategorias = true;
+            cargarClasificaciones(command.getSubCategoria());
+        }
+
+    }
     
-    public void cambioSelectCategoria(ValueChangeEvent event) {
+    private void cargarClasificaciones(SubCategoria subCategoria) {
+        List<Clasificacion> clasificaciones = clasificacionModel.listarPorCodigoSubCategoria(subCategoria.getId().toString());
+        if (!clasificaciones.isEmpty()) {
+            clasificacionesOptions = new ArrayList<SelectItem>();
+            for (Clasificacion item : clasificaciones) {
+                clasificacionesOptions.add(new SelectItem(item.getId(), item.getNombre()));  // ID + Nombre -- Usado para combo de filtro para enviar el ID al Dao para la consulta
+            }
+            enableComboClasificaciones = true;
+            cargarSubClasificaciones(command.getClasificacion());
+        }        
+    }
 
-        if (!event.getPhaseId().equals(PhaseId.INVOKE_APPLICATION)) {
-            event.setPhaseId(PhaseId.INVOKE_APPLICATION);
-            event.queue();
-            return;
+    private void cargarSubClasificaciones (Clasificacion clasificacion) {
+        List<SubClasificacion> subClasificaciones = subClasificacionModel.listar(clasificacion.getId());
+        if (!subClasificaciones.isEmpty()) {
+            subClasificacionesOptions = new ArrayList<SelectItem>();
+            for (SubClasificacion item : subClasificaciones) {
+                subClasificacionesOptions.add(new SelectItem(item.getId(), item.getNombre()));  // ID + Nombre -- Usado para combo de filtro para enviar el ID al Dao para la consulta
+            }
+            enableComboSubClasificaciones = true;
         }
-        // Obtengo el valor seleccionado
-        String valor = event.getNewValue().toString();
-    }
-
-    public void cambioSelectSubCategoria(ValueChangeEvent event) {
-
-        if (!event.getPhaseId().equals(PhaseId.INVOKE_APPLICATION)) {
-            event.setPhaseId(PhaseId.INVOKE_APPLICATION);
-            event.queue();
-            return;
-        }
-    }
-
-    public void cambioSelectClasificacion(ValueChangeEvent event) {
-        if (!event.getPhaseId().equals(PhaseId.INVOKE_APPLICATION)) {
-            event.setPhaseId(PhaseId.INVOKE_APPLICATION);
-            event.queue();
-            return;
-        }
-    }
-
-    public void cargaComboSubCategoria(String valor) {
-        
-    }
-
-    public void cargaComboClasificacion(String valor) {
-        
-    }
-
-    public void cargaComboSubClasificacion(String valor) {
-
-    }
-
-    boolean disableComboClasificacion;
-    boolean disableComboSubClasificacion;
-
-    public boolean isDisableComboClasificacion() {
-        return disableComboClasificacion;
-    }
-
-    public void setDisableComboClasificacion(boolean disableComboClasificacion) {
-        this.disableComboClasificacion = disableComboClasificacion;
-    }
-
-    public boolean isDisableComboSubClasificacion() {
-        return disableComboSubClasificacion;
-    }
-
-    public void setDisableComboSubClasificacion(boolean disableComboSubClasificacion) {
-        this.disableComboSubClasificacion = disableComboSubClasificacion;
     }
 
     //</editor-fold>
@@ -449,4 +346,5 @@ public class AgregarBienController extends BaseController {
         this.observacionCliente = observacionCliente;
     }
     //</editor-fold>
+
 }

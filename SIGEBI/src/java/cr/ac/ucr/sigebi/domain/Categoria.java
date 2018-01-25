@@ -92,4 +92,5 @@ public class Categoria  extends ObjetoBase implements Serializable {
     public void setObservaciones(String observaciones) {
         this.observaciones = observaciones;
     }
+    //</editor-fold>
 }

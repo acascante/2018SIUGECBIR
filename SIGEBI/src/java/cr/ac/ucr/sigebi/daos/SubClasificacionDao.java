@@ -9,6 +9,9 @@ import cr.ac.ucr.framework.daoHibernate.DaoHelper;
 import cr.ac.ucr.framework.utils.FWExcepcion;
 import cr.ac.ucr.sigebi.domain.SubClasificacion;
 import java.util.List;
+import org.hibernate.HibernateException;
+import org.hibernate.Query;
+import org.hibernate.Session;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.dao.DataAccessException;
@@ -38,5 +41,20 @@ public class SubClasificacionDao extends GenericDaoImpl{
     @Transactional(readOnly = true)
     public SubClasificacion buscarPorId(Long id) throws FWExcepcion {
         return load(SubClasificacion.class, id);
+    }
+
+    public List<SubClasificacion> listar(Integer idClasificacion) {
+        Session session = dao.getSessionFactory().openSession();
+        try {
+            String sql = "SELECT sc FROM SubClasificacion sc WHERE sc.idClasificacion = :idClasificacion";
+            Query query = session.createQuery(sql);
+            query.setParameter("idClasificacion", idClasificacion);
+
+            return (List<SubClasificacion>) query.list();
+        } catch (HibernateException e) {
+            throw new FWExcepcion("sigebi.error.notificacionDao.listar", "Error obtener los registros de tipo " + this.getClass(), e.getCause());
+        } finally {
+            session.close();
+        }
     }
 }

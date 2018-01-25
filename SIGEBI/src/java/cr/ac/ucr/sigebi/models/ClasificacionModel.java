@@ -25,8 +25,7 @@ public class ClasificacionModel {
     private ClasificacionDao clasificacionDao;
     
     public List<Clasificacion> listar() throws FWExcepcion {
-        return clasificacionDao.listar();
-        
+        return clasificacionDao.listar();   
     }
 
     public Clasificacion buscarPorId(Long id) throws FWExcepcion {
@@ -35,5 +34,4 @@ public class ClasificacionModel {
 
     public List<Clasificacion> listarPorCodigoSubCategoria(String codigoSubCategoria) throws FWExcepcion {
         return clasificacionDao.listarPorCodigoSubCategoria(codigoSubCategoria);
-    }
-}
+    }}

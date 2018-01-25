@@ -10,6 +10,9 @@ import cr.ac.ucr.framework.daoImpl.GenericDaoImpl;
 import cr.ac.ucr.framework.utils.FWExcepcion;
 import cr.ac.ucr.sigebi.domain.SubCategoria;
 import java.util.List;
+import org.hibernate.HibernateException;
+import org.hibernate.Query;
+import org.hibernate.Session;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.dao.DataAccessException;
@@ -33,6 +36,22 @@ public class SubCategoriaDao extends GenericDaoImpl {
             return dao.getHibernateTemplate().find("from SubCategoria"); 
         } catch (DataAccessException e) {
             throw new FWExcepcion("sigebi.error.notificacionDao.listar", "Error obtener los registros de tipo " + this.getClass(), e.getCause());
+        }
+    }
+    
+    @Transactional(readOnly = true)
+    public List<SubCategoria> listar(String codigoCategoria) throws FWExcepcion {
+        Session session = dao.getSessionFactory().openSession();
+        try {
+            String sql = "SELECT sc FROM SubCategoria sc WHERE sc.codigoCategoria = :codigoCategoria";
+            Query query = session.createQuery(sql);
+            query.setParameter("codigoCategoria", codigoCategoria);
+
+            return (List<SubCategoria>) query.list();
+        } catch (HibernateException e) {
+            throw new FWExcepcion("sigebi.error.notificacionDao.listar", "Error obtener los registros de tipo " + this.getClass(), e.getCause());
+        } finally {
+            session.close();
         }
     }
     

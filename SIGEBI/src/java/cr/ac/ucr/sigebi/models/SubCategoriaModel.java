@@ -28,6 +28,10 @@ public class SubCategoriaModel {
         return subCategoriaDao.listar();
     }
     
+    public List<SubCategoria> listar(String codigoCategoria) throws FWExcepcion {
+        return subCategoriaDao.listar(codigoCategoria);
+    }
+    
     public SubCategoria buscarPorId(Long id) throws FWExcepcion {
         return subCategoriaDao.buscarPorId(id);
     }

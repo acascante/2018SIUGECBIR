@@ -8,6 +8,8 @@ package cr.ac.ucr.sigebi.commands;
 import cr.ac.ucr.sigebi.domain.Accesorio;
 import cr.ac.ucr.sigebi.domain.Bien;
 import cr.ac.ucr.sigebi.domain.BienCaracteristica;
+import cr.ac.ucr.sigebi.domain.Categoria;
+import cr.ac.ucr.sigebi.domain.Clasificacion;
 import cr.ac.ucr.sigebi.domain.Estado;
 import cr.ac.ucr.sigebi.domain.Identificacion;
 import cr.ac.ucr.sigebi.domain.Lote;
@@ -34,9 +36,10 @@ public class BienCommand {
     private String descripcion;
     private Integer cantidad;
     private Boolean capitalizable;
-    private Lote lote; //Lote lote;
-    
+    private Lote lote; 
+    private Categoria categoria;
     private SubCategoria subCategoria;
+    private Clasificacion clasificacion;
     private SubClasificacion subClasificacion;
     private ViewResumenBien resumenBien;
     private UnidadEjecutora unidadEjecutora;
@@ -66,13 +69,15 @@ public class BienCommand {
     //<editor-fold defaultstate="collapsed" desc="Constructores">
     public BienCommand() {}
 
-    public BienCommand(Long id, String descripcion, Integer cantidad, Boolean capitalizable, Lote lote, SubCategoria subCategoria, SubClasificacion subClasificacion, ViewResumenBien resumenBien, UnidadEjecutora unidadEjecutora, Proveedor proveedor, Moneda moneda, Double costo, Date fechaAdquisicion, Integer persona, Date inicioGarantia, Date finGarantia, String descripcionGarantia, Ubicacion ubicacion, String descripcionUbicacion, Integer referencia, Identificacion identificacion, Tipo tipo, Tipo origen, Estado estadoInterno, Estado estado, List<Accesorio> accesorios, List<BienCaracteristica> caracteristicas) {
+    public BienCommand(Long id, String descripcion, Integer cantidad, Boolean capitalizable, Lote lote, Categoria categoria, SubCategoria subCategoria, Clasificacion clasificacion, SubClasificacion subClasificacion, ViewResumenBien resumenBien, UnidadEjecutora unidadEjecutora, Proveedor proveedor, Moneda moneda, Double costo, Date fechaAdquisicion, Integer persona, Date inicioGarantia, Date finGarantia, String descripcionGarantia, Ubicacion ubicacion, String descripcionUbicacion, Integer referencia, Identificacion identificacion, Tipo tipo, Tipo origen, Estado estadoInterno, Estado estado, List<Accesorio> accesorios, List<BienCaracteristica> caracteristicas) {
         this.id = id;
         this.descripcion = descripcion;
         this.cantidad = cantidad;
         this.capitalizable = capitalizable;
         this.lote = lote;
+        this.categoria = categoria;
         this.subCategoria = subCategoria;
+        this.clasificacion = clasificacion;
         this.subClasificacion = subClasificacion;
         this.resumenBien = resumenBien;
         this.unidadEjecutora = unidadEjecutora;
@@ -204,6 +209,14 @@ public class BienCommand {
     public void setLote(Lote lote) {
         this.lote = lote;
     }
+
+    public Categoria getCategoria() {
+        return categoria;
+    }
+
+    public void setCategoria(Categoria categoria) {
+        this.categoria = categoria;
+    }
     
     public SubCategoria getSubCategoria() {
         return subCategoria;
@@ -211,6 +224,14 @@ public class BienCommand {
 
     public void setSubCategoria(SubCategoria subCategoria) {
         this.subCategoria = subCategoria;
+    }
+
+    public Clasificacion getClasificacion() {
+        return clasificacion;
+    }
+
+    public void setClasificacion(Clasificacion clasificacion) {
+        this.clasificacion = clasificacion;
     }
 
     public SubClasificacion getSubClasificacion() {

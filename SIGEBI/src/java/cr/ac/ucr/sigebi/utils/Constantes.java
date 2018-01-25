@@ -72,12 +72,17 @@ public final class Constantes {
     public static final String DOMINIO_CARACTERISTICA = "CARACTERISTICA";
     public static final String DOMINIO_EXCLUSION = "EXCLUSION";
     public static final String DOMINIO_GENERAL = "GENERAL";
+    public static final String DOMINIO_IDENTIFICACION = "IDENTIFICACION";
     public static final String DOMINIO_INFORME_TECNICO = "INFORME_TECNICO";
     public static final String DOMINIO_NOTIFICACION = "NOTIFICACION";
     public static final String DOMINIO_ORIGEN = "ORIGEN";
     public static final String DOMINIO_PROCESO = "PROCESO";
     public static final String DOMINIO_DOCUMENTO = "DOCUMENTO";
 
+    //Identificaciones
+    public static final String IDENTIFICACION_ESTADO_DISPONIBLE = "DISPONIBLE";
+    public static final String IDENTIFICACION_ESTADO_OCUPADA = "OCUPADA";
+    
     //Id documentos
     public static final Long ID_DOCUMENTO_INFORME_TECNICO = 1l;
     public static final Long ID_DOCUMENTO_ACTA_DESECHO = 2l;
