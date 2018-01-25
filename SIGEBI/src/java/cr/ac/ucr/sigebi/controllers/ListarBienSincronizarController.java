@@ -21,7 +21,6 @@ import org.springframework.stereotype.Controller;
 import cr.ac.ucr.framework.vista.util.Util;
 import cr.ac.ucr.sigebi.domain.Bien;
 import cr.ac.ucr.sigebi.domain.Estado;
-import cr.ac.ucr.sigebi.domain.UnidadEjecutora;
 import cr.ac.ucr.sigebi.models.UnidadEjecutoraModel;
 import java.util.HashMap;
 import java.util.Map;
@@ -260,6 +259,9 @@ public class ListarBienSincronizarController extends BaseController {
         estado = estadoModel.buscarPorDominioEstado(Constantes.DOMINIO_BIEN, Constantes.ESTADO_BIEN_PENDIENTE_SINCRONIZAR);
         estadosBienes.put(estado.getValor(), estado);
 
+        estado = estadoModel.buscarPorDominioEstado(Constantes.DOMINIO_BIEN, Constantes.ESTADO_BIEN_PENDIENTE_ACTIVACION);
+        estadosBienes.put(estado.getValor(), estado);
+
         estadosOptions = new ArrayList<SelectItem>();
         for (Estado item : estadosBienes.values()) {
             estadosOptions.add(new SelectItem(item.getId().toString(), item.getNombre()));
@@ -355,8 +357,8 @@ public class ListarBienSincronizarController extends BaseController {
             Long contador = 0l;
             if (fltEstado == null || (fltEstado != null && fltEstado.equals("-1"))) {
                 contador = bienMod.contar(unidadEjecutora,
-                        Long.valueOf(fltIdBien),
                         null,
+                        fltIdBien,
                         fltDescripcion,
                         fltMarca,
                         fltModelo,
@@ -367,8 +369,8 @@ public class ListarBienSincronizarController extends BaseController {
             } else {
                 
                 contador = bienMod.contar(unidadEjecutora,
-                        Long.valueOf(fltIdBien),
                         null,
+                        fltIdBien,
                         fltDescripcion,
                         fltMarca,
                         fltModelo,
@@ -387,7 +389,7 @@ public class ListarBienSincronizarController extends BaseController {
             Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.error.controllerListarBienSincronizar.contarBienes"));
         }
     }
-
+    
     private void listarBienes() {
         try {
             if (fltEstado == null || (fltEstado != null && fltEstado.equals("-1"))) {
@@ -395,8 +397,8 @@ public class ListarBienSincronizarController extends BaseController {
                         this.getPrimerRegistro()-1, 
                         this.getUltimoRegistro(),
                         unidadEjecutora,
-                        Long.valueOf(fltIdBien),
                         null,
+                        fltIdBien,
                         fltDescripcion,
                         fltMarca,
                         fltModelo,
@@ -409,8 +411,8 @@ public class ListarBienSincronizarController extends BaseController {
                         this.getPrimerRegistro()-1, 
                         this.getUltimoRegistro(),
                         unidadEjecutora,
-                        Long.valueOf(fltIdBien),
                         null,
+                        fltIdBien,
                         fltDescripcion,
                         fltMarca,
                         fltModelo,
@@ -622,41 +624,27 @@ public class ListarBienSincronizarController extends BaseController {
                 return;
             }
             
-            String resp = "";
             for (Map.Entry<Long, Bien> bienSincro : bienesEnviarSincronizar.entrySet()) {
                 Bien bien = bienMod.buscarPorId(bienSincro.getKey());
-                bien.setEstado(estadosBienes.get(Constantes.ESTADO_BIEN_PENDIENTE_SINCRONIZAR));
-                resp += sincronizar(bien);
+                bien.setEstado(estadosBienes.get(Constantes.ESTADO_BIEN_PENDIENTE_ACTIVACION));
+                bienMod.sincronizarBien(bien, lVistaUsuario.getgUsuarioActual().getIdUsuario());
                 bienesEnviarSincronizar.remove(bienSincro.getKey());
             }
             bienesPorSincronizar.clear();
-
-            if (resp.equals("")) {
-                Mensaje.agregarInfo(Util.getEtiquetas("sigebi.sincronizarBienes.Exito"));
-            } else {
-                Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.sincronizarBien.Lista.ErrorEnviarSincronizar"));
-            }
+            Mensaje.agregarInfo(Util.getEtiquetas("sigebi.sincronizarBienes.Exito"));
             
             //Actualiza la lista
             this.listarBienes();
 
         } catch (FWExcepcion err) {
+            err.printStackTrace();
             Mensaje.agregarErrorAdvertencia(err.getError_para_usuario());
         } catch (Exception err) {
+            err.printStackTrace();
             Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.error.controllerListarBienSincronizar.sincronizarTodo"));
         }
     }
 
-    private String sincronizar(Bien bien) {
-        try {
-            bienMod.sincronizarBien(bien, lVistaUsuario.getgUsuarioActual().getIdUsuario());
-        } catch (FWExcepcion err) {
-            Mensaje.agregarErrorAdvertencia(err.getError_para_usuario());
-        } catch (Exception err) {
-            Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.error.controllerListarBienSincronizar.enviarSincronizar"));
-        }
-        return null;
-    }
 
     //</editor-fold>
 }

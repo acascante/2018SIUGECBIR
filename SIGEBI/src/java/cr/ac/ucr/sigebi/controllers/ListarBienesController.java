@@ -84,7 +84,7 @@ public class ListarBienesController extends BaseController {
     }
 
     private void inicializarDatos() {
-        this.vistaOrigen = Constantes.VISTA_NOTIFICACION_LISTADO;
+        this.vistaOrigen = Constantes.KEY_VISTA_LISTAR_BIENES;
         this.command = new ListarBienesCommand();
     }
     

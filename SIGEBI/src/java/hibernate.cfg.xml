@@ -43,6 +43,7 @@
     <mapping class="cr.ac.ucr.sigebi.domain.SolicitudDetalle"/>
     <mapping class="cr.ac.ucr.sigebi.domain.SolicitudExclusion"/>
     <mapping class="cr.ac.ucr.sigebi.domain.SolicitudTraslado"/>
+    <mapping class="cr.ac.ucr.sigebi.domain.Sincronizar"/>
     <mapping class="cr.ac.ucr.sigebi.domain.SubCategoria"/>
     <mapping class="cr.ac.ucr.sigebi.domain.SubClasificacion"/>
     <mapping class="cr.ac.ucr.sigebi.domain.Tipo"/>

@@ -16,7 +16,6 @@ import cr.ac.ucr.sigebi.domain.AutorizacionRol;
 import cr.ac.ucr.sigebi.domain.AutorizacionRolPersona;
 import cr.ac.ucr.sigebi.domain.Rol;
 import cr.ac.ucr.sigebi.domain.Tipo;
-import cr.ac.ucr.sigebi.domain.UnidadEjecutora;
 import cr.ac.ucr.sigebi.domain.Usuario;
 import cr.ac.ucr.sigebi.models.AutorizacionModel;
 import cr.ac.ucr.sigebi.models.AutorizacionRolModel;
@@ -71,9 +70,6 @@ public class GestionProcesosController extends BaseController {
 
     @Resource
     private EstadoModel estadoModel;
-
-    @Resource
-    private UnidadEjecutoraModel unidadEjecutoraModel;
 
     //Listas para agregas
     List<SelectItem> tiposProceso;
@@ -188,14 +184,6 @@ public class GestionProcesosController extends BaseController {
 
     public void setCommand(GestionProcesoCommand command) {
         this.command = command;
-    }
-
-    public UnidadEjecutoraModel getUnidadEjecutoraModel() {
-        return unidadEjecutoraModel;
-    }
-
-    public void setUnidadEjecutoraModel(UnidadEjecutoraModel unidadEjecutoraModel) {
-        this.unidadEjecutoraModel = unidadEjecutoraModel;
     }
 
     //</editor-fold>
@@ -367,14 +355,12 @@ public class GestionProcesosController extends BaseController {
 
             SegUsuario usuario = (SegUsuario) pEvent.getComponent().getAttributes().get("usuarioSelApro");
             Usuario usr = usuarioModel.buscarPorId(usuario.getIdUsuario());
-//TODO arreglar unidad ejecutora
-//            UnidadEjecutora unidadEjecutora = unidadEjecutoraModel.buscarPorId(unidadEjecutoraId);
 
             //Se incluye el usuario al rol
             AutorizacionRolPersona autorizacionRolPersona = new AutorizacionRolPersona();
             autorizacionRolPersona.setAutorizacionRol(autorizacionRol);            
             autorizacionRolPersona.setUsuarioSeguridad(usr);
-//            autorizacionRolPersona.setUnidadEjecutora(unidadEjecutora);
+            autorizacionRolPersona.setUnidadEjecutora(unidadEjecutora);
             autorizacionRolPersonaModel.agregar(autorizacionRolPersona);
 
             usuario.setMarcado(true);

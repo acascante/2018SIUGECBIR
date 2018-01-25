@@ -38,7 +38,7 @@ public class BienDao extends GenericDaoImpl {
     public List<Bien> listar() throws FWExcepcion {
         try {
             return dao.getHibernateTemplate().find("from Bien");
-        } catch (DataAccessException e) {
+        } catch (HibernateException e) {
             throw new FWExcepcion("sigebi.error.bienCaracteristica.dao.traerTodo", "Error obtener los registros de bien " + this.getClass(), e.getCause());
         }
     }
@@ -101,7 +101,7 @@ public class BienDao extends GenericDaoImpl {
                 query.setMaxResults(ultimoRegistro - primerRegistro);
             }
             return (List<Bien>) query.list();
-        } catch (Exception e) {
+        } catch (HibernateException e) {
             throw new FWExcepcion("sigebi.error.notificacionDao.listar", "Error obtener los registros de tipo " + this.getClass(), e.getCause());
         } finally {
             session.close();
@@ -113,7 +113,7 @@ public class BienDao extends GenericDaoImpl {
         try {
             Query query = this.creaQuery(Boolean.TRUE, session, unidadejecutora, id, identificacion, descripcion, marca, modelo, serie, tipo, estados);
             return (Long) query.uniqueResult();
-        } catch (Exception e) {
+        } catch (HibernateException e) {
             throw new FWExcepcion("sigebi.error.notificacionDao.contarNotificaciones", "Error contando los registros de tipo " + this.getClass(), e.getCause());
         } finally {
             session.close();
@@ -131,7 +131,7 @@ public class BienDao extends GenericDaoImpl {
     public void actualizar(Bien bien) throws FWExcepcion {
         try {
             persist(bien);
-        } catch (DataAccessException e) {
+        } catch (HibernateException e) {
             throw new FWExcepcion("sigebi.error.notificacionDao.salvar", "Error guardando registro de tipo " + this.getClass(), e.getCause());
         }
     }
@@ -205,7 +205,7 @@ public class BienDao extends GenericDaoImpl {
     public void sincronizarBien(Sincronizar sincronizar) throws FWExcepcion {
         try {
             persist(sincronizar);
-        } catch (DataAccessException e) {
+        } catch (HibernateException e) {
             throw new FWExcepcion("sigebi.error.bienDao.sincronizarBien", "Error guardando registro de tipo " + this.getClass(), e.getCause());
         }
     }

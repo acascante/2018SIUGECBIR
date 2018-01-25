@@ -27,11 +27,10 @@ public class Sincronizar implements Serializable {
     
     //<editor-fold defaultstate="collapsed" desc="Atributos">
     @Id
-    @Basic(optional = false)
-    @Column(name = "NUM_EMPRESA") // NUMBER (3) 
-    private int  numEmpresa;
     @Column(name = "ID_ACTIVO") // NUMBER (10) 
     private int  idActivo;
+    @Column(name = "NUM_EMPRESA") // NUMBER (3) 
+    private int  numEmpresa;
     @Column(name = "DESCRIPCION") // VARCHAR2 (100 Byte) 
     private String descripcion;
     @Column(name = "INDICA_TIPO_ACTIVO") // VARCHAR2 (1 Byte) 
@@ -654,7 +653,7 @@ public class Sincronizar implements Serializable {
         origen = bien.getOrigen().toString().charAt(0);
         valorInicialColones = Float.parseFloat( bien.getCosto().toString());
         valorInicialOtraMo = Float.parseFloat( bien.getCosto().toString());
-        ubicacionFisica = bien.getUbicacion().getDetalle();
+        ubicacionFisica = bien.getUbicacion() != null ? bien.getUbicacion().getDetalle() : "";
         tieneImagen = 'N';
         estadoDelActivo = Constantes.SINCRONIZAR_ESTADO_TRANSITO_ACTIVACION;
 //        tipoCambioCompra = 500;

@@ -214,7 +214,7 @@ public class AgregarBienController extends BaseController {
             }
             inicializarDatos();
             this.vistaOrigen = event.getComponent().getAttributes().get(Constantes.KEY_VISTA_ORIGEN).toString();
-            Util.navegar(Constantes.VISTA_NOTIFICACION_NUEVA);
+            Util.navegar(Constantes.KEY_VISTA_DETALLE_BIEN);
         } catch (Exception err) {
             mensaje = err.getMessage();
         }
@@ -284,7 +284,143 @@ public class AgregarBienController extends BaseController {
         }
     }
 
-    //</editor-fold>
+    public Boolean getRenderBotonSincronizar () {
+        return true;
+    }
+    
+    public Boolean getRenderBotonRechazar () {
+        return true;
+    }
+    
+    //<editor-fold defaultstate="collapsed" desc="Get's y Set's">
+    public List<SelectItem> getTiposBienOptions() {
+        return tiposBienOptions;
+    }
+
+    public void setTiposBienOptions(List<SelectItem> tiposBienOptions) {
+        this.tiposBienOptions = tiposBienOptions;
+    }
+
+    public List<SelectItem> getOrigenesBienOptions() {
+        return origenesBienOptions;
+    }
+
+    public void setOrigenesBienOptions(List<SelectItem> origenesBienOptions) {
+        this.origenesBienOptions = origenesBienOptions;
+    }
+
+    public List<SelectItem> getLotesOptions() {
+        return lotesOptions;
+    }
+
+    public void setLotesOptions(List<SelectItem> lotesOptions) {
+        this.lotesOptions = lotesOptions;
+    }
+
+    public List<SelectItem> getCategoriasOptions() {
+        return categoriasOptions;
+    }
+
+    public void setCategoriasOptions(List<SelectItem> categoriasOptions) {
+        this.categoriasOptions = categoriasOptions;
+    }
+
+    public List<SelectItem> getClasificacionesOptions() {
+        return clasificacionesOptions;
+    }
+
+    public void setClasificacionesOptions(List<SelectItem> clasificacionesOptions) {
+        this.clasificacionesOptions = clasificacionesOptions;
+    }
+
+    public List<SelectItem> getMonedasOptions() {
+        return monedasOptions;
+    }
+
+    public void setMonedasOptions(List<SelectItem> monedasOptions) {
+        this.monedasOptions = monedasOptions;
+    }
+
+    public List<SelectItem> getSubClasificacionesOptions() {
+        return subClasificacionesOptions;
+    }
+
+    public void setSubClasificacionesOptions(List<SelectItem> subClasificacionesOptions) {
+        this.subClasificacionesOptions = subClasificacionesOptions;
+    }
+
+    public List<SelectItem> getSubCategoriasOptions() {
+        return subCategoriasOptions;
+    }
+
+    public void setSubCategoriasOptions(List<SelectItem> subCategoriasOptions) {
+        this.subCategoriasOptions = subCategoriasOptions;
+    }
+
+    public BienCommand getCommand() {
+        return command;
+    }
+
+    public void setCommand(BienCommand command) {
+        this.command = command;
+    }
+
+    public String getMensajeExito() {
+        return mensajeExito;
+    }
+
+    public void setMensajeExito(String mensajeExito) {
+        this.mensajeExito = mensajeExito;
+    }
+
+    public String getMensaje() {
+        return mensaje;
+    }
+
+    public void setMensaje(String mensaje) {
+        this.mensaje = mensaje;
+    }
+
+    public boolean isEnableComboSubCategorias() {
+        return enableComboSubCategorias;
+    }
+
+    public void setEnableComboSubCategorias(boolean enableComboSubCategorias) {
+        this.enableComboSubCategorias = enableComboSubCategorias;
+    }
+
+    public boolean isEnableComboClasificaciones() {
+        return enableComboClasificaciones;
+    }
+
+    public void setEnableComboClasificaciones(boolean enableComboClasificaciones) {
+        this.enableComboClasificaciones = enableComboClasificaciones;
+    }
+
+    public boolean isEnableComboSubClasificaciones() {
+        return enableComboSubClasificaciones;
+    }
+
+    public void setEnableComboSubClasificaciones(boolean enableComboSubClasificaciones) {
+        this.enableComboSubClasificaciones = enableComboSubClasificaciones;
+    }
+
+    public boolean isAccionSincronizar() {
+        return accionSincronizar;
+    }
+
+    public void setAccionSincronizar(boolean accionSincronizar) {
+        this.accionSincronizar = accionSincronizar;
+    }
+
+    public boolean isAccionRechazar() {
+        return accionRechazar;
+    }
+
+    public void setAccionRechazar(boolean accionRechazar) {
+        this.accionRechazar = accionRechazar;
+    }
+//</editor-fold>    
     
     //<editor-fold defaultstate="collapsed" desc="Panel Observacion Sincronizar o Rechazar">
     
