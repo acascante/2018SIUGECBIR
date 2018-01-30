@@ -46,7 +46,7 @@ public class SubClasificacionDao extends GenericDaoImpl{
     public List<SubClasificacion> listar(Integer idClasificacion) {
         Session session = dao.getSessionFactory().openSession();
         try {
-            String sql = "SELECT sc FROM SubClasificacion sc WHERE sc.idClasificacion = :idClasificacion";
+            String sql = "SELECT sc FROM SubClasificacion sc WHERE sc.clasificacion.idClasificacion = :idClasificacion";
             Query query = session.createQuery(sql);
             query.setParameter("idClasificacion", idClasificacion);
 

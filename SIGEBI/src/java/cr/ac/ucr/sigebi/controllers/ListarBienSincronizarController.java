@@ -47,7 +47,7 @@ public class ListarBienSincronizarController extends BaseController {
 
     @Resource
     EstadoModel modelEstado;
-    
+
     // Lista de los Bienes
     List<Bien> bienes;
 
@@ -60,9 +60,9 @@ public class ListarBienSincronizarController extends BaseController {
     String fltEstado = "-1";
 
     // comboBox subCategorias
+    ArrayList<Estado> estadosFiltros;
     List<SelectItem> estadosOptions;
 
-    Map<Integer, Estado> estadosBienes;
     Map<Long, Bien> bienesPorSincronizar;
     Map<Long, Bien> bienesPorRechazar;
     Map<Long, Bien> bienesEnviarSincronizar;
@@ -72,9 +72,7 @@ public class ListarBienSincronizarController extends BaseController {
     String observacionCliente = "";
 
     //</editor-fold>
-    
     //<editor-fold defaultstate="collapsed" desc="Get's & Set's">
-
     public boolean cerrarPanelObserva() {
         panelObservaVisible = false;
         return false;
@@ -95,7 +93,7 @@ public class ListarBienSincronizarController extends BaseController {
     public void setObservacionCliente(String observacionCliente) {
         this.observacionCliente = observacionCliente;
     }
-    
+
     public boolean isSincronizar() {
         return (bienesEnviarSincronizar.isEmpty());
     }
@@ -103,7 +101,7 @@ public class ListarBienSincronizarController extends BaseController {
     public void setSincronizar(boolean sincronizar) {
         this.sincronizar = sincronizar;
     }
-    
+
     public BienModel getBienMod() {
         return bienMod;
     }
@@ -220,12 +218,12 @@ public class ListarBienSincronizarController extends BaseController {
         this.modelEstado = modelEstado;
     }
 
-    public Map<Integer, Estado> getEstadosBienes() {
-        return estadosBienes;
+    public ArrayList<Estado> getEstadosFiltros() {
+        return estadosFiltros;
     }
 
-    public void setEstadosBienes(Map<Integer, Estado> estadosBienes) {
-        this.estadosBienes = estadosBienes;
+    public void setEstadosFiltros(ArrayList<Estado> estadosFiltros) {
+        this.estadosFiltros = estadosFiltros;
     }
 
     public Map<Long, Bien> getBienesEnviarSincronizar() {
@@ -235,9 +233,8 @@ public class ListarBienSincronizarController extends BaseController {
     public void setBienesEnviarSincronizar(Map<Long, Bien> bienesEnviarSincronizar) {
         this.bienesEnviarSincronizar = bienesEnviarSincronizar;
     }
-   
-    //</editor-fold>
 
+    //</editor-fold>
     //<editor-fold defaultstate="collapsed" desc="Constructor">
     public ListarBienSincronizarController() {
         super();
@@ -250,20 +247,13 @@ public class ListarBienSincronizarController extends BaseController {
         bienesPorSincronizar = new HashMap<Long, Bien>();
         bienesPorRechazar = new HashMap<Long, Bien>();
         bienesEnviarSincronizar = new HashMap<Long, Bien>();
-        estadosBienes = new HashMap<Integer, Estado>();
 
-        //Cargar Estados Filtros
-        Estado estado = estadoModel.buscarPorDominioEstado(Constantes.DOMINIO_BIEN, Constantes.ESTADO_BIEN_PENDIENTE);
-        estadosBienes.put(estado.getValor(), estado);
-        
-        estado = estadoModel.buscarPorDominioEstado(Constantes.DOMINIO_BIEN, Constantes.ESTADO_BIEN_PENDIENTE_SINCRONIZAR);
-        estadosBienes.put(estado.getValor(), estado);
-
-        estado = estadoModel.buscarPorDominioEstado(Constantes.DOMINIO_BIEN, Constantes.ESTADO_BIEN_PENDIENTE_ACTIVACION);
-        estadosBienes.put(estado.getValor(), estado);
+        estadosFiltros = new ArrayList<Estado>();
+        estadosFiltros.add(this.estadoPorDominioValor(Constantes.DOMINIO_BIEN, Constantes.ESTADO_BIEN_PENDIENTE));
+        estadosFiltros.add(this.estadoPorDominioValor(Constantes.DOMINIO_BIEN, Constantes.ESTADO_BIEN_PENDIENTE_SINCRONIZAR));
 
         estadosOptions = new ArrayList<SelectItem>();
-        for (Estado item : estadosBienes.values()) {
+        for (Estado item : estadosFiltros) {
             estadosOptions.add(new SelectItem(item.getId().toString(), item.getNombre()));
         }
 
@@ -273,7 +263,7 @@ public class ListarBienSincronizarController extends BaseController {
 
         //Se consulta la lista de los bienes
         this.listarBienes();
-        
+
     }
     //</editor-fold>
 
@@ -364,10 +354,10 @@ public class ListarBienSincronizarController extends BaseController {
                         fltModelo,
                         fltSerie,
                         null,
-                        estadosBienes.values().toArray(new Estado[estadosBienes.size()])
+                        estadosFiltros.toArray(new Estado[estadosFiltros.size()])
                 );
             } else {
-                
+
                 contador = bienMod.contar(unidadEjecutora,
                         null,
                         fltIdBien,
@@ -376,9 +366,9 @@ public class ListarBienSincronizarController extends BaseController {
                         fltModelo,
                         fltSerie,
                         null,
-                        estadosBienes.get(Integer.parseInt(fltEstado))
+                        this.estadoPorDominioValor(Constantes.DOMINIO_BIEN, Integer.parseInt(fltEstado))
                 );
-            } 
+            }
 
             //Se actualiza la cantidad de registros segun los filtros
             this.setCantidadRegistros(contador.intValue());
@@ -389,12 +379,11 @@ public class ListarBienSincronizarController extends BaseController {
             Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.error.controllerListarBienSincronizar.contarBienes"));
         }
     }
-    
+
     private void listarBienes() {
         try {
             if (fltEstado == null || (fltEstado != null && fltEstado.equals("-1"))) {
-                this.bienes = bienMod.listar(
-                        this.getPrimerRegistro()-1, 
+                this.bienes = bienMod.listar(this.getPrimerRegistro() - 1,
                         this.getUltimoRegistro(),
                         unidadEjecutora,
                         null,
@@ -404,11 +393,10 @@ public class ListarBienSincronizarController extends BaseController {
                         fltModelo,
                         fltSerie,
                         null,
-                        estadosBienes.values().toArray(new Estado[estadosBienes.size()])
+                        estadosFiltros.toArray(new Estado[estadosFiltros.size()])
                 );
             } else {
-                this.bienes = bienMod.listar(
-                        this.getPrimerRegistro()-1, 
+                this.bienes = bienMod.listar(this.getPrimerRegistro() - 1,
                         this.getUltimoRegistro(),
                         unidadEjecutora,
                         null,
@@ -418,7 +406,7 @@ public class ListarBienSincronizarController extends BaseController {
                         fltModelo,
                         fltSerie,
                         null,
-                        estadosBienes.get(Integer.parseInt(fltEstado))
+                        this.estadoPorDominioValor(Constantes.DOMINIO_BIEN, Integer.parseInt(fltEstado))
                 );
             }
             for (Bien bien : this.bienes) {
@@ -432,7 +420,6 @@ public class ListarBienSincronizarController extends BaseController {
     }
 
     //</editor-fold>
-    
     // <editor-fold defaultstate="collapsed" desc="Paginacion">
     /**
      * Pasa a la pagina sub-set de bienes
@@ -528,7 +515,6 @@ public class ListarBienSincronizarController extends BaseController {
     }
 
 // </editor-fold>
-    
     //<editor-fold defaultstate="collapsed" desc="Panel Observacion Sincronizar o Rechazar">
     public void rechazarBien() {
         try {
@@ -536,8 +522,8 @@ public class ListarBienSincronizarController extends BaseController {
                 Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.error.controllerListarBienSincronizar.rechazarBien.sin.observacion"));
             } else {
                 Integer telefono = lVistaUsuario.getgUsuarioActual().getTelefono1() != null ? Integer.parseInt(lVistaUsuario.getgUsuarioActual().getTelefono1()) : 0;
-                
-                bienMod.cambiaEstadoBien(this.bienesEnviarSincronizar.values(), estadosBienes.get(Constantes.ESTADO_BIEN_PENDIENTE), observacionCliente, telefono);
+
+                bienMod.cambiaEstadoBien(this.bienesEnviarSincronizar.values(), this.estadoPorDominioValor(Constantes.DOMINIO_BIEN, Constantes.ESTADO_BIEN_PENDIENTE), observacionCliente, telefono);
                 this.bienesEnviarSincronizar.clear();
 
                 observacionCliente = "";
@@ -560,9 +546,9 @@ public class ListarBienSincronizarController extends BaseController {
             Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.error.controllerListarBienSincronizar.solicitarSincronizacion.sin.bienes.sincronizar"));
         } else {
             Integer telefono = lVistaUsuario.getgUsuarioActual().getTelefono1() != null ? Integer.parseInt(lVistaUsuario.getgUsuarioActual().getTelefono1()) : 0;
-            bienMod.cambiaEstadoBien(this.bienesPorSincronizar.values(), estadosBienes.get(Constantes.ESTADO_BIEN_PENDIENTE_SINCRONIZAR), observacionCliente, telefono);
+            bienMod.cambiaEstadoBien(this.bienesPorSincronizar.values(), this.estadoPorDominioValor(Constantes.DOMINIO_BIEN, Constantes.ESTADO_BIEN_PENDIENTE_SINCRONIZAR), observacionCliente, telefono);
             this.bienesPorSincronizar.clear();
-            
+
             //Se consulta la vista nuevamente
             this.listarBienes();
         }
@@ -584,11 +570,9 @@ public class ListarBienSincronizarController extends BaseController {
             return true;
         }
     }
-      
-    //</editor-fold>
-    
-    //<editor-fold defaultstate="collapsed" desc="Sincronizar">
 
+    //</editor-fold>
+    //<editor-fold defaultstate="collapsed" desc="Sincronizar">
     public void checkBienEnviarSincronizar(ValueChangeEvent pEvent) {
         try {
             if (!pEvent.getPhaseId().equals(PhaseId.INVOKE_APPLICATION)) {
@@ -623,16 +607,16 @@ public class ListarBienSincronizarController extends BaseController {
                 Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.sincronizarBien.Lista.ListaVacia"));
                 return;
             }
-            
+
             for (Map.Entry<Long, Bien> bienSincro : bienesEnviarSincronizar.entrySet()) {
                 Bien bien = bienMod.buscarPorId(bienSincro.getKey());
-                bien.setEstado(estadosBienes.get(Constantes.ESTADO_BIEN_PENDIENTE_ACTIVACION));
+                bien.setEstado(this.estadoPorDominioValor(Constantes.DOMINIO_BIEN, Constantes.ESTADO_BIEN_PENDIENTE_ACTIVACION));
                 bienMod.sincronizarBien(bien, lVistaUsuario.getgUsuarioActual().getIdUsuario());
                 bienesEnviarSincronizar.remove(bienSincro.getKey());
             }
             bienesPorSincronizar.clear();
             Mensaje.agregarInfo(Util.getEtiquetas("sigebi.sincronizarBienes.Exito"));
-            
+
             //Actualiza la lista
             this.listarBienes();
 
@@ -644,7 +628,6 @@ public class ListarBienSincronizarController extends BaseController {
             Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.error.controllerListarBienSincronizar.sincronizarTodo"));
         }
     }
-
 
     //</editor-fold>
 }

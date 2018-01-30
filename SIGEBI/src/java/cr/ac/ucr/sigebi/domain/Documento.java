@@ -59,6 +59,20 @@ public class Documento extends ObjetoBase implements Serializable {
     private List<DocumentoAutorizacion> autorizacionesDocumento;
 
     //</editor-fold>
+
+    //<editor-fold defaultstate="collapsed" desc="Constructores">
+
+    public Documento() {
+    }
+    
+    public Documento(Estado estado, Integer discriminator) {
+        this.estado = estado;
+        this.discriminator = discriminator;
+        this.fecha = new Date();
+    }
+    
+    //</editor-fold>
+
     //<editor-fold defaultstate="collapsed" desc="GET's y SET's">
     public Long getId() {
         return id;
@@ -109,6 +123,7 @@ public class Documento extends ObjetoBase implements Serializable {
     }
 
     //</editor-fold>
+    
     //<editor-fold defaultstate="collapsed" desc="Metodos">
     @Override
     public int hashCode() {

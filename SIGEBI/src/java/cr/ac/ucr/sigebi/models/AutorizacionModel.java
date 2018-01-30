@@ -44,8 +44,8 @@ public class AutorizacionModel {
         return autorizacionDao.buscarPorTipoProceso(idTipoProceso);
     }
 
-    public Long contarAutorizacionsValidator(Long idAutorizacionDiferente, Integer idProceso, Integer orden, String nombre) throws FWExcepcion {
-        return autorizacionDao.contarAutorizacionsValidator(idAutorizacionDiferente, idProceso, orden, nombre);
+    public Long contarAutorizacionsValidator(Long idAutorizacionDiferente, Integer idProceso, Integer orden, String nombre, Integer codigo) throws FWExcepcion {
+        return autorizacionDao.contarAutorizacionsValidator(idAutorizacionDiferente, idProceso, orden, nombre, codigo);
     }
 
 }

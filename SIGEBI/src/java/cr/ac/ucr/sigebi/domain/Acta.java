@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package cr.ac.ucr.sigebi.entities;
+package cr.ac.ucr.sigebi.domain;
 
 import cr.ac.ucr.sigebi.domain.Estado;
 import cr.ac.ucr.sigebi.domain.Tipo;
@@ -24,10 +24,10 @@ import javax.persistence.Temporal;
  *
  * @author jorge.serrano
  */
-@Entity(name = "ActaEntity")
+@Entity(name = "Acta")
 @Table(name = "SIGEBI_OAF.SGB_ACTA")
 @SequenceGenerator(name = "SGB_SQ_ACTA", sequenceName = "SIGEBI_OAF.SGB_SQ_ACTA", initialValue = 1, allocationSize = 1)
-public class ActaEntity implements Serializable {
+public class Acta implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -35,7 +35,7 @@ public class ActaEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SGB_SQ_ACTA")
     @Column(name = "ID_ACTA") // NUMBER 
-    private int idActa;
+    private int id;
 
     @Column(name = "AUTORIZACION") // VARCHAR2 (100 Byte) 
     private String autorizacion;
@@ -63,18 +63,18 @@ public class ActaEntity implements Serializable {
 
     //</editor-fold>
     //<editor-fold defaultstate="collapsed" desc="Contructores">
-    public ActaEntity() {
+    public Acta() {
         fecha = new Date();
     }
 
     //</editor-fold>
     //<editor-fold defaultstate="collapsed" desc="GETs & SETs">
-    public int getIdActa() {
-        return idActa;
+    public int getId() {
+        return id;
     }
 
-    public void setIdActa(int idActa) {
-        this.idActa = idActa;
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getAutorizacion() {
@@ -138,18 +138,18 @@ public class ActaEntity implements Serializable {
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (int) idActa;
+        hash += (int) id;
         return hash;
     }
 
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof ActaEntity)) {
+        if (!(object instanceof Acta)) {
             return false;
         }
-        ActaEntity other = (ActaEntity) object;
-        if (this.idActa != other.idActa) {
+        Acta other = (Acta) object;
+        if (this.id != other.id) {
             return false;
         }
         return true;
@@ -157,7 +157,7 @@ public class ActaEntity implements Serializable {
 
     @Override
     public String toString() {
-        return "cr.ac.ucr.sigebi.entities.ActaEntity[ id=" + idActa + " ]";
+        return "cr.ac.ucr.sigebi.domain.Acta[ id=" + id + " ]";
     }
 
     //</editor-fold>

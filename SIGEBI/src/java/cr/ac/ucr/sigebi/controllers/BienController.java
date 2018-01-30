@@ -39,7 +39,7 @@ import org.springframework.stereotype.Controller;
  */
 @Controller(value = "controllerBienes")
 @Scope("session")
-public class BienController extends BienController_Adicional {
+public class BienController extends BaseController {
     
     //<editor-fold defaultstate="collapsed" desc="Variables de la Clase">
     List<SelectItem> tiposBienOptions;
@@ -81,9 +81,9 @@ public class BienController extends BienController_Adicional {
 
     private void cargarCombos() {
         try {
-            
-            cargarOpcionesCaract();
-            inicializaUbicaciones();
+//            
+//            cargarOpcionesCaract();
+//            inicializaUbicaciones();
             //cargarProveedores();
             
             List<Tipo> tipos = tipoModel.listarPorDominio(Constantes.DOMINIO_BIEN);
@@ -232,13 +232,6 @@ public class BienController extends BienController_Adicional {
         this.mensajeExito = mensajeExito;
     }
 
-    public boolean isBienRegistrado() {
-        return bienRegistrado;
-    }
-
-    public void setBienRegistrado(boolean bienRegistrado) {
-        this.bienRegistrado = bienRegistrado;
-    }
 
     //</editor-fold>
     
@@ -488,23 +481,6 @@ public class BienController extends BienController_Adicional {
         this.origenOptions = origenOptions;
     }
 
-
-    public String getProvSelccionado() {
-        return provSelccionado;
-    }
-
-    public void setProvSelccionado(String provSelccionado) {
-        this.provSelccionado = provSelccionado;
-    }
-
-    public String getProvId() {
-        return provId;
-    }
-
-    public void setProvId(String provId) {
-        this.provId = provId;
-    }
-
     public String getSelectUbicacion() {
         return selectUbicacion;
     }
@@ -537,21 +513,6 @@ public class BienController extends BienController_Adicional {
         this.selectMoneda = selectMoneda;
     }
 
-    public List<SelectItem> getUbicacionOptions() {
-        return ubicacionOptions;
-    }
-
-    public void setUbicacionOptions(List<SelectItem> ubicacionOptions) {
-        this.ubicacionOptions = ubicacionOptions;
-    }
-
-    public List<SelectItem> getProvedooresOptions() {
-        return provedooresOptions;
-    }
-
-    public void setProvedooresOptions(List<SelectItem> provedooresOptions) {
-        this.provedooresOptions = provedooresOptions;
-    }
 
     public List<SelectItem> getEstadosOptions() {
         return estadosOptions;

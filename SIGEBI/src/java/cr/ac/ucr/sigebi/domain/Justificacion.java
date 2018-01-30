@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package cr.ac.ucr.sigebi.entities;
+package cr.ac.ucr.sigebi.domain;
 
 import cr.ac.ucr.framework.seguridad.ObjetoBase;
 import java.io.Serializable;
@@ -23,10 +23,10 @@ import javax.persistence.Temporal;
  *
  * @author jorge.serrano
  */
-@Entity(name = "JustificacionEntity")
+@Entity(name = "Justificacion")
 @Table(name = "SIGEBI_OAF.SGB_JUSTIFICACION")
 @SequenceGenerator(name="SGB_SQ_JUSTIFICACIONES", sequenceName = "SIGEBI_OAF.SGB_SQ_JUSTIFICACIONES", initialValue=1, allocationSize=1)
-public class JustificacionEntity  extends ObjetoBase implements Serializable  {
+public class Justificacion  extends ObjetoBase implements Serializable  {
     
     private static final long serialVersionUID = 1L;
     
@@ -51,14 +51,14 @@ public class JustificacionEntity  extends ObjetoBase implements Serializable  {
     
     @ManyToOne
     @JoinColumn(name = "REFERECIA_BIEN", referencedColumnName = "ID_BIEN")
-    private ViewBienEntity idBien;
+    private Bien idBien;
     
     @Column(name = "OBSERVACIONES") // VARCHAR2 (500 Byte) 
     private String observaciones;
     
     @ManyToOne
     @JoinColumn(name = "USUARIO_REGISTRA", referencedColumnName = "ID_USUARIO")
-    private UsuarioEntity usuarioRegistra;
+    private Usuario usuarioRegistra;
     
     @Column(name = "FECHA") // DATE 
     @Temporal(javax.persistence.TemporalType.DATE)
@@ -72,13 +72,13 @@ public class JustificacionEntity  extends ObjetoBase implements Serializable  {
     //<editor-fold defaultstate="collapsed" desc="Contructores">
     
     
-    public JustificacionEntity(Long idJustificacion
+    public Justificacion(Long idJustificacion
                             , String documentoTipo
                             , Long idDocumento
                             , String encabezado
-                            , ViewBienEntity idBien
+                            , Bien idBien
                             , String observaciones
-                            , UsuarioEntity usuarioRegistra
+                            , Usuario usuarioRegistra
                             , Date fecha) {    
         this.idJustificacion = idJustificacion;
         this.documentoTipo = documentoTipo;
@@ -91,7 +91,7 @@ public class JustificacionEntity  extends ObjetoBase implements Serializable  {
     }
 
     
-    public JustificacionEntity(){
+    public Justificacion(){
         fecha = new Date();
     }
     
@@ -131,11 +131,11 @@ public class JustificacionEntity  extends ObjetoBase implements Serializable  {
         this.encabezado = encabezado;
     }
 
-    public ViewBienEntity getIdBien() {
+    public Bien getIdBien() {
         return idBien;
     }
 
-    public void setIdBien(ViewBienEntity idBien) {
+    public void setIdBien(Bien idBien) {
         this.idBien = idBien;
     }
 
@@ -147,11 +147,11 @@ public class JustificacionEntity  extends ObjetoBase implements Serializable  {
         this.observaciones = observaciones;
     }
 
-    public UsuarioEntity getUsuarioRegistra() {
+    public Usuario getUsuarioRegistra() {
         return usuarioRegistra;
     }
 
-    public void setUsuarioRegistra(UsuarioEntity usuarioRegistra) {
+    public void setUsuarioRegistra(Usuario usuarioRegistra) {
         this.usuarioRegistra = usuarioRegistra;
     }
 
@@ -180,10 +180,10 @@ public class JustificacionEntity  extends ObjetoBase implements Serializable  {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof JustificacionEntity)) {
+        if (!(object instanceof Justificacion)) {
             return false;
         }
-        JustificacionEntity other = (JustificacionEntity) object;
+        Justificacion other = (Justificacion) object;
         if ((this.idJustificacion == null && other.idJustificacion != null) || (this.idJustificacion != null && !this.idJustificacion.equals(other.idJustificacion))) {
             return false;
         }

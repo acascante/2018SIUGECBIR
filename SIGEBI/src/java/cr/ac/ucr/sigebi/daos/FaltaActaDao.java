@@ -8,8 +8,8 @@ package cr.ac.ucr.sigebi.daos;
 import cr.ac.ucr.framework.daoHibernate.DaoHelper;
 import cr.ac.ucr.framework.daoImpl.GenericDaoImpl;
 import cr.ac.ucr.framework.utils.FWExcepcion;
-import cr.ac.ucr.sigebi.entities.ActaDetalleEntity;
-import cr.ac.ucr.sigebi.entities.ActaEntity;
+import cr.ac.ucr.sigebi.domain.Acta;
+import cr.ac.ucr.sigebi.domain.ActaDetalle;
 import cr.ac.ucr.sigebi.entities.ViewBienEntity;
 import java.util.ArrayList;
 import java.util.List;
@@ -37,17 +37,17 @@ public class FaltaActaDao extends GenericDaoImpl {
     private FaltaViewBienDao viewBienDao;
     
     @Transactional
-    public ActaEntity traerPorId(Integer pId) {
+    public Acta traerPorId(Integer pId) {
         Session session = dao.getSessionFactory().openSession();
-        ActaEntity resp = new ActaEntity();
+        Acta resp = new Acta();
         try {
             // De momento utilizamos la referencia como el id del bien
-            String sql = "from ActaEntity s where s.idActa = :pidActa";
+            String sql = "from Acta s where s.id = :pid";
             Query q = session.createQuery(sql);
-            q.setParameter("pidActa",pId);
+            q.setParameter("pid",pId);
             
             List l = q.list();
-            resp = (ActaEntity) l.get(0);
+            resp = (Acta) l.get(0);
             
             session.close();
             return resp;
@@ -59,9 +59,9 @@ public class FaltaActaDao extends GenericDaoImpl {
     }
     
     
-    public List<ActaEntity> listar(Long unidadEjecutora) {
+    public List<Acta> listar(Long unidadEjecutora) {
         try {
-            return dao.getHibernateTemplate().find("from ActaEntity"); 
+            return dao.getHibernateTemplate().find("from Acta"); 
         } catch (DataAccessException e) {
             throw new FWExcepcion("sigebi.error.ActaDao.listar", "Error obtener los registros " + this.getClass(), e.getCause());
         }
@@ -75,12 +75,12 @@ public class FaltaActaDao extends GenericDaoImpl {
             
             
             // De momento utilizamos la referencia como el id del bien
-            //String sql = "from ActaEntity s where s.idActa = :pidActa";
+            //String sql = "from Acta s where s.id = :pid";
             String sql = "        SELECT BIEN.* \n" +
                         "        FROM SIGEBI_OAF.SGB_ACTA_DETALLE DET\n" +
                         "            INNER JOIN SIGEBI_OAF.V_SGB_BIEN BIEN\n" +
                         "            ON(DET.ID_BIEN = BIEN.ID_BIEN)\n" +
-                        "        WHERE DET.ID_ACTA = :pidActa ";
+                        "        WHERE DET.ID_ACTA = :pid ";
             
             Query q = session.createSQLQuery(sql);
             q.setParameter("pidActa",actaId);
@@ -92,7 +92,7 @@ public class FaltaActaDao extends GenericDaoImpl {
                 ViewBienEntity valor = viewBienDao.traerPorId(Integer.parseInt(val[0].toString()));
                 detalle.add(valor);
             }
-            //resp = (ActaEntity) l.get(0);
+            //resp = (Acta) l.get(0);
             
             return detalle;
         } catch (Exception e) {
@@ -106,7 +106,7 @@ public class FaltaActaDao extends GenericDaoImpl {
     
     
     @Transactional
-    public void guardar(ActaEntity valor) {
+    public void guardar(Acta valor) {
         try {
             persist(valor);
         } catch (DataAccessException e) {
@@ -118,10 +118,10 @@ public class FaltaActaDao extends GenericDaoImpl {
     
     
     @Transactional
-    public void guardarBienes(List<ActaDetalleEntity> valores) {
+    public void guardarBienes(List<ActaDetalle> valores) {
         try {
             EliminarBienesEnActa(valores.get(0).getIdActa());
-            for(ActaDetalleEntity valor : valores) {
+            for(ActaDetalle valor : valores) {
                 persist(valor);
             }
             
@@ -136,12 +136,12 @@ public class FaltaActaDao extends GenericDaoImpl {
     @Transactional
     public void EliminarBienesEnActa(Integer pIdActa) {
         Session session = dao.getSessionFactory().openSession();
-        ActaEntity resp = new ActaEntity();
+        Acta resp = new Acta();
         try {
             // De momento utilizamos la referencia como el id del bien
-            String sql = "delete  from ActaDetalleEntity s where s.idActa = :pidActa";
+            String sql = "delete  from ActaDetalle s where s.id = :pid";
             Query q = session.createQuery(sql);
-            q.setParameter("pidActa",pIdActa);
+            q.setParameter("pid",pIdActa);
             
             int rsp = q.executeUpdate();
             
@@ -189,7 +189,7 @@ public class FaltaActaDao extends GenericDaoImpl {
 
     
     @Transactional(readOnly = true)
-    public List<ActaEntity> listarActas(Long unidadEjecutora,
+    public List<Acta> listarActas(Long unidadEjecutora,
                                         String fltIdTipo,
                                         String fltAutorizacion,
                                         String fltEstado,
@@ -214,7 +214,7 @@ public class FaltaActaDao extends GenericDaoImpl {
                 q.setMaxResults(pUltimoRegistro - pPrimerRegistro);
             }
             //Se obtienen los resutltados
-            return (List<ActaEntity>) q.list();
+            return (List<Acta>) q.list();
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -236,9 +236,9 @@ public class FaltaActaDao extends GenericDaoImpl {
     ) {
         String sql;
         if (contar) 
-            sql = "SELECT count(s) FROM ActaEntity s ";
+            sql = "SELECT count(s) FROM Acta s ";
          else 
-            sql = "SELECT s FROM ActaEntity s ";
+            sql = "SELECT s FROM Acta s ";
         
         //Select
         sql = sql + " WHERE s.unidadEjecutora = :pnumUnidadEjec ";

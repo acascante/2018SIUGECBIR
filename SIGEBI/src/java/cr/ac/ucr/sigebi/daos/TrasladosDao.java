@@ -10,8 +10,8 @@ import cr.ac.ucr.framework.daoImpl.GenericDaoImpl;
 import cr.ac.ucr.framework.utils.FWExcepcion;
 import cr.ac.ucr.sigebi.domain.Estado;
 import cr.ac.ucr.sigebi.domain.UnidadEjecutora;
-import cr.ac.ucr.sigebi.entities.TrasladoDetalleEntity;
-import cr.ac.ucr.sigebi.entities.TrasladoEntity;
+import cr.ac.ucr.sigebi.domain.TrasladoDetalle;
+import cr.ac.ucr.sigebi.domain.Traslado;
 import cr.ac.ucr.sigebi.entities.UnidadEjecutoraEntity;
 import java.util.List;
 import javax.annotation.Resource;
@@ -29,7 +29,7 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Repository(value = "trasladoDao")
 @Scope("request")
-public class FaltaTrasladosDao extends GenericDaoImpl {
+public class TrasladosDao extends GenericDaoImpl {
     
     @Autowired
     private DaoHelper dao;
@@ -38,7 +38,7 @@ public class FaltaTrasladosDao extends GenericDaoImpl {
     private FaltaViewBienDao viewBienDao;
     
     @Transactional
-    public void guardar(TrasladoEntity obj) {
+    public void guardar(Traslado obj) {
         try {
             this.persist(obj);
         } catch (Exception e) {
@@ -49,9 +49,9 @@ public class FaltaTrasladosDao extends GenericDaoImpl {
     }
     
     @Transactional
-    public void guardarBienes(List<TrasladoDetalleEntity> bienes){
+    public void guardarBienes(List<TrasladoDetalle> bienes){
         try {
-            for(TrasladoDetalleEntity valor : bienes) {
+            for(TrasladoDetalle valor : bienes) {
                 persist(valor);
             }
             
@@ -63,7 +63,7 @@ public class FaltaTrasladosDao extends GenericDaoImpl {
     }
     
     @Transactional
-    public void guardarBien(TrasladoDetalleEntity bien){
+    public void guardarBien(TrasladoDetalle bien){
         try {
             persist(bien);
             
@@ -75,11 +75,11 @@ public class FaltaTrasladosDao extends GenericDaoImpl {
     }
     
     @Transactional
-    public void eliminarBienes(TrasladoEntity traslado, Estado estado){
+    public void eliminarBienes(Traslado traslado, Estado estado){
         Session session = dao.getSessionFactory().openSession();
         try {
             //idTraslado
-            String sql = "delete from TrasladoDetalleEntity s where s.idTraslado = :ptraslado and  s.idEstado = :pEstado";
+            String sql = "delete from TrasladoDetalle s where s.idTraslado = :ptraslado and  s.idEstado = :pEstado";
             Query q = session.createQuery(sql);
             q.setParameter("ptraslado",traslado);
             q.setParameter("pEstado",estado);
@@ -94,19 +94,19 @@ public class FaltaTrasladosDao extends GenericDaoImpl {
         }
     }
     
-    public TrasladoEntity traerPorId(Integer pId) {
+    public Traslado traerPorId(Integer pId) {
         Session session = this.dao.getSessionFactory().openSession();
         try {
-            String sql = "SELECT obj FROM TrasladoEntity obj WHERE obj.idTraslado = :idTraslado";
+            String sql = "SELECT obj FROM Traslado obj WHERE obj.idTraslado = :idTraslado";
             Query query = session.createQuery(sql);
             query.setParameter("idTraslado", pId);
 
             //Se obtienen los resutltados
-            return (TrasladoEntity) query.list().get(0);
+            return (Traslado) query.list().get(0);
 
         } catch (Exception e) {
             e.printStackTrace();
-            throw new FWExcepcion("sigebi.error.dao.TrasladoEntity.traerPorId",
+            throw new FWExcepcion("sigebi.error.dao.Traslado.traerPorId",
                     "Error obtener los registros de tipo " + this.getClass(), e.getCause());
         } finally {
             session.close();
@@ -114,21 +114,21 @@ public class FaltaTrasladosDao extends GenericDaoImpl {
     }
     
     @Transactional
-    public List<TrasladoEntity> traerTodo(UnidadEjecutoraEntity unidadEjecutora) {
+    public List<Traslado> traerTodo(UnidadEjecutoraEntity unidadEjecutora) {
         Session session = this.dao.getSessionFactory().openSession();
         try {
-            String sql = "SELECT obj FROM TrasladoEntity obj "
+            String sql = "SELECT obj FROM Traslado obj "
                         + " WHERE obj.numUnidadOrigen = :numUnidadOrigen "
                         + " OR obj.numUnidadDestino = :numUnidadOrigen";
             Query query = session.createQuery(sql);
             query.setParameter("numUnidadOrigen", unidadEjecutora);
 
             //Se obtienen los resutltados
-            return (List<TrasladoEntity>) query.list();
+            return (List<Traslado>) query.list();
 
         } catch (Exception e) {
             e.printStackTrace();
-            throw new FWExcepcion("sigebi.error.dao.TrasladoEntity.traerPorId",
+            throw new FWExcepcion("sigebi.error.dao.Traslado.traerPorId",
                     "Error obtener los registros de tipo " + this.getClass(), e.getCause());
         } finally {
             session.close();
@@ -137,20 +137,20 @@ public class FaltaTrasladosDao extends GenericDaoImpl {
     }
     
     @Transactional
-    public List<TrasladoDetalleEntity> traerBienesTraslado(Integer trasladoId) {
+    public List<TrasladoDetalle> traerBienesTraslado(Integer trasladoId) {
         Session session = this.dao.getSessionFactory().openSession();
         try {
-            String sql = "SELECT obj FROM TrasladoDetalleEntity obj "
+            String sql = "SELECT obj FROM TrasladoDetalle obj "
                         + " WHERE obj.idTraslado.idTraslado = :trasladoId ";
             Query query = session.createQuery(sql);
             query.setParameter("trasladoId", trasladoId);
 
             //Se obtienen los resutltados
-            return (List<TrasladoDetalleEntity>) query.list();
+            return (List<TrasladoDetalle>) query.list();
 
         } catch (Exception e) {
             e.printStackTrace();
-            throw new FWExcepcion("sigebi.error.dao.TrasladoDetalleEntity.traerBienesTraslado",
+            throw new FWExcepcion("sigebi.error.dao.TrasladoDetalle.traerBienesTraslado",
                     "Error obtener los registros de tipo " + this.getClass(), e.getCause());
         } finally {
             session.close();
@@ -159,7 +159,7 @@ public class FaltaTrasladosDao extends GenericDaoImpl {
     
     
     @Transactional
-    public List<TrasladoEntity> trasladosListado(
+    public List<Traslado> trasladosListado(
               UnidadEjecutora unidadEjecutora
             , String fltIdTraslado
             , String fltUnidadOrigen
@@ -192,7 +192,7 @@ public class FaltaTrasladosDao extends GenericDaoImpl {
             }
 
             //Se obtienen los resutltados
-            return (List<TrasladoEntity>) q.list();
+            return (List<Traslado>) q.list();
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -256,9 +256,9 @@ public class FaltaTrasladosDao extends GenericDaoImpl {
             String sql;
             
             if (contar) 
-                sql = "SELECT count(s) FROM TrasladoEntity s ";
+                sql = "SELECT count(s) FROM Traslado s ";
              else 
-                sql = "SELECT s FROM TrasladoEntity s ";
+                sql = "SELECT s FROM Traslado s ";
             
             sql +=  " WHERE (s.numUnidadOrigen = :numUnidadOrigen "
                   + " OR s.numUnidadDestino = :numUnidadOrigen) ";

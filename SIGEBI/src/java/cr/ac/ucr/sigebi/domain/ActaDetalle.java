@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package cr.ac.ucr.sigebi.entities;
+package cr.ac.ucr.sigebi.domain;
 
 import java.io.Serializable;
 import javax.persistence.Column;
@@ -18,10 +18,10 @@ import javax.persistence.Table;
  *
  * @author jorge.serrano
  */
-@Entity(name = "ActaDetalleEntity")
+@Entity(name = "ActaDetalle")
 @Table(name = "SIGEBI_OAF.SGB_ACTA_DETALLE")
 @SequenceGenerator(name="SGB_SQ_ACTA_DETALLE", sequenceName = "SIGEBI_OAF.SGB_SQ_ACTA_DETALLE", initialValue=1, allocationSize=1)
-public class ActaDetalleEntity implements Serializable {
+public class ActaDetalle implements Serializable {
 
     private static final long serialVersionUID = 1L;
     
@@ -29,7 +29,7 @@ public class ActaDetalleEntity implements Serializable {
     @Id
     @GeneratedValue(strategy=GenerationType.SEQUENCE, generator = "SGB_SQ_ACTA_DETALLE")
     @Column(name = "ID_ACTA_DETALLE") // NUMBER 
-    private Integer idActaDetalle;
+    private Integer id;
 
     @Column(name = "ID_ACTA") // NUMBER 
     //@JoinColumn(name = "ID_ACTA", referencedColumnName = "ID_ACTA")
@@ -54,10 +54,10 @@ public class ActaDetalleEntity implements Serializable {
 
     //<editor-fold defaultstate="collapsed" desc="Contructores">
 
-    public ActaDetalleEntity() {
+    public ActaDetalle() {
     }
 
-    public ActaDetalleEntity(Integer idActa, Integer idBien, Integer idEstado) {
+    public ActaDetalle(Integer idActa, Integer idBien, Integer idEstado) {
         this.idActa = idActa;
         this.idBien = idBien;
         this.idEstado = idEstado;
@@ -70,12 +70,12 @@ public class ActaDetalleEntity implements Serializable {
     
     //<editor-fold defaultstate="collapsed" desc="GETs & SETs">
 
-    public Integer getIdActaDetalle() {
-        return idActaDetalle;
+    public Integer getId() {
+        return id;
     }
 
-    public void setIdActaDetalle(Integer idActaDetalle) {
-        this.idActaDetalle = idActaDetalle;
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     public Integer getIdActa() {
@@ -118,18 +118,18 @@ public class ActaDetalleEntity implements Serializable {
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (Integer) idActaDetalle;
+        hash += (Integer) id;
         return hash;
     }
 
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof ActaDetalleEntity)) {
+        if (!(object instanceof ActaDetalle)) {
             return false;
         }
-        ActaDetalleEntity other = (ActaDetalleEntity) object;
-        if (this.idActaDetalle != other.idActaDetalle) {
+        ActaDetalle other = (ActaDetalle) object;
+        if (this.id != other.id) {
             return false;
         }
         return true;
@@ -137,7 +137,7 @@ public class ActaDetalleEntity implements Serializable {
 
     @Override
     public String toString() {
-        return "cr.ac.ucr.sigebi.entities.ActaDetalleEntity[ id=" + idActaDetalle + " ]";
+        return "cr.ac.ucr.sigebi.entities.ActaDetalle[ id=" + id + " ]";
     }
     
     

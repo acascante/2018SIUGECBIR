@@ -50,7 +50,7 @@ public class VistaNavegacion {
         gPaginas.put(Constantes.KEY_VISTA_LISTAR_BIENES, Constantes.VISTA_LISTAR_BIENES);
         gPaginas.put(Constantes.KEY_VISTA_DETALLE_BIEN, Constantes.VISTA_DETALLE_BIEN);
         
-        gPaginas.put("sincronizar", "../bienes/listarBienSincronizar.xhtml");
+        gPaginas.put(Constantes.VISTA_SINCRONIZACION_BIEN, Constantes.VISTA_SINCRONIZACION_BIEN_LISTADO);
         
         gPaginas.put(Constantes.VISTA_NOTIFICACION_LISTADO, Constantes.VISTA_NOTIFICACION_LISTADO_PAGINA);
         

@@ -46,7 +46,7 @@ public class ListadoBienesGeneralController extends BaseController{
     private ListarBienesCommand command;
     
     List<Bien> bienes;
-    Map<Integer, Bien> bienesSeleccionados;
+    Map<Long, Bien> bienesSeleccionados;
     List<Bien> bienesAsociados;
     
     List<SelectItem> estadosOptions;
@@ -55,9 +55,69 @@ public class ListadoBienesGeneralController extends BaseController{
     boolean permiteSeleccionar = false;
     boolean mostrarDetalle = true;
     boolean mostrarDialogBienes;
+    
+    
+    String fltIdBien;
+    String fltDescripcion;
+    String fltMarca;
+    String fltModelo;
+    String fltSerie;
+    
+    
+    
+    
     //</editor-fold>
     
     //<editor-fold defaultstate="collapsed" desc="Get's & Set's">
+
+    public String getFltIdBien() {
+        return fltIdBien;
+    }
+
+    public void setFltIdBien(String fltIdBien) {
+        this.fltIdBien = fltIdBien;
+    }
+
+    public String getFltDescripcion() {
+        return fltDescripcion;
+    }
+
+    public void setFltDescripcion(String fltDescripcion) {
+        this.fltDescripcion = fltDescripcion;
+    }
+
+    public String getFltMarca() {
+        return fltMarca;
+    }
+
+    public void setFltMarca(String fltMarca) {
+        this.fltMarca = fltMarca;
+    }
+
+    public String getFltModelo() {
+        return fltModelo;
+    }
+
+    public void setFltModelo(String fltModelo) {
+        this.fltModelo = fltModelo;
+    }
+
+    public String getFltSerie() {
+        return fltSerie;
+    }
+
+    public void setFltSerie(String fltSerie) {
+        this.fltSerie = fltSerie;
+    }
+    
+    
+    
+    
+    
+    
+    
+    
+    
     public boolean isPermiteSeleccionar() {
         return permiteSeleccionar;
     }
@@ -90,11 +150,11 @@ public class ListadoBienesGeneralController extends BaseController{
         this.bienes = bienes;
     }
 
-    public Map<Integer, Bien> getBienesSeleccionados() {
+    public Map<Long, Bien> getBienesSeleccionados() {
         return bienesSeleccionados;
     }
 
-    public void setBienesSeleccionados(Map<Integer, Bien> bienesSeleccionados) {
+    public void setBienesSeleccionados(Map<Long, Bien> bienesSeleccionados) {
         this.bienesSeleccionados = bienesSeleccionados;
     }
 
@@ -133,7 +193,7 @@ public class ListadoBienesGeneralController extends BaseController{
     public final void inicializar() {
 
         bienes = new ArrayList<Bien>();
-        bienesSeleccionados = new HashMap<Integer, Bien>();
+        bienesSeleccionados = new HashMap<Long, Bien>();
         bienesAsociados = new ArrayList<Bien>();
         
         List<Estado> estados = estadoModel.listarPorDominio(Constantes.DOMINIO_BIEN);

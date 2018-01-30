@@ -42,6 +42,7 @@ public class Clasificacion extends ObjetoBase implements Serializable {
     @ManyToOne
     @JoinColumn(name = "ID_ESTADO", referencedColumnName = "ID_ESTADO")
     private Estado estado;
+    
     //</editor-fold>
 
     //<editor-fold defaultstate="collapsed" desc="GET's y SET's">
@@ -67,6 +68,14 @@ public class Clasificacion extends ObjetoBase implements Serializable {
 
     public void setEstado(Estado estado) {
         this.estado = estado;
+    }
+
+    public SubCategoria getSubCategoria() {
+        return subCategoria;
+    }
+
+    public void setSubCategoria(SubCategoria subCategoria) {
+        this.subCategoria = subCategoria;
     }
     //</editor-fold>
 

@@ -5,8 +5,8 @@
  */
 package cr.ac.ucr.sigebi.models;
 
-import cr.ac.ucr.sigebi.daos.FaltaJustificacionDao;
-import cr.ac.ucr.sigebi.entities.JustificacionEntity;
+import cr.ac.ucr.sigebi.daos.JustificacionDao;
+import cr.ac.ucr.sigebi.domain.Justificacion;
 import java.util.List;
 import javax.annotation.Resource;
 import org.springframework.context.annotation.Scope;
@@ -21,17 +21,17 @@ import org.springframework.stereotype.Service;
 public class JustificacionModel {
     
     @Resource
-    FaltaJustificacionDao justificacionDao;
+    JustificacionDao justificacionDao;
     
-    public void guardar(JustificacionEntity valor){
+    public void guardar(Justificacion valor){
         justificacionDao.guardar(valor);
     }
     
-    public JustificacionEntity traerPorId(Integer idJustificacion) {
+    public Justificacion traerPorId(Integer idJustificacion) {
         return justificacionDao.traerPorId(idJustificacion);
     }
     
-    public List<JustificacionEntity> listarPorDocumento(String documentoTipo, Long idDocumento) {
+    public List<Justificacion> listarPorDocumento(String documentoTipo, Long idDocumento) {
         return justificacionDao.listarPorDocumento(documentoTipo, idDocumento);
     }
 }

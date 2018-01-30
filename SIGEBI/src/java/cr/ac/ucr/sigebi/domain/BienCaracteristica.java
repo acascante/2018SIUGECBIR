@@ -25,13 +25,13 @@ import javax.persistence.Table;
  */
 @Entity(name = "BienCaracteristica")
 @Table(name = "SIGEBI_OAF.SIGB_BIEN_CARACTERISTICA")
-@SequenceGenerator(name="SGB_SQ_BIEN_CARACTERISTICA", sequenceName = "SIGEBI_OAF.SGB_SQ_BIEN_CARACTERISTICA", initialValue=1, allocationSize=1)
+@SequenceGenerator(name="SGB_SQ_CARACTERISTICA", sequenceName = "SIGEBI_OAF.SGB_SQ_CARACTERISTICA", initialValue=1, allocationSize=1)
 public class BienCaracteristica extends ObjetoBase implements Serializable  {
     
     //<editor-fold defaultstate="collapsed" desc="Atributos">
     @Id
-    @GeneratedValue(strategy=GenerationType.SEQUENCE, generator = "SGB_SQ_BIEN_CARACTERISTICA")
-    @Column(name = "ID")
+    @GeneratedValue(strategy=GenerationType.SEQUENCE, generator = "SGB_SQ_CARACTERISTICA")
+    @Column(name = "ID_BIEN_CARACTERISTICA")
     private Long id;
     
     @JoinColumn(name = "ID_TIPO", referencedColumnName = "ID_TIPO")

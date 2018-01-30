@@ -24,7 +24,6 @@ import cr.ac.ucr.sigebi.models.EstadoModel;
 import cr.ac.ucr.sigebi.models.RolModel;
 import cr.ac.ucr.sigebi.models.SegUsuarioModel;
 import cr.ac.ucr.sigebi.models.TipoModel;
-import cr.ac.ucr.sigebi.models.UnidadEjecutoraModel;
 import cr.ac.ucr.sigebi.models.UsuarioModel;
 import cr.ac.ucr.sigebi.utils.JsfUtil;
 import java.util.ArrayList;
@@ -309,17 +308,18 @@ public class GestionProcesosController extends BaseController {
         try {
 
             //Se cargan los usuario asociados al rol
-            List<AutorizacionRolPersona> personasRolAutorizacion = autorizacionRolPersonaModel.buscarPorAutorizacionRol(command.getIdAutorizacionTipoProceso(), command.getIdRol());
+            List<AutorizacionRolPersona> personasRolAutorizacion = autorizacionRolPersonaModel.buscarPorAutorizacionRol(command.getIdAutorizacionTipoProceso(), command.getIdRol(), unidadEjecutora.getId());
 
             //Se buscan los usuarios
             this.usuarios = segUsuarioModel.listarUsuarios(command.getIdUsuario(), command.getNombreCompleto(), 
                     command.getCorreo(), this.getPrimerRegistro() - 1, this.getUltimoRegistro());
-
-            //Se seleccionan los usuarios asociados a los roles
-            for (SegUsuario usuario : usuarios) {
-                for (AutorizacionRolPersona personaRol : personasRolAutorizacion) {
-                    if (personaRol.getUsuarioSeguridad().getId().equals(usuario.getIdUsuario())) {
-                        usuario.setMarcado(true);
+            if (personasRolAutorizacion != null) {
+                //Se seleccionan los usuarios asociados a los roles
+                for (SegUsuario usuario : usuarios) {
+                    for (AutorizacionRolPersona personaRol : personasRolAutorizacion) {
+                        if (personaRol.getUsuarioSeguridad().getId().equals(usuario.getIdUsuario())) {
+                            usuario.setMarcado(true);
+                        }
                     }
                 }
             }
@@ -629,6 +629,13 @@ public class GestionProcesosController extends BaseController {
             Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.error.controllerGestionProcesos.autorizacion.orden.requerido"));
             return false;
         }
+        if (!command.getAutorizacion().getCodigo().toString().matches(Constantes.PATTERN_NUMERIC)) {
+            Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.error.controllerGestionProcesos.autorizacion.codigo.no.numerico"));
+            return false;
+        } else if (command.getAutorizacion().getCodigo() == null || command.getAutorizacion().getOrden() <= 0) {
+            Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.error.controllerGestionProcesos.autorizacion.codigo.requerido"));
+            return false;
+        }
         if (command.getAutorizacion().getEstado() == null) {
             Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.error.controllerGestionProcesos.autorizacion.estado.requerido"));
             return false;
@@ -642,26 +649,38 @@ public class GestionProcesosController extends BaseController {
         if (command.getPresentarPanelAgregarAutorizacion()) {
 
             //Se verifica si ya existe un autorizacion con el nombre indicado
-            if (autorizacionModel.contarAutorizacionsValidator(null, command.getIdTipoProceso(), null, command.getAutorizacion().getNombre()) > 0) {
+            if (autorizacionModel.contarAutorizacionsValidator(null, command.getIdTipoProceso(), null, command.getAutorizacion().getNombre(),null) > 0) {
                 Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.error.controllerGestionProcesos.autorizacion.nombre.ya.existe"));
                 return false;
             }
 
             //Se verifica si ya existe un autorizacion con el orden indicado
-            if (autorizacionModel.contarAutorizacionsValidator(null, command.getIdTipoProceso(), command.getAutorizacion().getOrden(), null) > 0) {
+            if (autorizacionModel.contarAutorizacionsValidator(null, command.getIdTipoProceso(), command.getAutorizacion().getOrden(), null,null) > 0) {
                 Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.error.controllerGestionProcesos.autorizacion.orden.ya.existe"));
+                return false;
+            }
+            
+            //Se verifica si ya existe un autorizacion con el codigo indicado
+            if (autorizacionModel.contarAutorizacionsValidator(null, command.getIdTipoProceso(), null, null, command.getAutorizacion().getCodigo()) > 0) {
+                Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.error.controllerGestionProcesos.autorizacion.codigo.ya.existe"));
                 return false;
             }
         } else if (command.getPresentarPanelModificarAutorizacion()) {
             //Se verifica si ya existe un autorizacion con el nombre indicado
-            if (autorizacionModel.contarAutorizacionsValidator(command.getAutorizacion().getId(), command.getIdTipoProceso(), null, command.getAutorizacion().getNombre()) > 0) {
+            if (autorizacionModel.contarAutorizacionsValidator(command.getAutorizacion().getId(), command.getIdTipoProceso(), null, command.getAutorizacion().getNombre(),null) > 0) {
                 Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.error.controllerGestionProcesos.autorizacion.nombre.ya.existe"));
                 return false;
             }
 
             //Se verifica si ya existe un autorizacion con el orden indicado
-            if (autorizacionModel.contarAutorizacionsValidator(command.getAutorizacion().getId(), command.getIdTipoProceso(), command.getAutorizacion().getOrden(), null) > 0) {
+            if (autorizacionModel.contarAutorizacionsValidator(command.getAutorizacion().getId(), command.getIdTipoProceso(), command.getAutorizacion().getOrden(), null,null) > 0) {
                 Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.error.controllerGestionProcesos.autorizacion.orden.ya.existe"));
+                return false;
+            }
+
+            //Se verifica si ya existe un autorizacion con el codigo indicado
+            if (autorizacionModel.contarAutorizacionsValidator(command.getAutorizacion().getId(), command.getIdTipoProceso(), null,null, command.getAutorizacion().getCodigo()) > 0) {
+                Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.error.controllerGestionProcesos.autorizacion.codigo.ya.existe"));
                 return false;
             }
         }

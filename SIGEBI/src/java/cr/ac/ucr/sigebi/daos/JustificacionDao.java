@@ -8,7 +8,7 @@ package cr.ac.ucr.sigebi.daos;
 import cr.ac.ucr.framework.daoHibernate.DaoHelper;
 import cr.ac.ucr.framework.daoImpl.GenericDaoImpl;
 import cr.ac.ucr.framework.utils.FWExcepcion;
-import cr.ac.ucr.sigebi.entities.JustificacionEntity;
+import cr.ac.ucr.sigebi.domain.Justificacion;
 import java.util.List;
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -24,14 +24,14 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Repository(value = "JustificacionDao")
 @Scope("request")
-public class FaltaJustificacionDao extends GenericDaoImpl {
+public class JustificacionDao extends GenericDaoImpl {
     
     @Autowired
     private DaoHelper dao;
     
     
     @Transactional
-    public void guardar(JustificacionEntity valor){
+    public void guardar(Justificacion valor){
         try {
             persist(valor);
         } catch (DataAccessException e) {
@@ -42,17 +42,17 @@ public class FaltaJustificacionDao extends GenericDaoImpl {
     }
     
     @Transactional
-    public JustificacionEntity traerPorId(Integer idJustificacion) {
+    public Justificacion traerPorId(Integer idJustificacion) {
         Session session = dao.getSessionFactory().openSession();
-        JustificacionEntity resp = new JustificacionEntity();
+        Justificacion resp = new Justificacion();
         try {
             // De momento utilizamos la referencia como el id del bien
-            String sql = "from JustificacionEntity s where s.idJustificacion = :pidJustificacion";
+            String sql = "from Justificacion s where s.idJustificacion = :pidJustificacion";
             Query q = session.createQuery(sql);
             q.setParameter("pidJustificacion",idJustificacion);
             
             List l = q.list();
-            resp = (JustificacionEntity) l.get(0);
+            resp = (Justificacion) l.get(0);
             
             return resp;
         } catch (Exception e) {
@@ -65,18 +65,18 @@ public class FaltaJustificacionDao extends GenericDaoImpl {
     }
     
     
-    public List<JustificacionEntity> listarPorDocumento(String documentoTipo, Long idDocumento) {
+    public List<Justificacion> listarPorDocumento(String documentoTipo, Long idDocumento) {
         Session session = dao.getSessionFactory().openSession();
         try {
             // De momento utilizamos la referencia como el id del bien
-            String sql = "from JustificacionEntity s "
+            String sql = "from Justificacion s "
                         + "where s.documentoTipo = :documentoTipo "
                         + "and s.idDocumento = :idDocumento";
             Query q = session.createQuery(sql);
             q.setParameter("documentoTipo",documentoTipo);
             q.setParameter("idDocumento",idDocumento);
             
-            return (List<JustificacionEntity>) q.list();
+            return (List<Justificacion>) q.list();
         } catch (Exception e) {
             return null;
         }

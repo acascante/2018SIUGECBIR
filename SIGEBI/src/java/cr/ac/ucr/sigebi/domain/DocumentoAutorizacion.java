@@ -40,9 +40,13 @@ public class DocumentoAutorizacion extends ObjetoBase implements Serializable {
     private Documento documento;
 
     @ManyToOne
-    @JoinColumn(name = "ID_AUTORIZACION_ROL_PERSONA", referencedColumnName = "ID_AUTORIZACION_ROL_PERSONA")
-    private AutorizacionRolPersona autorizacionRolPersona;
+    @JoinColumn(name = "ID_AUTORIZACION_ROL", referencedColumnName = "ID_AUTORIZACION_ROL")
+    private AutorizacionRol autorizacionRol;
 
+    @ManyToOne
+    @JoinColumn(name = "ID_USUARIO", referencedColumnName = "ID_USUARIO")
+    private Usuario usuarioSeguridad;
+    
     @ManyToOne
     @JoinColumn(name = "ID_ESTADO", referencedColumnName = "ID_ESTADO")
     private Estado estado;
@@ -53,7 +57,13 @@ public class DocumentoAutorizacion extends ObjetoBase implements Serializable {
 
     //</editor-fold>
     
+    //<editor-fold defaultstate="collapsed" desc="Constructores">
+    
+    //</editor-fold>
+    
     //<editor-fold defaultstate="collapsed" desc="GET's y SET's">
+    
+
     public Long getId() {
         return id;
     }
@@ -70,12 +80,20 @@ public class DocumentoAutorizacion extends ObjetoBase implements Serializable {
         this.documento = documento;
     }
 
-    public AutorizacionRolPersona getAutorizacionRolPersona() {
-        return autorizacionRolPersona;
+    public AutorizacionRol getAutorizacionRol() {
+        return autorizacionRol;
     }
 
-    public void setAutorizacionRolPersona(AutorizacionRolPersona autorizacionRolPersona) {
-        this.autorizacionRolPersona = autorizacionRolPersona;
+    public void setAutorizacionRol(AutorizacionRol autorizacionRol) {
+        this.autorizacionRol = autorizacionRol;
+    }
+
+    public Usuario getUsuarioSeguridad() {
+        return usuarioSeguridad;
+    }
+
+    public void setUsuarioSeguridad(Usuario usuarioSeguridad) {
+        this.usuarioSeguridad = usuarioSeguridad;
     }
 
     public Estado getEstado() {
@@ -93,17 +111,20 @@ public class DocumentoAutorizacion extends ObjetoBase implements Serializable {
     public void setFecha(Date fecha) {
         this.fecha = fecha;
     }
+    
     //</editor-fold>
 
     //<editor-fold defaultstate="collapsed" desc="Metodos">
+   
     @Override
     public int hashCode() {
-        int hash = 5;
-        hash = 59 * hash + (this.id != null ? this.id.hashCode() : 0);
-        hash = 59 * hash + (this.documento != null ? this.documento.hashCode() : 0);
-        hash = 59 * hash + (this.autorizacionRolPersona != null ? this.autorizacionRolPersona.hashCode() : 0);
-        hash = 59 * hash + (this.estado != null ? this.estado.hashCode() : 0);
-        hash = 59 * hash + (this.fecha != null ? this.fecha.hashCode() : 0);
+        int hash = 3;
+        hash = 97 * hash + (this.id != null ? this.id.hashCode() : 0);
+        hash = 97 * hash + (this.documento != null ? this.documento.hashCode() : 0);
+        hash = 97 * hash + (this.autorizacionRol != null ? this.autorizacionRol.hashCode() : 0);
+        hash = 97 * hash + (this.usuarioSeguridad != null ? this.usuarioSeguridad.hashCode() : 0);
+        hash = 97 * hash + (this.estado != null ? this.estado.hashCode() : 0);
+        hash = 97 * hash + (this.fecha != null ? this.fecha.hashCode() : 0);
         return hash;
     }
 
@@ -125,7 +146,10 @@ public class DocumentoAutorizacion extends ObjetoBase implements Serializable {
         if (this.documento != other.documento && (this.documento == null || !this.documento.equals(other.documento))) {
             return false;
         }
-        if (this.autorizacionRolPersona != other.autorizacionRolPersona && (this.autorizacionRolPersona == null || !this.autorizacionRolPersona.equals(other.autorizacionRolPersona))) {
+        if (this.autorizacionRol != other.autorizacionRol && (this.autorizacionRol == null || !this.autorizacionRol.equals(other.autorizacionRol))) {
+            return false;
+        }
+        if (this.usuarioSeguridad != other.usuarioSeguridad && (this.usuarioSeguridad == null || !this.usuarioSeguridad.equals(other.usuarioSeguridad))) {
             return false;
         }
         if (this.estado != other.estado && (this.estado == null || !this.estado.equals(other.estado))) {
@@ -136,6 +160,8 @@ public class DocumentoAutorizacion extends ObjetoBase implements Serializable {
         }
         return true;
     }
+    
 
     //</editor-fold>
+
 }

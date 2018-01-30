@@ -14,7 +14,7 @@
 
 
 
-                    <ice:panelGroup visible="#{controllerBienes.bienRegistrado}"
+                    <ice:panelGroup visible="#{controllerAgregarBienes.bienRegistrado}"
                                     >
 
                         <ice:panelGroup id="tabAdicionales" 
@@ -29,7 +29,7 @@
                                     <!-- TAB Caracteristicas-->
                                     <ice:panelTab id="tabCaracteristicas" 
                                                   label="#{label['sigebi.Bien.Label.Caracteristicas']}"
-                                                  disabled="#{!controllerBienes.bienRegistrado}"
+                                                  disabled="#{!controllerAgregarBienes.bienRegistrado}"
                                                   >
 
 
@@ -42,7 +42,7 @@
                                                 </div>
                                                 <div class="col-md-12">
                                                     <ice:outputText style="color: red;" 
-                                                                    value="#{controllerBienes.mensajeCaracteristicas} "
+                                                                    value="#{controllerAgregarBienes.mensajeCaracteristicas} "
 
                                                                     />
                                                 </div>
@@ -63,13 +63,13 @@
                                                                         />
                                                                     <ice:selectOneMenu id="selCaracteristica"
                                                                                        styleClass="form-control"
-                                                                                       value="#{controllerBienes.selectCaracteristica}" 
+                                                                                       value="#{controllerAgregarBienes.selectCaracteristica}" 
                                                                                        partialSubmit="false"
-                                                                                       disabled="#{!controllerBienes.bienRegistrado}"
+                                                                                       disabled="#{!controllerAgregarBienes.bienRegistrado}"
                                                                                        >
                                                                         <f:selectItem itemLabel="Seleccionar Caracteristica" itemValue="-1"/>
 
-                                                                        <f:selectItems id="optSelCaracteristica" value="#{controllerBienes.caracteristicasOptions}"/>
+                                                                        <f:selectItems id="optSelCaracteristica" value="#{controllerAgregarBienes.caracteristicasOptions}"/>
 
                                                                     </ice:selectOneMenu>
                                                                 </div>
@@ -86,9 +86,9 @@
                                                                         />
                                                                     <ice:inputText id="txtCaracteristicaDesc" 
                                                                                    styleClass="form-control" 
-                                                                                   value="#{controllerBienes.descCaracteristica}" 
+                                                                                   value="#{controllerAgregarBienes.descCaracteristica}" 
                                                                                    required="true" 
-                                                                                   readonly="#{!controllerBienes.bienRegistrado}"
+                                                                                   readonly="#{!controllerAgregarBienes.bienRegistrado}"
                                                                                    partialSubmit="true">
                                                                     </ice:inputText>
                                                                 </div>
@@ -100,12 +100,12 @@
                                                         <div class="row">
                                                             <div class="col-md-6">
                                                                 <ice:commandButton id="btnGuardarCaracteristica" 
-                                                                                   value="#{label['sigebi.Bien.Label.SelCaracterist']}"  
+                                                                                   value="#{label['sigebi.Bien.Label.RegistCaracterist']}"  
                                                                                    partialSubmit="true"
                                                      
                                                                                    styleClass="boton" 
-                                                                                   disabled="#{!controllerBienes.bienRegistrado}"
-                                                                                   action="#{controllerBienes.guardarCaracteristica}"/>
+                                                                                   disabled="#{!controllerAgregarBienes.bienRegistrado}"
+                                                                                   action="#{controllerAgregarBienes.guardarCaracteristica}"/>
 
                                                             </div>
                                                         </div>
@@ -119,7 +119,7 @@
                                                 <div class="col-md-6">
 
                                                     <ice:dataTable id="caracteristicasLista"
-                                                                   value="#{controllerBienes.caracteristicas}"
+                                                                   value="#{controllerAgregarBienes.caracteristicas}"
                                                                    var="caracteristica"
                                                                    paginator="true"
                                                                    paginatorPosition="bottom"
@@ -161,7 +161,7 @@
                                                                                style="float:right; margin-top:2%" 
                                                                                styleClass="boton" 
                                                                                partialSubmit="true" 
-                                                                               actionListener="#{controllerBienes.modificarCaracteristica}"
+                                                                               actionListener="#{controllerAgregarBienes.modificarCaracteristica}"
                                                                                value="Detalle"  >
                                                                 <f:attribute id="caracteristicaSelccionada" name="caracteristicaSelccionada"  value="#{caracteristica}"/>
                                                             </ice:commandButton>
@@ -177,7 +177,7 @@
                                     
                                     <!-- TAB GARANTIA -->
                                     <ice:panelTab id="tabGarantia" 
-                                                  disabled="#{!controllerBienes.bienRegistrado}"
+                                                  disabled="#{!controllerAgregarBienes.bienRegistrado}"
                                                   label="Garantía">
 
 
@@ -193,12 +193,12 @@
                                             </div>
                                             <div class="row">
                                                 <div class="col-md-12">
-                                                    <ice:outputText style="color: red;" value="#{controllerBienes.garantiaMensajeError} "/>
+                                                    <ice:outputText style="color: red;" value="#{controllerAgregarBienes.garantiaMensajeError} "/>
                                                 </div>
                                             </div>
                                             <div class="row">
                                                 <div class="col-md-12">
-                                                    <ice:outputText style="color: green;" value="#{controllerBienes.garantiaMensajeExito} "/>
+                                                    <ice:outputText style="color: green;" value="#{controllerAgregarBienes.garantiaMensajeExito} "/>
                                                 </div>
                                             </div>
                                             <div class="row" style="padding-bottom: 5px" >
@@ -211,7 +211,7 @@
                                                                          renderAsPopup="true" 
                                                                          renderMonthAsDropdown="true"
                                                                          title="Fecha Inicio Garantia"
-                                                                         value="#{controllerBienes.garantiaFecIni}">
+                                                                         value="#{controllerAgregarBienes.garantiaFecIni}">
                                                         <f:convertDateTime pattern="dd/MM/yyyy" timeZone="GMT-6:00" />
                                                     </ice:selectInputDate>
 
@@ -225,7 +225,7 @@
                                                                          renderAsPopup="true" 
                                                                          renderMonthAsDropdown="true"
                                                                          title="Fecha Inicio Garantia"
-                                                                         value="#{controllerBienes.garantiaFecFin}">
+                                                                         value="#{controllerAgregarBienes.garantiaFecFin}">
                                                         <f:convertDateTime pattern="dd/MM/yyyy" timeZone="GMT-6:00" />
                                                     </ice:selectInputDate>
 
@@ -241,7 +241,7 @@
                                                         />
                                                     <ice:inputTextarea id="txtDescripcionGarant" 
                                                                        styleClass="form-control" 
-                                                                       value="#{controllerBienes.garantiaDesc}"
+                                                                       value="#{controllerAgregarBienes.garantiaDesc}"
                                                                        required="false"
                                                                        style="resize: none;"
                                                                        maxlength="150"
@@ -261,7 +261,7 @@
                                                                        style="margin: 0 10px"
                                                                        partialSubmit="true"
                                                                        styleClass="boton" 
-                                                                       action="#{controllerBienes.guardarGarantia}"/>
+                                                                       action="#{controllerAgregarBienes.guardarGarantia}"/>
                                                 </div>
 
                                             </div>
@@ -279,16 +279,10 @@
 
                                     <!-- TAB NOTAS -->
                                     <ice:panelTab id="tabNotas" 
-                                                  disabled="#{!controllerBienes.bienRegistrado}"
+                                                  disabled="#{!controllerAgregarBienes.bienRegistrado}"
                                                   label="#{label['sigebi.Bien.Label.tabNotas']}">
 
                                         <div>
-                                            <div class="row">
-
-                                                <div class="col-md-12">
-                                                    <ice:outputText style="color: red;" value="#{controllerBienes.mensajeNota} "/>
-                                                </div>
-                                            </div>
 
                                             <div class="row"  style="padding-bottom: 30px">
 
@@ -301,7 +295,7 @@
                                                             />
                                                         <ice:inputText id="txtNotaDesc" 
                                                                        styleClass="form-control" 
-                                                                       value="#{controllerBienes.notaDetalle}" 
+                                                                       value="#{controllerAgregarBienes.notaDetalle}" 
                                                                        required="false" 
                                                                        partialSubmit="true">
                                                         </ice:inputText>
@@ -312,7 +306,7 @@
                                                                        value="#{label['sigebi.Bien.Btn.btnIngresarNota']}"  
                                                                        partialSubmit="true"
                                                                        styleClass="boton" 
-                                                                       action="#{controllerBienes.guardarNota}"/>
+                                                                       action="#{controllerAgregarBienes.guardarNota}"/>
 
 
                                                 </div>
@@ -321,7 +315,7 @@
                                                     <!-- LISTAR NOTAS-->
 
                                                     <ice:dataTable id="notasLista"
-                                                                   value="#{controllerBienes.notas}"
+                                                                   value="#{controllerAgregarBienes.notas}"
                                                                    var="nota"
                                                                    paginator="true"
                                                                    paginatorPosition="bottom"
@@ -351,7 +345,7 @@
                                                                                style="float:right;margin-top:2%" 
                                                                                styleClass="boton" 
                                                                                partialSubmit="true" 
-                                                                               actionListener="#{controllerBienes.eliminarNota}"
+                                                                               actionListener="#{controllerAgregarBienes.eliminarNota}"
                                                                                value="#{label['sigebi.Bien.Label.Eliminar']}"  >
                                                                 <f:attribute id="notaSeleccionada" name="notaSeleccionada"  value="#{nota}"/>
 
@@ -379,7 +373,7 @@
 
                                     <!-- TAB ARCHIVOS -->
                                     <ice:panelTab id="tabArchivos" 
-                                                  disabled="#{!controllerBienes.bienRegistrado}"
+                                                  disabled="#{!controllerAgregarBienes.bienRegistrado}"
                                                   label="Archivos"
                                                   >
 
@@ -392,12 +386,12 @@
                                             </div>
                                             <div class="row">
                                                 <div class="col-md-12">
-                                                    <ice:outputText style="color: red;" value="#{controllerBienes.mensajeAdjuntos} "/>
+                                                    <ice:outputText style="color: red;" value="#{controllerAgregarBienes.mensajeAdjuntos} "/>
                                                 </div>
                                             </div>
                                             <div class="row">
                                                 <div class="col-md-12">
-                                                    <ice:outputText style="color: green;" value="#{controllerBienes.mensajeAdjuntosExito} "/>
+                                                    <ice:outputText style="color: green;" value="#{controllerAgregarBienes.mensajeAdjuntosExito} "/>
                                                 </div>
                                             </div>
 
@@ -417,7 +411,7 @@
                                                                     <label class="control-label" for="txtDescripcionAdjunto">Descripción</label>
                                                                     <ice:inputTextarea id="txtDescripcionAdjunto" 
                                                                                        styleClass="form-control" 
-                                                                                       value="#{controllerBienes.adjuntoDescripcion}"
+                                                                                       value="#{controllerAgregarBienes.adjuntoDescripcion}"
                                                                                        required="true"
                                                                                        style="resize: none;"
                                                                                        partialSubmit="true"
@@ -457,7 +451,7 @@
                                                                                text-align: center;
                                                                                text-shadow: none;
                                                                                "
-                                                                               actionListener="#{controllerBienes.checkFileLocation}"
+                                                                               actionListener="#{controllerAgregarBienes.checkFileLocation}"
                                                                                >
                                                                 </ice:inputFile>
                                                             </div>
@@ -475,7 +469,7 @@
                                                     <!-- LISTAR ARCHIVOS-->
 
                                                     <ice:dataTable id="adjuntosLista"
-                                                                   value="#{controllerBienes.adjuntos}"
+                                                                   value="#{controllerAgregarBienes.adjuntos}"
                                                                    var="adjunto"
                                                                    paginator="true"
                                                                    paginatorPosition="bottom"
@@ -513,7 +507,7 @@
                                                                                style="float:right;margin-top:2%" 
                                                                                styleClass="boton" 
                                                                                partialSubmit="true" 
-                                                                               actionListener="#{controllerBienes.adjuntoMostrarDetalle}"
+                                                                               actionListener="#{controllerAgregarBienes.adjuntoMostrarDetalle}"
                                                                                value="Detalle"  >
                                                                 <f:attribute id="adjuntoSeleccionado" 
                                                                              name="adjuntoSeleccionado"  
@@ -550,7 +544,7 @@
 
                                     <!-- TAB ACCESORIOS -->
                                     <ice:panelTab id="tabAccesorios" 
-                                                  disabled="#{!controllerBienes.bienRegistrado}"
+                                                  disabled="#{!controllerAgregarBienes.bienRegistrado}"
                                                   label="Accesorios"
                                                   >
 
@@ -563,12 +557,12 @@
                                             </div>
                                             <div class="row">
                                                 <div class="col-md-12">
-                                                    <ice:outputText style="color: green;" value="#{controllerBienes.mensajeAccesExito} "/>
+                                                    <ice:outputText style="color: green;" value="#{controllerAgregarBienes.mensajeAccesExito} "/>
                                                 </div>
                                             </div>
                                             <div class="row">
                                                 <div class="col-md-12">
-                                                    <ice:outputText style="color: red;" value="#{controllerBienes.mensajeAccesError} "/>
+                                                    <ice:outputText style="color: red;" value="#{controllerAgregarBienes.mensajeAccesError} "/>
                                                 </div>
                                             </div>
 
@@ -587,7 +581,7 @@
 
                                                         <ice:inputText  id="txtAccesorioDesc" 
                                                                         styleClass="form-control" 
-                                                                        value="#{controllerBienes.accesorio.detalle}" 
+                                                                        value="#{controllerAgregarBienes.accesorio.detalle}" 
                                                                         required="true" 
                                                                         partialSubmit="false">
                                                         </ice:inputText>
@@ -598,7 +592,7 @@
                                                                        value="Guardar Accesorio"  
                                                                        partialSubmit="true"
                                                                        styleClass="boton" 
-                                                                       action="#{controllerBienes.guardarAccesorio}"/>
+                                                                       action="#{controllerAgregarBienes.guardarAccesorio}"/>
 
 
                                                 </div>
@@ -607,7 +601,7 @@
                                                     <!-- LISTAR ACCESORIOS-->
 
                                                     <ice:dataTable id="accesoriosLista"
-                                                                   value="#{controllerBienes.accesorios}"
+                                                                   value="#{controllerAgregarBienes.accesorios}"
                                                                    var="accesorio"
                                                                    paginator="true"
                                                                    paginatorPosition="bottom"
@@ -635,7 +629,7 @@
                                                                                style="float:right;margin-top:2%" 
                                                                                styleClass="boton" 
                                                                                partialSubmit="true" 
-                                                                               actionListener="#{controllerBienes.eliminarAccesorio}"
+                                                                               actionListener="#{controllerAgregarBienes.eliminarAccesorio}"
                                                                                value="Eliminar"  >
                                                                 <f:attribute id="accesorioSeleccionado" name="accesorioSeleccionado"  value="#{accesorio}"/>
 
@@ -683,7 +677,7 @@
         <!-- Modal Proveedores -->
         <ice:panelPopup
             modal="true" 
-            visible="#{controllerBienes.proveedoresVisible}"
+            visible="#{controllerAgregarBienes.proveedoresVisible}"
             rendered="true" 
             styleClass="popup"
             >
@@ -701,7 +695,7 @@
                     <!-- LISTAR PROVEEDORES -->
 
                     <ice:dataTable id="provTabla"
-                                   value="#{controllerBienes.proveedores}"
+                                   value="#{controllerAgregarBienes.proveedores}"
                                    var="prov"
                                    paginator="true"
                                    paginatorPosition="bottom"
@@ -717,9 +711,9 @@
                             <f:facet name="footer">
                                 <ice:inputText id="filtrIdentificacion"
                                                style="width: 130px;"
-                                               value="#{controllerBienes.provIdentificacion}"                                   
+                                               value="#{controllerAgregarBienes.provIdentificacion}"                                   
                                                partialSubmit="true"
-                                               valueChangeListener="#{controllerBienes.filtroProveedor}"/>
+                                               valueChangeListener="#{controllerAgregarBienes.filtroProveedor}"/>
                             </f:facet>
                             <h:outputText id="idProveedor" value="#{prov.identificacion}"/>
                         </ice:column>
@@ -735,9 +729,9 @@
                             <f:facet name="footer">
                                 <ice:inputText id="filtroNombre"
                                                style="width: 130px;"
-                                               value="#{controllerBienes.provNombre}"                                   
+                                               value="#{controllerAgregarBienes.provNombre}"                                   
                                                partialSubmit="true"
-                                               valueChangeListener="#{controllerBienes.filtroProveedor}"/>
+                                               valueChangeListener="#{controllerAgregarBienes.filtroProveedor}"/>
                             </f:facet>
                             <h:outputText id="lblNomb" value="#{prov.nombre}"/>
                             <h:outputText id="lblApell" value="#{ prov.primerApellido }"/>
@@ -751,7 +745,7 @@
                                                style="float:right;margin-top:2%" 
                                                styleClass="boton" 
                                                partialSubmit="true" 
-                                               actionListener="#{controllerBienes.selecProveedor}"
+                                               actionListener="#{controllerAgregarBienes.selecProveedor}"
                                                value="Seleccionar"  >
                                 <f:attribute id="provSeleccionado" 
                                              name="provSeleccionado"  
@@ -770,7 +764,7 @@
                     <span class="alineado_derecha">
                         <ice:commandButton id="btn_cancelar"
                                            partialSubmit="true"
-                                           action="#{controllerBienes.cerrarProveedores}"
+                                           action="#{controllerAgregarBienes.cerrarProveedores}"
                                            styleClass="boton"  value="Regresar" />
                     </span>
                     <br/><br/>
@@ -779,79 +773,10 @@
 
         </ice:panelPopup>
 
-        <!-- Modal Ubicaciones -->
-        <ice:panelPopup
-            modal="true" 
-            visible="#{controllerBienes.ubicacionVisible}"
-            rendered="true" 
-            styleClass="popup"
-            >
-
-            <f:facet name="header">
-                <ice:outputFormat 
-                    value="#{label['sigebi.Modal.Ubicaciones.Titulo']}"
-                    />
-            </f:facet> 
-
-            <f:facet name="body">
-                <fieldset class="panel_Container" >
-
-                    <div class="container" style="margin-top: 30px;">
-                        <div class="row">
-                            <div class="col-md-12">
-                                <h4>
-                                    
-                                </h4>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-2"></div>
-                            <div class="col-md-10">
-
-                                <div class="form-group">
-                                    <label class="control-label" for="selUbicacion">* Ubicación</label>
-                                    
-                                    <ice:selectOneMenu id="selUbicacion"
-                                                       styleClass="form-control"
-                                                       value="#{controllerBienes.selectUbicacion}" 
-                                                       partialSubmit="true"
-                                                       valueChangeListener="#{controllerBienes.ubicacionSelectCambio}"
-                                                       >
-                                        <f:selectItem itemLabel="Seleccione una Ubicación" itemValue="-1"/>
-                                        
-                                        <f:selectItems id="optSelUbicacion" value="#{controllerBienes.ubicacionOptions}"/>
-                                        
-                                    </ice:selectOneMenu>
-                                </div>
-                            </div>
-
-                        </div>
-                        <div class="row">
-                            <div class="col-md-12 align-content-center">
-
-                                <ice:commandButton id="btnCerrarUbicacion"
-                                                   partialSubmit="true"
-                                                   action="#{controllerBienes.cerrarUbicacion}"
-                                                   styleClass="boton"
-                                                   style="float: right"
-                                                   value="Cerrar" />
-                            </div>
-                        </div>
-
-                    </div>
-
-                    <br />
-                    <br />
-
-                </fieldset>       
-            </f:facet>  
-
-        </ice:panelPopup>
-
         <!-- Modal Eliminar Nota -->
         <ice:panelPopup
             modal="true" 
-            visible="#{controllerBienes.eliminarNotaVisible}"
+            visible="#{controllerAgregarBienes.eliminarNotaVisible}"
             rendered="true" 
             styleClass="popup"
             >
@@ -872,7 +797,7 @@
                         <div class="row">
                             <div class="col-md-2"></div>
                             <div class="col-md-10">
-                                <ice:inputText value="#{controllerBienes.nota.detalle}"/>
+                                <ice:inputText value="#{controllerAgregarBienes.nota.detalle}"/>
                             </div>
 
                         </div>
@@ -881,7 +806,7 @@
 
                                 <ice:commandButton id="btnCancelarNota"
                                                    partialSubmit="true"
-                                                   action="#{controllerBienes.eliminarNotaCancelar}"
+                                                   action="#{controllerAgregarBienes.eliminarNotaCancelar}"
                                                    styleClass="boton"  
                                                    value="Cancelar" />
                             </div>
@@ -889,7 +814,7 @@
 
                                 <ice:commandButton id="btnConfirmarEliminarNota"
                                                    partialSubmit="true"
-                                                   action="#{controllerBienes.eliminarNotaConfirmar}"
+                                                   action="#{controllerAgregarBienes.eliminarNotaConfirmar}"
                                                    styleClass="boton"  
                                                    value="Eliminar" />
                             </div>
@@ -910,7 +835,7 @@
         <ice:panelPopup
             id="modalCaracterist"
             modal="true" 
-            visible="#{controllerBienes.modifCaracterVisible}"
+            visible="#{controllerAgregarBienes.modifCaracterVisible}"
             rendered="true" 
             styleClass="popup"
             >
@@ -925,13 +850,13 @@
                     <div class="container" style="margin-top: 30px;">
                         <div class="row">
                             <div class="col-md-12">
-                                <h4>Caracteristica: <ice:outputText value=" #{controllerBienes.caracteristica.detalle}"/></h4>
+                                <h4>Caracteristica: <ice:outputText value=" #{controllerAgregarBienes.caracteristica.detalle}"/></h4>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-md-2"></div>
                             <div class="col-md-10">
-                                <ice:inputText value="#{controllerBienes.caracteristica.detalle}"
+                                <ice:inputText value="#{controllerAgregarBienes.caracteristica.detalle}"
                                                styleClass="form-control"
                                                />
                             </div>
@@ -942,7 +867,7 @@
 
                                 <ice:commandButton id="btnCancelarCaract"
                                                    partialSubmit="true"
-                                                   action="#{controllerBienes.cancelarCaracteristica}"
+                                                   action="#{controllerAgregarBienes.cancelarCaracteristica}"
                                                    styleClass="boton"  
                                                    value="Cancelar" />
                             </div>
@@ -950,7 +875,7 @@
 
                                 <ice:commandButton id="btnEliminarCaract"
                                                    partialSubmit="true"
-                                                   action="#{controllerBienes.elminimarCaracteristica}"
+                                                   action="#{controllerAgregarBienes.elminimarCaracteristica}"
                                                    styleClass="boton"  
                                                    value="Eliminar" />
                             </div>
@@ -958,7 +883,7 @@
 
                                 <ice:commandButton id="btnactualizarCaract"
                                                    partialSubmit="true"
-                                                   action="#{controllerBienes.actualizarCaracteristica}"
+                                                   action="#{controllerAgregarBienes.actualizarCaracteristica}"
                                                    styleClass="boton"  
                                                    value="Modificar" />
                             </div>
@@ -978,7 +903,7 @@
         <!-- Modal Detalle Adjunto -->
         <ice:panelPopup
             modal="true" 
-            visible="#{controllerBienes.mostrarAdjunto}"
+            visible="#{controllerAgregarBienes.mostrarAdjunto}"
             rendered="true" 
             styleClass="popup"
             >
@@ -1004,7 +929,7 @@
                                     <label class="control-label" for="txtAdjuntoNombre">Nombre: </label>
                                     <ice:inputText id="txtAdjuntoNombre" 
                                                    styleClass="form-control" 
-                                                   value="#{controllerBienes.adjunto.nombre}" 
+                                                   value="#{controllerAgregarBienes.adjunto.nombre}" 
                                                    readonly="true"
                                                    partialSubmit="false">
                                     </ice:inputText>
@@ -1020,7 +945,7 @@
                                     <label class="control-label" for="txtAdjuntoTamano">Tamaño: </label>
                                     <ice:inputText id="txtAdjuntoTamano" 
                                                    styleClass="form-control" 
-                                                   value="#{controllerBienes.adjunto.tamano}" 
+                                                   value="#{controllerAgregarBienes.adjunto.tamano}" 
                                                    readonly="true"
                                                    partialSubmit="false">
                                     </ice:inputText>
@@ -1038,7 +963,7 @@
 
                                     <ice:inputTextarea id="txtAdjuntoDetalle" 
                                                        styleClass="form-control" 
-                                                       value="#{controllerBienes.adjunto.detalle}"
+                                                       value="#{controllerAgregarBienes.adjunto.detalle}"
                                                        style="resize: none;"
                                                        partialSubmit="false"
                                                        readonly="true"
@@ -1049,16 +974,16 @@
 
                             </div>
                             <div class="col-sm-6 center-block">
-                                <ice:outputLink   id="imgFichero" value="#{controllerBienes.adjuntoDescargar}" download="#{controllerBienes.adjuntoNombreDescarga}"  target="_blank">
+                                <ice:outputLink   id="imgFichero" value="#{controllerAgregarBienes.adjuntoDescargar}" download="#{controllerAgregarBienes.adjuntoNombreDescarga}"  target="_blank">
                                     <ice:graphicImage  alt="Registro no encontrado" 
-                                                       url="#{controllerBienes.adjuntoMostrar}" 
+                                                       url="#{controllerAgregarBienes.adjuntoMostrar}" 
                                                        style="border:0;
                                                        max-height: 90px;
                                                        max-width: 130px;"/>
                                 </ice:outputLink>
                                 <ice:commandButton id="btnAdjuntoDescargar"
                                                    value="Download" 
-                                                   action="#{controllerBienes.downloadFile}" 
+                                                   action="#{controllerAgregarBienes.downloadFile}" 
                                                    styleClass="boton center-block"
                                                    partialSubmit="true"
                                                    />
@@ -1069,7 +994,7 @@
 
                                 <ice:commandButton id="btnConfirmarEliminarAdjunto"
                                                    partialSubmit="true"
-                                                   action="#{controllerBienes.adjuntoEliminarConfirmar}"
+                                                   action="#{controllerAgregarBienes.adjuntoEliminarConfirmar}"
                                                    styleClass="boton"  
                                                    value="Eliminar" />
                             </div>
@@ -1077,7 +1002,7 @@
 
                                 <ice:commandButton id="btnCancelarAdjunto"
                                                    partialSubmit="true"
-                                                   action="#{controllerBienes.adjuntoEliminarCancelar}"
+                                                   action="#{controllerAgregarBienes.adjuntoEliminarCancelar}"
                                                    styleClass="boton"  
                                                    value="Cancelar" />
                             </div>
@@ -1098,7 +1023,7 @@
         <!-- Modal Eliminar Accesorio -->
         <ice:panelPopup
             modal="true" 
-            visible="#{controllerBienes.eliminarAccesorioVisible}"
+            visible="#{controllerAgregarBienes.eliminarAccesorioVisible}"
             rendered="true" 
             styleClass="popup"
             >
@@ -1119,7 +1044,7 @@
                         <div class="row">
                             <div class="col-md-2"></div>
                             <div class="col-md-10">
-                                <ice:inputText value="#{controllerBienes.accesorio.detalle}" 
+                                <ice:inputText value="#{controllerAgregarBienes.accesorio.detalle}" 
                                                styleClass="form-control"
                                                readonly="true"
                                                />
@@ -1131,7 +1056,7 @@
 
                                 <ice:commandButton id="btnCancelarAccesorio"
                                                    partialSubmit="true"
-                                                   action="#{controllerBienes.eliminarAccesorioCancelar}"
+                                                   action="#{controllerAgregarBienes.eliminarAccesorioCancelar}"
                                                    styleClass="boton"  
                                                    value="Cancelar" />
                             </div>
@@ -1139,7 +1064,7 @@
 
                                 <ice:commandButton id="btnConfirmarEliminarAccesorio"
                                                    partialSubmit="true"
-                                                   action="#{controllerBienes.eliminarAccesorioConfirmar}"
+                                                   action="#{controllerAgregarBienes.eliminarAccesorioConfirmar}"
                                                    styleClass="boton"  
                                                    value="Eliminar" />
                             </div>
@@ -1160,7 +1085,7 @@
         <!-- Modal Agregar Observacion -->
         <ice:panelPopup
             modal="true" 
-            visible="#{controllerBienes.panelObservaVisible}"
+            visible="#{controllerAgregarBienes.panelObservaVisible}"
             rendered="true" 
             styleClass="popup"
             >
@@ -1183,7 +1108,7 @@
                                 <ice:inputTextarea  id="observacionCliente" 
                                                     style="width: 430px;" 
                                                     cols="2" 
-                                                    value="#{controllerBienes.observacionCliente}"/>
+                                                    value="#{controllerAgregarBienes.observacionCliente}"/>
                             </div>
                         </div>
                         <br />
@@ -1192,7 +1117,7 @@
 
                                 <ice:commandButton id="btnCancelarObservacion"
                                                    partialSubmit="true"
-                                                   action="#{controllerBienes.cerrarPanelObserva}"
+                                                   action="#{controllerAgregarBienes.cerrarPanelObserva}"
                                                    styleClass="boton"  
                                                    value="#{label['label.cancelar']}" />
                             </div>
@@ -1200,7 +1125,7 @@
 
                                 <ice:commandButton id="btnConfirmarObservacion"
                                                    partialSubmit="true"
-                                                   action="#{controllerBienes.rechazarBien}"
+                                                   action="#{controllerAgregarBienes.rechazarBien}"
                                                    styleClass="boton"  
                                                    value="#{label['label.aceptar']}" />
                             </div>

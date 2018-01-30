@@ -3,10 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package cr.ac.ucr.sigebi.entities;
+package cr.ac.ucr.sigebi.domain;
 
 import cr.ac.ucr.framework.seguridad.ObjetoBase;
-import cr.ac.ucr.sigebi.domain.Estado;
 import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -22,10 +21,10 @@ import javax.persistence.Table;
  *
  * @author jorge.serrano
  */
-@Entity(name = "TrasladoDetalleEntity")
+@Entity(name = "TrasladoDetalle")
 @Table(name = "SIGEBI_OAF.SGB_TRASLADO_DETALLE")
 @SequenceGenerator(name="SGB_SQ_TRASLADO_DETALLE", sequenceName = "SIGEBI_OAF.SGB_SQ_TRASLADO_DETALLE", initialValue=1, allocationSize=1)
-public class TrasladoDetalleEntity  extends ObjetoBase implements Serializable  {
+public class TrasladoDetalle  extends ObjetoBase implements Serializable  {
     
     private static final long serialVersionUID = 1L;
     
@@ -38,12 +37,12 @@ public class TrasladoDetalleEntity  extends ObjetoBase implements Serializable  
     
     @ManyToOne
     @JoinColumn(name = "ID_TRASLADO", referencedColumnName = "ID_TRASLADO")
-    private TrasladoEntity idTraslado;
+    private Traslado idTraslado;
     
     
     @ManyToOne
     @JoinColumn(name = "ID_BIEN", referencedColumnName = "ID_BIEN")
-    private ViewBienEntity idBien;
+    private Bien idBien;
     
     @ManyToOne
     @JoinColumn(name = "ID_ESTADO", referencedColumnName = "ID_ESTADO")
@@ -55,11 +54,11 @@ public class TrasladoDetalleEntity  extends ObjetoBase implements Serializable  
     
     //<editor-fold defaultstate="collapsed" desc="Constructor">
 
-    public TrasladoDetalleEntity() {
+    public TrasladoDetalle() {
     }
 
-    public TrasladoDetalleEntity( TrasladoEntity idTraslado
-                                , ViewBienEntity idBien
+    public TrasladoDetalle( Traslado idTraslado
+                                , Bien idBien
                                 ,  Estado idEstado) {
         this.idTraslado = idTraslado;
         this.idBien = idBien;
@@ -81,19 +80,19 @@ public class TrasladoDetalleEntity  extends ObjetoBase implements Serializable  
         this.idTrasladoDetalle = idTrasladoDetalle;
     }
 
-    public TrasladoEntity getIdTraslado() {
+    public Traslado getIdTraslado() {
         return idTraslado;
     }
 
-    public void setIdTraslado(TrasladoEntity idTraslado) {
+    public void setIdTraslado(Traslado idTraslado) {
         this.idTraslado = idTraslado;
     }
 
-    public ViewBienEntity getIdBien() {
+    public Bien getIdBien() {
         return idBien;
     } 
 
-    public void setIdBien(ViewBienEntity idBien) {
+    public void setIdBien(Bien idBien) {
         this.idBien = idBien;
     }
 
@@ -121,10 +120,10 @@ public class TrasladoDetalleEntity  extends ObjetoBase implements Serializable  
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof TrasladoDetalleEntity)) {
+        if (!(object instanceof TrasladoDetalle)) {
             return false;
         }
-        TrasladoDetalleEntity other = (TrasladoDetalleEntity) object;
+        TrasladoDetalle other = (TrasladoDetalle) object;
         if ((this.idTrasladoDetalle == null && other.idTrasladoDetalle != null) || (this.idTrasladoDetalle != null && !this.idTrasladoDetalle.equals(other.idTrasladoDetalle))) {
             return false;
         }

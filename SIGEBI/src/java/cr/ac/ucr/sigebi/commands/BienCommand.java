@@ -36,7 +36,7 @@ public class BienCommand {
     private String descripcion;
     private Integer cantidad;
     private Boolean capitalizable;
-    private Lote lote; 
+    private Lote lote;
     private Categoria categoria;
     private SubCategoria subCategoria;
     private Clasificacion clasificacion;
@@ -54,7 +54,7 @@ public class BienCommand {
     private Ubicacion ubicacion;
     private String descripcionUbicacion;
     private Integer referencia;
-    private Identificacion identificacion;    
+    private Identificacion identificacion;
 
     private Tipo tipo;
     private Tipo origen;
@@ -65,64 +65,55 @@ public class BienCommand {
     private List<Accesorio> accesorios;
     private List<BienCaracteristica> caracteristicas;
     //</editor-fold>
-    
-    //<editor-fold defaultstate="collapsed" desc="Constructores">
-    public BienCommand() {}
 
-    public BienCommand(Long id, String descripcion, Integer cantidad, Boolean capitalizable, Lote lote, Categoria categoria, SubCategoria subCategoria, Clasificacion clasificacion, SubClasificacion subClasificacion, ViewResumenBien resumenBien, UnidadEjecutora unidadEjecutora, Proveedor proveedor, Moneda moneda, Double costo, Date fechaAdquisicion, Integer persona, Date inicioGarantia, Date finGarantia, String descripcionGarantia, Ubicacion ubicacion, String descripcionUbicacion, Integer referencia, Identificacion identificacion, Tipo tipo, Tipo origen, Estado estadoInterno, Estado estado, List<Accesorio> accesorios, List<BienCaracteristica> caracteristicas) {
-        this.id = id;
-        this.descripcion = descripcion;
-        this.cantidad = cantidad;
-        this.capitalizable = capitalizable;
-        this.lote = lote;
-        this.categoria = categoria;
-        this.subCategoria = subCategoria;
-        this.clasificacion = clasificacion;
-        this.subClasificacion = subClasificacion;
-        this.resumenBien = resumenBien;
-        this.unidadEjecutora = unidadEjecutora;
-        this.proveedor = proveedor;
-        this.moneda = moneda;
-        this.costo = costo;
-        this.fechaAdquisicion = fechaAdquisicion;
-        this.persona = persona;
-        this.inicioGarantia = inicioGarantia;
-        this.finGarantia = finGarantia;
-        this.descripcionGarantia = descripcionGarantia;
-        this.ubicacion = ubicacion;
-        this.descripcionUbicacion = descripcionUbicacion;
-        this.referencia = referencia;
-        this.identificacion = identificacion;
-        this.tipo = tipo;
-        this.origen = origen;
-        this.estadoInterno = estadoInterno;
-        this.estado = estado;
-        this.accesorios = accesorios;
-        this.caracteristicas = caracteristicas;
+    //<editor-fold defaultstate="collapsed" desc="Constructores">
+    public BienCommand() {
+        this.lote = new Lote();
+        this.categoria = new Categoria();
+        this.subCategoria = new SubCategoria();
+        this.clasificacion = new Clasificacion();
+        this.subClasificacion = new SubClasificacion();
+        this.unidadEjecutora = new UnidadEjecutora();
+        this.proveedor = new Proveedor();
+        this.moneda = new Moneda();
+        this.ubicacion = new Ubicacion();
+        this.identificacion = new Identificacion();
+        this.origen = new Tipo();
+        this.tipo = new Tipo();
+        this.estadoInterno = new Estado();
+        this.estado = new Estado();
+
     }
-    
+
     public BienCommand(Bien bien) {
+        this.lote = bien.getLote() != null ? bien.getLote() : new Lote();
+        this.categoria = new Categoria();
+        this.subCategoria = bien.getSubCategoria() != null ? bien.getSubCategoria() : new SubCategoria();
+        this.subClasificacion = bien.getSubClasificacion() != null ? bien.getSubClasificacion() : new SubClasificacion();
+        this.clasificacion = new Clasificacion();
+        this.unidadEjecutora = bien.getUnidadEjecutora() != null ? bien.getUnidadEjecutora() : new UnidadEjecutora();
+        this.proveedor = bien.getProveedor() != null ? bien.getProveedor() : new Proveedor();
+        this.moneda = bien.getMoneda() != null ? bien.getMoneda() : new Moneda();
+        this.ubicacion = bien.getUbicacion() != null ? bien.getUbicacion() : new Ubicacion();
+        this.identificacion = bien.getIdentificacion() != null ? bien.getIdentificacion() : new Identificacion();
+        this.origen = bien.getOrigen() != null ? bien.getOrigen() : new Tipo();
+        this.estadoInterno = bien.getEstadoInterno() != null ? bien.getEstadoInterno() : new Estado();
+        this.estado = bien.getEstado() != null ? bien.getEstado() : new Estado();
+        this.tipo =  bien.getTipo() != null ? bien.getTipo() : new Tipo();
+
         this.id = bien.getId();
         this.descripcion = bien.getDescripcion();
         this.cantidad = bien.getCantidad();
         this.capitalizable = bien.getCapitalizable();
-        this.lote = bien.getLote();
-        this.subCategoria = bien.getSubCategoria();
-        this.subClasificacion = bien.getSubClasificacion();
         this.resumenBien = bien.getResumenBien();
-        this.unidadEjecutora = bien.getUnidadEjecutora();
-        this.proveedor = bien.getProveedor();
-        this.moneda = bien.getMoneda();
         this.costo = bien.getCosto();
         this.fechaAdquisicion = bien.getFechaAdquisicion();
         this.persona = bien.getPersona();
         this.inicioGarantia = bien.getInicioGarantia();
         this.finGarantia = bien.getFinGarantia();
         this.descripcionGarantia = bien.getDescripcionGarantia();
-        this.ubicacion = bien.getUbicacion();
         this.descripcionUbicacion = bien.getDescripcionUbicacion();
         this.referencia = bien.getReferencia();
-        this.identificacion = bien.getIdentificacion();
         this.tipo = bien.getTipo();
         this.origen = bien.getOrigen();
         this.estadoInterno = bien.getEstadoInterno();
@@ -131,9 +122,9 @@ public class BienCommand {
         this.caracteristicas = bien.getCaracteristicas();
     }
     //</editor-fold>
-    
+
     //<editor-fold defaultstate="collapsed" desc="Metodos">
-    public Bien getBien () {
+    public Bien getBien() {
         Bien bien = new Bien();
         bien.setId(this.id);
         bien.setDescripcion(this.descripcion);
@@ -164,10 +155,10 @@ public class BienCommand {
         return bien;
     }
     //</editor-fold>
-    
+
     //<editor-fold defaultstate="collapsed" desc="GET's y SET's">
     public String getKeyVistaOrigen() {
-        return Constantes.KEY_VISTA_ORIGEN; 
+        return Constantes.KEY_VISTA_ORIGEN;
     }
 
     public Long getId() {
@@ -217,7 +208,7 @@ public class BienCommand {
     public void setCategoria(Categoria categoria) {
         this.categoria = categoria;
     }
-    
+
     public SubCategoria getSubCategoria() {
         return subCategoria;
     }
@@ -401,6 +392,6 @@ public class BienCommand {
     public void setCaracteristicas(List<BienCaracteristica> caracteristicas) {
         this.caracteristicas = caracteristicas;
     }
-    
+
     //</editor-fold>
 }

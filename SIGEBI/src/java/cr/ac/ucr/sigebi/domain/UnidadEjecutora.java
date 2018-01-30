@@ -35,7 +35,7 @@ public class UnidadEjecutora extends ObjetoBase implements Serializable {
     private Character numeroUnidadEjecutoraSIAF;
     
     @Column(name = "COD_REFERENCIA") 
-    private Integer codigoReferencia;
+    private String codigoReferencia;
      
     @Column(name = "ID_TIPO_UNIDAD")
     private String idTipoUnidad;
@@ -86,11 +86,11 @@ public class UnidadEjecutora extends ObjetoBase implements Serializable {
         this.numeroUnidadEjecutoraSIAF = numeroUnidadEjecutoraSIAF;
     }
 
-    public Integer getCodigoReferencia() {
+    public String getCodigoReferencia() {
         return codigoReferencia;
     }
 
-    public void setCodigoReferencia(Integer codigoReferencia) {
+    public void setCodigoReferencia(String codigoReferencia) {
         this.codigoReferencia = codigoReferencia;
     }
 

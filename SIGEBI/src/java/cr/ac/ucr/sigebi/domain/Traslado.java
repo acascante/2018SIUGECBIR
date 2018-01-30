@@ -3,11 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package cr.ac.ucr.sigebi.entities;
+package cr.ac.ucr.sigebi.domain;
 
 import cr.ac.ucr.framework.seguridad.ObjetoBase;
-import cr.ac.ucr.sigebi.domain.Estado;
-import cr.ac.ucr.sigebi.domain.UnidadEjecutora;
 import java.io.Serializable;
 import java.util.Date;
 import javax.persistence.Column;
@@ -16,7 +14,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinColumns;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
@@ -26,10 +23,10 @@ import javax.persistence.Temporal;
  *
  * @author jorge.serrano
  */
-@Entity(name = "TrasladoEntity")
+@Entity(name = "Traslado")
 @Table(name = "SIGEBI_OAF.SGB_TRASLADO")
 @SequenceGenerator(name="SGB_SQ_TRASLADO", sequenceName = "SIGEBI_OAF.SGB_SQ_TRASLADO", initialValue=1, allocationSize=1)
-public class TrasladoEntity  extends ObjetoBase implements Serializable  {
+public class Traslado  extends ObjetoBase implements Serializable  {
     
     private static final long serialVersionUID = 1L;
     
@@ -45,41 +42,26 @@ public class TrasladoEntity  extends ObjetoBase implements Serializable  {
     private Date fecha;
     
     @ManyToOne
-    @JoinColumns ({
-        @JoinColumn(name="NUM_UNIDAD_EJEC", referencedColumnName = "ID"),
-        @JoinColumn(name="EMPRESA_ORIGEN", referencedColumnName = "ID_EMPRESA")
-    })
+    @JoinColumn(name = "NUM_UNIDAD_EJEC", referencedColumnName = "ID")
     private UnidadEjecutora numUnidadOrigen;
-//    @Column(name = "NUM_UNIDAD_EJEC") // VARCHAR2 (500 Byte)
-//    private Integer numUnidadOrigen;
-//    @Column(name = "EMPRESA_ORIGEN") // VARCHAR2 (500 Byte)
-//    private Integer empresaDestino;
     
             
     @ManyToOne
     @JoinColumn(name = "ID_PERSONA", referencedColumnName = "ID_USUARIO")
-    private UsuarioEntity idPersona;
+    private Usuario idPersona;
     
 
     @ManyToOne
-    @JoinColumns ({
-        @JoinColumn(name="NUM_UNIDAD_EJEC_RECIBE", referencedColumnName = "ID_UNIDAD_EJECUTORA"),
-        @JoinColumn(name="EMPRESA_DESTINO", referencedColumnName = "ID_EMPRESA")
-    })
+    @JoinColumn(name = "NUM_UNIDAD_EJEC_RECIBE", referencedColumnName = "ID")
     private UnidadEjecutora numUnidadDestino;
-//    @Column(name = "NUM_UNIDAD_EJEC_RECIBE") // VARCHAR2 (500 Byte)
-//    private Integer numUnidadDestino;
-//    @Column(name = "EMPRESA_DESTINO") // VARCHAR2 (500 Byte)
-//    private Integer empresaDestino;
-//    
     
     @ManyToOne
     @JoinColumn(name = "ID_PERSONA_RECIBE", referencedColumnName = "ID_USUARIO")
-    private UsuarioEntity idPersonaRecibe;
+    private Usuario idPersonaRecibe;
     
     @ManyToOne
     @JoinColumn(name = "ID_UBICACION", referencedColumnName = "ID_UBICACION")
-    private UbicacionEntity idUbicacion;
+    private Ubicacion idUbicacion;
     
     @ManyToOne
     @JoinColumn(name = "ID_ESTADO", referencedColumnName = "ID_ESTADO")
@@ -117,11 +99,11 @@ public class TrasladoEntity  extends ObjetoBase implements Serializable  {
         this.numUnidadOrigen = numUnidadOrigen;
     }
 
-    public UsuarioEntity getIdPersona() {
+    public Usuario getIdPersona() {
         return idPersona;
     }
 
-    public void setIdPersona(UsuarioEntity idPersona) {
+    public void setIdPersona(Usuario idPersona) {
         this.idPersona = idPersona;
     }
 
@@ -133,19 +115,19 @@ public class TrasladoEntity  extends ObjetoBase implements Serializable  {
         this.numUnidadDestino = numUnidadDestino;
     }
 
-    public UsuarioEntity getIdPersonaRecibe() {
+    public Usuario getIdPersonaRecibe() {
         return idPersonaRecibe;
     }
 
-    public void setIdPersonaRecibe(UsuarioEntity idPersonaRecibe) {
+    public void setIdPersonaRecibe(Usuario idPersonaRecibe) {
         this.idPersonaRecibe = idPersonaRecibe;
     }
 
-    public UbicacionEntity getIdUbicacion() {
+    public Ubicacion getIdUbicacion() {
         return idUbicacion;
     }
 
-    public void setIdUbicacion(UbicacionEntity idUbicacion) {
+    public void setIdUbicacion(Ubicacion idUbicacion) {
         this.idUbicacion = idUbicacion;
     }
 
@@ -171,7 +153,7 @@ public class TrasladoEntity  extends ObjetoBase implements Serializable  {
     
     //<editor-fold defaultstate="collapsed" desc="Constructores">
 
-    public TrasladoEntity() {
+    public Traslado() {
         fecha = new Date();
     }
 
@@ -189,10 +171,10 @@ public class TrasladoEntity  extends ObjetoBase implements Serializable  {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof TrasladoEntity)) {
+        if (!(object instanceof Traslado)) {
             return false;
         }
-        TrasladoEntity other = (TrasladoEntity) object;
+        Traslado other = (Traslado) object;
         if ((this.idTraslado == null && other.idTraslado != null) || (this.idTraslado != null && !this.idTraslado.equals(other.idTraslado))) {
             return false;
         }

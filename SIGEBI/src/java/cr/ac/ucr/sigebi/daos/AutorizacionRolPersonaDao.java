@@ -60,15 +60,17 @@ public class AutorizacionRolPersonaDao extends GenericDaoImpl {
     }
 
     @Transactional(readOnly = true)
-    public List<AutorizacionRolPersona> buscarPorAutorizacionRol(Long idAutorizacion, Long idRol) throws FWExcepcion {
+    public List<AutorizacionRolPersona> buscarPorAutorizacionRol(Long idAutorizacion, Long idRol, Long numUnidadEjec) throws FWExcepcion {
         Session session = this.dao.getSessionFactory().openSession();
         try {
             String sql = "SELECT obj FROM AutorizacionRolPersona obj "
                     + " WHERE obj.autorizacionRol.autorizacion.id = :idAutorizacion"
-                    + " and obj.autorizacionRol.rol.id = :idRol";
+                    + " and obj.autorizacionRol.rol.id = :idRol"
+                    + " and obj.unidadEjecutora.id = :numUnidadEjec";
             Query query = session.createQuery(sql);
             query.setParameter("idAutorizacion", idAutorizacion);
             query.setParameter("idRol", idRol);
+            query.setParameter("numUnidadEjec", numUnidadEjec);
 
             //Se obtienen los resutltados
             return (List<AutorizacionRolPersona>) query.list();

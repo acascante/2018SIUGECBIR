@@ -10,6 +10,7 @@ public abstract class ObjetoBase {
 
     protected volatile transient boolean seleccionado;
     protected volatile transient boolean marcado;
+    protected volatile transient Long idTemporal;
 
     public ObjetoBase() {
 
@@ -31,5 +32,11 @@ public abstract class ObjetoBase {
         this.marcado = marcado;
     }
 
-    
+    public Long getIdTemporal() {
+        return idTemporal;
+    }
+
+    public void setIdTemporal(Long idTemporal) {
+        this.idTemporal = idTemporal;
+    }
 }

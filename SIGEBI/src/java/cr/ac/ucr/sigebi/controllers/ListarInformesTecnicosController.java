@@ -8,7 +8,6 @@ package cr.ac.ucr.sigebi.controllers;
 import cr.ac.ucr.sigebi.utils.Constantes;
 import cr.ac.ucr.framework.utils.FWExcepcion;
 import cr.ac.ucr.framework.vista.util.Mensaje;
-import cr.ac.ucr.sigebi.models.EstadoModel;
 import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.Resource;
@@ -18,11 +17,10 @@ import javax.faces.model.SelectItem;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import cr.ac.ucr.framework.vista.util.Util;
+import cr.ac.ucr.sigebi.domain.Documento;
 import cr.ac.ucr.sigebi.domain.Estado;
 import cr.ac.ucr.sigebi.domain.Tipo;
-import cr.ac.ucr.sigebi.models.InformeTecnicoModel;
-import cr.ac.ucr.sigebi.entities.InformeTecnicoEntity;
-import cr.ac.ucr.sigebi.models.TipoModel;
+import cr.ac.ucr.sigebi.models.DocumentoModel;
 import javax.annotation.PostConstruct;
 import javax.faces.event.ActionEvent;
 
@@ -36,56 +34,42 @@ public class ListarInformesTecnicosController extends BaseController {
 
     //<editor-fold defaultstate="collapsed" desc="Variables Locales">
     @Resource
-    private InformeTecnicoModel informeTecnicoModel;
-
-    @Resource
-    private EstadoModel estadoModel;
-
-    @Resource
-    private TipoModel tipoModel;
+    private DocumentoModel documentoModel;
 
     // Lista de los informes
-    List<InformeTecnicoEntity> informes;
+    List<Documento> informes;
 
     // Filtros para listar los Informes 
     String fltIdTipo = "-1";
-    String fltIdBien = "";
-    String fltDescripcion = "";
     String fltEstado = "-1";
+
+    String fltIdentificacionBien = "";
+    String fltDescripcionBien = "";
+    String fltMarcaBien = "";
+    String fltModeloBien = "";
 
     // comboBox estados
     List<SelectItem> estadosOptions;
-    List<Estado> estados;
 
     // comboBox tipos
     List<SelectItem> tipoOptions;
-    List<Tipo> tipos;
 
     //</editor-fold>
     
     //<editor-fold defaultstate="collapsed" desc="Get's & Set's">
-
-    public InformeTecnicoModel getInformeTecnicoModel() {
-        return informeTecnicoModel;
+    public DocumentoModel getDocumentoModel() {
+        return documentoModel;
     }
 
-    public void setInformeTecnicoModel(InformeTecnicoModel informeTecnicoModel) {
-        this.informeTecnicoModel = informeTecnicoModel;
+    public void setDocumentoModel(DocumentoModel documentoModel) {
+        this.documentoModel = documentoModel;
     }
 
-    public EstadoModel getEstadoModel() {
-        return estadoModel;
-    }
-
-    public void setEstadoModel(EstadoModel estadoModel) {
-        this.estadoModel = estadoModel;
-    }
-
-    public List<InformeTecnicoEntity> getInformes() {
+    public List<Documento> getInformes() {
         return informes;
     }
 
-    public void setInformes(List<InformeTecnicoEntity> informes) {
+    public void setInformes(List<Documento> informes) {
         this.informes = informes;
     }
 
@@ -97,28 +81,44 @@ public class ListarInformesTecnicosController extends BaseController {
         this.fltIdTipo = fltIdTipo;
     }
 
-    public String getFltIdBien() {
-        return fltIdBien;
-    }
-
-    public void setFltIdBien(String fltIdBien) {
-        this.fltIdBien = fltIdBien;
-    }
-
-    public String getFltDescripcion() {
-        return fltDescripcion;
-    }
-
-    public void setFltDescripcion(String fltDescripcion) {
-        this.fltDescripcion = fltDescripcion;
-    }
-
     public String getFltEstado() {
         return fltEstado;
     }
 
     public void setFltEstado(String fltEstado) {
         this.fltEstado = fltEstado;
+    }
+
+    public String getFltIdentificacionBien() {
+        return fltIdentificacionBien;
+    }
+
+    public void setFltIdentificacionBien(String fltIdentificacionBien) {
+        this.fltIdentificacionBien = fltIdentificacionBien;
+    }
+
+    public String getFltDescripcionBien() {
+        return fltDescripcionBien;
+    }
+
+    public void setFltDescripcionBien(String fltDescripcionBien) {
+        this.fltDescripcionBien = fltDescripcionBien;
+    }
+
+    public String getFltMarcaBien() {
+        return fltMarcaBien;
+    }
+
+    public void setFltMarcaBien(String fltMarcaBien) {
+        this.fltMarcaBien = fltMarcaBien;
+    }
+
+    public String getFltModeloBien() {
+        return fltModeloBien;
+    }
+
+    public void setFltModeloBien(String fltModeloBien) {
+        this.fltModeloBien = fltModeloBien;
     }
 
     public List<SelectItem> getEstadosOptions() {
@@ -129,28 +129,12 @@ public class ListarInformesTecnicosController extends BaseController {
         this.estadosOptions = estadosOptions;
     }
 
-    public List<Estado> getEstados() {
-        return estados;
-    }
-
-    public void setEstados(List<Estado> estados) {
-        this.estados = estados;
-    }
-
     public List<SelectItem> getTipoOptions() {
         return tipoOptions;
     }
 
     public void setTipoOptions(List<SelectItem> tipoOptions) {
         this.tipoOptions = tipoOptions;
-    }
-
-    public List<Tipo> getTipos() {
-        return tipos;
-    }
-
-    public void setTipos(List<Tipo> tipos) {
-        this.tipos = tipos;
     }
 
     //</editor-fold>
@@ -164,19 +148,16 @@ public class ListarInformesTecnicosController extends BaseController {
     public final void inicializar() {
 
         //Se consultan los estados por dominio
-        estados = estadoModel.listarPorDominio(Constantes.DOMINIO_INFORME_TECNICO);        
         estadosOptions = new ArrayList<SelectItem>();
-        for (Estado item : estados) {
-            estadosOptions.add(new SelectItem(item.getId().toString(), item.getNombre()));
+        tipoOptions = new ArrayList<SelectItem>();
+        for (Estado estado : this.estadosPorDominio(Constantes.DOMINIO_INFORME_TECNICO)) {
+            estadosOptions.add(new SelectItem(estado.getId().toString(), estado.getNombre()));
+        }
+        //Se consultan los tipos por dominio
+        for (Tipo tipo : this.tiposPorDominio(Constantes.DOMINIO_INFORME_TECNICO)) {
+             tipoOptions.add(new SelectItem(tipo.getId().toString(), tipo.getNombre()));
         }
 
-        //Se consultan los tipos por dominio
-        tipos = tipoModel.listarPorDominio(Constantes.DOMINIO_INFORME_TECNICO);
-        tipoOptions = new ArrayList<SelectItem>();
-        for (Tipo item : tipos) {
-            tipoOptions.add(new SelectItem(item.getId().toString(), item.getNombre()));
-        }
-        
         // Se cuenta la cantidad de informes
         this.setPrimerRegistro(1);
         this.contarInformes();
@@ -187,7 +168,6 @@ public class ListarInformesTecnicosController extends BaseController {
     //</editor-fold>
 
     //<editor-fold defaultstate="collapsed" desc="Metodos">
-
     /**
      * Cambia el valor de alguno de los filtros
      *
@@ -200,17 +180,18 @@ public class ListarInformesTecnicosController extends BaseController {
                 pEvent.queue();
                 return;
             }
+            // Se cuenta la cantidad de informes
             this.contarInformes();
-
             this.setPrimerRegistro(1);
 
             this.listarInformes();
+
         } catch (Exception err) {
             Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.error.controllerListarInformesTecnicos.cambioFiltro"));
         }
 
     }
-    
+
     /**
      * Contabiliza los informes
      */
@@ -218,12 +199,10 @@ public class ListarInformesTecnicosController extends BaseController {
         try {
 
             //Se cuenta la cantidad de registros
-            Long contador = informeTecnicoModel.consultaCantidadRegistros(unidadEjecutora.getId(), 
-                    fltIdTipo, fltIdBien, fltDescripcion, fltEstado);
-            
+            Long contador = documentoModel.consultaCantidadRegistros(unidadEjecutora.getId(), Integer.parseInt(fltIdTipo), fltIdentificacionBien, fltDescripcionBien, fltMarcaBien, fltModeloBien, Integer.parseInt(fltEstado));
 
             //Se actualiza la cantidad de registros segun los filtros
-            //this.setCantidadRegistros(contador.intValue());
+            this.setCantidadRegistros(contador.intValue());
 
         } catch (FWExcepcion e) {
             Mensaje.agregarErrorAdvertencia(e.getError_para_usuario());
@@ -231,25 +210,33 @@ public class ListarInformesTecnicosController extends BaseController {
             Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.error.controllerListarInformesTecnicos.contarBienes"));
         }
     }
+
     /**
      * Lista los informes
      */
     private void listarInformes() {
         try {
-            this.informes = informeTecnicoModel.listarInformes(unidadEjecutora.getId(), 
-                    fltIdTipo, fltIdBien, fltDescripcion, fltEstado, this.getPrimerRegistro() - 1, this.getUltimoRegistro());
+            this.informes = documentoModel.listarInformes(unidadEjecutora.getId(),
+                    Integer.parseInt(fltIdTipo),
+                    fltIdentificacionBien,
+                    fltDescripcionBien,
+                    fltMarcaBien,
+                    fltModeloBien,
+                    Integer.parseInt(fltEstado),
+                    this.getPrimerRegistro() - 1,
+                    this.getUltimoRegistro());
         } catch (FWExcepcion e) {
             Mensaje.agregarErrorAdvertencia(e.getError_para_usuario());
         } catch (Exception e) {
             Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.error.controllerListarInformesTecnicos.listarBienes"));
         }
     }
-    
+
     //</editor-fold>
     
     // <editor-fold defaultstate="collapsed" desc="Paginacion">
     /**
-     * Pasa a la pagina sub-set 
+     * Pasa a la pagina sub-set
      *
      * @param pEvent
      */
@@ -265,7 +252,7 @@ public class ListarInformesTecnicosController extends BaseController {
     }
 
     /**
-     * Pasa al siguiente sub-set 
+     * Pasa al siguiente sub-set
      *
      * @param pEvent
      */
@@ -280,7 +267,7 @@ public class ListarInformesTecnicosController extends BaseController {
     }
 
     /**
-     * Pasa al anterior sub-set 
+     * Pasa al anterior sub-set
      *
      * @param pEvent
      */

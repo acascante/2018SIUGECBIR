@@ -151,9 +151,11 @@
 
                             <ice:column style="text-align: center;">
                                 <ice:commandButton id="botonAbrir" style="float:right;margin-top:2%" styleClass="boton" partialSubmit="true" visible="false"
-                                                   actionListener="#{controllerBienes.abrirDetalle}"
+                                                   actionListener="#{controllerAgregarBienes.abrirDetalle}"
                                                    value="#{label['sigebi.Bien.Listado.Detalle']}"  >
-                                    <f:attribute id="tipoSeleccionado" name="tipoSeleccionado"  value="#{bien}"/>
+                                    <f:attribute id="bienSeleccionado" name="bienSeleccionado"  value="#{bien}"/>
+                                    <f:attribute id="vistaOrigenParam" name="vistaOrigenParam"  value="reg_manual"/>
+
                                 </ice:commandButton>
                             </ice:column>
                         </ice:dataTable>

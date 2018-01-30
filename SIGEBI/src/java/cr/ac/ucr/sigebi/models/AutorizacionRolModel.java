@@ -41,6 +41,10 @@ public class AutorizacionRolModel {
         return autorizacionRolDao.buscarPorAutorizacion(idAutorizacion);
     }
 
+    public List<AutorizacionRol> buscarPorCodigoAutorizacion(Integer codigoAutorizacion) throws FWExcepcion {
+        return autorizacionRolDao.buscarPorCodigoAutorizacion(codigoAutorizacion);
+    }
+
     public Long contarPorAutorizacion(Long idAutorizacion) throws FWExcepcion {
         return autorizacionRolDao.contarPorAutorizacion(idAutorizacion);
     }

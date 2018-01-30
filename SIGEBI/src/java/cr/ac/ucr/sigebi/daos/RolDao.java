@@ -102,7 +102,7 @@ public class RolDao extends GenericDaoImpl {
         try {
             String sql = "SELECT obj FROM Rol obj ";
             sql = sql + " where 0 = (select count(docu.rol) from DocumentoAutorizacion docu "
-                    + "where docu.autorizacionRolPersona.autorizacionRol.rol.id = obj.id and docu.documento.id = :idDocumento)";
+                    + "where docu.autorizacionRol.rol.id = obj.id and docu.documento.id = :idDocumento)";
             Query query = session.createQuery(sql);
             query.setParameter("idDocumento", idDocumento);
 
@@ -256,7 +256,7 @@ public class RolDao extends GenericDaoImpl {
         try {
             String sql = "SELECT COUNT(*) FROM Rol obj";
             sql = sql + " WHERE obj.id = :idRol and ";
-            sql = sql + "((SELECT COUNT(obj1.id) from DocumentoAutorizacion obj1 where obj1.autorizacionRolPersona.autorizacionRol.rol.id = :idRol) > 0 ";
+            sql = sql + "((SELECT COUNT(obj1.id) from DocumentoAutorizacion obj1 where obj1.autorizacionRol.rol.id = :idRol) > 0 ";
             sql = sql + " or (SELECT COUNT(obj1.id) from AutorizacionRol obj1 where obj1.rol.id = :idRol) > 0 ";
             sql = sql + " or (SELECT COUNT(obj1.id) from AutorizacionRolPersona obj1 where obj1.autorizacionRol.rol.id = :idRol) > 0) ";
             Query query = session.createQuery(sql);

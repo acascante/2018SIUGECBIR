@@ -5,14 +5,18 @@
  */
 package cr.ac.ucr.sigebi.controllers;
 
-import cr.ac.ucr.framework.seguridad.entidades.SegUnidadEjecutora;
 import cr.ac.ucr.framework.seguridad.entidades.SegUsuario;
 import cr.ac.ucr.sigebi.utils.Constantes;
 import cr.ac.ucr.framework.vista.VistaUsuario;
 import cr.ac.ucr.framework.vista.util.PaginacionOracle;
 import cr.ac.ucr.framework.vista.util.Util;
+import cr.ac.ucr.sigebi.domain.Estado;
+import cr.ac.ucr.sigebi.domain.Tipo;
 import cr.ac.ucr.sigebi.domain.UnidadEjecutora;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.function.Predicate;
 import javax.faces.model.SelectItem;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
@@ -38,9 +42,13 @@ public class BaseController extends PaginacionOracle {
     String vistaOrigen;
     String vistaActual;
     UnidadEjecutora unidadEjecutora;
-    
+
+    List<Estado> estadosGenerales;
+    List<Tipo> tiposGenerales;
+
+    Map<Integer, Estado> tiposBienes;
+
     //</editor-fold>
-    
     //<editor-fold defaultstate="collapsed" desc="Get's & Set's">
     public String getVistaActual() {
         return vistaActual;
@@ -107,16 +115,15 @@ public class BaseController extends PaginacionOracle {
     }
 
     //</editor-fold>
-    
     //<editor-fold defaultstate="collapsed" desc="Constructor">
     public BaseController() {
-        
-        estadoPendiente = Constantes.ESTADO_BIEN_PENDIENTE; 
-        estadoPendienteSincronizar = Constantes.ESTADO_BIEN_PENDIENTE_SINCRONIZAR; 
+
+        estadoPendiente = Constantes.ESTADO_BIEN_PENDIENTE;
+        estadoPendienteSincronizar = Constantes.ESTADO_BIEN_PENDIENTE_SINCRONIZAR;
         incializaBienes();
     }
     //</editor-fold>
-    
+
     //<editor-fold defaultstate="collapsed" desc="Metodos">
     //@PostConstruct
     private void incializaBienes() {
@@ -124,7 +131,6 @@ public class BaseController extends PaginacionOracle {
         lVistaUsuario = (VistaUsuario) Util.obtenerVista("#{vistaUsuario}");
 
         //Obtener el id de la unidad ejecutora
-        SegUnidadEjecutora unidad = lVistaUsuario.getgUnidadActual();
         unidadEjecutora = lVistaUsuario.getUnidadEjecutoraSIGEBI();
 
         //Obtener usuario
@@ -138,6 +144,71 @@ public class BaseController extends PaginacionOracle {
         cantPorPaginas.add(new SelectItem(25, "25"));
         cantPorPaginas.add(new SelectItem(50, "50"));
         this.setListaRegistrosPagina(cantPorPaginas);
+
+        //Se asigna la lista de estados y tipos
+        estadosGenerales = lVistaUsuario.getEstadosSIGEBI();
+        tiposGenerales = lVistaUsuario.getTiposSIGEBI();
     }
-    //</editor-fold>
+
+    public List<Estado> estadosPorDominio(final String dominio) {
+        return this.estadosFilter(estadosGenerales, new PredicateFilter() {
+            @Override
+            public boolean verifica(Object t) {
+                return dominio.equals(((Estado) t).getDominio());
+            }
+        });
+    }
+
+    public Estado estadoPorDominioValor(final String dominio, final Integer valor) {
+        return this.estadosFilter(estadosGenerales, new PredicateFilter() {
+            @Override
+            public boolean verifica(Object t) {
+                return dominio.equals(((Estado) t).getDominio()) && valor.equals(((Estado) t).getValor());
+            }
+        }).get(0);
+    }
+
+    public List<Tipo> tiposPorDominio(final String dominio) {
+        return this.tiposFilter(tiposGenerales, new PredicateFilter() {
+            @Override
+            public boolean verifica(Object t) {
+                return dominio.equals(((Tipo) t).getDominio());
+            }
+        });
+    }
+
+    public Tipo tipoPorDominioValor(final String dominio, final Integer valor) {
+        return this.tiposFilter(tiposGenerales, new PredicateFilter() {
+            @Override
+            public boolean verifica(Object t) {
+                return dominio.equals(((Tipo) t).getDominio()) && valor.equals(((Tipo) t).getValor());
+            }
+        }).get(0);
+    }
+
+    public List<Tipo> tiposFilter(List<Tipo> tipos, PredicateFilter tester) {
+        List<Tipo> resultado = new ArrayList();
+        for (Tipo p : tipos) {
+            if (tester.verifica(p)) {
+                resultado.add(p);
+            }
+        }
+        return resultado;
+    }
+
+    public List<Estado> estadosFilter(List<Estado> estados, PredicateFilter tester) {
+        List<Estado> resultado = new ArrayList();
+        for (Estado p : estados) {
+            if (tester.verifica(p)) {
+                resultado.add(p);
+            }
+        }
+        return resultado;
+    }
+
+    public interface PredicateFilter {
+
+        boolean verifica(Object p);
+    }
+
 }

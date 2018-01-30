@@ -89,10 +89,10 @@
                                         </ice:headerRow>
                                     </ice:columnGroup>
                                 </f:facet>                                
-                                <h:outputText id="costoCell" value="#{informe.idTipo.nombre}"/>
+                                <h:outputText id="costoCell" value="#{informe.tipo.nombre}"/>
                             </ice:column>
                             
-                            <ice:column id="idBien">                                 
+<!--                            <ice:column id="idBien">                                 
                                 <f:facet name="header">
                                     <ice:columnGroup>
                                         <ice:headerRow>
@@ -108,9 +108,9 @@
                                     </ice:columnGroup>
                                 </f:facet>
                                 <h:outputText id="idBienCell" value="#{informe.idBien.idPlaca.placa}"/>
-                            </ice:column>
+                            </ice:column>-->
 
-                            <ice:column id="descripcion">
+<!--                            <ice:column id="descripcion">
                                 <f:facet name="header">
                                     <ice:columnGroup>
                                         <ice:headerRow>
@@ -126,7 +126,7 @@
                                     </ice:columnGroup>
                                 </f:facet>                                
                                 <h:outputText id="descripcionCell" value="#{informe.idBien.descripcion}"/>
-                            </ice:column>
+                            </ice:column>-->
 
                             <ice:column id="colEstado">
                                 <f:facet name="header">
@@ -146,7 +146,7 @@
                                         </ice:headerRow>
                                     </ice:columnGroup>
                                 </f:facet>                                
-                                <h:outputText id="costoCell" value="#{informe.idEstado.nombre}"/>
+                                <h:outputText id="costoCell" value="#{informe.estado.nombre}"/>
                             </ice:column>
                             <ice:column style="text-align: center;">
 

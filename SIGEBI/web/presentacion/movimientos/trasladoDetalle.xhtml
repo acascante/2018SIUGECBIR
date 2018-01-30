@@ -60,7 +60,7 @@
                         </ice:inputText>
 
                         <ice:inputHidden id="hdnEstadoId"
-                                         value="#{trasladoController.traslado.idEstado.idEstado}"
+                                         value="#{trasladoController.traslado.idEstado.id}"
                                          rendered="true"
                                          >
                         </ice:inputHidden>
@@ -93,7 +93,7 @@
                             />
                         <ice:inputText id="txtUnidadDestino" 
                                        styleClass="form-control" 
-                                       value="#{trasladoController.traslado.numUnidadDestino.dscUnidadEjecutora}"
+                                       value="#{trasladoController.traslado.numUnidadDestino.descripcion}"
                                        readonly="true"
                                        partialSubmit="false">
                         </ice:inputText>
@@ -234,7 +234,7 @@
                                                         </ice:headerRow>
                                                     </ice:columnGroup>
                                                 </f:facet>
-                                                <h:outputText id="idBienCell" value="#{detalle.idBien.idPlaca.placa}"/>
+                                                <h:outputText id="idBienCell" value="#{detalle.idBien.identificacion.identificacion}"/>
                                             </ice:column>
 
                                             <ice:column id="descripcion">
@@ -257,7 +257,7 @@
                                                         </ice:headerRow>
                                                     </ice:columnGroup>
                                                 </f:facet>                                
-                                                <h:outputText id="marcaCell" value="#{detalle.idBien.marca}"/>
+                                                <h:outputText id="marcaCell" value="#{detalle.idBien.resumenBien.marca}"/>
                                             </ice:column>
 
                                             <ice:column id="colModelo">
@@ -268,7 +268,7 @@
                                                         </ice:headerRow>
                                                     </ice:columnGroup>
                                                 </f:facet>                                 
-                                                <h:outputText id="modeloCell" value="#{detalle.idBien.modelo}"/>
+                                                <h:outputText id="modeloCell" value="#{detalle.idBien.resumenBien.modelo}"/>
                                             </ice:column>
 
                                             <ice:column id="colSerie">
@@ -279,7 +279,7 @@
                                                         </ice:headerRow>
                                                     </ice:columnGroup>
                                                 </f:facet>    
-                                                <h:outputText id="modeloCell" value="#{detalle.idBien.serie}"/>                            
+                                                <h:outputText id="modeloCell" value="#{detalle.idBien.resumenBien.serie}"/>                            
                                             </ice:column>
 
                                             <!-- Columna de ACCIONES Aceptar / Rechazar -->
@@ -440,7 +440,7 @@
                                             />
                                         <ice:inputText id="txtJustificUsuario" 
                                                        styleClass="form-control" 
-                                                       value="#{trasladoController.justificacion.usuarioRegistra.nombre_completo}"
+                                                       value="#{trasladoController.justificacion.usuarioRegistra.nombreCompleto}"
                                                        readonly="true"
                                                        partialSubmit="false">
                                         </ice:inputText>
@@ -456,7 +456,7 @@
                                             />
                                         <ice:inputText id="txtJustificBien" 
                                                        styleClass="form-control" 
-                                                       value="#{trasladoController.bienDetalle.idBien.idPlaca.placa}"
+                                                       value="#{trasladoController.bienDetalle.idBien.identificacion.identificacion}"
                                                        readonly="true"
                                                        partialSubmit="false">
                                         </ice:inputText>
@@ -633,7 +633,7 @@
                                 </ice:headerRow>
                             </ice:columnGroup>
                         </f:facet>
-                        <h:outputText id="nombreUnidad" value="#{unidad.dscUnidadEjecutora}"/>
+                        <h:outputText id="nombreUnidad" value="#{unidad.descripcion}"/>
                     </ice:column>
 
 

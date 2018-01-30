@@ -11,7 +11,11 @@ import cr.ac.ucr.framework.service.SeguridadMgr;
 import cr.ac.ucr.framework.utils.FWExcepcion;
 import cr.ac.ucr.framework.vista.util.Mensaje;
 import cr.ac.ucr.framework.vista.util.Util;
+import cr.ac.ucr.sigebi.domain.Estado;
+import cr.ac.ucr.sigebi.domain.Tipo;
 import cr.ac.ucr.sigebi.domain.UnidadEjecutora;
+import cr.ac.ucr.sigebi.models.EstadoModel;
+import cr.ac.ucr.sigebi.models.TipoModel;
 import cr.ac.ucr.sigebi.models.UnidadEjecutoraModel;
 
 import java.util.ArrayList;
@@ -27,7 +31,6 @@ import javax.faces.event.ValueChangeEvent;
 import javax.faces.model.SelectItem;
 
 import javax.servlet.http.HttpSession;
-import oracle.net.aso.i;
 
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
@@ -42,8 +45,14 @@ public class VistaUsuario {
     private SeguridadMgr seguridadMgr;
     @Resource
     private UnidadEjecutoraModel unidadEjecutoraModel;
-    
+    @Resource
+    private EstadoModel estadoModel;
+    @Resource
+    private TipoModel tipoModel;
+
     private UnidadEjecutora unidadEjecutoraSIGEBI;
+    private List<Estado> estadosSIGEBI;
+    private List<Tipo> tiposSIGEBI;
 
     private boolean gLoginDirecto = true;
     //Variable para almacenar los datos del usuario del sistema
@@ -294,7 +303,13 @@ public class VistaUsuario {
             event.setPhaseId(PhaseId.INVOKE_APPLICATION);
             event.queue();
             return;
-        }//if
+        }
+
+        //Se asignan los estados y tipos de la aplicacion
+        estadosSIGEBI = estadoModel.listar();        
+        tiposSIGEBI = tipoModel.listar();
+
+        //if
         //Busco la unidad ejecutora seleccionada y actualizo la unidad actual
         Integer unidadEjecSelect = Integer.valueOf(event.getNewValue().toString());
         if (unidadEjecSelect != null) {
@@ -568,6 +583,38 @@ public class VistaUsuario {
     public void setUnidadEjecutoraSIGEBI(UnidadEjecutora unidadEjecutoraSIGEBI) {
         this.unidadEjecutoraSIGEBI = unidadEjecutoraSIGEBI;
     }
-    // </editor-fold>
 
+    public EstadoModel getEstadoModel() {
+        return estadoModel;
+    }
+
+    public void setEstadoModel(EstadoModel estadoModel) {
+        this.estadoModel = estadoModel;
+    }
+
+    public TipoModel getTipoModel() {
+        return tipoModel;
+    }
+
+    public void setTipoModel(TipoModel tipoModel) {
+        this.tipoModel = tipoModel;
+    }
+
+    public List<Estado> getEstadosSIGEBI() {
+        return estadosSIGEBI;
+    }
+
+    public void setEstadosSIGEBI(List<Estado> estadosSIGEBI) {
+        this.estadosSIGEBI = estadosSIGEBI;
+    }
+
+    public List<Tipo> getTiposSIGEBI() {
+        return tiposSIGEBI;
+    }
+
+    public void setTiposSIGEBI(List<Tipo> tiposSIGEBI) {
+        this.tiposSIGEBI = tiposSIGEBI;
+    }
+
+    // </editor-fold>
 }//fin de la clase

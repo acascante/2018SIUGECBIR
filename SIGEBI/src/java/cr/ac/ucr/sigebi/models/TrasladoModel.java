@@ -5,11 +5,11 @@
  */
 package cr.ac.ucr.sigebi.models;
 
-import cr.ac.ucr.sigebi.daos.FaltaTrasladosDao;
+import cr.ac.ucr.sigebi.daos.TrasladosDao;
 import cr.ac.ucr.sigebi.domain.Estado;
 import cr.ac.ucr.sigebi.domain.UnidadEjecutora;
-import cr.ac.ucr.sigebi.entities.TrasladoDetalleEntity;
-import cr.ac.ucr.sigebi.entities.TrasladoEntity;
+import cr.ac.ucr.sigebi.domain.TrasladoDetalle;
+import cr.ac.ucr.sigebi.domain.Traslado;
 import cr.ac.ucr.sigebi.entities.UnidadEjecutoraEntity;
 import java.util.List;
 import javax.annotation.Resource;
@@ -25,38 +25,38 @@ import org.springframework.stereotype.Service;
 public class TrasladoModel {
     
     @Resource
-    private FaltaTrasladosDao trasladoDao;
+    private TrasladosDao trasladoDao;
 
     
-    public void guardar(TrasladoEntity obj) {
+    public void guardar(Traslado obj) {
         trasladoDao.guardar(obj);
     }
     
-    public void guardarBienes(List<TrasladoDetalleEntity> bienes){
+    public void guardarBienes(List<TrasladoDetalle> bienes){
         trasladoDao.guardarBienes(bienes);
     }
     
-    public void guardarBien(TrasladoDetalleEntity bien){
+    public   void guardarBien(TrasladoDetalle bien){
         trasladoDao.guardarBien(bien);
     }
     
-    public void eliminarBienes(TrasladoEntity traslado, Estado estado){
+    public void eliminarBienes(Traslado traslado, Estado estado){
         trasladoDao.eliminarBienes(traslado, estado);
     }
     
-    public TrasladoEntity traerPorId(Integer pId) {
+    public Traslado traerPorId(Integer pId) {
         return trasladoDao.traerPorId(pId);
     }
     
-    public List<TrasladoEntity> traerTodo(UnidadEjecutoraEntity unidadEjecutora) {
+    public List<Traslado> traerTodo(UnidadEjecutoraEntity unidadEjecutora) {
         return trasladoDao.traerTodo(unidadEjecutora);
     }
     
-    public List<TrasladoDetalleEntity> traerBienesTraslado(Integer trasladoId) {
+    public List<TrasladoDetalle> traerBienesTraslado(Integer trasladoId) {
         return trasladoDao.traerBienesTraslado(trasladoId);
     }
     
-    public List<TrasladoEntity> trasladosListado(
+    public List<Traslado> trasladosListado(
     UnidadEjecutora unidadEjecutora
             , String fltIdTraslado
             , String fltUnidadOrigen

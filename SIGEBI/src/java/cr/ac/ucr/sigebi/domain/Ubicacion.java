@@ -34,7 +34,7 @@ public class Ubicacion extends ObjetoBase implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SGB_SQ_UBICACION")
     @Column(name = "ID_UBICACION")
-    private Integer id;
+    private Long id;
 
     @Column(name = "DETALLE")
     private String detalle;
@@ -55,11 +55,11 @@ public class Ubicacion extends ObjetoBase implements Serializable {
     //</editor-fold>
 
     //<editor-fold defaultstate="collapsed" desc="Get's y Set's">
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

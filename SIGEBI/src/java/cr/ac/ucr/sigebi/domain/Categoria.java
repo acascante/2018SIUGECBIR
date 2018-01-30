@@ -19,7 +19,7 @@ import javax.persistence.Temporal;
  * @author jorge.serrano
  */
 @Entity(name = "Categoria")
-@Table(name = "V_SIGB_CATEGORIA")
+@Table(name = "SIGEBI_OAF.V_SIGB_CATEGORIA")
 public class Categoria  extends ObjetoBase implements Serializable {
     
     //<editor-fold defaultstate="collapsed" desc="Atributos">

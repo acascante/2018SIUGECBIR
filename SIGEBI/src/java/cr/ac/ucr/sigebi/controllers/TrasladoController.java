@@ -9,15 +9,16 @@ import cr.ac.ucr.framework.vista.util.Mensaje;
 import cr.ac.ucr.framework.vista.util.Util;
 import cr.ac.ucr.sigebi.domain.Autorizacion;
 import cr.ac.ucr.sigebi.domain.AutorizacionRolPersona;
+import cr.ac.ucr.sigebi.domain.Bien;
 import cr.ac.ucr.sigebi.domain.Estado;
 import cr.ac.ucr.sigebi.domain.Tipo;
-import cr.ac.ucr.sigebi.entities.JustificacionEntity;
+import cr.ac.ucr.sigebi.domain.Justificacion;
 import cr.ac.ucr.sigebi.domain.Notificacion;
 import cr.ac.ucr.sigebi.domain.UnidadEjecutora;
 import cr.ac.ucr.sigebi.domain.Usuario;
-import cr.ac.ucr.sigebi.entities.TrasladoDetalleEntity;
-import cr.ac.ucr.sigebi.entities.TrasladoEntity;
-import cr.ac.ucr.sigebi.entities.UbicacionEntity;
+import cr.ac.ucr.sigebi.domain.Ubicacion;
+import cr.ac.ucr.sigebi.domain.TrasladoDetalle;
+import cr.ac.ucr.sigebi.domain.Traslado;
 import cr.ac.ucr.sigebi.models.BienModel;
 import cr.ac.ucr.sigebi.models.AutorizacionModel;
 import cr.ac.ucr.sigebi.models.AutorizacionRolPersonaModel;
@@ -62,10 +63,10 @@ public class TrasladoController extends ListadoBienesGeneralController {
     Estado estadoGeneralAprobado;
     Estado estadoGeneralRechazado;
 
-    List<TrasladoEntity> traslados;
-    TrasladoEntity traslado;
-    List<TrasladoDetalleEntity> trasladoDetalle;
-    Map<Integer, TrasladoDetalleEntity> bienesAsociadosTraslados;
+    List<Traslado> traslados;
+    Traslado traslado;
+    List<TrasladoDetalle> trasladoDetalle;
+    Map<Long, TrasladoDetalle> bienesAsociadosTraslados;
 
     UnidadEjecutora unidadOrigen;
     UnidadEjecutora unidadDestino;
@@ -103,12 +104,14 @@ public class TrasladoController extends ListadoBienesGeneralController {
 
     @Resource
     private UsuarioModel usuarioModel;
-    Usuario usuarioRegistrado;
+    Usuario usuarioRegistradoClass;
 
     @Resource
     private BienModel bienModel;
 
     //</editor-fold>
+    
+    
     //<editor-fold defaultstate="collapsed" desc="GET's & SET's">
     public boolean isPermiteRecibir() {
         return permiteRecibir;
@@ -142,19 +145,19 @@ public class TrasladoController extends ListadoBienesGeneralController {
         this.fechaRegistro = fechaRegistro;
     }
 
-    public List<TrasladoEntity> getTraslados() {
+    public List<Traslado> getTraslados() {
         return traslados;
     }
 
-    public void setTraslados(List<TrasladoEntity> traslados) {
+    public void setTraslados(List<Traslado> traslados) {
         this.traslados = traslados;
     }
 
-    public TrasladoEntity getTraslado() {
+    public Traslado getTraslado() {
         return traslado;
     }
 
-    public void setTraslado(TrasladoEntity traslado) {
+    public void setTraslado(Traslado traslado) {
         this.traslado = traslado;
     }
 
@@ -174,15 +177,17 @@ public class TrasladoController extends ListadoBienesGeneralController {
         this.unidadDestino = unidadDestino;
     }
 
-    public List<TrasladoDetalleEntity> getTrasladoDetalle() {
+    public List<TrasladoDetalle> getTrasladoDetalle() {
         return trasladoDetalle;
     }
 
-    public void setTrasladoDetalle(List<TrasladoDetalleEntity> trasladoDetalle) {
+    public void setTrasladoDetalle(List<TrasladoDetalle> trasladoDetalle) {
         this.trasladoDetalle = trasladoDetalle;
     }
 
     //</editor-fold>
+    
+    
     //<editor-fold defaultstate="collapsed" desc="NavegaciÃ³n">
     public void listadoTraslados(ActionEvent pEvent) {
         try {
@@ -232,16 +237,21 @@ public class TrasladoController extends ListadoBienesGeneralController {
     }
 
     //</editor-fold>
+    
+    
     //<editor-fold defaultstate="collapsed" desc="Inicializa Datos">
+    
+    
+    
     public TrasladoController() {
-        justificacion = new JustificacionEntity();
+        justificacion = new Justificacion();
     }
 
     @PostConstruct
     private void incializaDatos() {
 
         //Asigno Usuario EnvÃ­a
-        usuarioRegistrado = usuarioModel.buscarPorId(codPersonaReg);
+        usuarioRegistradoClass = usuarioModel.buscarPorId(codPersonaReg);
 
         //TODO cambiar implementacion de consulta de estados, VER ListarNotificacionesController
         estadoGeneralPendiente = estadoModel.buscarPorDominioEstado(Constantes.DOMINIO_GENERAL, Constantes.ESTADO_GENERAL_PENDIENTE);
@@ -270,8 +280,8 @@ public class TrasladoController extends ListadoBienesGeneralController {
 
     private void inicializaTraslado() {
         try {
-            traslado = new TrasladoEntity();
-            trasladoDetalle = new ArrayList<TrasladoDetalleEntity>();
+            traslado = new Traslado();
+            trasladoDetalle = new ArrayList<TrasladoDetalle>();
 
             permiteEdicion = true;
 
@@ -309,15 +319,6 @@ public class TrasladoController extends ListadoBienesGeneralController {
                 }
             }
 //TODO arreglar unidad ejecutora
-//            List<AutorizacionRolPersona> usrsEnviar = autorizacionRolPersonaModel.buscarUsuariosPorAutorizacion(autorizacionEnviar.getId(), unidadEjecutoraId);
-//            for (AutorizacionRolPersona usr : usrsEnviar) {
-//                usuariosEnviar.put(usr.getUsuarioSeguridad().getId(), usr.getUsuarioSeguridad());
-//            }
-//
-//            List<AutorizacionRolPersona> usrsRecibir = autorizacionRolPersonaModel.buscarUsuariosPorAutorizacion(autorizacionRecibir.getId(), unidadEjecutoraId);
-//            for (AutorizacionRolPersona usr : usrsRecibir) {
-//                usuariosRecibir.put(usr.getUsuarioSeguridad().getId(), usr.getUsuarioSeguridad());
-//            }
 
             List<AutorizacionRolPersona> usrsEnviar = autorizacionRolPersonaModel.buscarUsuariosPorAutorizacion(autorizacionEnviar.getId(), unidadEjecutora.getId());
             for (AutorizacionRolPersona usr : usrsEnviar) {
@@ -344,7 +345,7 @@ public class TrasladoController extends ListadoBienesGeneralController {
             }
 
             inicializaTraslado();
-            TrasladoEntity item = (TrasladoEntity) pEvent.getComponent().getAttributes().get("itemSeleccionado");
+            Traslado item = (Traslado) pEvent.getComponent().getAttributes().get("itemSeleccionado");
             if (item.getIdTraslado() > 0) {
                 traslado = item;
 
@@ -362,20 +363,18 @@ public class TrasladoController extends ListadoBienesGeneralController {
                 }
 
                 trasladoDetalle = trasladoModel.traerBienesTraslado(traslado.getIdTraslado());
-                bienesAsociadosTraslados = new HashMap<Integer, TrasladoDetalleEntity>();
-                for (TrasladoDetalleEntity valor : trasladoDetalle) {
+                bienesAsociadosTraslados = new HashMap<Long, TrasladoDetalle>();
+                for (TrasladoDetalle valor : trasladoDetalle) {
+                    if (valor.getIdEstado().getId().equals(estadoGeneralPendiente.getId())) {
+                        valor.setMarcado(permiteRecibir);
+                    }
 
-//                    if (valor.getIdEstado().getEstado().equals(estadoGeneralPendiente.getEstado())) {
-//                        valor.setMarcado(permiteRecibir);
-//                    }
+                    bienesAsociados.add(valor.getIdBien());
+                    bienesSeleccionados.put(valor.getIdBien().getId(), valor.getIdBien());
 
-//                    bienesAsociados.add(valor.getIdBien());
-//                    bienesSeleccionados.put(valor.getIdBien().getIdBien(), valor.getIdBien());
-
-                    bienesAsociadosTraslados.put(valor.getIdBien().getIdBien(), valor);
-
+                    bienesAsociadosTraslados.put(valor.getIdBien().getId(), valor);
                 }
-                trasladoDetalle = new ArrayList<TrasladoDetalleEntity>(bienesAsociadosTraslados.values());
+                trasladoDetalle = new ArrayList<TrasladoDetalle>(bienesAsociadosTraslados.values());
                 this.listarBienes();
             }
 
@@ -386,6 +385,7 @@ public class TrasladoController extends ListadoBienesGeneralController {
     }
 
     //</editor-fold>
+    
     //<editor-fold defaultstate="collapsed" desc="Listado Traslados">
     String fltIdTraslado = "";
     String fltUnidadOrigen = "";
@@ -599,6 +599,7 @@ public class TrasladoController extends ListadoBienesGeneralController {
     }
 
     //</editor-fold>
+    
     //<editor-fold defaultstate="collapsed" desc="Metodos">
     public void guardarTraslado(ActionEvent pEvent) {
         try {
@@ -611,7 +612,7 @@ public class TrasladoController extends ListadoBienesGeneralController {
             if (validarRegistro()) {
                 trasladoModel.guardar(traslado);
 
-                List<TrasladoDetalleEntity> detalle = getBienesAsoc();
+                List<TrasladoDetalle> detalle = getBienesAsoc();
 
                 //trasladoModel.eliminarBienes(traslado, estadoGeneralPendiente);
                 trasladoModel.guardarBienes(detalle);
@@ -633,12 +634,12 @@ public class TrasladoController extends ListadoBienesGeneralController {
             }
 
             //Validar Ubicacion
-            if ((traslado.getIdUbicacion().getIdUbicacion() == null) || (traslado.getIdUbicacion().getIdUbicacion() == 0)) {
+            if ((traslado.getIdUbicacion().getId() == null) || (traslado.getIdUbicacion().getId() == 0)) {
                 mensaje = Util.getEtiquetas("sigebi.Traslado.Mns.SelecUnidad");
             }
             
             //FIXME Jairo verificar el usuario se esta asignando
-            //traslado.setIdPersona(usuarioRegistrado);
+            traslado.setIdPersona(usuarioRegistradoClass);
 
             if (!mensaje.equals("")) {
                 Mensaje.agregarErrorAdvertencia(mensaje);
@@ -652,17 +653,17 @@ public class TrasladoController extends ListadoBienesGeneralController {
     }
 
     // jserrano cambio nuevo
-    private List<TrasladoDetalleEntity> getBienesAsoc() {
+    private List<TrasladoDetalle> getBienesAsoc() {
 
         //trasladoDetalle
-        List<TrasladoDetalleEntity> detalle = new ArrayList<TrasladoDetalleEntity>();
-        for (TrasladoDetalleEntity bn : trasladoDetalle) {     // foreach grade in grades
+        List<TrasladoDetalle> detalle = new ArrayList<TrasladoDetalle>();
+        for (TrasladoDetalle bn : trasladoDetalle) {     // foreach grade in grades
 
             if (bn.getIdTraslado().getIdTraslado() > 0) {
                 return trasladoDetalle;
             }
 
-            TrasladoDetalleEntity valor = new TrasladoDetalleEntity(traslado,
+            TrasladoDetalle valor = new TrasladoDetalle(traslado,
                     bn.getIdBien(),
                     estadoGeneralPendiente);
             detalle.add(valor);
@@ -785,9 +786,9 @@ public class TrasladoController extends ListadoBienesGeneralController {
             }
 
             accion = constAccionAceptarBien;
-            bienDetalle = new TrasladoDetalleEntity();
+            bienDetalle = new TrasladoDetalle();
             //Se obtiene el bien que se va a aprobar 
-            bienDetalle = (TrasladoDetalleEntity) pEvent.getComponent().getAttributes().get("bienSeleccionado");
+            bienDetalle = (TrasladoDetalle) pEvent.getComponent().getAttributes().get("bienSeleccionado");
 
             mostrarConfirmacion();
 
@@ -798,38 +799,38 @@ public class TrasladoController extends ListadoBienesGeneralController {
     }
     
     private void aplicarAprobarBien() {
-//        try {
-//            //Primero se debe aplicar el cambio
-//            bienDetalle.setIdEstado(estadoGeneralAprobado);
-//            trasladoModel.guardarBien(bienDetalle);
-//            bienDetalle.setMarcado(false);
-//
-//            //Busacamos que esten todos aprobados para cambiar estado del traslado
-//            //Lo cambiamos de unidad
-//            Bien bien = bienModel.buscarPorId(bienDetalle.getIdBien().getIdBien());
-//            bien.setNumUnidadEjec(traslado.getNumUnidadDestino().getId());
-//            bienModel.actualizarBien(bien);
-//
-//            //PENDIENTE SINCRONIZAR CON SIAF
-//            if (estaAprobada()) {
-//                aprobarTraslado();
-//            }
-//            Mensaje.agregarErrorAdvertencia("PENDIENTE SINCRONIZAR CON SIAF");        //Lo sincronizamos
-//
-//            cerrarConfirmacion();
-//
-//        } catch (Exception err) {
-//            Mensaje.agregarErrorFatal(Util.getEtiquetas("sigebi.Traslado.Mns.ErrorBien"));
-//        }
+        try {
+            //Primero se debe aplicar el cambio
+            bienDetalle.setIdEstado(estadoGeneralAprobado);
+            trasladoModel.guardarBien(bienDetalle);
+            bienDetalle.setMarcado(false);
+
+            //Busacamos que esten todos aprobados para cambiar estado del traslado
+            //Lo cambiamos de unidad
+            Bien bien = bienModel.buscarPorId(bienDetalle.getIdBien().getId());
+            bien.setUnidadEjecutora(traslado.getNumUnidadDestino());
+            bienModel.actualizar(bien);
+
+            //PENDIENTE SINCRONIZAR CON SIAF
+            if (estaAprobada()) {
+                aprobarTraslado();
+            }
+            Mensaje.agregarErrorAdvertencia("PENDIENTE SINCRONIZAR CON SIAF");        //Lo sincronizamos
+
+            cerrarConfirmacion();
+
+        } catch (Exception err) {
+            Mensaje.agregarErrorFatal(Util.getEtiquetas("sigebi.Traslado.Mns.ErrorBien"));
+        }
 
     }
     
     private boolean estaAprobada() {
-//        for (TrasladoDetalleEntity item : trasladoDetalle) {
-//            if (!item.getIdEstado().getEstado().equals(estadoGeneralAprobado.getEstado())) {
-//                return false;
-//            }
-//        }
+        for (TrasladoDetalle item : trasladoDetalle) {
+            if (!item.getIdEstado().getId().equals(estadoGeneralAprobado.getId())) {
+                return false;
+            }
+        }
         return true;
     }
 
@@ -854,11 +855,11 @@ public class TrasladoController extends ListadoBienesGeneralController {
             }
 
             accion = constAccionRechazarBien;
-            bienDetalle = new TrasladoDetalleEntity();
+            bienDetalle = new TrasladoDetalle();
             //Se obtiene el bien que se va a aprobar 
-            bienDetalle = (TrasladoDetalleEntity) pEvent.getComponent().getAttributes().get("bienSeleccionado");
+            bienDetalle = (TrasladoDetalle) pEvent.getComponent().getAttributes().get("bienSeleccionado");
 
-            justificacion = new JustificacionEntity();
+            justificacion = new Justificacion();
 
             iniciarJustificacion();
 
@@ -877,6 +878,7 @@ public class TrasladoController extends ListadoBienesGeneralController {
     }
 
     //</editor-fold>
+    
     //<editor-fold defaultstate="collapsed" desc="Buscar Unidades">
     @Resource
     UnidadEjecutoraModel unidadModel;
@@ -988,6 +990,7 @@ public class TrasladoController extends ListadoBienesGeneralController {
     }
 
     //</editor-fold>
+    
     //<editor-fold defaultstate="collapsed" desc="Buscar Ubicaciones">
     boolean ubicacionVisible;
 
@@ -999,11 +1002,11 @@ public class TrasladoController extends ListadoBienesGeneralController {
             selectDefault = Constantes.SELECT_DEFAULT;
 
             ubicacionOptions = new ArrayList<SelectItem>();
-            List<UbicacionEntity> ubicaciones;
-//            ubicaciones = ubicModel.traerTodo();
-//            for (UbicacionEntity item : ubicaciones) {
-//                ubicacionOptions.add(new SelectItem(item.getIdUbicacion() + "#" + item.getDetalle().replace("#", "-"), item.getDetalle().replace("#", "-")));
-//            }
+            List<Ubicacion> ubicaciones;
+            ubicaciones = ubicModel.listar(unidadEjecutora.getId());
+            for (Ubicacion item : ubicaciones) {
+                ubicacionOptions.add(new SelectItem(item.getId() + "#" + item.getDetalle().replace("#", "-"), item.getDetalle().replace("#", "-")));
+            }
         } catch (Exception err) {
             Mensaje.agregarErrorFatal(err.getMessage());
         }
@@ -1154,17 +1157,18 @@ public class TrasladoController extends ListadoBienesGeneralController {
 //                bienesAsociadosTraslados.remove(bien.getIdBien());
 //            } else {
 //                bienesSeleccionados.put(bien.getIdBien(), bien);
-//                bienesAsociadosTraslados.put(bien.getIdBien(), new TrasladoDetalleEntity(traslado, bien, estadoGeneralPendiente));
+//                bienesAsociadosTraslados.put(bien.getIdBien(), new TrasladoDetalle(traslado, bien, estadoGeneralPendiente));
 //            }
 //            //bienesAsociados_1 = new Array<>(bienesSeleccionados_1.values());
 //            bienesAsociados = new ArrayList<ViewBienEntity>(bienesSeleccionados.values());
-//            trasladoDetalle = new ArrayList<TrasladoDetalleEntity>(bienesAsociadosTraslados.values());
+//            trasladoDetalle = new ArrayList<TrasladoDetalle>(bienesAsociadosTraslados.values());
         } catch (Exception err) {
             Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.error.controllerListarBienSincronizar.checkBienPorSincronizar"));
         }
     }
 
     //</editor-fold>
+    
     //<editor-fold defaultstate="collapsed" desc="Metodos Justificaciones y Notificaciones">
     @Resource
     JustificacionModel justificacionModel;
@@ -1206,14 +1210,14 @@ public class TrasladoController extends ListadoBienesGeneralController {
 
     public void cancelarJustificacion() {
 
-        justificacion = new JustificacionEntity();
-        bienDetalle = new TrasladoDetalleEntity();
+        justificacion = new Justificacion();
+        bienDetalle = new TrasladoDetalle();
         panelNotificacionVisible = false;
     }
 
     public void mostrarJustificacionGeneral() {
-        justificacion = new JustificacionEntity();
-        bienDetalle = new TrasladoDetalleEntity();
+        justificacion = new Justificacion();
+        bienDetalle = new TrasladoDetalle();
 
         iniciarJustificacion();
 
@@ -1228,11 +1232,11 @@ public class TrasladoController extends ListadoBienesGeneralController {
                 return;
             }
             accion = constAccionRechazarBien;
-            bienDetalle = new TrasladoDetalleEntity();
+            bienDetalle = new TrasladoDetalle();
             //Se obtiene el bien que se va a aprobar 
-            bienDetalle = (TrasladoDetalleEntity) pEvent.getComponent().getAttributes().get("bienSeleccionado");
+            bienDetalle = (TrasladoDetalle) pEvent.getComponent().getAttributes().get("bienSeleccionado");
 
-            justificacion = new JustificacionEntity();
+            justificacion = new Justificacion();
 
             iniciarJustificacion();
 
@@ -1256,21 +1260,21 @@ public class TrasladoController extends ListadoBienesGeneralController {
 
             notificacionModel.enviarCorreo(correo);
 
-//            List<AutorizacionRolPersona> usrsNotificar = new ArrayList<AutorizacionRolPersona>();
-//
-//            switch (accion) {
-//                case constAccionEnviarARevision:
-//                    usrsNotificar = autorizacionRolPersonaModel.buscarUsuariosPorAutorizacion(autorizacionRecibir.getId(), traslado.getNumUnidadDestino().getId());
-//                    break;
-//                default:
-//                    usrsNotificar = autorizacionRolPersonaModel.buscarUsuariosPorAutorizacion(autorizacionEnviar.getId(), traslado.getNumUnidadOrigen().getId());
-//                    break;
-//            }
-//
-//            for (AutorizacionRolPersona usr : usrsNotificar) {
-//                correo.setDestinatario(usr.getIdUsuarioSeguridad().getCorreo());
-//                notificacionModel.enviarCorreo(correo);
-//            }
+            List<AutorizacionRolPersona> usrsNotificar = new ArrayList<AutorizacionRolPersona>();
+
+            switch (accion) {
+                case constAccionEnviarARevision:
+                    usrsNotificar = autorizacionRolPersonaModel.buscarUsuariosPorAutorizacion(autorizacionRecibir.getId(), traslado.getNumUnidadDestino().getId());
+                    break;
+                default:
+                    usrsNotificar = autorizacionRolPersonaModel.buscarUsuariosPorAutorizacion(autorizacionEnviar.getId(), traslado.getNumUnidadOrigen().getId());
+                    break;
+            }
+
+            for (AutorizacionRolPersona usr : usrsNotificar) {
+                correo.setDestinatario(usr.getUsuarioSeguridad().getCorreo());
+                notificacionModel.enviarCorreo(correo);
+            }
 
         } catch (Exception err) {
             Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.Traslado.Err.Email"));
@@ -1291,7 +1295,7 @@ public class TrasladoController extends ListadoBienesGeneralController {
             case constAccionAnularTraslado:
                 mensaje = Util.getEtiquetas("sigebi.Traslado.Email.Mensaje1") + "<br /><br />";
                 mensaje += justificacion.getEncabezado() + "<br />";
-                mensaje += "Usuario: " + justificacion.getUsuarioRegistra().getNombre_completo() + "<br /><br />";
+                mensaje += "Usuario: " + justificacion.getUsuarioRegistra().getNombreCompleto() + "<br /><br />";
                 mensaje += "Traslado # " + justificacion.getIdDocumento().toString() + "<br /><br />";
                 mensaje += justificacion.getObservaciones() + "<br /><br />";
                 mensaje += Util.getEtiquetas("sigebi.Traslado.Email.Mensaje3");
@@ -1299,16 +1303,16 @@ public class TrasladoController extends ListadoBienesGeneralController {
             case constAccionRechazarBien:
                 mensaje = Util.getEtiquetas("sigebi.Traslado.Email.Mensaje1") + "<br /><br />";
                 mensaje += justificacion.getEncabezado() + "<br />";
-                mensaje += "Usuario: " + justificacion.getUsuarioRegistra().getNombre_completo() + "<br /><br />";
+                mensaje += "Usuario: " + justificacion.getUsuarioRegistra().getNombreCompleto()+ "<br /><br />";
                 mensaje += "Traslado # " + justificacion.getIdDocumento().toString() + "<br /><br />";
-                mensaje += "Bien " + justificacion.getIdBien().getIdPlaca().getPlaca() + "<br /><br />";
+                mensaje += "Bien " + justificacion.getIdBien().getIdentificacion().getIdentificacion()+ "<br /><br />";
                 mensaje += justificacion.getObservaciones() + "<br /><br />";
                 mensaje += Util.getEtiquetas("sigebi.Traslado.Email.Mensaje3");
                 break;
             case constAccionSolictCorreccion:
                 mensaje = Util.getEtiquetas("sigebi.Traslado.Email.Mensaje1") + "<br /><br />";
                 mensaje += justificacion.getEncabezado() + "<br />";
-                mensaje += "Usuario: " + justificacion.getUsuarioRegistra().getNombre_completo() + "<br /><br />";
+                mensaje += "Usuario: " + justificacion.getUsuarioRegistra().getNombreCompleto() + "<br /><br />";
                 mensaje += "Traslado # " + justificacion.getIdDocumento().toString() + "<br /><br />";
                 mensaje += justificacion.getObservaciones() + "<br /><br />";
                 mensaje += Util.getEtiquetas("sigebi.Traslado.Email.Mensaje3");
@@ -1334,7 +1338,7 @@ public class TrasladoController extends ListadoBienesGeneralController {
         }
         
         //FIXME Jairo verificar el usuario
-        //justificacion.setUsuarioRegistra(usuarioRegistrado);
+        justificacion.setUsuarioRegistra(usuarioRegistradoClass);
         
         justificacion.setDocumentoTipo(Constantes.DOCUMENTO_TRASLADO);
         justificacion.setIdDocumento(Long.parseLong(traslado.getIdTraslado().toString()));
@@ -1387,9 +1391,9 @@ public class TrasladoController extends ListadoBienesGeneralController {
 
     private boolean panelNotificacionVisible = false;
     private boolean panelConfirmacionVisible = false;
-    private JustificacionEntity justificacion;
-    private List<JustificacionEntity> justificaciones;
-    private TrasladoDetalleEntity bienDetalle;
+    private Justificacion justificacion;
+    private List<Justificacion> justificaciones;
+    private TrasladoDetalle bienDetalle;
 
     public boolean isPanelConfirmacionVisible() {
         return panelConfirmacionVisible;
@@ -1407,11 +1411,11 @@ public class TrasladoController extends ListadoBienesGeneralController {
         this.mensajeConfirmacion = mensajeConfirmacion;
     }
 
-    public TrasladoDetalleEntity getBienDetalle() {
+    public TrasladoDetalle getBienDetalle() {
         return bienDetalle;
     }
 
-    public void setBienDetalle(TrasladoDetalleEntity bienDetalle) {
+    public void setBienDetalle(TrasladoDetalle bienDetalle) {
         this.bienDetalle = bienDetalle;
     }
 
@@ -1423,19 +1427,19 @@ public class TrasladoController extends ListadoBienesGeneralController {
         this.panelNotificacionVisible = panelNotificacionVisible;
     }
 
-    public JustificacionEntity getJustificacion() {
+    public Justificacion getJustificacion() {
         return justificacion;
     }
 
-    public void setJustificacion(JustificacionEntity justificacion) {
+    public void setJustificacion(Justificacion justificacion) {
         this.justificacion = justificacion;
     }
 
-    public List<JustificacionEntity> getJustificaciones() {
+    public List<Justificacion> getJustificaciones() {
         return justificaciones;
     }
 
-    public void setJustificaciones(List<JustificacionEntity> justificaciones) {
+    public void setJustificaciones(List<Justificacion> justificaciones) {
         this.justificaciones = justificaciones;
     }
 

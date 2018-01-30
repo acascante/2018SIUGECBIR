@@ -19,7 +19,6 @@ import org.hibernate.Query;
 import org.hibernate.Session;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
-import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -123,7 +122,7 @@ public class BienDao extends GenericDaoImpl {
     public void almacenar(Bien bien) throws FWExcepcion {
         try {
             persist(bien);
-        } catch (DataAccessException e) {
+        } catch (HibernateException e) {
             throw new FWExcepcion("sigebi.error.notificacionDao.salvar", "Error guardando registro de tipo " + this.getClass(), e.getCause());
         }
     }

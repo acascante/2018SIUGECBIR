@@ -9,6 +9,7 @@ import com.icesoft.faces.component.inputfile.FileInfo;
 import com.icesoft.faces.component.inputfile.InputFile;
 import cr.ac.ucr.framework.vista.util.Mensaje;
 import cr.ac.ucr.framework.vista.util.Util;
+import cr.ac.ucr.sigebi.commands.BienCommand;
 import cr.ac.ucr.sigebi.domain.Bien;
 import cr.ac.ucr.sigebi.domain.BienCaracteristica;
 import cr.ac.ucr.sigebi.domain.Estado;
@@ -16,12 +17,13 @@ import cr.ac.ucr.sigebi.domain.Proveedor;
 import cr.ac.ucr.sigebi.domain.Tipo;
 import cr.ac.ucr.sigebi.domain.Ubicacion;
 import cr.ac.ucr.sigebi.entities.AccesoriosEntity;
-import cr.ac.ucr.sigebi.entities.AdjuntoBienEntity;
+import cr.ac.ucr.sigebi.domain.Adjunto;
 import cr.ac.ucr.sigebi.entities.NotaEntity;
 import cr.ac.ucr.sigebi.models.AccesorioModel;
-import cr.ac.ucr.sigebi.models.AdjuntoBienModel;
+import cr.ac.ucr.sigebi.models.AdjuntoModel;
 import cr.ac.ucr.sigebi.models.BienCaracteristicaModel;
 import cr.ac.ucr.sigebi.models.BienModel;
+import cr.ac.ucr.sigebi.models.EstadoModel;
 import cr.ac.ucr.sigebi.models.NotaModel;
 import cr.ac.ucr.sigebi.models.ProveedorModel;
 import cr.ac.ucr.sigebi.models.TipoModel;
@@ -60,16 +62,14 @@ public class BienController_Adicional extends BaseController{
     Bien bien;// = new ProveedorEntity();
     
 
-    // comboBox subCategorias
-    List<SelectItem> provedooresOptions;
+    protected BienCommand command;
 
-    NotaEntity nota;
-    List<NotaEntity> notas;
-
+    boolean bienRegistrado;
     //</editor-fold>
     
     
     //<editor-fold defaultstate="collapsed" desc="Gets & Sets">
+    
     public void setBien(Bien bien) {
         this.bien = bien;
     }
@@ -78,14 +78,37 @@ public class BienController_Adicional extends BaseController{
         
         return bien;
         
+        
     }
 
-    //<editor-fold>
+    public boolean isBienRegistrado() {
+        return bienRegistrado;
+    }
+
+    public void setBienRegistrado(boolean bienRegistrado) {
+        this.bienRegistrado = bienRegistrado;
+    }
+
+    public List<SelectItem> getUbicacionOptions() {
+        return ubicacionOptions;
+    }
+
+    public void setUbicacionOptions(List<SelectItem> ubicacionOptions) {
+        this.ubicacionOptions = ubicacionOptions;
+    }
+
+    
+    
+    //</editor-fold>
     
     
     //<editor-fold defaultstate="collapsed" desc="Inicializa Datos">
     public BienController_Adicional() {
         super();
+        bien = new Bien();
+    }
+    
+    protected void iniciaComplementos(){
         
         notas = new ArrayList<NotaEntity>();
         nota = new NotaEntity();
@@ -96,10 +119,13 @@ public class BienController_Adicional extends BaseController{
         
         caracteristica = new BienCaracteristica();
         
-        bien = new Bien();
-        
-        
-        
+        cargarOpcionesCaract();
+        inicializaUbicaciones();
+        cargarCaracteristicasBien();
+        inicializaAdjuntos();
+                
+        command =new BienCommand(bien);
+        bienRegistrado = true;
     }
     //</editor-fold>
     
@@ -237,6 +263,7 @@ public class BienController_Adicional extends BaseController{
     
     //<editor-fold defaultstate="collapsed" desc="Ubicacion">
     
+    String selectionUbicacion;
     
     // comboBox subCategorias
     List<SelectItem> ubicacionOptions;
@@ -353,6 +380,14 @@ public class BienController_Adicional extends BaseController{
     public void setUbicacionVisible(boolean ubicacionVisible) {
         this.ubicacionVisible = ubicacionVisible;
     }
+
+    public String getSelectionUbicacion() {
+        return selectionUbicacion;
+    }
+
+    public void setSelectionUbicacion(String selectionUbicacion) {
+        this.selectionUbicacion = selectionUbicacion;
+    }
     
     
     
@@ -361,6 +396,11 @@ public class BienController_Adicional extends BaseController{
     
     
     //<editor-fold defaultstate="collapsed" desc="Tab Notas del Activo">
+    
+    
+    NotaEntity nota;
+    List<NotaEntity> notas;
+    
     boolean eliminarNotaVisible;
 
     String notaDetalle;
@@ -482,43 +522,46 @@ public class BienController_Adicional extends BaseController{
 
     List<BienCaracteristica> caracteristicas;
     List<Tipo> caracteristicasObjOptions;
-    Map<Integer, BienCaracteristica> caracteristicasRegistradas = new HashMap<Integer, BienCaracteristica>();
+    Map<Integer, BienCaracteristica> caracteristicasRegistradas;
     BienCaracteristica caracteristica;
     boolean modifCaracterVisible;
 
     @Resource private TipoModel tipoModel;
+    @Resource private EstadoModel estadoModel;
     @Resource private BienCaracteristicaModel bienCaracModel;
     
     public void guardarCaracteristica() {
+        try{
 
-        if (descCaracteristica.length() < 5) {
-            mensajeCaracteristicas = "Debe registrar al menos 5 caracteristicas.";
-            return;
-        }
-        if (selectCaracteristica.equals("-1")) {
-            mensajeCaracteristicas = "Seleccione Caracteristica.";
-            return;
-        }
-        BienCaracteristica registro = new BienCaracteristica();
+            if (descCaracteristica.length() < 3) {
+                mensajeCaracteristicas = "Debe registrar al menos 4 caracteristicas.";
+                return;
+            }
+            if (selectCaracteristica.equals("-1")) {
+                mensajeCaracteristicas = "Seleccione Caracteristica.";
+                return;
+            }
+            BienCaracteristica registro = new BienCaracteristica();
 
-        Tipo caract = new Tipo();
-        caract.setId(Integer.parseInt(selectCaracteristica));
+            Tipo caract = new Tipo();
+            caract.setId(Integer.parseInt(selectCaracteristica));
 
-        //FIXME
-        registro.setId(bien.getId());
-        registro.setDetalle(descCaracteristica);
-        registro.setTipo(caract);
-        Estado estado = new Estado();
-        estado.setId(Constantes.ESTADO_GENERAL_ACTIVO);
-        registro.setEstado(estado);
-        
-        // TODO revisar almacenamiento de caracteristicas, deberian tener su propio model y dao, no tiene por que estar en TIPO
-        //mensajeCaracteristicas = tipoModel.guardarCaracteristica(registro);
-        if (mensajeCaracteristicas.length() == 0) {
+            //FIXME
+            registro.setBien(bien);
+            registro.setDetalle(descCaracteristica);
+            registro.setTipo(caract);
+            Estado estado = estadoModel.buscarPorDominioEstado(Constantes.DOMINIO_GENERAL, Constantes.ESTADO_GENERAL_ACTIVO);
+
+            registro.setEstado(estado);
+
+            // TODO revisar almacenamiento de caracteristicas, deberian tener su propio model y dao, no tiene por que estar en TIPO
+            bienCaracModel.almacenar(registro);
             descCaracteristica = "";
+            cargarCaracteristicasBien();
+            actualizarOpcionesCaracteristicas();
+        }catch(Exception err){
+            Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.Bien.Error.cargarCaracteristica"));
         }
-        actualizarOpcionesCaracteristicas();
-        //mensajeCaracteristicas = "Pendiente de implementar.";
     }
 
     public void cargarCaracteristicasBien() {
@@ -528,11 +571,17 @@ public class BienController_Adicional extends BaseController{
             caracteristicas = new ArrayList<BienCaracteristica>();
             caracteristicas = bienCaracModel.listarPorBien(bien);
 
-            actualizarOpcionesCaracteristicas();
             caracteristica = new BienCaracteristica();
+            
+            caracteristicasRegistradas  = new HashMap<Integer, BienCaracteristica>();
+            for (BienCaracteristica item : caracteristicas) {
+                caracteristicasRegistradas.put(item.getTipo().getId(), item);
+            }
+            
+            actualizarOpcionesCaracteristicas();
             //mensajeCaracteristicas = "Debo llenar el select de características";
         }catch(Exception err){
-            Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.Bien.Error.cargarCaracteristica"));
+            Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.Bien.Error.registrarCaracteristica"));
         }
     }
 
@@ -743,19 +792,11 @@ public class BienController_Adicional extends BaseController{
     String mensajeAdjuntosExito;
 
     String adjuntoDescripcion;
-    AdjuntoBienEntity adjunto;
-    List<AdjuntoBienEntity> adjuntos;
+    Adjunto adjunto;
+    List<Adjunto> adjuntos;
 
     @Resource
-    AdjuntoBienModel modelAdjunto;
-    
-    private String componentStatus;
-    private String urlAdjunto;
-    private String nombreAdjunto;
-    private float tamannoAdjunto;
-    private String extencionAdjunto;
-    private String tipoAdjunto;
-    
+    AdjuntoModel modelAdjunto;
     
     private String adjuntoDescargar;
     private String adjuntoMostrar;
@@ -763,70 +804,59 @@ public class BienController_Adicional extends BaseController{
     private String adjuntoNombreDescarga;
     
     boolean mostrarAdjunto;
-    
+    private Tipo tipoAdjuntoDoc;
+            
     public void checkFileLocation(ActionEvent event){
         InputFile inputFile =(InputFile) event.getSource();
         FileInfo fileInfo = inputFile.getFileInfo();
+        adjunto = new Adjunto();
         //file has been saved
          if (fileInfo.isSaved()) {
              // Path with uniqueFolder attribute default
              if(inputFile.getId().endsWith("2")){
-                 urlAdjunto = fileInfo.getPhysicalPath();
-                 nombreAdjunto = fileInfo.getFileName();
-                 tamannoAdjunto = (fileInfo.getSize() /1024 ); // pasar a bites 
-                 tipoAdjunto =  fileInfo.getContentType();
-                 String[] extencion = (String[]) nombreAdjunto.split(Pattern.quote("."));
+                 adjunto.setUrl(fileInfo.getPhysicalPath());
+                 adjunto.setNombre(fileInfo.getFileName());
+                 adjunto.setTamano(fileInfo.getSize() /1024 ); // pasar a bites 
+                 adjunto.setTipoMime(fileInfo.getContentType());
+                 String[] extencion = (String[]) adjunto.getNombre().split(Pattern.quote("."));
                  int cant = extencion.length;
-                 extencionAdjunto = extencion[cant - 1];
-                 /*
-                 adjuntoDescripcion += "\nNombre: "+nombreAdjunto;
-                 adjuntoDescripcion += "\nTamaño: "+tamannoAdjunto;
-                 adjuntoDescripcion += "\nTipoArchivo: "+tipoAdjunto;
-                 adjuntoDescripcion += "\nExtención: "+extencionAdjunto;
-                 */
+                 adjunto.setExtension(extencion[cant - 1]);
+                 
+                 
+                 adjunto.setDetalle(adjuntoDescripcion);
+                 adjunto.setIdDocumento(bien.getId());
+                 
                  guardarAdjunto();
              }
              
         }
     }
 
+    private void inicializaAdjuntos(){
+        tipoAdjuntoDoc = tipoModel.buscarPorDominioNombre(Constantes.DOMINIO_BIEN, Constantes.TIPO_NOMBRE_ADJUNTO);
+        cargarAdjuntos();
+    }
     
     
     public void guardarAdjunto() {
-        mensajeAdjuntos = "";
-        mensajeAdjuntosExito = "";
         try {
             if (bien.getId() < 1) {
                 mensajeAdjuntos = "El bien no ha sido registrado.";
                 return;
             }
-                adjunto = new AdjuntoBienEntity();
-            adjunto.setDetalle(adjuntoDescripcion);
-            adjunto.setIdEstado(1);
-            adjunto.setIdTipo(1);
-            adjunto.setIdBien(Integer.parseInt(bien.getId().toString()));
-            adjunto.setUrl(urlAdjunto);
             
-            adjunto.setNombre(nombreAdjunto);
-            adjunto.setTamano(tamannoAdjunto);
-            adjunto.setTipoMime(tipoAdjunto);
-            adjunto.setExtension(extencionAdjunto);
+            Estado estadoAdjunto = estadoModel.buscarPorDominioEstado(Constantes.DOMINIO_GENERAL, Constantes.ESTADO_GENERAL_ACTIVO);
             
+            adjunto.setIdEstado(estadoAdjunto);
+            adjunto.setIdTipo(tipoAdjuntoDoc);
 
             //Detalle
             //El Id se registra cuando se guarda;
-            String resp = modelAdjunto.guardarAdjunto(adjunto);
-            if (resp.length() == 0) {
-                mensajeAdjuntosExito = "El Archivo se guardó con éxito.";
-            }
+            modelAdjunto.agregar(adjunto);
             
+            adjunto = new Adjunto();
             cargarAdjuntos();
             
-            if (resp.length() > 0) {
-                mensajeAdjuntos = resp;
-            } else {
-                adjunto = new AdjuntoBienEntity();
-            }
         } catch (Exception err) {
             mensajeAdjuntos = err.getMessage();
         }
@@ -834,7 +864,7 @@ public class BienController_Adicional extends BaseController{
 
     private void cargarAdjuntos(){
         //FIXME
-        adjuntos = modelAdjunto.traerAdjuntos(Integer.parseInt(bien.getId().toString()));
+        adjuntos = modelAdjunto.buscarPorDocumento(tipoAdjuntoDoc, bien.getId());
     }
     
     public void adjuntoMostrarDetalle(ActionEvent pEvent) {
@@ -845,10 +875,10 @@ public class BienController_Adicional extends BaseController{
                 return;
             }
             adjuntosUbicacion = "upload/";
-            adjunto = new AdjuntoBienEntity();
+            adjunto = new Adjunto();
             mensajeAdjuntos = "";
             mensajeAdjuntosExito = "";
-            adjunto = (AdjuntoBienEntity) pEvent.getComponent().getAttributes().get("adjuntoSeleccionado");
+            adjunto = (Adjunto) pEvent.getComponent().getAttributes().get("adjuntoSeleccionado");
             mostrarAdjunto = true;
             
             adjuntoDescargar = adjuntosUbicacion + adjunto.getNombre();
@@ -873,14 +903,14 @@ public class BienController_Adicional extends BaseController{
     
     public void adjuntoEliminarCancelar(){
         
-        adjunto = new AdjuntoBienEntity();
+        adjunto = new Adjunto();
         mostrarAdjunto = false;
     }
     
     public void adjuntoEliminarConfirmar(){
         try{
-            mensajeAdjuntos = modelAdjunto.eliminarAdjunto(adjunto);
-            adjunto = new AdjuntoBienEntity();
+            modelAdjunto.eliminar(adjunto);
+            adjunto = new Adjunto();
             mostrarAdjunto = false;
             cargarAdjuntos();
         }catch(Exception err){
@@ -956,6 +986,10 @@ public class BienController_Adicional extends BaseController{
     }
 
     
+    
+    
+    
+    
     public String getAdjuntoDescargar() {
         return adjuntoDescargar;
     }
@@ -980,19 +1014,19 @@ public class BienController_Adicional extends BaseController{
         this.adjuntoMostrar = adjuntoMostrar;
     }
     
-    public AdjuntoBienEntity getAdjunto() {
+    public Adjunto getAdjunto() {
         return adjunto;
     }
 
-    public void setAdjunto(AdjuntoBienEntity adjunto) {
+    public void setAdjunto(Adjunto adjunto) {
         this.adjunto = adjunto;
     }
 
-    public List<AdjuntoBienEntity> getAdjuntos() {
+    public List<Adjunto> getAdjuntos() {
         return adjuntos;
     }
 
-    public void setAdjuntos(List<AdjuntoBienEntity> adjuntos) {
+    public void setAdjuntos(List<Adjunto> adjuntos) {
         this.adjuntos = adjuntos;
     }
 
@@ -1010,10 +1044,6 @@ public class BienController_Adicional extends BaseController{
 
     public void setMensajeAdjuntos(String mensajeAdjuntos) {
         this.mensajeAdjuntos = mensajeAdjuntos;
-    }
-
-    public String getComponentStatus() {
-        return componentStatus;
     }
 
     public String getAdjuntoDescripcion() {

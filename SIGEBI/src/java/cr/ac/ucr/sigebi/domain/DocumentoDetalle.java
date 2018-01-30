@@ -6,6 +6,7 @@
 package cr.ac.ucr.sigebi.domain;
 
 import cr.ac.ucr.framework.seguridad.ObjetoBase;
+import cr.ac.ucr.sigebi.utils.Constantes;
 import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -23,7 +24,7 @@ import javax.persistence.Table;
  *
  * @author jairo.cisneros
  */
-@Entity(name = "DocumentoDetalleBien")
+@Entity(name = "DocumentoDetalle")
 @Table(name = "SIGEBI_OAF.SIGB_DOCUMENTO_DETALLE")
 @Inheritance(strategy = InheritanceType.JOINED)
 @SequenceGenerator(name = "SGB_SQ_DOCUMENTO_DETALLE", sequenceName = "SIGEBI_OAF.SGB_SQ_DOCUMENTO_DETALLE", initialValue = 1, allocationSize = 1)
@@ -46,6 +47,19 @@ public class DocumentoDetalle extends ObjetoBase implements Serializable {
     @Column(name = "DISCRIMINATOR")
     private Integer discriminator;
 
+    //</editor-fold>
+    
+    //<editor-fold defaultstate="collapsed" desc="Constructores">
+
+    public DocumentoDetalle() {
+    }
+
+    public DocumentoDetalle(Documento documento, Bien bien) {
+        this.documento = documento;
+        this.bien = bien;
+        this.discriminator = Constantes.DISCRIMINATOR_DOCUMENTO_DETALLE_GENERAL;
+    }
+    
     //</editor-fold>
     
     //<editor-fold defaultstate="collapsed" desc="Get's y Set's">

@@ -43,7 +43,7 @@ public class UnidadEjecutoraDao extends GenericDaoImpl {
     public List<UnidadEjecutora> listar(String idUnidad, String nombreUnidad) throws FWExcepcion {
         Session session = dao.getSessionFactory().openSession();
         try {
-            StringBuilder sql = new StringBuilder ("SELECT obj FROM UnidadEjecutora obj WHERE TO_CHAR(obj.id) LIKE :idUnidad");
+            StringBuilder sql = new StringBuilder ("select obj from UnidadEjecutora obj where to_char(obj.id) like :idUnidad");
             sql.append("AND UPPER(obj.descripcion) LIKE :nombreUnidad");
             Query query = session.createQuery(sql.toString());
             query.setParameter("idUnidad", idUnidad);

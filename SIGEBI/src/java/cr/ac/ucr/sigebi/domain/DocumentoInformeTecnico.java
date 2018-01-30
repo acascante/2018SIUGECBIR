@@ -5,6 +5,7 @@
  */
 package cr.ac.ucr.sigebi.domain;
 
+import cr.ac.ucr.sigebi.utils.Constantes;
 import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.DiscriminatorValue;
@@ -23,20 +24,27 @@ import javax.persistence.Table;
 @DiscriminatorValue("1")
 @PrimaryKeyJoinColumn(name = "ID_DOCUMENTO", referencedColumnName = "ID_DOCUMENTO")
 public class DocumentoInformeTecnico extends Documento implements Serializable {
-    
+
     //<editor-fold defaultstate="collapsed" desc="Atributos">
     @Column(name = "EVALUACION")
     private String evaluacion;
-    
+
     @ManyToOne
     @JoinColumn(name = "ID_TIPO", referencedColumnName = "ID_TIPO")
     private Tipo tipoInforme;
-    
-    @ManyToOne
-    @JoinColumn(name = "ID_BIEN", referencedColumnName = "ID_BIEN")
-    private Bien bien;
-    //</editor-fold>
 
+    //</editor-fold>
+    public DocumentoInformeTecnico() {
+    }
+
+    //<editor-fold defaultstate="collapsed" desc="Constructores">
+    public DocumentoInformeTecnico(Estado estado, Tipo tipoInforme, Bien bien, String evaluacion) {
+        super(estado, Constantes.DISCRIMINATOR_DOCUMENTO_INFORME_TECNICO);
+        this.evaluacion = evaluacion;
+        this.tipoInforme = tipoInforme;
+    }
+
+    //</editor-fold>
     //<editor-fold defaultstate="collapsed" desc="GET's y SET's">
     public String getEvaluacion() {
         return evaluacion;
@@ -54,22 +62,13 @@ public class DocumentoInformeTecnico extends Documento implements Serializable {
         this.tipoInforme = tipoInforme;
     }
 
-    public Bien getBien() {
-        return bien;
-    }
-
-    public void setBien(Bien bien) {
-        this.bien = bien;
-    }
     //</editor-fold>
-
     //<editor-fold defaultstate="collapsed" desc="Metodos">
     @Override
     public int hashCode() {
         int hash = 3;
         hash = 83 * hash + (this.evaluacion != null ? this.evaluacion.hashCode() : 0);
         hash = 83 * hash + (this.tipoInforme != null ? this.tipoInforme.hashCode() : 0);
-        hash = 83 * hash + (this.bien != null ? this.bien.hashCode() : 0);
         return hash;
     }
 
@@ -89,9 +88,6 @@ public class DocumentoInformeTecnico extends Documento implements Serializable {
             return false;
         }
         if (this.tipoInforme != other.tipoInforme && (this.tipoInforme == null || !this.tipoInforme.equals(other.tipoInforme))) {
-            return false;
-        }
-        if (this.bien != other.bien && (this.bien == null || !this.bien.equals(other.bien))) {
             return false;
         }
         return true;

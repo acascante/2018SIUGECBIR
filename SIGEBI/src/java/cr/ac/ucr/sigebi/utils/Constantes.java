@@ -12,7 +12,6 @@ public final class Constantes {
         new Constantes();
     }
 
-    
     public static final String OK = "OK";
     public static final String SELECT_DEFAULT = "-1";
     public static final String DEFAULT_DATE_PATTERN = "dd/MM/yyyy";
@@ -79,14 +78,20 @@ public final class Constantes {
     public static final String DOMINIO_PROCESO = "PROCESO";
     public static final String DOMINIO_DOCUMENTO = "DOCUMENTO";
 
+    //TIPO NOMBRE
+    public static final String TIPO_NOMBRE_ADJUNTO = "ADJUNTO";
+    
+    
     //Identificaciones
     public static final String IDENTIFICACION_ESTADO_DISPONIBLE = "DISPONIBLE";
     public static final String IDENTIFICACION_ESTADO_OCUPADA = "OCUPADA";
-    
-    //Id documentos
-    public static final Long ID_DOCUMENTO_INFORME_TECNICO = 1l;
-    public static final Long ID_DOCUMENTO_ACTA_DESECHO = 2l;
-    public static final Long ID_DOCUMENTO_ACTA_DONACION = 28l;
+
+    //codigos de documentos
+    public static final Integer CODIGO_AUTORIZACION_INFORME_EXCLUSION = 1;
+    public static final Integer CODIGO_AUTORIZACION_INFORME_TECNICO = 2;
+    public static final Integer CODIGO_AUTORIZACION_ACTA_DONACION = 3;
+    public static final Integer CODIGO_AUTORIZACION_ACTA_DESECHO = 4;
+
     public static final String ACTA_ID_TIPO_DONACION = "26";
     public static final String ACTA_ID_TIPO_DESECHO = "27";
 
@@ -100,46 +105,48 @@ public final class Constantes {
     public static final String VISTA_EXCLUSION_LISTADO_PAGINA = "../exclusiones/listarExclusiones.xhtml";
     public static final String VISTA_EXCLUSION_NUEVA = "exclusion_nueva";
     public static final String VISTA_EXCLUSION_NUEVA_PAGINA = "../exclusiones/exclusionDetalle.xhtml";
-    
+    public static final String VISTA_SINCRONIZACION_BIEN = "sincronizacion";
+    public static final String VISTA_SINCRONIZACION_BIEN_LISTADO = "../bienes/listarBienSincronizar.xhtml";
+
     //BIENES
     public static final String VISTA_LISTAR_BIENES = "../bienes/listarBienes.xhtml";
     public static final String KEY_VISTA_LISTAR_BIENES = "reg_manual";
     public static final String VISTA_DETALLE_BIEN = "../bienes/bienDetalle.xhtml";
     public static final String KEY_VISTA_DETALLE_BIEN = "bien_nuevo";
-    
+
     //ACTAS
     public static final String KEY_VISTA_ACTA = "actaDetalle";
     public static final String VISTA_ACTA = "../exclusiones/acta.xhtml";
     public static final String KEY_VISTA_LISTAR_ACTAS = "acta";
     public static final String VISTA_LISTAR_ACTAS = "../exclusiones/actasListar.xhtml";
-    
+
     //TRASLADOS
     public static final String KEY_VISTA_TRASLADOS_LISTAR = "traslados";
     public static final String VISTA_TRASLADOS_LISTAR = "../movimientos/trasladosListar.xhtml";
     public static final String KEY_VISTA_TRASLADO_DETALLE = "trasladoDetalle";
     public static final String VISTA_TRASLADO_DETALLE = "../movimientos/trasladoDetalle.xhtml";
-    
+
     //PERMISOS TRASLADOS
     public static final String KEY_VISTA_TRASLADO_PERMISOS = "permisosMovimientos";
     public static final String VISTA_TRASLADO_PERMISOS = "../movimientos/permisosMovimientos.xhtml";
-    
+
     //ACCIONES TRASLADOS
     public static final String DOCUMENTO_TRASLADO = "TRASLADO";
     public static final String DOCUMENTO_ENVIAR = "ENVIAR";
     public static final String DOCUMENTO_RECIBIR = "RECIBIR";
-    
+
     //Acciones gestion proceso
     public static final Integer ACCION_PROCESO_AGREGA_DOCUMENTO = 1;
     public static final Integer ACCION_PROCESO_MODIFICAR_DOCUMENTO = 2;
     public static final Integer ACCION_PROCESO_AGREGA_ROL = 3;
     public static final Integer ACCION_PROCESO_MODIFICAR_ROL = 4;
-    
+
     //Sincronizar
     public static final char SINCRONIZAR_ESTADO_ACTIVO = '1';
     public static final char SINCRONIZAR_ESTADO_INACTIVO = '2';
     public static final char SINCRONIZAR_ESTADO_TRANSITO_ACTIVACION = '3';
     public static final char SINCRONIZAR_ESTADO_TRANSITO_INATIVACION = '4';
-    
+
     // Codigos de rol
     public static final String CODIGO_ROL_TECNICO = "1";
     public static final String CODIGO_ROL_DIRECTOR = "2";
@@ -152,6 +159,9 @@ public final class Constantes {
     //Discriminator Documento
     public static final Integer DISCRIMINATOR_DOCUMENTO_INFORME_TECNICO = 1;
     public static final Integer DISCRIMINATOR_DOCUMENTO_ACTA = 2;
+
+    //Discriminator Documento Detalle
+    public static final Integer DISCRIMINATOR_DOCUMENTO_DETALLE_GENERAL = 1;
 
     //Discriminator Detalle Documento
     public static final Integer DISCRIMINATOR_DOCUMENTO_DETALLE_ACTA = 1;

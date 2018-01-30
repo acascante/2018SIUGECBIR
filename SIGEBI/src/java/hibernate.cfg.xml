@@ -16,9 +16,9 @@
     <mapping class="cr.ac.ucr.framework.seguridad.entidades.SegUsuario"/>
     
     <mapping class="cr.ac.ucr.sigebi.domain.Accesorio"/>
+    <mapping class="cr.ac.ucr.sigebi.domain.Acta"/>
+    <mapping class="cr.ac.ucr.sigebi.domain.ActaDetalle"/>
     <mapping class="cr.ac.ucr.sigebi.domain.Adjunto"/>
-    <mapping class="cr.ac.ucr.sigebi.domain.AdjuntoBien"/>
-    <mapping class="cr.ac.ucr.sigebi.domain.AdjuntoDocumento"/>
     <mapping class="cr.ac.ucr.sigebi.domain.Autorizacion"/>
     <mapping class="cr.ac.ucr.sigebi.domain.AutorizacionRol"/>
     <mapping class="cr.ac.ucr.sigebi.domain.AutorizacionRolPersona"/>
@@ -52,6 +52,10 @@
     <mapping class="cr.ac.ucr.sigebi.domain.Usuario"/>
     <mapping class="cr.ac.ucr.sigebi.domain.ViewResumenBien"/>
     
+    <mapping class="cr.ac.ucr.sigebi.domain.Traslado"/>
+    <mapping class="cr.ac.ucr.sigebi.domain.TrasladoDetalle"/>
+    <mapping class="cr.ac.ucr.sigebi.domain.Justificacion"/>
+    
     
     <!--<mapping class="cr.ac.ucr.sigebi.entities.AccesoriosEntity"/>
     <mapping class="cr.ac.ucr.sigebi.entities.ActaDetalleEntity"/>
@@ -82,14 +86,10 @@
     <mapping class="cr.ac.ucr.sigebi.entities.SubCategoriaEntity"/>
     <mapping class="cr.ac.ucr.sigebi.entities.TipoEntity"/>
     <mapping class="cr.ac.ucr.sigebi.entities.UbicacionBien"/>
-    <mapping class="cr.ac.ucr.sigebi.entities.UbicacionEntity"/>
     <mapping class="cr.ac.ucr.sigebi.entities.ViewBienEntity"/>
     <mapping class="cr.ac.ucr.sigebi.entities.SincronizarEntity"/>
     <mapping class="cr.ac.ucr.sigebi.entities.ViewDocumAprobEntity"/>
-    <mapping class="cr.ac.ucr.sigebi.entities.TrasladoEntity"/>
     <mapping class="cr.ac.ucr.sigebi.entities.UnidadEjecutoraEntity"/>
-    <mapping class="cr.ac.ucr.sigebi.entities.UsuarioEntity"/>
-    <mapping class="cr.ac.ucr.sigebi.entities.TrasladoDetalleEntity"/>
     <mapping class="cr.ac.ucr.sigebi.entities.JustificacionEntity"/> -->
     
   </session-factory>

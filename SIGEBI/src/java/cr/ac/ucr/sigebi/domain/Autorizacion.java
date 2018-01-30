@@ -50,6 +50,9 @@ public class Autorizacion extends ObjetoBase implements Serializable {
     @ManyToOne
     @JoinColumn(name = "ID_ESTADO", referencedColumnName = "ID_ESTADO")
     private Estado estado;
+
+    @Column(name = "CODIGO")
+    private Integer codigo;
     
     @Transient
     private List<AutorizacionRol> autorizacionesRol;
@@ -105,6 +108,14 @@ public class Autorizacion extends ObjetoBase implements Serializable {
         this.estado = estado;
     }
 
+    public Integer getCodigo() {
+        return codigo;
+    }
+
+    public void setCodigo(Integer codigo) {
+        this.codigo = codigo;
+    }
+    
     public List<AutorizacionRol> getAutorizacionesRol() {
         return autorizacionesRol;
     }
@@ -112,7 +123,7 @@ public class Autorizacion extends ObjetoBase implements Serializable {
     public void setAutorizacionesRol(List<AutorizacionRol> autorizacionesRol) {
         this.autorizacionesRol = autorizacionesRol;
     }
-    
+
     //</editor-fold>
 
     //<editor-fold defaultstate="collapsed" desc="Metodos">

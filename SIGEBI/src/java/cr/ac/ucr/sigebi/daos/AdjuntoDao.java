@@ -8,7 +8,8 @@ package cr.ac.ucr.sigebi.daos;
 import cr.ac.ucr.framework.daoHibernate.DaoHelper;
 import cr.ac.ucr.framework.daoImpl.GenericDaoImpl;
 import cr.ac.ucr.framework.utils.FWExcepcion;
-import cr.ac.ucr.sigebi.entities.AdjuntoEntity;
+import cr.ac.ucr.sigebi.domain.Adjunto;
+import cr.ac.ucr.sigebi.domain.Tipo;
 import java.util.List;
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -23,13 +24,13 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Repository(value = "adjuntoDao")
 @Scope("request")
-public class FaltaAdjuntoDao extends GenericDaoImpl {
+public class AdjuntoDao extends GenericDaoImpl {
 
     @Autowired
     private DaoHelper dao;
 
     @Transactional
-    public void agregar(AdjuntoEntity adjunto) {
+    public void agregar(Adjunto adjunto) {
         try {
             this.persist(adjunto);
         } catch (Exception e) {
@@ -40,7 +41,7 @@ public class FaltaAdjuntoDao extends GenericDaoImpl {
     }
 
     @Transactional
-    public void eliminar(AdjuntoEntity adjunto) {       
+    public void eliminar(Adjunto adjunto) {       
         try {
              this.delete(adjunto);
         } catch (Exception e) {
@@ -51,15 +52,37 @@ public class FaltaAdjuntoDao extends GenericDaoImpl {
     }
 
     @Transactional(readOnly = true)
-    public List<AdjuntoEntity> buscarPorReferencia(Long idReferencia) {
+    public List<Adjunto> buscarPorDocumento(Tipo tipoDocumento, Long idDocumento) {
         Session session = this.dao.getSessionFactory().openSession();
         try {
-            String sql = "SELECT obj FROM AdjuntoEntity obj WHERE obj.idReferencia = :idReferencia";
+            String sql = "SELECT obj FROM Adjunto obj WHERE obj.idTipo.id = :idTipo and obj.idDocumento = :idDocumento";
+            Query query = session.createQuery(sql);
+            query.setParameter("idTipo", tipoDocumento.getId());
+            query.setParameter("idDocumento", idDocumento);
+
+            //Se obtienen los resutltados
+            return (List<Adjunto>) query.list();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new FWExcepcion("sigebi.error.dao.adjunto.buscarPorReferencia",
+                    "Error obtener los registros de tipo " + this.getClass(), e.getCause());
+        } finally {
+            session.close();
+        }
+    }
+    
+    
+    @Transactional(readOnly = true)
+    public List<Adjunto> buscarPorReferencia(Long idReferencia) {
+        Session session = this.dao.getSessionFactory().openSession();
+        try {
+            String sql = "SELECT obj FROM Adjunto obj WHERE obj.idReferencia = : idReferencia";
             Query query = session.createQuery(sql);
             query.setParameter("idReferencia", idReferencia);
 
             //Se obtienen los resutltados
-            return (List<AdjuntoEntity>) query.list();
+            return (List<Adjunto>) query.list();
 
         } catch (Exception e) {
             e.printStackTrace();

@@ -7,19 +7,18 @@ package cr.ac.ucr.sigebi.controllers;
 
 import cr.ac.ucr.framework.vista.util.Mensaje;
 import cr.ac.ucr.framework.vista.util.Util;
+import cr.ac.ucr.sigebi.domain.Acta;
+import cr.ac.ucr.sigebi.domain.ActaDetalle;
 import cr.ac.ucr.sigebi.domain.AutorizacionRolPersona;
 import cr.ac.ucr.sigebi.domain.Estado;
 import cr.ac.ucr.sigebi.domain.Rol;
 import cr.ac.ucr.sigebi.domain.Tipo;
 import cr.ac.ucr.sigebi.domain.Usuario;
-import cr.ac.ucr.sigebi.entities.ActaDetalleEntity;
 import cr.ac.ucr.sigebi.models.ActaModel;
 import cr.ac.ucr.sigebi.models.EstadoModel;
-import cr.ac.ucr.sigebi.entities.ActaEntity;
 import cr.ac.ucr.sigebi.entities.DocumentoEntity;
 import cr.ac.ucr.sigebi.models.TipoModel;
 import cr.ac.ucr.sigebi.entities.RolEntity;
-import cr.ac.ucr.sigebi.entities.ViewBienEntity;
 import cr.ac.ucr.sigebi.entities.ViewDocumAprobEntity;
 import cr.ac.ucr.sigebi.models.BienModel;
 import cr.ac.ucr.sigebi.models.DocumentoRolEstadoModel;
@@ -52,7 +51,7 @@ import org.springframework.stereotype.Controller;
 public class ActaController extends ListadoBienesGeneralController {
 
     //<editor-fold defaultstate="collapsed" desc="Variables">
-    ActaEntity acta;
+    Acta acta;
 
     //TODO el manejo de estados debe modificarse para que si agrega un nuevo estado no haya que modificar el codigo
     Estado estadoGeneralActivo;
@@ -60,7 +59,7 @@ public class ActaController extends ListadoBienesGeneralController {
     Estado estadoGeneralAprobado;
     Estado estadoGeneralRechazado;
     
-    List<ActaEntity> actasRegistradas;
+    List<Acta> actasRegistradas;
 
     List<SelectItem> tiposActaOptions;
     String tipoActaSeleccionada;
@@ -90,18 +89,11 @@ public class ActaController extends ListadoBienesGeneralController {
     @Resource
     private EstadoModel estadoModel;
 
-    @Resource
-    private ActaModel actaModel;
-
-    @Resource
-    private AutorizacionRolPersonaModel autorizacionRolPersonaModel;
-
-    @Resource
-    private BienModel bienModel;
-
+    @Resource private ActaModel actaModel;
+    @Resource private AutorizacionRolPersonaModel autorizacionRolPersonaModel;
+    @Resource private BienModel bienModel;
+    @Resource private UsuarioModel usuarioModel;
     
-    @Resource
-    private UsuarioModel usuarioModel;
     Usuario usuarioRegistrado;
     
     //</editor-fold>
@@ -115,26 +107,26 @@ public class ActaController extends ListadoBienesGeneralController {
     private void incializaDatos() {
         try{
             // TODO manejar los estados en un List por dominio
-//            estadoGeneralActivo = estadoModel.buscarPorDominioEstado( Constantes.DOMINI0_ESTADO_GENERAL, Constantes.ESTADO_GENERAL_ACTIVO);
-//            estadoGeneralPendiente = estadoModel.buscarPorDominioEstado( Constantes.DOMINI0_ESTADO_GENERAL, Constantes.ESTADO_GENERAL_PENDIENTE);
-//            estadoGeneralAprobado = estadoModel.buscarPorDominioEstado( Constantes.DOMINI0_ESTADO_GENERAL, Constantes.ESTADO_GENERAL_APROBADO);
-//            estadoGeneralRechazado = estadoModel.buscarPorDominioEstado( Constantes.DOMINI0_ESTADO_GENERAL, Constantes.ESTADO_GENERAL_RECHAZADO);
+            estadoGeneralActivo = estadoModel.buscarPorDominioEstado( Constantes.DOMINIO_GENERAL, Constantes.ESTADO_GENERAL_ACTIVO);
+            estadoGeneralPendiente = estadoModel.buscarPorDominioEstado( Constantes.DOMINIO_GENERAL, Constantes.ESTADO_GENERAL_PENDIENTE);
+            estadoGeneralAprobado = estadoModel.buscarPorDominioEstado( Constantes.DOMINIO_GENERAL, Constantes.ESTADO_GENERAL_APROBADO);
+            estadoGeneralRechazado = estadoModel.buscarPorDominioEstado( Constantes.DOMINIO_GENERAL, Constantes.ESTADO_GENERAL_RECHAZADO);
     //      
             usuarioRegistrado = usuarioModel.buscarPorId(codPersonaReg);
             rolesDelUsuarioActualDesecho = new HashMap<Long, Rol>();
             rolesDelUsuarioActualDonacion = new HashMap<Long, Rol>();
 
-            List<AutorizacionRolPersona> rolesAprobacionDonacion =  autorizacionRolPersonaModel.buscarRolesPorAutorizacionUsuario(Constantes.ID_DOCUMENTO_ACTA_DONACION, usuarioRegistrado.getId(), unidadEjecutora.getId());     
-            List<AutorizacionRolPersona> rolesAprobacionDesecho =  autorizacionRolPersonaModel.buscarRolesPorAutorizacionUsuario(Constantes.ID_DOCUMENTO_ACTA_DESECHO, usuarioRegistrado.getId(), unidadEjecutora.getId());     
+            List<AutorizacionRolPersona> rolesAprobacionDonacion =  autorizacionRolPersonaModel.buscarRolesPorAutorizacionUsuario(Long.parseLong(Constantes.CODIGO_AUTORIZACION_ACTA_DONACION.toString()), usuarioRegistrado.getId(), unidadEjecutora.getId());     
+            List<AutorizacionRolPersona> rolesAprobacionDesecho =  autorizacionRolPersonaModel.buscarRolesPorAutorizacionUsuario(Long.parseLong(Constantes.CODIGO_AUTORIZACION_ACTA_DESECHO.toString()), usuarioRegistrado.getId(), unidadEjecutora.getId());     
 
 
             //Estos son los roles registrados para este USUARIO en cada DOCUMENTO
-    //        for(AutorizacionRolPersona item : rolesAprobacionDesecho)
-    //            rolesDelUsuarioActualDesecho.put(item.getIdRol().getId(), item.getIdRol());
-    //        for(AutorizacionRolPersona item : rolesAprobacionDonacion)
-    //            rolesDelUsuarioActualDonacion.put(item.getIdRol().getId(), item.getIdRol());
-    //                
-            listarActas();
+            for(AutorizacionRolPersona item : rolesAprobacionDesecho)
+                rolesDelUsuarioActualDesecho.put(item.getAutorizacionRol().getRol().getId(), item.getAutorizacionRol().getRol());
+            for(AutorizacionRolPersona item : rolesAprobacionDonacion)
+                rolesDelUsuarioActualDonacion.put(item.getAutorizacionRol().getRol().getId(), item.getAutorizacionRol().getRol());
+                    
+            listadoInicializaDatos();
         }catch(Exception err){
             Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.ActaListar.MSGError.Listado"));
         }
@@ -146,7 +138,7 @@ public class ActaController extends ListadoBienesGeneralController {
 
             tiposActaOptions = new ArrayList<SelectItem>();
             cargarTipo();
-            acta = new ActaEntity();
+            acta = new Acta();
             acta.setUnidadEjecutora(unidadEjecutora.getId());
 
             acta.setIdEstado(estadoGeneralPendiente);
@@ -205,11 +197,11 @@ public class ActaController extends ListadoBienesGeneralController {
         this.permitirEdicion = permitirEdicion;
     }
     
-    public List<ActaEntity> getActasRegistradas() {
+    public List<Acta> getActasRegistradas() {
         return actasRegistradas;
     }
 
-    public void setActasRegistradas(List<ActaEntity> actasRegistradas) {
+    public void setActasRegistradas(List<Acta> actasRegistradas) {
         this.actasRegistradas = actasRegistradas;
     }
 
@@ -245,11 +237,11 @@ public class ActaController extends ListadoBienesGeneralController {
         this.registrado = registrado;
     }
 
-    public ActaEntity getActa() {
+    public Acta getActa() {
         return acta;
     }
 
-    public void setActa(ActaEntity acta) {
+    public void setActa(Acta acta) {
         this.acta = acta;
     }
 
@@ -307,8 +299,8 @@ public class ActaController extends ListadoBienesGeneralController {
                 return;
             }
             iniciaDatos();
-            ActaEntity item = (ActaEntity) pEvent.getComponent().getAttributes().get("itemSeleccionado");
-            if (item.getIdActa() > 0) {
+            Acta item = (Acta) pEvent.getComponent().getAttributes().get("itemSeleccionado");
+            if (item.getId() > 0) {
                 acta = item;
                 tipoActaSeleccionada = acta.getIdTipo().getId().toString();
                 esDonacion = tipoActaSeleccionada.equals(Constantes.ACTA_ID_TIPO_DONACION);
@@ -317,7 +309,7 @@ public class ActaController extends ListadoBienesGeneralController {
                 actaFecha = formatter.parse(formatter.format(acta.getFecha()));
                 fechaRegistro = formatter.format(acta.getFecha());
 
-//                bienesAsociados = actaModel.traerBienesActa(acta.getIdActa());
+//                bienesAsociados = actaModel.traerBienesActa(acta.getId());
 //
 //                for (ViewBienEntity valor : bienesAsociados) {
 //                    bienesSeleccionados.put(valor.getIdBien(), valor);
@@ -359,8 +351,13 @@ public class ActaController extends ListadoBienesGeneralController {
                 pEvent.queue();
                 return;
             }
-
-            listarActas();
+            
+            
+            fltIdActa = "";
+            fltAutorizacion = "";
+            fltEstados = "";
+            fltFecha = "";
+            listadoInicializaDatos();
             //inicializaDatos();
             Util.navegar(Constantes.KEY_VISTA_LISTAR_ACTAS);
 
@@ -387,21 +384,10 @@ public class ActaController extends ListadoBienesGeneralController {
     
     public void listarActas(){
         try{
-//            traslados = trasladoModel.trasladosListado(
-//                    unidadOrigen
-//                    , fltIdTraslado
-//                    , fltUnidadOrigen
-//                    , fltUnidadDestino
-//                    , fltFecha
-//                    , fltEstados
-//                    , this.getPrimerRegistro()-1
-//                    , this.getUltimoRegistro()
-//                    );
-
                 actasRegistradas = actaModel.listarActas(unidadEjecutora.getId()
                         , fltIdActa
                         , fltAutorizacion
-                        , fltEstados
+                        , fltEstados.equals("-1") ? "" : fltEstados
                         , fltFecha
                         , this.getPrimerRegistro()-1
                         , this.getUltimoRegistro()
@@ -432,7 +418,7 @@ public class ActaController extends ListadoBienesGeneralController {
             contador = actaModel.consultaCantidadRegistros(unidadEjecutora.getId()
                         , fltIdActa
                         , fltAutorizacion
-                        , fltEstados
+                        , fltEstados.equals("-1") ? "" : fltEstados
                         , fltFecha
                 );
             
@@ -657,7 +643,7 @@ public class ActaController extends ListadoBienesGeneralController {
         if (registroEsValido()) {
             actaModel.guardar(acta);
             //GUARDAR LOS BIENES ASOCIADOS
-            List<ActaDetalleEntity> bienesAsoc = getBienesAsoc();
+            List<ActaDetalle> bienesAsoc = getBienesAsoc();
             actaModel.guardarBienes(bienesAsoc);
             Mensaje.agregarInfo(Util.getEtiquetas("sigebi.Acta.MsnError.ActaGuardada"));
         }
@@ -712,11 +698,11 @@ public class ActaController extends ListadoBienesGeneralController {
 
     }
 
-    private List<ActaDetalleEntity> getBienesAsoc() {
-        List<ActaDetalleEntity> detalle = new ArrayList<ActaDetalleEntity>();
+    private List<ActaDetalle> getBienesAsoc() {
+        List<ActaDetalle> detalle = new ArrayList<ActaDetalle>();
 //        for (ViewBienEntity bn : bienesAsociados) {     // foreach grade in grades
 //            //Bien bien = bienModel.traerPorId(bn.getIdBien());
-//            ActaDetalleEntity valor = new ActaDetalleEntity(acta.getIdActa(),
+//            ActaDetalle valor = new ActaDetalle(acta.getId(),
 //                     bn.getIdBien(),
 //                     estadoGeneralPendiente.getId());
 //            detalle.add(valor);
@@ -749,9 +735,9 @@ public class ActaController extends ListadoBienesGeneralController {
             
             //COnsulto los roles por tipo
             if (tipoActaSeleccionada.equals(valorDonacion))
-                roles = documRolModel.buscarRolDocumId(Constantes.ID_DOCUMENTO_ACTA_DONACION.intValue(), acta.getIdActa());
+                roles = documRolModel.buscarRolDocumId(Constantes.CODIGO_AUTORIZACION_ACTA_DONACION.intValue(), acta.getId());
             else 
-                roles = documRolModel.buscarRolDocumId(Constantes.ID_DOCUMENTO_ACTA_DESECHO.intValue(), acta.getIdActa());
+                roles = documRolModel.buscarRolDocumId(Constantes.CODIGO_AUTORIZACION_ACTA_DESECHO.intValue(), acta.getId());
             
                 
             //Reviso los roles por documento
@@ -779,7 +765,7 @@ public class ActaController extends ListadoBienesGeneralController {
     }
 
     public boolean permitirEditar() {
-        return acta.getIdEstado().equals(estadoGeneralPendiente.getId());
+        return acta.getIdEstado().getId().equals(estadoGeneralPendiente.getId());
     }
 
     @Resource
@@ -803,7 +789,7 @@ public class ActaController extends ListadoBienesGeneralController {
             RolEntity rolEntity = new RolEntity();
             rolEntity.setIdRol( Long.parseLong(""+docum.getRolId() ) );
             //Inicializo el registro DocumentoRolEstadoEntity
-//            DocumentoRolEstadoEntity registro = new DocumentoRolEstadoEntity( Long.parseLong(""+acta.getIdActa())
+//            DocumentoRolEstadoEntity registro = new DocumentoRolEstadoEntity( Long.parseLong(""+acta.getId())
 //                                                                            , documentoEntity
 //                                                                            , rolEntity
 //                                                                            , estadoGeneralAprobado);
@@ -853,7 +839,7 @@ public class ActaController extends ListadoBienesGeneralController {
             RolEntity rolEntity = new RolEntity();
             rolEntity.setIdRol( Long.parseLong(""+docum.getRolId() ) );
             //Inicializo el registro DocumentoRolEstadoEntity
-//            DocumentoRolEstadoEntity registro = new DocumentoRolEstadoEntity( Long.parseLong(""+acta.getIdActa())
+//            DocumentoRolEstadoEntity registro = new DocumentoRolEstadoEntity( Long.parseLong(""+acta.getId())
 //                                                                            , documentoEntity
 //                                                                            , rolEntity
 //                                                                            , estadoGeneralRechazado);

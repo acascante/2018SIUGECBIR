@@ -36,8 +36,8 @@ public class AutorizacionRolPersonaModel {
         autorizacionRolPersonaDao.eliminar(obj);
     }
 
-    public List<AutorizacionRolPersona> buscarPorAutorizacionRol(Long idAutorizacion, Long idRol) throws FWExcepcion{
-        return autorizacionRolPersonaDao.buscarPorAutorizacionRol(idAutorizacion, idRol);
+    public List<AutorizacionRolPersona> buscarPorAutorizacionRol(Long idAutorizacion, Long idRol, Long numUnidadEjec) throws FWExcepcion{
+        return autorizacionRolPersonaDao.buscarPorAutorizacionRol(idAutorizacion, idRol, numUnidadEjec);
     }
 
     public List<AutorizacionRolPersona> buscarUsuariosPorAutorizacion(Long idAutorizacion, Long numUnidadEjec) throws FWExcepcion{

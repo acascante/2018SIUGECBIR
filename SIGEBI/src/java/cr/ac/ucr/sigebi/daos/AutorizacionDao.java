@@ -98,12 +98,12 @@ public class AutorizacionDao extends GenericDaoImpl {
     }
 
     @Transactional(readOnly = true)
-    public Long contarAutorizacionsValidator(Long idAutorizacion, Integer idProceso,Integer orden,String nombre) throws FWExcepcion {
+    public Long contarAutorizacionsValidator(Long idAutorizacion, Integer idProceso,Integer orden,String nombre, Integer codigo) throws FWExcepcion {
         Session session = dao.getSessionFactory().openSession();
         try {
 
             //Se genera el query para la busqueda
-            Query q = this.creaQueryContar(idAutorizacion, idProceso, orden, nombre, session);
+            Query q = this.creaQueryContar(idAutorizacion, idProceso, orden, nombre, codigo, session);
 
             //Se obtienen los resutltados
             return (Long) q.uniqueResult();
@@ -116,7 +116,7 @@ public class AutorizacionDao extends GenericDaoImpl {
         }
     }
 
-    private Query creaQueryContar(Long idAutorizacion, Integer idProceso,Integer orden,String nombre,Session session) {
+    private Query creaQueryContar(Long idAutorizacion, Integer idProceso,Integer orden,String nombre, Integer codigo, Session session) {
         String sql = "SELECT count(obj) FROM Autorizacion obj ";        
         //Select
         sql = sql + " WHERE  1 = 1 ";
@@ -128,6 +128,9 @@ public class AutorizacionDao extends GenericDaoImpl {
         }
         if (orden != null && orden> 0) {
             sql = sql + " AND obj.orden = :orden ";
+        }
+        if (codigo != null && codigo> 0) {
+            sql = sql + " AND obj.codigo = :codigo ";
         }
         if (nombre != null && nombre.length() > 0) {
             sql = sql + " AND upper(obj.nombre) = upper(:nombre) ";
@@ -142,6 +145,9 @@ public class AutorizacionDao extends GenericDaoImpl {
         }
         if (orden != null && orden> 0) {
             q.setParameter("orden", orden);
+        }
+        if (codigo != null && codigo> 0) {
+            q.setParameter("codigo", codigo);
         }
         if (nombre != null && nombre.length() > 0) {
             q.setParameter("nombre", nombre);

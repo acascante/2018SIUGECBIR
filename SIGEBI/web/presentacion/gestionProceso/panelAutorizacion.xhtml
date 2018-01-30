@@ -38,6 +38,20 @@
                         <div class="col-md-12">
                             <div class="form-group"> 
                                 <label class="control-label" for="txtOrden">
+                                    <ice:outputText value="#{label['sigebi.label.vista.gestionProceso.autorizacion.codigo']}" />
+                                    <ice:outputText value="#{label['label.requerido']}" />
+                                </label>
+                                <ice:inputText id="autorizacionOrden" 
+                                               required="true"
+                                               styleClass="form-control"
+                                               value="#{controllerGestionProceso.command.autorizacion.codigo}" />
+                            </div>                                             
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group"> 
+                                <label class="control-label" for="txtOrden">
                                     <ice:outputText value="#{label['sigebi.label.vista.gestionProceso.autorizacion.orden']}" />
                                     <ice:outputText value="#{label['label.requerido']}" />
                                 </label>

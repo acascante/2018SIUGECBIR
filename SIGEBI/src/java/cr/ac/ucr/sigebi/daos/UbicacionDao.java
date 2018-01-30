@@ -9,12 +9,11 @@ import cr.ac.ucr.framework.daoHibernate.DaoHelper;
 import cr.ac.ucr.framework.daoImpl.GenericDaoImpl;
 import cr.ac.ucr.framework.utils.FWExcepcion;
 import cr.ac.ucr.sigebi.domain.Ubicacion;
-import java.util.Iterator;
 import java.util.List;
+import org.hibernate.HibernateException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
-import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import org.hibernate.Query;
@@ -35,29 +34,35 @@ public class UbicacionDao extends GenericDaoImpl {
     public List<Ubicacion> listar(Long idUnidadEjec) throws FWExcepcion {
         Session session = dao.getSessionFactory().openSession();
         try {
-            
             String sql = "SELECT ub FROM Ubicacion ub WHERE ub.unidadEjecutora.id = :unidad ";
             Query query = session.createQuery(sql);
-            query.setParameter("unidad", idUnidadEjec);
-            
+            query.setParameter("unidad", idUnidadEjec);           
             return (List<Ubicacion>) query.list();
-
-            //return dao.getHibernateTemplate().find("from Ubicacion s WHERE s.idUnidadEjecutora = :idUnidadEjec "); 
-        } catch (DataAccessException e) {
+        } catch (HibernateException e) {
             throw new FWExcepcion("sigebi.error.notificacionDao.listar", "Error obtener los registros de tipo " + this.getClass(), e.getCause());
         }
     }
     
     @Transactional(readOnly = true)
     public Ubicacion buscarPorId(Long id) throws FWExcepcion {
-        return load(Ubicacion.class, id);
+        Session session = dao.getSessionFactory().openSession();
+        try {
+            String sql = "SELECT obj FROM Ubicacion obj WHERE obj.id = :id";
+            Query query = session.createQuery(sql);
+            query.setParameter("id", id);
+            return (Ubicacion) query.uniqueResult();
+        } catch (HibernateException e) {
+            throw new FWExcepcion("sigebi.error.ubicacion.dao.buscarPorId", "Error obtener los registros de tipo " + this.getClass(), e.getCause());
+        } finally {
+            session.close();
+        }
     }
     
     @Transactional
     public void almacenar(Ubicacion ubicacion) throws FWExcepcion {
         try {
             persist(ubicacion);
-        } catch (DataAccessException e) {
+        } catch (HibernateException e) {
             throw new FWExcepcion("sigebi.error.notificacionDao.salvar", "Error guardando registro de tipo " + this.getClass(), e.getCause());
         }
     }
@@ -66,7 +71,7 @@ public class UbicacionDao extends GenericDaoImpl {
     public void eliminar(Ubicacion ubicacion)throws FWExcepcion {
         try {
             delete(ubicacion);
-        } catch (DataAccessException e) {
+        } catch (HibernateException e) {
             throw new FWExcepcion("sigebi.error.notificacionDao.salvar", "Error guardando registro de tipo " + this.getClass(), e.getCause());
         }
     }
