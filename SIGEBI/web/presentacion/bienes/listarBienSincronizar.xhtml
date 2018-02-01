@@ -231,12 +231,13 @@
                                                    style="float:right;margin-top:2%" 
                                                    styleClass="boton" 
                                                    partialSubmit="true" 
-                                                   actionListener="#{controllerBienes.abrirDetalleSincronizar}"
+                                                   actionListener="#{controllerAgregarBienes.abrirDetalle}"
                                                    value="#{label['sigebi.label.vista.listarBienSincronizar.detalle']}"  >
-                                    <f:attribute id="tipoSeleccionado" name="tipoSeleccionado"  value="#{bien}"/>                                
+                                    <f:attribute id="bienSeleccionado" name="bienSeleccionado"  value="#{bien}"/>
+                                    <f:attribute id="vistaOrigenParam" name="vistaOrigenParam"  value="sincronizar"/>
                                 </ice:commandButton>
 
-                            </ice:column>
+                                </ice:column>
                         </ice:dataTable>
 
                     </div>

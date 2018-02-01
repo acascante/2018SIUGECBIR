@@ -18,6 +18,8 @@ public final class Constantes {
     public static final String PATTERN_EMAIL = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@" + "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
     public static final TimeZone DEFAULT_TIME_ZONE = TimeZone.getDefault();
     public static final String PATTERN_NUMERIC = "((-|\\+)?[0-9]+(\\.[0-9]+)?)+";
+    public static final Long DEFAULT_ID = -1L;
+    public static final String DEFAULT_COMBO_MESSAGE = "Seleccione una Opcion";
 
     // Estados de un bien
     public static final Integer ESTADO_BIEN_PRE_INGRESO = 1;
@@ -105,7 +107,7 @@ public final class Constantes {
     public static final String VISTA_EXCLUSION_LISTADO_PAGINA = "../exclusiones/listarExclusiones.xhtml";
     public static final String VISTA_EXCLUSION_NUEVA = "exclusion_nueva";
     public static final String VISTA_EXCLUSION_NUEVA_PAGINA = "../exclusiones/exclusionDetalle.xhtml";
-    public static final String VISTA_SINCRONIZACION_BIEN = "sincronizacion";
+    public static final String VISTA_SINCRONIZACION_BIEN = "sincronizar";
     public static final String VISTA_SINCRONIZACION_BIEN_LISTADO = "../bienes/listarBienSincronizar.xhtml";
 
     //BIENES

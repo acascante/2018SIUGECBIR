@@ -18,7 +18,6 @@ import cr.ac.ucr.sigebi.domain.Tipo;
 import cr.ac.ucr.sigebi.domain.Ubicacion;
 import cr.ac.ucr.sigebi.entities.AccesoriosEntity;
 import cr.ac.ucr.sigebi.domain.Adjunto;
-import cr.ac.ucr.sigebi.entities.NotaEntity;
 import cr.ac.ucr.sigebi.models.AccesorioModel;
 import cr.ac.ucr.sigebi.models.AdjuntoModel;
 import cr.ac.ucr.sigebi.models.BienCaracteristicaModel;
@@ -55,7 +54,7 @@ import javax.servlet.http.HttpServletResponse;
  * @author jorge.serrano
  */
 public class BienController_Adicional extends BaseController{
-
+/*
     
     //<editor-fold defaultstate="collapsed" desc="Variables de la Clase">
     
@@ -339,9 +338,9 @@ public class BienController_Adicional extends BaseController{
         ubicacionOptions = new ArrayList<SelectItem>();
         
         List<Ubicacion> ubicacionesList;
-        ubicacionesList = ubicModel.listar(unidadEjecutora.getId());
+        ubicacionesList = ubicModel.listar(unidadEjecutora);
         for (Ubicacion item : ubicacionesList) {
-            ubicaciones.put(item.getId(), item);
+            ubicaciones.put(item.getId().intValue(), item);
             ubicacionOptions.add(new SelectItem(item.getId(), item.getDetalle()));
         }
         
@@ -1072,7 +1071,7 @@ public class BienController_Adicional extends BaseController{
     //</editor-fold>
     
     
-    //<editor-fold defaultstate="collapsed" desc="Tab Notas del Activo">
+    //<editor-fold defaultstate="collapsed" desc="Tab Accesorio del Activo">
     boolean eliminarAccesorioVisible;
     String mensajeAccesExito;
     String mensajeAccesError;
@@ -1206,5 +1205,5 @@ public class BienController_Adicional extends BaseController{
 
     //</editor-fold>
     
-    
+    */
 }

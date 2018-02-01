@@ -33,30 +33,24 @@ public class CategoriaDao extends GenericDaoImpl {
     @Transactional(readOnly = true)
     public List<Categoria> listar() throws FWExcepcion {
         try {
-            return dao.getHibernateTemplate().find("from Categoria"); 
-        } catch (DataAccessException e) {
+            return dao.getHibernateTemplate().find("from Categoria");
+        } catch (HibernateException e) {
             throw new FWExcepcion("sigebi.error.notificacionDao.listar", "Error obtener los registros de tipo " + this.getClass(), e.getCause());
         }
     }
-    
+
     @Transactional(readOnly = true)
     public Categoria buscarPorId(Long id) throws FWExcepcion {
-        return load(Categoria.class, id);
-    }
-    
-    @Transactional(readOnly = true)
-    public Categoria buscarPorCodigoCategoria(String codigoCategoria) throws FWExcepcion {
         Session session = dao.getSessionFactory().openSession();
         try {
-            String sql = "SELECT cat FROM Categoria cat WHERE cat.codigoCategoria = :codigoCategoria";
+            String sql = "SELECT obj FROM Categoria obj WHERE obj.id = :id";
             Query query = session.createQuery(sql);
-            query.setParameter("codigoCategoria", codigoCategoria);
-
+            query.setParameter("id", id);
             return (Categoria) query.uniqueResult();
         } catch (HibernateException e) {
-            throw new FWExcepcion("sigebi.error.notificacionDao.listar", "Error obtener los registros de tipo " + this.getClass(), e.getCause());
+            throw new FWExcepcion("sigebi.error.categoria.dao.buscarPorId", "Error obtener los registros de tipo " + this.getClass(), e.getCause());
         } finally {
             session.close();
         }
-    }
+    }    
 }

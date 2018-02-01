@@ -10,7 +10,7 @@ public abstract class ObjetoBase {
 
     protected volatile transient boolean seleccionado;
     protected volatile transient boolean marcado;
-    protected volatile transient Long idTemporal;
+    protected volatile transient Long idTemporal = -1L;
 
     public ObjetoBase() {
 

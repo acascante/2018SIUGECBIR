@@ -8,6 +8,7 @@ package cr.ac.ucr.sigebi.daos;
 import cr.ac.ucr.framework.daoHibernate.DaoHelper;
 import cr.ac.ucr.framework.daoImpl.GenericDaoImpl;
 import cr.ac.ucr.framework.utils.FWExcepcion;
+import cr.ac.ucr.sigebi.domain.Categoria;
 import cr.ac.ucr.sigebi.domain.SubCategoria;
 import java.util.List;
 import org.hibernate.HibernateException;
@@ -26,26 +27,26 @@ import org.springframework.transaction.annotation.Transactional;
 @Repository(value = "SubCategoriaDao")
 @Scope("request")
 public class SubCategoriaDao extends GenericDaoImpl {
-    
+
     @Autowired
     private DaoHelper dao;
-    
+
     @Transactional(readOnly = true)
     public List<SubCategoria> listar() throws FWExcepcion {
         try {
-            return dao.getHibernateTemplate().find("from SubCategoria"); 
+            return dao.getHibernateTemplate().find("from SubCategoria");
         } catch (DataAccessException e) {
             throw new FWExcepcion("sigebi.error.notificacionDao.listar", "Error obtener los registros de tipo " + this.getClass(), e.getCause());
         }
     }
-    
+
     @Transactional(readOnly = true)
-    public List<SubCategoria> listar(String codigoCategoria) throws FWExcepcion {
+    public List<SubCategoria> listar(Categoria categoria) throws FWExcepcion {
         Session session = dao.getSessionFactory().openSession();
         try {
-            String sql = "SELECT sc FROM SubCategoria sc WHERE sc.codigoCategoria = :codigoCategoria";
+            String sql = "SELECT sc FROM SubCategoria sc WHERE sc.categoria = :categoria";
             Query query = session.createQuery(sql);
-            query.setParameter("codigoCategoria", codigoCategoria);
+            query.setParameter("categoria", categoria);
 
             return (List<SubCategoria>) query.list();
         } catch (HibernateException e) {
@@ -57,6 +58,16 @@ public class SubCategoriaDao extends GenericDaoImpl {
     
     @Transactional(readOnly = true)
     public SubCategoria buscarPorId(Long id) throws FWExcepcion {
-        return load(SubCategoria.class, id);
+        Session session = dao.getSessionFactory().openSession();
+        try {
+            String sql = "SELECT obj FROM SubCategoria obj WHERE obj.id = :id";
+            Query query = session.createQuery(sql);
+            query.setParameter("id", id);
+            return (SubCategoria) query.uniqueResult();
+        } catch (HibernateException e) {
+            throw new FWExcepcion("sigebi.error.subcategoria.dao.buscarPorId", "Error obtener los registros de tipo " + this.getClass(), e.getCause());
+        } finally {
+            session.close();
+        }
     }
 }

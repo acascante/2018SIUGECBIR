@@ -159,8 +159,6 @@ public class SincronizarEntity implements Serializable {
 
     //</editor-fold>
     
-    
-    
     //<editor-fold defaultstate="collapsed" desc="SET's y GET's ">
 
     public int getNumEmpresa() {
@@ -658,7 +656,7 @@ public class SincronizarEntity implements Serializable {
 //        descripcion = bien.getIdSubClasificacion().toString();//.getDescripcion(); 
         indicaTipoActivo = bien.getTipo().toString().charAt(0);
         codigoSubCategoria = bien.getSubCategoria().getCodigoSubCategoria();// .getCodSubCategoria().split("-")[0];
-        codigoCategoria  = bien.getSubCategoria().getCodigoCategoria();// .getCodSubCategoria().split("-")[1];
+        codigoCategoria  = bien.getSubCategoria().getCategoria().getId().toString();// .getCodSubCategoria().split("-")[1];
         idCustodio = 1000;//bien.getNumUnidadEjec();
         idProveedor = Integer.parseInt(bien.getProveedor().getNumPersona().toString());
         origen = bien.getOrigen().toString().charAt(0);

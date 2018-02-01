@@ -7,6 +7,7 @@ package cr.ac.ucr.sigebi.domain;
 
 import cr.ac.ucr.framework.seguridad.ObjetoBase;
 import java.io.Serializable;
+import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -16,6 +17,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 /**
  *
@@ -30,7 +32,7 @@ public class Clasificacion extends ObjetoBase implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SGB_SQ_CLASIFICACION")
     @Column(name = "ID_CLASIFICACION")
-    private Integer id;
+    private Long id;
     
     @Column(name = "NOMBRE")
     private String nombre;
@@ -43,15 +45,34 @@ public class Clasificacion extends ObjetoBase implements Serializable {
     @JoinColumn(name = "ID_ESTADO", referencedColumnName = "ID_ESTADO")
     private Estado estado;
     
+    @Transient
+    private List<SubClasificacion> subClasificaciones;
+    
     //</editor-fold>
 
+    //<editor-fold defaultstate="collapsed" desc="Constructores">
+    public Clasificacion() {}
+    
+    public Clasificacion(Long id) {
+        this.id = id;
+    }
+    //</editor-fold>
+    
     //<editor-fold defaultstate="collapsed" desc="GET's y SET's">
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
+    }
+
+    public List<SubClasificacion> getSubClasificaciones() {
+        return subClasificaciones;
+    }
+
+    public void setSubClasificaciones(List<SubClasificacion> subClasificaciones) {
+        this.subClasificaciones = subClasificaciones;
     }
 
     public String getNombre() {

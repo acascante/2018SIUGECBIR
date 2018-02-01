@@ -30,7 +30,7 @@ public class SubClasificacion extends ObjetoBase implements Serializable {
     @Id
     @Column(name = "ID_SUB_CLASIFICACION")
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SGB_SQ_SUB_CLASIFICACION")
-    private Integer id;
+    private Long id;
     
     @ManyToOne
     @JoinColumn(name = "ID_CLASIFICACION", referencedColumnName = "ID_CLASIFICACION")
@@ -44,12 +44,20 @@ public class SubClasificacion extends ObjetoBase implements Serializable {
     private Estado estado;
     //</editor-fold>
 
+    //<editor-fold defaultstate="collapsed" desc="Constructores">
+    public SubClasificacion() {}
+    
+    public SubClasificacion(Long id) {
+        this.id = id;
+    }
+    //</editor-fold>
+ 
     //<editor-fold defaultstate="collapsed" desc="GET's y SET's">
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

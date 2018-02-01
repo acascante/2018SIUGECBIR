@@ -36,11 +36,8 @@ import org.springframework.stereotype.Controller;
 @Scope("session")
 public class AgregarNotificaionController {
 
-    @Resource
-    private NotificacionModel notificacionModel;
-    
-    @Resource
-    private EstadoModel estadoModel;
+    @Resource private NotificacionModel notificacionModel;
+    @Resource private EstadoModel estadoModel;
     
     private NotificacionCommand command;
     

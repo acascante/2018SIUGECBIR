@@ -9,6 +9,7 @@ import cr.ac.ucr.framework.daoHibernate.DaoHelper;
 import cr.ac.ucr.framework.daoImpl.GenericDaoImpl;
 import cr.ac.ucr.framework.utils.FWExcepcion;
 import cr.ac.ucr.sigebi.domain.Ubicacion;
+import cr.ac.ucr.sigebi.domain.UnidadEjecutora;
 import java.util.List;
 import org.hibernate.HibernateException;
 
@@ -31,12 +32,13 @@ public class UbicacionDao extends GenericDaoImpl {
     private DaoHelper dao;
 
     @Transactional(readOnly = true)
-    public List<Ubicacion> listar(Long idUnidadEjec) throws FWExcepcion {
+    public List<Ubicacion> listar(UnidadEjecutora unidadEjecutora) throws FWExcepcion {
         Session session = dao.getSessionFactory().openSession();
         try {
-            String sql = "SELECT ub FROM Ubicacion ub WHERE ub.unidadEjecutora.id = :unidad ";
+            String sql = "SELECT ub FROM Ubicacion ub WHERE ub.unidadEjecutora = :unidadEjecutora ";
             Query query = session.createQuery(sql);
-            query.setParameter("unidad", idUnidadEjec);           
+            query.setParameter("unidadEjecutora", unidadEjecutora);
+
             return (List<Ubicacion>) query.list();
         } catch (HibernateException e) {
             throw new FWExcepcion("sigebi.error.notificacionDao.listar", "Error obtener los registros de tipo " + this.getClass(), e.getCause());

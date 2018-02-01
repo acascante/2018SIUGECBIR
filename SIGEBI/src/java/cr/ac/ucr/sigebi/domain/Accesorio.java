@@ -44,7 +44,7 @@ public class Accesorio  extends ObjetoBase implements Serializable{
     private Estado estado;
     //</editor-fold>
     
-    //<editor-fold defaultstate="collapsed" desc="Atributos">
+    //<editor-fold defaultstate="collapsed" desc="Constructores">
     public Accesorio() {}
 
     public Accesorio(Long id, Bien bien, String detalle, Estado estado) {

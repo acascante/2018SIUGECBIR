@@ -7,10 +7,14 @@ package cr.ac.ucr.sigebi.domain;
 
 import cr.ac.ucr.framework.seguridad.ObjetoBase;
 import java.io.Serializable;
+import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 /**
  *
@@ -19,7 +23,7 @@ import javax.persistence.Table;
 @Entity(name = "SubCategoria")
 @Table(name = "SIGEBI_OAF.V_SIGB_SUB_CATEGORIA")
 public class SubCategoria extends ObjetoBase implements Serializable {
-    
+
     //<editor-fold defaultstate="collapsed" desc="Atributos">
     @Id
     @Column(name = "ID")
@@ -27,32 +31,44 @@ public class SubCategoria extends ObjetoBase implements Serializable {
 
     @Column(name = "NUM_EMPRESA")
     private Integer numeroEmpresa;
-    
+
     @Column(name = "CODIGO_SUB_CATEGORIA")
     private String codigoSubCategoria;
-    
-    @Column(name = "CODIGO_CATEGORIA")
-    private String codigoCategoria;
-    
+
+    @ManyToOne
+    @JoinColumn(name = "CODIGO_CATEGORIA", referencedColumnName = "ID")
+    private Categoria categoria;
+
     @Column(name = "DESCRIPCION")
     private String descripcion;
-    
+
     @Column(name = "CTA_CAPITALIZACION_CAT")
     private String cuentaCapitalizacion;
-    
+
     @Column(name = "CTA_PATRIMONIO_COMPRAS_CAT")
     private String cuentaPatrimonioCompras;
-    
+
     @Column(name = "CTA_PATRIMONIO_DONACIONES_CAT")
     private String cuentaPatrimonioDonaciones;
-    
+
     @Column(name = "CTA_DEPRECIACION_CAT")
     private String cuentaDepreciacion;
-    
+
     @Column(name = "CTA_REVALUACION_CAT")
     private String cuentaRevaluacion;
-    //</editor-fold>
 
+    @Transient
+    private List<Clasificacion> clasificaciones;
+    //</editor-fold>
+    
+    //<editor-fold defaultstate="collapsed" desc="Constructores">
+    public SubCategoria() {}
+    
+    public SubCategoria(Long id) {
+        this.id = id;
+    }
+    //</editor-fold>
+    
     //<editor-fold defaultstate="collapsed" desc="GET's y SET's">
     public Long getId() {
         return id;
@@ -60,6 +76,14 @@ public class SubCategoria extends ObjetoBase implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public List<Clasificacion> getClasificaciones() {
+        return clasificaciones;
+    }
+
+    public void setClasificaciones(List<Clasificacion> clasificaciones) {
+        this.clasificaciones = clasificaciones;
     }
 
     public Integer getNumeroEmpresa() {
@@ -78,12 +102,12 @@ public class SubCategoria extends ObjetoBase implements Serializable {
         this.codigoSubCategoria = codigoSubCategoria;
     }
 
-    public String getCodigoCategoria() {
-        return codigoCategoria;
+    public Categoria getCategoria() {
+        return categoria;
     }
 
-    public void setCodigoCategoria(String codigoCategoria) {
-        this.codigoCategoria = codigoCategoria;
+    public void setCategoria(Categoria categoria) {
+        this.categoria = categoria;
     }
 
     public String getDescripcion() {
@@ -134,21 +158,21 @@ public class SubCategoria extends ObjetoBase implements Serializable {
         this.cuentaRevaluacion = cuentaRevaluacion;
     }
     //</editor-fold>
-    
+
     //<editor-fold defaultstate="collapsed" desc="Metodos">
     @Override
     public int hashCode() {
         int hash = 7;
-        hash = 79 * hash + (this.id != null ? this.id.hashCode() : 0);
-        hash = 79 * hash + (this.numeroEmpresa != null ? this.numeroEmpresa.hashCode() : 0);
-        hash = 79 * hash + (this.codigoSubCategoria != null ? this.codigoSubCategoria.hashCode() : 0);
-        hash = 79 * hash + (this.codigoCategoria != null ? this.codigoCategoria.hashCode() : 0);
-        hash = 79 * hash + (this.descripcion != null ? this.descripcion.hashCode() : 0);
-        hash = 79 * hash + (this.cuentaCapitalizacion != null ? this.cuentaCapitalizacion.hashCode() : 0);
-        hash = 79 * hash + (this.cuentaPatrimonioCompras != null ? this.cuentaPatrimonioCompras.hashCode() : 0);
-        hash = 79 * hash + (this.cuentaPatrimonioDonaciones != null ? this.cuentaPatrimonioDonaciones.hashCode() : 0);
-        hash = 79 * hash + (this.cuentaDepreciacion != null ? this.cuentaDepreciacion.hashCode() : 0);
-        hash = 79 * hash + (this.cuentaRevaluacion != null ? this.cuentaRevaluacion.hashCode() : 0);
+        hash = 89 * hash + (this.id != null ? this.id.hashCode() : 0);
+        hash = 89 * hash + (this.numeroEmpresa != null ? this.numeroEmpresa.hashCode() : 0);
+        hash = 89 * hash + (this.codigoSubCategoria != null ? this.codigoSubCategoria.hashCode() : 0);
+        hash = 89 * hash + (this.categoria != null ? this.categoria.hashCode() : 0);
+        hash = 89 * hash + (this.descripcion != null ? this.descripcion.hashCode() : 0);
+        hash = 89 * hash + (this.cuentaCapitalizacion != null ? this.cuentaCapitalizacion.hashCode() : 0);
+        hash = 89 * hash + (this.cuentaPatrimonioCompras != null ? this.cuentaPatrimonioCompras.hashCode() : 0);
+        hash = 89 * hash + (this.cuentaPatrimonioDonaciones != null ? this.cuentaPatrimonioDonaciones.hashCode() : 0);
+        hash = 89 * hash + (this.cuentaDepreciacion != null ? this.cuentaDepreciacion.hashCode() : 0);
+        hash = 89 * hash + (this.cuentaRevaluacion != null ? this.cuentaRevaluacion.hashCode() : 0);
         return hash;
     }
 
@@ -165,9 +189,6 @@ public class SubCategoria extends ObjetoBase implements Serializable {
         }
         final SubCategoria other = (SubCategoria) obj;
         if ((this.codigoSubCategoria == null) ? (other.codigoSubCategoria != null) : !this.codigoSubCategoria.equals(other.codigoSubCategoria)) {
-            return false;
-        }
-        if ((this.codigoCategoria == null) ? (other.codigoCategoria != null) : !this.codigoCategoria.equals(other.codigoCategoria)) {
             return false;
         }
         if ((this.descripcion == null) ? (other.descripcion != null) : !this.descripcion.equals(other.descripcion)) {
@@ -192,6 +213,9 @@ public class SubCategoria extends ObjetoBase implements Serializable {
             return false;
         }
         if (this.numeroEmpresa != other.numeroEmpresa && (this.numeroEmpresa == null || !this.numeroEmpresa.equals(other.numeroEmpresa))) {
+            return false;
+        }
+        if (this.categoria != other.categoria && (this.categoria == null || !this.categoria.equals(other.categoria))) {
             return false;
         }
         return true;

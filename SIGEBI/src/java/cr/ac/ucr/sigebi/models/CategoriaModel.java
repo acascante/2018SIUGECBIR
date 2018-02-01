@@ -30,9 +30,5 @@ public class CategoriaModel {
     
     public Categoria buscarPorId(Long id) throws FWExcepcion {
         return categoriaDao.buscarPorId(id);
-    }
-    
-    public Categoria buscarPorCodigoCategoria(String codigoCategoria) throws FWExcepcion {
-        return categoriaDao.buscarPorCodigoCategoria(codigoCategoria);
-    }
+    }        
 }

@@ -1,0 +1,154 @@
+  <ice:outputHtml id="frmDetalleNotificacion" 
+          xmlns:ice="http://www.icesoft.com/icefaces/component" 
+          xmlns:icecore="http://www.icefaces.org/icefaces/core" 
+          xmlns:h="http://java.sun.com/jsf/html" 
+          xmlns:f="http://java.sun.com/jsf/core" 
+          xmlns:ui="http://java.sun.com/jsf/facelets"
+          xmlns:c="http://java.sun.com/jstl/core">
+             
+
+      
+        <!-- TAB Adjunto -->
+                <div class="container">
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <h4>Adjuntar archivos</h4>
+                        </div>
+                    </div>
+
+
+                    <div class="row"  style="padding-bottom: 30px">
+
+                        <div class="col-md-6">
+
+                            <div class="container">
+
+                                <div class="row">
+                                    <div class="col-md-12">
+
+                                        <div class="form-group">
+                                            <label class="control-label" for="txtDescripcionAdjunto">Descripción</label>
+                                            <ice:inputTextarea id="txtDescripcionAdjunto" 
+                                                               styleClass="form-control" 
+                                                               value="#{controllerAgregarBienes.adjuntoDescripcion}"
+                                                               required="true"
+                                                               style="resize: none;"
+                                                               partialSubmit="true"
+                                                               maxlength="350"
+                                                               ></ice:inputTextarea>
+
+                                        </div>
+                                    </div>
+                                </div>
+
+
+
+
+                                <div class="row">
+                                    <div class="col-md-12">
+
+                                        <ice:inputFile id="inputFileComponent2"
+                                                       styleClass="boton"
+                                                       style="
+                                                       color: #FFFFFF;
+                                                       border: 0 none;
+                                                       border-radius: 2px 2px 2px 2px;
+                                                       background: none repeat scroll 0 0 #0090D8;
+
+                                                       cursor: pointer;
+                                                       display: inline-block;
+                                                       font-family: Arial,sans-serif;
+                                                       font-size: 16px;
+                                                       font-weight: lighter;
+                                                       line-height: 20px;
+                                                       margin-bottom: 0;
+                                                       padding: 4px 10px;
+                                                       text-transform: none;
+                                                       transition: all 0.3s ease 0s;
+                                                       -moz-transition: all 0.3s ease 0s;
+                                                       -webkit-transition: all 0.3s ease 0s;
+                                                       text-align: center;
+                                                       text-shadow: none;
+                                                       "
+                                                       actionListener="#{controllerAgregarBienes.checkFileLocation}"
+                                                       >
+                                        </ice:inputFile>
+                                    </div>
+                                </div>
+
+
+
+
+
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+
+                            <!-- LISTAR ARCHIVOS-->
+
+                            <ice:dataTable id="adjuntosLista"
+                                           value="#{controllerAgregarBienes.adjuntos}"
+                                           var="adjunto"
+                                           paginator="true"
+                                           paginatorPosition="bottom"
+                                           rows="10">
+
+                                <ice:column id="colNombreAdjunto" 
+                                            headerText="descripcion" 
+                                            sortBy="#{adjunto.nombre}"
+                                            filterBy="#{adjunto.nombre}" 
+                                            filterMatchMode="contains">
+                                    <f:facet name="header">
+                                        Nombre
+                                    </f:facet>
+                                    <h:outputText id="descripcionCellAdjunto" value="#{adjunto.nombre}"/>
+                                </ice:column>
+
+                                <ice:column id="colTamannoAdjunto" 
+                                            headerText="Tamaño" 
+                                            sortBy="#{adjunto.tamano}"
+                                            filterBy="#{adjunto.tamano}" 
+                                            filterMatchMode="contains">
+                                    <f:facet name="header">
+                                        Tamaño
+                                    </f:facet>
+                                    <h:outputText id="tamanoCellAdjunto" value="#{adjunto.tamano}"/>
+                                </ice:column>
+
+
+                                <ice:column style="text-align: center;">
+                                    <f:facet name="header">
+                                        <ice:outputText value="Detalle"  />
+                                    </f:facet>
+
+                                    <ice:commandButton id="btnDetalleAdjunto"
+                                                       style="float:right;margin-top:2%" 
+                                                       styleClass="boton" 
+                                                       partialSubmit="true" 
+                                                       actionListener="#{controllerAgregarBienes.adjuntoMostrarDetalle}"
+                                                       value="Detalle"  >
+                                        <f:attribute id="adjuntoSeleccionado" 
+                                                     name="adjuntoSeleccionado"  
+                                                     value="#{adjunto}"/>
+
+                                    </ice:commandButton>
+
+                                </ice:column>
+
+
+
+                            </ice:dataTable>
+
+                        </div>
+
+
+
+                    </div>
+
+                </div>
+
+
+      
+  </ice:outputHtml>

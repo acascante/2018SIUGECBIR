@@ -515,7 +515,7 @@ public class ListarBienSincronizarController extends BaseController {
     }
 
 // </editor-fold>
-    //<editor-fold defaultstate="collapsed" desc="Panel Observacion Sincronizar o Rechazar">
+    //<editor-fold defaultstate="collapsed" desc="Panel Observacion Solicitud Sincronizar o Rechazar">
     public void rechazarBien() {
         try {
             if (this.observacionCliente == null || this.observacionCliente.isEmpty()) {
@@ -523,8 +523,8 @@ public class ListarBienSincronizarController extends BaseController {
             } else {
                 Integer telefono = lVistaUsuario.getgUsuarioActual().getTelefono1() != null ? Integer.parseInt(lVistaUsuario.getgUsuarioActual().getTelefono1()) : 0;
 
-                bienMod.cambiaEstadoBien(this.bienesEnviarSincronizar.values(), this.estadoPorDominioValor(Constantes.DOMINIO_BIEN, Constantes.ESTADO_BIEN_PENDIENTE), observacionCliente, telefono);
-                this.bienesEnviarSincronizar.clear();
+                bienMod.cambiaEstadoBien(this.bienesPorRechazar.values(), this.estadoPorDominioValor(Constantes.DOMINIO_BIEN, Constantes.ESTADO_BIEN_PENDIENTE), observacionCliente, telefono);
+                this.bienesPorRechazar.clear();
 
                 observacionCliente = "";
 

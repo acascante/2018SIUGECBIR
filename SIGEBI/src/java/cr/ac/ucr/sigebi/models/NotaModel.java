@@ -6,8 +6,8 @@
 package cr.ac.ucr.sigebi.models;
 
 import cr.ac.ucr.framework.utils.FWExcepcion;
-import cr.ac.ucr.sigebi.daos.FaltaNotaDao;
-import cr.ac.ucr.sigebi.entities.NotaEntity;
+import cr.ac.ucr.sigebi.daos.NotaDao;
+import cr.ac.ucr.sigebi.domain.Nota;
 import java.util.List;
 import javax.annotation.Resource;
 import org.springframework.context.annotation.Scope;
@@ -22,64 +22,23 @@ import org.springframework.stereotype.Service;
 public class NotaModel {
 
     @Resource
-    private FaltaNotaDao notaDao;
+    private NotaDao notaDao;
 
-    public NotaEntity obtenerValor(Integer pId) {
-        NotaEntity respAux = new NotaEntity();
-        try {
-            respAux = notaDao.traerPorId(pId);
-
-        } catch (FWExcepcion e) {
-            throw e;
-        } catch (Exception ex) {
-            throw new FWExcepcion("sigebi.error.obteneClasificacion",
-                    "Error obtener los datos de un tipo, error generado en la clase " + this.getClass()
-                    + " en el método obtenerTipo(Integer pIdTipo)", ex);
-        }
-        return respAux;
+    public Nota obtenerValor(Long pId) {
+        return notaDao.traerPorId(pId);
     }
 
-    public List<NotaEntity> traerTodo(Integer idBien) {
+    public List<Nota> traerTodo(Long idBien) {
 
-        try {
-
-            return notaDao.traerTodo(idBien);
-
-        } catch (FWExcepcion e) {
-            throw e;
-        } catch (Exception ex) {
-            throw new FWExcepcion("sigebi.error.notaDao.traerTodo ",
-                    "Error obtener los datos de un tipo, error generado en la clase " + this.getClass()
-                    + " en el método obtenerTipo(Integer pIdTipo)", ex);
-        }
+        return notaDao.traerTodo(idBien);
     }
 
-    public String guardarNuevo(NotaEntity nota) {
-        try {
-            return notaDao.guardarNota(nota);
-
-        } catch (Exception e) {
-            return e.getMessage();
-        }
+    public void guardarNuevo(Nota nota) {
+        notaDao.guardarNota(nota);
     }
 
-    public Integer obtenerId() {
-        try {
-            return notaDao.obtenerId();
-        } catch (Exception err) {
-            return 1;
-        }
-
-    }
-
-    
-    
-    public String eliminarNota(NotaEntity nota){
-        try{
-            return notaDao.eliminarNota(nota);
-        }catch(Exception err){
-            return err.getMessage();
-        }
+    public void eliminarNota(Nota nota){
+        notaDao.eliminarNota(nota);
     }
     
 }

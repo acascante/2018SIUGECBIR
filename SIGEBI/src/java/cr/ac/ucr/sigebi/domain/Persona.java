@@ -47,8 +47,8 @@ public class Persona extends ObjetoBase implements Serializable {
 
     @Column(name = "ES_PROVEEDOR")
     private String esProveedor;
-
     //</editor-fold>
+    
     //<editor-fold defaultstate="collapsed" desc="Constructores">
     public Persona() {
     }
@@ -104,6 +104,21 @@ public class Persona extends ObjetoBase implements Serializable {
         this.esProveedor = esProveedor;
     }
 
+    public String getNombreCompleto() {
+        StringBuilder nombreCompleto = new StringBuilder(" ");
+        if (this.nombre != null && !this.nombre.isEmpty()) {
+            nombreCompleto.append(this.nombre);
+        }
+        if (this.primerApellido != null && !this.primerApellido.isEmpty()) {
+            nombreCompleto.append(" ");
+            nombreCompleto.append(this.primerApellido);
+        }
+        if (this.segundoApellido != null && !this.segundoApellido.isEmpty()) {
+            nombreCompleto.append(" ");
+            nombreCompleto.append(this.segundoApellido);
+        }
+        return nombreCompleto.toString();
+    }
     //</editor-fold>
     
     //<editor-fold defaultstate="collapsed" desc="Sobrecargas">
@@ -131,5 +146,4 @@ public class Persona extends ObjetoBase implements Serializable {
         return "entidades.PersonaEntity[numPersona=" + numPersona + "]";
     }
     //</editor-fold>
-
 }

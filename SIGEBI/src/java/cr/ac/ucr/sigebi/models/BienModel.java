@@ -73,6 +73,8 @@ public class BienModel {
     }
 
     public void cambiaEstadoBien(Bien bien, Estado estado, String observacion, Integer telefono) {
+        
+        
         //Se registra el movimiento
         RegistroMovimiento regisMov = new RegistroMovimiento();
         regisMov.setBien(bien);
@@ -83,6 +85,7 @@ public class BienModel {
         regisMov.setNumeroPersona(telefono);
         registroMovimientoModel.agregar(regisMov);
 
+        
         //Se actualiza el estado del bien
         bien.setEstado(estado);
         bien.setSeleccionado(false);

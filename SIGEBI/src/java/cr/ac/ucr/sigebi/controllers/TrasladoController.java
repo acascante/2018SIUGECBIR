@@ -1003,7 +1003,7 @@ public class TrasladoController extends ListadoBienesGeneralController {
 
             ubicacionOptions = new ArrayList<SelectItem>();
             List<Ubicacion> ubicaciones;
-            ubicaciones = ubicModel.listar(unidadEjecutora.getId());
+            ubicaciones = ubicModel.listar(unidadEjecutora);
             for (Ubicacion item : ubicaciones) {
                 ubicacionOptions.add(new SelectItem(item.getId() + "#" + item.getDetalle().replace("#", "-"), item.getDetalle().replace("#", "-")));
             }

@@ -5,7 +5,6 @@
  */
 package cr.ac.ucr.sigebi.controllers;
 
-import cr.ac.ucr.framework.utils.FWExcepcion;
 import cr.ac.ucr.framework.vista.util.Mensaje;
 import cr.ac.ucr.framework.vista.util.Util;
 import cr.ac.ucr.sigebi.commands.BienCommand;
@@ -78,8 +77,7 @@ public class AgregarBienController extends BaseController {
     @Resource private UbicacionModel modelUbicacion;
     
     private BienCommand command;
-    private Bien bien;
-    
+
     private String mensajeExito;
     private String mensaje;
     
@@ -95,7 +93,6 @@ public class AgregarBienController extends BaseController {
     private boolean visibleBotonSincronizar;
     private boolean visibleBotonRechazar;
 
-    private boolean visiblePanelObservaciones;
     //</editor-fold>
     
     //<editor-fold defaultstate="collapsed" desc="Inicializa Datos">
@@ -120,10 +117,8 @@ public class AgregarBienController extends BaseController {
         this.disableClasificaciones = true;
         this.disableSubClasificaciones = true;
         
-        
-        this.visiblePanelObservaciones = false;
-        this.visiblePanelProveedores = false;
         this.visiblePanelUbicaciones = false;
+        this.visiblePanelProveedores = false;
         this.visibleBotonSincronizar = false;
         this.visibleBotonRechazar = false;
     }
@@ -441,14 +436,6 @@ public class AgregarBienController extends BaseController {
         this.itemsUbicacion = itemsUbicacion;
     }
 
-    public Bien getBien() {
-        return bien;
-    }
-
-    public void setBien(Bien bien) {
-        this.bien = bien;
-    }
-
     public BienCommand getCommand() {
         return command;
     }
@@ -497,14 +484,6 @@ public class AgregarBienController extends BaseController {
         this.disableSubClasificaciones = disableSubClasificaciones;
     }
 
-    public boolean isVisiblePanelObservaciones() {
-        return visiblePanelObservaciones;
-    }
-
-    public void setVisiblePanelObservaciones(boolean visiblePanelObservaciones) {
-        this.visiblePanelObservaciones = visiblePanelObservaciones;
-    }
-
     public boolean isVisiblePanelUbicaciones() {
         return visiblePanelUbicaciones;
     }
@@ -536,41 +515,52 @@ public class AgregarBienController extends BaseController {
     public void setVisibleBotonRechazar(boolean visibleBotonRechazar) {
         this.visibleBotonRechazar = visibleBotonRechazar;
     }
+
+    public boolean isAccionSincronizar() {
+        return accionSincronizar;
+    }
+
+    public void setAccionSincronizar(boolean accionSincronizar) {
+        this.accionSincronizar = accionSincronizar;
+    }
+
+    public boolean isAccionRechazar() {
+        return accionRechazar;
+    }
+
+    public void setAccionRechazar(boolean accionRechazar) {
+        this.accionRechazar = accionRechazar;
+    }
     //</editor-fold>    
     
     //<editor-fold defaultstate="collapsed" desc="Panel Observacion Sincronizar o Rechazar">
+    
+    boolean panelObservaVisible = false;
+    boolean accionSincronizar = false;
+    boolean accionRechazar = false;
+    String observacionCliente = "";
+    
     public void rechazarBien() {
-        try {
-            if (command.getObservacionCliente() == null || command.getObservacionCliente().isEmpty()) {
-                Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.error.controllerListarBienSincronizar.rechazarBien.sin.observacion"));
-            } else {
-                Integer telefono = lVistaUsuario.getgUsuarioActual().getTelefono1() != null ? Integer.parseInt(lVistaUsuario.getgUsuarioActual().getTelefono1()) : 0;
-                modelBien.cambiaEstadoBien(bien, this.estadoPorDominioValor(Constantes.DOMINIO_BIEN, Constantes.ESTADO_BIEN_PENDIENTE), command.getObservacionCliente(), telefono);
-                command.setObservacionCliente("");
-                this.setVisibleBotonRechazar(false);
-                this.cerrarPanelObservacion();
-            }
-        } catch (FWExcepcion err) {
-            Mensaje.agregarErrorAdvertencia(err.getError_para_usuario());
-        } catch (Exception e) {
-            Mensaje.agregarErrorAdvertencia(e.getMessage());
+        if (this.observacionCliente == null || this.observacionCliente.isEmpty()) {
+            Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.error.controllerListarBienSincronizar.rechazarBien.sin.observacion"));
+        } else {
+            Integer telefono = lVistaUsuario.getgUsuarioActual().getTelefono1() != null ? Integer.parseInt(lVistaUsuario.getgUsuarioActual().getTelefono1()) : 0;
+           // bienMod.cambiaEstadoBien(this.bien, modelEstado.obtenerPorEstado(Constantes.DOMINIO_ESTADO_BIEN, Constantes.ESTADO_BIEN_PENDIENTE), observacionCliente, telefono);
+            observacionCliente = "";
+            //Se oculta el panel
+            this.cerrarPanelObserva();
         }
     }
 
     public void solicitarSincronizacion() {
-        try {
-            Integer telefono = lVistaUsuario.getgUsuarioActual().getTelefono1() != null ? Integer.parseInt(lVistaUsuario.getgUsuarioActual().getTelefono1()) : 0;
-            modelBien.cambiaEstadoBien(bien, this.estadoPorDominioValor(Constantes.DOMINIO_BIEN, Constantes.ESTADO_BIEN_PENDIENTE_SINCRONIZAR), command.getObservacionCliente(), telefono);
-            this.setVisibleBotonSincronizar(false);
-            this.cerrarPanelObservacion();
-        } catch (FWExcepcion err) {
-            Mensaje.agregarErrorAdvertencia(err.getError_para_usuario());
-        } catch (Exception e) {
-            Mensaje.agregarErrorAdvertencia(e.getMessage());
-        }
+        Integer telefono = lVistaUsuario.getgUsuarioActual().getTelefono1() != null ? Integer.parseInt(lVistaUsuario.getgUsuarioActual().getTelefono1()) : 0;
+        //bienMod.cambiaEstadoBien(this.bien, modelEstado.buscarPorDominioEstado(Constantes.DOMINIO_ESTADO_BIEN, Constantes.ESTADO_BIEN_PENDIENTE_SINCRONIZAR), observacionCliente, telefono);
+        //Se oculta el panel
+        this.cerrarPanelObserva();
+
     }
     
-    public boolean mostrarPanelObservacion(ActionEvent pEvent) {
+    public boolean mostrarPanelObserva(ActionEvent pEvent) {
         if (!pEvent.getPhaseId().equals(PhaseId.INVOKE_APPLICATION)) {
             pEvent.setPhaseId(PhaseId.INVOKE_APPLICATION);
             pEvent.queue();
@@ -578,13 +568,30 @@ public class AgregarBienController extends BaseController {
         }
 
         //Se presenta el panel de obervacion
-        this.setVisiblePanelUbicaciones(true);
+        panelObservaVisible = true;
         return true;
     }
 
-    public boolean cerrarPanelObservacion() {
-        this.setVisiblePanelUbicaciones(false);
+    public boolean cerrarPanelObserva() {
+        panelObservaVisible = false;
         return false;
     }
+
+    public boolean isPanelObservaVisible() {
+        return panelObservaVisible;
+    }
+
+    public void setPanelObservaVisible(boolean panelObservaVisible) {
+        this.panelObservaVisible = panelObservaVisible;
+    }
+
+    public String getObservacionCliente() {
+        return observacionCliente;
+    }
+
+    public void setObservacionCliente(String observacionCliente) {
+        this.observacionCliente = observacionCliente;
+    }
     //</editor-fold>
+
 }

@@ -7,6 +7,7 @@ package cr.ac.ucr.sigebi.models;
 
 import cr.ac.ucr.framework.utils.FWExcepcion;
 import cr.ac.ucr.sigebi.daos.SubCategoriaDao;
+import cr.ac.ucr.sigebi.domain.Categoria;
 import cr.ac.ucr.sigebi.domain.SubCategoria;
 import java.util.List;
 import javax.annotation.Resource;
@@ -28,8 +29,8 @@ public class SubCategoriaModel {
         return subCategoriaDao.listar();
     }
     
-    public List<SubCategoria> listar(String codigoCategoria) throws FWExcepcion {
-        return subCategoriaDao.listar(codigoCategoria);
+    public List<SubCategoria> listar(Categoria categoria) throws FWExcepcion {
+        return subCategoriaDao.listar(categoria);
     }
     
     public SubCategoria buscarPorId(Long id) throws FWExcepcion {

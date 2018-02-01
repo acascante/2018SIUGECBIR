@@ -1,0 +1,101 @@
+  <ice:outputHtml id="frmDetalleNotificacion" 
+          xmlns:ice="http://www.icesoft.com/icefaces/component" 
+          xmlns:icecore="http://www.icefaces.org/icefaces/core" 
+          xmlns:h="http://java.sun.com/jsf/html" 
+          xmlns:f="http://java.sun.com/jsf/core" 
+          xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:c="http://java.sun.com/jstl/core">
+
+
+            <div>
+
+                <div class="row"  style="padding-bottom: 30px">
+
+                    <div class="col-md-6">
+
+
+                        <div class="form-group"> 
+                            <ice:outputText 
+                                value="#{label['sigebi.Bien.Label.txtNotaDesc']}"
+                                />
+                            <ice:inputText id="txtNotaDesc" 
+                                           styleClass="form-control" 
+                                           value="#{controllerAgregarBienes.notaDetalle}" 
+                                           required="false" 
+                                           partialSubmit="true">
+                            </ice:inputText>
+
+                        </div>
+
+                        <ice:commandButton id="btnIngresarNota" 
+                                           value="#{label['sigebi.Bien.Btn.btnIngresarNota']}"  
+                                           partialSubmit="true"
+                                           styleClass="boton" 
+                                           action="#{controllerAgregarBienes.guardarNota}"/>
+
+
+                    </div>
+                    <div class="col-md-6">
+
+                        <!-- LISTAR NOTAS-->
+
+                        <ice:dataTable id="notasLista"
+                                       value="#{controllerAgregarBienes.notas}"
+                                       var="nota"
+                                       paginator="true"
+                                       paginatorPosition="bottom"
+                                       rows="10">
+                            <ice:column id="coldetalleNota" 
+                                        headerText="descripcion" 
+                                        sortBy="#{nota.detalle}"
+                                        filterBy="#{nota.detalle}" 
+                                        filterMatchMode="contains">
+                                <f:facet name="header">
+                                    Detalle
+                                    <ice:outputText 
+                                value="#{label['sigebi.Bien.Label.colDetalle']}"
+                                />
+                                </f:facet>
+                                <h:outputText id="descripcionCellNota" value="#{nota.detalle}"/>
+                            </ice:column>
+
+
+
+                            <ice:column style="text-align: center;">
+                                <f:facet name="header">
+                                    <ice:outputText value="#{label['sigebi.Bien.Label.Eliminar']}"  />
+                                </f:facet>
+
+                                <ice:commandButton id="botonAbrirNota"
+                                                   style="float:right;margin-top:2%" 
+                                                   styleClass="boton" 
+                                                   partialSubmit="true" 
+                                                   actionListener="#{controllerAgregarBienes.eliminarNota}"
+                                                   value="#{label['sigebi.Bien.Label.Eliminar']}"  >
+                                    <f:attribute id="notaSeleccionada" name="notaSeleccionada"  value="#{nota}"/>
+
+                                </ice:commandButton>
+
+                            </ice:column>
+
+
+
+                        </ice:dataTable>
+
+
+
+                    </div>
+
+
+
+                </div>
+
+            </div>
+
+
+
+        
+        
+</ice:outputHtml>
+
+

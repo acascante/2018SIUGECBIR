@@ -7,6 +7,7 @@ package cr.ac.ucr.sigebi.daos;
 import cr.ac.ucr.framework.daoImpl.GenericDaoImpl;
 import cr.ac.ucr.framework.daoHibernate.DaoHelper;
 import cr.ac.ucr.framework.utils.FWExcepcion;
+import cr.ac.ucr.sigebi.domain.Clasificacion;
 import cr.ac.ucr.sigebi.domain.SubClasificacion;
 import java.util.List;
 import org.hibernate.HibernateException;
@@ -40,15 +41,26 @@ public class SubClasificacionDao extends GenericDaoImpl{
     
     @Transactional(readOnly = true)
     public SubClasificacion buscarPorId(Long id) throws FWExcepcion {
-        return load(SubClasificacion.class, id);
-    }
-
-    public List<SubClasificacion> listar(Integer idClasificacion) {
         Session session = dao.getSessionFactory().openSession();
         try {
-            String sql = "SELECT sc FROM SubClasificacion sc WHERE sc.clasificacion.idClasificacion = :idClasificacion";
+            String sql = "SELECT obj FROM SubClasificacion obj WHERE obj.id = :id";
             Query query = session.createQuery(sql);
-            query.setParameter("idClasificacion", idClasificacion);
+            query.setParameter("id", id);
+            return (SubClasificacion) query.uniqueResult();
+        } catch (HibernateException e) {
+            throw new FWExcepcion("sigebi.error.clasificacion.dao.buscarPorId", "Error obtener los registros de tipo " + this.getClass(), e.getCause());
+        } finally {
+            session.close();
+        }
+    }
+
+    public List<SubClasificacion> listar(Clasificacion clasificacion) {
+        Session session = dao.getSessionFactory().openSession();
+        try {
+            String sql = "SELECT sc FROM SubClasificacion sc WHERE sc.clasificacion = :clasificacion";
+            Query query = session.createQuery(sql);
+            query.setParameter("clasificacion", clasificacion);
+            System.out.println("-------querry----------- " + query.getQueryString());
 
             return (List<SubClasificacion>) query.list();
         } catch (HibernateException e) {

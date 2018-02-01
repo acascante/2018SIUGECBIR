@@ -27,7 +27,7 @@ import java.util.List;
 
 /**
  *
- * @author aocc
+ * @author alvaro.cascante
  */
 public class BienCommand {
 
@@ -64,6 +64,8 @@ public class BienCommand {
 
     private List<Accesorio> accesorios;
     private List<BienCaracteristica> caracteristicas;
+    
+    private String observacionCliente;
     //</editor-fold>
 
     //<editor-fold defaultstate="collapsed" desc="Constructores">
@@ -82,15 +84,14 @@ public class BienCommand {
         this.tipo = new Tipo();
         this.estadoInterno = new Estado();
         this.estado = new Estado();
-
     }
 
     public BienCommand(Bien bien) {
         this.lote = bien.getLote() != null ? bien.getLote() : new Lote();
-        this.categoria = new Categoria();
+        this.categoria = bien.getSubCategoria() != null && bien.getSubCategoria().getCategoria() != null ? bien.getSubCategoria().getCategoria() : new Categoria();
         this.subCategoria = bien.getSubCategoria() != null ? bien.getSubCategoria() : new SubCategoria();
         this.subClasificacion = bien.getSubClasificacion() != null ? bien.getSubClasificacion() : new SubClasificacion();
-        this.clasificacion = new Clasificacion();
+        this.clasificacion = bien.getSubClasificacion() != null && bien.getSubClasificacion().getClasificacion() != null ? bien.getSubClasificacion().getClasificacion() : new Clasificacion();
         this.unidadEjecutora = bien.getUnidadEjecutora() != null ? bien.getUnidadEjecutora() : new UnidadEjecutora();
         this.proveedor = bien.getProveedor() != null ? bien.getProveedor() : new Proveedor();
         this.moneda = bien.getMoneda() != null ? bien.getMoneda() : new Moneda();
@@ -392,6 +393,13 @@ public class BienCommand {
     public void setCaracteristicas(List<BienCaracteristica> caracteristicas) {
         this.caracteristicas = caracteristicas;
     }
+    
+    public String getObservacionCliente() {
+        return observacionCliente;
+    }
 
+    public void setObservacionCliente(String observacionCliente) {
+        this.observacionCliente = observacionCliente;
+    }
     //</editor-fold>
 }

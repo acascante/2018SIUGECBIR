@@ -33,8 +33,10 @@
     <mapping class="cr.ac.ucr.sigebi.domain.DocumentoInformeTecnico"/>
     <mapping class="cr.ac.ucr.sigebi.domain.Estado"/>
     <mapping class="cr.ac.ucr.sigebi.domain.Identificacion"/>
+    <mapping class="cr.ac.ucr.sigebi.domain.Justificacion"/>
     <mapping class="cr.ac.ucr.sigebi.domain.Lote"/>
     <mapping class="cr.ac.ucr.sigebi.domain.Moneda"/>
+    <mapping class="cr.ac.ucr.sigebi.domain.Nota"/>
     <mapping class="cr.ac.ucr.sigebi.domain.Notificacion"/>
     <mapping class="cr.ac.ucr.sigebi.domain.Proveedor"/>
     <mapping class="cr.ac.ucr.sigebi.domain.RegistroMovimiento"/>
@@ -47,14 +49,13 @@
     <mapping class="cr.ac.ucr.sigebi.domain.SubCategoria"/>
     <mapping class="cr.ac.ucr.sigebi.domain.SubClasificacion"/>
     <mapping class="cr.ac.ucr.sigebi.domain.Tipo"/>
+    <mapping class="cr.ac.ucr.sigebi.domain.Traslado"/>
+    <mapping class="cr.ac.ucr.sigebi.domain.TrasladoDetalle"/>
     <mapping class="cr.ac.ucr.sigebi.domain.Ubicacion"/>
     <mapping class="cr.ac.ucr.sigebi.domain.UnidadEjecutora"/>
     <mapping class="cr.ac.ucr.sigebi.domain.Usuario"/>
     <mapping class="cr.ac.ucr.sigebi.domain.ViewResumenBien"/>
     
-    <mapping class="cr.ac.ucr.sigebi.domain.Traslado"/>
-    <mapping class="cr.ac.ucr.sigebi.domain.TrasladoDetalle"/>
-    <mapping class="cr.ac.ucr.sigebi.domain.Justificacion"/>
     
     
     <!--<mapping class="cr.ac.ucr.sigebi.entities.AccesoriosEntity"/>

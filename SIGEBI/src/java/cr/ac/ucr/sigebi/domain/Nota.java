@@ -3,49 +3,47 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package cr.ac.ucr.sigebi.entities;
+package cr.ac.ucr.sigebi.domain;
 
 import cr.ac.ucr.framework.seguridad.ObjetoBase;
 import java.io.Serializable;
-import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 /**
  *
  * @author jorge.serrano
  */
-@Entity(name = "NotaEntity")
+@Entity(name = "Nota")
 @Table(name = "SIGEBI_OAF.SGB_NOTA")
-@NamedQueries({ 
-    @NamedQuery(name = "NotaEntity.findAll", query =  "SELECT s FROM NotaEntity s WHERE s.idBien = :PID_BIEN"),
-    @NamedQuery(name = "NotaEntity.findById", query = "SELECT s FROM NotaEntity s WHERE s.idNota = :PID_NOTA"),
-    @NamedQuery(name = "NotaEntity.getId", query = "SELECT COUNT(s), MAX(s.idNota) FROM NotaEntity s")
-}
-)
-public class NotaEntity extends ObjetoBase implements Serializable  {
+@SequenceGenerator(name = "SGB_SQ_NOTAS", sequenceName = "SIGEBI_OAF.SGB_SQ_NOTAS", initialValue = 1, allocationSize = 1)
+public class Nota extends ObjetoBase implements Serializable  {
     
     private static final long serialVersionUID = 1L;
     
     //<editor-fold defaultstate="collapsed" desc="Atributos">
     
     @Id
-    @Basic(optional = false)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SGB_SQ_NOTAS")
     @Column(name = "ID_NOTA")
-    private Integer idNota;
+    private Long id;
     
     @Column(name = "ID_BIEN")
-    private Integer idBien;
+    private Long idBien;
     
     @Column(name = "DETALLE")
     private String detalle;
     
-    @Column(name = "ID_ESTADO")
-    private Integer idEstado;
+    @ManyToOne
+    @JoinColumn(name = "ID_ESTADO", referencedColumnName = "ID_ESTADO")
+    private Estado idEstado;
     
     //</editor-fold>
     
@@ -53,19 +51,19 @@ public class NotaEntity extends ObjetoBase implements Serializable  {
     
     
     
-    public Integer getIdNota() {
-        return idNota;
+    public Long getId() {
+        return id;
     }
 
-    public void setIdNota(Integer idNota) {
-        this.idNota = idNota;
+    public void setId(Long id) {
+        this.id = id;
     }
 
-    public Integer getIdBien() {
+    public Long getIdBien() {
         return idBien;
     }
 
-    public void setIdBien(Integer idBien) {
+    public void setIdBien(Long idBien) {
         this.idBien = idBien;
     }
 
@@ -77,11 +75,11 @@ public class NotaEntity extends ObjetoBase implements Serializable  {
         this.detalle = detalle;
     }
 
-    public Integer getIdEstado() {
+    public Estado getIdEstado() {
         return idEstado;
     }
 
-    public void setIdEstado(Integer idEstado) {
+    public void setIdEstado(Estado idEstado) {
         this.idEstado = idEstado;
     }
     
@@ -92,14 +90,14 @@ public class NotaEntity extends ObjetoBase implements Serializable  {
     
     
     //<editor-fold defaultstate="collapsed" desc="Constructores">
-    public NotaEntity(Integer idNota, Integer idBien, String detalle, Integer idEstado) {    
-        this.idNota = idNota;
+    public Nota(Long id, Long idBien, String detalle, Estado idEstado) {    
+        this.id = id;
         this.idBien = idBien;
         this.detalle = detalle;
         this.idEstado = idEstado;
     }
 
-    public NotaEntity() {
+    public Nota() {
     }
 
     //</editor-fold>
@@ -107,18 +105,18 @@ public class NotaEntity extends ObjetoBase implements Serializable  {
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (idNota != null ? idNota.hashCode() : 0);
+        hash += (id != null ? id.hashCode() : 0);
         return hash;
     }
 
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof NotaEntity)) {
+        if (!(object instanceof Nota)) {
             return false;
         }
-        NotaEntity other = (NotaEntity) object;
-        if ((this.idNota == null && other.idNota != null) || (this.idNota != null && !this.idNota.equals(other.idNota))) {
+        Nota other = (Nota) object;
+        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }
         return true;
@@ -126,7 +124,7 @@ public class NotaEntity extends ObjetoBase implements Serializable  {
 
     @Override
     public String toString() {
-        return "entidades.NotaEntity[idTipo=" + idNota + "]";
+        return "entidades.Nota[idTipo=" + id + "]";
     }
     
     //</editor-fold>

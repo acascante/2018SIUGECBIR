@@ -8,6 +8,7 @@ package cr.ac.ucr.sigebi.models;
 import cr.ac.ucr.framework.utils.FWExcepcion;
 import cr.ac.ucr.sigebi.daos.ClasificacionDao;
 import cr.ac.ucr.sigebi.domain.Clasificacion;
+import cr.ac.ucr.sigebi.domain.SubCategoria;
 import java.util.List;
 import javax.annotation.Resource;
 import org.springframework.context.annotation.Scope;
@@ -32,6 +33,6 @@ public class ClasificacionModel {
         return clasificacionDao.buscarPorId(id);
     }
 
-    public List<Clasificacion> listarPorCodigoSubCategoria(String codigoSubCategoria) throws FWExcepcion {
-        return clasificacionDao.listarPorCodigoSubCategoria(codigoSubCategoria);
+    public List<Clasificacion> listarPorSubCategoria(SubCategoria subCategoria) throws FWExcepcion {
+        return clasificacionDao.listarPorSubCategoria(subCategoria);
     }}

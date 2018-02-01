@@ -7,6 +7,7 @@ package cr.ac.ucr.sigebi.models;
 
 import cr.ac.ucr.framework.utils.FWExcepcion;
 import cr.ac.ucr.sigebi.daos.SubClasificacionDao;
+import cr.ac.ucr.sigebi.domain.Clasificacion;
 import cr.ac.ucr.sigebi.domain.SubClasificacion;
 import java.util.List;
 import javax.annotation.Resource;
@@ -32,7 +33,7 @@ public class SubClasificacionModel {
         return subClasificacionDao.buscarPorId(id);
     }
 
-    public List<SubClasificacion> listar(Integer idClasificacion) {
-        return subClasificacionDao.listar(idClasificacion);
+    public List<SubClasificacion> listar(Clasificacion clasificacion) {
+        return subClasificacionDao.listar(clasificacion);
     }
 }

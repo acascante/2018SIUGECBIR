@@ -1,17 +1,7 @@
-<ice:outputHtml id="frmDetalleNotificacion" 
-          xmlns:ice="http://www.icesoft.com/icefaces/component" 
-          xmlns:icecore="http://www.icefaces.org/icefaces/core" 
-          xmlns:h="http://java.sun.com/jsf/html" 
-          xmlns:f="http://java.sun.com/jsf/core" 
-          xmlns:ui="http://java.sun.com/jsf/facelets"
-    xmlns:c="http://java.sun.com/jstl/core">
+<ice:outputHtml id="frmDetalleNotificacion"  xmlns:ice="http://www.icesoft.com/icefaces/component" xmlns:icecore="http://www.icefaces.org/icefaces/core" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:c="http://java.sun.com/jstl/core">
 
         <!-- Modal Ubicaciones -->
-        <ice:panelPopup
-            modal="true" 
-            visible="#{controllerAgregarBienes.ubicacionVisible}"
-            rendered="true" 
-            styleClass="popup">
+        <ice:panelPopup modal="true" visible="#{controllerAgregarBienes.visiblePanelUbicaciones}" rendered="true" styleClass="popup">
 
             <f:facet name="header">
                 <ice:outputFormat value="#{label['sigebi.Modal.Ubicaciones.Titulo']}"/>
@@ -33,13 +23,10 @@
 
                                 <div class="form-group">
                                     <label class="control-label" for="selUbicacion">* Ubicación</label>
-                                    <ice:selectOneMenu id="selUbicacion"
-                                                       styleClass="form-control"
-                                                       partialSubmit="true"
-                                                       valueChangeListener="#{controllerAgregarBienes.ubicacionSelectCambio}"
-                                                       value="#{controllerAgregarBienes.command.ubicacion.idTemporal}" >
+                                    <ice:selectOneMenu id="selUbicacion" styleClass="form-control" partialSubmit="true"
+                                                       value="#{controllerAgregarBienes.command.ubicacion}" >
                                         <f:selectItem itemLabel="Seleccione una Ubicación" itemValue="-1"/>                                        
-                                        <f:selectItems id="optSelUbicacion" value="#{controllerAgregarBienes.ubicacionOptions}"/>                                        
+                                        <f:selectItems id="optSelUbicacion" value="#{controllerAgregarBienes.itemsUbicacion}"/>                                        
                                     </ice:selectOneMenu>
                                 </div>
                             </div>
@@ -47,23 +34,14 @@
                         
                         <div class="row">
                             <div class="col-md-12 align-content-center">
-                                <ice:commandButton id="btnCerrarUbicacion"
-                                                   partialSubmit="true"
-                                                   action="#{controllerAgregarBienes.cerrarUbicacion}"
-                                                   styleClass="boton"
-                                                   style="float: right"
-                                                   value="Cerrar" />
+                                <ice:commandButton id="btnCerrarUbicacion" partialSubmit="true" styleClass="boton" style="float: right" value="Cerrar"
+                                                   action="#{controllerAgregarBienes.cerrarPanelUbicaciones}" />
                             </div>
                         </div>
                     </div>
-
                     <br />
                     <br />
-
                 </fieldset>       
             </f:facet>  
-
         </ice:panelPopup>
-        
-        
 </ice:outputHtml>

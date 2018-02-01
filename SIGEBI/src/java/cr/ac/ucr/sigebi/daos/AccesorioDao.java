@@ -12,6 +12,7 @@ import cr.ac.ucr.sigebi.domain.Accesorio;
 import cr.ac.ucr.sigebi.domain.Bien;
 import java.util.List;
 import org.hibernate.HibernateException;
+import org.hibernate.Query;
 import org.hibernate.Session;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -25,38 +26,50 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Repository(value = "AccesorioDao")
 @Scope("request")
-public class AccesorioDao  extends GenericDaoImpl{
-    
+public class AccesorioDao extends GenericDaoImpl {
+
     @Autowired
     private DaoHelper dao;
-    
+
     @Transactional(readOnly = true)
     public List<Accesorio> listar() throws FWExcepcion {
         try {
-            return dao.getHibernateTemplate().find("from Accesorio"); 
+            return dao.getHibernateTemplate().find("from Accesorio");
         } catch (DataAccessException e) {
             throw new FWExcepcion("sigebi.error.notificacionDao.listar", "Error obtener los registros de tipo " + this.getClass(), e.getCause());
         }
     }
-    
+
     @Transactional(readOnly = true)
     public List<Accesorio> listarPorBien(Bien bien) throws FWExcepcion {
         Session session = dao.getSessionFactory().openSession();
         try {
-            String hql = "SELECT a FROM Accesorio a WHERE a.bien = :bien";
-            return find(hql);
+            String sql = "SELECT a FROM Accesorio a WHERE a.bien = :idBien";
+            Query query = session.createQuery(sql);
+            query.setParameter("idBien", bien);
+            return (List<Accesorio>) query.list();
         } catch (HibernateException e) {
             throw new FWExcepcion("sigebi.error.notificacionDao.listar", "Error obtener los registros de tipo " + this.getClass(), e.getCause());
         } finally {
-            session.close();        
-        } 
+            session.close();
+        }
     }
-    
+
     @Transactional(readOnly = true)
     public Accesorio buscarPorId(Long id) throws FWExcepcion {
-        return load(Accesorio.class, id);
+        Session session = dao.getSessionFactory().openSession();
+        try {
+            String sql = "SELECT obj FROM Accesorio obj WHERE obj.id = :id";
+            Query query = session.createQuery(sql);
+            query.setParameter("id", id);
+            return (Accesorio) query.uniqueResult();
+        } catch (HibernateException e) {
+            throw new FWExcepcion("sigebi.error.accesorio.dao.buscarPorId", "Error obtener los registros de tipo " + this.getClass(), e.getCause());
+        } finally {
+            session.close();
+        }
     }
-    
+
     @Transactional
     public void almacenar(Accesorio accesorio) throws FWExcepcion {
         try {
@@ -67,7 +80,7 @@ public class AccesorioDao  extends GenericDaoImpl{
     }
 
     @Transactional
-    public void eliminar(Accesorio accesorio)throws FWExcepcion {
+    public void eliminar(Accesorio accesorio) throws FWExcepcion {
         try {
             delete(accesorio);
         } catch (DataAccessException e) {

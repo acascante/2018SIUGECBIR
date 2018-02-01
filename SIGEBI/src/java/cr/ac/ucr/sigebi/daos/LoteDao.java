@@ -10,6 +10,9 @@ import cr.ac.ucr.framework.daoImpl.GenericDaoImpl;
 import cr.ac.ucr.framework.utils.FWExcepcion;
 import cr.ac.ucr.sigebi.domain.Lote;
 import java.util.List;
+import org.hibernate.HibernateException;
+import org.hibernate.Query;
+import org.hibernate.Session;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.dao.DataAccessException;
@@ -30,14 +33,24 @@ public class LoteDao extends GenericDaoImpl {
     @Transactional(readOnly = true)
     public List<Lote> listar() throws FWExcepcion {
         try {
-            return dao.getHibernateTemplate().find("from Lote"); 
+            return dao.getHibernateTemplate().find("from Lote");
         } catch (DataAccessException e) {
             throw new FWExcepcion("sigebi.error.notificacionDao.listar", "Error obtener los registros de tipo " + this.getClass(), e.getCause());
         }
     }
-    
+
     @Transactional(readOnly = true)
     public Lote buscarPorId(Long id) throws FWExcepcion {
-        return load(Lote.class, id);
+        Session session = dao.getSessionFactory().openSession();
+        try {
+            String sql = "SELECT obj FROM Lote obj WHERE obj.id = :id";
+            Query query = session.createQuery(sql);
+            query.setParameter("id", id);
+            return (Lote) query.uniqueResult();
+        } catch (HibernateException e) {
+            throw new FWExcepcion("sigebi.error.lote.dao.buscarPorId", "Error obtener los registros de tipo " + this.getClass(), e.getCause());
+        } finally {
+            session.close();
+        }
     }
 }

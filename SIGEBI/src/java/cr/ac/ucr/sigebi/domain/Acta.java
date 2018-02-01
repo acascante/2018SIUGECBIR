@@ -5,8 +5,6 @@
  */
 package cr.ac.ucr.sigebi.domain;
 
-import cr.ac.ucr.sigebi.domain.Estado;
-import cr.ac.ucr.sigebi.domain.Tipo;
 import java.io.Serializable;
 import java.util.Date;
 import javax.persistence.Column;

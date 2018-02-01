@@ -43,13 +43,12 @@ public class BienDao extends GenericDaoImpl {
     }
 
     @Transactional(readOnly = true)
-    public List<Bien> listarPorUnidadEjecutora(UnidadEjecutora unidadejecutora) throws FWExcepcion {
+    public List<Bien> listarPorUnidadEjecutora(UnidadEjecutora unidadEjecutora) throws FWExcepcion {
         Session session = dao.getSessionFactory().openSession();
         try {
-            String sql = "SELECT b FROM Bien b WHERE b.unidadejecutora = :unidadejecutora";
+            String sql = "SELECT b FROM Bien b WHERE b.unidadEjecutora = :unidadejecutora";
             Query query = session.createQuery(sql);
-            query.setParameter("unidadejecutora", unidadejecutora);
-
+            query.setParameter("unidadEjecutora", unidadEjecutora);
             return (List<Bien>) query.list();
         } catch (HibernateException e) {
             throw new FWExcepcion("sigebi.error.notificacionDao.listar", "Error obtener los registros de tipo " + this.getClass(), e.getCause());

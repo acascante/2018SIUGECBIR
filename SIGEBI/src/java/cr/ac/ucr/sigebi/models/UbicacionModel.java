@@ -8,6 +8,7 @@ package cr.ac.ucr.sigebi.models;
 import cr.ac.ucr.framework.utils.FWExcepcion;
 import cr.ac.ucr.sigebi.daos.UbicacionDao;
 import cr.ac.ucr.sigebi.domain.Ubicacion;
+import cr.ac.ucr.sigebi.domain.UnidadEjecutora;
 import java.util.List;
 import javax.annotation.Resource;
 import org.springframework.context.annotation.Scope;
@@ -24,8 +25,8 @@ public class UbicacionModel {
     @Resource
     private UbicacionDao ubicacionDao;
 
-    public List<Ubicacion> listar(Long idUnidadEjec) throws FWExcepcion {
-        return ubicacionDao.listar(idUnidadEjec);
+    public List<Ubicacion> listar(UnidadEjecutora unidadEjecutora) throws FWExcepcion {
+        return ubicacionDao.listar(unidadEjecutora);
     }
     
     public Ubicacion buscarPorId(Long id) throws FWExcepcion {
