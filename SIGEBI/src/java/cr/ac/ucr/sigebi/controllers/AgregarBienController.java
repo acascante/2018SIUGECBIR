@@ -33,16 +33,15 @@ import cr.ac.ucr.sigebi.models.AccesorioModel;
 import cr.ac.ucr.sigebi.models.AdjuntoModel;
 import cr.ac.ucr.sigebi.models.BienCaracteristicaModel;
 import cr.ac.ucr.sigebi.models.BienModel;
-import cr.ac.ucr.sigebi.models.EstadoModel;
 import cr.ac.ucr.sigebi.models.IdentificacionModel;
 import cr.ac.ucr.sigebi.models.LoteModel;
 import cr.ac.ucr.sigebi.models.NotaModel;
 import cr.ac.ucr.sigebi.models.ProveedorModel;
 import cr.ac.ucr.sigebi.models.SubCategoriaModel;
 import cr.ac.ucr.sigebi.models.SubClasificacionModel;
-import cr.ac.ucr.sigebi.models.TipoModel;
 import cr.ac.ucr.sigebi.models.UbicacionModel;
 import cr.ac.ucr.sigebi.utils.Constantes;
+import cr.ac.ucr.sigebi.utils.SelectItemObject;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -50,6 +49,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.locks.ReentrantLock;
 import java.util.regex.Pattern;
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
@@ -81,7 +81,7 @@ public class AgregarBienController extends BaseController {
     private List<SelectItem> itemsOrigen;
     private List<SelectItem> itemsSubCategoria;
     private List<SelectItem> itemsSubClasificacion;
-    private List<SelectItem> itemsTipo;
+    private List<SelectItemObject> itemsTipo;
     private List<SelectItem> itemsUbicacion;
     
     @Resource private AccesorioModel modelAccesorio;
@@ -90,7 +90,6 @@ public class AgregarBienController extends BaseController {
     @Resource private BienCaracteristicaModel modelBienCaracteristica;
     @Resource private CategoriaModel modelCategoria;
     @Resource private ClasificacionModel modelClasificacion;
-    @Resource private EstadoModel modelEstado;
     @Resource private IdentificacionModel modelIdentificacion;
     @Resource private LoteModel modelLote;
     @Resource private MonedaModel modelMoneda;
@@ -98,7 +97,6 @@ public class AgregarBienController extends BaseController {
     @Resource private ProveedorModel modelProveedor;
     @Resource private SubCategoriaModel modelSubCategoria;
     @Resource private SubClasificacionModel modelSubClasificacion;
-    @Resource private TipoModel modelTipo;
     @Resource private UbicacionModel modelUbicacion;
     
     private List<Proveedor> proveedores;
@@ -122,8 +120,9 @@ public class AgregarBienController extends BaseController {
     private boolean visiblePanelProveedores;
     private boolean visibleBotonSincronizar;
     private boolean visibleBotonRechazar;
-
     private boolean visiblePanelObservaciones;
+    
+    private boolean bienRegistrado;
     //</editor-fold>
     
     //<editor-fold defaultstate="collapsed" desc="Inicializa Datos">
@@ -136,7 +135,7 @@ public class AgregarBienController extends BaseController {
     protected void inicializar() {
         cargarCombos();
         
-        command.setEstado(modelEstado.buscarPorDominioEstado(Constantes.DOMINIO_BIEN, Constantes.ESTADO_BIEN_PENDIENTE));
+        command.setEstado(this.estadoPorDominioValor(Constantes.DOMINIO_BIEN, Constantes.ESTADO_BIEN_PENDIENTE));
     }
     
     private void inicializarDatos() {
@@ -154,10 +153,13 @@ public class AgregarBienController extends BaseController {
         this.visiblePanelUbicaciones = false;
         this.visibleBotonSincronizar = false;
         this.visibleBotonRechazar = false;
+        
+        this.bienRegistrado = false;
     }
     
     private void inicializarDatos(Bien bien) {
         this.command = new BienCommand(bien);
+        this.bienRegistrado = true;
         
         this.inicializarDatos();
         
@@ -173,19 +175,23 @@ public class AgregarBienController extends BaseController {
         }
     }
     
+    private Tipo getTipoSeleccionado() {
+        return itemsTipo.get
+    }
+    
     private void cargarCombos() {
         try {
-            List<Tipo> tipos = modelTipo.listarPorDominio(Constantes.DOMINIO_BIEN);
+            List<Tipo> tipos = this.tiposPorDominio(Constantes.DOMINIO_BIEN);
             if (!tipos.isEmpty()) {
-                itemsTipo = new ArrayList<>();
+                itemsTipo = new ArrayList<SelectItemObject>();
                 for (Tipo item : tipos) {
-                    itemsTipo.add(new SelectItem(item, item.getNombre()));  // ID + Nombre -- Usado para combo de filtro para enviar el ID al Dao para la consulta
+                    itemsTipo.add(new SelectItemObject(item, item.getId(), item.getNombre()));  // ID + Nombre -- Usado para combo de filtro para enviar el ID al Dao para la consulta
                 }
             }
             
-            List<Tipo> tiposOrigen = modelTipo.listarPorDominio(Constantes.DOMINIO_ORIGEN);
+            List<Tipo> tiposOrigen = this.tiposPorDominio(Constantes.DOMINIO_ORIGEN);
             if (!tiposOrigen.isEmpty()) {
-                itemsOrigen = new ArrayList<>();
+                itemsOrigen = new ArrayList<SelectItem>();
                 for (Tipo item : tiposOrigen) {
                     itemsOrigen.add(new SelectItem(item, item.getNombre()));  // ID + Nombre -- Usado para combo de filtro para enviar el ID al Dao para la consulta
                 }
@@ -193,7 +199,7 @@ public class AgregarBienController extends BaseController {
             
             List<Lote> lotes = modelLote.listar();
             if (!lotes.isEmpty()) {
-                itemsLote = new ArrayList<>();
+                itemsLote = new ArrayList<SelectItem>();
                 for (Lote item : lotes) {
                     itemsLote.add(new SelectItem(item, item.getDescripcion()));  // ID + Nombre -- Usado para combo de filtro para enviar el ID al Dao para la consulta
                 }
@@ -201,7 +207,7 @@ public class AgregarBienController extends BaseController {
             
             List<Categoria> categorias = modelCategoria.listar();
             if (!categorias.isEmpty()) {
-                itemsCategoria = new ArrayList<>();
+                itemsCategoria = new ArrayList<SelectItem>();
                 itemsCategoria.add(new SelectItem(new Categoria(Constantes.DEFAULT_ID, Constantes.DEFAULT_COMBO_MESSAGE), Constantes.DEFAULT_COMBO_MESSAGE));
                 for (Categoria item : categorias) {
                     
@@ -211,7 +217,7 @@ public class AgregarBienController extends BaseController {
             
             List<Moneda> monedas = modelMoneda.listar();
             if (!monedas.isEmpty()) {
-                itemsMoneda = new ArrayList<>();
+                itemsMoneda = new ArrayList<SelectItem>();
                 for (Moneda item : monedas) {
                     itemsMoneda.add(new SelectItem(item, item.getDescripcion()));  // ID + Nombre -- Usado para combo de filtro para enviar el ID al Dao para la consulta
                 }
@@ -252,15 +258,43 @@ public class AgregarBienController extends BaseController {
     public void agregarBien() {
         FacesContext context = FacesContext.getCurrentInstance();
         UIViewRoot root = context.getViewRoot();
-        UIInput component =  new UIInput();
+        UIInput component = new UIInput();
         String messageValidacion = validarForm(root, component);
+        ReentrantLock reentrantLock = new ReentrantLock();
         if (Constantes.OK.equals(messageValidacion)) {
-            Estado estado = modelEstado.buscarPorDominioNombre(Constantes.DOMINIO_IDENTIFICACION, Constantes.IDENTIFICACION_ESTADO_DISPONIBLE);
-            command.setIdentificacion(modelIdentificacion.siguienteDisponible(estado));
-            modelBien.actualizar(command.getBien());
-            
-            command.getIdentificacion().setEstado(modelEstado.buscarPorDominioNombre(Constantes.DOMINIO_IDENTIFICACION, Constantes.IDENTIFICACION_ESTADO_OCUPADA));
-            modelIdentificacion.actualizar(command.getIdentificacion());
+            try {                
+                reentrantLock.lock();                
+                //Se busca la identificacion del bien
+                if(!bienRegistrado){
+                    Estado estadoDispo = this.estadoPorDominioValor(Constantes.DOMINIO_IDENTIFICACION, Constantes.IDENTIFICACION_ESTADO_DISPONIBLE);
+                    command.setIdentificacion(modelIdentificacion.siguienteDisponible(estadoDispo));
+                    bien = command.getBien();
+
+                    Estado estadoOcupado = this.estadoPorDominioValor(Constantes.DOMINIO_IDENTIFICACION, Constantes.IDENTIFICACION_ESTADO_OCUPADA);
+                    bien.getIdentificacion().setEstado(estadoOcupado);
+                    modelIdentificacion.actualizar(bien.getIdentificacion());
+                    
+                    modelBien.almacenar(bien);
+                    bienRegistrado = true;
+                }else{
+                    modelBien.actualizar(command.getBien());
+                }                
+            } catch(Exception exception){
+                //Se retorna la identificacion
+                if(!bienRegistrado && command.getIdentificacion() != null && command.getIdentificacion().getId() != null && command.getIdentificacion().getId() > 0){
+                    Estado estadoDispo = this.estadoPorDominioValor(Constantes.DOMINIO_IDENTIFICACION, Constantes.IDENTIFICACION_ESTADO_DISPONIBLE);
+                    bien.getIdentificacion().setEstado(estadoDispo);
+                    modelIdentificacion.actualizar(bien.getIdentificacion());
+                }
+                if (exception instanceof FWExcepcion) {
+                    Mensaje.agregarErrorAdvertencia(((FWExcepcion)exception).getError_para_usuario());
+                } else  {
+                    Mensaje.agregarErrorAdvertencia(exception.getMessage());
+                }
+            }
+            finally {
+                reentrantLock.unlock();
+            }
         } else {
             component.setValid(false);
             Mensaje.agregarErrorAdvertencia(messageValidacion);
@@ -397,7 +431,7 @@ public class AgregarBienController extends BaseController {
     }
     
     private void cargarUbicaciones() {
-        if (itemsUbicacion.isEmpty()) {
+        if (itemsUbicacion != null && itemsUbicacion.isEmpty()) {
             List<Ubicacion> ubicaciones = modelUbicacion.listar(unidadEjecutora);
             if (!ubicaciones.isEmpty()) {
                 itemsUbicacion = new ArrayList<SelectItem>();
@@ -544,13 +578,13 @@ public class AgregarBienController extends BaseController {
                 adjunto.setIdDocumento(bien.getId());
                 guardarAdjunto();
             }
-
         }
     }
 
     private void inicializarAdjuntos() {
-        Tipo tipoAdjunto = modelTipo.buscarPorDominioNombre(Constantes.DOMINIO_BIEN, Constantes.TIPO_NOMBRE_ADJUNTO);
-        List<Adjunto> adjuntos = modelAdjunto.buscarPorDocumento(tipoAdjunto, bien.getId());
+        //TODO revisar
+//        Tipo tipo = this.tipoPorDominioValor(Constantes.DOMINIO_BIEN, Constantes.TIPO_NOMBRE_ADJUNTO);
+//        List<Adjunto> adjuntos = modelAdjunto.buscarPorDocumento(tipoAdjunto, bien.getId());
     }
 
     public void guardarAdjunto() {
@@ -777,11 +811,11 @@ public class AgregarBienController extends BaseController {
         this.itemsSubClasificacion = itemsSubClasificacion;
     }
 
-    public List<SelectItem> getItemsTipo() {
+    public List<SelectItemObject> getItemsTipo() {
         return itemsTipo;
     }
 
-    public void setItemsTipo(List<SelectItem> itemsTipo) {
+    public void setItemsTipo(List<SelectItemObject> itemsTipo) {
         this.itemsTipo = itemsTipo;
     }
 

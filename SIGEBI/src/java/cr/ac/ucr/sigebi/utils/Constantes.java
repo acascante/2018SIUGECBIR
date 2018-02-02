@@ -85,12 +85,12 @@ public final class Constantes {
     public static final String DOMINIO_DOCUMENTO = "DOCUMENTO";
 
     //TIPO NOMBRE
-    public static final String TIPO_NOMBRE_ADJUNTO = "ADJUNTO";
+    public static final Integer TIPO_NOMBRE_ADJUNTO = 1;
     
     
     //Identificaciones
-    public static final String IDENTIFICACION_ESTADO_DISPONIBLE = "DISPONIBLE";
-    public static final String IDENTIFICACION_ESTADO_OCUPADA = "OCUPADA";
+    public static final Integer IDENTIFICACION_ESTADO_DISPONIBLE = 1;
+    public static final Integer IDENTIFICACION_ESTADO_OCUPADA = 2;
 
     //codigos de documentos
     public static final Integer CODIGO_AUTORIZACION_INFORME_EXCLUSION = 1;

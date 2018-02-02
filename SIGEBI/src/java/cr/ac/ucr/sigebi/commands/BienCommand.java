@@ -5,7 +5,6 @@
  */
 package cr.ac.ucr.sigebi.commands;
 
-import static com.lowagie.text.pdf.PdfFileSpecification.url;
 import cr.ac.ucr.sigebi.domain.Accesorio;
 import cr.ac.ucr.sigebi.domain.Adjunto;
 import cr.ac.ucr.sigebi.domain.Bien;
@@ -360,6 +359,7 @@ public class BienCommand {
     private String descripcionUbicacion;
     private Integer referencia;
     private Identificacion identificacion;
+    private Double montoCapitalizable;
 
     private Tipo tipo;
     private Tipo origen;
@@ -402,9 +402,13 @@ public class BienCommand {
         this.tipo = new Tipo();
         this.estadoInterno = new Estado();
         this.estado = new Estado();
+        this.montoCapitalizable = 250000D;
         
         this.accesorioCommand = new AccesorioCommand();
         this.adjuntoCommand = new AdjuntoCommand();
+        this.caracteristicaCommand = new CaracteristicaCommand();
+        this.notaCommand = new NotaCommand();
+        this.proveedorCommand = new ProveedorCommand();
     }
 
     public BienCommand(Bien bien) {
@@ -442,9 +446,13 @@ public class BienCommand {
         this.estado = bien.getEstado();
         this.accesorios = bien.getAccesorios();
         this.caracteristicas = bien.getCaracteristicas();
+        this.montoCapitalizable = 250000D;
         
         this.accesorioCommand = new AccesorioCommand();
         this.adjuntoCommand = new AdjuntoCommand();
+        this.caracteristicaCommand = new CaracteristicaCommand();
+        this.notaCommand = new NotaCommand();
+        this.proveedorCommand = new ProveedorCommand();
     }
     //</editor-fold>
 
@@ -454,7 +462,7 @@ public class BienCommand {
         bien.setId(this.id);
         bien.setDescripcion(this.descripcion);
         bien.setCantidad(this.cantidad);
-        bien.setCapitalizable(this.capitalizable);
+        bien.setCapitalizable(this.esCapitalizable());
         bien.setLote(this.lote);
         bien.setSubCategoria(this.subCategoria);
         bien.setSubClasificacion(this.subClasificacion);
@@ -482,6 +490,30 @@ public class BienCommand {
     //</editor-fold>
 
     //<editor-fold defaultstate="collapsed" desc="GET's y SET's">
+    public String getKeyVistaOrigen() {
+        return Constantes.KEY_VISTA_ORIGEN;
+    }
+    
+    public String getCapitalizableStr() {
+        if(esCapitalizable()){
+            return "SI";
+        }else{
+            return "NO";
+        }
+    }
+    
+    private Boolean esCapitalizable(){
+        Boolean resultado = false;
+        if(moneda != null && moneda.getId() != null && moneda.getId() > 0 && costo != null && costo > 0  ){
+           Double costoColones = moneda.getTipoCambio() * costo;
+           if(costoColones > montoCapitalizable){
+               resultado = true;
+               this.capitalizable = true;
+           }
+        }
+        return resultado;
+    }
+
     public Long getId() {
         return id;
     }
@@ -721,6 +753,9 @@ public class BienCommand {
     public void setCaracteristicas(List<BienCaracteristica> caracteristicas) {
         this.caracteristicas = caracteristicas;
     }
+    public Double getMontoCapitalizable() {
+        return montoCapitalizable;
+    }
 
     public List<Nota> getNotas() {
         return notas;
@@ -792,6 +827,10 @@ public class BienCommand {
 
     public void setProveedorCommand(ProveedorCommand proveedorCommand) {
         this.proveedorCommand = proveedorCommand;
+    }
+
+    public void setMontoCapitalizable(Double montoCapitalizable) {
+        this.montoCapitalizable = montoCapitalizable;
     }
     //</editor-fold>
 }

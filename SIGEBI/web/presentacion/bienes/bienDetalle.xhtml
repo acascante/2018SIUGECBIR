@@ -19,7 +19,7 @@
 
         <div class="container">
             <div class="col-md-12">
-                
+                <!-- ROW IDENTIFICACION -->
                 <div class="row">
                     <div class="col-md-4">
                         <ice:outputText value="#{label['sigebi.Bien.Label.Identificacion']}" />
@@ -42,8 +42,8 @@
                         <ice:outputText value="#{label['sigebi.Bien.Label.Tipo']}" />
 
                         <ice:selectOneMenu id="selTipoBien" styleClass="form-control"
-                                           value="#{controllerAgregarBienes.command.tipo}" >
-                            <f:selectItem itemLabel="#{label['sigebi.Bien.Select.Tipo']}" itemValue="-1"/>
+                                           value="#{controllerAgregarBienes.command.tipo.id}" >
+                            <!--<f:selectItem itemLabel="#{label['sigebi.Bien.Select.Tipo']}" itemValue="-1"/>-->
                             <f:selectItems id="optSelTipoBien" value="#{controllerAgregarBienes.itemsTipo}"/>
                         </ice:selectOneMenu>
                     </div>
@@ -86,7 +86,7 @@
                                 <f:selectItem itemLabel="Ninguno" itemValue="-1"/>
                                 <f:selectItems id="optSelLotes" value="#{controllerAgregarBienes.itemsLote}"/>
                             </ice:selectOneMenu>
-                        </div>                                             
+                        </div>
                     </div>
 
                     <div class="col-md-2">
@@ -164,7 +164,7 @@
                             </ice:inputText>
                         </div>
                     </div>
-
+                    
                     <div class="col-sm-2">
                         <ice:commandButton id="btnBuscarUbicacion" value="#{label['sigebi.Bien.Btn.Buscar']}"  partialSubmit="true" styleClass="boton" style="margin-top: 1.5rem"
                                            action="#{controllerAgregarBienes.mostrarPanelUbicaciones}"/>

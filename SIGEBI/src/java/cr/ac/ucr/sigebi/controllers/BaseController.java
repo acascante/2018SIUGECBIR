@@ -16,7 +16,6 @@ import cr.ac.ucr.sigebi.domain.UnidadEjecutora;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Predicate;
 import javax.faces.model.SelectItem;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
@@ -47,8 +46,8 @@ public class BaseController extends PaginacionOracle {
     List<Tipo> tiposGenerales;
 
     Map<Integer, Estado> tiposBienes;
-
     //</editor-fold>
+    
     //<editor-fold defaultstate="collapsed" desc="Get's & Set's">
     public String getVistaActual() {
         return vistaActual;
@@ -113,11 +112,10 @@ public class BaseController extends PaginacionOracle {
     public void setUsuarioRegistrado(String usuarioRegistrado) {
         this.usuarioRegistrado = usuarioRegistrado;
     }
-
     //</editor-fold>
+    
     //<editor-fold defaultstate="collapsed" desc="Constructor">
     public BaseController() {
-
         estadoPendiente = Constantes.ESTADO_BIEN_PENDIENTE;
         estadoPendienteSincronizar = Constantes.ESTADO_BIEN_PENDIENTE_SINCRONIZAR;
         incializaBienes();
@@ -127,7 +125,6 @@ public class BaseController extends PaginacionOracle {
     //<editor-fold defaultstate="collapsed" desc="Metodos">
     //@PostConstruct
     private void incializaBienes() {
-
         lVistaUsuario = (VistaUsuario) Util.obtenerVista("#{vistaUsuario}");
 
         //Obtener el id de la unidad ejecutora
@@ -207,8 +204,6 @@ public class BaseController extends PaginacionOracle {
     }
 
     public interface PredicateFilter {
-
         boolean verifica(Object p);
     }
-
 }

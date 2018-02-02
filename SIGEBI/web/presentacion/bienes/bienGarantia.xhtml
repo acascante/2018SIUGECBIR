@@ -32,6 +32,17 @@
                                    value="#{controllerAgregarBienes.command.descripcionGarantia}"/>
             </div>
         </div>
+||||||| .r202
+                            <div class="container"  style="padding-bottom: 30px">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <h4>
+                                            <ice:outputText 
+                                                value="#{label['sigebi.Bien.Label.titGarantia']}"
+                                                />
+                                        </h4>
+                                    </div>
+                                </div>
 
         <div class="row"  style="padding: 5px 0px">
             <div class="col-md-12">
@@ -41,4 +52,80 @@
             </div>
         </div>
     </div>
+</ice:outputHtml>||||||| .r202
+                                <div class="row" style="padding-bottom: 5px" >
+
+                                    <div class="col-md-6">
+                                        <ice:outputText 
+                                            value="#{label['sigebi.Bien.Label.txtFecIniGarantia']}"
+                                            />
+                                        <ice:selectInputDate id="txtFecIniGarantia" partialSubmit="false"
+                                                             renderAsPopup="true" 
+                                                             renderMonthAsDropdown="true"
+                                                             title="Fecha Inicio Garantia"
+                                                             value="#{controllerAgregarBienes.garantiaFecIni}">
+                                            <f:convertDateTime pattern="dd/MM/yyyy" timeZone="GMT-6:00" />
+                                        </ice:selectInputDate>
+
+
+                                    </div>
+                                    <div class="col-md-6">
+                                        <ice:outputText 
+                                            value="#{label['sigebi.Bien.Label.txtFecFinGarantia']}"
+                                            />
+                                        <ice:selectInputDate id="txtFecFinGarantia" partialSubmit="false"
+                                                             renderAsPopup="true" 
+                                                             renderMonthAsDropdown="true"
+                                                             title="Fecha Inicio Garantia"
+                                                             value="#{controllerAgregarBienes.garantiaFecFin}">
+                                            <f:convertDateTime pattern="dd/MM/yyyy" timeZone="GMT-6:00" />
+                                        </ice:selectInputDate>
+
+                                    </div>
+
+                                </div>
+
+                                <div class="row">
+
+                                    <div class="col-md-12"  style="padding-bottom: 5px">
+                                        <ice:outputText 
+                                            value="#{label['sigebi.Bien.Label.txtDescripcionGarant']}"
+                                            />
+                                        <ice:inputTextarea id="txtDescripcionGarant" 
+                                                           styleClass="form-control" 
+                                                           value="#{controllerAgregarBienes.garantiaDesc}"
+                                                           required="false"
+                                                           style="resize: none;"
+                                                           maxlength="150"
+                                                           partialSubmit="false"
+                                                           ></ice:inputTextarea>
+                                    </div>
+
+                                </div>
+
+
+                                <div class="row"  style="padding: 5px 0px">
+
+                                    <div class="col-md-12">
+
+                                        <ice:commandButton id="btnRegistrarGarantia" 
+                                                           value="#{label['sigebi.Bien.Btn.btnRegistrarGarantia']}"  
+                                                           style="margin: 0 10px"
+                                                           partialSubmit="true"
+                                                           styleClass="boton" 
+                                                           action="#{controllerAgregarBienes.guardarGarantia}"/>
+                                    </div>
+
+                                </div>
+
+
+
+
+                            </div>
+
+      
+      
+      
 </ice:outputHtml>
+
+

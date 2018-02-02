@@ -39,6 +39,10 @@ public class Moneda extends ObjetoBase implements Serializable {
 
     @Column(name = "IND_OPERADOR")
     private String operador;
+
+    @Column(name = "TIPO_CAMBIO")
+    private Double tipoCambio;
+
     //</editor-fold>
 
     //<editor-fold defaultstate="collapsed" desc="GET's y SET's">
@@ -88,6 +92,14 @@ public class Moneda extends ObjetoBase implements Serializable {
 
     public void setOperador(String operador) {
         this.operador = operador;
+    }
+
+    public Double getTipoCambio() {
+        return tipoCambio;
+    }
+
+    public void setTipoCambio(Double tipoCambio) {
+        this.tipoCambio = tipoCambio;
     }
     //</editor-fold>
 
