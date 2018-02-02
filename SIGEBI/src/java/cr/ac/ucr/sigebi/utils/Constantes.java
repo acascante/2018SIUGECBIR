@@ -30,6 +30,9 @@ public final class Constantes {
     public static final Integer ESTADO_BIEN_PENDIENTE_INACTIVACION = 6;
     public static final Integer ESTADO_BIEN_INACTIVO = 7;
 
+    // Estados de una nota
+    public static final int ESTADO_NOTA_CREADA = 1;
+    
     // Estados de una notificacion
     public static final int ESTADO_DEFAULT = -1;
     public static final int ESTADO_NOTIFICACION_CREADA = 1;
@@ -75,6 +78,7 @@ public final class Constantes {
     public static final String DOMINIO_GENERAL = "GENERAL";
     public static final String DOMINIO_IDENTIFICACION = "IDENTIFICACION";
     public static final String DOMINIO_INFORME_TECNICO = "INFORME_TECNICO";
+    public static final String DOMINIO_NOTA = "NOTA";
     public static final String DOMINIO_NOTIFICACION = "NOTIFICACION";
     public static final String DOMINIO_ORIGEN = "ORIGEN";
     public static final String DOMINIO_PROCESO = "PROCESO";

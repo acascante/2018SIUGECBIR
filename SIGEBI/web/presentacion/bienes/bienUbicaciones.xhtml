@@ -1,47 +1,43 @@
 <ice:outputHtml id="frmDetalleNotificacion"  xmlns:ice="http://www.icesoft.com/icefaces/component" xmlns:icecore="http://www.icefaces.org/icefaces/core" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:c="http://java.sun.com/jstl/core">
 
-        <!-- Modal Ubicaciones -->
-        <ice:panelPopup modal="true" visible="#{controllerAgregarBienes.visiblePanelUbicaciones}" rendered="true" styleClass="popup">
+    <ice:panelPopup modal="true" visible="#{controllerAgregarBienes.visiblePanelUbicaciones}" rendered="true" styleClass="popup">
+        <f:facet name="header">
+            <ice:outputFormat value="#{label['sigebi.Modal.Ubicaciones.Titulo']}"/>
+        </f:facet> 
 
-            <f:facet name="header">
-                <ice:outputFormat value="#{label['sigebi.Modal.Ubicaciones.Titulo']}"/>
-            </f:facet> 
-
-            <f:facet name="body">
-                <fieldset class="panel_Container" >
-
-                    <div class="container" style="margin-top: 30px;">
-                        <div class="row">
-                            <div class="col-md-12">
-                                <h4>
-                                </h4>
-                            </div>
+        <f:facet name="body">
+            <fieldset class="panel_Container" >
+                <div class="container" style="margin-top: 30px;">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <h4>
+                            </h4>
                         </div>
-                        <div class="row">
-                            <div class="col-md-2"></div>
-                            <div class="col-md-10">
-
-                                <div class="form-group">
-                                    <label class="control-label" for="selUbicacion">* Ubicación</label>
-                                    <ice:selectOneMenu id="selUbicacion" styleClass="form-control" partialSubmit="true"
-                                                       value="#{controllerAgregarBienes.command.ubicacion}" >
-                                        <f:selectItem itemLabel="Seleccione una Ubicación" itemValue="-1"/>                                        
-                                        <f:selectItems id="optSelUbicacion" value="#{controllerAgregarBienes.itemsUbicacion}"/>                                        
-                                    </ice:selectOneMenu>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="row">
-                            <div class="col-md-12 align-content-center">
-                                <ice:commandButton id="btnCerrarUbicacion" partialSubmit="true" styleClass="boton" style="float: right" value="Cerrar"
-                                                   action="#{controllerAgregarBienes.cerrarPanelUbicaciones}" />
+                    </div>
+                    <div class="row">
+                        <div class="col-md-2"></div>
+                        <div class="col-md-10">
+                            <div class="form-group">
+                                <label class="control-label" for="selUbicacion">* Ubicación</label>
+                                <ice:selectOneMenu id="selUbicacion" styleClass="form-control" partialSubmit="true"
+                                                   value="#{controllerAgregarBienes.command.ubicacion}" >
+                                    <f:selectItem itemLabel="Seleccione una Ubicación" itemValue="-1"/>                                        
+                                    <f:selectItems id="optSelUbicacion" value="#{controllerAgregarBienes.itemsUbicacion}"/>                                        
+                                </ice:selectOneMenu>
                             </div>
                         </div>
                     </div>
-                    <br />
-                    <br />
-                </fieldset>       
-            </f:facet>  
-        </ice:panelPopup>
+
+                    <div class="row">
+                        <div class="col-md-12 align-content-center">
+                            <ice:commandButton id="btnCerrarUbicacion" partialSubmit="true" styleClass="boton" style="float: right" value="Cerrar"
+                                               action="#{controllerAgregarBienes.cerrarPanelUbicaciones}" />
+                        </div>
+                    </div>
+                </div>
+                <br />
+                <br />
+            </fieldset>       
+        </f:facet>  
+    </ice:panelPopup>
 </ice:outputHtml>

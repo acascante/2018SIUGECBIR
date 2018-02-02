@@ -1,156 +1,82 @@
-  <ice:outputHtml id="frmDetalleNotificacion" 
-          xmlns:ice="http://www.icesoft.com/icefaces/component" 
-          xmlns:icecore="http://www.icefaces.org/icefaces/core" 
-          xmlns:h="http://java.sun.com/jsf/html" 
-          xmlns:f="http://java.sun.com/jsf/core" 
-          xmlns:ui="http://java.sun.com/jsf/facelets"
-    xmlns:c="http://java.sun.com/jstl/core">
+<ice:outputHtml id="frmDetalleNotificacion" xmlns:ice="http://www.icesoft.com/icefaces/component" xmlns:icecore="http://www.icefaces.org/icefaces/core" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:c="http://java.sun.com/jstl/core">
 
-
-
-        <div class="container">
-            <div class="row">
-                <div class="col-md-12">
-                    <h4><ice:outputText 
-                        value="#{label['sigebi.Bien.Label.titCaracteristicas']}"
-                        /></h4>
-                </div>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <h4><ice:outputText value="#{label['sigebi.Bien.Label.titCaracteristicas']}" /></h4>
             </div>
-
-
-            <div class="row">
-
-                <div class="col-md-6">
-
-                    <div class="container">
-                        <div class="row">
-                            <div class="col-md-12">
-
-                                <div class="form-group"> 
-                                    <ice:outputText 
-                                        value="#{label['sigebi.Bien.Label.SelCaracterist']}"
-                                        />
-                                    <ice:selectOneMenu id="selCaracteristica"
-                                                       styleClass="form-control"
-                                                       value="#{controllerAgregarBienes.selectCaracteristica}" 
-                                                       partialSubmit="false"
-                                                       disabled="#{!controllerAgregarBienes.bienRegistrado}"
-                                                       >
-                                        <f:selectItem itemLabel="Seleccionar Caracteristica" itemValue="-1"/>
-
-                                        <f:selectItems id="optSelCaracteristica" value="#{controllerAgregarBienes.caracteristicasOptions}"/>
-
-                                    </ice:selectOneMenu>
-                                </div>
-                            </div>
-                        </div>
-
-
-                        <div class="row">
-                            <div class="col-md-12">
-
-                                <div class="form-group"> 
-                                    <ice:outputText 
-                                        value="#{label['sigebi.Bien.Label.txtDetalle']}"
-                                        />
-                                    <ice:inputText id="txtCaracteristicaDesc" 
-                                                   styleClass="form-control" 
-                                                   value="#{controllerAgregarBienes.descCaracteristica}" 
-                                                   required="true" 
-                                                   readonly="#{!controllerAgregarBienes.bienRegistrado}"
-                                                   partialSubmit="true">
-                                    </ice:inputText>
-                                </div>
-                            </div>
-                        </div>
-
-
-
-                        <div class="row">
-                            <div class="col-md-6">
-                                <ice:commandButton id="btnGuardarCaracteristica" 
-                                                   value="#{label['sigebi.Bien.Label.RegistCaracterist']}"  
-                                                   partialSubmit="true"
-
-                                                   styleClass="boton" 
-                                                   disabled="#{!controllerAgregarBienes.bienRegistrado}"
-                                                   action="#{controllerAgregarBienes.guardarCaracteristica}"/>
-
-                            </div>
-                        </div>
-
-
-                    </div>
-                </div>
-
-
-                <!-- TABLA DE CARACTERISTICAS -->
-                <div class="col-md-6">
-
-                    <ice:dataTable id="caracteristicasLista"
-                                   value="#{controllerAgregarBienes.caracteristicas}"
-                                   var="caracteristica"
-                                   paginator="true"
-                                   paginatorPosition="bottom"
-                                   rows="10">
-                        <ice:column id="colidNota" 
-                                    headerText="ID" 
-                                    sortBy="#{caracteristica.detalle}"
-                                    filterBy="#{caracteristicadetalle}" 
-                                    filterMatchMode="contains">
-                            <f:facet name="header">
-                                <ice:outputText 
-                                    value="#{label['sigebi.Bien.Label.Caracteristica']}"
-                                    />
-                            </f:facet>
-                            <h:outputText id="txtCaracteristica" value="#{caracteristica.tipo.nombre}"/>
-                        </ice:column>
-
-                        <ice:column id="coldetalleCaracteristica" 
-                                    headerText="descripcion" 
-                                    sortBy="#{caracteristica.detalle}"
-                                    filterBy="#{caracteristica.detalle}" 
-                                    filterMatchMode="contains">
-                            <f:facet name="header">
-                                <ice:outputText 
-                                    value="#{label['sigebi.Bien.Label.colDetalle']}"
-                                    />
-                            </f:facet>
-                            <h:outputText id="descripcionCellCaracterist" value="#{caracteristica.detalle}"/>
-                        </ice:column>
-
-
-                        <ice:column style="text-align: center;">
-                            <f:facet name="header">
-                                <ice:outputText 
-                                    value="#{label['sigebi.Bien.Label.Modificar']}"
-                                    />
-                            </f:facet>
-                            <ice:commandButton id="botonAbrirCaracteristica"
-                                               style="float:right; margin-top:2%" 
-                                               styleClass="boton" 
-                                               partialSubmit="true" 
-                                               actionListener="#{controllerAgregarBienes.modificarCaracteristica}"
-                                               value="Detalle"  >
-                                <f:attribute id="caracteristicaSelccionada" name="caracteristicaSelccionada"  value="#{caracteristica}"/>
-                            </ice:commandButton>
-                        </ice:column>
-                    </ice:dataTable>
-
-                </div>
-            </div>
-
         </div>
 
+        <div class="row">
+            <div class="col-md-6">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group"> 
+                                <ice:outputText  value="#{label['sigebi.Bien.Label.SelCaracterist']}" />
+                                <ice:selectOneMenu id="selCaracteristica" styleClass="form-control" partialSubmit="false"
+                                                   value="#{controllerAgregarBienes.caracteristicaCommand.tipo}">
+                                    <f:selectItem itemLabel="Seleccionar Caracteristica" itemValue="-1"/>
+                                    <f:selectItems id="optSelCaracteristica" value="#{controllerAgregarBienes.itemsCaracteristica}"/>
+                                </ice:selectOneMenu>
+                            </div>
+                        </div>
+                    </div>
 
 
-      
-              
+                    <div class="row">
+                        <div class="col-md-12">
 
+                            <div class="form-group"> 
+                                <ice:outputText 
+                                    value="#{label['sigebi.Bien.Label.txtDetalle']}"
+                                    />
+                                <ice:inputText id="txtCaracteristicaDesc" styleClass="form-control" required="true" partialSubmit="true"
+                                               value="#{controllerAgregarBienes.caracteristicaCommand.detalle}">
+                                </ice:inputText>
+                            </div>
+                        </div>
+                    </div>
 
-      
-      
-        
+                    <div class="row">
+                        <div class="col-md-6">
+                            <ice:commandButton id="btnGuardarCaracteristica" partialSubmit="true" styleClass="boton" 
+                                               value="#{label['sigebi.Bien.Label.RegistCaracterist']}"
+                                               action="#{controllerAgregarBienes.guardarCaracteristica}"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TABLA DE CARACTERISTICAS -->
+            <div class="col-md-6">
+                <ice:dataTable id="caracteristicasLista" var="caracteristica" paginator="true" paginatorPosition="bottom" rows="10"
+                               value="#{controllerAgregarBienes.bien.caracteristicas}">
+                    <ice:column id="colidNota" headerText="ID" sortBy="#{caracteristica.detalle}" filterBy="#{caracteristicadetalle}"  filterMatchMode="contains">
+                        <f:facet name="header">
+                            <ice:outputText  value="#{label['sigebi.Bien.Label.Caracteristica']}" />
+                        </f:facet>
+                        <h:outputText id="txtCaracteristica" value="#{caracteristica.tipo.nombre}"/>
+                    </ice:column>
+
+                    <ice:column id="coldetalleCaracteristica" headerText="descripcion" sortBy="#{caracteristica.detalle}" filterBy="#{caracteristica.detalle}" filterMatchMode="contains">
+                        <f:facet name="header">
+                            <ice:outputText value="#{label['sigebi.Bien.Label.colDetalle']}"/>
+                        </f:facet>
+                        <h:outputText id="descripcionCellCaracterist" value="#{caracteristica.detalle}"/>
+                    </ice:column>
+
+                    <ice:column style="text-align: center;">
+                        <f:facet name="header">
+                            <ice:outputText value="#{label['sigebi.Bien.Label.Modificar']}" />
+                        </f:facet>
+                        <ice:commandButton id="botonAbrirCaracteristica" style="float:right; margin-top:2%" styleClass="boton" partialSubmit="true" value="Detalle"
+                                           actionListener="#{controllerAgregarBienes.modificarCaracteristica}">
+                            <f:attribute id="caracteristicaSelccionada" name="caracteristicaSelccionada"  value="#{caracteristica}"/>
+                        </ice:commandButton>
+                    </ice:column>
+                </ice:dataTable>
+            </div>
+        </div>
+    </div>
 </ice:outputHtml>
-
-

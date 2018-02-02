@@ -269,7 +269,7 @@ public class InformeTecnicoController extends BaseController {
                 Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.error.informeTecnicoController.adjunto.requerido"));
             } else {
                 Adjunto adjunto = new Adjunto();
-                adjunto.setIdEstado(estadoModel.buscarPorDominioEstado(Constantes.DOMINIO_GENERAL, Constantes.ESTADO_GENERAL_ACTIVO));
+                adjunto.setEstado(estadoModel.buscarPorDominioEstado(Constantes.DOMINIO_GENERAL, Constantes.ESTADO_GENERAL_ACTIVO));
                 adjunto.setIdReferencia(informe.getId());
                 //adjunto.setIdTipo(tipoModel.buscarPorDominioTipo(Constantes.DOMINIO_TIPO_ADJUNTO, Constantes.TIPO_ADJUNTO_INFORME_TECNICO));
                 //adjunto.setIdTipoDocumento(tipoModel.buscarPorDominioTipo(Constantes.DOMINIO_TIPO_DOCUMENTO, Constantes.TIPO_DOCUMENTO_INFORME_TECNICO));

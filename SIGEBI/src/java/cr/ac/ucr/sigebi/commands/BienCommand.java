@@ -5,7 +5,9 @@
  */
 package cr.ac.ucr.sigebi.commands;
 
+import static com.lowagie.text.pdf.PdfFileSpecification.url;
 import cr.ac.ucr.sigebi.domain.Accesorio;
+import cr.ac.ucr.sigebi.domain.Adjunto;
 import cr.ac.ucr.sigebi.domain.Bien;
 import cr.ac.ucr.sigebi.domain.BienCaracteristica;
 import cr.ac.ucr.sigebi.domain.Categoria;
@@ -14,6 +16,7 @@ import cr.ac.ucr.sigebi.domain.Estado;
 import cr.ac.ucr.sigebi.domain.Identificacion;
 import cr.ac.ucr.sigebi.domain.Lote;
 import cr.ac.ucr.sigebi.domain.Moneda;
+import cr.ac.ucr.sigebi.domain.Nota;
 import cr.ac.ucr.sigebi.domain.Proveedor;
 import cr.ac.ucr.sigebi.domain.SubCategoria;
 import cr.ac.ucr.sigebi.domain.SubClasificacion;
@@ -31,6 +34,308 @@ import java.util.List;
  */
 public class BienCommand {
 
+    public class AccesorioCommand {
+        
+        private Long id;
+        private Bien bien;
+        private String detalle;
+        private Estado estado;
+
+        public Accesorio getAccesorio() {
+            Accesorio accesorio = new Accesorio();
+            accesorio.setBien(this.bien);
+            accesorio.setDetalle(this.detalle);
+            accesorio.setEstado(this.estado);
+            return accesorio;
+        }
+        
+        //<editor-fold defaultstate="collapsed" desc="GET's y SET's">
+        public Long getId() {
+            return id;
+        }
+
+        public void setId(Long id) {
+            this.id = id;
+        }
+
+        public Bien getBien() {
+            return bien;
+        }
+
+        public void setBien(Bien bien) {
+            this.bien = bien;
+        }
+
+        public String getDetalle() {
+            return detalle;
+        }
+
+        public void setDetalle(String detalle) {
+            this.detalle = detalle;
+        }
+
+        public Estado getEstado() {
+            return estado;
+        }
+
+        public void setEstado(Estado estado) {
+            this.estado = estado;
+        }
+        //</editor-fold>
+    }
+    
+    public class AdjuntoCommand {
+        
+        private Integer id;
+        private Tipo tipo;
+        private Long idDocumento;
+        private String detalle;
+        private String url;
+        private Estado estado;
+        private String tipoMime;
+        private float tamano;
+        private String extension;
+        private String nombre;
+        private Long idReferencia;
+
+        public Adjunto getAdjunto() {
+            Adjunto adjunto = new Adjunto();
+            adjunto.setTipo(this.tipo);
+            adjunto.setIdDocumento(this.idDocumento);
+            adjunto.setDetalle(this.detalle);
+            adjunto.setUrl(this.url);
+            adjunto.setEstado(this.estado);
+            adjunto.setTipoMime(this.tipoMime);
+            adjunto.setTamano(this.tamano);
+            adjunto.setExtension(this.extension);
+            adjunto.setNombre(this.nombre);
+            adjunto.setIdReferencia(this.idReferencia);
+            return adjunto;
+        }
+        
+        //<editor-fold defaultstate="collapsed" desc="GET's y SET's">
+        public Integer getId() {
+            return id;
+        }
+
+        public void setId(Integer id) {
+            this.id = id;
+        }
+
+        public Tipo getTipo() {
+            return tipo;
+        }
+
+        public void setTipo(Tipo tipo) {
+            this.tipo = tipo;
+        }
+
+        public Long getIdDocumento() {
+            return idDocumento;
+        }
+
+        public void setIdDocumento(Long idDocumento) {
+            this.idDocumento = idDocumento;
+        }
+
+        public String getDetalle() {
+            return detalle;
+        }
+
+        public void setDetalle(String detalle) {
+            this.detalle = detalle;
+        }
+
+        public String getUrl() {
+            return url;
+        }
+
+        public void setUrl(String url) {
+            this.url = url;
+        }
+
+        public Estado getEstado() {
+            return estado;
+        }
+
+        public void setEstado(Estado estado) {
+            this.estado = estado;
+        }
+
+        public String getTipoMime() {
+            return tipoMime;
+        }
+
+        public void setTipoMime(String tipoMime) {
+            this.tipoMime = tipoMime;
+        }
+
+        public float getTamano() {
+            return tamano;
+        }
+
+        public void setTamano(float tamano) {
+            this.tamano = tamano;
+        }
+
+        public String getExtension() {
+            return extension;
+        }
+
+        public void setExtension(String extension) {
+            this.extension = extension;
+        }
+
+        public String getNombre() {
+            return nombre;
+        }
+
+        public void setNombre(String nombre) {
+            this.nombre = nombre;
+        }
+
+        public Long getIdReferencia() {
+            return idReferencia;
+        }
+
+        public void setIdReferencia(Long idReferencia) {
+            this.idReferencia = idReferencia;
+        }
+        //</editor-fold>    
+    }
+    
+    public class CaracteristicaCommand {
+        
+        private Long id;
+        private Tipo tipo;
+        private Bien bien;
+        private Estado estado;
+        private String detalle;
+
+        public BienCaracteristica getBienCaracteristica() {
+            BienCaracteristica bienCaracteristica = new BienCaracteristica();
+            bienCaracteristica.setTipo(this.tipo);
+            bienCaracteristica.setBien(this.bien);
+            bienCaracteristica.setEstado(this.estado);
+            bienCaracteristica.setDetalle(this.detalle);
+            return bienCaracteristica;
+        }
+        
+        //<editor-fold defaultstate="collapsed" desc="GET's y SET's">
+        public Long getId() {
+            return id;
+        }
+
+        public void setId(Long id) {
+            this.id = id;
+        }
+
+        public Tipo getTipo() {
+            return tipo;
+        }
+
+        public void setTipo(Tipo tipo) {
+            this.tipo = tipo;
+        }
+
+        public Bien getBien() {
+            return bien;
+        }
+
+        public void setBien(Bien bien) {
+            this.bien = bien;
+        }
+
+        public Estado getEstado() {
+            return estado;
+        }
+
+        public void setEstado(Estado estado) {
+            this.estado = estado;
+        }
+
+        public String getDetalle() {
+            return detalle;
+        }
+
+        public void setDetalle(String detalle) {
+            this.detalle = detalle;
+        }
+        //</editor-fold>
+        
+    }
+    
+    public class NotaCommand {
+        
+        private Long id;
+        private Bien bien;
+        private String detalle;
+        private Estado estado;
+        
+        public Nota getNota() {
+            Nota nota = new Nota();
+            nota.setBien(this.bien);
+            nota.setDetalle(this.detalle);
+            nota.setEstado(this.estado);
+            return nota;
+        }
+        
+        //<editor-fold defaultstate="collapsed" desc="GET's y SET's">
+        public Long getId() {
+            return id;
+        }
+
+        public void setId(Long id) {
+            this.id = id;
+        }
+
+        public Bien getBien() {
+            return bien;
+        }
+
+        public void setBien(Bien bien) {
+            this.bien = bien;
+        }
+
+        public String getDetalle() {
+            return detalle;
+        }
+
+        public void setDetalle(String detalle) {
+            this.detalle = detalle;
+        }
+
+        public Estado getEstado() {
+            return estado;
+        }
+
+        public void setEstado(Estado estado) {
+            this.estado = estado;
+        }
+        //</editor-fold>
+    }
+    
+    public class ProveedorCommand {
+        private String identificacion;
+        private String nombre;
+
+        public String getIdentificacion() {
+            return identificacion;
+        }
+
+        public void setIdentificacion(String identificacion) {
+            this.identificacion = identificacion;
+        }
+
+        public String getNombre() {
+            return nombre;
+        }
+
+        public void setNombre(String nombre) {
+            this.nombre = nombre;
+        }
+    }
+    
     //<editor-fold defaultstate="collapsed" desc="Atributos">
     private Long id;
     private String descripcion;
@@ -63,9 +368,22 @@ public class BienCommand {
     private Estado estado;
 
     private List<Accesorio> accesorios;
+    private List<Adjunto> adjuntos;
     private List<BienCaracteristica> caracteristicas;
+    private List<Nota> notas;
     
     private String observacionCliente;
+    
+    private String detalleNota;
+    
+    private String descripcionAdjunto;
+    
+    private AccesorioCommand accesorioCommand;
+    private AdjuntoCommand adjuntoCommand;
+    private CaracteristicaCommand caracteristicaCommand;
+    private NotaCommand notaCommand;
+    private ProveedorCommand proveedorCommand;
+    
     //</editor-fold>
 
     //<editor-fold defaultstate="collapsed" desc="Constructores">
@@ -84,6 +402,9 @@ public class BienCommand {
         this.tipo = new Tipo();
         this.estadoInterno = new Estado();
         this.estado = new Estado();
+        
+        this.accesorioCommand = new AccesorioCommand();
+        this.adjuntoCommand = new AdjuntoCommand();
     }
 
     public BienCommand(Bien bien) {
@@ -121,6 +442,9 @@ public class BienCommand {
         this.estado = bien.getEstado();
         this.accesorios = bien.getAccesorios();
         this.caracteristicas = bien.getCaracteristicas();
+        
+        this.accesorioCommand = new AccesorioCommand();
+        this.adjuntoCommand = new AdjuntoCommand();
     }
     //</editor-fold>
 
@@ -158,10 +482,6 @@ public class BienCommand {
     //</editor-fold>
 
     //<editor-fold defaultstate="collapsed" desc="GET's y SET's">
-    public String getKeyVistaOrigen() {
-        return Constantes.KEY_VISTA_ORIGEN;
-    }
-
     public Long getId() {
         return id;
     }
@@ -386,6 +706,14 @@ public class BienCommand {
         this.accesorios = accesorios;
     }
 
+    public List<Adjunto> getAdjuntos() {
+        return adjuntos;
+    }
+
+    public void setAdjuntos(List<Adjunto> adjuntos) {
+        this.adjuntos = adjuntos;
+    }
+
     public List<BienCaracteristica> getCaracteristicas() {
         return caracteristicas;
     }
@@ -393,13 +721,77 @@ public class BienCommand {
     public void setCaracteristicas(List<BienCaracteristica> caracteristicas) {
         this.caracteristicas = caracteristicas;
     }
-    
+
+    public List<Nota> getNotas() {
+        return notas;
+    }
+
+    public void setNotas(List<Nota> notas) {
+        this.notas = notas;
+    }
+
     public String getObservacionCliente() {
         return observacionCliente;
     }
 
     public void setObservacionCliente(String observacionCliente) {
         this.observacionCliente = observacionCliente;
+    }
+
+    public String getDetalleNota() {
+        return detalleNota;
+    }
+
+    public void setDetalleNota(String detalleNota) {
+        this.detalleNota = detalleNota;
+    }
+
+    public String getDescripcionAdjunto() {
+        return descripcionAdjunto;
+    }
+
+    public void setDescripcionAdjunto(String descripcionAdjunto) {
+        this.descripcionAdjunto = descripcionAdjunto;
+    }
+
+    public AccesorioCommand getAccesorioCommand() {
+        return accesorioCommand;
+    }
+
+    public void setAccesorioCommand(AccesorioCommand accesorioCommand) {
+        this.accesorioCommand = accesorioCommand;
+    }
+
+    public AdjuntoCommand getAdjuntoCommand() {
+        return adjuntoCommand;
+    }
+
+    public void setAdjuntoCommand(AdjuntoCommand adjuntoCommand) {
+        this.adjuntoCommand = adjuntoCommand;
+    }
+
+    public NotaCommand getNotaCommand() {
+        return notaCommand;
+    }
+
+    public void setNotaCommand(NotaCommand notaCommand) {
+        this.notaCommand = notaCommand;
+    }
+    
+    public CaracteristicaCommand getCaracteristicaCommand() {
+        return caracteristicaCommand;
+    }
+
+    public void setCaracteristicaCommand(CaracteristicaCommand caracteristicaCommand) {
+        this.caracteristicaCommand = caracteristicaCommand;
+    }
+
+    public ProveedorCommand getProveedorCommand() {
+        return proveedorCommand;
+    }
+
+    public void setProveedorCommand(ProveedorCommand proveedorCommand) {
+        this.proveedorCommand = proveedorCommand;
     }
     //</editor-fold>
 }

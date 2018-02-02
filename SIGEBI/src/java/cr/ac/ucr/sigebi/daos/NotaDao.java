@@ -8,7 +8,7 @@ package cr.ac.ucr.sigebi.daos;
 import cr.ac.ucr.framework.daoHibernate.DaoHelper;
 import cr.ac.ucr.framework.daoImpl.GenericDaoImpl;
 import cr.ac.ucr.framework.utils.FWExcepcion;
-import cr.ac.ucr.sigebi.domain.Autorizacion;
+import cr.ac.ucr.sigebi.domain.Bien;
 import cr.ac.ucr.sigebi.domain.Nota;
 import java.util.List;
 import org.hibernate.HibernateException;
@@ -29,67 +29,52 @@ public class NotaDao extends GenericDaoImpl {
     
     @Autowired
     private DaoHelper dao;
-
     
-    @Transactional
-    public Nota traerPorId(Long pId) {
-        
+    @Transactional(readOnly = true) 
+    public Nota buscarPorId(Long id) {
         Session session = this.dao.getSessionFactory().openSession();
         try {
-            String sql = "SELECT obj FROM Nota obj WHERE obj.id = :idNota";
+            String sql = "SELECT obj FROM Nota obj WHERE obj.id = :id";
             Query query = session.createQuery(sql);
-            query.setParameter("idNota", pId);
-
-            //Se obtienen los resutltados
+            query.setParameter("id", id);
             return (Nota) query.list().get(0);
-
         } catch (HibernateException e) {
-            throw new FWExcepcion("sigebi.error.dao.nota.buscarPorId",
-                    "Error Nota traer por id " + this.getClass(), e.getCause());
+            throw new FWExcepcion("sigebi.error.dao.nota.buscarPorId", "Error Nota traer por id " + this.getClass(), e.getCause());
         } finally {
             session.close();
         }
     }
     
-    @Transactional
-    public List<Nota> traerTodo(Long idBien) {
+    @Transactional(readOnly = true) 
+    public List<Nota> listar(Bien bien) {
         
         Session session = this.dao.getSessionFactory().openSession();
         try {
-            String sql = "SELECT obj FROM Nota obj WHERE obj.idBien = :idBien";
+            String sql = "SELECT obj FROM Nota obj WHERE obj.bien = :bien";
             Query query = session.createQuery(sql);
-            query.setParameter("idBien", idBien);
-
-            //Se obtienen los resutltados
+            query.setParameter("bien", bien);
             return (List<Nota>) query.list();
-
         } catch (HibernateException e) {
-            throw new FWExcepcion("sigebi.error.dao.Nota.traerTodo",
-                    "Error Nota traer Todo " + this.getClass(), e.getCause());
+            throw new FWExcepcion("sigebi.error.dao.Nota.traerTodo", "Error Nota traer Todo " + this.getClass(), e.getCause());
         } finally {
             session.close();
         }
-
     }
     
-    public void eliminarNota(Nota nota){
-        try{
+    public void eliminar(Nota nota){
+        try {
             this.delete(nota);
-        }catch(Exception e){
-            throw new FWExcepcion("sigebi.error.dao.Nota.eliminar",
-                    "Error eliminarNota " + this.getClass(), e.getCause());
+        } catch(Exception e) {
+            throw new FWExcepcion("sigebi.error.dao.Nota.eliminar", "Error eliminarNota " + this.getClass(), e.getCause());
         }
     }
     
     @Transactional
-    public void guardarNota(Nota nota ) {
+    public void guardar(Nota nota) {
         try {
             persist(nota);
         } catch (Exception e) {
-            throw new FWExcepcion("sigebi.error.dao.Nota.guardar",
-                    "Error guardarNota " + this.getClass(), e.getCause());
+            throw new FWExcepcion("sigebi.error.dao.Nota.guardar", "Error guardarNota " + this.getClass(), e.getCause());
         }
-
     }
-    
 }

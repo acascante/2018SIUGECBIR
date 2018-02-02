@@ -25,19 +25,15 @@ import javax.persistence.Table;
 @SequenceGenerator(name = "SGB_SQ_ADJUNTO",  sequenceName = "SIGEBI_OAF.SGB_SQ_ADJUNTO", initialValue = 1, allocationSize = 1)
 public class Adjunto  extends ObjetoBase implements Serializable{
     
-    private static final long serialVersionUID = 1L;
-    
-    
     //<editor-fold defaultstate="collapsed" desc="Atributos">
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SGB_SQ_ADJUNTO")
     @Column(name = "ID_ADJUNTO")
     private Integer id;
     
-    
     @ManyToOne
     @JoinColumn(name = "ID_TIPO", referencedColumnName = "ID_TIPO")
-    private Tipo idTipo;
+    private Tipo tipo;
     
     //usamos esta como el ID_BIEN
     @Column(name = "ID_DOCUMENTO")
@@ -51,8 +47,7 @@ public class Adjunto  extends ObjetoBase implements Serializable{
     
     @ManyToOne
     @JoinColumn(name = "ID_ESTADO", referencedColumnName = "ID_ESTADO")
-    private Estado idEstado;
-    
+    private Estado estado;
     
     @Column(name = "TIPO_MIME")
     private String tipoMime;
@@ -70,18 +65,60 @@ public class Adjunto  extends ObjetoBase implements Serializable{
     private Long idReferencia;
     //</editor-fold>
     
-    
     //<editor-fold defaultstate="collapsed" desc="Constructores">
-    
-    public Adjunto() {
-    }
-
-
-
+    public Adjunto() {}
     //</editor-fold>
     
-    
     //<editor-fold defaultstate="collapsed" desc="Sets y Gets">
+
+    //</editor-fold>
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public Tipo getTipo() {
+        return tipo;
+    }
+
+    public void setTipo(Tipo tipo) {
+        this.tipo = tipo;
+    }
+
+    public Long getIdDocumento() {
+        return idDocumento;
+    }
+
+    public void setIdDocumento(Long idDocumento) {
+        this.idDocumento = idDocumento;
+    }
+
+    public String getDetalle() {
+        return detalle;
+    }
+
+    public void setDetalle(String detalle) {
+        this.detalle = detalle;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
+    public Estado getEstado() {
+        return estado;
+    }
+
+    public void setEstado(Estado estado) {
+        this.estado = estado;
+    }
 
     public String getTipoMime() {
         return tipoMime;
@@ -114,54 +151,6 @@ public class Adjunto  extends ObjetoBase implements Serializable{
     public void setNombre(String nombre) {
         this.nombre = nombre;
     }
-    
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer idAdjunto) {
-        this.id = idAdjunto;
-    }
-
-    public Tipo getIdTipo() {
-        return idTipo;
-    }
-
-    public void setIdTipo(Tipo idTipo) {
-        this.idTipo = idTipo;
-    }
-
-    public Long getIdDocumenton() {
-        return idDocumento;
-    }
-
-    public void setIdDocumento(Long idDocumento) {
-        this.idDocumento = idDocumento;
-    }
-
-    public String getDetalle() {
-        return detalle;
-    }
-
-    public void setDetalle(String detalle) {
-        this.detalle = detalle;
-    }
-
-    public String getUrl() {
-        return url;
-    }
-
-    public void setUrl(String url) {
-        this.url = url;
-    }
-
-    public Estado getIdEstado() {
-        return idEstado;
-    }
-
-    public void setIdEstado(Estado idEstado) {
-        this.idEstado = idEstado;
-    }
 
     public Long getIdReferencia() {
         return idReferencia;
@@ -170,18 +159,8 @@ public class Adjunto  extends ObjetoBase implements Serializable{
     public void setIdReferencia(Long idReferencia) {
         this.idReferencia = idReferencia;
     }
-
-    
-    
-    
-    
-    
-    
-    //</editor-fold>
-
     
     //<editor-fold defaultstate="collapsed" desc="Sobrecargas">
-    
     @Override
     public int hashCode() {
         int hash = 0;
@@ -191,7 +170,6 @@ public class Adjunto  extends ObjetoBase implements Serializable{
 
     @Override
     public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
         if (!(object instanceof Adjunto)) {
             return false;
         }
@@ -208,14 +186,5 @@ public class Adjunto  extends ObjetoBase implements Serializable{
     public String toString() {
         return " proveedores.Adjunto[idAdjunto = " + id + "] ";
     }
-    
     //</editor-fold>
-    
-    
-    
-    
-    
-    
-    
-    
 }

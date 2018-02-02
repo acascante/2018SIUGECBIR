@@ -5,8 +5,8 @@
  */
 package cr.ac.ucr.sigebi.models;
 
-import cr.ac.ucr.framework.utils.FWExcepcion;
 import cr.ac.ucr.sigebi.daos.NotaDao;
+import cr.ac.ucr.sigebi.domain.Bien;
 import cr.ac.ucr.sigebi.domain.Nota;
 import java.util.List;
 import javax.annotation.Resource;
@@ -24,21 +24,19 @@ public class NotaModel {
     @Resource
     private NotaDao notaDao;
 
-    public Nota obtenerValor(Long pId) {
-        return notaDao.traerPorId(pId);
+    public Nota buscarPorId(Long pId) {
+        return notaDao.buscarPorId(pId);
     }
 
-    public List<Nota> traerTodo(Long idBien) {
-
-        return notaDao.traerTodo(idBien);
+    public List<Nota> listar(Bien bien) {
+        return notaDao.listar(bien);
     }
 
-    public void guardarNuevo(Nota nota) {
-        notaDao.guardarNota(nota);
+    public void guardar(Nota nota) {
+        notaDao.guardar(nota);
     }
 
-    public void eliminarNota(Nota nota){
-        notaDao.eliminarNota(nota);
+    public void eliminar(Nota nota){
+        notaDao.eliminar(nota);
     }
-    
 }

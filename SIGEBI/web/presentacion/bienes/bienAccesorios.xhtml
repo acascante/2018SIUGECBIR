@@ -1,105 +1,49 @@
-  <ice:outputHtml id="frmDetalleNotificacion" 
-          xmlns:ice="http://www.icesoft.com/icefaces/component" 
-          xmlns:icecore="http://www.icefaces.org/icefaces/core" 
-          xmlns:h="http://java.sun.com/jsf/html" 
-          xmlns:f="http://java.sun.com/jsf/core" 
-          xmlns:ui="http://java.sun.com/jsf/facelets"
-          xmlns:c="http://java.sun.com/jstl/core">
+  <ice:outputHtml id="frmDetalleNotificacion"  xmlns:ice="http://www.icesoft.com/icefaces/component" xmlns:icecore="http://www.icefaces.org/icefaces/core" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:c="http://java.sun.com/jstl/core">
+    <!-- TAB Accesorios -->
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <h4>REGISTRO DE ACCESORIOS</h4>
+            </div>
+        </div>
 
-
-        <!-- TAB Accesorios -->
-
-                <div class="container">
-
-                    <div class="row">
-                        <div class="col-md-12">
-                            <h4>REGISTRO DE ACCESORIOS</h4>
-                        </div>
-                    </div>
-
-                    <div class="row"  style="padding-bottom: 30px">
-
-                        <div class="col-md-6">
-
-
-                            <div class="form-group"> 
-                                <label class="control-label" for="txtAccesorioDesc">Descripción Accesorio</label>
-
-                                <ice:inputText  id="txtAccesorioDesc" 
-                                                styleClass="form-control" 
-                                                value="#{controllerAgregarBienes.accesorio.detalle}" 
-                                                required="true" 
-                                                partialSubmit="false">
-                                </ice:inputText>
-
-                            </div>
-
-                            <ice:commandButton id="botonIngresarAccesorio" 
-                                               value="Guardar Accesorio"  
-                                               partialSubmit="true"
-                                               styleClass="boton" 
-                                               action="#{controllerAgregarBienes.guardarAccesorio}"/>
-
-
-                        </div>
-                        <div class="col-md-6">
-
-                            <!-- LISTAR ACCESORIOS-->
-
-                            <ice:dataTable id="accesoriosLista"
-                                           value="#{controllerAgregarBienes.accesorios}"
-                                           var="accesorio"
-                                           paginator="true"
-                                           paginatorPosition="bottom"
-                                           rows="10">
-
-                                <ice:column id="colDetalleAccesorio" 
-                                            headerText="descripcion" 
-                                            sortBy="#{accesorio.detalle}"
-                                            filterBy="#{accesorio.detalle}" 
-                                            filterMatchMode="contains">
-                                    <f:facet name="header">
-                                        Detalle
-                                    </f:facet>
-                                    <h:outputText id="colDetAccesorio" value="#{accesorio.detalle}"/>
-                                </ice:column>
-
-
-
-                                <ice:column style="text-align: center;">
-                                    <f:facet name="header">
-                                        <ice:outputText value="Eliminar"  />
-                                    </f:facet>
-
-                                    <ice:commandButton id="btnDetalleAccesorio"
-                                                       style="float:right;margin-top:2%" 
-                                                       styleClass="boton" 
-                                                       partialSubmit="true" 
-                                                       actionListener="#{controllerAgregarBienes.eliminarAccesorio}"
-                                                       value="Eliminar"  >
-                                        <f:attribute id="accesorioSeleccionado" name="accesorioSeleccionado"  value="#{accesorio}"/>
-
-                                    </ice:commandButton>
-
-                                </ice:column>
-
-
-
-                            </ice:dataTable>
-
-
-
-                        </div>
-
-
-
-                    </div>
-
-
+        <div class="row"  style="padding-bottom: 30px">
+            <div class="col-md-6">
+                <div class="form-group"> 
+                    <label class="control-label" for="txtAccesorioDesc">Descripción Accesorio</label>
+                    <ice:inputText  id="txtAccesorioDesc" styleClass="form-control" required="true" partialSubmit="false"
+                                    value="#{controllerAgregarBienes.command.accesorioCommand.detalle}" >
+                    </ice:inputText>
                 </div>
 
-      
-      
+                <ice:commandButton id="botonIngresarAccesorio" value="Guardar Accesorio" partialSubmit="true" styleClass="boton" 
+                                   action="#{controllerAgregarBienes.guardarAccesorio}"/>
+            </div>
+
+            <div class="col-md-6">
+                <!-- LISTAR ACCESORIOS-->
+                <ice:dataTable id="accesoriosLista" var="accesorio" paginator="true" paginatorPosition="bottom" rows="10"
+                               value="#{controllerAgregarBienes.command.accesorios}">
+
+                    <ice:column id="colDetalleAccesorio" headerText="descripcion" sortBy="#{accesorio.detalle}" filterBy="#{accesorio.detalle}"  filterMatchMode="contains">
+                        <f:facet name="header"> Detalle </f:facet>
+                        <h:outputText id="colDetAccesorio" value="#{accesorio.detalle}"/>
+                    </ice:column>
+
+                    <ice:column style="text-align: center;">
+                        <f:facet name="header">
+                            <ice:outputText value="Eliminar"  />
+                        </f:facet>
+
+                        <ice:commandButton id="btnDetalleAccesorio" value="Eliminar" style="float:right;margin-top:2%" styleClass="boton" partialSubmit="true" 
+                                           actionListener="#{controllerAgregarBienes.eliminarAccesorio}" >
+                            <f:attribute id="accesorioSeleccionado" name="accesorioSeleccionado"  value="#{accesorio}"/>
+                        </ice:commandButton>
+                    </ice:column>
+                </ice:dataTable>
+            </div>
+        </div>
+    </div>
   </ice:outputHtml>
 
 

@@ -5,11 +5,16 @@
  */
 package cr.ac.ucr.sigebi.controllers;
 
+import com.icesoft.faces.component.inputfile.FileInfo;
+import com.icesoft.faces.component.inputfile.InputFile;
 import cr.ac.ucr.framework.utils.FWExcepcion;
 import cr.ac.ucr.framework.vista.util.Mensaje;
 import cr.ac.ucr.framework.vista.util.Util;
 import cr.ac.ucr.sigebi.commands.BienCommand;
+import cr.ac.ucr.sigebi.domain.Accesorio;
+import cr.ac.ucr.sigebi.domain.Adjunto;
 import cr.ac.ucr.sigebi.domain.Bien;
+import cr.ac.ucr.sigebi.domain.BienCaracteristica;
 import cr.ac.ucr.sigebi.domain.Clasificacion;
 import cr.ac.ucr.sigebi.domain.Lote;
 import cr.ac.ucr.sigebi.domain.Moneda;
@@ -19,21 +24,33 @@ import cr.ac.ucr.sigebi.models.ClasificacionModel;
 import cr.ac.ucr.sigebi.models.MonedaModel;
 import cr.ac.ucr.sigebi.domain.Categoria;
 import cr.ac.ucr.sigebi.domain.Estado;
+import cr.ac.ucr.sigebi.domain.Nota;
 import cr.ac.ucr.sigebi.domain.Proveedor;
 import cr.ac.ucr.sigebi.domain.SubCategoria;
 import cr.ac.ucr.sigebi.domain.SubClasificacion;
 import cr.ac.ucr.sigebi.domain.Ubicacion;
+import cr.ac.ucr.sigebi.models.AccesorioModel;
+import cr.ac.ucr.sigebi.models.AdjuntoModel;
+import cr.ac.ucr.sigebi.models.BienCaracteristicaModel;
 import cr.ac.ucr.sigebi.models.BienModel;
 import cr.ac.ucr.sigebi.models.EstadoModel;
 import cr.ac.ucr.sigebi.models.IdentificacionModel;
 import cr.ac.ucr.sigebi.models.LoteModel;
+import cr.ac.ucr.sigebi.models.NotaModel;
+import cr.ac.ucr.sigebi.models.ProveedorModel;
 import cr.ac.ucr.sigebi.models.SubCategoriaModel;
 import cr.ac.ucr.sigebi.models.SubClasificacionModel;
 import cr.ac.ucr.sigebi.models.TipoModel;
 import cr.ac.ucr.sigebi.models.UbicacionModel;
 import cr.ac.ucr.sigebi.utils.Constantes;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern;
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import javax.faces.component.UIInput;
@@ -43,6 +60,7 @@ import javax.faces.event.ActionEvent;
 import javax.faces.event.PhaseId;
 import javax.faces.event.ValueChangeEvent;
 import javax.faces.model.SelectItem;
+import javax.servlet.http.HttpServletResponse;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
@@ -56,6 +74,7 @@ public class AgregarBienController extends BaseController {
     
     //<editor-fold defaultstate="collapsed" desc="Variables de la Clase">
     private List<SelectItem> itemsCategoria;
+    private List<SelectItem> itemsCaracteristica;
     private List<SelectItem> itemsClasificacion;
     private List<SelectItem> itemsLote;
     private List<SelectItem> itemsMoneda;
@@ -65,22 +84,31 @@ public class AgregarBienController extends BaseController {
     private List<SelectItem> itemsTipo;
     private List<SelectItem> itemsUbicacion;
     
+    @Resource private AccesorioModel modelAccesorio;
+    @Resource private AdjuntoModel modelAdjunto;
     @Resource private BienModel modelBien;
+    @Resource private BienCaracteristicaModel modelBienCaracteristica;
     @Resource private CategoriaModel modelCategoria;
     @Resource private ClasificacionModel modelClasificacion;
     @Resource private EstadoModel modelEstado;
     @Resource private IdentificacionModel modelIdentificacion;
     @Resource private LoteModel modelLote;
     @Resource private MonedaModel modelMoneda;
+    @Resource private NotaModel modelNota;
+    @Resource private ProveedorModel modelProveedor;
     @Resource private SubCategoriaModel modelSubCategoria;
     @Resource private SubClasificacionModel modelSubClasificacion;
     @Resource private TipoModel modelTipo;
     @Resource private UbicacionModel modelUbicacion;
     
+    private List<Proveedor> proveedores;
+    private List<Tipo> tiposCaracteristica;
     private BienCommand command;
     private Bien bien;
     
     private String mensajeExito;
+    private String mensajeAdjunto;
+    private String mensajeCaracteristica;
     private String mensaje;
     
     float tipoCambioDollar = 570;
@@ -130,13 +158,26 @@ public class AgregarBienController extends BaseController {
     
     private void inicializarDatos(Bien bien) {
         this.command = new BienCommand(bien);
+        
+        this.inicializarDatos();
+        
+        if (bien.getEstado().getValor().equals(Constantes.ESTADO_BIEN_PENDIENTE)) {
+            this.setVisibleBotonSincronizar(true);
+        } else {
+            this.setVisibleBotonSincronizar(false);
+        }
+        if(bien.getEstado().getValor().equals(Constantes.ESTADO_BIEN_PENDIENTE_SINCRONIZAR)) {
+            this.setVisibleBotonRechazar(true);
+        }else{
+            this.setVisibleBotonRechazar(false);
+        }
     }
     
     private void cargarCombos() {
         try {
             List<Tipo> tipos = modelTipo.listarPorDominio(Constantes.DOMINIO_BIEN);
             if (!tipos.isEmpty()) {
-                itemsTipo = new ArrayList<SelectItem>();
+                itemsTipo = new ArrayList<>();
                 for (Tipo item : tipos) {
                     itemsTipo.add(new SelectItem(item, item.getNombre()));  // ID + Nombre -- Usado para combo de filtro para enviar el ID al Dao para la consulta
                 }
@@ -144,7 +185,7 @@ public class AgregarBienController extends BaseController {
             
             List<Tipo> tiposOrigen = modelTipo.listarPorDominio(Constantes.DOMINIO_ORIGEN);
             if (!tiposOrigen.isEmpty()) {
-                itemsOrigen = new ArrayList<SelectItem>();
+                itemsOrigen = new ArrayList<>();
                 for (Tipo item : tiposOrigen) {
                     itemsOrigen.add(new SelectItem(item, item.getNombre()));  // ID + Nombre -- Usado para combo de filtro para enviar el ID al Dao para la consulta
                 }
@@ -152,7 +193,7 @@ public class AgregarBienController extends BaseController {
             
             List<Lote> lotes = modelLote.listar();
             if (!lotes.isEmpty()) {
-                itemsLote = new ArrayList<SelectItem>();
+                itemsLote = new ArrayList<>();
                 for (Lote item : lotes) {
                     itemsLote.add(new SelectItem(item, item.getDescripcion()));  // ID + Nombre -- Usado para combo de filtro para enviar el ID al Dao para la consulta
                 }
@@ -160,7 +201,7 @@ public class AgregarBienController extends BaseController {
             
             List<Categoria> categorias = modelCategoria.listar();
             if (!categorias.isEmpty()) {
-                itemsCategoria = new ArrayList<SelectItem>();
+                itemsCategoria = new ArrayList<>();
                 itemsCategoria.add(new SelectItem(new Categoria(Constantes.DEFAULT_ID, Constantes.DEFAULT_COMBO_MESSAGE), Constantes.DEFAULT_COMBO_MESSAGE));
                 for (Categoria item : categorias) {
                     
@@ -170,7 +211,7 @@ public class AgregarBienController extends BaseController {
             
             List<Moneda> monedas = modelMoneda.listar();
             if (!monedas.isEmpty()) {
-                itemsMoneda = new ArrayList<SelectItem>();
+                itemsMoneda = new ArrayList<>();
                 for (Moneda item : monedas) {
                     itemsMoneda.add(new SelectItem(item, item.getDescripcion()));  // ID + Nombre -- Usado para combo de filtro para enviar el ID al Dao para la consulta
                 }
@@ -216,8 +257,7 @@ public class AgregarBienController extends BaseController {
         if (Constantes.OK.equals(messageValidacion)) {
             Estado estado = modelEstado.buscarPorDominioNombre(Constantes.DOMINIO_IDENTIFICACION, Constantes.IDENTIFICACION_ESTADO_DISPONIBLE);
             command.setIdentificacion(modelIdentificacion.siguienteDisponible(estado));
-            Bien bien = command.getBien();
-            modelBien.actualizar(bien);
+            modelBien.actualizar(command.getBien());
             
             command.getIdentificacion().setEstado(modelEstado.buscarPorDominioNombre(Constantes.DOMINIO_IDENTIFICACION, Constantes.IDENTIFICACION_ESTADO_OCUPADA));
             modelIdentificacion.actualizar(command.getIdentificacion());
@@ -237,6 +277,21 @@ public class AgregarBienController extends BaseController {
                 return;
             }
             inicializarDatos();
+            this.vistaOrigen = event.getComponent().getAttributes().get(Constantes.KEY_VISTA_ORIGEN).toString();
+            Util.navegar(Constantes.KEY_VISTA_DETALLE_BIEN);
+        } catch (Exception err) {
+            mensaje = err.getMessage();
+        }
+    }
+    
+    public void modificarRegistro(ActionEvent event) {
+        try{
+            if (!event.getPhaseId().equals(PhaseId.INVOKE_APPLICATION)) {
+                event.setPhaseId(PhaseId.INVOKE_APPLICATION);
+                event.queue();
+                return;
+            }
+            inicializarDatos((Bien) event.getComponent().getAttributes().get("bienSeleccionado"));
             this.vistaOrigen = event.getComponent().getAttributes().get(Constantes.KEY_VISTA_ORIGEN).toString();
             Util.navegar(Constantes.KEY_VISTA_DETALLE_BIEN);
         } catch (Exception err) {
@@ -355,6 +410,18 @@ public class AgregarBienController extends BaseController {
     //</editor-fold>
 
     //<editor-fold defaultstate="collapsed" desc="Proveedores">
+    public void selecProveedor(ActionEvent event) {
+
+        if (!event.getPhaseId().equals(PhaseId.INVOKE_APPLICATION)) {
+            event.setPhaseId(PhaseId.INVOKE_APPLICATION);
+            event.queue();
+            return;
+        }
+        Proveedor proveedor = (Proveedor) event.getComponent().getAttributes().get("provSeleccionado");
+        command.setProveedor(proveedor);
+        this.setVisiblePanelProveedores(false);
+    }
+    
     public void mostrarPanelProveedores() {
         this.setVisiblePanelProveedores(true);
     }
@@ -368,6 +435,283 @@ public class AgregarBienController extends BaseController {
     }
     //</editor-fold>    
     
+    //<editor-fold defaultstate="collapsed" desc="Panel Observacion Sincronizar o Rechazar">
+    public void rechazarBien() {
+        try {
+            if (command.getObservacionCliente() == null || command.getObservacionCliente().isEmpty()) {
+                Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.error.controllerListarBienSincronizar.rechazarBien.sin.observacion"));
+            } else {
+                Integer telefono = lVistaUsuario.getgUsuarioActual().getTelefono1() != null ? Integer.parseInt(lVistaUsuario.getgUsuarioActual().getTelefono1()) : 0;
+                modelBien.cambiaEstadoBien(bien, this.estadoPorDominioValor(Constantes.DOMINIO_BIEN, Constantes.ESTADO_BIEN_PENDIENTE), command.getObservacionCliente(), telefono);
+                command.setObservacionCliente("");
+                this.setVisibleBotonRechazar(false);
+                this.cerrarPanelObservacion();
+            }
+        } catch (FWExcepcion err) {
+            Mensaje.agregarErrorAdvertencia(err.getError_para_usuario());
+        } catch (Exception e) {
+            Mensaje.agregarErrorAdvertencia(e.getMessage());
+        }
+    }
+
+    public void solicitarSincronizacion() {
+        try {
+            Integer telefono = lVistaUsuario.getgUsuarioActual().getTelefono1() != null ? Integer.parseInt(lVistaUsuario.getgUsuarioActual().getTelefono1()) : 0;
+            modelBien.cambiaEstadoBien(bien, this.estadoPorDominioValor(Constantes.DOMINIO_BIEN, Constantes.ESTADO_BIEN_PENDIENTE_SINCRONIZAR), command.getObservacionCliente(), telefono);
+            this.setVisibleBotonSincronizar(false);
+            this.cerrarPanelObservacion();
+        } catch (FWExcepcion err) {
+            Mensaje.agregarErrorAdvertencia(err.getError_para_usuario());
+        } catch (Exception e) {
+            Mensaje.agregarErrorAdvertencia(e.getMessage());
+        }
+    }
+    
+    public boolean mostrarPanelObservacion(ActionEvent pEvent) {
+        if (!pEvent.getPhaseId().equals(PhaseId.INVOKE_APPLICATION)) {
+            pEvent.setPhaseId(PhaseId.INVOKE_APPLICATION);
+            pEvent.queue();
+            return false;
+        }
+        this.setVisiblePanelUbicaciones(true);
+        return true;
+    }
+
+    public boolean cerrarPanelObservacion() {
+        this.setVisiblePanelUbicaciones(false);
+        return false;
+    }
+    //</editor-fold>
+
+    //<editor-fold defaultstate="collapsed" desc="Tab Notas del Activo">
+    public void guardarNota() {
+        Nota nota = command.getNotaCommand().getNota();
+        modelNota.guardar(nota);
+    }
+
+    public void eliminarNota(ActionEvent event) {
+        try {
+            if (!event.getPhaseId().equals(PhaseId.INVOKE_APPLICATION)) {
+                event.setPhaseId(PhaseId.INVOKE_APPLICATION);
+                event.queue();
+                return;
+            }
+            modelNota.eliminar((Nota) event.getComponent().getAttributes().get("notaSeleccionada"));
+        } catch (Exception err) {
+            Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.Bien.Error.Nota"));
+        }
+    }
+    //</editor-fold>
+
+    //<editor-fold defaultstate="collapsed" desc="Tab Garantías">
+    public boolean validarGarantia() {
+        return command.getInicioGarantia().compareTo(command.getFinGarantia()) < 0;
+    }
+    
+    public void guardarGarantia() {
+        try {
+            if (validarGarantia()) {
+                modelBien.actualizar(command.getBien());
+                Mensaje.agregarInfo(Util.getEtiquetas("sigebi.Bien.Exito.Guardar"));
+            } else {
+                Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.Bien.Error.Fecha1"));
+            }
+
+        } catch (NullPointerException e) {
+            Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.Bien.Error.Fecha2"));
+        } catch (Exception err) {
+            Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.Bien.Error.Complemento"));
+        }
+    }
+    //</editor-fold>
+    
+    //<editor-fold defaultstate="collapsed" desc="Tad Archivos-Adjuntos">
+    public void checkFileLocation(ActionEvent event) {
+        InputFile inputFile = (InputFile) event.getSource();
+        FileInfo fileInfo = inputFile.getFileInfo();
+        Adjunto adjunto = new Adjunto();
+        if (fileInfo.isSaved()) {
+            if (inputFile.getId().endsWith("2")) {
+                adjunto.setUrl(fileInfo.getPhysicalPath());
+                adjunto.setNombre(fileInfo.getFileName());
+                adjunto.setTamano(fileInfo.getSize() / 1024); // pasar a bites 
+                adjunto.setTipoMime(fileInfo.getContentType());
+                String[] extencion = (String[]) adjunto.getNombre().split(Pattern.quote("."));
+                int cant = extencion.length;
+                adjunto.setExtension(extencion[cant - 1]);
+
+                adjunto.setDetalle(command.getDescripcionAdjunto());
+                adjunto.setIdDocumento(bien.getId());
+                guardarAdjunto();
+            }
+
+        }
+    }
+
+    private void inicializarAdjuntos() {
+        Tipo tipoAdjunto = modelTipo.buscarPorDominioNombre(Constantes.DOMINIO_BIEN, Constantes.TIPO_NOMBRE_ADJUNTO);
+        List<Adjunto> adjuntos = modelAdjunto.buscarPorDocumento(tipoAdjunto, bien.getId());
+    }
+
+    public void guardarAdjunto() {
+        try {
+            Adjunto adjunto = command.getAdjuntoCommand().getAdjunto();
+            modelAdjunto.agregar(adjunto);
+        } catch (Exception err) {
+            mensajeAdjunto = err.getMessage();
+        }
+    }
+
+    public void adjuntoMostrarDetalle(ActionEvent pEvent) {
+        try {
+            if (!pEvent.getPhaseId().equals(PhaseId.INVOKE_APPLICATION)) {
+                pEvent.setPhaseId(PhaseId.INVOKE_APPLICATION);
+                pEvent.queue();
+                return;
+            }
+//            adjuntosUbicacion = "upload/";
+//            adjunto = new Adjunto();
+//            mensajeAdjuntos = "";
+//            mensajeAdjuntosExito = "";
+//            adjunto = (Adjunto) pEvent.getComponent().getAttributes().get("adjuntoSeleccionado");
+//            mostrarAdjunto = true;
+//
+//            adjuntoDescargar = adjuntosUbicacion + adjunto.getNombre();
+//            adjuntoNombreDescarga = adjunto.getNombre().replace("." + adjunto.getExtension(), "");
+//            if ((adjunto.getExtension().toUpperCase().equals("JPG"))
+//                    || (adjunto.getExtension().toUpperCase().equals("PNG"))
+//                    || (adjunto.getExtension().toUpperCase().equals("GIF"))
+//                    || (adjunto.getExtension().toUpperCase().equals("JPGE"))) {
+//                adjuntoMostrar = adjuntoDescargar;
+//
+//            } else {
+//                adjuntoMostrar = "imagenes/botones/descargar_SIIAGC.png";
+//            }
+            //mensajeNota = notaModel.eliminarNota(nota);
+
+        } catch (Exception err) {
+            mensajeAdjunto = err.getMessage();
+        }
+
+    }
+
+    public void downloadFile() throws FileNotFoundException, IOException {
+        try {
+
+            String dir = "C:\\SIGEBI_V2\\build\\web\\upload\\";// System.getProperty("user.dir");
+            mensajeAdjunto = "current dir = " + dir;
+
+            File file = new File(dir + command.getAdjuntoCommand().getNombre());
+            InputStream fis = new FileInputStream(file);
+            byte[] buf = new byte[1024];
+            int offset = 0;
+            int numRead = 0;
+
+            while ((offset < buf.length) && ((numRead = fis.read(buf, offset, buf.length - offset)) >= 0)) {
+                offset += numRead;
+            }
+            fis.close();
+            HttpServletResponse response = (HttpServletResponse) FacesContext.getCurrentInstance().getExternalContext().getResponse();
+
+            response.setContentType("application/octet-stream");
+
+            response.setHeader("Content-Disposition", "attachment;filename=" + command.getAdjuntoCommand().getNombre());
+            response.getOutputStream().write(buf);
+            response.getOutputStream().flush();
+            response.getOutputStream().close();
+            FacesContext.getCurrentInstance().responseComplete();
+        } catch (Exception err) {
+
+            mensajeAdjunto = err.getMessage();
+        }
+    }
+
+    public void downloadFile(ActionEvent event) throws FileNotFoundException, IOException {
+        try {
+//            File file = new File(adjuntoDescargar);
+//            InputStream fis = new FileInputStream(file);
+//            byte[] buf = new byte[1024];
+//            int offset = 0;
+//            int numRead = 0;
+//
+//            while ((offset < buf.length) && ((numRead = fis.read(buf, offset, buf.length - offset)) >= 0)) {
+//                offset += numRead;
+//            }
+//            fis.close();
+//            HttpServletResponse response
+//                    = (HttpServletResponse) FacesContext.getCurrentInstance()
+//                            .getExternalContext().getResponse();
+//
+//            response.setContentType("application/octet-stream");
+//
+//            response.setHeader("Content-Disposition", "attachment;filename=" + command.getAdjuntoCommand().getNombre());
+//            response.getOutputStream().write(buf);
+//            response.getOutputStream().flush();
+//            response.getOutputStream().close();
+//            FacesContext.getCurrentInstance().responseComplete();
+        } catch (Exception err) {
+            mensajeAdjunto = err.getMessage();
+        }
+    }
+    //</editor-fold>
+
+    //<editor-fold defaultstate="collapsed" desc="Tab Accesorios">
+    public void guardarAccesorio() {
+        try {
+            Accesorio accesorio = command.getAccesorioCommand().getAccesorio();
+            modelAccesorio.almacenar(accesorio);
+        } catch (Exception err) {
+            Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.Bien.Error.Complemento"));
+        }
+    }
+
+    public void eliminarAccesorio(ActionEvent event) {
+        try {
+            if (!event.getPhaseId().equals(PhaseId.INVOKE_APPLICATION)) {
+                event.setPhaseId(PhaseId.INVOKE_APPLICATION);
+                event.queue();
+                return;
+            }
+            modelAccesorio.eliminar((Accesorio) event.getComponent().getAttributes().get("accesorioSeleccionado"));
+        } catch (Exception err) {
+            Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.Bien.Error.Complemento.Eliminar"));
+        }
+    }
+    //</editor-fold>
+
+    //<editor-fold defaultstate="collapsed" desc="Tab Características">
+    public void guardarCaracteristica() {
+        try {
+            if (validarCaracteristica()) {
+                modelBienCaracteristica.almacenar(command.getCaracteristicaCommand().getBienCaracteristica());
+            }
+        } catch (Exception err) {
+            Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.Bien.Error.cargarCaracteristica"));
+        }
+    }
+    
+    public void modificarCaracteristica(ActionEvent event) {
+        try {
+            if (!event.getPhaseId().equals(PhaseId.INVOKE_APPLICATION)) {
+                event.setPhaseId(PhaseId.INVOKE_APPLICATION);
+                event.queue();
+                return;
+            }
+            if (validarCaracteristica()) {
+                modelBienCaracteristica.almacenar((BienCaracteristica)event.getComponent().getAttributes().get("caracteristicaSelccionada"));
+            }
+        } catch (Exception err) {
+            mensajeCaracteristica = err.getMessage();
+        }
+    }
+
+    private boolean validarCaracteristica() {
+        
+        //TODO Agragar validaciones de caracteristicas
+        return true;
+    }
+    //</editor-fold>
+
     //<editor-fold defaultstate="collapsed" desc="Get's y Set's">
     public List<SelectItem> getItemsCategoria() {
         return itemsCategoria;
@@ -375,6 +719,14 @@ public class AgregarBienController extends BaseController {
 
     public void setItemsCategoria(List<SelectItem> itemsCategoria) {
         this.itemsCategoria = itemsCategoria;
+    }
+
+    public List<SelectItem> getItemsCaracteristica() {
+        return itemsCaracteristica;
+    }
+
+    public void setItemsCaracteristica(List<SelectItem> itemsCaracteristica) {
+        this.itemsCaracteristica = itemsCaracteristica;
     }
 
     public List<SelectItem> getItemsClasificacion() {
@@ -441,12 +793,20 @@ public class AgregarBienController extends BaseController {
         this.itemsUbicacion = itemsUbicacion;
     }
 
-    public Bien getBien() {
-        return bien;
+    public List<Proveedor> getProveedores() {
+        return proveedores;
     }
 
-    public void setBien(Bien bien) {
-        this.bien = bien;
+    public void setProveedores(List<Proveedor> proveedores) {
+        this.proveedores = proveedores;
+    }
+
+    public List<Tipo> getTiposCaracteristica() {
+        return tiposCaracteristica;
+    }
+
+    public void setTiposCaracteristica(List<Tipo> tiposCaracteristica) {
+        this.tiposCaracteristica = tiposCaracteristica;
     }
 
     public BienCommand getCommand() {
@@ -457,6 +817,14 @@ public class AgregarBienController extends BaseController {
         this.command = command;
     }
 
+    public Bien getBien() {
+        return bien;
+    }
+
+    public void setBien(Bien bien) {
+        this.bien = bien;
+    }
+
     public String getMensajeExito() {
         return mensajeExito;
     }
@@ -465,12 +833,44 @@ public class AgregarBienController extends BaseController {
         this.mensajeExito = mensajeExito;
     }
 
+    public String getMensajeAdjunto() {
+        return mensajeAdjunto;
+    }
+
+    public void setMensajeAdjunto(String mensajeAdjunto) {
+        this.mensajeAdjunto = mensajeAdjunto;
+    }
+
+    public String getMensajeCaracteristica() {
+        return mensajeCaracteristica;
+    }
+
+    public void setMensajeCaracteristica(String mensajeCaracteristica) {
+        this.mensajeCaracteristica = mensajeCaracteristica;
+    }
+
     public String getMensaje() {
         return mensaje;
     }
 
     public void setMensaje(String mensaje) {
         this.mensaje = mensaje;
+    }
+
+    public float getTipoCambioDollar() {
+        return tipoCambioDollar;
+    }
+
+    public void setTipoCambioDollar(float tipoCambioDollar) {
+        this.tipoCambioDollar = tipoCambioDollar;
+    }
+
+    public float getTipoCambioEuro() {
+        return tipoCambioEuro;
+    }
+
+    public void setTipoCambioEuro(float tipoCambioEuro) {
+        this.tipoCambioEuro = tipoCambioEuro;
     }
 
     public boolean isDisableSubCategorias() {
@@ -495,14 +895,6 @@ public class AgregarBienController extends BaseController {
 
     public void setDisableSubClasificaciones(boolean disableSubClasificaciones) {
         this.disableSubClasificaciones = disableSubClasificaciones;
-    }
-
-    public boolean isVisiblePanelObservaciones() {
-        return visiblePanelObservaciones;
-    }
-
-    public void setVisiblePanelObservaciones(boolean visiblePanelObservaciones) {
-        this.visiblePanelObservaciones = visiblePanelObservaciones;
     }
 
     public boolean isVisiblePanelUbicaciones() {
@@ -536,55 +928,13 @@ public class AgregarBienController extends BaseController {
     public void setVisibleBotonRechazar(boolean visibleBotonRechazar) {
         this.visibleBotonRechazar = visibleBotonRechazar;
     }
-    //</editor-fold>    
-    
-    //<editor-fold defaultstate="collapsed" desc="Panel Observacion Sincronizar o Rechazar">
-    public void rechazarBien() {
-        try {
-            if (command.getObservacionCliente() == null || command.getObservacionCliente().isEmpty()) {
-                Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.error.controllerListarBienSincronizar.rechazarBien.sin.observacion"));
-            } else {
-                Integer telefono = lVistaUsuario.getgUsuarioActual().getTelefono1() != null ? Integer.parseInt(lVistaUsuario.getgUsuarioActual().getTelefono1()) : 0;
-                modelBien.cambiaEstadoBien(bien, this.estadoPorDominioValor(Constantes.DOMINIO_BIEN, Constantes.ESTADO_BIEN_PENDIENTE), command.getObservacionCliente(), telefono);
-                command.setObservacionCliente("");
-                this.setVisibleBotonRechazar(false);
-                this.cerrarPanelObservacion();
-            }
-        } catch (FWExcepcion err) {
-            Mensaje.agregarErrorAdvertencia(err.getError_para_usuario());
-        } catch (Exception e) {
-            Mensaje.agregarErrorAdvertencia(e.getMessage());
-        }
+
+    public boolean isVisiblePanelObservaciones() {
+        return visiblePanelObservaciones;
     }
 
-    public void solicitarSincronizacion() {
-        try {
-            Integer telefono = lVistaUsuario.getgUsuarioActual().getTelefono1() != null ? Integer.parseInt(lVistaUsuario.getgUsuarioActual().getTelefono1()) : 0;
-            modelBien.cambiaEstadoBien(bien, this.estadoPorDominioValor(Constantes.DOMINIO_BIEN, Constantes.ESTADO_BIEN_PENDIENTE_SINCRONIZAR), command.getObservacionCliente(), telefono);
-            this.setVisibleBotonSincronizar(false);
-            this.cerrarPanelObservacion();
-        } catch (FWExcepcion err) {
-            Mensaje.agregarErrorAdvertencia(err.getError_para_usuario());
-        } catch (Exception e) {
-            Mensaje.agregarErrorAdvertencia(e.getMessage());
-        }
-    }
-    
-    public boolean mostrarPanelObservacion(ActionEvent pEvent) {
-        if (!pEvent.getPhaseId().equals(PhaseId.INVOKE_APPLICATION)) {
-            pEvent.setPhaseId(PhaseId.INVOKE_APPLICATION);
-            pEvent.queue();
-            return false;
-        }
-
-        //Se presenta el panel de obervacion
-        this.setVisiblePanelUbicaciones(true);
-        return true;
-    }
-
-    public boolean cerrarPanelObservacion() {
-        this.setVisiblePanelUbicaciones(false);
-        return false;
+    public void setVisiblePanelObservaciones(boolean visiblePanelObservaciones) {
+        this.visiblePanelObservaciones = visiblePanelObservaciones;
     }
     //</editor-fold>
 }

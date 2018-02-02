@@ -26,31 +26,25 @@ import javax.persistence.Table;
 @SequenceGenerator(name = "SGB_SQ_NOTAS", sequenceName = "SIGEBI_OAF.SGB_SQ_NOTAS", initialValue = 1, allocationSize = 1)
 public class Nota extends ObjetoBase implements Serializable  {
     
-    private static final long serialVersionUID = 1L;
-    
     //<editor-fold defaultstate="collapsed" desc="Atributos">
-    
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SGB_SQ_NOTAS")
     @Column(name = "ID_NOTA")
     private Long id;
     
-    @Column(name = "ID_BIEN")
-    private Long idBien;
+    @ManyToOne
+    @JoinColumn(name = "ID_BIEN", referencedColumnName = "ID_BIEN")
+    private Bien bien;
     
     @Column(name = "DETALLE")
     private String detalle;
     
     @ManyToOne
     @JoinColumn(name = "ID_ESTADO", referencedColumnName = "ID_ESTADO")
-    private Estado idEstado;
-    
+    private Estado estado;
     //</editor-fold>
     
     //<editor-fold defaultstate="collapsed" desc="SET's y GET's ">
-    
-    
-    
     public Long getId() {
         return id;
     }
@@ -59,12 +53,12 @@ public class Nota extends ObjetoBase implements Serializable  {
         this.id = id;
     }
 
-    public Long getIdBien() {
-        return idBien;
+    public Bien getBien() {
+        return bien;
     }
 
-    public void setIdBien(Long idBien) {
-        this.idBien = idBien;
+    public void setBien(Bien bien) {
+        this.bien = bien;
     }
 
     public String getDetalle() {
@@ -75,32 +69,26 @@ public class Nota extends ObjetoBase implements Serializable  {
         this.detalle = detalle;
     }
 
-    public Estado getIdEstado() {
-        return idEstado;
+    public Estado getEstado() {
+        return estado;
     }
 
-    public void setIdEstado(Estado idEstado) {
-        this.idEstado = idEstado;
+    public void setEstado(Estado estado) {
+        this.estado = estado;
     }
-    
-    
-    
     //</editor-fold>
 
-    
-    
     //<editor-fold defaultstate="collapsed" desc="Constructores">
-    public Nota(Long id, Long idBien, String detalle, Estado idEstado) {    
+    public Nota() {}
+    
+    public Nota(Long id, Bien bien, String detalle, Estado estado) {    
         this.id = id;
-        this.idBien = idBien;
+        this.bien = bien;
         this.detalle = detalle;
-        this.idEstado = idEstado;
+        this.estado = estado;
     }
-
-    public Nota() {
-    }
-
     //</editor-fold>
+    
     //<editor-fold defaultstate="collapsed" desc="Sobrecargas">
     @Override
     public int hashCode() {
@@ -126,8 +114,5 @@ public class Nota extends ObjetoBase implements Serializable  {
     public String toString() {
         return "entidades.Nota[idTipo=" + id + "]";
     }
-    
     //</editor-fold>
-    
-    
 }

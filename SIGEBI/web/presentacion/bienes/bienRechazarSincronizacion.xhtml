@@ -1,53 +1,46 @@
-<ice:outputHtml id="frmDetalleNotificacion" 
-          xmlns:ice="http://www.icesoft.com/icefaces/component" 
-          xmlns:icecore="http://www.icefaces.org/icefaces/core" 
-          xmlns:h="http://java.sun.com/jsf/html" 
-          xmlns:f="http://java.sun.com/jsf/core" 
-          xmlns:ui="http://java.sun.com/jsf/facelets"
-    xmlns:c="http://java.sun.com/jstl/core">
+<ice:outputHtml id="frmDetalleNotificacion" xmlns:ice="http://www.icesoft.com/icefaces/component" xmlns:icecore="http://www.icefaces.org/icefaces/core" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:c="http://java.sun.com/jstl/core">
+    <!-- Modal Agregar Observacion -->
+    <ice:panelPopup modal="true" rendered="true" styleClass="popup"
+        visible="#{controllerAgregarBienes.visiblePanelObservaciones}">
 
-        <!-- Modal Agregar Observacion -->
-        <ice:panelPopup modal="true" rendered="true" styleClass="popup"
-            visible="#{controllerAgregarBienes.visiblePanelObservaciones}">
+        <f:facet name="header">
+            <ice:outputText styleClass="flotar_izquierda titulo_popup" value="#{label['sigebi.label.vista.listarBienSincronizar.observacion.titulo']}"/>                
+        </f:facet> 
 
-            <f:facet name="header">
-                <ice:outputText styleClass="flotar_izquierda titulo_popup" value="#{label['sigebi.label.vista.listarBienSincronizar.observacion.titulo']}"/>                
-            </f:facet> 
+        <f:facet name="body">
+            <fieldset class="panel_Container" >
 
-            <f:facet name="body">
-                <fieldset class="panel_Container" >
-
-                    <div class="container" style="margin-top: 30px;">
-                        <div class="row">
-                            <div class="col-md-12">
-                                <h4><ice:outputText value="#{label['sigebi.label.vista.listarBienSincronizar.observacion']}"/></h4>
-                            </div>
+                <div class="container" style="margin-top: 30px;">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <h4>
+                                <ice:outputText value="#{label['sigebi.label.vista.listarBienSincronizar.observacion']}"/>
+                            </h4>
                         </div>
-                        <div class="row">
-                            <div class="col-md-12">
-                                <ice:inputTextarea  id="observacionCliente" style="width: 430px;" cols="2" 
-                                                    value="#{controllerAgregarBienes.command.observacionCliente}"/>
-                            </div>
-                        </div>
-                        <br />
-                        <div class="row">
-                            <div class="col-md-6 col-sm-6 align-content-center-div">
-
-                                <ice:commandButton id="btnCancelarObservacion" partialSubmit="true" styleClass="boton" 
-                                                   action="#{controllerAgregarBienes.cerrarPanelObservacion}"
-                                                   value="#{label['label.cancelar']}" />
-                            </div>
-                            <div class="col-md-6 col-sm-6 align-content-center-div">
-
-                                <ice:commandButton id="btnConfirmarObservacion" partialSubmit="true" styleClass="boton"
-                                                   action="#{controllerAgregarBienes.rechazarBien}"
-                                                   value="#{label['label.aceptar']}" />
-                            </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <ice:inputTextarea  id="observacionCliente" style="width: 430px;" cols="2" 
+                                                value="#{controllerAgregarBienes.command.observacionCliente}"/>
                         </div>
                     </div>
                     <br />
-                    <br />
-                </fieldset>
-            </f:facet>
-        </ice:panelPopup>
+                    <div class="row">
+                        <div class="col-md-6 col-sm-6 align-content-center-div">
+                            <ice:commandButton id="btnCancelarObservacion" partialSubmit="true" styleClass="boton" 
+                                               action="#{controllerAgregarBienes.cerrarPanelObservacion}"
+                                               value="#{label['label.cancelar']}" />
+                        </div>
+                        <div class="col-md-6 col-sm-6 align-content-center-div">
+                            <ice:commandButton id="btnConfirmarObservacion" partialSubmit="true" styleClass="boton"
+                                               action="#{controllerAgregarBienes.rechazarBien}"
+                                               value="#{label['label.aceptar']}" />
+                        </div>
+                    </div>
+                </div>
+                <br />
+                <br />
+            </fieldset>
+        </f:facet>
+    </ice:panelPopup>
 </ice:outputHtml>
