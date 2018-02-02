@@ -32,7 +32,7 @@ public class TipoModel {
         return tipoDao.listarPorDominio(dominio);
     }
 
-    public Tipo buscarPorId(Integer id) {
+    public Tipo buscarPorId(Long id) {
         return tipoDao.buscarPorId(id);
     }
     

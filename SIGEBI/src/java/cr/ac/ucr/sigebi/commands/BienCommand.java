@@ -24,8 +24,11 @@ import cr.ac.ucr.sigebi.domain.Ubicacion;
 import cr.ac.ucr.sigebi.domain.UnidadEjecutora;
 import cr.ac.ucr.sigebi.domain.ViewResumenBien;
 import cr.ac.ucr.sigebi.utils.Constantes;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  *
@@ -318,6 +321,7 @@ public class BienCommand {
         private String identificacion;
         private String nombre;
 
+        //<editor-fold defaultstate="collapsed" desc="GET's y SET's">
         public String getIdentificacion() {
             return identificacion;
         }
@@ -333,6 +337,156 @@ public class BienCommand {
         public void setNombre(String nombre) {
             this.nombre = nombre;
         }
+        //</editor-fold>
+    }
+    
+    public class ItemCommand {
+        private Map<Long, Accesorio> itemsAccesorio;
+        private Map<Long, BienCaracteristica> itemsCaracteristica;
+        private Map<Long, Categoria> itemsCategoria;
+        private Map<Long, Clasificacion> itemsClasificacion;
+        private Map<Long, Lote> itemsLote;
+        private Map<Long, Moneda> itemsMoneda;
+        private Map<Long, Tipo> itemsOrigen;
+        private Map<Long, Proveedor> itemsProveedor;
+        private Map<Long, SubCategoria> itemsSubCategoria;
+        private Map<Long, SubClasificacion> itemsSubClasificacion;
+        private Map<Long, Tipo> itemsTipo;
+        private Map<Long, Ubicacion> itemsUbicacion;
+        
+        //<editor-fold defaultstate="collapsed" desc="GET's y SET's">
+        public Map<Long, Accesorio> getItemsAccesorio() {
+            if (this.itemsAccesorio == null) {
+                return new HashMap<Long, Accesorio>();
+            }
+            return itemsAccesorio;
+        }
+
+        public void setItemsAccesorio(Map<Long, Accesorio> itemsAccesorio) {
+            this.itemsAccesorio = itemsAccesorio;
+        }
+
+        public Map<Long, Categoria> getItemsCategoria() {
+            if (this.itemsCategoria == null) {
+                return new HashMap<Long, Categoria>();
+            }
+            return itemsCategoria;
+        }
+
+        public void setItemsCategoria(Map<Long, Categoria> itemsCategoria) {
+            this.itemsCategoria = itemsCategoria;
+        }
+
+        public Map<Long, BienCaracteristica> getItemsCaracteristica() {
+            if (this.itemsCaracteristica == null) {
+                return new HashMap<Long, BienCaracteristica>();
+            }
+            return itemsCaracteristica;
+        }
+
+        public void setItemsCaracteristica(Map<Long, BienCaracteristica> itemsCaracteristica) {
+            this.itemsCaracteristica = itemsCaracteristica;
+        }
+
+        public Map<Long, Clasificacion> getItemsClasificacion() {
+            if (this.itemsClasificacion == null) {
+                return new HashMap<Long, Clasificacion>();
+            }
+            return itemsClasificacion;
+        }
+
+        public void setItemsClasificacion(Map<Long, Clasificacion> itemsClasificacion) {
+            this.itemsClasificacion = itemsClasificacion;
+        }
+
+        public Map<Long, Lote> getItemsLote() {
+            if (this.itemsLote == null) {
+                return new HashMap<Long, Lote>();
+            }
+            return itemsLote;
+        }
+
+        public void setItemsLote(Map<Long, Lote> itemsLote) {
+            this.itemsLote = itemsLote;
+        }
+
+        public Map<Long, Moneda> getItemsMoneda() {
+            if (this.itemsMoneda == null) {
+                return new HashMap<Long, Moneda>();
+            }
+            return itemsMoneda;
+        }
+
+        public void setItemsMoneda(Map<Long, Moneda> itemsMoneda) {
+            this.itemsMoneda = itemsMoneda;
+        }
+
+        public Map<Long, Tipo> getItemsOrigen() {
+            if (this.itemsOrigen == null) {
+                return new HashMap<Long, Tipo>();
+            }
+            return itemsOrigen;
+        }
+
+        public void setItemsOrigen(Map<Long, Tipo> itemsOrigen) {
+            this.itemsOrigen = itemsOrigen;
+        }
+
+        public Map<Long, Proveedor> getItemsProveedor() {
+            if (this.itemsProveedor == null) {
+                return new HashMap<Long, Proveedor>();
+            }
+            return itemsProveedor;
+        }
+
+        public void setItemsProveedor(Map<Long, Proveedor> itemsProveedor) {
+            this.itemsProveedor = itemsProveedor;
+        }
+
+        public Map<Long, SubCategoria> getItemsSubCategoria() {
+            if (this.itemsSubCategoria == null) {
+                return new HashMap<Long, SubCategoria>();
+            }
+            return itemsSubCategoria;
+        }
+
+        public void setItemsSubCategoria(Map<Long, SubCategoria> itemsSubCategoria) {
+            this.itemsSubCategoria = itemsSubCategoria;
+        }
+
+        public Map<Long, SubClasificacion> getItemsSubClasificacion() {
+            if (this.itemsSubClasificacion == null) {
+                return new HashMap<Long, SubClasificacion>();
+            }
+            return itemsSubClasificacion;
+        }
+
+        public void setItemsSubClasificacion(Map<Long, SubClasificacion> itemsSubClasificacion) {
+            this.itemsSubClasificacion = itemsSubClasificacion;
+        }
+
+        public Map<Long, Tipo> getItemsTipo() {
+            if (this.itemsTipo == null) {
+                return new HashMap<Long, Tipo>();
+            }
+            return itemsTipo;
+        }
+
+        public void setItemsTipo(Map<Long, Tipo> itemsTipo) {
+            this.itemsTipo = itemsTipo;
+        }
+
+        public Map<Long, Ubicacion> getItemsUbicacion() {
+            if (this.itemsUbicacion == null) {
+                return new HashMap<Long, Ubicacion>();
+            }
+            return itemsUbicacion;
+        }
+
+        public void setItemsUbicacion(Map<Long, Ubicacion> itemsUbicacion) {
+            this.itemsUbicacion = itemsUbicacion;
+        }
+        //</editor-fold>
     }
     
     //<editor-fold defaultstate="collapsed" desc="Atributos">
@@ -340,93 +494,86 @@ public class BienCommand {
     private String descripcion;
     private Integer cantidad;
     private Boolean capitalizable;
-    private Lote lote;
-    private Categoria categoria;
-    private SubCategoria subCategoria;
-    private Clasificacion clasificacion;
-    private SubClasificacion subClasificacion;
-    private ViewResumenBien resumenBien;
-    private UnidadEjecutora unidadEjecutora;
-    private Proveedor proveedor;
-    private Moneda moneda;
     private Double costo;
     private Date fechaAdquisicion;
     private Integer persona;
     private Date inicioGarantia;
     private Date finGarantia;
     private String descripcionGarantia;
-    private Ubicacion ubicacion;
     private String descripcionUbicacion;
     private Integer referencia;
-    private Identificacion identificacion;
     private Double montoCapitalizable;
+    private String observacionCliente;
+    private String detalleNota;
+    private String descripcionAdjunto;
 
-    private Tipo tipo;
-    private Tipo origen;
-
-    private Estado estadoInterno;
+    private Long idCategoria;
+    private Long idClasificacion;
+    private Long idLote;
+    private Long idMoneda;
+    private Long idOrigen;
+    private Long idProveedor;
+    private Long idSubCategoria;
+    private Long idSubClasificacion;
+    private Long idTipo;
+    private Long idUbicacion;
+    
     private Estado estado;
-
+    private Estado estadoInterno;
+    private Identificacion identificacion;
+    private ViewResumenBien resumenBien;
+    private UnidadEjecutora unidadEjecutora;
+    
     private List<Accesorio> accesorios;
     private List<Adjunto> adjuntos;
     private List<BienCaracteristica> caracteristicas;
     private List<Nota> notas;
-    
-    private String observacionCliente;
-    
-    private String detalleNota;
-    
-    private String descripcionAdjunto;
-    
+        
     private AccesorioCommand accesorioCommand;
     private AdjuntoCommand adjuntoCommand;
     private CaracteristicaCommand caracteristicaCommand;
     private NotaCommand notaCommand;
     private ProveedorCommand proveedorCommand;
+    private ItemCommand itemCommand;
     
     //</editor-fold>
 
     //<editor-fold defaultstate="collapsed" desc="Constructores">
     public BienCommand() {
-        this.lote = new Lote();
-        this.categoria = new Categoria();
-        this.subCategoria = new SubCategoria();
-        this.clasificacion = new Clasificacion();
-        this.subClasificacion = new SubClasificacion();
-        this.unidadEjecutora = new UnidadEjecutora();
-        this.proveedor = new Proveedor();
-        this.moneda = new Moneda();
-        this.ubicacion = new Ubicacion();
-        this.identificacion = new Identificacion();
-        this.origen = new Tipo();
-        this.tipo = new Tipo();
-        this.estadoInterno = new Estado();
+        this.accesorios = new ArrayList<>();
+        this.adjuntos = new ArrayList<>();
+        this.caracteristicas = new ArrayList<>();
+        this.notas = new ArrayList<>();
+        
         this.estado = new Estado();
+        this.estadoInterno = new Estado();
+        this.identificacion = new Identificacion();
+        this.unidadEjecutora = new UnidadEjecutora();
         this.montoCapitalizable = 250000D;
         
-        this.accesorioCommand = new AccesorioCommand();
-        this.adjuntoCommand = new AdjuntoCommand();
-        this.caracteristicaCommand = new CaracteristicaCommand();
-        this.notaCommand = new NotaCommand();
-        this.proveedorCommand = new ProveedorCommand();
+        this.initItemCommand();
     }
-
+    
     public BienCommand(Bien bien) {
-        this.lote = bien.getLote() != null ? bien.getLote() : new Lote();
-        this.categoria = bien.getSubCategoria() != null && bien.getSubCategoria().getCategoria() != null ? bien.getSubCategoria().getCategoria() : new Categoria();
-        this.subCategoria = bien.getSubCategoria() != null ? bien.getSubCategoria() : new SubCategoria();
-        this.subClasificacion = bien.getSubClasificacion() != null ? bien.getSubClasificacion() : new SubClasificacion();
-        this.clasificacion = bien.getSubClasificacion() != null && bien.getSubClasificacion().getClasificacion() != null ? bien.getSubClasificacion().getClasificacion() : new Clasificacion();
-        this.unidadEjecutora = bien.getUnidadEjecutora() != null ? bien.getUnidadEjecutora() : new UnidadEjecutora();
-        this.proveedor = bien.getProveedor() != null ? bien.getProveedor() : new Proveedor();
-        this.moneda = bien.getMoneda() != null ? bien.getMoneda() : new Moneda();
-        this.ubicacion = bien.getUbicacion() != null ? bien.getUbicacion() : new Ubicacion();
-        this.identificacion = bien.getIdentificacion() != null ? bien.getIdentificacion() : new Identificacion();
-        this.origen = bien.getOrigen() != null ? bien.getOrigen() : new Tipo();
-        this.estadoInterno = bien.getEstadoInterno() != null ? bien.getEstadoInterno() : new Estado();
+        this.accesorios = bien.getAccesorios() != null ? bien.getAccesorios() : new ArrayList<>();
+        this.caracteristicas = bien.getCaracteristicas() != null ? bien.getCaracteristicas() : new ArrayList<>();
+        
+        this.idCategoria = bien.getSubCategoria() != null && bien.getSubCategoria().getCategoria() != null ? bien.getSubCategoria().getCategoria().getId() : -1L;
+        this.idClasificacion = bien.getSubClasificacion() != null && bien.getSubClasificacion().getClasificacion() != null ? bien.getSubClasificacion().getClasificacion().getId() : -1L;
+        this.idLote = bien.getLote() != null ? bien.getLote().getId() : -1L;
+        this.idMoneda = bien.getMoneda() != null ? bien.getMoneda().getId() : -1L;
+        this.idOrigen = bien.getOrigen() != null ? bien.getOrigen().getId() : -1L;
+        this.idProveedor = bien.getProveedor() != null ? bien.getProveedor().getNumPersona(): -1L;
+        this.idSubCategoria = bien.getSubCategoria() != null ? bien.getSubCategoria().getId() : -1L;
+        this.idSubClasificacion = bien.getSubClasificacion() != null ? bien.getSubClasificacion().getId() : -1L;
+        this.idTipo =  bien.getTipo() != null ? bien.getTipo().getId() : -1L;
+        this.idUbicacion = bien.getUbicacion() != null ? bien.getUbicacion().getId() : -1L;
+        
         this.estado = bien.getEstado() != null ? bien.getEstado() : new Estado();
-        this.tipo =  bien.getTipo() != null ? bien.getTipo() : new Tipo();
-
+        this.estadoInterno = bien.getEstadoInterno() != null ? bien.getEstadoInterno() : new Estado();
+        this.identificacion = bien.getIdentificacion() != null ? bien.getIdentificacion() : new Identificacion();
+        this.unidadEjecutora = bien.getUnidadEjecutora() != null ? bien.getUnidadEjecutora() : new UnidadEjecutora();
+        
         this.id = bien.getId();
         this.descripcion = bien.getDescripcion();
         this.cantidad = bien.getCantidad();
@@ -440,51 +587,53 @@ public class BienCommand {
         this.descripcionGarantia = bien.getDescripcionGarantia();
         this.descripcionUbicacion = bien.getDescripcionUbicacion();
         this.referencia = bien.getReferencia();
-        this.tipo = bien.getTipo();
-        this.origen = bien.getOrigen();
-        this.estadoInterno = bien.getEstadoInterno();
-        this.estado = bien.getEstado();
-        this.accesorios = bien.getAccesorios();
-        this.caracteristicas = bien.getCaracteristicas();
         this.montoCapitalizable = 250000D;
         
+        this.initItemCommand();
+    }
+    
+    private void initItemCommand() {
         this.accesorioCommand = new AccesorioCommand();
         this.adjuntoCommand = new AdjuntoCommand();
         this.caracteristicaCommand = new CaracteristicaCommand();
         this.notaCommand = new NotaCommand();
         this.proveedorCommand = new ProveedorCommand();
+        this.itemCommand = new ItemCommand();
     }
     //</editor-fold>
 
     //<editor-fold defaultstate="collapsed" desc="Metodos">
     public Bien getBien() {
         Bien bien = new Bien();
+        
+        bien.setLote(this.itemCommand.itemsLote.get(this.idLote));
+        bien.setMoneda(this.itemCommand.itemsMoneda.get(this.idMoneda));
+        bien.setOrigen(this.itemCommand.itemsOrigen.get(this.idOrigen));
+        bien.setProveedor(this.itemCommand.itemsProveedor.get(this.idProveedor));
+        bien.setSubCategoria(this.itemCommand.itemsSubCategoria.get(this.idSubCategoria));
+        bien.setSubClasificacion(this.itemCommand.itemsSubClasificacion.get(this.idSubClasificacion));
+        bien.setTipo(this.itemCommand.itemsTipo.get(this.idTipo));
+        bien.setUbicacion(this.itemCommand.itemsUbicacion.get(this.idUbicacion));
+                
         bien.setId(this.id);
         bien.setDescripcion(this.descripcion);
         bien.setCantidad(this.cantidad);
         bien.setCapitalizable(this.esCapitalizable());
-        bien.setLote(this.lote);
-        bien.setSubCategoria(this.subCategoria);
-        bien.setSubClasificacion(this.subClasificacion);
         bien.setResumenBien(this.resumenBien);
         bien.setUnidadEjecutora(this.unidadEjecutora);
-        bien.setProveedor(this.proveedor);
-        bien.setMoneda(this.moneda);
         bien.setCosto(this.costo);
         bien.setFechaAdquisicion(this.fechaAdquisicion);
         bien.setPersona(this.persona);
         bien.setInicioGarantia(this.inicioGarantia);
         bien.setFinGarantia(this.finGarantia);
         bien.setDescripcionGarantia(this.descripcionGarantia);
-        bien.setUbicacion(this.ubicacion);
         bien.setDescripcionUbicacion(this.descripcionUbicacion);
         bien.setIdentificacion(this.identificacion);
-        bien.setTipo(this.tipo);
-        bien.setOrigen(this.origen);
         bien.setEstadoInterno(this.estadoInterno);
         bien.setEstado(this.estado);
         bien.setAccesorios(this.accesorios);
         bien.setCaracteristicas(this.caracteristicas);
+        
         return bien;
     }
     //</editor-fold>
@@ -504,6 +653,7 @@ public class BienCommand {
     
     private Boolean esCapitalizable(){
         Boolean resultado = false;
+        Moneda moneda = this.itemCommand.itemsMoneda.get(this.idMoneda);
         if(moneda != null && moneda.getId() != null && moneda.getId() > 0 && costo != null && costo > 0  ){
            Double costoColones = moneda.getTipoCambio() * costo;
            if(costoColones > montoCapitalizable){
@@ -544,78 +694,6 @@ public class BienCommand {
 
     public void setCapitalizable(Boolean capitalizable) {
         this.capitalizable = capitalizable;
-    }
-
-    public Lote getLote() {
-        return lote;
-    }
-
-    public void setLote(Lote lote) {
-        this.lote = lote;
-    }
-
-    public Categoria getCategoria() {
-        return categoria;
-    }
-
-    public void setCategoria(Categoria categoria) {
-        this.categoria = categoria;
-    }
-
-    public SubCategoria getSubCategoria() {
-        return subCategoria;
-    }
-
-    public void setSubCategoria(SubCategoria subCategoria) {
-        this.subCategoria = subCategoria;
-    }
-
-    public Clasificacion getClasificacion() {
-        return clasificacion;
-    }
-
-    public void setClasificacion(Clasificacion clasificacion) {
-        this.clasificacion = clasificacion;
-    }
-
-    public SubClasificacion getSubClasificacion() {
-        return subClasificacion;
-    }
-
-    public void setSubClasificacion(SubClasificacion subClasificacion) {
-        this.subClasificacion = subClasificacion;
-    }
-
-    public ViewResumenBien getResumenBien() {
-        return resumenBien;
-    }
-
-    public void setResumenBien(ViewResumenBien resumenBien) {
-        this.resumenBien = resumenBien;
-    }
-
-    public UnidadEjecutora getUnidadEjecutora() {
-        return unidadEjecutora;
-    }
-
-    public void setUnidadEjecutora(UnidadEjecutora unidadEjecutora) {
-        this.unidadEjecutora = unidadEjecutora;
-    }
-
-    public Proveedor getProveedor() {
-        return proveedor;
-    }
-
-    public void setProveedor(Proveedor proveedor) {
-        this.proveedor = proveedor;
-    }
-
-    public Moneda getMoneda() {
-        return moneda;
-    }
-
-    public void setMoneda(Moneda moneda) {
-        this.moneda = moneda;
     }
 
     public Double getCosto() {
@@ -666,14 +744,6 @@ public class BienCommand {
         this.descripcionGarantia = descripcionGarantia;
     }
 
-    public Ubicacion getUbicacion() {
-        return ubicacion;
-    }
-
-    public void setUbicacion(Ubicacion ubicacion) {
-        this.ubicacion = ubicacion;
-    }
-
     public String getDescripcionUbicacion() {
         return descripcionUbicacion;
     }
@@ -690,79 +760,12 @@ public class BienCommand {
         this.referencia = referencia;
     }
 
-    public Identificacion getIdentificacion() {
-        return identificacion;
-    }
-
-    public void setIdentificacion(Identificacion identificacion) {
-        this.identificacion = identificacion;
-    }
-
-    public Tipo getTipo() {
-        return tipo;
-    }
-
-    public void setTipo(Tipo tipo) {
-        this.tipo = tipo;
-    }
-
-    public Tipo getOrigen() {
-        return origen;
-    }
-
-    public void setOrigen(Tipo origen) {
-        this.origen = origen;
-    }
-
-    public Estado getEstadoInterno() {
-        return estadoInterno;
-    }
-
-    public void setEstadoInterno(Estado estadoInterno) {
-        this.estadoInterno = estadoInterno;
-    }
-
-    public Estado getEstado() {
-        return estado;
-    }
-
-    public void setEstado(Estado estado) {
-        this.estado = estado;
-    }
-
-    public List<Accesorio> getAccesorios() {
-        return accesorios;
-    }
-
-    public void setAccesorios(List<Accesorio> accesorios) {
-        this.accesorios = accesorios;
-    }
-
-    public List<Adjunto> getAdjuntos() {
-        return adjuntos;
-    }
-
-    public void setAdjuntos(List<Adjunto> adjuntos) {
-        this.adjuntos = adjuntos;
-    }
-
-    public List<BienCaracteristica> getCaracteristicas() {
-        return caracteristicas;
-    }
-
-    public void setCaracteristicas(List<BienCaracteristica> caracteristicas) {
-        this.caracteristicas = caracteristicas;
-    }
     public Double getMontoCapitalizable() {
         return montoCapitalizable;
     }
 
-    public List<Nota> getNotas() {
-        return notas;
-    }
-
-    public void setNotas(List<Nota> notas) {
-        this.notas = notas;
+    public void setMontoCapitalizable(Double montoCapitalizable) {
+        this.montoCapitalizable = montoCapitalizable;
     }
 
     public String getObservacionCliente() {
@@ -789,6 +792,158 @@ public class BienCommand {
         this.descripcionAdjunto = descripcionAdjunto;
     }
 
+    public Long getIdCategoria() {
+        return idCategoria;
+    }
+
+    public void setIdCategoria(Long idCategoria) {
+        this.idCategoria = idCategoria;
+    }
+
+    public Long getIdClasificacion() {
+        return idClasificacion;
+    }
+
+    public void setIdClasificacion(Long idClasificacion) {
+        this.idClasificacion = idClasificacion;
+    }
+
+    public Long getIdLote() {
+        return idLote;
+    }
+
+    public void setIdLote(Long idLote) {
+        this.idLote = idLote;
+    }
+
+    public Long getIdMoneda() {
+        return idMoneda;
+    }
+
+    public void setIdMoneda(Long idMoneda) {
+        this.idMoneda = idMoneda;
+    }
+
+    public Long getIdOrigen() {
+        return idOrigen;
+    }
+
+    public void setIdOrigen(Long idOrigen) {
+        this.idOrigen = idOrigen;
+    }
+
+    public Long getIdProveedor() {
+        return idProveedor;
+    }
+
+    public void setIdProveedor(Long idProveedor) {
+        this.idProveedor = idProveedor;
+    }
+
+    public Long getIdSubCategoria() {
+        return idSubCategoria;
+    }
+
+    public void setIdSubCategoria(Long idSubCategoria) {
+        this.idSubCategoria = idSubCategoria;
+    }
+
+    public Long getIdSubClasificacion() {
+        return idSubClasificacion;
+    }
+
+    public void setIdSubClasificacion(Long idSubClasificacion) {
+        this.idSubClasificacion = idSubClasificacion;
+    }
+
+    public Long getIdTipo() {
+        return idTipo;
+    }
+
+    public void setIdTipo(Long idTipo) {
+        this.idTipo = idTipo;
+    }
+
+    public Long getIdUbicacion() {
+        return idUbicacion;
+    }
+
+    public void setIdUbicacion(Long idUbicacion) {
+        this.idUbicacion = idUbicacion;
+    }
+
+    public Estado getEstado() {
+        return estado;
+    }
+
+    public void setEstado(Estado estado) {
+        this.estado = estado;
+    }
+
+    public Estado getEstadoInterno() {
+        return estadoInterno;
+    }
+
+    public void setEstadoInterno(Estado estadoInterno) {
+        this.estadoInterno = estadoInterno;
+    }
+
+    public Identificacion getIdentificacion() {
+        return identificacion;
+    }
+
+    public void setIdentificacion(Identificacion identificacion) {
+        this.identificacion = identificacion;
+    }
+
+    public ViewResumenBien getResumenBien() {
+        return resumenBien;
+    }
+
+    public void setResumenBien(ViewResumenBien resumenBien) {
+        this.resumenBien = resumenBien;
+    }
+
+    public UnidadEjecutora getUnidadEjecutora() {
+        return unidadEjecutora;
+    }
+
+    public void setUnidadEjecutora(UnidadEjecutora unidadEjecutora) {
+        this.unidadEjecutora = unidadEjecutora;
+    }
+
+    public List<Accesorio> getAccesorios() {
+        return accesorios;
+    }
+
+    public void setAccesorios(List<Accesorio> accesorios) {
+        this.accesorios = accesorios;
+    }
+
+    public List<Adjunto> getAdjuntos() {
+        return adjuntos;
+    }
+
+    public void setAdjuntos(List<Adjunto> adjuntos) {
+        this.adjuntos = adjuntos;
+    }
+
+    public List<BienCaracteristica> getCaracteristicas() {
+        return caracteristicas;
+    }
+
+    public void setCaracteristicas(List<BienCaracteristica> caracteristicas) {
+        this.caracteristicas = caracteristicas;
+    }
+
+    public List<Nota> getNotas() {
+        return notas;
+    }
+
+    public void setNotas(List<Nota> notas) {
+        this.notas = notas;
+    }
+
     public AccesorioCommand getAccesorioCommand() {
         return accesorioCommand;
     }
@@ -805,20 +960,20 @@ public class BienCommand {
         this.adjuntoCommand = adjuntoCommand;
     }
 
-    public NotaCommand getNotaCommand() {
-        return notaCommand;
-    }
-
-    public void setNotaCommand(NotaCommand notaCommand) {
-        this.notaCommand = notaCommand;
-    }
-    
     public CaracteristicaCommand getCaracteristicaCommand() {
         return caracteristicaCommand;
     }
 
     public void setCaracteristicaCommand(CaracteristicaCommand caracteristicaCommand) {
         this.caracteristicaCommand = caracteristicaCommand;
+    }
+
+    public NotaCommand getNotaCommand() {
+        return notaCommand;
+    }
+
+    public void setNotaCommand(NotaCommand notaCommand) {
+        this.notaCommand = notaCommand;
     }
 
     public ProveedorCommand getProveedorCommand() {
@@ -829,8 +984,12 @@ public class BienCommand {
         this.proveedorCommand = proveedorCommand;
     }
 
-    public void setMontoCapitalizable(Double montoCapitalizable) {
-        this.montoCapitalizable = montoCapitalizable;
+    public ItemCommand getItemCommand() {
+        return itemCommand;
+    }
+
+    public void setItemCommand(ItemCommand itemCommand) {
+        this.itemCommand = itemCommand;
     }
     //</editor-fold>
 }

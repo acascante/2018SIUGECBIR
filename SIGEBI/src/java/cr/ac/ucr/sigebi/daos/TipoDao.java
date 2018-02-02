@@ -56,7 +56,7 @@ public class TipoDao extends GenericDaoImpl {
     }
 
     @Transactional(readOnly = true)
-    public Tipo buscarPorId(Integer idTipo) throws FWExcepcion {
+    public Tipo buscarPorId(Long idTipo) throws FWExcepcion {
         Session session = dao.getSessionFactory().openSession();
         try {
             String sql = "SELECT tip FROM Tipo tip WHERE tip.id = :idTipo";

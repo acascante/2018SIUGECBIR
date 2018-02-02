@@ -229,7 +229,7 @@ public class GestionProcesosController extends BaseController {
         }
 
         // Se obtiene el id del proceso
-        Integer valor = Integer.parseInt(event.getNewValue().toString());
+        Long valor = Long.parseLong(event.getNewValue().toString());
         command.setIdTipoProceso(valor);
 
         //Se inicializa el autorizacion y usuarios

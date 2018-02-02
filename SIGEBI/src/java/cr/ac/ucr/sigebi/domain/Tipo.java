@@ -29,7 +29,7 @@ public class Tipo extends ObjetoBase implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SGB_SQ_TIPO")
     @Column(name = "ID_TIPO")    
-    private Integer id;
+    private Long id;
 
     @Basic(optional = false)
     @Column(name = "NOMBRE")
@@ -43,11 +43,11 @@ public class Tipo extends ObjetoBase implements Serializable {
     //</editor-fold>
 
     //<editor-fold defaultstate="collapsed" desc="GET's y SET's">
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

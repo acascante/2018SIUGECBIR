@@ -175,10 +175,6 @@ public class AgregarBienController extends BaseController {
         }
     }
     
-    private Tipo getTipoSeleccionado() {
-        return itemsTipo.get
-    }
-    
     private void cargarCombos() {
         try {
             List<Tipo> tipos = this.tiposPorDominio(Constantes.DOMINIO_BIEN);
@@ -186,6 +182,7 @@ public class AgregarBienController extends BaseController {
                 itemsTipo = new ArrayList<SelectItemObject>();
                 for (Tipo item : tipos) {
                     itemsTipo.add(new SelectItemObject(item, item.getId(), item.getNombre()));  // ID + Nombre -- Usado para combo de filtro para enviar el ID al Dao para la consulta
+                    command.getItemCommand().getItemsTipo().put(item.getId(), item);
                 }
             }
             
@@ -225,21 +222,6 @@ public class AgregarBienController extends BaseController {
         } catch (Exception err) {
             mensaje = err.getMessage();
         }
-    }
-    
-    private Double getValorColones() {
-        //TODO como se va a manejar el tipo de cambio?
-        try {
-            if (command.getMoneda().getId() == 2L) {
-                return command.getCosto() * tipoCambioDollar;
-            }
-            if (command.getMoneda().getId() == 3L) {
-                return command.getCosto() * tipoCambioEuro;
-            }
-        } catch (Exception err) {
-            mensaje = err.getMessage();
-        }
-        return command.getCosto();
     }
 
     public String validarForm(UIViewRoot root, UIInput component) {
@@ -341,7 +323,7 @@ public class AgregarBienController extends BaseController {
             event.queue();
             return;
         }
-        cargarSubCategorias(command.getCategoria());
+        cargarSubCategorias(command.getItemCommand().getItemsCategoria().get(command.getIdCategoria()));
     }
 
     public void cambioSubCategoria(ValueChangeEvent event) {
@@ -350,7 +332,7 @@ public class AgregarBienController extends BaseController {
             event.queue();
             return;
         }
-        cargarClasificaciones(command.getSubCategoria());
+        cargarClasificaciones(command.getItemCommand().getItemsSubCategoria().get(command.getIdSubCategoria()));
     }
 
     public void cambioClasificacion(ValueChangeEvent event) {
@@ -359,12 +341,12 @@ public class AgregarBienController extends BaseController {
             event.queue();
             return;
         }
-        cargarSubClasificaciones(command.getClasificacion());
+        cargarSubClasificaciones(command.getItemCommand().getItemsClasificacion().get(command.getIdClasificacion()));
     }
 
     private void cargarSubCategorias(Categoria categoria) {
-        if (Constantes.DEFAULT_ID.equals(command.getCategoria().getId())) {
-            command.setSubCategoria(new SubCategoria(Constantes.DEFAULT_ID));
+        if (Constantes.DEFAULT_ID.equals(command.getIdCategoria())) {
+            command.setIdSubCategoria(Constantes.DEFAULT_ID);
             itemsSubCategoria.clear();
             this.setDisableSubCategorias(true);
         } else {
@@ -377,12 +359,12 @@ public class AgregarBienController extends BaseController {
                 }
             }
         }
-        cargarClasificaciones(command.getSubCategoria());
+        cargarClasificaciones(command.getItemCommand().getItemsSubCategoria().get(command.getIdSubCategoria()));
     }
     
     private void cargarClasificaciones(SubCategoria subCategoria) {
-        if (Constantes.DEFAULT_ID.equals(command.getSubCategoria().getId())) {
-            command.setClasificacion(new Clasificacion(Constantes.DEFAULT_ID));
+        if (Constantes.DEFAULT_ID.equals(command.getIdSubCategoria())) {
+            command.setIdClasificacion(Constantes.DEFAULT_ID);
             itemsClasificacion.clear();
             this.setDisableClasificaciones(true);
         } else {
@@ -394,13 +376,13 @@ public class AgregarBienController extends BaseController {
                     itemsClasificacion.add(new SelectItem(item.getId(), item.getNombre()));  // ID + Nombre -- Usado para combo de filtro para enviar el ID al Dao para la consulta
                 }
             }
-            cargarSubClasificaciones(command.getClasificacion());
+            cargarSubClasificaciones(command.getItemCommand().getItemsClasificacion().get(command.getIdClasificacion()));
         }
     }
 
     private void cargarSubClasificaciones(Clasificacion clasificacion) {
-        if (Constantes.DEFAULT_ID.equals(command.getClasificacion().getId())) {
-            command.setSubClasificacion(new SubClasificacion(Constantes.DEFAULT_ID));
+        if (Constantes.DEFAULT_ID.equals(command.getIdClasificacion())) {
+            command.setIdSubClasificacion(Constantes.DEFAULT_ID);
             itemsSubClasificacion.clear();
             this.setDisableSubClasificaciones(true);
         } else {
@@ -423,7 +405,7 @@ public class AgregarBienController extends BaseController {
     }
 
     public void limpiarUbicacion() {
-        command.setUbicacion(new Ubicacion());
+        command.setIdUbicacion(Constantes.DEFAULT_ID);
     }
 
     public void cerrarPanelUbicaciones() {
@@ -444,15 +426,14 @@ public class AgregarBienController extends BaseController {
     //</editor-fold>
 
     //<editor-fold defaultstate="collapsed" desc="Proveedores">
-    public void selecProveedor(ActionEvent event) {
-
+    public void selecionarProveedor(ActionEvent event) {
         if (!event.getPhaseId().equals(PhaseId.INVOKE_APPLICATION)) {
             event.setPhaseId(PhaseId.INVOKE_APPLICATION);
             event.queue();
             return;
         }
-        Proveedor proveedor = (Proveedor) event.getComponent().getAttributes().get("provSeleccionado");
-        command.setProveedor(proveedor);
+        Long idProveedor = (Long) event.getComponent().getAttributes().get("provSeleccionado");
+        command.setIdProveedor(idProveedor);
         this.setVisiblePanelProveedores(false);
     }
     
@@ -461,7 +442,7 @@ public class AgregarBienController extends BaseController {
     }
 
     public void limpiarProveedor() {
-        command.setProveedor(new Proveedor());
+        command.setIdProveedor(Constantes.DEFAULT_ID);
     }
 
     public void cerrarPanelProveedores() {

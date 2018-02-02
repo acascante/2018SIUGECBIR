@@ -141,22 +141,6 @@ public class BienController extends BaseController {
         }
     }
 
-    private Double getValorColones() {
-        //TODO como se va a manejar el tipo de cambio?
-        try {
-            if (command.getMoneda().getId() == 2L) {
-                return command.getCosto() * tipoCambioDollar;
-            }
-            if (command.getMoneda().getId() == 3L) {
-                return command.getCosto() * tipoCambioEuro;
-            }
-        } catch (Exception err) {
-            mensaje = err.getMessage();
-
-        }
-        return command.getCosto();
-    }
-
     public void guardarDatos() {
         try {
             if (prepararBien()) {

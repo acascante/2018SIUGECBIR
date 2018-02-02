@@ -16,7 +16,7 @@ import cr.ac.ucr.sigebi.utils.Constantes;
 public class GestionProcesoCommand {
 
     //<editor-fold defaultstate="collapsed" desc="Atributos">
-    Integer idTipoProceso;
+    Long idTipoProceso;
     Long idAutorizacionTipoProceso;
     Long idRol;
 
@@ -38,7 +38,7 @@ public class GestionProcesoCommand {
     //<editor-fold defaultstate="collapsed" desc="Constructores">
     public GestionProcesoCommand() {
         super();
-        idTipoProceso = -1;
+        idTipoProceso = -1L;
         idAutorizacionTipoProceso = -1L;
         idRol = -1L;
         idUsuario = null;
@@ -50,11 +50,11 @@ public class GestionProcesoCommand {
     //</editor-fold>
 
     //<editor-fold defaultstate="collapsed" desc="Get's & Set's">
-    public Integer getIdTipoProceso() {
+    public Long getIdTipoProceso() {
         return idTipoProceso;
     }
 
-    public void setIdTipoProceso(Integer idTipoProceso) {
+    public void setIdTipoProceso(Long idTipoProceso) {
         this.idTipoProceso = idTipoProceso;
     }
 

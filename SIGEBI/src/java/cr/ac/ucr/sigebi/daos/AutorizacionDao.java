@@ -79,7 +79,7 @@ public class AutorizacionDao extends GenericDaoImpl {
     }
     
     @Transactional(readOnly = true)
-    public List<Autorizacion> buscarPorTipoProceso(Integer idTipoProceso) throws FWExcepcion {
+    public List<Autorizacion> buscarPorTipoProceso(Long idTipoProceso) throws FWExcepcion {
         Session session = this.dao.getSessionFactory().openSession();
         try {
             String sql = "SELECT obj FROM Autorizacion obj WHERE obj.tipoProceso.id = :idTipoProceso";
@@ -98,7 +98,7 @@ public class AutorizacionDao extends GenericDaoImpl {
     }
 
     @Transactional(readOnly = true)
-    public Long contarAutorizacionsValidator(Long idAutorizacion, Integer idProceso,Integer orden,String nombre, Integer codigo) throws FWExcepcion {
+    public Long contarAutorizacionsValidator(Long idAutorizacion, Long idProceso,Integer orden,String nombre, Integer codigo) throws FWExcepcion {
         Session session = dao.getSessionFactory().openSession();
         try {
 
@@ -116,7 +116,7 @@ public class AutorizacionDao extends GenericDaoImpl {
         }
     }
 
-    private Query creaQueryContar(Long idAutorizacion, Integer idProceso,Integer orden,String nombre, Integer codigo, Session session) {
+    private Query creaQueryContar(Long idAutorizacion, Long idProceso,Integer orden,String nombre, Integer codigo, Session session) {
         String sql = "SELECT count(obj) FROM Autorizacion obj ";        
         //Select
         sql = sql + " WHERE  1 = 1 ";

@@ -620,7 +620,7 @@ public class ActaController extends ListadoBienesGeneralController {
         String valor = event.getNewValue().toString();
         tipoSeleccionado = null;
         if (!valor.equals(Constantes.SELECT_DEFAULT)) {
-            tipoSeleccionado = tipoModel.buscarPorId(Integer.parseInt(valor));
+            tipoSeleccionado = tipoModel.buscarPorId(Long.parseLong(valor));
         }
 
         esDonacion = valor.equals(Constantes.ACTA_ID_TIPO_DONACION);
