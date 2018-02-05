@@ -81,7 +81,7 @@ public class Bien extends ObjetoBase implements Serializable {
     @Temporal(javax.persistence.TemporalType.DATE)
     private Date fechaAdquisicion;
     
-    @Column(name = "ID_PERSONA")//FIXME objecto persona
+    @Column(name = "ID_PERSONA", nullable=true)//FIXME objecto persona
     private Integer persona;
     
     @Column(name = "INICIO_GARANTIA")
@@ -120,8 +120,8 @@ public class Bien extends ObjetoBase implements Serializable {
     @Column(name = "REFERENCIA", nullable=true)
     private Integer referencia;
     
-    @JoinColumn(name = "ID_IDENTIFICACION", referencedColumnName = "ID_IDENTIFICACION")
     @ManyToOne
+    @JoinColumn(name = "ID_IDENTIFICACION", referencedColumnName = "ID_IDENTIFICACION")
     private Identificacion identificacion;    
 
     @Transient

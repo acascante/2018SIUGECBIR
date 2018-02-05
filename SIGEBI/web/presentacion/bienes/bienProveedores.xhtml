@@ -11,34 +11,41 @@
             <fieldset class="panel_Container" >
                 <br></br>
                 <!-- LISTAR PROVEEDORES -->
-                <ice:dataTable id="provTabla" value="#{controllerAgregarBienes.proveedores}" var="proveedor" paginator="true" paginatorPosition="bottom" rows="10">
-                    <ice:column id="colIdentificacion" headerText="ID" sortBy="#{proveedor.identificacion}" filterBy="#{proveedor.identificacion}" filterMatchMode="contains">
+                <ice:dataTable id="provTabla" value="#{controllerAgregarBienes.proveedores}" var="proveedor" 
+                               paginator="true" paginatorPosition="bottom" rows="10">
+                    <ice:column id="colIdentificacion">
                         <f:facet name="header">
-                            <ice:outputText value="Identificación"  />
+                            <ice:outputText value="Identificación"/>
                         </f:facet>
+                        
                         <f:facet name="footer">
-                            <ice:inputText id="filtrIdentificacion" style="width: 130px;" value="#{controllerAgregarBienes.command.proveedorCommand.identificacion}" partialSubmit="true"
+                            <ice:inputText id="filtrIdentificacion" 
+                                           value="#{controllerAgregarBienes.command.proveedorCommand.filtroIdentificacion}" 
                                            valueChangeListener="#{controllerAgregarBienes.filtroProveedor}"/>
                         </f:facet>
-                        <h:outputText id="idProveedor" value="#{proveedor.command.proveedorCommand.identificacion}"/>
+                        
+                        <h:outputText id="idProveedor" value="#{proveedor.identificacion}"/>
                     </ice:column>
 
-                    <ice:column id="colNombre" headerText="descripcion" sortBy="#{proveedor.command.nombre}" filterBy="#{proveedor.command.proveedorCommand.nombre}" filterMatchMode="contains">
+                    <ice:column id="colNombre">
                         <f:facet name="header">
-                            <ice:outputText value="Nombre"  />
+                            <ice:outputText value="Nombre"/>
                         </f:facet>
+                        
                         <f:facet name="footer">
-                            <ice:inputText id="filtroNombre" style="width: 130px;" partialSubmit="true"
-                                           value="#{controllerAgregarBienes.command.proveedorCommand.nombre}"                                   
+                            <ice:inputText id="filtroNombre" 
+                                           value="#{controllerAgregarBienes.command.proveedorCommand.filtroNombre}"                     
                                            valueChangeListener="#{controllerAgregarBienes.filtroProveedor}"/>
                         </f:facet>
+                        
                         <h:outputText id="lblNomb" value="#{proveedor.nombreCompleto}"/>
                     </ice:column>
 
                     <ice:column style="text-align: center;">
-                        <ice:commandButton id="botonAbrirProveedor" style="float:right;margin-top:2%"  styleClass="boton"  partialSubmit="true" value="Seleccionar"  
+                        <ice:commandButton id="botonSeleccionarProveedor" style="float:right;margin-top:2%"  styleClass="boton"  partialSubmit="true" 
+                                           value="Seleccionar"  
                                            actionListener="#{controllerAgregarBienes.selecionarProveedor}">
-                            <f:attribute id="provSeleccionado" name="provSeleccionado" value="#{prov}"/>
+                            <f:attribute id="provSeleccionado" name="proveedorSeleccionado" value="#{proveedor}"/>
                         </ice:commandButton>
                     </ice:column>
                 </ice:dataTable>

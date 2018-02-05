@@ -31,7 +31,7 @@ public class Proveedor extends Persona implements Serializable{
     private String claseProveedor;
     
     @Column(name = "ID_PLAZO")
-    private Integer plazo;
+    private String plazo;
     
     @Column(name = "ESTADO")
     private String estado;
@@ -62,11 +62,11 @@ public class Proveedor extends Persona implements Serializable{
         this.claseProveedor = claseProveedor;
     }
 
-    public Integer getPlazo() {
+    public String getPlazo() {
         return plazo;
     }
 
-    public void setPlazo(Integer plazo) {
+    public void setPlazo(String plazo) {
         this.plazo = plazo;
     }
 

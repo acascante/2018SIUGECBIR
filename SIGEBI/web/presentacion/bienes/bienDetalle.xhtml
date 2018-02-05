@@ -42,8 +42,8 @@
                         <ice:outputText value="#{label['sigebi.Bien.Label.Tipo']}" />
 
                         <ice:selectOneMenu id="selTipoBien" styleClass="form-control"
-                                           value="#{controllerAgregarBienes.command.tipo.id}" >
-                            <!--<f:selectItem itemLabel="#{label['sigebi.Bien.Select.Tipo']}" itemValue="-1"/>-->
+                                           value="#{controllerAgregarBienes.command.idTipo}" >
+                            <f:selectItem itemLabel="#{label['sigebi.Bien.Select.Tipo']}" itemValue="-1"/>
                             <f:selectItems id="optSelTipoBien" value="#{controllerAgregarBienes.itemsTipo}"/>
                         </ice:selectOneMenu>
                     </div>
@@ -51,7 +51,7 @@
                     <div class="col-md-8">
                         <ice:outputText value="#{label['sigebi.Bien.Label.Origen']}" />  
                         <ice:selectOneMenu id="selOrigen" styleClass="form-control" partialSubmit="false"
-                                           value="#{controllerAgregarBienes.command.origen}" >
+                                           value="#{controllerAgregarBienes.command.idOrigen}" >
                             <f:selectItem itemLabel="Seleccione un valor" itemValue="-1"/>
                             <f:selectItems id="optSelOrigen" value="#{controllerAgregarBienes.itemsOrigen}"/>
                         </ice:selectOneMenu>
@@ -82,7 +82,7 @@
                         <div class="form-group"> 
                             <ice:outputText value="#{label['sigebi.Bien.Label.Lote']}" />  
                             <ice:selectOneMenu id="selLotes" styleClass="form-control" partialSubmit="true" 
-                                               value="#{controllerAgregarBienes.command.lote}" >
+                                               value="#{controllerAgregarBienes.command.idLote}" >
                                 <f:selectItem itemLabel="Ninguno" itemValue="-1"/>
                                 <f:selectItems id="optSelLotes" value="#{controllerAgregarBienes.itemsLote}"/>
                             </ice:selectOneMenu>
@@ -106,8 +106,9 @@
                             <ice:outputText value="#{label['sigebi.Bien.Label.Categoria']}" />                                 
                             <ice:selectOneMenu  id="selCategoria" styleClass="form-control" partialSubmit="true"
                                                 valueChangeListener="#{controllerAgregarBienes.cambioCategoria}"
-                                                value="#{controllerAgregarBienes.command.categoria}" >
-                                    <f:selectItems id="optSelCategoria" value="#{controllerAgregarBienes.itemsCategoria}"/>                                        
+                                                value="#{controllerAgregarBienes.command.idCategoria}" >
+                                    <f:selectItem itemLabel="Seleccionar Categoría" itemValue="-1"/>
+                                    <f:selectItems id="optSelCategoria" value="#{controllerAgregarBienes.itemsCategoria}"/>
                             </ice:selectOneMenu>
                         </div>                                             
                     </div>
@@ -116,8 +117,7 @@
                         <div class="form-group"> 
                             <ice:outputText value="#{label['sigebi.Bien.Label.SubCategoria']}" /> 
                             <ice:selectOneMenu id="selSubCategoria" styleClass="form-control" partialSubmit="true"
-                                               disabled="#{controllerAgregarBienes.disableSubCategorias}"
-                                               value="#{controllerAgregarBienes.command.subCategoria}" 
+                                               value="#{controllerAgregarBienes.command.idSubCategoria}" 
                                                valueChangeListener="#{controllerAgregarBienes.cambioSubCategoria}">
                                 <f:selectItem itemLabel="Seleccionar Sub Categoría" itemValue="-1"/>
                                 <f:selectItems id="optSelSubCateg" value="#{controllerAgregarBienes.itemsSubCategoria}"/>
@@ -132,8 +132,8 @@
                         <div class="form-group"> 
                             <ice:outputText value="#{label['sigebi.Bien.Label.Clasificacion']}" /> 
                             <ice:selectOneMenu id="selClasificacion" styleClass="form-control" partialSubmit="true"
-                                               disabled="#{controllerAgregarBienes.disableClasificaciones}"
-                                               value="#{controllerAgregarBienes.command.clasificacion}" 
+                                               readonly="#{controllerAgregarBienes.disableClasificaciones}"
+                                               value="#{controllerAgregarBienes.command.idClasificacion}" 
                                                valueChangeListener="#{controllerAgregarBienes.cambioClasificacion}">
                                 <f:selectItem itemLabel="Seleccionar Clasificación" itemValue="-1"/>
                                 <f:selectItems id="optSelClasificacion" value="#{controllerAgregarBienes.itemsClasificacion}"/>
@@ -145,8 +145,8 @@
                         <div class="form-group"> 
                             <ice:outputText value="#{label['sigebi.Bien.Label.SubClasificacion']}" /> 
                             <ice:selectOneMenu id="selSubClasificacion" styleClass="form-control" partialSubmit="false"
-                                               disabled="#{controllerAgregarBienes.disableSubClasificaciones}"
-                                               value="#{controllerAgregarBienes.command.subClasificacion}">
+                                               readonly="#{controllerAgregarBienes.disableSubClasificaciones}"
+                                               value="#{controllerAgregarBienes.command.idSubClasificacion}">
                                 <f:selectItem itemLabel="#{label['sigebi.Bien.Select.SubClasificacion']}" itemValue="-1"/>
                                 <f:selectItems id="optSelSubclasificacion" value="#{controllerAgregarBienes.itemsSubClasificacion}"/>
                             </ice:selectOneMenu>
@@ -160,7 +160,7 @@
                         <div class="form-group">
                             <ice:outputText value="#{label['sigebi.Bien.Label.Ubicacion']}" /> 
                             <ice:inputText id="txtUbicacionDescr" styleClass="form-control" required="true" readonly="true" partialSubmit="true"
-                                           value="#{controllerAgregarBienes.command.ubicacion.detalle}" >
+                                           value="#{controllerAgregarBienes.command.ubicacionCommand.descripcion}" >
                             </ice:inputText>
                         </div>
                     </div>
@@ -181,7 +181,7 @@
                     <div class="col-sm-8"> 
                         <div class="form-group">
                             <ice:outputText value="#{label['sigebi.Bien.Label.Proveedor']}" /> 
-                            <ice:inputText id="txtProvedor" styleClass="form-control" value="#{controllerAgregarBienes.command.proveedor.nombreCompleto}" required="true" readonly="true" partialSubmit="true"/>
+                            <ice:inputText id="txtProvedor" styleClass="form-control" value="#{controllerAgregarBienes.command.proveedorCommand.descripcion}" required="true" readonly="true" partialSubmit="true"/>
                         </div>
                     </div>
                     <div class="col-sm-2">
@@ -209,7 +209,7 @@
                     <div class="col-md-3">
                         <ice:outputText value="#{label['sigebi.Bien.Label.Moneda']}"/>
                         <ice:selectOneMenu id="selMoneda" styleClass="form-control" partialSubmit="false"
-                                           value="#{controllerAgregarBienes.command.moneda.id}" >
+                                           value="#{controllerAgregarBienes.command.idMoneda}" >
                             <f:selectItem itemLabel="#{label['sigebi.Bien.Select.Moneda']}" itemValue="-1"/>
                             <f:selectItems id="optSelMoneda" value="#{controllerAgregarBienes.itemsMoneda}"/>
                         </ice:selectOneMenu>
@@ -235,16 +235,21 @@
 
                         <ice:commandButton id="botonRechazar" value="#{label['sigebi.Bien.Btn.Rechazar']}" style="float:right" styleClass="boton" partialSubmit="true"
                                            rendered="#{controllerAgregarBienes.visibleBotonRechazar}"
-                                           actionListener="#{controllerAgregarBienes.mostrarPanelObserva}">
+                                           actionListener="#{controllerAgregarBienes.mostrarPanelObservacion}">
                         </ice:commandButton>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Modal de ubicaciones --> 
+        <!-- Panel de Ubicaciones --> 
         <ui:insert name="modalUbicaciones">
             <ui:include src="../bienes/bienUbicaciones.xhtml" />
+        </ui:insert>
+                
+        <!-- Panel de Proveedores --> 
+        <ui:insert name="modalUbicaciones">
+            <ui:include src="../bienes/bienProveedores.xhtml" />
         </ui:insert>
         
         <!-- Modal para rechazar un bien pendiente de sincronizar --> 

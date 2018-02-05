@@ -20,7 +20,7 @@
                             <div class="form-group">
                                 <label class="control-label" for="selUbicacion">* Ubicación</label>
                                 <ice:selectOneMenu id="selUbicacion" styleClass="form-control" partialSubmit="true"
-                                                   value="#{controllerAgregarBienes.command.ubicacion}" >
+                                                   value="#{controllerAgregarBienes.command.ubicacionCommand.idUbicacion}" >
                                     <f:selectItem itemLabel="Seleccione una Ubicación" itemValue="-1"/>                                        
                                     <f:selectItems id="optSelUbicacion" value="#{controllerAgregarBienes.itemsUbicacion}"/>                                        
                                 </ice:selectOneMenu>

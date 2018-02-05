@@ -73,8 +73,6 @@ public class BienModel {
     }
 
     public void cambiaEstadoBien(Bien bien, Estado estado, String observacion, Integer telefono) {
-        
-        
         //Se registra el movimiento
         RegistroMovimiento regisMov = new RegistroMovimiento();
         regisMov.setBien(bien);

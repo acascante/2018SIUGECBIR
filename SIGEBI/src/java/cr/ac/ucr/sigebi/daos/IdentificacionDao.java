@@ -44,10 +44,10 @@ public class IdentificacionDao extends GenericDaoImpl {
     public Identificacion siguienteDisponible(Estado estado) throws FWExcepcion {
         Session session = dao.getSessionFactory().openSession();
         try {
-            String sql = "SELECT i FROM Identificacion i WHERE i.estado = :estado AND rowcount = 1";
+            String sql = "SELECT i FROM Identificacion i WHERE i.estado = :estado";
             Query query = session.createQuery(sql);
             query.setParameter("estado", estado);
-
+            query.setMaxResults(1); 
             return (Identificacion) query.uniqueResult();
         } catch (HibernateException e) {
             throw new FWExcepcion("sigebi.error.notificacionDao.listar", "Error obtener los registros de tipo " + this.getClass(), e.getCause());

@@ -29,6 +29,10 @@ public class ProveedorModel {
         return proveedorDao.listar();
     }
     
+    public List<Proveedor> listar(String identificacion, String nombre) throws FWExcepcion {
+        return proveedorDao.listar(identificacion, nombre);
+    }
+    
     public Proveedor buscarPorId(Long id) throws FWExcepcion {
         return proveedorDao.buscarPorId(id);
     }
