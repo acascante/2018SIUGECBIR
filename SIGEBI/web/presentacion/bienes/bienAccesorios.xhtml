@@ -44,6 +44,46 @@
             </div>
         </div>
     </div>
+    
+    <!-- Modal Eliminar Accesorio -->
+    <ice:panelPopup modal="true" visible="#{controllerAgregarBienes.visiblePanelEliminarAccesorio}" rendered="true" styleClass="popup" >
+        <f:facet name="header">
+            <ice:outputText styleClass="flotar_izquierda titulo_popup" value="Confirmación"/>
+        </f:facet> 
+
+        <f:facet name="body">
+            <fieldset class="panel_Container" >
+
+                <div class="container" style="margin-top: 30px;">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <h4>Desea eliminar el accesorio: </h4>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-2"></div>
+                        <div class="col-md-10">
+                            <ice:inputText value="#{controllerAgregarBienes.command.accesorioCommand.detalle}" styleClass="form-control" readonly="true"/>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 align-content-center">
+                            <ice:commandButton id="btnCancelarAccesorio" partialSubmit="true" styleClass="boton" value="Cancelar"
+                                               action="#{controllerAgregarBienes.eliminarAccesorioCancelar}" />
+                        </div>
+
+                        <div class="col-md-6 align-content-center">
+                            <ice:commandButton id="btnConfirmarEliminarAccesorio" partialSubmit="true" styleClass="boton" value="Eliminar"
+                                               action="#{controllerAgregarBienes.eliminarAccesorioConfirmar}" />
+                        </div>
+                    </div>
+                </div>
+                <br />
+                <br />
+            </fieldset>       
+        </f:facet>  
+    </ice:panelPopup>
   </ice:outputHtml>
 
 

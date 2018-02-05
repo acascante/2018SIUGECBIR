@@ -42,6 +42,7 @@ public class BienCommand {
         private Bien bien;
         private String detalle;
         private Estado estado;
+        private Accesorio itemAccesorio;
 
         public AccesorioCommand() {}
 
@@ -88,6 +89,14 @@ public class BienCommand {
 
         public void setEstado(Estado estado) {
             this.estado = estado;
+        }
+        
+        public Accesorio getItemAccesorio() {
+            return itemAccesorio;
+        }
+
+        public void setItemAccesorio(Accesorio itemAccesorio) {
+            this.itemAccesorio = itemAccesorio;
         }
         //</editor-fold>
     }
@@ -219,6 +228,7 @@ public class BienCommand {
         private Bien bien;
         private Estado estado;
         private String detalle;
+        private BienCaracteristica caracteristica;
 
         public CaracteristicaCommand() {}
 
@@ -274,14 +284,24 @@ public class BienCommand {
         public void setDetalle(String detalle) {
             this.detalle = detalle;
         }
-        //</editor-fold>
         
+        public BienCaracteristica getCaracteristica() {
+            if (caracteristica == null) {
+                this.caracteristica = new BienCaracteristica();
+            }
+            return caracteristica;
+        }
+
+        public void setCaracteristica(BienCaracteristica caracteristica) {
+            this.caracteristica = caracteristica;
+        }
+        //</editor-fold>
     }
     
     public class ItemCommand {
         
         private Map<Long, Accesorio> itemsAccesorio;
-        private Map<Long, BienCaracteristica> itemsCaracteristica;
+        private Map<Long, Tipo> itemsCaracteristica;
         private Map<Long, Categoria> itemsCategoria;
         private Map<Long, Clasificacion> itemsClasificacion;
         private Map<Long, Lote> itemsLote;
@@ -296,7 +316,7 @@ public class BienCommand {
         
         public ItemCommand(Bien bien) {
             this.itemsAccesorio = new HashMap<Long, Accesorio>();
-            this.itemsCaracteristica = new HashMap<Long, BienCaracteristica>();
+            this.itemsCaracteristica = new HashMap<Long, Tipo>();
             this.itemsCategoria= new HashMap<Long, Categoria>();
             this.itemsClasificacion= new HashMap<Long, Clasificacion>();
             this.itemsLote= new HashMap<Long, Lote>();
@@ -314,12 +334,6 @@ public class BienCommand {
             if (bien.getAccesorios() != null) {
                 for (Accesorio item : bien.getAccesorios()) {
                     this.itemsAccesorio.put(item.getId(), item);
-                }
-            }
-            
-            if (bien.getCaracteristicas() != null) {
-                for (BienCaracteristica item : bien.getCaracteristicas()) {
-                    this.itemsCaracteristica.put(item.getId(), item);
                 }
             }
             
@@ -357,14 +371,14 @@ public class BienCommand {
             this.itemsCategoria = itemsCategoria;
         }
 
-        public Map<Long, BienCaracteristica> getItemsCaracteristica() {
+        public Map<Long, Tipo> getItemsCaracteristica() {
             if (this.itemsCaracteristica == null) {
-                itemsCaracteristica = new HashMap<Long, BienCaracteristica>();
+                itemsCaracteristica = new HashMap<Long, Tipo>();
             }
             return itemsCaracteristica;
         }
 
-        public void setItemsCaracteristica(Map<Long, BienCaracteristica> itemsCaracteristica) {
+        public void setItemsCaracteristica(Map<Long, Tipo> itemsCaracteristica) {
             this.itemsCaracteristica = itemsCaracteristica;
         }
 

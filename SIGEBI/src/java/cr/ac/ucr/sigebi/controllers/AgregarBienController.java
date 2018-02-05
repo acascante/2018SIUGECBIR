@@ -100,6 +100,8 @@ public class AgregarBienController extends BaseController {
     @Resource private UbicacionModel modelUbicacion;
     
     private List<Proveedor> proveedores;
+    private List<Accesorio> accesorios;
+    private List<BienCaracteristica> caracteristicas;
     private List<Tipo> tiposCaracteristica;
     private BienCommand command;
     private Bien bien;
@@ -121,7 +123,10 @@ public class AgregarBienController extends BaseController {
     private boolean visibleBotonSincronizar;
     private boolean visibleBotonRechazar;
     private boolean visiblePanelObservaciones;
-    
+    private boolean visiblePanelModificarCaracteristica;
+    private boolean visiblePanelEliminarNota;
+    private boolean visiblePanelAdjunto;
+    private boolean visiblePanelEliminarAccesorio;
     private boolean bienRegistrado;
     //</editor-fold>
     
@@ -150,12 +155,15 @@ public class AgregarBienController extends BaseController {
         this.disableClasificaciones = true;
         this.disableSubClasificaciones = true;
         
-        
         this.visiblePanelObservaciones = false;
         this.visiblePanelProveedores = false;
         this.visiblePanelUbicaciones = false;
         this.visibleBotonSincronizar = false;
         this.visibleBotonRechazar = false;
+        this.visiblePanelModificarCaracteristica = false;
+        this.visiblePanelEliminarNota = false;
+        this.visiblePanelAdjunto = false;
+        this.visiblePanelEliminarAccesorio = false;
         
         this.bienRegistrado = false;
     }
@@ -171,17 +179,48 @@ public class AgregarBienController extends BaseController {
         }
         if(bien.getEstado().getValor().equals(Constantes.ESTADO_BIEN_PENDIENTE_SINCRONIZAR)) {
             this.setVisibleBotonRechazar(true);
-        }else{
+        } else {
             this.setVisibleBotonRechazar(false);
+        }
+
+        Estado estado = this.estadoPorDominioValor(Constantes.DOMINIO_BIEN, Constantes.ESTADO_BIEN_PENDIENTE);
+        this.command.setEstado(estado);
+        this.command.setEstadoInterno(estado); // TODO Revisar cual es el estado interno para BIENES
+        
+        this.accesorios = modelAccesorio.listarPorBien(bien);
+        this.caracteristicas = modelBienCaracteristica.listarPorBien(bien);
+        
+        this.tiposCaracteristica = this.tiposPorDominio(Constantes.DOMINIO_CARACTERISTICA);
+        if (!this.tiposCaracteristica.isEmpty()) {
+            this.itemsCaracteristica = new ArrayList<SelectItem>();
+            for (Tipo item : this.tiposCaracteristica) {
+                boolean existe = false;
+                for (BienCaracteristica bienCaracteristica : this.caracteristicas) {
+                    if (bienCaracteristica.getTipo().equals(item)) {
+                        existe = true;
+                    }
+                }
+                
+                if (existe == false) {
+                    this.itemsCaracteristica.add(new SelectItem(item.getId(), item.getNombre()));  // ID + Nombre -- Usado para combo de filtro para enviar el ID al Dao para la consulta
+                    this.command.getItemCommand().getItemsCaracteristica().put(item.getId(), item);
+                }
+            }
+        }
+        
+        if (command.getIdSubCategoria()!= null) {
+            cargarSubCategorias(command.getItemCommand().getItemsCategoria().get(command.getIdCategoria()));
+        }
+        if (command.getIdClasificacion() != null) {
+            cargarClasificaciones(command.getItemCommand().getItemsSubCategoria().get(command.getIdSubCategoria()));
+        }
+        if (command.getIdSubClasificacion() != null) {
+            cargarSubClasificaciones(command.getItemCommand().getItemsClasificacion().get(command.getIdClasificacion()));
         }
     }
     
     private void cargarCombos() {
         try {
-            Estado estado = this.estadoPorDominioValor(Constantes.DOMINIO_BIEN, Constantes.ESTADO_BIEN_PENDIENTE);
-            command.setEstado(estado);
-            command.setEstadoInterno(estado); // TODO Revisar cual es el estado interno para BIENES
-        
             List<Tipo> tipos = this.tiposPorDominio(Constantes.DOMINIO_BIEN);
             if (!tipos.isEmpty()) {
                 itemsTipo = new ArrayList<SelectItem>();
@@ -225,16 +264,6 @@ public class AgregarBienController extends BaseController {
                     itemsMoneda.add(new SelectItem(item.getId(), item.getDescripcion()));
                     command.getItemCommand().getItemsMoneda().put(item.getId(), item);
                 }
-            }
-            
-            if (command.getIdSubCategoria()!= null) {
-                cargarSubCategorias(command.getItemCommand().getItemsCategoria().get(command.getIdCategoria()));
-            }
-            if (command.getIdClasificacion() != null) {
-                cargarClasificaciones(command.getItemCommand().getItemsSubCategoria().get(command.getIdSubCategoria()));
-            }
-            if (command.getIdSubClasificacion() != null) {
-                cargarSubClasificaciones(command.getItemCommand().getItemsClasificacion().get(command.getIdClasificacion()));
             }
         } catch (Exception err) {
             mensaje = err.getMessage();
@@ -322,7 +351,8 @@ public class AgregarBienController extends BaseController {
                 event.queue();
                 return;
             }
-            inicializarDetalle((Bien) event.getComponent().getAttributes().get("bienSeleccionado"));
+            this.bien = (Bien) event.getComponent().getAttributes().get("bienSeleccionado");
+            inicializarDetalle(bien);
             this.vistaOrigen = event.getComponent().getAttributes().get(Constantes.KEY_VISTA_ORIGEN).toString();
             Util.navegar(Constantes.KEY_VISTA_DETALLE_BIEN);
         } catch (Exception err) {
@@ -708,53 +738,115 @@ public class AgregarBienController extends BaseController {
     //<editor-fold defaultstate="collapsed" desc="Tab Accesorios">
     public void guardarAccesorio() {
         try {
-            Accesorio accesorio = command.getAccesorioCommand().getAccesorio();
-            modelAccesorio.almacenar(accesorio);
+            if (validarAccesorio()) {
+                Estado estado = this.estadoPorDominioValor(Constantes.DOMINIO_BIEN, Constantes.ESTADO_BIEN_ACTIVO); // TODO revisar dominios para accesorios
+                this.command.getAccesorioCommand().setBien(bien);
+                this.command.getAccesorioCommand().setEstado(estado);
+                Accesorio accesorio = command.getAccesorioCommand().getAccesorio();
+                modelAccesorio.almacenar(accesorio);
+            }
         } catch (Exception err) {
-            Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.Bien.Error.Complemento"));
+            Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.Bien.Error.cargarCaracteristica"));
         }
     }
 
-    public void eliminarAccesorio(ActionEvent event) {
+    private boolean validarAccesorio () {
+        return true;
+    }
+    
+    public void mostrarPanelEliminarAccesorio(ActionEvent event) {
         try {
             if (!event.getPhaseId().equals(PhaseId.INVOKE_APPLICATION)) {
                 event.setPhaseId(PhaseId.INVOKE_APPLICATION);
                 event.queue();
                 return;
             }
-            modelAccesorio.eliminar((Accesorio) event.getComponent().getAttributes().get("accesorioSeleccionado"));
+            
+            Accesorio accesorio = (Accesorio) event.getComponent().getAttributes().get("accesorioSeleccionado");
+            this.command.getAccesorioCommand().setItemAccesorio(accesorio);
+            this.command.getAccesorioCommand().setDetalle(accesorio.getDetalle());
+            this.setVisiblePanelModificarCaracteristica(true);
+        } catch (Exception err) {
+            mensajeCaracteristica = err.getMessage();
+        }
+    }
+    
+    
+    public void eliminarAccesorioCancelar() {
+        this.setVisiblePanelEliminarAccesorio(false);
+    }
+
+    public void eliminarAccesorioConfirmar() {
+        try {
+            Accesorio accesorio = this.command.getAccesorioCommand().getAccesorio();
+            modelAccesorio.eliminar(accesorio);
+            this.accesorios.remove(accesorio);
         } catch (Exception err) {
             Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.Bien.Error.Complemento.Eliminar"));
         }
     }
     //</editor-fold>
 
-    //<editor-fold defaultstate="collapsed" desc="Tab Características">
+     //<editor-fold defaultstate="collapsed" desc="Tab Características">
     public void guardarCaracteristica() {
         try {
             if (validarCaracteristica()) {
-                modelBienCaracteristica.almacenar(command.getCaracteristicaCommand().getBienCaracteristica());
+                Estado estado = this.estadoPorDominioValor(Constantes.DOMINIO_CARACTERISTICA, Constantes.ESTADO_BIEN_ACTIVO); // TODO revisar estado
+                this.command.getCaracteristicaCommand().setBien(bien);
+                this.command.getCaracteristicaCommand().setTipo(this.command.getItemCommand().getItemsCaracteristica().get(this.command.getCaracteristicaCommand().getId()));
+                this.command.getCaracteristicaCommand().setEstado(estado);
+                BienCaracteristica caracteristica = command.getCaracteristicaCommand().getBienCaracteristica();
+                modelBienCaracteristica.almacenar(caracteristica);
             }
         } catch (Exception err) {
             Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.Bien.Error.cargarCaracteristica"));
         }
     }
     
-    public void modificarCaracteristica(ActionEvent event) {
+    public void mostrarPanelModificarCaracteristica(ActionEvent event) {
         try {
             if (!event.getPhaseId().equals(PhaseId.INVOKE_APPLICATION)) {
                 event.setPhaseId(PhaseId.INVOKE_APPLICATION);
                 event.queue();
                 return;
             }
-            if (validarCaracteristica()) {
-                modelBienCaracteristica.almacenar((BienCaracteristica)event.getComponent().getAttributes().get("caracteristicaSelccionada"));
-            }
+            this.command.getCaracteristicaCommand().setCaracteristica((BienCaracteristica) event.getComponent().getAttributes().get("caracteristicaSelccionada"));
+            this.setVisiblePanelModificarCaracteristica(true);
         } catch (Exception err) {
             mensajeCaracteristica = err.getMessage();
         }
     }
 
+    public void modificarPanelCaracteristicaCancelar(ActionEvent event) {
+        this.setVisiblePanelModificarCaracteristica(false);
+    }
+    
+    public void modificarPanelCaracteristicaElminimar(ActionEvent event) {
+        try {
+            BienCaracteristica caracteristica = this.command.getCaracteristicaCommand().getBienCaracteristica();
+            modelBienCaracteristica.eliminar(caracteristica);
+            
+            SelectItem item = new SelectItem(caracteristica.getTipo().getId(), caracteristica.getTipo().getNombre());
+            this.itemsCaracteristica.remove(item);
+            this.command.getItemCommand().getItemsCaracteristica().put(caracteristica.getTipo().getId(), caracteristica.getTipo());
+        } catch (Exception err) {
+            Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.Bien.Error.Complemento.Eliminar"));
+        }
+    }
+        
+    public void modificarPanelCaracteristicaModificar(ActionEvent event) {
+        try {
+            BienCaracteristica caracteristica = this.command.getCaracteristicaCommand().getBienCaracteristica();
+            modelBienCaracteristica.almacenar(caracteristica);
+            
+            SelectItem item = new SelectItem(caracteristica.getTipo().getId(), caracteristica.getTipo().getNombre());
+            this.itemsCaracteristica.add(item);
+            this.caracteristicas.add(caracteristica);
+        } catch (Exception err) {
+            Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.Bien.Error.Complemento.Eliminar"));
+        }
+    }        
+    
     private boolean validarCaracteristica() {
         
         //TODO Agragar validaciones de caracteristicas
@@ -994,5 +1086,39 @@ public class AgregarBienController extends BaseController {
     public void setBienRegistrado(boolean bienRegistrado) {
         this.bienRegistrado = bienRegistrado;
     }
+    
+    
     //</editor-fold>
+
+    public boolean isVisiblePanelModificarCaracteristica() {
+        return visiblePanelModificarCaracteristica;
+    }
+
+    public void setVisiblePanelModificarCaracteristica(boolean visiblePanelModificarCaracteristica) {
+        this.visiblePanelModificarCaracteristica = visiblePanelModificarCaracteristica;
+    }
+
+    public boolean isVisiblePanelEliminarNota() {
+        return visiblePanelEliminarNota;
+    }
+
+    public void setVisiblePanelEliminarNota(boolean visiblePanelEliminarNota) {
+        this.visiblePanelEliminarNota = visiblePanelEliminarNota;
+    }
+
+    public boolean isVisiblePanelAdjunto() {
+        return visiblePanelAdjunto;
+    }
+
+    public void setVisiblePanelAdjunto(boolean visiblePanelAdjunto) {
+        this.visiblePanelAdjunto = visiblePanelAdjunto;
+    }
+
+    public boolean isVisiblePanelEliminarAccesorio() {
+        return visiblePanelEliminarAccesorio;
+    }
+
+    public void setVisiblePanelEliminarAccesorio(boolean visiblePanelEliminarAccesorio) {
+        this.visiblePanelEliminarAccesorio = visiblePanelEliminarAccesorio;
+    }
 }
