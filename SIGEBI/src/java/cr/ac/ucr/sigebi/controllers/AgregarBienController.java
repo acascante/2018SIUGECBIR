@@ -219,6 +219,16 @@ public class AgregarBienController extends BaseController {
                     itemsMoneda.add(new SelectItem(item, item.getDescripcion()));  // ID + Nombre -- Usado para combo de filtro para enviar el ID al Dao para la consulta
                 }
             }
+            
+            if (command.getIdSubCategoria()!= null) {
+                cargarSubCategorias(command.getItemCommand().getItemsCategoria().get(command.getIdCategoria()));
+            }
+            if (command.getIdClasificacion() != null) {
+                cargarClasificaciones(command.getItemCommand().getItemsSubCategoria().get(command.getIdSubCategoria()));
+            }
+            if (command.getIdSubClasificacion() != null) {
+                cargarSubClasificaciones(command.getItemCommand().getItemsClasificacion().get(command.getIdClasificacion()));
+            }
         } catch (Exception err) {
             mensaje = err.getMessage();
         }
@@ -349,6 +359,7 @@ public class AgregarBienController extends BaseController {
             command.setIdSubCategoria(Constantes.DEFAULT_ID);
             itemsSubCategoria.clear();
             this.setDisableSubCategorias(true);
+            cargarClasificaciones(command.getItemCommand().getItemsSubCategoria().get(command.getIdSubCategoria()));
         } else {
             List<SubCategoria> subCategorias = modelSubCategoria.listar(categoria);
             if (!subCategorias.isEmpty()) {
@@ -359,7 +370,6 @@ public class AgregarBienController extends BaseController {
                 }
             }
         }
-        cargarClasificaciones(command.getItemCommand().getItemsSubCategoria().get(command.getIdSubCategoria()));
     }
     
     private void cargarClasificaciones(SubCategoria subCategoria) {
@@ -367,6 +377,7 @@ public class AgregarBienController extends BaseController {
             command.setIdClasificacion(Constantes.DEFAULT_ID);
             itemsClasificacion.clear();
             this.setDisableClasificaciones(true);
+            cargarSubClasificaciones(command.getItemCommand().getItemsClasificacion().get(command.getIdClasificacion()));
         } else {
             List<Clasificacion> clasificaciones = modelClasificacion.listarPorSubCategoria(subCategoria);
             if (!clasificaciones.isEmpty()) {
@@ -376,7 +387,6 @@ public class AgregarBienController extends BaseController {
                     itemsClasificacion.add(new SelectItem(item.getId(), item.getNombre()));  // ID + Nombre -- Usado para combo de filtro para enviar el ID al Dao para la consulta
                 }
             }
-            cargarSubClasificaciones(command.getItemCommand().getItemsClasificacion().get(command.getIdClasificacion()));
         }
     }
 
