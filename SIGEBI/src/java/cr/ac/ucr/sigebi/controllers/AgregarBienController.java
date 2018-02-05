@@ -226,6 +226,16 @@ public class AgregarBienController extends BaseController {
                     command.getItemCommand().getItemsMoneda().put(item.getId(), item);
                 }
             }
+            
+            if (command.getIdSubCategoria()!= null) {
+                cargarSubCategorias(command.getItemCommand().getItemsCategoria().get(command.getIdCategoria()));
+            }
+            if (command.getIdClasificacion() != null) {
+                cargarClasificaciones(command.getItemCommand().getItemsSubCategoria().get(command.getIdSubCategoria()));
+            }
+            if (command.getIdSubClasificacion() != null) {
+                cargarSubClasificaciones(command.getItemCommand().getItemsClasificacion().get(command.getIdClasificacion()));
+            }
         } catch (Exception err) {
             mensaje = err.getMessage();
         }
@@ -350,58 +360,53 @@ public class AgregarBienController extends BaseController {
     }
 
     private void cargarSubCategorias(Categoria categoria) {
-        if (command.getIdSubCategoria() == null ) {
-            command.setIdSubCategoria(Constantes.DEFAULT_ID);
-        } 
         if (Constantes.DEFAULT_ID.equals(command.getIdCategoria())) {
+            command.setIdSubCategoria(Constantes.DEFAULT_ID);
             itemsSubCategoria.clear();
             this.setDisableSubCategorias(true);
+            cargarClasificaciones(command.getItemCommand().getItemsSubCategoria().get(command.getIdSubCategoria()));
         } else {
             List<SubCategoria> subCategorias = modelSubCategoria.listar(categoria);
-            itemsSubCategoria = new ArrayList<SelectItem>();
             if (!subCategorias.isEmpty()) {
                 this.setDisableSubCategorias(false);
+                itemsSubCategoria = new ArrayList<SelectItem>();
                 for (SubCategoria item : subCategorias) {
-                    itemsSubCategoria.add(new SelectItem(item.getId(), item.getDescripcion()));
-                    command.getItemCommand().getItemsSubCategoria().put(item.getId(), item);
+                    itemsSubCategoria.add(new SelectItem(item.getId(), item.getDescripcion()));  // ID + Nombre -- Usado para combo de filtro para enviar el ID al Dao para la consulta
                 }
             }
         }
-        cargarClasificaciones(command.getItemCommand().getItemsSubCategoria().get(command.getIdSubCategoria()));
     }
     
     private void cargarClasificaciones(SubCategoria subCategoria) {
-        command.setIdClasificacion(Constantes.DEFAULT_ID);
         if (Constantes.DEFAULT_ID.equals(command.getIdSubCategoria())) {
-            this.setDisableClasificaciones(true);
+            command.setIdClasificacion(Constantes.DEFAULT_ID);
             itemsClasificacion.clear();
+            this.setDisableClasificaciones(true);
+            cargarSubClasificaciones(command.getItemCommand().getItemsClasificacion().get(command.getIdClasificacion()));
         } else {
             List<Clasificacion> clasificaciones = modelClasificacion.listarPorSubCategoria(subCategoria);
-            itemsClasificacion = new ArrayList<SelectItem>();
             if (!clasificaciones.isEmpty()) {
+                itemsClasificacion = new ArrayList<SelectItem>();
                 for (Clasificacion item : clasificaciones) {
                     this.setDisableClasificaciones(false);
                     itemsClasificacion.add(new SelectItem(item.getId(), item.getNombre()));  // ID + Nombre -- Usado para combo de filtro para enviar el ID al Dao para la consulta
-                    command.getItemCommand().getItemsClasificacion().put(item.getId(), item);
                 }
             }
         }
-        cargarSubClasificaciones(command.getItemCommand().getItemsClasificacion().get(command.getIdClasificacion()));
     }
 
     private void cargarSubClasificaciones(Clasificacion clasificacion) {
-        command.setIdSubClasificacion(Constantes.DEFAULT_ID);
         if (Constantes.DEFAULT_ID.equals(command.getIdClasificacion())) {
+            command.setIdSubClasificacion(Constantes.DEFAULT_ID);
             itemsSubClasificacion.clear();
             this.setDisableSubClasificaciones(true);
         } else {
             List<SubClasificacion> subClasificaciones = modelSubClasificacion.listar(clasificacion);
-            itemsSubClasificacion = new ArrayList<SelectItem>();
             if (!subClasificaciones.isEmpty()) {
+                itemsSubClasificacion = new ArrayList<SelectItem>();
                 for (SubClasificacion item : subClasificaciones) {
                     this.setDisableSubClasificaciones(false);
                     itemsSubClasificacion.add(new SelectItem(item.getId(), item.getNombre()));  // ID + Nombre -- Usado para combo de filtro para enviar el ID al Dao para la consulta
-                    command.getItemCommand().getItemsSubClasificacion().put(item.getId(), item);
                 }
             }
         }
