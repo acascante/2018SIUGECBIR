@@ -8,10 +8,9 @@ package cr.ac.ucr.sigebi.daos;
 import cr.ac.ucr.framework.daoHibernate.DaoHelper;
 import cr.ac.ucr.framework.daoImpl.GenericDaoImpl;
 import cr.ac.ucr.framework.utils.FWExcepcion;
-import cr.ac.ucr.sigebi.domain.Acta;
-import cr.ac.ucr.sigebi.domain.ActaDetalle;
-import cr.ac.ucr.sigebi.entities.ViewBienEntity;
-import java.util.ArrayList;
+import cr.ac.ucr.sigebi.domain.Documento;
+import cr.ac.ucr.sigebi.domain.DocumentoActa;
+import cr.ac.ucr.sigebi.domain.DocumentoDetalle;
 import java.util.List;
 import javax.annotation.Resource;
 import org.hibernate.Query;
@@ -28,7 +27,7 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Repository(value = "ActaDao")
 @Scope("request")
-public class FaltaActaDao extends GenericDaoImpl {
+public class ActaDao extends GenericDaoImpl {
     
     @Autowired
     private DaoHelper dao;
@@ -37,17 +36,17 @@ public class FaltaActaDao extends GenericDaoImpl {
     private FaltaViewBienDao viewBienDao;
     
     @Transactional
-    public Acta traerPorId(Integer pId) {
+    public DocumentoActa traerPorId(Integer pId) {
         Session session = dao.getSessionFactory().openSession();
-        Acta resp = new Acta();
+        DocumentoActa resp = new DocumentoActa();
         try {
             // De momento utilizamos la referencia como el id del bien
-            String sql = "from Acta s where s.id = :pid";
+            String sql = "from DocumentoActa s where s.id = :pid";
             Query q = session.createQuery(sql);
             q.setParameter("pid",pId);
             
             List l = q.list();
-            resp = (Acta) l.get(0);
+            resp = (DocumentoActa) l.get(0);
             
             session.close();
             return resp;
@@ -58,8 +57,8 @@ public class FaltaActaDao extends GenericDaoImpl {
         }
     }
     
-    
-    public List<Acta> listar(Long unidadEjecutora) {
+    @Transactional
+    public List<DocumentoActa> listar(Long unidadEjecutora) {
         try {
             return dao.getHibernateTemplate().find("from Acta"); 
         } catch (DataAccessException e) {
@@ -68,33 +67,15 @@ public class FaltaActaDao extends GenericDaoImpl {
     }
     
     @Transactional
-    public List<ViewBienEntity> traerBienesActa(Integer actaId) {
+    public List<DocumentoDetalle> traerBienesActa(Documento acta) {
         Session session = dao.getSessionFactory().openSession();
-        List<ViewBienEntity> detalle = new ArrayList<ViewBienEntity>();
         try {
             
+            String sql = "SELECT det FROM DocumentoDetalle det WHERE det.documento = :acta";
+            Query query = session.createQuery(sql);
+            query.setParameter("acta", acta);
             
-            // De momento utilizamos la referencia como el id del bien
-            //String sql = "from Acta s where s.id = :pid";
-            String sql = "        SELECT BIEN.* \n" +
-                        "        FROM SIGEBI_OAF.SGB_ACTA_DETALLE DET\n" +
-                        "            INNER JOIN SIGEBI_OAF.V_SGB_BIEN BIEN\n" +
-                        "            ON(DET.ID_BIEN = BIEN.ID_BIEN)\n" +
-                        "        WHERE DET.ID_ACTA = :pid ";
-            
-            Query q = session.createSQLQuery(sql);
-            q.setParameter("pidActa",actaId);
-            
-            List l = (List<ViewBienEntity> )q.list();
-            
-            for ( Object result :  l) {
-                Object[] val = (Object[]) result;
-                ViewBienEntity valor = viewBienDao.traerPorId(Integer.parseInt(val[0].toString()));
-                detalle.add(valor);
-            }
-            //resp = (Acta) l.get(0);
-            
-            return detalle;
+            return (List<DocumentoDetalle>) query.list();
         } catch (Exception e) {
             return null;
         }
@@ -106,7 +87,7 @@ public class FaltaActaDao extends GenericDaoImpl {
     
     
     @Transactional
-    public void guardar(Acta valor) {
+    public void guardar(DocumentoActa valor) {
         try {
             persist(valor);
         } catch (DataAccessException e) {
@@ -116,13 +97,11 @@ public class FaltaActaDao extends GenericDaoImpl {
         }
     }
     
-    
     @Transactional
-    public void guardarBienes(List<ActaDetalle> valores) {
+    public void eliminarBienes(List<DocumentoDetalle> valores) {
         try {
-            EliminarBienesEnActa(valores.get(0).getIdActa());
-            for(ActaDetalle valor : valores) {
-                persist(valor);
+            for(DocumentoDetalle valor : valores) {
+                delete(valor);
             }
             
         } catch (DataAccessException e) {
@@ -132,26 +111,17 @@ public class FaltaActaDao extends GenericDaoImpl {
         }
     }
     
-    
     @Transactional
-    public void EliminarBienesEnActa(Integer pIdActa) {
-        Session session = dao.getSessionFactory().openSession();
-        Acta resp = new Acta();
+    public void guardarBienes(List<DocumentoDetalle> valores) {
         try {
-            // De momento utilizamos la referencia como el id del bien
-            String sql = "delete  from ActaDetalle s where s.id = :pid";
-            Query q = session.createQuery(sql);
-            q.setParameter("pid",pIdActa);
+            for(DocumentoDetalle valor : valores) {
+                persist(valor);
+            }
             
-            int rsp = q.executeUpdate();
-            
-            
-        } catch (Exception e) {
-            throw new java.lang.Error("Bad.");
-        }
-        finally{
-            if(session.isOpen())
-                session.close();
+        } catch (DataAccessException e) {
+            throw new FWExcepcion("sigebi.error.ActaDao.guardarBienes", "Error guardar el registro de tipo " + this.getClass(), e.getCause());
+        } catch (Exception ex) {
+            throw new FWExcepcion("sigebi.error.ActaDao.guardarBienes", "Error guardar el registro de tipo " + this.getClass(), ex.getCause());
         }
     }
     
@@ -189,7 +159,7 @@ public class FaltaActaDao extends GenericDaoImpl {
 
     
     @Transactional(readOnly = true)
-    public List<Acta> listarActas(Long unidadEjecutora,
+    public List<DocumentoActa> listarActas(Long unidadEjecutora,
                                         String fltIdTipo,
                                         String fltAutorizacion,
                                         String fltEstado,
@@ -214,7 +184,7 @@ public class FaltaActaDao extends GenericDaoImpl {
                 q.setMaxResults(pUltimoRegistro - pPrimerRegistro);
             }
             //Se obtienen los resutltados
-            return (List<Acta>) q.list();
+            return (List<DocumentoActa>) q.list();
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -234,20 +204,20 @@ public class FaltaActaDao extends GenericDaoImpl {
                                         Boolean contar,
                                         Session session
     ) {
+        
         String sql;
         if (contar) 
-            sql = "SELECT count(s) FROM Acta s ";
+            sql = "SELECT count(s) FROM DocumentoActa s ";
          else 
-            sql = "SELECT s FROM Acta s ";
+            sql = "SELECT s FROM DocumentoActa s ";
         
-        //Select
-        sql = sql + " WHERE s.unidadEjecutora = :pnumUnidadEjec ";
+        sql = sql + " WHERE s.unidadEjecutora.id = :pnumUnidadEjec ";
         if (fltIdTipo != null && fltIdTipo.length() > 0) 
-            sql = sql + " AND s.idTipo like :fltIdTipo ";
+            sql = sql + " AND s.tipo.id like :fltIdTipo ";
         if (fltAutorizacion != null && fltAutorizacion.length() > 0) 
             sql = sql + " AND upper(s.autorizacion) like upper(:fltAutorizacion) ";
         if (fltEstado != null && fltEstado.length() > 0) 
-            sql = sql + " AND s.idEstado.idEstado = :fltEstado";
+            sql = sql + " AND s.estado.id = :fltEstado";
         if(fltFecha != null && fltFecha.length() > 0)
                sql = sql +  " AND upper(s.fecha) like upper(:fltFecha) ";
 
@@ -262,6 +232,36 @@ public class FaltaActaDao extends GenericDaoImpl {
         if(fltFecha != null && fltFecha.length() > 0)
             q.setParameter("fltFecha", '%' + fltFecha + '%');
         
+        
+        
+//        String sql;
+//        if (contar) 
+//            sql = "SELECT count(s) FROM DocumentoActa s ";
+//         else 
+//            sql = "SELECT s FROM DocumentoActa s ";
+//        
+//        //Select
+//        sql = sql + " WHERE s.unidadEjecutora.id = :pnumUnidadEjec ";
+//        if (fltIdTipo != null && fltIdTipo.length() > 0) 
+//            sql = sql + " AND s.tipo.id like :fltIdTipo ";
+//        if (fltAutorizacion != null && fltAutorizacion.length() > 0) 
+//            sql = sql + " AND upper(s.autorizacion) like upper(:fltAutorizacion) ";
+//        if (fltEstado != null && fltEstado.length() > 0) 
+//            sql = sql + " AND s.estado.id = :fltEstado";
+//        if(fltFecha != null && fltFecha.length() > 0)
+//               sql = sql +  " AND upper(s.fecha) like upper(:fltFecha) ";
+//
+//        Query q = session.createQuery(sql);
+//        q.setParameter("pnumUnidadEjec", unidadEjecutora);
+//        if (fltIdTipo != null && fltIdTipo.length() > 0) 
+//            q.setParameter("fltIdTipo", '%' + fltIdTipo + '%');
+//        if (fltAutorizacion != null && fltAutorizacion.length() > 0) 
+//            q.setParameter("fltAutorizacion", '%' + fltAutorizacion + '%');
+//        if (fltEstado != null && fltEstado.length() > 0) 
+//            q.setParameter("fltEstado", Integer.parseInt(fltEstado));
+//        if(fltFecha != null && fltFecha.length() > 0)
+//            q.setParameter("fltFecha", '%' + fltFecha + '%');
+//        
         return q;
     }
 

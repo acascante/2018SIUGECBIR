@@ -33,7 +33,7 @@ public class Rol extends ObjetoBase implements Serializable {
     private Long id;
 
     @Column(name = "CODIGO")
-    private String codigo;
+    private Integer codigo;
 
     @Column(name = "NOMBRE")
     private String nombre;
@@ -52,11 +52,11 @@ public class Rol extends ObjetoBase implements Serializable {
         this.id = id;
     }
 
-    public String getCodigo() {
+    public Integer getCodigo() {
         return codigo;
     }
 
-    public void setCodigo(String codigo) {
+    public void setCodigo(Integer codigo) {
         this.codigo = codigo;
     }
 

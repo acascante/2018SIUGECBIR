@@ -36,7 +36,7 @@ public class Justificacion  extends ObjetoBase implements Serializable  {
     @Id
     @GeneratedValue(strategy=GenerationType.SEQUENCE, generator = "SGB_SQ_JUSTIFICACIONES")
     @Column(name = "ID_JUSTIFICACION") // NUMBER SGB_SQ_TRASLADO
-    private Long idJustificacion;
+    private Long id;
     
     @Column(name = "TIPO_DOCUMENTO") // VARCHAR2 (500 Byte) 
     private String documentoTipo;
@@ -51,7 +51,7 @@ public class Justificacion  extends ObjetoBase implements Serializable  {
     
     @ManyToOne
     @JoinColumn(name = "REFERECIA_BIEN", referencedColumnName = "ID_BIEN")
-    private Bien idBien;
+    private Bien bien;
     
     @Column(name = "OBSERVACIONES") // VARCHAR2 (500 Byte) 
     private String observaciones;
@@ -72,19 +72,19 @@ public class Justificacion  extends ObjetoBase implements Serializable  {
     //<editor-fold defaultstate="collapsed" desc="Contructores">
     
     
-    public Justificacion(Long idJustificacion
+    public Justificacion(Long id
                             , String documentoTipo
                             , Long idDocumento
                             , String encabezado
-                            , Bien idBien
+                            , Bien bien
                             , String observaciones
                             , Usuario usuarioRegistra
                             , Date fecha) {    
-        this.idJustificacion = idJustificacion;
+        this.id = id;
         this.documentoTipo = documentoTipo;
         this.idDocumento = idDocumento;
         this.encabezado = encabezado;
-        this.idBien = idBien;
+        this.bien = bien;
         this.observaciones = observaciones;
         this.usuarioRegistra = usuarioRegistra;
         this.fecha = fecha;
@@ -99,12 +99,12 @@ public class Justificacion  extends ObjetoBase implements Serializable  {
     
     
     //<editor-fold defaultstate="collapsed" desc="Sets & Gets">
-    public Long getIdJustificacion() {
-        return idJustificacion;
+    public Long getId() {
+        return id;
     }
 
-    public void setIdJustificacion(Long idJustificacion) {
-        this.idJustificacion = idJustificacion;
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getDocumentoTipo() {
@@ -131,12 +131,12 @@ public class Justificacion  extends ObjetoBase implements Serializable  {
         this.encabezado = encabezado;
     }
 
-    public Bien getIdBien() {
-        return idBien;
+    public Bien getBien() {
+        return bien;
     }
 
-    public void setIdBien(Bien idBien) {
-        this.idBien = idBien;
+    public void setBien(Bien bien) {
+        this.bien = bien;
     }
 
     public String getObservaciones() {
@@ -173,7 +173,7 @@ public class Justificacion  extends ObjetoBase implements Serializable  {
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (idJustificacion != null ? idJustificacion.hashCode() : 0);
+        hash += (id != null ? id.hashCode() : 0);
         return hash;
     }
 
@@ -184,7 +184,7 @@ public class Justificacion  extends ObjetoBase implements Serializable  {
             return false;
         }
         Justificacion other = (Justificacion) object;
-        if ((this.idJustificacion == null && other.idJustificacion != null) || (this.idJustificacion != null && !this.idJustificacion.equals(other.idJustificacion))) {
+        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }
         return true;
@@ -192,7 +192,7 @@ public class Justificacion  extends ObjetoBase implements Serializable  {
 
     @Override
     public String toString() {
-        return "cr.ac.ucr.sigebi.entities.Justificacion[ id=" + idJustificacion + " ]";
+        return "cr.ac.ucr.sigebi.entities.Justificacion[ id=" + id + " ]";
     }
     //</editor-fold>
     

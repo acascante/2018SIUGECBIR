@@ -7,7 +7,7 @@
     <ice:panelPopup
         modal="true" 
         visible="#{(controllerGestionProceso.command.presentarPanelAgregarRol || controllerGestionProceso.command.presentarPanelModificarRol)}"
-        rendered="true" 
+        rendered="#{(controllerGestionProceso.command.presentarPanelAgregarRol || controllerGestionProceso.command.presentarPanelModificarRol)}"
         styleClass="popup">
 
         <f:facet name="header">
@@ -29,7 +29,7 @@
                                 <ice:inputText id="rolNombre" 
                                                required="true"
                                                styleClass="form-control"
-                                               value="#{controllerGestionProceso.command.rol.nombre}" />
+                                               value="#{controllerGestionProceso.command.rolNew.nombre}" />
                             </div>                                             
                         </div>
                     </div>
@@ -43,7 +43,7 @@
                                 <ice:inputText id="rolCodigo" 
                                                required="true"
                                                styleClass="form-control"
-                                               value="#{controllerGestionProceso.command.rol.codigo}" />
+                                               value="#{controllerGestionProceso.command.rolNew.codigo}" />
                             </div>                                             
                         </div>
                     </div>

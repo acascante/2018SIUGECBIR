@@ -1,4 +1,4 @@
-  <ice:outputHtml id="frmDetalleNotificacion"  xmlns:ice="http://www.icesoft.com/icefaces/component" xmlns:icecore="http://www.icefaces.org/icefaces/core" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:c="http://java.sun.com/jstl/core">
+  <ice:outputHtml id="frmAccesorios"  xmlns:ice="http://www.icesoft.com/icefaces/component" xmlns:icecore="http://www.icefaces.org/icefaces/core" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:c="http://java.sun.com/jstl/core">
     <!-- TAB Accesorios -->
     <div class="container">
         <div class="row">
@@ -23,7 +23,7 @@
             <div class="col-md-6">
                 <!-- LISTAR ACCESORIOS-->
                 <ice:dataTable id="accesoriosLista" var="accesorio" paginator="true" paginatorPosition="bottom" rows="10"
-                               value="#{controllerAgregarBienes.command.accesorios}">
+                               value="#{controllerAgregarBienes.accesorios}">
 
                     <ice:column id="colDetalleAccesorio" headerText="descripcion" sortBy="#{accesorio.detalle}" filterBy="#{accesorio.detalle}"  filterMatchMode="contains">
                         <f:facet name="header"> Detalle </f:facet>
@@ -36,7 +36,7 @@
                         </f:facet>
 
                         <ice:commandButton id="btnDetalleAccesorio" value="Eliminar" style="float:right;margin-top:2%" styleClass="boton" partialSubmit="true" 
-                                           actionListener="#{controllerAgregarBienes.eliminarAccesorio}" >
+                                           actionListener="#{controllerAgregarBienes.mostrarPanelEliminarAccesorio}" >
                             <f:attribute id="accesorioSeleccionado" name="accesorioSeleccionado"  value="#{accesorio}"/>
                         </ice:commandButton>
                     </ice:column>
@@ -44,48 +44,4 @@
             </div>
         </div>
     </div>
-    
-    <!-- Modal Eliminar Accesorio -->
-    <ice:panelPopup modal="true" visible="#{controllerAgregarBienes.visiblePanelEliminarAccesorio}" rendered="true" styleClass="popup" >
-        <f:facet name="header">
-            <ice:outputText styleClass="flotar_izquierda titulo_popup" value="Confirmación"/>
-        </f:facet> 
-
-        <f:facet name="body">
-            <fieldset class="panel_Container" >
-
-                <div class="container" style="margin-top: 30px;">
-                    <div class="row">
-                        <div class="col-md-12">
-                            <h4>Desea eliminar el accesorio: </h4>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-2"></div>
-                        <div class="col-md-10">
-                            <ice:inputText value="#{controllerAgregarBienes.command.accesorioCommand.detalle}" styleClass="form-control" readonly="true"/>
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="col-md-6 align-content-center">
-                            <ice:commandButton id="btnCancelarAccesorio" partialSubmit="true" styleClass="boton" value="Cancelar"
-                                               action="#{controllerAgregarBienes.eliminarAccesorioCancelar}" />
-                        </div>
-
-                        <div class="col-md-6 align-content-center">
-                            <ice:commandButton id="btnConfirmarEliminarAccesorio" partialSubmit="true" styleClass="boton" value="Eliminar"
-                                               action="#{controllerAgregarBienes.eliminarAccesorioConfirmar}" />
-                        </div>
-                    </div>
-                </div>
-                <br />
-                <br />
-            </fieldset>       
-        </f:facet>  
-    </ice:panelPopup>
-  </ice:outputHtml>
-
-
-
-      
+</ice:outputHtml>

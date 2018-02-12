@@ -1,4 +1,4 @@
-  <ice:outputHtml id="frmDetalleNotificacion" xmlns:ice="http://www.icesoft.com/icefaces/component" xmlns:icecore="http://www.icefaces.org/icefaces/core" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:c="http://java.sun.com/jstl/core">
+  <ice:outputHtml id="frmFooter" xmlns:ice="http://www.icesoft.com/icefaces/component" xmlns:icecore="http://www.icefaces.org/icefaces/core" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:c="http://java.sun.com/jstl/core">
       <!-- Seccion de TAB en el FOOTER -->
     <div class="container">
         <div class="row">
@@ -49,52 +49,10 @@
         </div>
     </div>
 
-    <!-- Modal Agregar Observacion -->
-    <ice:panelPopup modal="true" visible="#{controllerAgregarBienes.visiblePanelObservaciones}" rendered="true" styleClass="popup">
-        <f:facet name="header">
-            <ice:outputText styleClass="flotar_izquierda titulo_popup" value="#{label['sigebi.label.vista.listarBienSincronizar.observacion.titulo']}"/>                
-        </f:facet> 
-
-        <f:facet name="body">
-            <fieldset class="panel_Container" >
-                <div class="container" style="margin-top: 30px;">
-                    <div class="row">
-                        <div class="col-md-12">
-                            <h4><ice:outputText value="#{label['sigebi.label.vista.listarBienSincronizar.observacion']}"/></h4>
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="col-md-12">
-                            <ice:inputTextarea  id="observacionCliente" style="width: 430px;" cols="2" 
-                                                value="#{controllerAgregarBienes.observacionCliente}"/>
-                        </div>
-                    </div>
-
-                    <br/>
-                    <div class="row">
-                        <div class="col-md-6 col-sm-6 align-content-center-div">
-                            <ice:commandButton id="btnCancelarObservacion" partialSubmit="true" styleClass="boton"
-                                               action="#{controllerAgregarBienes.cerrarPanelObserva}"
-                                               value="#{label['label.cancelar']}" />
-                        </div>
-
-                        <div class="col-md-6 col-sm-6 align-content-center-div">
-                            <ice:commandButton id="btnConfirmarObservacion" partialSubmit="true" styleClass="boton"
-                                               action="#{controllerAgregarBienes.rechazarBien}"
-                                               value="#{label['label.aceptar']}" />
-                        </div>
-                    </div>
-                </div>
-                <br />
-                <br />
-            </fieldset>       
-        </f:facet>  
-    </ice:panelPopup>
-
-
     <!-- Modal Eliminar Nota -->
-    <ice:panelPopup modal="true" visible="#{controllerAgregarBienes.visiblePanelEliminarNota}" rendered="true" styleClass="popup">
+    <ice:panelPopup modal="true" 
+                    visible="#{controllerAgregarBienes.visiblePanelEliminarNota}" 
+                    rendered="#{controllerAgregarBienes.visiblePanelEliminarNota}" styleClass="popup">
 
         <f:facet name="header">
             <ice:outputText styleClass="flotar_izquierda titulo_popup" value="Confirmación"/>
@@ -112,7 +70,7 @@
                     <div class="row">
                         <div class="col-md-2"></div>
                         <div class="col-md-10">
-                            <ice:inputText value="#{controllerAgregarBienes.nota.detalle}"/>
+                            <ice:inputText value="#{controllerAgregarBienes.command.notaCommand.detalle}"/>
                         </div>
                     </div>
 
@@ -135,7 +93,8 @@
     </ice:panelPopup>
 
     <!-- Modal Detalle Adjunto -->
-    <ice:panelPopup modal="true" visible="#{controllerAgregarBienes.visiblePanelAdjunto}" rendered="true" styleClass="popup">
+    <ice:panelPopup modal="true" visible="#{controllerAgregarBienes.visiblePanelAdjunto}" 
+                    rendered="#{controllerAgregarBienes.visiblePanelAdjunto}" styleClass="popup">
         <f:facet name="header">
             <ice:outputText styleClass="flotar_izquierda titulo_popup" value="Detalle Adjunto"/>
         </f:facet> 
@@ -155,7 +114,7 @@
                             <div class="form-group"> 
                                 <label class="control-label" for="txtAdjuntoNombre">Nombre: </label>
                                 <ice:inputText id="txtAdjuntoNombre" styleClass="form-control" readonly="true" partialSubmit="false"
-                                               value="#{controllerAgregarBienes.adjunto.nombre}">
+                                               value="#{controllerAgregarBienes.command.adjunto.nombre}">
                                 </ice:inputText>
                             </div>     
 
@@ -169,7 +128,7 @@
                             <div class="form-group"> 
                                 <label class="control-label" for="txtAdjuntoTamano">Tamaño: </label>
                                 <ice:inputText id="txtAdjuntoTamano" styleClass="form-control" readonly="true" partialSubmit="false" 
-                                               value="#{controllerAgregarBienes.adjunto.tamano}">
+                                               value="#{controllerAgregarBienes.command.adjuntoCommand.tamano}">
                                 </ice:inputText>
                             </div>     
                         </div>
@@ -182,7 +141,7 @@
                                 <label class="control-label" for="txtAdjuntoDetalle">Detalle: </label>
 
                                 <ice:inputTextarea id="txtAdjuntoDetalle" styleClass="form-control" style="resize: none;" partialSubmit="false" readonly="true"
-                                                   value="#{controllerAgregarBienes.adjunto.detalle}">
+                                                   value="#{controllerAgregarBienes.command.adjunto.detalle}">
                                 </ice:inputTextarea>
 
                             </div>     
@@ -207,6 +166,98 @@
                             <ice:commandButton id="btnCancelarAdjunto" partialSubmit="true" styleClass="boton" value="Cancelar" 
                                                action="#{controllerAgregarBienes.adjuntoEliminarCancelar}" />
                         </div>
+                    </div>
+                </div>
+                <br />
+                <br />
+            </fieldset>       
+        </f:facet>  
+    </ice:panelPopup>
+    
+    
+    <!-- Modal Eliminar Accesorio -->
+    <ice:panelPopup modal="true" 
+                    visible="#{controllerAgregarBienes.visiblePanelEliminarAccesorio}" 
+                    rendered="#{controllerAgregarBienes.visiblePanelEliminarAccesorio}" 
+                    styleClass="popup" >
+        <f:facet name="header">
+            <ice:outputText styleClass="flotar_izquierda titulo_popup" value="Confirmación"/>
+        </f:facet> 
+
+        <f:facet name="body">
+            <fieldset class="panel_Container" >
+
+                <div class="container" style="margin-top: 30px;">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <h4>Desea eliminar el accesorio: </h4>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-2"></div>
+                        <div class="col-md-10">
+                            <ice:inputText value="#{controllerAgregarBienes.command.accesorioCommand.detalle}" styleClass="form-control" readonly="true"/>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 align-content-center">
+                            <ice:commandButton id="btnCancelarAccesorio" partialSubmit="true" styleClass="boton" value="Cancelar"
+                                               action="#{controllerAgregarBienes.eliminarAccesorioCancelar}" />
+                        </div>
+
+                        <div class="col-md-6 align-content-center">
+                            <ice:commandButton id="btnConfirmarEliminarAccesorio" partialSubmit="true" styleClass="boton" value="Eliminar"
+                                               action="#{controllerAgregarBienes.eliminarAccesorioConfirmar}" />
+                        </div>
+                    </div>
+                </div>
+                <br />
+                <br />
+            </fieldset>       
+        </f:facet>  
+    </ice:panelPopup>
+
+    <!-- Modal Modificar Caracteristica -->
+    <ice:panelPopup id="modalCaracterist" modal="true" 
+                    visible="#{controllerAgregarBienes.visiblePanelModificarCaracteristica}" 
+                    rendered="#{controllerAgregarBienes.visiblePanelModificarCaracteristica}" 
+                    styleClass="popup">
+        <f:facet name="header">
+            <ice:outputText styleClass="flotar_izquierda titulo_popup" value="Modificar Característica"/>
+        </f:facet> 
+
+        <f:facet name="body">
+            <fieldset class="panel_Container" >
+                <div class="container" style="margin-top: 30px;">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <h4>Caracteristica: <ice:outputText value=" #{controllerAgregarBienes.command.caracteristicaCommand.caracteristica.tipo.nombre}"/></h4>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-2"></div>
+                        <div class="col-md-10">
+                            <ice:inputText value="#{controllerAgregarBienes.command.caracteristicaCommand.detalleModificar}" styleClass="form-control" />
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-4 align-content-center">
+                            <ice:commandButton id="btnCancelarCaract" partialSubmit="true" styleClass="boton" value="Cancelar" 
+                                               action="#{controllerAgregarBienes.panelCaracteristicaCancelar}"/>
+                        </div>
+
+                        <div class="col-md-4 align-content-center">
+                            <ice:commandButton id="btnEliminarCaract" partialSubmit="true" styleClass="boton" value="Eliminar"
+                                               action="#{controllerAgregarBienes.panelCaracteristicaEliminar}" />
+                        </div>
+                        <div class="col-md-4 align-content-center">
+                            <ice:commandButton id="btnactualizarCaract" partialSubmit="true" styleClass="boton" value="Modificar"
+                                               action="#{controllerAgregarBienes.panelCaracteristicaModificar}" />
+                        </div>
+                        
                     </div>
                 </div>
                 <br />

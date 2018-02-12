@@ -21,7 +21,7 @@
                 </div>
             </div>
             
-            <div class="row">
+<!--            <div class="row">
                 <div class="col-md-6">
                     <div class="form-group"> 
                         <label class="control-label" for="txtIdentificacion">
@@ -48,7 +48,7 @@
                                        value="#{controllerInformeTecnico.informe.idBien.descripcion}" />
                     </div>                                             
                 </div>
-            </div>  
+            </div>  -->
             
             <div class="row">
                 <div class="col-md-12">
@@ -73,11 +73,12 @@
                             <ice:outputText value="#{label['sigebi.label.vista.mantenimientoInformeTecnico.recomendacion']}" />
                             <ice:outputText value="#{label['label.requerido']}" />
                         </label>                                               
-                        
+                         
                         <ice:selectOneMenu id="recomendacionesSelec"                                           
                                            styleClass="form-control"
-                                           partialSubmit="false"
-                                           value="#{controllerInformeTecnico.informe.idTipo.idTipo}">
+                                           partialSubmit="true"
+                                           value="#{controllerInformeTecnico.informe.tipoInforme.idTemporal}"
+                                           valueChangeListener="#{controllerInformeTecnico.cambiarTipoInforme}">
                                            <f:selectItem itemLabel="N/A" itemValue="-1"/>
                                            <f:selectItems id="slcTipoItem" value="#{controllerInformeTecnico.tipoOptions}"/>
                         </ice:selectOneMenu>
@@ -184,8 +185,8 @@
                         </label>  
                         <div>
                             <ice:dataTable id="documentosPorRol"
-                                       value="#{controllerInformeTecnico.documentosPorRol}"
-                                       var="documento"
+                                           value="#{controllerInformeTecnico.listaDocumentosAutorizacionesPorRol}"
+                                       var="documentoAutorizacion"
                                        paginator="true"
                                        paginatorPosition="bottom"
                                        rows="5">
@@ -196,7 +197,7 @@
                                            <ice:outputText value="#{label['sigebi.label.vista.mantenimientoInformeTecnico.rol']}"/>
                                         </ice:headerRow>
                                     </f:facet>                                
-                                    <h:outputText id="colRolTxt" value="#{documento.idRol.nombre}"/>
+                                    <h:outputText id="colRolTxt" value="#{documentoAutorizacion.autorizacionRol.rol.nombre}"/>
                                 </ice:column>
                                 <ice:column id="colEsatdo">
                                     <f:facet name="header">
@@ -204,7 +205,7 @@
                                            <ice:outputText value="#{label['sigebi.label.vista.mantenimientoInformeTecnico.estado']}"/>
                                         </ice:headerRow>
                                     </f:facet>                                
-                                    <h:outputText id="colEstadoTxt" value="#{documento.idEstado.nombre}"/>
+                                    <h:outputText id="colEstadoTxt" value="#{documentoAutorizacion.estado.nombre}"/>
                                 </ice:column>
                                 <ice:column id="colUsuario">
                                     <f:facet name="header">
@@ -212,7 +213,7 @@
                                            <ice:outputText value="#{label['sigebi.label.vista.mantenimientoInformeTecnico.usuario']}"/>
                                         </ice:headerRow>
                                     </f:facet>                                
-                                    <h:outputText id="colUsuarioTxt" value="#{documento.idUsuarioSeguridad.idUsuario}"/>
+                                    <h:outputText id="colUsuarioTxt" value="#{documentoAutorizacion.usuarioSeguridad.id}"/>
                                 </ice:column>                            
                                 <ice:column id="colFecha">
                                     <f:facet name="header">
@@ -220,26 +221,24 @@
                                            <ice:outputText value="#{label['sigebi.label.vista.mantenimientoInformeTecnico.fecha']}"/>
                                         </ice:headerRow>
                                     </f:facet>                                
-                                    <h:outputText id="colFechaTxt" value="#{documento.fecha}"/>
+                                    <h:outputText id="colFechaTxt" value="#{documentoAutorizacion.fecha}"/>
                                 </ice:column>                                                         
                                 <ice:column style="text-align: center;">
                                     <ice:commandButton id="botonAprobar"
                                                        style="margin-top:2%" 
                                                        styleClass="btnAprobar_informe" 
                                                        partialSubmit="true" 
-                                                       rendered="#{documento.marcado}"
-                                                       actionListener="#{controllerInformeTecnico.aprobar}"
-                                                        >
-                                        <f:attribute id="documentoSelApro" name="documentoSelApro"  value="#{documento}"/>                                
+                                                       rendered="#{documentoAutorizacion.marcado}"
+                                                       actionListener="#{controllerInformeTecnico.aprobar}">
+                                        <f:attribute id="documentoSelApro" name="documentoSelApro"  value="#{documentoAutorizacion}"/>                                
                                     </ice:commandButton>
                                     <ice:commandButton id="botonRechazar"
                                                        style="margin-top:2%" 
                                                        styleClass="btnRechazar_informe" 
                                                        partialSubmit="true"
-                                                       rendered="#{documento.marcado}"
-                                                       actionListener="#{controllerInformeTecnico.rechazar}"
-                                                       >
-                                        <f:attribute id="documentoSelRech" name="documentoSelRech"  value="#{documento}"/>                                
+                                                       rendered="#{documentoAutorizacion.marcado}"
+                                                       actionListener="#{controllerInformeTecnico.rechazar}">
+                                        <f:attribute id="documentoSelRech" name="documentoSelRech"  value="#{documentoAutorizacion}"/>                                
                                     </ice:commandButton>
                                 </ice:column>
                             </ice:dataTable>
@@ -247,6 +246,9 @@
                     </div>
                 </div>
             </div>
+            
+            
+            
         </div>
     </div>
 </ice:form>

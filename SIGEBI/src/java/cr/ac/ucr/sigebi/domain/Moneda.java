@@ -43,6 +43,9 @@ public class Moneda extends ObjetoBase implements Serializable {
     @Column(name = "TIPO_CAMBIO")
     private Double tipoCambio;
 
+    @Column(name = "MONTO_CAPITALIZABLE")
+    private Double montoCapitalizable;
+
     //</editor-fold>
 
     //<editor-fold defaultstate="collapsed" desc="GET's y SET's">
@@ -101,6 +104,16 @@ public class Moneda extends ObjetoBase implements Serializable {
     public void setTipoCambio(Double tipoCambio) {
         this.tipoCambio = tipoCambio;
     }
+
+    public Double getMontoCapitalizable() {
+        return montoCapitalizable;
+    }
+
+    public void setMontoCapitalizable(Double montoCapitalizable) {
+        this.montoCapitalizable = montoCapitalizable;
+    }
+    
+    
     //</editor-fold>
 
     //<editor-fold defaultstate="collapsed" desc="Metodos">

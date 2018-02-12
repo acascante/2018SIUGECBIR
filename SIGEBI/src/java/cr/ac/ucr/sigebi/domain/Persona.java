@@ -30,7 +30,7 @@ public class Persona extends ObjetoBase implements Serializable {
     @Id
     @Basic(optional = false)
     @Column(name = "NUM_PERSONA")
-    private Integer numPersona;
+    private Long numPersona;
 
     @Column(name = "IDETIFICACION")
     private String identificacion;
@@ -55,11 +55,11 @@ public class Persona extends ObjetoBase implements Serializable {
     //</editor-fold>
     
     //<editor-fold defaultstate="collapsed" desc="SET's y GET's ">
-    public Integer getNumPersona() {
+    public Long getNumPersona() {
         return numPersona;
     }
 
-    public void setNumPersona(Integer numPersona) {
+    public void setNumPersona(Long numPersona) {
         this.numPersona = numPersona;
     }
 

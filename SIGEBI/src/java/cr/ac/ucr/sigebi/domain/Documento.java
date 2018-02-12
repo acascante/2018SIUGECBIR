@@ -52,6 +52,10 @@ public class Documento extends ObjetoBase implements Serializable {
     @Column(name = "DISCRIMINATOR")
     private Integer discriminator;
 
+    @ManyToOne
+    @JoinColumn(name = "ID_UNIDAD_EJECUTORA", referencedColumnName = "ID")
+    private UnidadEjecutora unidadEjecutora;
+    
     @Transient
     private List<DocumentoDetalle> detallesDocumento;
 
@@ -63,17 +67,23 @@ public class Documento extends ObjetoBase implements Serializable {
     //<editor-fold defaultstate="collapsed" desc="Constructores">
 
     public Documento() {
+        this.fecha = new Date();
     }
     
-    public Documento(Estado estado, Integer discriminator) {
+    public Documento(Estado estado
+            , Integer discriminator
+            , UnidadEjecutora unidadEjecutora
+    ) {
         this.estado = estado;
         this.discriminator = discriminator;
         this.fecha = new Date();
+        this.unidadEjecutora = unidadEjecutora;
     }
     
     //</editor-fold>
 
     //<editor-fold defaultstate="collapsed" desc="GET's y SET's">
+    
     public Long getId() {
         return id;
     }
@@ -112,6 +122,14 @@ public class Documento extends ObjetoBase implements Serializable {
 
     public void setDetallesDocumento(List<DocumentoDetalle> detallesDocumento) {
         this.detallesDocumento = detallesDocumento;
+    }
+
+    public UnidadEjecutora getUnidadEjecutora() {
+        return unidadEjecutora;
+    }
+
+    public void setUnidadEjecutora(UnidadEjecutora unidadEjecutora) {
+        this.unidadEjecutora = unidadEjecutora;
     }
 
     public List<DocumentoAutorizacion> getAutorizacionesDocumento() {

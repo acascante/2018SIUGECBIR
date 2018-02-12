@@ -5,6 +5,7 @@
  */
 package cr.ac.ucr.sigebi.commands;
 
+import cr.ac.ucr.sigebi.domain.UnidadEjecutora;
 import cr.ac.ucr.sigebi.utils.Constantes;
 import java.util.TimeZone;
 
@@ -23,6 +24,8 @@ public class ListarBienesCommand {
     private String fltSerie;
     private Integer fltEstado;
     private Integer fltTipo;
+    private String fltUnidadEjecutoraAdmin;
+    private Boolean usuarioAdmnistrador;
     //</editor-fold>
     
     //<editor-fold defaultstate="collapsed" desc="Constructores">
@@ -35,6 +38,8 @@ public class ListarBienesCommand {
         this.fltSerie =  new String();
         this.fltEstado = -1;
         this.fltTipo = -1;
+        this.fltUnidadEjecutoraAdmin = new String();
+        this.usuarioAdmnistrador = false;
     }
     //</editor-fold>
     
@@ -121,5 +126,23 @@ public class ListarBienesCommand {
     public void setFltTipo(Integer fltTipo) {
         this.fltTipo = fltTipo;
     }
+
+    public Boolean getUsuarioAdmnistrador() {
+        return usuarioAdmnistrador;
+    }
+
+    public void setUsuarioAdmnistrador(Boolean usuarioAdmnistrador) {
+        this.usuarioAdmnistrador = usuarioAdmnistrador;
+    }
+
+    public String getFltUnidadEjecutoraAdmin() {
+        return fltUnidadEjecutoraAdmin;
+    }
+
+    public void setFltUnidadEjecutoraAdmin(String fltUnidadEjecutoraAdmin) {
+        this.fltUnidadEjecutoraAdmin = fltUnidadEjecutoraAdmin;
+    }
+    
     //</editor-fold>
+
 }

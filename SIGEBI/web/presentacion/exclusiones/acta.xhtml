@@ -53,7 +53,7 @@
                                 />
                         <ice:inputText id="txtActaEstado" 
                                        styleClass="form-control" 
-                                       value="#{actaController.acta.idEstado.nombre}"
+                                       value="#{actaController.acta.estado.nombre}"
                                        readonly="true"
                                        partialSubmit="false">
                         </ice:inputText>
@@ -195,7 +195,7 @@
                             </h4>
                             <div>
                                 <ice:dataTable id="documentosPorRol"
-                                           value="#{actaController.documentoRoles}"
+                                               value="#{actaController.documentoRoles}"
                                            var="documento"
                                            paginator="true"
                                            paginatorPosition="bottom"
@@ -208,7 +208,7 @@
                                                <ice:outputText value="#{label['sigebi.label.vista.mantenimientoInformeTecnico.rol']}"/>
                                             </ice:headerRow>
                                         </f:facet>                                
-                                        <h:outputText id="colRolTxt" value="#{documento.rolNombre}"/>
+                                        <h:outputText id="colRolTxt" value="#{documento.rol.nombre}"/>
                                     </ice:column>
 
                                     <!-- Columna Estado -->
@@ -218,7 +218,7 @@
                                                <ice:outputText value="#{label['sigebi.label.vista.mantenimientoInformeTecnico.estado']}"/>
                                             </ice:headerRow>
                                         </f:facet>                                
-                                        <h:outputText id="colEstadoTxt" value="#{documento.idEstado.nombre}"/>
+                                        <h:outputText id="colEstadoTxt" value="#{documento.autorizacion.estado.nombre}"/>
                                     </ice:column>
                                     
                                     <!-- Columna Usuario -->
@@ -228,7 +228,7 @@
                                                <ice:outputText value="#{label['sigebi.label.vista.mantenimientoInformeTecnico.usuario']}"/>
                                             </ice:headerRow>
                                         </f:facet>                                
-                                        <h:outputText id="colUsuarioTxt" value="#{documento.usuario}"/>
+                                        <h:outputText id="colUsuarioTxt" value="#{documento.autorizacion.detalle}"/>
                                     </ice:column>     
                                     
                                     <!-- Columna Fecha -->
@@ -238,7 +238,7 @@
                                                <ice:outputText value="#{label['sigebi.label.vista.mantenimientoInformeTecnico.fecha']}"/>
                                             </ice:headerRow>
                                         </f:facet>                                
-                                        <h:outputText id="colFechaTxt" value="#{documento.fecha}"/>
+                                        <h:outputText id="colFechaTxt" value="#{documento.autorizacion.nombre}"/>
                                     </ice:column>                                                         
 
                                     <!-- Columna Acciones -->
@@ -290,15 +290,11 @@
                 <div class="col-sm-12">
                     
                     <ice:panelGroup visible="#{!actaController.registrado}" style="padding-top: 1rem">
-                    
-                        
                         
                         <div class="container" style="overflow: auto; padding-bottom: 20px;">
 
-                            
                             <!-- Tabla de Bienes Asociados -->
                             <div class="row">
-                                
                                 
                                 <div class="col-sm-10">
                                     <h4>
@@ -325,69 +321,93 @@
                                 <div class="col-sm-12">
                                     <div>
                                         <ice:dataTable id="tblBienes"
-                                                       value="#{actaController.bienesAsociados}"
-                                                   var="bien"
+                                                       value="#{actaController.bienesActa}"
+                                                   var="bienActa"
                                                    paginator="true"
                                                    paginatorPosition="bottom"
                                                    rows="10">
 
+                                            <!-- Columna ID BIEN -->
+                                            <ice:column id="idBien">                                 
+                                                <f:facet name="header">
+                                                    <ice:columnGroup>
+                                                        <ice:headerRow>
+                                                            <ice:outputText value="#{label['sigebi.label.vista.listarBienSincronizar.identificacion']} "/>
+                                                        </ice:headerRow>
+                                                    </ice:columnGroup>
+                                                </f:facet>
+                                                <h:outputText id="idBienCell" value="#{bienActa.bien.identificacion.identificacion}"/>
+                                            </ice:column>
 
-                                                    <ice:column id="idBien">                                 
-                                                        <f:facet name="header">
-                                                            <ice:columnGroup>
-                                                                <ice:headerRow>
-                                                                    <ice:outputText value="#{label['sigebi.label.vista.listarBienSincronizar.identificacion']} "/>
-                                                                </ice:headerRow>
-                                                            </ice:columnGroup>
-                                                        </f:facet>
-                                                        <h:outputText id="idBienCell" value="#{bien.idPlaca.placa}"/>
-                                                    </ice:column>
+                                            <!-- Columna DESCRIPCION -->
+                                            <ice:column id="descripcion">
+                                                <f:facet name="header">
+                                                    <ice:columnGroup>
+                                                        <ice:headerRow>
+                                                            <ice:outputText value="#{label['sigebi.label.vista.listarBienSincronizar.descripcion']} "/>
+                                                        </ice:headerRow>
+                                                    </ice:columnGroup>
+                                                </f:facet>                                
+                                                <h:outputText id="descripcionCell" value="#{bienActa.bien.descripcion}"/>
+                                            </ice:column>
 
-                                                    <ice:column id="descripcion">
-                                                        <f:facet name="header">
-                                                            <ice:columnGroup>
-                                                                <ice:headerRow>
-                                                                    <ice:outputText value="#{label['sigebi.label.vista.listarBienSincronizar.descripcion']} "/>
-                                                                </ice:headerRow>
-                                                            </ice:columnGroup>
-                                                        </f:facet>                                
-                                                        <h:outputText id="descripcionCell" value="#{bien.descripcion}"/>
-                                                    </ice:column>
+                                            <!-- Columna MARCA -->
+                                            <ice:column id="colMarca">
+                                                <f:facet name="header">
+                                                    <ice:columnGroup>
+                                                        <ice:headerRow>
+                                                            <ice:outputText value="#{label['sigebi.label.vista.listarBienSincronizar.marca']} "/>
+                                                        </ice:headerRow>
+                                                    </ice:columnGroup>
+                                                </f:facet>                                
+                                                <h:outputText id="costoCell" value="#{bienActa.bien.resumenBien.marca}"/>
+                                            </ice:column>
 
+                                            <!-- Columna MODELO -->
+                                            <ice:column id="colModelo">
+                                                <f:facet name="header">
+                                                    <ice:columnGroup>
+                                                        <ice:headerRow>
+                                                            <ice:outputText value="#{label['sigebi.label.vista.listarBienSincronizar.modelo']}"/>
+                                                        </ice:headerRow>
+                                                    </ice:columnGroup>
+                                                </f:facet>                                 
+                                                <h:outputText id="costoCell" value="#{bienActa.bien.resumenBien.modelo}"/>
+                                            </ice:column>
 
-                                                    <ice:column id="colMarca">
-                                                        <f:facet name="header">
-                                                            <ice:columnGroup>
-                                                                <ice:headerRow>
-                                                                    <ice:outputText value="#{label['sigebi.label.vista.listarBienSincronizar.marca']} "/>
-                                                                </ice:headerRow>
-                                                            </ice:columnGroup>
-                                                        </f:facet>                                
-                                                        <h:outputText id="costoCell" value="#{bien.marca}"/>
-                                                    </ice:column>
+                                            <!-- Columna SERIE -->
+                                            <ice:column id="colSerie">
+                                                <f:facet name="header">
+                                                    <ice:columnGroup>
+                                                        <ice:headerRow>
+                                                            <ice:outputText value="#{label['sigebi.label.vista.listarBienSincronizar.serie']}"/>
+                                                        </ice:headerRow>
+                                                    </ice:columnGroup>
+                                                </f:facet>                                
+                                                <h:outputText id="costoCell" value="#{bienActa.bien.resumenBien.serie}"/>
+                                            </ice:column>
 
-                                                    <ice:column id="colModelo">
-                                                        <f:facet name="header">
-                                                            <ice:columnGroup>
-                                                                <ice:headerRow>
-                                                                    <ice:outputText value="#{label['sigebi.label.vista.listarBienSincronizar.modelo']}"/>
-                                                                </ice:headerRow>
-                                                            </ice:columnGroup>
-                                                        </f:facet>                                 
-                                                        <h:outputText id="costoCell" value="#{bien.modelo}"/>
-                                                    </ice:column>
-
-                                                    <ice:column id="colSerie">
-                                                        <f:facet name="header">
-                                                            <ice:columnGroup>
-                                                                <ice:headerRow>
-                                                                    <ice:outputText value="#{label['sigebi.label.vista.listarBienSincronizar.serie']}"/>
-                                                                </ice:headerRow>
-                                                            </ice:columnGroup>
-                                                        </f:facet>                                
-                                                        <h:outputText id="costoCell" value="#{bien.serie}"/>
-                                                    </ice:column>
-
+                                            <!-- Columna ELIMINAR -->
+                                            <ice:column id="colEliminar"
+                                                        rendered="#{actaController.permitirEdicion}"
+                                                        >
+                                                <f:facet name="header">
+                                                    <ice:columnGroup>
+                                                        <ice:headerRow>
+                                                            <ice:outputText value="#{label['sigebi.label.vista.listarBienSincronizar.eliminar']}"/>
+                                                        </ice:headerRow>
+                                                    </ice:columnGroup>
+                                                </f:facet>                                
+                                                
+                                                <ice:commandButton id="btnEliminarBien"
+                                                                   style="margin-top:2%" 
+                                                                   styleClass="btnEliminar" 
+                                                                   partialSubmit="true" 
+                                                        actionListener="#{actaController.quitarBienSeleccionado}"
+                                                                   >
+                                                    <f:attribute id="bienSeleccionado" name="bienSeleccionado"  value="#{bienActa.bien}"/> 
+                                                </ice:commandButton>   
+                                            </ice:column>
 
                                         </ice:dataTable>
 
@@ -409,7 +429,7 @@
             <ice:panelGroup visible="#{actaController.permitirEdicion}">
                 <div class="row" style="margin-top:10px">                
                     <div class="col-sm-8">
-                        <h4><ice:outputFormat value="#{label['sigebi.Acta.Label.BienesAsociados']}" /></h4> 
+                        <h4><ice:outputFormat value="#{label['sigebi.Acta.Label.EnviarActa']}" /></h4> 
                     </div>   
                     <div class="col-sm-4">
 
@@ -417,7 +437,7 @@
                                            style="margin-bottom: 10px; float: right;"
                                            partialSubmit="true"
                                            action="#{actaController.activarActa}"
-                                           rendered="#{actaController.permitirEdicion}"
+                                           rendered="#{actaController.mostrarActivarBtn}"
                                            styleClass="boton "  
                                            value="#{label['sigebi.Acta.Label.Activar']}" />
 

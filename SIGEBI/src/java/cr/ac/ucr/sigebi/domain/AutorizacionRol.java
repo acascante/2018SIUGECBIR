@@ -117,3 +117,6 @@ public class AutorizacionRol extends ObjetoBase implements Serializable {
     }
     //</editor-fold>
 }
+
+
+

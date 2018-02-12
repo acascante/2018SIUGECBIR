@@ -6,10 +6,9 @@
 package cr.ac.ucr.sigebi.models;
 
 import cr.ac.ucr.framework.utils.FWExcepcion;
-import cr.ac.ucr.sigebi.daos.FaltaActaDao;
-import cr.ac.ucr.sigebi.domain.Acta;
-import cr.ac.ucr.sigebi.domain.ActaDetalle;
-import cr.ac.ucr.sigebi.entities.ViewBienEntity;
+import cr.ac.ucr.sigebi.daos.ActaDao;
+import cr.ac.ucr.sigebi.domain.DocumentoActa;
+import cr.ac.ucr.sigebi.domain.DocumentoDetalle;
 import java.util.List;
 import javax.annotation.Resource;
 import org.springframework.context.annotation.Scope;
@@ -24,23 +23,26 @@ import org.springframework.stereotype.Service;
 public class ActaModel {
     
     @Resource
-    private FaltaActaDao actaDao;
+    private ActaDao actaDao;
     
     
-    public void guardar(Acta actaEntity){
+    public void guardar(DocumentoActa actaEntity){
         actaDao.guardar(actaEntity);
     }
     
-    public void guardarBienes(List<ActaDetalle> valores){
+    public void eliminarBienes(List<DocumentoDetalle> valores){
+        actaDao.eliminarBienes(valores);
+    }
+    public void guardarBienes(List<DocumentoDetalle> valores){
         actaDao.guardarBienes(valores);
     }
     
-    public Acta traerActa(Integer actaId) {
+    public DocumentoActa traerActa(Integer actaId) {
         return actaDao.traerPorId(actaId);
     }
     
-    public List<ViewBienEntity> traerBienesActa(Integer actaId) {
-        return actaDao.traerBienesActa(actaId);
+    public List<DocumentoDetalle> traerBienesActa(DocumentoActa acta) {
+        return actaDao.traerBienesActa(acta);
     }
     
     
@@ -64,7 +66,7 @@ public class ActaModel {
         }
     }
     
-    public List<Acta> listarActas(Long unidadEjecutora,
+    public List<DocumentoActa> listarActas(Long unidadEjecutora,
                                         String fltIdTipo,
                                         String fltAutorizacion,
                                         String fltEstado,

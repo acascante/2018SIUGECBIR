@@ -7,26 +7,29 @@ package cr.ac.ucr.sigebi.controllers;
 
 import cr.ac.ucr.framework.vista.util.Mensaje;
 import cr.ac.ucr.framework.vista.util.Util;
-import cr.ac.ucr.sigebi.domain.Acta;
-import cr.ac.ucr.sigebi.domain.ActaDetalle;
-import cr.ac.ucr.sigebi.domain.AutorizacionRolPersona;
+import cr.ac.ucr.sigebi.domain.DocumentoActa;
+import cr.ac.ucr.sigebi.domain.DocumentoDetalle;
+import cr.ac.ucr.sigebi.domain.AutorizacionRol;
 import cr.ac.ucr.sigebi.domain.Estado;
 import cr.ac.ucr.sigebi.domain.Rol;
 import cr.ac.ucr.sigebi.domain.Tipo;
 import cr.ac.ucr.sigebi.domain.Usuario;
 import cr.ac.ucr.sigebi.models.ActaModel;
 import cr.ac.ucr.sigebi.models.EstadoModel;
+import cr.ac.ucr.sigebi.domain.Bien;
+import cr.ac.ucr.sigebi.domain.DocumentoAutorizacion;
 import cr.ac.ucr.sigebi.entities.DocumentoEntity;
 import cr.ac.ucr.sigebi.models.TipoModel;
-import cr.ac.ucr.sigebi.entities.RolEntity;
+//import cr.ac.ucr.sigebi.entities.RolEntity;
 import cr.ac.ucr.sigebi.entities.ViewDocumAprobEntity;
-import cr.ac.ucr.sigebi.models.BienModel;
 import cr.ac.ucr.sigebi.models.DocumentoRolEstadoModel;
 import cr.ac.ucr.sigebi.models.AutorizacionRolPersonaModel;
 import cr.ac.ucr.sigebi.models.AutorizacionRolModel;
+import cr.ac.ucr.sigebi.models.DocumentoAutorizacionModel;
 import cr.ac.ucr.sigebi.models.UsuarioModel;
 import cr.ac.ucr.sigebi.utils.Constantes;
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -51,7 +54,7 @@ import org.springframework.stereotype.Controller;
 public class ActaController extends ListadoBienesGeneralController {
 
     //<editor-fold defaultstate="collapsed" desc="Variables">
-    Acta acta;
+    DocumentoActa acta;
 
     //TODO el manejo de estados debe modificarse para que si agrega un nuevo estado no haya que modificar el codigo
     Estado estadoGeneralActivo;
@@ -59,7 +62,11 @@ public class ActaController extends ListadoBienesGeneralController {
     Estado estadoGeneralAprobado;
     Estado estadoGeneralRechazado;
     
-    List<Acta> actasRegistradas;
+    List<DocumentoActa> actasRegistradas;
+    List<DocumentoDetalle> bienesActa;
+    List<DocumentoDetalle> bienesActaEliminar;
+    
+    Map<Long, DocumentoDetalle> actaDetalleMap;
 
     List<SelectItem> tiposActaOptions;
     String tipoActaSeleccionada;
@@ -76,12 +83,12 @@ public class ActaController extends ListadoBienesGeneralController {
     boolean registrado;
     boolean esDonacion;
     boolean permitirEdicion;
+    boolean mostrarActivarBtn;
 
     Tipo tipoSeleccionado;
 
 
-    Map<Long, Rol> rolesDelUsuarioActualDesecho;
-    Map<Long, Rol> rolesDelUsuarioActualDonacion;
+    //Map<Long, Rol> rolesDelUsuarioActualDesecho;
     
     @Resource
     private TipoModel tipoModel;
@@ -91,16 +98,16 @@ public class ActaController extends ListadoBienesGeneralController {
 
     @Resource private ActaModel actaModel;
     @Resource private AutorizacionRolPersonaModel autorizacionRolPersonaModel;
-    @Resource private BienModel bienModel;
     @Resource private UsuarioModel usuarioModel;
     
-    Usuario usuarioRegistrado;
+    Usuario usuario;
     
     //</editor-fold>
     
     
     //<editor-fold defaultstate="collapsed" desc="Inicializa Datos">
     public ActaController() {
+        super();
     }
 
     @PostConstruct
@@ -112,19 +119,21 @@ public class ActaController extends ListadoBienesGeneralController {
             estadoGeneralAprobado = estadoModel.buscarPorDominioEstado( Constantes.DOMINIO_GENERAL, Constantes.ESTADO_GENERAL_APROBADO);
             estadoGeneralRechazado = estadoModel.buscarPorDominioEstado( Constantes.DOMINIO_GENERAL, Constantes.ESTADO_GENERAL_RECHAZADO);
     //      
-            usuarioRegistrado = usuarioModel.buscarPorId(codPersonaReg);
-            rolesDelUsuarioActualDesecho = new HashMap<Long, Rol>();
-            rolesDelUsuarioActualDonacion = new HashMap<Long, Rol>();
+            usuario = usuarioModel.buscarPorId(codPersonaReg);
+//            rolesDelUsuarioActualDesecho = new HashMap<Long, Rol>();
+//            rolesDelUsuarioActualDonacion = new HashMap<Long, Rol>();
 
-            List<AutorizacionRolPersona> rolesAprobacionDonacion =  autorizacionRolPersonaModel.buscarRolesPorAutorizacionUsuario(Long.parseLong(Constantes.CODIGO_AUTORIZACION_ACTA_DONACION.toString()), usuarioRegistrado.getId(), unidadEjecutora.getId());     
-            List<AutorizacionRolPersona> rolesAprobacionDesecho =  autorizacionRolPersonaModel.buscarRolesPorAutorizacionUsuario(Long.parseLong(Constantes.CODIGO_AUTORIZACION_ACTA_DESECHO.toString()), usuarioRegistrado.getId(), unidadEjecutora.getId());     
+            bienesActa = new ArrayList<DocumentoDetalle>();
+            
+            //List<AutorizacionRolPersona> rolesAprobacionDonacion =  autorizacionRolPersonaModel.buscarRolesPorAutorizacionUsuario(Long.parseLong(Constantes.CODIGO_AUTORIZACION_ACTA_DONACION.toString()), usuarioRegistrado.getId(), unidadEjecutora.getId());     
+            //List<AutorizacionRolPersona> rolesAprobacionDesecho =  autorizacionRolPersonaModel.buscarRolesPorAutorizacionUsuario(Long.parseLong(Constantes.CODIGO_AUTORIZACION_ACTA_DESECHO.toString()), usuarioRegistrado.getId(), unidadEjecutora.getId());     
 
 
             //Estos son los roles registrados para este USUARIO en cada DOCUMENTO
-            for(AutorizacionRolPersona item : rolesAprobacionDesecho)
-                rolesDelUsuarioActualDesecho.put(item.getAutorizacionRol().getRol().getId(), item.getAutorizacionRol().getRol());
-            for(AutorizacionRolPersona item : rolesAprobacionDonacion)
-                rolesDelUsuarioActualDonacion.put(item.getAutorizacionRol().getRol().getId(), item.getAutorizacionRol().getRol());
+//            for(AutorizacionRolPersona item : rolesAprobacionDesecho)
+//                rolesDelUsuarioActualDesecho.put(item.getAutorizacionRol().getRol().getId(), item.getAutorizacionRol().getRol());
+//            for(AutorizacionRolPersona item : rolesAprobacionDonacion)
+//                rolesDelUsuarioActualDonacion.put(item.getAutorizacionRol().getRol().getId(), item.getAutorizacionRol().getRol());
                     
             listadoInicializaDatos();
         }catch(Exception err){
@@ -134,17 +143,28 @@ public class ActaController extends ListadoBienesGeneralController {
 
     private void iniciaDatos() {
         try {
-            consultaBienes = 2;
+            consultaBienes = Constantes.BIENES_LISTADO_ACTAS;
 
             tiposActaOptions = new ArrayList<SelectItem>();
+            bienesSeleccionados = new HashMap<Long, Bien>();
+            actaDetalleMap = new HashMap<Long, DocumentoDetalle>();
+            
+            bienesActa = new ArrayList<DocumentoDetalle>();
+            bienesActaEliminar = new ArrayList<DocumentoDetalle>();
+            
             cargarTipo();
-            acta = new Acta();
-            acta.setUnidadEjecutora(unidadEjecutora.getId());
+            acta = new DocumentoActa(estadoGeneralPendiente
+                                    ,null
+                                    ,""
+                                    , unidadEjecutora
+                            );
+            acta.setUnidadEjecutora(unidadEjecutora);
 
-            acta.setIdEstado(estadoGeneralPendiente);
+            acta.setEstado(estadoGeneralPendiente);
 
             registrado = false;
             esDonacion = false;
+            mostrarActivarBtn = false;
 
             selectValorDefecto = Constantes.SELECT_DEFAULT;
             tipoActaSeleccionada = selectValorDefecto;
@@ -154,14 +174,9 @@ public class ActaController extends ListadoBienesGeneralController {
 
             actaNombreEstado = estadoGeneralPendiente.getNombre();
 
-//            bienesAsociados = new ArrayList<ViewBienEntity>();
-//
-//            //Indica el n�mero de consulta que voy a utilizar en el popUp de Bienes
-//            estadosBienes = null;
-//            consultaBienes = 2;
-//            inicializaBuscarBienes();
+            iniciaListadoBienes();
             
-            documentoRoles = new ArrayList<ViewDocumAprobEntity>();
+            documentoRoles = new ArrayList<AutorizacionRol>();
             permitirEdicion = permitirEditar();
 
         } catch (Exception err) {
@@ -169,6 +184,32 @@ public class ActaController extends ListadoBienesGeneralController {
         }
     }
 
+    private void cargarDetalle(DocumentoActa item) throws ParseException{
+        if (item.getId() > 0) {
+                acta = item;
+                
+                tipoActaSeleccionada = acta.getTipo().getId().toString();
+                esDonacion = tipoActaSeleccionada.equals(Constantes.ACTA_ID_TIPO_DONACION);
+                tipoSeleccionado = acta.getTipo();
+                
+                actaFecha = formatter.parse(formatter.format(acta.getFecha()));
+                fechaRegistro = formatter.format(acta.getFecha());
+
+                bienesActa = actaModel.traerBienesActa(acta);
+
+                if(bienesActa != null)
+                    for (DocumentoDetalle valor : bienesActa) {
+                        bienesSeleccionados.put(valor.getBien().getId(), valor.getBien());
+                        actaDetalleMap.put(valor.getBien().getId(), valor);
+                    }
+
+                listarRolesAprobacion();
+                permitirEdicion = permitirEditar();
+                mostrarActivarBtn = permitirEdicion;
+            }
+    }
+    
+    
     void cargarTipo() {
         try {
             //Aqui traemos los tipos de bienes para los Select
@@ -189,6 +230,14 @@ public class ActaController extends ListadoBienesGeneralController {
     
     //<editor-fold defaultstate="collapsed" desc="GETs & SETs">
 
+    public boolean isMostrarActivarBtn() {
+        return mostrarActivarBtn;
+    }
+
+    public void setMostrarActivarBtn(boolean mostrarActivarBtn) {
+        this.mostrarActivarBtn = mostrarActivarBtn;
+    }
+    
     public boolean isPermitirEdicion() {
         return permitirEdicion;
     }
@@ -197,11 +246,11 @@ public class ActaController extends ListadoBienesGeneralController {
         this.permitirEdicion = permitirEdicion;
     }
     
-    public List<Acta> getActasRegistradas() {
+    public List<DocumentoActa> getActasRegistradas() {
         return actasRegistradas;
     }
 
-    public void setActasRegistradas(List<Acta> actasRegistradas) {
+    public void setActasRegistradas(List<DocumentoActa> actasRegistradas) {
         this.actasRegistradas = actasRegistradas;
     }
 
@@ -237,11 +286,11 @@ public class ActaController extends ListadoBienesGeneralController {
         this.registrado = registrado;
     }
 
-    public Acta getActa() {
+    public DocumentoActa getActa() {
         return acta;
     }
 
-    public void setActa(Acta acta) {
+    public void setActa(DocumentoActa acta) {
         this.acta = acta;
     }
 
@@ -285,10 +334,18 @@ public class ActaController extends ListadoBienesGeneralController {
         this.actaFecha = actaFecha;
     }
 
+    public List<DocumentoDetalle> getBienesActa() {
+        return bienesActa;
+    }
+
+    public void setBienesActa(List<DocumentoDetalle> bienesActa) {
+        this.bienesActa = bienesActa;
+    }
+
     //</editor-fold>
     
     
-    //<editor-fold defaultstate="collapsed" desc="Navagar">
+    //<editor-fold defaultstate="collapsed" desc="Navegar">
     
     
     public void verDetalle(ActionEvent pEvent) {
@@ -299,31 +356,12 @@ public class ActaController extends ListadoBienesGeneralController {
                 return;
             }
             iniciaDatos();
-            Acta item = (Acta) pEvent.getComponent().getAttributes().get("itemSeleccionado");
-            if (item.getId() > 0) {
-                acta = item;
-                tipoActaSeleccionada = acta.getIdTipo().getId().toString();
-                esDonacion = tipoActaSeleccionada.equals(Constantes.ACTA_ID_TIPO_DONACION);
-                tipoSeleccionado = acta.getIdTipo();
-                
-                actaFecha = formatter.parse(formatter.format(acta.getFecha()));
-                fechaRegistro = formatter.format(acta.getFecha());
-
-//                bienesAsociados = actaModel.traerBienesActa(acta.getId());
-//
-//                for (ViewBienEntity valor : bienesAsociados) {
-//                    bienesSeleccionados.put(valor.getIdBien(), valor);
-//                }
-
-                listarRolesAprobacion();
-                permitirEdicion = permitirEditar();
-            }
-
+            DocumentoActa item = (DocumentoActa) pEvent.getComponent().getAttributes().get("itemSeleccionado");
+            cargarDetalle(item);
             Util.navegar(Constantes.KEY_VISTA_ACTA);//"actaDetalle"
         } catch (Exception err) {
-
-
-            Mensaje.agregarErrorAdvertencia(err.getCause().getMessage());
+            Mensaje.agregarErrorAdvertencia(err, Util.getEtiquetas("sigebi.Acta.MsnError.Cargar"));
+            //Mensaje.agregarErrorAdvertencia(err.getCause().getMessage());
         }
     }
 
@@ -340,7 +378,8 @@ public class ActaController extends ListadoBienesGeneralController {
             Util.navegar(Constantes.KEY_VISTA_ACTA);
 
         } catch (Exception err) {
-            Mensaje.agregarErrorAdvertencia(err.getCause().getMessage());
+            Mensaje.agregarErrorAdvertencia(err, Util.getEtiquetas("sigebi.Acta.MsnError.Cargar"));
+            //Mensaje.agregarErrorAdvertencia(err.getCause().getMessage());
         }
     }
 
@@ -369,8 +408,6 @@ public class ActaController extends ListadoBienesGeneralController {
     
     //</editor-fold>
     
-    
-     
     
     //<editor-fold defaultstate="collapsed" desc="Listado Actas">
     
@@ -431,7 +468,7 @@ public class ActaController extends ListadoBienesGeneralController {
     }
     
     
-    public void trasladoIrPagina(ActionEvent pEvent) {
+    public void actaIrPagina(ActionEvent pEvent) {
         if (!pEvent.getPhaseId().equals(PhaseId.INVOKE_APPLICATION)) {
             pEvent.setPhaseId(PhaseId.INVOKE_APPLICATION);
             pEvent.queue();
@@ -448,7 +485,7 @@ public class ActaController extends ListadoBienesGeneralController {
      *
      * @param pEvent
      */
-    public void trasladoSiguiente(ActionEvent pEvent) {
+    public void actaSiguiente(ActionEvent pEvent) {
         if (!pEvent.getPhaseId().equals(PhaseId.INVOKE_APPLICATION)) {
             pEvent.setPhaseId(PhaseId.INVOKE_APPLICATION);
             pEvent.queue();
@@ -463,7 +500,7 @@ public class ActaController extends ListadoBienesGeneralController {
      *
      * @param pEvent
      */
-    public void trasladoAnterior(ActionEvent pEvent) {
+    public void actaAnterior(ActionEvent pEvent) {
         if (!pEvent.getPhaseId().equals(PhaseId.INVOKE_APPLICATION)) {
             pEvent.setPhaseId(PhaseId.INVOKE_APPLICATION);
             pEvent.queue();
@@ -478,7 +515,7 @@ public class ActaController extends ListadoBienesGeneralController {
      *
      * @param pEvent
      */
-    public void trasladoPrimero(ActionEvent pEvent) {
+    public void actaPrimero(ActionEvent pEvent) {
         if (!pEvent.getPhaseId().equals(PhaseId.INVOKE_APPLICATION)) {
             pEvent.setPhaseId(PhaseId.INVOKE_APPLICATION);
             pEvent.queue();
@@ -493,7 +530,7 @@ public class ActaController extends ListadoBienesGeneralController {
      *
      * @param pEvent
      */
-    public void trasladoUltimo(ActionEvent pEvent) {
+    public void actaUltimo(ActionEvent pEvent) {
         if (!pEvent.getPhaseId().equals(PhaseId.INVOKE_APPLICATION)) {
             pEvent.setPhaseId(PhaseId.INVOKE_APPLICATION);
             pEvent.queue();
@@ -508,7 +545,7 @@ public class ActaController extends ListadoBienesGeneralController {
      *
      * @param pEvent
      */
-    public void trasladoCambioRegistrosPorPagina(ValueChangeEvent pEvent) {
+    public void actaCambioRegistrosPorPagina(ValueChangeEvent pEvent) {
         if (!pEvent.getPhaseId().equals(PhaseId.INVOKE_APPLICATION)) {
             pEvent.setPhaseId(PhaseId.INVOKE_APPLICATION);
             pEvent.queue();
@@ -524,7 +561,7 @@ public class ActaController extends ListadoBienesGeneralController {
     
     
     
-    public void trasladosCambioFiltro() {
+    public void actasCambioFiltro() {
         //this.setCantRegistroPorPagina(Integer.parseInt(pEvent.getNewValue().toString()));  
         this.setPrimerRegistro(1);
         listadoInicializaDatos();
@@ -590,8 +627,6 @@ public class ActaController extends ListadoBienesGeneralController {
     //</editor-fold>
     
     
-    
-    
     //<editor-fold defaultstate="collapsed" desc="Metodos Registro Acta">
     
     public void guardar(ActionEvent pEvent) {
@@ -602,9 +637,12 @@ public class ActaController extends ListadoBienesGeneralController {
                 return;
             }
             guardarActa();
+            listadoInicializaDatos();
+            
+            permitirEdicion = permitirEditar();
+            mostrarActivarBtn = permitirEdicion;
         } catch (Exception err) {
             Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.Acta.MsnError.ActaError"));
-            //Mensaje.agregarErrorAdvertencia(err.getCause().getMessage());
         }
     }
 
@@ -628,10 +666,15 @@ public class ActaController extends ListadoBienesGeneralController {
 
     public void activarActa(){
         try{
-//            acta.setIdEstado(estadoGeneralActivo);
+            
+            if (bienesActa.isEmpty()) {
+                Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.Acta.MsnError.BienesSeleccionados"));
+                return;
+            }
+            acta.setEstado(estadoGeneralActivo);
             guardarActa();
         
-            listarActas();
+            listadoInicializaDatos();
             //inicializaDatos();
             Util.navegar(Constantes.KEY_VISTA_LISTAR_ACTAS);
         }catch(Exception err){
@@ -643,9 +686,11 @@ public class ActaController extends ListadoBienesGeneralController {
         if (registroEsValido()) {
             actaModel.guardar(acta);
             //GUARDAR LOS BIENES ASOCIADOS
-            List<ActaDetalle> bienesAsoc = getBienesAsoc();
-            actaModel.guardarBienes(bienesAsoc);
+            
+            actaModel.eliminarBienes(bienesActaEliminar);
+            actaModel.guardarBienes(bienesActa);
             Mensaje.agregarInfo(Util.getEtiquetas("sigebi.Acta.MsnError.ActaGuardada"));
+            mostrarActivarBtn = true;
         }
     }
     
@@ -664,7 +709,7 @@ public class ActaController extends ListadoBienesGeneralController {
         if (tipoSeleccionado == null) {
             mensaje = Util.getEtiquetas("sigebi.Acta.MsnError.TipoActa");
         } else {
-            acta.setIdTipo(tipoSeleccionado);
+            acta.setTipo(tipoSeleccionado);
         }
         // Validamos si es donaci�n
         if (esDonacion) {
@@ -678,41 +723,19 @@ public class ActaController extends ListadoBienesGeneralController {
             }
         }
 
-        if (bienesAsociados.isEmpty()) {
-            mensaje = Util.getEtiquetas("sigebi.Acta.MsnError.BienesSeleccionados");
-            //return false;
-        }
-
         if (!mensaje.equals("")) {
             Mensaje.agregarErrorAdvertencia(mensaje);
             return false;
-        } else {
-            if (acta.getIdEstado() == null) {
-//                acta.setIdEstado(estadoGeneralPendiente);
-            }
-        }
-
-        //bienesAsociados = new ArrayList<ViewBienEntity>(bienesSeleccionados.values());
+        } else 
+            if (acta.getEstado() == null) 
+                acta.setEstado(estadoGeneralPendiente);
+            
+        //bienesAsociados = new ArrayList<ActaDetalle>(bienesSeleccionados.values());
 
         return true;
 
     }
 
-    private List<ActaDetalle> getBienesAsoc() {
-        List<ActaDetalle> detalle = new ArrayList<ActaDetalle>();
-//        for (ViewBienEntity bn : bienesAsociados) {     // foreach grade in grades
-//            //Bien bien = bienModel.traerPorId(bn.getIdBien());
-//            ActaDetalle valor = new ActaDetalle(acta.getId(),
-//                     bn.getIdBien(),
-//                     estadoGeneralPendiente.getId());
-//            detalle.add(valor);
-//        }
-
-        return detalle;
-    }
-    
-    
-    
     //</editor-fold>
     
     
@@ -720,42 +743,17 @@ public class ActaController extends ListadoBienesGeneralController {
     String valorDonacion;
 
     @Resource
-    private AutorizacionRolModel documRolModel;
+    private DocumentoAutorizacionModel documRolModel;
     
     //Los Roles de la tabla
-    List<ViewDocumAprobEntity> documentoRoles;
+    List<AutorizacionRol> documentoRoles;
+    
+    //DocumentoAutorizacion documentoRoles;
     
     Map<Integer, ViewDocumAprobEntity> rolesIncluidos;
 
     public void listarRolesAprobacion() {
         try {
-            List<ViewDocumAprobEntity> roles = null;
-             rolesIncluidos = new HashMap<Integer, ViewDocumAprobEntity>();
-             documentoRoles = new ArrayList<ViewDocumAprobEntity>();
-            
-            //COnsulto los roles por tipo
-            if (tipoActaSeleccionada.equals(valorDonacion))
-                roles = documRolModel.buscarRolDocumId(Constantes.CODIGO_AUTORIZACION_ACTA_DONACION.intValue(), acta.getId());
-            else 
-                roles = documRolModel.buscarRolDocumId(Constantes.CODIGO_AUTORIZACION_ACTA_DESECHO.intValue(), acta.getId());
-            
-                
-            //Reviso los roles por documento
-            for (ViewDocumAprobEntity valor : roles) {
-                //Los agrego sin que se repitan los roles
-                if( !rolesIncluidos.containsKey(valor.getRolId())  ){
-                    rolesIncluidos.put(valor.getRolId(), valor);
-                    // Los marco como marcados.
-                    if(( valor.getUsuario() == null) || (valor.getUsuario().equals("")) ){
-                        if(acta.getIdEstado().equals(estadoGeneralActivo.getId()))
-                            valor.setMarcado(rolesDelUsuarioActualDonacion.containsKey(Long.parseLong(valor.getRolId().toString())));
-                    }
-                        
-                        
-                    documentoRoles.add(valor);
-                }
-
-            }
             
 
         } catch (Exception err) {
@@ -765,7 +763,7 @@ public class ActaController extends ListadoBienesGeneralController {
     }
 
     public boolean permitirEditar() {
-        return acta.getIdEstado().getId().equals(estadoGeneralPendiente.getId());
+        return acta.getEstado().getId().equals(estadoGeneralPendiente.getId());
     }
 
     @Resource
@@ -786,8 +784,8 @@ public class ActaController extends ListadoBienesGeneralController {
             ViewDocumAprobEntity docum = (ViewDocumAprobEntity) pEvent.getComponent().getAttributes().get("documentoAprobar");
             DocumentoEntity documentoEntity = new DocumentoEntity();
             documentoEntity.setIdDocumento( Long.parseLong(""+docum.getIdDocumento() ) );
-            RolEntity rolEntity = new RolEntity();
-            rolEntity.setIdRol( Long.parseLong(""+docum.getRolId() ) );
+            Rol rolEntity = new Rol();
+//            rolEntity.setId() Long.parseLong(""+docum.getRol() ) );
             //Inicializo el registro DocumentoRolEstadoEntity
 //            DocumentoRolEstadoEntity registro = new DocumentoRolEstadoEntity( Long.parseLong(""+acta.getId())
 //                                                                            , documentoEntity
@@ -801,7 +799,7 @@ public class ActaController extends ListadoBienesGeneralController {
 //            
             listarRolesAprobacion();
             if(actaAprobada()){
-//                acta.setIdEstado(estadoGeneralAprobado);
+//                acta.setEstado(estadoGeneralAprobado);
                 actaModel.guardar(acta);
             }
                 
@@ -812,10 +810,10 @@ public class ActaController extends ListadoBienesGeneralController {
     }
     
     private boolean actaAprobada(){
-        for(ViewDocumAprobEntity valor : documentoRoles){
-            if( (valor.getIdEstado() == null) || (valor.getIdEstado().getIdEstado().equals( estadoGeneralRechazado.getId() ) ))
-                return false;
-        }
+//        for(AutorizacionRol valor : documentoRoles){
+//            if( (valor.get() == null) || (valor.getIdEstado().getIdEstado().equals( estadoGeneralRechazado.getId() ) ))
+//                return false;
+//        }
         return true;
     }
 
@@ -836,8 +834,8 @@ public class ActaController extends ListadoBienesGeneralController {
             ViewDocumAprobEntity docum = (ViewDocumAprobEntity) pEvent.getComponent().getAttributes().get("documentoRechazar");
             DocumentoEntity documentoEntity = new DocumentoEntity();
             documentoEntity.setIdDocumento( Long.parseLong(""+docum.getIdDocumento() ) );
-            RolEntity rolEntity = new RolEntity();
-            rolEntity.setIdRol( Long.parseLong(""+docum.getRolId() ) );
+//            RolEntity rolEntity = new RolEntity();
+//             rolEntity.setIdRol( Long.parseLong(""+docum.getRolId() ) );
             //Inicializo el registro DocumentoRolEstadoEntity
 //            DocumentoRolEstadoEntity registro = new DocumentoRolEstadoEntity( Long.parseLong(""+acta.getId())
 //                                                                            , documentoEntity
@@ -849,7 +847,7 @@ public class ActaController extends ListadoBienesGeneralController {
             //Envío a guardar
 //            docRolEstModel.agregar(registro);
             
-  //          acta.setIdEstado(estadoGeneralRechazado);
+  //          acta.setEstado(estadoGeneralRechazado);
             actaModel.guardar(acta);
                 
             listarRolesAprobacion();
@@ -859,11 +857,11 @@ public class ActaController extends ListadoBienesGeneralController {
         }
     }
 
-    public List<ViewDocumAprobEntity> getDocumentoRoles() {
+    public List<AutorizacionRol> getDocumentoRoles() {
         return documentoRoles;
     }
 
-    public void setDocumentoRoles(List<ViewDocumAprobEntity> documentoRoles) {
+    public void setDocumentoRoles(List<AutorizacionRol> documentoRoles) {
         this.documentoRoles = documentoRoles;
     }
 
@@ -890,5 +888,89 @@ public class ActaController extends ListadoBienesGeneralController {
 
     //</editor-fold>
     
+    
+    //<editor-fold defaultstate="collapsed" desc="Metodos Seleccionar Bien">
+
+    /**
+     *
+     * @param pEvent
+     */
+    @Override
+    public void checkBienSeleccionado(ValueChangeEvent pEvent) {
+        try {
+            if (!pEvent.getPhaseId().equals(PhaseId.INVOKE_APPLICATION)) {
+                pEvent.setPhaseId(PhaseId.INVOKE_APPLICATION);
+                pEvent.queue();
+                return;
+            }
+            
+            //bienesAsociados = new ArrayList<Bien>();
+            Bien bien = (Bien) pEvent.getComponent().getAttributes().get("bienSeleccionado");
+            if(bienesSeleccionados.containsKey(bien.getId())){
+                
+                //Si el bien ya estaba registrado lo agrego a una lista para ser eliminado
+                if((actaDetalleMap.get(bien.getId()).getId()!= null)&&
+                        (actaDetalleMap.get(bien.getId()).getId() > 0))
+                    bienesActaEliminar.add(actaDetalleMap.get(bien.getId()));
+                // Lo elimino de los datos que estoy mostrando
+                bienesSeleccionados.remove(bien.getId());
+                actaDetalleMap.remove(bien.getId());
+            }else{
+                bienesSeleccionados.put(bien.getId(), bien);
+                actaDetalleMap.put(bien.getId(), getActaDetalleDefault(bien));
+            }
+            bienesActa = new ArrayList<DocumentoDetalle>( actaDetalleMap.values() );
+            bienesAsociados = new ArrayList<Bien>( bienesSeleccionados.values() );
+        } catch (Exception err) {
+            Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.error.controllerListarBienSincronizar.checkBienPorSincronizar"));
+        }
+    }
+    
+    
+    public void quitarBienSeleccionado(ActionEvent pEvent) {
+        try {
+            if (!pEvent.getPhaseId().equals(PhaseId.INVOKE_APPLICATION)) {
+                pEvent.setPhaseId(PhaseId.INVOKE_APPLICATION);
+                pEvent.queue();
+                return;
+            }
+        
+            //bienesAsociados = new ArrayList<Bien>();
+            Bien bien;
+            bien = (Bien) pEvent.getComponent().getAttributes().get("bienSeleccionado");
+            if(bienesSeleccionados.containsKey(bien.getId())){
+                
+                //Si el bien ya estaba registrado lo agrego a una lista para ser eliminado
+                if((actaDetalleMap.get(bien.getId()).getId()!= null)&&
+                        (actaDetalleMap.get(bien.getId()).getId() > 0))
+                    bienesActaEliminar.add(actaDetalleMap.get(bien.getId()));
+                // Lo elimino de los datos que estoy mostrando
+                bienesSeleccionados.remove(bien.getId());
+                actaDetalleMap.remove(bien.getId());
+            }else{
+                bienesSeleccionados.put(bien.getId(), bien);
+                actaDetalleMap.put(bien.getId(), getActaDetalleDefault(bien));
+            }
+            bienesActa = new ArrayList<DocumentoDetalle>( actaDetalleMap.values() );
+            bienesAsociados = new ArrayList<Bien>( bienesSeleccionados.values() );
+        } catch (Exception err) {
+            Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.error.controllerListarBienSincronizar.checkBienPorSincronizar"));
+        }
+    }
+    
+    private DocumentoDetalle getActaDetalleDefault(Bien bien){
+        try{
+            DocumentoDetalle det = new DocumentoDetalle();
+            det.setDocumento(acta);
+            det.setBien(bien);
+            det.setDiscriminator(Constantes.DISCRIMINATOR_DOCUMENTO_ACTA);
+            return det;
+        }catch(Exception e){
+            return null;
+        }
+    }
+    
+
+    // </editor-fold>
     
 }

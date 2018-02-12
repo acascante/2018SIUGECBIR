@@ -6,7 +6,9 @@
 package cr.ac.ucr.sigebi.domain;
 
 import cr.ac.ucr.framework.seguridad.ObjetoBase;
+import cr.ac.ucr.sigebi.utils.Constantes;
 import java.io.Serializable;
+import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -14,125 +16,113 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.SequenceGenerator;
+import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
 
 /**
  *
  * @author jorge.serrano
  */
 @Entity(name = "TrasladoDetalle")
-@Table(name = "SIGEBI_OAF.SGB_TRASLADO_DETALLE")
-@SequenceGenerator(name="SGB_SQ_TRASLADO_DETALLE", sequenceName = "SIGEBI_OAF.SGB_SQ_TRASLADO_DETALLE", initialValue=1, allocationSize=1)
-public class TrasladoDetalle  extends ObjetoBase implements Serializable  {
+@Table(name = "SIGEBI_OAF.SIGB_TRASLADO_DETALLE")
+@PrimaryKeyJoinColumn(name = "ID_DOCUMENTO_DETALLE", referencedColumnName = "ID_DOCUMENTO_DETALLE")
+public class TrasladoDetalle  extends DocumentoDetalle implements Serializable  {
     
     private static final long serialVersionUID = 1L;
     
     //<editor-fold defaultstate="collapsed" desc="Atributos">
     
-    @Id
-    @GeneratedValue(strategy=GenerationType.SEQUENCE, generator = "SGB_SQ_TRASLADO_DETALLE")
-    @Column(name = "ID_TRASLADO_DETALLE") // NUMBER SGB_SQ_TRASLADO
-    private Integer idTrasladoDetalle;
-    
     @ManyToOne
-    @JoinColumn(name = "ID_TRASLADO", referencedColumnName = "ID_TRASLADO")
-    private Traslado idTraslado;
-    
-    
-    @ManyToOne
-    @JoinColumn(name = "ID_BIEN", referencedColumnName = "ID_BIEN")
-    private Bien idBien;
+    @JoinColumn(name = "ID_PERSONA_RECIBE", referencedColumnName = "ID_USUARIO")
+    private Usuario usuarioRecibe;
     
     @ManyToOne
     @JoinColumn(name = "ID_ESTADO", referencedColumnName = "ID_ESTADO")
-    private  Estado idEstado;
-    
+    private Estado estado;
+
+    @Column(name = "FECHA")
+    @Temporal(javax.persistence.TemporalType.DATE)
+    private Date fecha;
     
     //</editor-fold>
+
+    public TrasladoDetalle() {
+    }
     
     
     //<editor-fold defaultstate="collapsed" desc="Constructor">
 
-    public TrasladoDetalle() {
+    public TrasladoDetalle(Documento documento, Bien bien) {
+        super(documento, bien);
     }
-
-    public TrasladoDetalle( Traslado idTraslado
-                                , Bien idBien
-                                ,  Estado idEstado) {
-        this.idTraslado = idTraslado;
-        this.idBien = idBien;
-        this.idEstado = idEstado;
-    }
-    
-    
-    
     
     //</editor-fold>
+    
     
     //<editor-fold defaultstate="collapsed" desc="Get's & Set's">
 
-    public Integer getIdTrasladoDetalle() {
-        return idTrasladoDetalle;
+    public Usuario getUsuarioRecibe() {
+        return usuarioRecibe;
     }
 
-    public void setIdTrasladoDetalle(Integer idTrasladoDetalle) {
-        this.idTrasladoDetalle = idTrasladoDetalle;
+    public void setUsuarioRecibe(Usuario usuarioRecibe) {
+        this.usuarioRecibe = usuarioRecibe;
     }
 
-    public Traslado getIdTraslado() {
-        return idTraslado;
+    public Estado getEstado() {
+        return estado;
     }
 
-    public void setIdTraslado(Traslado idTraslado) {
-        this.idTraslado = idTraslado;
+    public void setEstado(Estado estado) {
+        this.estado = estado;
     }
 
-    public Bien getIdBien() {
-        return idBien;
-    } 
-
-    public void setIdBien(Bien idBien) {
-        this.idBien = idBien;
+    public Date getFecha() {
+        return fecha;
     }
 
-    public  Estado getIdEstado() {
-        return idEstado;
+    public void setFecha(Date fecha) {
+        this.fecha = fecha;
     }
 
-    public void setIdEstado( Estado idEstado) {
-        this.idEstado = idEstado;
-    }
-    
-    
-    
-    
+
     //</editor-fold>
     
     //<editor-fold defaultstate="collapsed" desc="Sobrecargas">
-     @Override
+    @Override
     public int hashCode() {
-        int hash = 0;
-        hash += (idTrasladoDetalle != null ? idTrasladoDetalle.hashCode() : 0);
+        int hash = 7;
+        hash = 79 * hash + (this.usuarioRecibe.getId() != null ? this.usuarioRecibe.getId().hashCode() : 0);
+        hash = 79 * hash + (this.estado.getId() != null ? this.estado.getId().hashCode() : 0);
         return hash;
     }
 
     @Override
-    public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof TrasladoDetalle)) {
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
             return false;
         }
-        TrasladoDetalle other = (TrasladoDetalle) object;
-        if ((this.idTrasladoDetalle == null && other.idTrasladoDetalle != null) || (this.idTrasladoDetalle != null && !this.idTrasladoDetalle.equals(other.idTrasladoDetalle))) {
+        if (getClass() != obj.getClass()) {
             return false;
         }
+        final TrasladoDetalle other = (TrasladoDetalle) obj;
+        if ((this.usuarioRecibe.getId() == null) ? (other.usuarioRecibe.getId() != null) : !this.usuarioRecibe.getId().equals(other.usuarioRecibe.getId())) {
+            return false;
+        }
+        if ((this.estado.getId() == null) ? (other.estado.getId() != null) : !this.estado.getId().equals(other.estado.getId())) {
+            return false;
+        }
+        
         return true;
     }
 
     @Override
     public String toString() {
-        return "cr.ac.ucr.sigebi.entities.TrasladoDetalle[ id=" + idTrasladoDetalle + " ]";
+        return "cr.ac.ucr.sigebi.entities.TrasladoDetalle[ id=" + this.getId() + " ]";
     }
     //</editor-fold>
     

@@ -11,7 +11,7 @@ import cr.ac.ucr.framework.utils.FWExcepcion;
 import cr.ac.ucr.sigebi.domain.Estado;
 import cr.ac.ucr.sigebi.domain.UnidadEjecutora;
 import cr.ac.ucr.sigebi.domain.TrasladoDetalle;
-import cr.ac.ucr.sigebi.domain.Traslado;
+import cr.ac.ucr.sigebi.domain.DocumentoTraslado;
 import cr.ac.ucr.sigebi.entities.UnidadEjecutoraEntity;
 import java.util.List;
 import javax.annotation.Resource;
@@ -38,7 +38,7 @@ public class TrasladosDao extends GenericDaoImpl {
     private FaltaViewBienDao viewBienDao;
     
     @Transactional
-    public void guardar(Traslado obj) {
+    public void guardar(DocumentoTraslado obj) {
         try {
             this.persist(obj);
         } catch (Exception e) {
@@ -62,6 +62,22 @@ public class TrasladosDao extends GenericDaoImpl {
         }
     }
     
+    
+    @Transactional
+    public void eliminarBienes(List<TrasladoDetalle> bienes){
+        try {
+            for(TrasladoDetalle valor : bienes) {
+                delete(valor);
+            }
+            
+        } catch (DataAccessException e) {
+            throw new FWExcepcion("sigebi.error.TrasladosDao.guardarBienes", "Error guardar el registro de tipo " + this.getClass(), e.getCause());
+        } catch (Exception ex) {
+            throw new FWExcepcion("sigebi.error.TrasladosDao.guardarBienes", "Error guardar el registro de tipo " + this.getClass(), ex.getCause());
+        }
+    }
+    
+    
     @Transactional
     public void guardarBien(TrasladoDetalle bien){
         try {
@@ -74,35 +90,15 @@ public class TrasladosDao extends GenericDaoImpl {
         }
     }
     
-    @Transactional
-    public void eliminarBienes(Traslado traslado, Estado estado){
-        Session session = dao.getSessionFactory().openSession();
-        try {
-            //idTraslado
-            String sql = "delete from TrasladoDetalle s where s.idTraslado = :ptraslado and  s.idEstado = :pEstado";
-            Query q = session.createQuery(sql);
-            q.setParameter("ptraslado",traslado);
-            q.setParameter("pEstado",estado);
-            
-            int resp = q.executeUpdate();
-            
-            session.close();
-        } catch (DataAccessException e) {
-            throw new FWExcepcion("sigebi.error.TrasladosDao.guardarBienes", "Error guardar el registro de tipo " + this.getClass(), e.getCause());
-        } catch (Exception ex) {
-            throw new FWExcepcion("sigebi.error.TrasladosDao.guardarBienes", "Error guardar el registro de tipo " + this.getClass(), ex.getCause());
-        }
-    }
-    
-    public Traslado traerPorId(Integer pId) {
+    public DocumentoTraslado traerPorId(Integer pId) {
         Session session = this.dao.getSessionFactory().openSession();
         try {
-            String sql = "SELECT obj FROM Traslado obj WHERE obj.idTraslado = :idTraslado";
+            String sql = "SELECT obj FROM DocumentoTraslado obj WHERE obj.id = :id";
             Query query = session.createQuery(sql);
-            query.setParameter("idTraslado", pId);
+            query.setParameter("id", pId);
 
             //Se obtienen los resutltados
-            return (Traslado) query.list().get(0);
+            return (DocumentoTraslado) query.list().get(0);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -114,17 +110,17 @@ public class TrasladosDao extends GenericDaoImpl {
     }
     
     @Transactional
-    public List<Traslado> traerTodo(UnidadEjecutoraEntity unidadEjecutora) {
+    public List<DocumentoTraslado> traerTodo(UnidadEjecutoraEntity unidadEjecutora) {
         Session session = this.dao.getSessionFactory().openSession();
         try {
-            String sql = "SELECT obj FROM Traslado obj "
-                        + " WHERE obj.numUnidadOrigen = :numUnidadOrigen "
-                        + " OR obj.numUnidadDestino = :numUnidadOrigen";
+            String sql = "SELECT obj FROM DocumentoTraslado obj "
+                        + " WHERE obj.unidadEjecutora = :unidadEjecutora "
+                        + " OR obj.numUnidadDestino = :unidadEjecutora";
             Query query = session.createQuery(sql);
-            query.setParameter("numUnidadOrigen", unidadEjecutora);
+            query.setParameter("unidadEjecutora", unidadEjecutora);
 
             //Se obtienen los resutltados
-            return (List<Traslado>) query.list();
+            return (List<DocumentoTraslado>) query.list();
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -137,13 +133,13 @@ public class TrasladosDao extends GenericDaoImpl {
     }
     
     @Transactional
-    public List<TrasladoDetalle> traerBienesTraslado(Integer trasladoId) {
+    public List<TrasladoDetalle> traerBienesTraslado(DocumentoTraslado trasladoId) {
         Session session = this.dao.getSessionFactory().openSession();
         try {
             String sql = "SELECT obj FROM TrasladoDetalle obj "
-                        + " WHERE obj.idTraslado.idTraslado = :trasladoId ";
+                        + " WHERE obj.documento.id = :traslado ";
             Query query = session.createQuery(sql);
-            query.setParameter("trasladoId", trasladoId);
+            query.setParameter("traslado", trasladoId.getId());
 
             //Se obtienen los resutltados
             return (List<TrasladoDetalle>) query.list();
@@ -159,7 +155,7 @@ public class TrasladosDao extends GenericDaoImpl {
     
     
     @Transactional
-    public List<Traslado> trasladosListado(
+    public List<DocumentoTraslado> trasladosListado(
               UnidadEjecutora unidadEjecutora
             , String fltIdTraslado
             , String fltUnidadOrigen
@@ -192,7 +188,7 @@ public class TrasladosDao extends GenericDaoImpl {
             }
 
             //Se obtienen los resutltados
-            return (List<Traslado>) q.list();
+            return (List<DocumentoTraslado>) q.list();
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -254,31 +250,30 @@ public class TrasladosDao extends GenericDaoImpl {
         
         try{
             String sql;
-            
             if (contar) 
-                sql = "SELECT count(s) FROM Traslado s ";
+                sql = "SELECT count(s) FROM DocumentoTraslado s ";
              else 
-                sql = "SELECT s FROM Traslado s ";
+                sql = "SELECT s FROM DocumentoTraslado s ";
             
-            sql +=  " WHERE (s.numUnidadOrigen = :numUnidadOrigen "
-                  + " OR s.numUnidadDestino = :numUnidadOrigen) ";
+            sql +=  " WHERE (s.unidadEjecutora = :unidadEjecutora "
+                  + " OR s.numUnidadDestino = :unidadEjecutora) ";
             
             if(fltIdTraslado != null && fltIdTraslado.length() > 0)
-               sql = sql +  " AND upper(s.idTraslado) like upper(:fltIdTraslado) ";
+               sql = sql +  " AND upper(s.id) like upper(:fltIdTraslado) ";
             
             if(fltUnidadOrigen != null && fltUnidadOrigen.length() > 0)
-               sql = sql +  " AND upper(s.numUnidadOrigen.dscUnidadEjecutora) like upper(:fltUnidadOrigen) ";
+               sql = sql +  " AND upper(s.unidadEjecutora.dscUnidadEjecutora) like upper(:fltUnidadOrigen) ";
             
             if(fltUnidadDestino != null && fltUnidadDestino.length() > 0)
                sql = sql +  " AND upper(s.numUnidadDestino.dscUnidadEjecutora) like upper(:fltUnidadDestino) ";
             if(fltFecha != null && fltFecha.length() > 0)
                sql = sql +  " AND upper(s.fecha) like upper(:fltFecha) ";
             if( ! fltEstados.equals("-1") )
-               sql = sql +  " AND s.idEstado.idEstado = :fltEstados ";
+               sql = sql +  " AND s.estado.id = :fltEstados ";
             
             
             Query q = session.createQuery(sql);
-            q.setParameter("numUnidadOrigen", unidadEjecutora);
+            q.setParameter("unidadEjecutora", unidadEjecutora);
             
             if(fltIdTraslado != null && fltIdTraslado.length() > 0)
                 q.setParameter("fltIdTraslado", '%' + fltIdTraslado + '%');

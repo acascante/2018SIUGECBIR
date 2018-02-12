@@ -60,14 +60,15 @@ public class VistaNavegacion {
         
         gPaginas.put(Constantes.VISTA_EXCLUSION_NUEVA, Constantes.VISTA_EXCLUSION_NUEVA_PAGINA);
 
-        gPaginas.put("informe", "../exclusiones/listarInformesTecnicos.xhtml");
-        gPaginas.put("informe_detalle", "../exclusiones/detalleInformeTecnico.xhtml");
-        gPaginas.put("proceso", "../gestionProceso/gestionProceso.xhtml");
+        gPaginas.put(Constantes.VISTA_INFORME_TECNICO, Constantes.VISTA_INFORME_TECNICO_LISTADO);
+        gPaginas.put(Constantes.VISTA_INFORME_TECNICO_DET, Constantes.VISTA_INFORME_TECNICO_DETALLE);
+        gPaginas.put(Constantes.VISTA_PROCESOS, Constantes.VISTA_PROCESO_DIRECCION);
+        
         //ACTAS
         gPaginas.put(Constantes.KEY_VISTA_ACTA, Constantes.VISTA_ACTA);
         gPaginas.put(Constantes.KEY_VISTA_LISTAR_ACTAS, Constantes.VISTA_LISTAR_ACTAS);
         //TRASLADOS
-        gPaginas.put("traslados"/*Constantes.KEY_VISTA_TRASLADOS_LISTAR*/, Constantes.VISTA_TRASLADOS_LISTAR);
+        gPaginas.put(Constantes.KEY_VISTA_TRASLADOS_LISTAR, Constantes.VISTA_TRASLADOS_LISTAR);
         gPaginas.put(Constantes.KEY_VISTA_TRASLADO_DETALLE, Constantes.VISTA_TRASLADO_DETALLE);
         gPaginas.put(Constantes.KEY_VISTA_TRASLADO_PERMISOS, Constantes.VISTA_TRASLADO_PERMISOS);
         

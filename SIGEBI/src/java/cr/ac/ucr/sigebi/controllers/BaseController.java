@@ -164,6 +164,19 @@ public class BaseController extends PaginacionOracle {
             }
         }).get(0);
     }
+    
+    public Estado estadoPorId(final Long id) {
+        if(id > 0){
+            return this.estadosFilter(estadosGenerales, new PredicateFilter() {
+            @Override
+            public boolean verifica(Object t) {
+                return id.equals(((Estado) t).getId());
+            }
+        }).get(0);
+        }else{
+            return null;
+        }
+    }
 
     public List<Tipo> tiposPorDominio(final String dominio) {
         return this.tiposFilter(tiposGenerales, new PredicateFilter() {
@@ -182,8 +195,21 @@ public class BaseController extends PaginacionOracle {
             }
         }).get(0);
     }
+    
+    public Tipo tipoPorId(final Long id) {
+        if(id > 0){
+            return this.tiposFilter(tiposGenerales, new PredicateFilter() {
+                @Override
+                public boolean verifica(Object t) {
+                    return id.equals(((Tipo) t).getId());
+                }
+            }).get(0);
+        }else{
+            return null;
+        }
+    }
 
-    public List<Tipo> tiposFilter(List<Tipo> tipos, PredicateFilter tester) {
+    private List<Tipo> tiposFilter(List<Tipo> tipos, PredicateFilter tester) {
         List<Tipo> resultado = new ArrayList();
         for (Tipo p : tipos) {
             if (tester.verifica(p)) {
@@ -193,7 +219,7 @@ public class BaseController extends PaginacionOracle {
         return resultado;
     }
 
-    public List<Estado> estadosFilter(List<Estado> estados, PredicateFilter tester) {
+    private List<Estado> estadosFilter(List<Estado> estados, PredicateFilter tester) {
         List<Estado> resultado = new ArrayList();
         for (Estado p : estados) {
             if (tester.verifica(p)) {
@@ -206,4 +232,5 @@ public class BaseController extends PaginacionOracle {
     public interface PredicateFilter {
         boolean verifica(Object p);
     }
+     //</editor-fold>
 }

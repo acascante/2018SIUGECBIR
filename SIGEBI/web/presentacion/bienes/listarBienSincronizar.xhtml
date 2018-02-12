@@ -73,7 +73,7 @@
                                             <ice:outputText value="#{label['sigebi.label.vista.listarBienSincronizar.identificacion']} "/>
                                         </ice:headerRow>
                                         <ice:headerRow>
-                                            <ice:inputText id="filtroNombre"
+                                            <ice:inputText id="filtroIdBien"
                                                            style="width: 130px;"
                                                            value="#{controllerListarBienSincronizar.fltIdBien}"                                   
                                                            partialSubmit="true"
@@ -91,7 +91,7 @@
                                             <ice:outputText value="#{label['sigebi.label.vista.listarBienSincronizar.descripcion']} "/>
                                         </ice:headerRow>
                                         <ice:headerRow>
-                                            <ice:inputText id="filtroDescripcion"
+                                            <ice:inputText id="filtroDescripcionBien"
                                                    style="width: 130px;"
                                                    value="#{controllerListarBienSincronizar.fltDescripcion}"                                   
                                                    partialSubmit="true"
@@ -231,10 +231,10 @@
                                                    style="float:right;margin-top:2%" 
                                                    styleClass="boton" 
                                                    partialSubmit="true" 
-                                                   actionListener="#{controllerAgregarBienes.abrirDetalle}"
+                                                   actionListener="#{controllerAgregarBienes.modificarRegistro}"
                                                    value="#{label['sigebi.label.vista.listarBienSincronizar.detalle']}"  >
                                     <f:attribute id="bienSeleccionado" name="bienSeleccionado"  value="#{bien}"/>
-                                    <f:attribute id="vistaOrigenParam" name="vistaOrigenParam"  value="sincronizar"/>
+                                    <f:attribute id="vistaOrigenParam" name="keyVistaOrigen"  value="sincronizar"/>
                                 </ice:commandButton>
 
                                 </ice:column>

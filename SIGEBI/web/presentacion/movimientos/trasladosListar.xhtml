@@ -114,7 +114,7 @@
                                         </ice:headerRow>
                                     </ice:columnGroup>
                                 </f:facet>                                
-                                <h:outputText id="costoCell" value="#{traslado.idTraslado}"/>
+                                <h:outputText id="costoCell" value="#{traslado.id}"/>
                             </ice:column>
                             
                             <!-- COLUMNA UNIDAD ORIGEN -->
@@ -133,7 +133,7 @@
                                         </ice:headerRow>
                                     </ice:columnGroup>
                                 </f:facet>
-                                <h:outputText id="idBienCell" value="#{traslado.numUnidadOrigen.descripcion}"/>
+                                <h:outputText id="idBienCell" value="#{traslado.unidadEjecutora.descripcion}"/>
                             </ice:column>
 
                             <!-- COLUMNA UNIDAD DESTINO -->
@@ -193,7 +193,7 @@
                                         </ice:headerRow>
                                     </ice:columnGroup>
                                 </f:facet>                                
-                                <h:outputText id="descripcionCell" value="#{traslado.idEstado.nombre}"/>
+                                <h:outputText id="descripcionCell" value="#{traslado.estado.nombre}"/>
                             </ice:column>
 
                             <ice:column id="colDetalle">

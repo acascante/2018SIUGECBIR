@@ -130,8 +130,8 @@
                                         </ice:headerRow>
                                         <ice:headerRow>
                                            <ice:selectOneMenu id="fltEstados"
-                                                              valueChangeListener="#{trasladoController.actasCambioFiltro}"
-                                                       value="#{trasladoController.fltEstados}"
+                                                              valueChangeListener="#{actaController.actasCambioFiltro}"
+                                                       value="#{actaController.fltEstados}"
                                                        partialSubmit="true"
                                                        >
                                                 <f:selectItem itemLabel="N/A" itemValue="-1"/>
@@ -140,7 +140,7 @@
                                         </ice:headerRow>
                                     </ice:columnGroup>
                                 </f:facet>
-                                <h:outputText id="idBienCell" value="#{acta.idEstado.nombre}"/>
+                                <h:outputText id="idBienCell" value="#{acta.estado.nombre}"/>
                             </ice:column>
                             
                             <ice:column id="colFecha">

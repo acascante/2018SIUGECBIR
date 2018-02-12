@@ -72,6 +72,7 @@ public class ListarBienSincronizarController extends BaseController {
     String observacionCliente = "";
 
     //</editor-fold>
+    
     //<editor-fold defaultstate="collapsed" desc="Get's & Set's">
     public boolean cerrarPanelObserva() {
         panelObservaVisible = false;
@@ -235,6 +236,7 @@ public class ListarBienSincronizarController extends BaseController {
     }
 
     //</editor-fold>
+    
     //<editor-fold defaultstate="collapsed" desc="Constructor">
     public ListarBienSincronizarController() {
         super();
@@ -354,6 +356,7 @@ public class ListarBienSincronizarController extends BaseController {
                         fltModelo,
                         fltSerie,
                         null,
+                        null,
                         estadosFiltros.toArray(new Estado[estadosFiltros.size()])
                 );
             } else {
@@ -365,6 +368,7 @@ public class ListarBienSincronizarController extends BaseController {
                         fltMarca,
                         fltModelo,
                         fltSerie,
+                        null,
                         null,
                         this.estadoPorDominioValor(Constantes.DOMINIO_BIEN, Integer.parseInt(fltEstado))
                 );
@@ -393,6 +397,7 @@ public class ListarBienSincronizarController extends BaseController {
                         fltModelo,
                         fltSerie,
                         null,
+                        null,
                         estadosFiltros.toArray(new Estado[estadosFiltros.size()])
                 );
             } else {
@@ -405,6 +410,7 @@ public class ListarBienSincronizarController extends BaseController {
                         fltMarca,
                         fltModelo,
                         fltSerie,
+                        null,
                         null,
                         this.estadoPorDominioValor(Constantes.DOMINIO_BIEN, Integer.parseInt(fltEstado))
                 );
@@ -420,6 +426,7 @@ public class ListarBienSincronizarController extends BaseController {
     }
 
     //</editor-fold>
+    
     // <editor-fold defaultstate="collapsed" desc="Paginacion">
     /**
      * Pasa a la pagina sub-set de bienes
@@ -515,6 +522,7 @@ public class ListarBienSincronizarController extends BaseController {
     }
 
 // </editor-fold>
+    
     //<editor-fold defaultstate="collapsed" desc="Panel Observacion Solicitud Sincronizar o Rechazar">
     public void rechazarBien() {
         try {
@@ -572,6 +580,7 @@ public class ListarBienSincronizarController extends BaseController {
     }
 
     //</editor-fold>
+    
     //<editor-fold defaultstate="collapsed" desc="Sincronizar">
     public void checkBienEnviarSincronizar(ValueChangeEvent pEvent) {
         try {
@@ -591,7 +600,7 @@ public class ListarBienSincronizarController extends BaseController {
         } catch (FWExcepcion err) {
             Mensaje.agregarErrorAdvertencia(err.getError_para_usuario());
         } catch (Exception err) {
-            Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.error.controllerListarBienSincronizar.checkBienEnviarSincronizar"));
+            Mensaje.agregarErrorAdvertencia(err, Util.getEtiquetas("sigebi.error.controllerListarBienSincronizar.checkBienEnviarSincronizar"));
         }
     }
 
@@ -621,11 +630,9 @@ public class ListarBienSincronizarController extends BaseController {
             this.listarBienes();
 
         } catch (FWExcepcion err) {
-            err.printStackTrace();
             Mensaje.agregarErrorAdvertencia(err.getError_para_usuario());
         } catch (Exception err) {
-            err.printStackTrace();
-            Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.error.controllerListarBienSincronizar.sincronizarTodo"));
+            Mensaje.agregarErrorAdvertencia(err,Util.getEtiquetas("sigebi.error.controllerListarBienSincronizar.sincronizarTodo"));
         }
     }
 

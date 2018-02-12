@@ -186,8 +186,10 @@ public class ListarInformesTecnicosController extends BaseController {
 
             this.listarInformes();
 
-        } catch (Exception err) {
-            Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.error.controllerListarInformesTecnicos.cambioFiltro"));
+        } catch (FWExcepcion e) {
+            Mensaje.agregarErrorAdvertencia(e.getError_para_usuario());
+        } catch (Exception e) {
+            Mensaje.agregarErrorAdvertencia(e, Util.getEtiquetas("sigebi.error.controllerListarInformesTecnicos.cambioFiltro"));
         }
 
     }
@@ -197,9 +199,15 @@ public class ListarInformesTecnicosController extends BaseController {
      */
     private void contarInformes() {
         try {
-
             //Se cuenta la cantidad de registros
-            Long contador = documentoModel.consultaCantidadRegistros(unidadEjecutora.getId(), Integer.parseInt(fltIdTipo), fltIdentificacionBien, fltDescripcionBien, fltMarcaBien, fltModeloBien, Integer.parseInt(fltEstado));
+            Long contador = documentoModel.consultaCantidadRegistros(unidadEjecutora, 
+                    this.tipoPorId(Long.parseLong(fltIdTipo)),
+                    fltIdentificacionBien, 
+                    fltDescripcionBien, 
+                    fltMarcaBien, 
+                    fltModeloBien, 
+                    this.estadoPorId(Long.parseLong(fltEstado)),
+                    Constantes.DISCRIMINATOR_DOCUMENTO_INFORME_TECNICO);
 
             //Se actualiza la cantidad de registros segun los filtros
             this.setCantidadRegistros(contador.intValue());
@@ -207,7 +215,7 @@ public class ListarInformesTecnicosController extends BaseController {
         } catch (FWExcepcion e) {
             Mensaje.agregarErrorAdvertencia(e.getError_para_usuario());
         } catch (Exception e) {
-            Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.error.controllerListarInformesTecnicos.contarBienes"));
+            Mensaje.agregarErrorAdvertencia(e, Util.getEtiquetas("sigebi.error.controllerListarInformesTecnicos.contarBienes"));
         }
     }
 
@@ -216,19 +224,20 @@ public class ListarInformesTecnicosController extends BaseController {
      */
     private void listarInformes() {
         try {
-            this.informes = documentoModel.listarInformes(unidadEjecutora.getId(),
-                    Integer.parseInt(fltIdTipo),
+            this.informes = documentoModel.listarInformes(unidadEjecutora,
+                    this.tipoPorId(Long.parseLong(fltIdTipo)) ,
                     fltIdentificacionBien,
                     fltDescripcionBien,
                     fltMarcaBien,
                     fltModeloBien,
-                    Integer.parseInt(fltEstado),
+                    this.estadoPorId(Long.parseLong(fltEstado)),
                     this.getPrimerRegistro() - 1,
-                    this.getUltimoRegistro());
+                    this.getUltimoRegistro(),
+                    Constantes.DISCRIMINATOR_DOCUMENTO_INFORME_TECNICO);
         } catch (FWExcepcion e) {
             Mensaje.agregarErrorAdvertencia(e.getError_para_usuario());
         } catch (Exception e) {
-            Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.error.controllerListarInformesTecnicos.listarBienes"));
+            Mensaje.agregarErrorAdvertencia(e, Util.getEtiquetas("sigebi.error.controllerListarInformesTecnicos.listarBienes"));
         }
     }
 

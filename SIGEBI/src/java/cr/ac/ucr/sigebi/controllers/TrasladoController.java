@@ -10,6 +10,7 @@ import cr.ac.ucr.framework.vista.util.Util;
 import cr.ac.ucr.sigebi.domain.Autorizacion;
 import cr.ac.ucr.sigebi.domain.AutorizacionRolPersona;
 import cr.ac.ucr.sigebi.domain.Bien;
+import cr.ac.ucr.sigebi.domain.TrasladoDetalle;
 import cr.ac.ucr.sigebi.domain.Estado;
 import cr.ac.ucr.sigebi.domain.Tipo;
 import cr.ac.ucr.sigebi.domain.Justificacion;
@@ -17,8 +18,7 @@ import cr.ac.ucr.sigebi.domain.Notificacion;
 import cr.ac.ucr.sigebi.domain.UnidadEjecutora;
 import cr.ac.ucr.sigebi.domain.Usuario;
 import cr.ac.ucr.sigebi.domain.Ubicacion;
-import cr.ac.ucr.sigebi.domain.TrasladoDetalle;
-import cr.ac.ucr.sigebi.domain.Traslado;
+import cr.ac.ucr.sigebi.domain.DocumentoTraslado;
 import cr.ac.ucr.sigebi.models.BienModel;
 import cr.ac.ucr.sigebi.models.AutorizacionModel;
 import cr.ac.ucr.sigebi.models.AutorizacionRolPersonaModel;
@@ -63,10 +63,14 @@ public class TrasladoController extends ListadoBienesGeneralController {
     Estado estadoGeneralAprobado;
     Estado estadoGeneralRechazado;
 
-    List<Traslado> traslados;
-    Traslado traslado;
+    //Variables Traslados
+    List<DocumentoTraslado> traslados;
+    DocumentoTraslado traslado;
+    
+    //Variables Traslado Detalle
     List<TrasladoDetalle> trasladoDetalle;
-    Map<Long, TrasladoDetalle> bienesAsociadosTraslados;
+    List<TrasladoDetalle> trasladoDetalleEliminar;
+    Map<Long, TrasladoDetalle> bienesAsociadosTraslado;
 
     UnidadEjecutora unidadOrigen;
     UnidadEjecutora unidadDestino;
@@ -87,32 +91,46 @@ public class TrasladoController extends ListadoBienesGeneralController {
     Map<String, Usuario> usuariosEnviar;
     Map<String, Usuario> usuariosRecibir;
 
-    @Resource
-    private TrasladoModel trasladoModel;
-
-    @Resource
-    private EstadoModel estadoModel;
-
-    @Resource
-    private TipoModel tipoModel;
-
-    @Resource
-    private AutorizacionModel autorizacionModel;
-
-    @Resource
-    private AutorizacionRolPersonaModel autorizacionRolPersonaModel;
-
-    @Resource
-    private UsuarioModel usuarioModel;
+    @Resource private TrasladoModel trasladoModel;
+    @Resource  private EstadoModel estadoModel;
+    @Resource private TipoModel tipoModel;
+    @Resource private AutorizacionModel autorizacionModel;
+    @Resource private AutorizacionRolPersonaModel autorizacionRolPersonaModel;
+    @Resource private UsuarioModel usuarioModel;
+    @Resource private BienModel bienModel;
+    
     Usuario usuarioRegistradoClass;
 
-    @Resource
-    private BienModel bienModel;
 
     //</editor-fold>
     
     
     //<editor-fold defaultstate="collapsed" desc="GET's & SET's">
+
+    public Estado getEstadoGeneralActivo() {
+        return estadoGeneralActivo;
+    }
+
+    public void setEstadoGeneralActivo(Estado estadoGeneralActivo) {
+        this.estadoGeneralActivo = estadoGeneralActivo;
+    }
+
+    public Estado getEstadoGeneralPendiente() {
+        return estadoGeneralPendiente;
+    }
+
+    public void setEstadoGeneralPendiente(Estado estadoGeneralPendiente) {
+        this.estadoGeneralPendiente = estadoGeneralPendiente;
+    }
+
+    public Estado getEstadoGeneralRechazado() {
+        return estadoGeneralRechazado;
+    }
+
+    public void setEstadoGeneralRechazado(Estado estadoGeneralRechazado) {
+        this.estadoGeneralRechazado = estadoGeneralRechazado;
+    }
+    
     public boolean isPermiteRecibir() {
         return permiteRecibir;
     }
@@ -145,19 +163,19 @@ public class TrasladoController extends ListadoBienesGeneralController {
         this.fechaRegistro = fechaRegistro;
     }
 
-    public List<Traslado> getTraslados() {
+    public List<DocumentoTraslado> getTraslados() {
         return traslados;
     }
 
-    public void setTraslados(List<Traslado> traslados) {
+    public void setTraslados(List<DocumentoTraslado> traslados) {
         this.traslados = traslados;
     }
 
-    public Traslado getTraslado() {
+    public DocumentoTraslado getTraslado() {
         return traslado;
     }
 
-    public void setTraslado(Traslado traslado) {
+    public void setTraslado(DocumentoTraslado traslado) {
         this.traslado = traslado;
     }
 
@@ -188,7 +206,7 @@ public class TrasladoController extends ListadoBienesGeneralController {
     //</editor-fold>
     
     
-    //<editor-fold defaultstate="collapsed" desc="NavegaciÃ³n">
+    //<editor-fold defaultstate="collapsed" desc="Navegacion">
     public void listadoTraslados(ActionEvent pEvent) {
         try {
             if (!pEvent.getPhaseId().equals(PhaseId.INVOKE_APPLICATION)) {
@@ -238,7 +256,6 @@ public class TrasladoController extends ListadoBienesGeneralController {
 
     //</editor-fold>
     
-    
     //<editor-fold defaultstate="collapsed" desc="Inicializa Datos">
     
     
@@ -249,43 +266,55 @@ public class TrasladoController extends ListadoBienesGeneralController {
 
     @PostConstruct
     private void incializaDatos() {
+        try{
+            //Asigno Usuario EnvÃ­a
+            usuarioRegistradoClass = usuarioModel.buscarPorId(codPersonaReg);
 
-        //Asigno Usuario EnvÃ­a
-        usuarioRegistradoClass = usuarioModel.buscarPorId(codPersonaReg);
+            //TODO cambiar implementacion de consulta de estados, VER ListarNotificacionesController
+            estadoGeneralPendiente = estadoModel.buscarPorDominioEstado(Constantes.DOMINIO_GENERAL, Constantes.ESTADO_GENERAL_PENDIENTE);
+            estadoGeneralActivo = estadoModel.buscarPorDominioEstado(Constantes.DOMINIO_GENERAL, Constantes.ESTADO_GENERAL_ACTIVO);
+            estadoGeneralAnulado = estadoModel.buscarPorDominioEstado(Constantes.DOMINIO_GENERAL, Constantes.ESTADO_GENERAL_ANULADO); //ESTADO_GENERAL_ANULADO;
 
-        //TODO cambiar implementacion de consulta de estados, VER ListarNotificacionesController
-        estadoGeneralPendiente = estadoModel.buscarPorDominioEstado(Constantes.DOMINIO_GENERAL, Constantes.ESTADO_GENERAL_PENDIENTE);
-        estadoGeneralActivo = estadoModel.buscarPorDominioEstado(Constantes.DOMINIO_GENERAL, Constantes.ESTADO_GENERAL_ACTIVO);
-        estadoGeneralAnulado = estadoModel.buscarPorDominioEstado(Constantes.DOMINIO_GENERAL, Constantes.ESTADO_GENERAL_ANULADO); //ESTADO_GENERAL_ANULADO;
+            estadoGeneralAprobado = estadoModel.buscarPorDominioEstado(Constantes.DOMINIO_GENERAL, Constantes.ESTADO_GENERAL_APROBADO);
+            estadoGeneralRechazado = estadoModel.buscarPorDominioEstado(Constantes.DOMINIO_GENERAL, Constantes.ESTADO_GENERAL_RECHAZADO);
 
-        estadoGeneralAprobado = estadoModel.buscarPorDominioEstado(Constantes.DOMINIO_GENERAL, Constantes.ESTADO_GENERAL_APROBADO);
-        estadoGeneralRechazado = estadoModel.buscarPorDominioEstado(Constantes.DOMINIO_GENERAL, Constantes.ESTADO_GENERAL_RECHAZADO);
+            estadosOptions = new ArrayList<SelectItem>();
 
-        estadosOptions = new ArrayList<SelectItem>();
+            estadosOptions.add(new SelectItem(estadoGeneralPendiente.getId().toString(), estadoGeneralPendiente.getNombre()));
+            estadosOptions.add(new SelectItem(estadoGeneralActivo.getId().toString(), estadoGeneralActivo.getNombre()));
+            estadosOptions.add(new SelectItem(estadoGeneralAnulado.getId().toString(), estadoGeneralAnulado.getNombre()));
+            estadosOptions.add(new SelectItem(estadoGeneralAprobado.getId().toString(), estadoGeneralAprobado.getNombre()));
+            
+            fltIdUnidad = "";
+            fltNombreUnidad = "";
 
-        estadosOptions.add(new SelectItem(estadoGeneralPendiente.getId().toString(), estadoGeneralPendiente.getNombre()));
-        estadosOptions.add(new SelectItem(estadoGeneralActivo.getId().toString(), estadoGeneralActivo.getNombre()));
-        estadosOptions.add(new SelectItem(estadoGeneralAnulado.getId().toString(), estadoGeneralAnulado.getNombre()));
-        estadosOptions.add(new SelectItem(estadoGeneralAprobado.getId().toString(), estadoGeneralAprobado.getNombre()));
-//        
+            // Busco Usuarios Enviar y Recibir
+            autorizacionEnviar = autorizacionModel.buscarPorCodigo(Constantes.CODIGO_AUTORIZACION_TRASLADO_ENVIAR);
+            autorizacionRecibir = autorizacionModel.buscarPorCodigo(Constantes.CODIGO_AUTORIZACION_TRASLADO_RECIBIR);
+            
+            inicializaTraslado();
+            listadoInicializaDatos();
 
-        fltIdUnidad = "";
-        fltNombreUnidad = "";
-
-        inicializaTraslado();
-
-        listadoInicializaDatos();
-
+        }catch(Exception err){
+            Mensaje.agregarErrorAdvertencia(err, Util.getEtiquetas("sigebi.Traslado.Err.Cargar"));
+        }
+        
     }
 
     private void inicializaTraslado() {
         try {
-            traslado = new Traslado();
+            traslado = new DocumentoTraslado();
             trasladoDetalle = new ArrayList<TrasladoDetalle>();
-
+            trasladoDetalleEliminar = new ArrayList<TrasladoDetalle>();
+            
+            trasladoDetalle = new ArrayList<TrasladoDetalle>(  );
+            bienesAsociados = new ArrayList<Bien>();
+            bienesAsociadosTraslado =  new HashMap<Long, TrasladoDetalle>();
+            bienesSeleccionados = new HashMap<Long, Bien>();
+            
             permiteEdicion = true;
 
-            traslado.setIdEstado(estadoGeneralPendiente);
+            traslado.setEstado(estadoGeneralPendiente);
             ubicacionVisible = false;
             unidadDestino = new UnidadEjecutora();
 
@@ -297,35 +326,21 @@ public class TrasladoController extends ListadoBienesGeneralController {
             buscarUnidades();
 
             //Asigno Unidad Origen
-            traslado.setNumUnidadOrigen(unidadOrigen);
+            traslado.setUnidadEjecutora(unidadOrigen);
 
 //            estadosBienes = null;
-//            consultaBienes = 2;
-//            inicializaBuscarBienes();
-
+            consultaBienes = 1;
+            iniciaListadoBienes();
+            
+            
+//          Usuarios con permisos para enviar y recibir
             usuariosEnviar = new HashMap<String, Usuario>();
             usuariosRecibir = new HashMap<String, Usuario>();
-
-            // Busco Usuarios Enviar y Recibir
-            tipoProcesoTraslado = tipoModel.buscarPorDominioNombre(Constantes.DOMINIO_PROCESO, Constantes.DOCUMENTO_TRASLADO);
-
-            List<Autorizacion> acciones = autorizacionModel.buscarPorTipoProceso(tipoProcesoTraslado.getId());
-            for (Autorizacion item : acciones) {
-                if (item.getNombre().toUpperCase().equals(Constantes.DOCUMENTO_ENVIAR)) {
-                    autorizacionEnviar = item;
-                }
-                if (item.getNombre().toUpperCase().equals(Constantes.DOCUMENTO_RECIBIR)) {
-                    autorizacionRecibir = item;
-                }
-            }
-//TODO arreglar unidad ejecutora
-
-            List<AutorizacionRolPersona> usrsEnviar = autorizacionRolPersonaModel.buscarUsuariosPorAutorizacion(autorizacionEnviar.getId(), unidadEjecutora.getId());
+            List<AutorizacionRolPersona> usrsEnviar = autorizacionRolPersonaModel.buscar(autorizacionEnviar, unidadEjecutora, usuarioRegistradoClass);
             for (AutorizacionRolPersona usr : usrsEnviar) {
                 usuariosEnviar.put(usr.getUsuarioSeguridad().getId(), usr.getUsuarioSeguridad());
             }
-
-            List<AutorizacionRolPersona> usrsRecibir = autorizacionRolPersonaModel.buscarUsuariosPorAutorizacion(autorizacionRecibir.getId(), unidadEjecutora.getId());
+            List<AutorizacionRolPersona> usrsRecibir = autorizacionRolPersonaModel.buscar(autorizacionRecibir, unidadEjecutora, usuarioRegistradoClass);
             for (AutorizacionRolPersona usr : usrsRecibir) {
                 usuariosRecibir.put(usr.getUsuarioSeguridad().getId(), usr.getUsuarioSeguridad());
             }
@@ -345,45 +360,42 @@ public class TrasladoController extends ListadoBienesGeneralController {
             }
 
             inicializaTraslado();
-            Traslado item = (Traslado) pEvent.getComponent().getAttributes().get("itemSeleccionado");
-            if (item.getIdTraslado() > 0) {
-                traslado = item;
-
-                //actaFecha = formatter.parse(formatter.format(traslado.getFecha()));
-                fechaRegistro = formatter.format(traslado.getFecha());
-
-                permiteEdicion = permitirEdicion();
-                permiteRecibir = permitirRecibir();
-
-                
-                if (traslado.getIdEstado().equals(estadoGeneralActivo)) {
-                    permiteAnular = usuariosEnviar.containsKey(this.codPersonaReg) || permiteRecibir;
-                } else {
-                    permiteAnular = false;
-                }
-
-                trasladoDetalle = trasladoModel.traerBienesTraslado(traslado.getIdTraslado());
-                bienesAsociadosTraslados = new HashMap<Long, TrasladoDetalle>();
-                for (TrasladoDetalle valor : trasladoDetalle) {
-                    if (valor.getIdEstado().getId().equals(estadoGeneralPendiente.getId())) {
-                        valor.setMarcado(permiteRecibir);
-                    }
-
-                    bienesAsociados.add(valor.getIdBien());
-                    bienesSeleccionados.put(valor.getIdBien().getId(), valor.getIdBien());
-
-                    bienesAsociadosTraslados.put(valor.getIdBien().getId(), valor);
-                }
-                trasladoDetalle = new ArrayList<TrasladoDetalle>(bienesAsociadosTraslados.values());
-                this.listarBienes();
-            }
-
+            DocumentoTraslado item = (DocumentoTraslado) pEvent.getComponent().getAttributes().get("itemSeleccionado");
+            cargarDatosTraslado(item);
             Util.navegar(Constantes.KEY_VISTA_TRASLADO_DETALLE);
         } catch (Exception err) {
             Mensaje.agregarErrorAdvertencia(err.getCause().getMessage());
         }
     }
+    
+    private void cargarDatosTraslado(DocumentoTraslado item){
+        if (item.getId() > 0) {
+            traslado = item;
 
+            //actaFecha = formatter.parse(formatter.format(traslado.getFecha()));
+            fechaRegistro = formatter.format(traslado.getFecha());
+            permiteEdicion = permitirEdicion();
+            permiteRecibir = permitirRecibir();
+
+            if (traslado.getEstado().equals(estadoGeneralActivo)) {
+                permiteAnular = usuariosEnviar.containsKey(this.codPersonaReg) || permiteRecibir;
+            } else {
+                permiteAnular = false;
+            }
+            trasladoDetalle = trasladoModel.traerBienesTraslado(traslado);
+            bienesAsociadosTraslado = new HashMap<Long, TrasladoDetalle>();
+            for (TrasladoDetalle valor : trasladoDetalle) {
+                if (valor.getEstado().getId().equals(estadoGeneralPendiente.getId())) {
+                    valor.setMarcado(permiteRecibir);
+                }
+                bienesAsociados.add(valor.getBien());
+                bienesSeleccionados.put(valor.getBien().getId(), valor.getBien());
+                bienesAsociadosTraslado.put(valor.getBien().getId(), valor);
+            }
+            trasladoDetalle = new ArrayList<TrasladoDetalle>(bienesAsociadosTraslado.values());
+            this.listarBienes();
+        }
+    }
     //</editor-fold>
     
     //<editor-fold defaultstate="collapsed" desc="Listado Traslados">
@@ -612,10 +624,9 @@ public class TrasladoController extends ListadoBienesGeneralController {
             if (validarRegistro()) {
                 trasladoModel.guardar(traslado);
 
-                List<TrasladoDetalle> detalle = getBienesAsoc();
 
-                //trasladoModel.eliminarBienes(traslado, estadoGeneralPendiente);
-                trasladoModel.guardarBienes(detalle);
+                trasladoModel.eliminarBienes( trasladoDetalleEliminar );
+                trasladoModel.guardarBienes(trasladoDetalle);
                 Mensaje.agregarInfo(Util.getEtiquetas("sigebi.Traslado.Mns.ExitoGuardar"));
                 listarTraslados();
             }
@@ -652,32 +663,12 @@ public class TrasladoController extends ListadoBienesGeneralController {
         }
     }
 
-    // jserrano cambio nuevo
-    private List<TrasladoDetalle> getBienesAsoc() {
-
-        //trasladoDetalle
-        List<TrasladoDetalle> detalle = new ArrayList<TrasladoDetalle>();
-        for (TrasladoDetalle bn : trasladoDetalle) {     // foreach grade in grades
-
-            if (bn.getIdTraslado().getIdTraslado() > 0) {
-                return trasladoDetalle;
-            }
-
-            TrasladoDetalle valor = new TrasladoDetalle(traslado,
-                    bn.getIdBien(),
-                    estadoGeneralPendiente);
-            detalle.add(valor);
-        }
-
-        return detalle;
-    }
-
     // Enviar a Unidad de destino
     public void enviarHaciaDestino() {
         //Cambiar estado del traslado
         try {
             if (validarRegistro()) {
-                traslado.setIdEstado(estadoGeneralActivo);
+                traslado.setEstado(estadoGeneralActivo);
                 trasladoModel.guardar(traslado);
 
                 accion = constAccionEnviarARevision;
@@ -703,7 +694,7 @@ public class TrasladoController extends ListadoBienesGeneralController {
     }
 
     private void aplicarSolicitudCorreccion() {
-        traslado.setIdEstado(estadoGeneralPendiente);
+        traslado.setEstado(estadoGeneralPendiente);
         trasladoModel.guardar(traslado);
 
         listarTraslados();
@@ -713,7 +704,7 @@ public class TrasladoController extends ListadoBienesGeneralController {
 
     private void aplicarRevision() {
         if (validarRegistro()) {
-            traslado.setIdEstado(estadoGeneralPendiente);
+            traslado.setEstado(estadoGeneralPendiente);
             trasladoModel.guardar(traslado);
 
             listadoInicializaDatos();
@@ -738,7 +729,7 @@ public class TrasladoController extends ListadoBienesGeneralController {
 
     private void aplicarAnularTraslado() {
 
-        traslado.setIdEstado(estadoGeneralAnulado);
+        traslado.setEstado(estadoGeneralAnulado);
         trasladoModel.guardar(traslado);
 
         listadoInicializaDatos();
@@ -748,7 +739,7 @@ public class TrasladoController extends ListadoBienesGeneralController {
 
     private boolean permitirEdicion() {
         //Verifica Unidad de Origen
-        if (!traslado.getNumUnidadOrigen().getId().equals(unidadEjecutora.getId())) {
+        if (!traslado.getUnidadEjecutora().getId().equals(unidadEjecutora.getId())) {
             return false;
         }
         //Verifica permisos en DocumentoRolPersona
@@ -757,8 +748,8 @@ public class TrasladoController extends ListadoBienesGeneralController {
         }
 
         // Verifica que estÃ© en estado PENDIENTE
-        //return traslado.getId().equals(estadoGeneralPendiente.getId());
-        return false;
+        return traslado.getEstado().getId().equals(estadoGeneralPendiente.getId());
+        //return false;
     }
 
     private boolean permitirRecibir() {
@@ -772,8 +763,8 @@ public class TrasladoController extends ListadoBienesGeneralController {
         }
 
         // Verifica que estÃ© en estado ACTIVO
-        //return traslado.getId()).equals(estadoGeneralActivo.getId());
-        return false;
+        return traslado.getEstado().getId().equals(estadoGeneralActivo.getId());
+        //return true;
     }
 
     //ACCIONES BIENES
@@ -801,13 +792,15 @@ public class TrasladoController extends ListadoBienesGeneralController {
     private void aplicarAprobarBien() {
         try {
             //Primero se debe aplicar el cambio
-            bienDetalle.setIdEstado(estadoGeneralAprobado);
+            bienDetalle.setEstado(estadoGeneralAprobado);
+            bienDetalle.setFecha(new Date());
+            bienDetalle.setUsuarioRecibe(usuarioRegistradoClass);
             trasladoModel.guardarBien(bienDetalle);
             bienDetalle.setMarcado(false);
 
             //Busacamos que esten todos aprobados para cambiar estado del traslado
             //Lo cambiamos de unidad
-            Bien bien = bienModel.buscarPorId(bienDetalle.getIdBien().getId());
+            Bien bien = bienModel.buscarPorId(bienDetalle.getBien().getId());
             bien.setUnidadEjecutora(traslado.getNumUnidadDestino());
             bienModel.actualizar(bien);
 
@@ -827,7 +820,7 @@ public class TrasladoController extends ListadoBienesGeneralController {
     
     private boolean estaAprobada() {
         for (TrasladoDetalle item : trasladoDetalle) {
-            if (!item.getIdEstado().getId().equals(estadoGeneralAprobado.getId())) {
+            if (!item.getEstado().getId().equals(estadoGeneralAprobado.getId())) {
                 return false;
             }
         }
@@ -836,7 +829,7 @@ public class TrasladoController extends ListadoBienesGeneralController {
 
     private void aprobarTraslado() {
         try {
-            traslado.setIdEstado(estadoGeneralAprobado);
+            traslado.setEstado(estadoGeneralAprobado);
             trasladoModel.guardar(traslado);
 
             listadoInicializaDatos();
@@ -860,7 +853,6 @@ public class TrasladoController extends ListadoBienesGeneralController {
             bienDetalle = (TrasladoDetalle) pEvent.getComponent().getAttributes().get("bienSeleccionado");
 
             justificacion = new Justificacion();
-
             iniciarJustificacion();
 
             panelNotificacionVisible = true;
@@ -871,10 +863,15 @@ public class TrasladoController extends ListadoBienesGeneralController {
     }
 
     private void aplicarRechazoBien() {
-        bienDetalle.setIdEstado(estadoGeneralRechazado);
-        trasladoModel.guardarBien(bienDetalle);
-        //Mensaje.agregarErrorAdvertencia("Estado: "+bienDetalle.getId().getNombre() + " Bien :" + bienDetalle.getIdBien().getDescripcion() );
-
+        //try {
+            bienDetalle.setEstado(estadoGeneralRechazado);
+            bienDetalle.setFecha(new Date());
+            bienDetalle.setUsuarioRecibe(usuarioRegistradoClass);
+            trasladoModel.guardarBien(bienDetalle);
+            //Mensaje.agregarErrorAdvertencia("Estado: "+bienDetalle.getId().getNombre() + " Bien :" + bienDetalle.getBien().getDescripcion() );
+//        } catch (Exception err) {
+//            Mensaje.agregarErrorFatal(Util.getEtiquetas("sigebi.Traslado.Mns.ErrorBien"));
+//        }
     }
 
     //</editor-fold>
@@ -944,6 +941,7 @@ public class TrasladoController extends ListadoBienesGeneralController {
             UnidadEjecutora unidad = (UnidadEjecutora) pEvent.getComponent().getAttributes().get("unidadSeleccionada");
 
             traslado.setNumUnidadDestino(unidad);// = unidad;
+            traslado.setIdUbicacion(new Ubicacion());
 
             unidadesVisible = false;
         } catch (Exception err) {
@@ -1003,7 +1001,7 @@ public class TrasladoController extends ListadoBienesGeneralController {
 
             ubicacionOptions = new ArrayList<SelectItem>();
             List<Ubicacion> ubicaciones;
-            ubicaciones = ubicModel.listar(unidadEjecutora);
+            ubicaciones = ubicModel.listar(traslado.getNumUnidadDestino());
             for (Ubicacion item : ubicaciones) {
                 ubicacionOptions.add(new SelectItem(item.getId() + "#" + item.getDetalle().replace("#", "-"), item.getDetalle().replace("#", "-")));
             }
@@ -1019,7 +1017,13 @@ public class TrasladoController extends ListadoBienesGeneralController {
                 pEvent.queue();
                 return;
             }
-            ubicacionVisible = true;
+            
+            if( (traslado.getNumUnidadDestino() != null) && (traslado.getNumUnidadDestino().getId() > 0l) ){
+                iniciaUbicaciones();
+                ubicacionVisible = true;
+            }else
+                Mensaje.agregarInfo(Util.getEtiquetas("sigebi.Traslado.Mns.PendienteUbicacion"));
+                
         } catch (Exception err) {
             Mensaje.agregarErrorFatal(err.getMessage());
         }
@@ -1055,8 +1059,8 @@ public class TrasladoController extends ListadoBienesGeneralController {
             if (valores.length > 1) {
                 ubicacionId = valores[0];
                 ubicacionNombre = valores[1];
-//                UbicacionEntity ubicacion = ubicModel.obtenerValor(Integer.parseInt(ubicacionId));
-//                traslado.setIdUbicacion(ubicacion);
+                Ubicacion ubicacion = ubicModel.buscarPorId(Long.parseLong(ubicacionId));
+                traslado.setIdUbicacion(ubicacion);
             } else {
                 ubicacionId = "";
                 ubicacionNombre = "";
@@ -1128,8 +1132,8 @@ public class TrasladoController extends ListadoBienesGeneralController {
     //<editor-fold defaultstate="collapsed" desc="Metodos Listado Bienes">
     public void abrirListaBienes() {
         try {
-//            consultaBienes = 2;
-//            mostrarBienes();
+            consultaBienes = 1;            
+            iniciaListadoBienes();
             mostrarDialogBienes = true;
         } catch (Exception err) {
         }
@@ -1152,16 +1156,16 @@ public class TrasladoController extends ListadoBienesGeneralController {
 
             //bienesAsociados_1 = new ArrayList<ViewBienEntity>();
 //            ViewBienEntity bien = (ViewBienEntity) pEvent.getComponent().getAttributes().get("bienSeleccionado");
-//            if (bienesSeleccionados.containsKey(bien.getIdBien())) {
-//                bienesSeleccionados.remove(bien.getIdBien());
-//                bienesAsociadosTraslados.remove(bien.getIdBien());
+//            if (bienesSeleccionados.containsKey(bien.getBien())) {
+//                bienesSeleccionados.remove(bien.getBien());
+//                bienesAsociadosTraslado.remove(bien.getBien());
 //            } else {
-//                bienesSeleccionados.put(bien.getIdBien(), bien);
-//                bienesAsociadosTraslados.put(bien.getIdBien(), new TrasladoDetalle(traslado, bien, estadoGeneralPendiente));
+//                bienesSeleccionados.put(bien.getBien(), bien);
+//                bienesAsociadosTraslado.put(bien.getBien(), new TrasladoDetalle(traslado, bien, estadoGeneralPendiente));
 //            }
 //            //bienesAsociados_1 = new Array<>(bienesSeleccionados_1.values());
 //            bienesAsociados = new ArrayList<ViewBienEntity>(bienesSeleccionados.values());
-//            trasladoDetalle = new ArrayList<TrasladoDetalle>(bienesAsociadosTraslados.values());
+//            trasladoDetalle = new ArrayList<TrasladoDetalle>(bienesAsociadosTraslado.values());
         } catch (Exception err) {
             Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.error.controllerListarBienSincronizar.checkBienPorSincronizar"));
         }
@@ -1199,6 +1203,9 @@ public class TrasladoController extends ListadoBienesGeneralController {
                         enviarNotificacion();
                         break;
                 }
+                
+                cargarDatosTraslado(traslado);
+                
                 Mensaje.agregarInfo(Util.getEtiquetas("sigebi.Traslado.Mns.ExitoModificar"));
             } else {
                 Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.Justificacion.Err.Observaciones"));
@@ -1262,14 +1269,14 @@ public class TrasladoController extends ListadoBienesGeneralController {
 
             List<AutorizacionRolPersona> usrsNotificar = new ArrayList<AutorizacionRolPersona>();
 
-            switch (accion) {
-                case constAccionEnviarARevision:
-                    usrsNotificar = autorizacionRolPersonaModel.buscarUsuariosPorAutorizacion(autorizacionRecibir.getId(), traslado.getNumUnidadDestino().getId());
-                    break;
-                default:
-                    usrsNotificar = autorizacionRolPersonaModel.buscarUsuariosPorAutorizacion(autorizacionEnviar.getId(), traslado.getNumUnidadOrigen().getId());
-                    break;
-            }
+//            switch (accion) {
+//                case constAccionEnviarARevision:
+//                    usrsNotificar = autorizacionRolPersonaModel.buscarUsuariosPorAutorizacion(autorizacionRecibir.getId(), traslado.getNumUnidadDestino().getId());
+//                    break;
+//                default:
+//                    usrsNotificar = autorizacionRolPersonaModel.buscarUsuariosPorAutorizacion(autorizacionEnviar.getId(), traslado.getNumUnidadOrigen().getId());
+//                    break;
+//            }
 
             for (AutorizacionRolPersona usr : usrsNotificar) {
                 correo.setDestinatario(usr.getUsuarioSeguridad().getCorreo());
@@ -1305,7 +1312,7 @@ public class TrasladoController extends ListadoBienesGeneralController {
                 mensaje += justificacion.getEncabezado() + "<br />";
                 mensaje += "Usuario: " + justificacion.getUsuarioRegistra().getNombreCompleto()+ "<br /><br />";
                 mensaje += "Traslado # " + justificacion.getIdDocumento().toString() + "<br /><br />";
-                mensaje += "Bien " + justificacion.getIdBien().getIdentificacion().getIdentificacion()+ "<br /><br />";
+                mensaje += "Bien " + justificacion.getBien().getIdentificacion().getIdentificacion()+ "<br /><br />";
                 mensaje += justificacion.getObservaciones() + "<br /><br />";
                 mensaje += Util.getEtiquetas("sigebi.Traslado.Email.Mensaje3");
                 break;
@@ -1341,10 +1348,10 @@ public class TrasladoController extends ListadoBienesGeneralController {
         justificacion.setUsuarioRegistra(usuarioRegistradoClass);
         
         justificacion.setDocumentoTipo(Constantes.DOCUMENTO_TRASLADO);
-        justificacion.setIdDocumento(Long.parseLong(traslado.getIdTraslado().toString()));
+        justificacion.setIdDocumento(Long.parseLong(traslado.getId().toString()));
         justificacion.setEncabezado(encabezado);
-        if (bienDetalle.getIdBien() != null) {
-            justificacion.setIdBien(bienDetalle.getIdBien());
+        if (bienDetalle.getBien() != null) {
+            justificacion.setBien(bienDetalle.getBien());
         }
     }
 
@@ -1352,10 +1359,10 @@ public class TrasladoController extends ListadoBienesGeneralController {
 
         switch (accion) {
             case constAccionAceptarBien:
-                mensajeConfirmacion = Util.getEtiquetas("sigebi.Traslado.Mns..Confirmacion.Aceptar");
+                mensajeConfirmacion = Util.getEtiquetas("sigebi.Traslado.Mns.Confirmacion.Aceptar");
                 break;
             default:
-                mensajeConfirmacion = "Mensaje sin definir.";//Util.getEtiquetas("sigebi.Traslado.Mns..Confirmacion.Aceptar");
+                mensajeConfirmacion = Util.getEtiquetas("sigebi.Traslado.Mns.Confirmacion.Aceptar");
                 break;
         }
 
@@ -1373,7 +1380,7 @@ public class TrasladoController extends ListadoBienesGeneralController {
                 aplicarAprobarBien();
                 break;
             default:
-                mensajeConfirmacion = "Mensaje sin definir.";//Util.getEtiquetas("sigebi.Traslado.Mns..Confirmacion.Aceptar");
+                mensajeConfirmacion = Util.getEtiquetas("sigebi.Traslado.Mns.Confirmacion.Aceptar");
                 break;
         }
     }
@@ -1445,4 +1452,88 @@ public class TrasladoController extends ListadoBienesGeneralController {
 
     //</editor-fold>
     //</editor-fold>
+    
+    //<editor-fold defaultstate="collapsed" desc="Metodos Seleccionar Bien">
+
+    /**
+     *
+     * @param pEvent
+     */
+    @Override
+    public void checkBienSeleccionado(ValueChangeEvent pEvent) {
+        try {
+            if (!pEvent.getPhaseId().equals(PhaseId.INVOKE_APPLICATION)) {
+                pEvent.setPhaseId(PhaseId.INVOKE_APPLICATION);
+                pEvent.queue();
+                return;
+            }
+            
+            //bienesAsociados = new ArrayList<Bien>();
+            Bien bien = (Bien) pEvent.getComponent().getAttributes().get("bienSeleccionado");
+            if(bienesSeleccionados.containsKey(bien.getId())){
+                
+                //Si el bien ya estaba registrado lo agrego a una lista para ser eliminado
+                if((bienesAsociadosTraslado.get(bien.getId()).getId()!= null)&&
+                        (bienesAsociadosTraslado.get(bien.getId()).getId() > 0))
+                    trasladoDetalleEliminar.add(bienesAsociadosTraslado.get(bien.getId()));
+                // Lo elimino de los datos que estoy mostrando
+                bienesSeleccionados.remove(bien.getId());
+                bienesAsociadosTraslado.remove(bien.getId());
+            }else{
+                bienesSeleccionados.put(bien.getId(), bien);
+                bienesAsociadosTraslado.put(bien.getId(), getTrasladoDetalleDefault(bien));
+            }
+            trasladoDetalle = new ArrayList<TrasladoDetalle>( bienesAsociadosTraslado.values() );
+            bienesAsociados = new ArrayList<Bien>( bienesSeleccionados.values() );
+        } catch (Exception err) {
+            Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.error.controllerListarBienSincronizar.checkBienPorSincronizar"));
+        }
+    }
+    
+    
+    public void quitarBienSeleccionado(ActionEvent pEvent) {
+        try {
+            if (!pEvent.getPhaseId().equals(PhaseId.INVOKE_APPLICATION)) {
+                pEvent.setPhaseId(PhaseId.INVOKE_APPLICATION);
+                pEvent.queue();
+                return;
+            }
+        
+            //bienesAsociados = new ArrayList<Bien>();
+            Bien bien;
+            bien = (Bien) pEvent.getComponent().getAttributes().get("bienSeleccionado");
+            if(bienesSeleccionados.containsKey(bien.getId())){
+                
+                //Si el bien ya estaba registrado lo agrego a una lista para ser eliminado
+                if((bienesAsociadosTraslado.get(bien.getId()).getId()!= null)&&
+                        (bienesAsociadosTraslado.get(bien.getId()).getId() > 0))
+                    trasladoDetalleEliminar.add(bienesAsociadosTraslado.get(bien.getId()));
+                // Lo elimino de los datos que estoy mostrando
+                bienesSeleccionados.remove(bien.getId());
+                bienesAsociadosTraslado.remove(bien.getId());
+            }else{
+                bienesSeleccionados.put(bien.getId(), bien);
+                bienesAsociadosTraslado.put(bien.getId(), getTrasladoDetalleDefault(bien));
+            }
+            trasladoDetalle = new ArrayList<TrasladoDetalle>( bienesAsociadosTraslado.values() );
+            bienesAsociados = new ArrayList<Bien>( bienesSeleccionados.values() );
+        } catch (Exception err) {
+            Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.error.controllerListarBienSincronizar.checkBienPorSincronizar"));
+        }
+    }
+    
+    private TrasladoDetalle getTrasladoDetalleDefault(Bien bien){
+        try{
+            TrasladoDetalle det = new TrasladoDetalle(traslado, bien);
+            det.setEstado(estadoGeneralPendiente);
+            return det;
+        }catch(Exception e){
+            return null;
+        }
+    }
+    
+
+    // </editor-fold>
+    
+    
 }

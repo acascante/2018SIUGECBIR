@@ -12,7 +12,7 @@
                 <div class="col-sm-6">
                     <ice:commandButton id="boton_regresar" style="float:right" partialSubmit="true" styleClass="boton" 
                                        value="#{label['sigebi.Bien.Btn.Regresar']}"  
-                                       action="#{controllerBienes.regresarListado}"/>
+                                       action="#{controllerAgregarBienes.regresarListado}"/>
                 </div>
             </div>
         </div>
@@ -24,7 +24,7 @@
                     <div class="col-md-4">
                         <ice:outputText value="#{label['sigebi.Bien.Label.Identificacion']}" />
                         <ice:inputText id="txtBienId" styleClass="form-control" readonly="true" partialSubmit="false"
-                                       value="#{controllerAgregarBienes.command.id}">
+                                       value="#{controllerAgregarBienes.command.identificacion.identificacion}">
                         </ice:inputText>
                     </div>                                             
 
@@ -64,7 +64,7 @@
                         <div class="form-group"> 
                             <ice:outputText value="#{label['sigebi.Bien.Label.Capitalizable']}" />  
                             <ice:inputText id="txtCapitalizable" styleClass="form-control" readonly="true" partialSubmit="false"
-                                           value="#{controllerAgregarBienes.command.capitalizable}" >
+                                           value="#{controllerAgregarBienes.command.capitalizableSTR}" >
                             </ice:inputText>
                         </div>                                             
                     </div>
@@ -117,6 +117,7 @@
                         <div class="form-group"> 
                             <ice:outputText value="#{label['sigebi.Bien.Label.SubCategoria']}" /> 
                             <ice:selectOneMenu id="selSubCategoria" styleClass="form-control" partialSubmit="true"
+                                               readonly="#{controllerAgregarBienes.disableSubCategorias}"
                                                value="#{controllerAgregarBienes.command.idSubCategoria}" 
                                                valueChangeListener="#{controllerAgregarBienes.cambioSubCategoria}">
                                 <f:selectItem itemLabel="Seleccionar Sub Categoría" itemValue="-1"/>
@@ -208,7 +209,8 @@
 
                     <div class="col-md-3">
                         <ice:outputText value="#{label['sigebi.Bien.Label.Moneda']}"/>
-                        <ice:selectOneMenu id="selMoneda" styleClass="form-control" partialSubmit="false"
+                        <ice:selectOneMenu id="selMoneda" styleClass="form-control" partialSubmit="true"
+                                           valueChangeListener="#{controllerAgregarBienes.verificaCapitalizable}"
                                            value="#{controllerAgregarBienes.command.idMoneda}" >
                             <f:selectItem itemLabel="#{label['sigebi.Bien.Select.Moneda']}" itemValue="-1"/>
                             <f:selectItems id="optSelMoneda" value="#{controllerAgregarBienes.itemsMoneda}"/>
@@ -217,7 +219,8 @@
 
                     <div class="col-md-4">
                         <ice:outputText value="#{label['sigebi.Bien.Label.Monto']}"/>
-                        <ice:inputText id="txtMonto" styleClass="form-control" required="true" partialSubmit="false"
+                        <ice:inputText id="txtMonto" styleClass="form-control" required="true" partialSubmit="true"
+                                       valueChangeListener="#{controllerAgregarBienes.verificaCapitalizable}"
                                        value="#{controllerAgregarBienes.command.costo}" >
                         </ice:inputText>
                     </div>
@@ -235,7 +238,7 @@
 
                         <ice:commandButton id="botonRechazar" value="#{label['sigebi.Bien.Btn.Rechazar']}" style="float:right" styleClass="boton" partialSubmit="true"
                                            rendered="#{controllerAgregarBienes.visibleBotonRechazar}"
-                                           actionListener="#{controllerAgregarBienes.mostrarPanelObservacion}">
+                                           actionListener="#{controllerAgregarBienes.mostrarPanelObservaciones}">
                         </ice:commandButton>
                     </div>
                 </div>
@@ -248,7 +251,7 @@
         </ui:insert>
                 
         <!-- Panel de Proveedores --> 
-        <ui:insert name="modalUbicaciones">
+        <ui:insert name="modalProveedores">
             <ui:include src="../bienes/bienProveedores.xhtml" />
         </ui:insert>
         
@@ -257,9 +260,8 @@
             <ui:include src="../bienes/bienRechazarSincronizacion.xhtml" />
         </ui:insert>
         <!-- Agrega el model para los complementos del BIEN -->
-<!--        <ui:insert name="modalBuscarBienes">
+        <ui:insert name="modalBuscarBienes">
             <ui:include src="../bienes/bienFooterPanel.xhtml" />
-             <ui:include src="../bienes/bienComplementos.xhtml" /> 
-        </ui:insert>-->
+        </ui:insert>
     </div>
 </ice:form>

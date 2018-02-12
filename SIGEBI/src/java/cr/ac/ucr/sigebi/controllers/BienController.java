@@ -148,7 +148,7 @@ public class BienController extends BaseController {
             }
                
             if (mensaje.equals("")) {
-                bienModel.almacenar(command.getBien());
+               // bienModel.almacenar(command.getBien());
                 bienRegistrado = true;
                 Mensaje.agregarInfo(Util.getEtiquetas("sigebi.Bien.Error.ActualizacionExito"));
             }

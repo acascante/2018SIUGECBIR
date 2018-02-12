@@ -1,4 +1,4 @@
-<ice:outputHtml id="frmDetalleNotificacion" 
+<ice:outputHtml id="frmComplementos" 
           xmlns:ice="http://www.icesoft.com/icefaces/component" 
           xmlns:icecore="http://www.icefaces.org/icefaces/core" 
           xmlns:h="http://java.sun.com/jsf/html" 
@@ -10,7 +10,7 @@
         <!-- Modal Proveedores -->
         <ice:panelPopup
             modal="true" 
-            visible="#{controllerAgregarBienes.proveedoresVisible}"
+            visible="#{controllerAgregarBienes.command.proveedoresVisible}"
             rendered="true" 
             styleClass="popup"
             >
@@ -60,7 +60,7 @@
                                 <ice:outputText value="Nombre"  />
                             </f:facet>
                             <f:facet name="footer">
-                                <ice:inputText id="filtroNombre"
+                                <ice:inputText id="filtroNombreProveDisa"
                                                style="width: 130px;"
                                                value="#{controllerAgregarBienes.provNombre}"                                   
                                                partialSubmit="true"

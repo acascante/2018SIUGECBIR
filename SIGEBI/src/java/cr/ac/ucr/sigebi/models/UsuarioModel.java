@@ -8,13 +8,14 @@ package cr.ac.ucr.sigebi.models;
 import cr.ac.ucr.framework.utils.FWExcepcion;
 import cr.ac.ucr.sigebi.daos.UsuarioDao;
 import cr.ac.ucr.sigebi.domain.Usuario;
+import java.util.List;
 import javax.annotation.Resource;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
 /**
  *
- * @author jorge.serrano
+ * @author jairo.cisneros
  */
 @Service(value = "usuarioModel")
 @Scope("request")
@@ -25,5 +26,13 @@ public class UsuarioModel {
 
     public Usuario buscarPorId(String idUsuario) throws FWExcepcion {
         return usuarioDao.buscarPorId(idUsuario);
+    }
+
+    public List<Usuario> listarUsuarios(String idUsuario, String nombreCompleto, String correo, Integer pPrimerRegistro, Integer pUltimoRegistro) throws FWExcepcion {
+        return usuarioDao.listarUsuarios(idUsuario, nombreCompleto, correo, pPrimerRegistro, pUltimoRegistro);
+    }
+
+    public Long contarUsuarios(String idUsuario, String nombreCompleto, String correo) throws FWExcepcion {
+        return usuarioDao.contarUsuarios(idUsuario, nombreCompleto, correo);
     }
 }

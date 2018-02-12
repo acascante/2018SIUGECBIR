@@ -647,7 +647,7 @@ public class Sincronizar implements Serializable {
         descripcion = bien.getSubClasificacion().getNombre();
         indicaTipoActivo = bien.getTipo().getValor().toString().charAt(0);
         codigoSubCategoria = bien.getSubCategoria().getCodigoSubCategoria();
-        codigoCategoria  = bien.getSubCategoria().getCategoria().getId().toString();
+        codigoCategoria  = bien.getSubCategoria().getCategoria().getCodigoCategoria();
         idCustodio = 1000;//bien.getNumUnidadEjec();
         idProveedor = Integer.parseInt(bien.getProveedor().getNumPersona().toString());
         origen = bien.getOrigen().getValor().toString().charAt(0);

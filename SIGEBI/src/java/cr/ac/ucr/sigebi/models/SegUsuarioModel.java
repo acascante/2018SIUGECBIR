@@ -24,17 +24,4 @@ public class SegUsuarioModel {
     @Resource
     private SegUsuarioDao segUsuarioDao;
 
-    public List<SegUsuario> listarUsuarios(String idUsuario,
-            String nombreCompleto,
-            String correo,
-            Integer pPrimerRegistro,
-            Integer pUltimoRegistro
-    ) throws FWExcepcion{
-        return segUsuarioDao.listarUsuarios(idUsuario, nombreCompleto, correo, pPrimerRegistro, pUltimoRegistro);
-    }
-
-    public Long contarUsuarios(String idUsuario, String nombreCompleto,String correo ) throws FWExcepcion{
-        return segUsuarioDao.contarUsuarios(idUsuario, nombreCompleto, correo);
-    }
-
 }

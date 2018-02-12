@@ -52,33 +52,12 @@ public class AdjuntoDao extends GenericDaoImpl {
     }
 
     @Transactional(readOnly = true)
-    public List<Adjunto> buscarPorDocumento(Tipo tipoDocumento, Long idDocumento) {
+    public List<Adjunto> buscarPorReferencia(Tipo tipoDocumento, Long idReferencia) {
         Session session = this.dao.getSessionFactory().openSession();
         try {
-            String sql = "SELECT obj FROM Adjunto obj WHERE obj.idTipo.id = :idTipo and obj.idDocumento = :idDocumento";
+            String sql = "SELECT obj FROM Adjunto obj WHERE obj.tipo.id = :idTipo and obj.idReferencia = :idReferencia";
             Query query = session.createQuery(sql);
             query.setParameter("idTipo", tipoDocumento.getId());
-            query.setParameter("idDocumento", idDocumento);
-
-            //Se obtienen los resutltados
-            return (List<Adjunto>) query.list();
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new FWExcepcion("sigebi.error.dao.adjunto.buscarPorReferencia",
-                    "Error obtener los registros de tipo " + this.getClass(), e.getCause());
-        } finally {
-            session.close();
-        }
-    }
-    
-    
-    @Transactional(readOnly = true)
-    public List<Adjunto> buscarPorReferencia(Long idReferencia) {
-        Session session = this.dao.getSessionFactory().openSession();
-        try {
-            String sql = "SELECT obj FROM Adjunto obj WHERE obj.idReferencia = : idReferencia";
-            Query query = session.createQuery(sql);
             query.setParameter("idReferencia", idReferencia);
 
             //Se obtienen los resutltados
@@ -92,4 +71,5 @@ public class AdjuntoDao extends GenericDaoImpl {
             session.close();
         }
     }
+   
 }

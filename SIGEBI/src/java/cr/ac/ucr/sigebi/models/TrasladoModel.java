@@ -6,10 +6,9 @@
 package cr.ac.ucr.sigebi.models;
 
 import cr.ac.ucr.sigebi.daos.TrasladosDao;
-import cr.ac.ucr.sigebi.domain.Estado;
 import cr.ac.ucr.sigebi.domain.UnidadEjecutora;
 import cr.ac.ucr.sigebi.domain.TrasladoDetalle;
-import cr.ac.ucr.sigebi.domain.Traslado;
+import cr.ac.ucr.sigebi.domain.DocumentoTraslado;
 import cr.ac.ucr.sigebi.entities.UnidadEjecutoraEntity;
 import java.util.List;
 import javax.annotation.Resource;
@@ -28,7 +27,7 @@ public class TrasladoModel {
     private TrasladosDao trasladoDao;
 
     
-    public void guardar(Traslado obj) {
+    public void guardar(DocumentoTraslado obj) {
         trasladoDao.guardar(obj);
     }
     
@@ -36,28 +35,28 @@ public class TrasladoModel {
         trasladoDao.guardarBienes(bienes);
     }
     
+    public void eliminarBienes(List<TrasladoDetalle> bienes){
+        trasladoDao.eliminarBienes(bienes);
+    }
+    
     public   void guardarBien(TrasladoDetalle bien){
         trasladoDao.guardarBien(bien);
     }
     
-    public void eliminarBienes(Traslado traslado, Estado estado){
-        trasladoDao.eliminarBienes(traslado, estado);
-    }
-    
-    public Traslado traerPorId(Integer pId) {
+    public DocumentoTraslado traerPorId(Integer pId) {
         return trasladoDao.traerPorId(pId);
     }
     
-    public List<Traslado> traerTodo(UnidadEjecutoraEntity unidadEjecutora) {
+    public List<DocumentoTraslado> traerTodo(UnidadEjecutoraEntity unidadEjecutora) {
         return trasladoDao.traerTodo(unidadEjecutora);
     }
     
-    public List<TrasladoDetalle> traerBienesTraslado(Integer trasladoId) {
-        return trasladoDao.traerBienesTraslado(trasladoId);
+    public List<TrasladoDetalle> traerBienesTraslado(DocumentoTraslado traslado) {
+        return trasladoDao.traerBienesTraslado(traslado);
     }
     
-    public List<Traslado> trasladosListado(
-    UnidadEjecutora unidadEjecutora
+    public List<DocumentoTraslado> trasladosListado(
+            UnidadEjecutora unidadEjecutora
             , String fltIdTraslado
             , String fltUnidadOrigen
             , String fltUnidadDestino

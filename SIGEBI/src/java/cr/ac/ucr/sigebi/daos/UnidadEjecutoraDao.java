@@ -43,12 +43,15 @@ public class UnidadEjecutoraDao extends GenericDaoImpl {
     public List<UnidadEjecutora> listar(String idUnidad, String nombreUnidad) throws FWExcepcion {
         Session session = dao.getSessionFactory().openSession();
         try {
-            StringBuilder sql = new StringBuilder ("select obj from UnidadEjecutora obj where to_char(obj.id) like :idUnidad");
+            StringBuilder sql = new StringBuilder ("select obj from UnidadEjecutora obj where to_char(obj.id) like :idUnidad ");
             sql.append("AND UPPER(obj.descripcion) LIKE :nombreUnidad");
             Query query = session.createQuery(sql.toString());
-            query.setParameter("idUnidad", idUnidad);
-            query.setParameter("nombreUnidad", nombreUnidad);
+            query.setParameter("idUnidad", '%'+ idUnidad +'%');
+            query.setParameter("nombreUnidad", '%'+ nombreUnidad +'%');
 
+            query.setFirstResult(0);
+            query.setMaxResults(10);
+                
             return (List<UnidadEjecutora>) query.list();
         } catch (HibernateException e) {
             throw new FWExcepcion("sigebi.error.unidadEejecutora.dao.listarUnidades", "Error obtener los registros de tipo " + this.getClass(), e.getCause());

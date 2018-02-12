@@ -5,8 +5,8 @@
  */
 package cr.ac.ucr.sigebi.domain;
 
+import cr.ac.ucr.sigebi.utils.Constantes;
 import java.io.Serializable;
-import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
@@ -14,7 +14,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
 
 /**
  *
@@ -27,28 +26,40 @@ import javax.persistence.Temporal;
 public class DocumentoActa extends Documento implements Serializable {
 
     //<editor-fold defaultstate="collapsed" desc="Atributos">
+    
+    @Column(name = "AUTORIZACION")
+    private String autorizacion;
+    
     @Column(name = "CEDULA")
     private String cedula;
 
     @Column(name = "RAZON_SOCIAL")
     private String razonSocial;
 
-    @Column(name = "AUTORIZACION")
-    private String autorizacion;
-
-    @Column(name = "FECHA") // TODO revisar el campo fecha por que el documento tambien lo tiene
-    @Temporal(javax.persistence.TemporalType.DATE)
-    private Date fecha;
-
-    @ManyToOne
-    @JoinColumn(name = "ID_UNIDAD_EJECUTORA", referencedColumnName = "ID")
-    private UnidadEjecutora unidadEjecutora;
-
     @ManyToOne
     @JoinColumn(name = "ID_TIPO", referencedColumnName = "ID_TIPO")
-    private Tipo tipoActa;
+    private Tipo tipo;
     
     //</editor-fold>
+    
+    
+    //<editor-fold defaultstate="collapsed" desc="Constructores">
+    
+    public DocumentoActa() {
+    }
+
+    public DocumentoActa(Estado estado
+            , Tipo tipo
+            , String autorizacion
+            , UnidadEjecutora unidadEjecutora) {
+        super(estado, Constantes.DISCRIMINATOR_DOCUMENTO_ACTA, unidadEjecutora);
+        this.autorizacion = autorizacion;
+        this.tipo = tipo;
+    }
+
+    //</editor-fold>
+    
+    
     
     //<editor-fold defaultstate="collapsed" desc="Get's y Set's">
     public String getCedula() {
@@ -75,28 +86,12 @@ public class DocumentoActa extends Documento implements Serializable {
         this.autorizacion = autorizacion;
     }
 
-    public Date getFecha() {
-        return fecha;
+    public Tipo getTipo() {
+        return tipo;
     }
 
-    public void setFecha(Date fecha) {
-        this.fecha = fecha;
-    }
-
-    public UnidadEjecutora getUnidadEjecutora() {
-        return unidadEjecutora;
-    }
-
-    public void setUnidadEjecutora(UnidadEjecutora unidadEjecutora) {
-        this.unidadEjecutora = unidadEjecutora;
-    }
-
-    public Tipo getTipoActa() {
-        return tipoActa;
-    }
-
-    public void setTipoActa(Tipo tipoActa) {
-        this.tipoActa = tipoActa;
+    public void setTipo(Tipo tipo) {
+        this.tipo = tipo;
     }
     //</editor-fold>
 
@@ -107,8 +102,6 @@ public class DocumentoActa extends Documento implements Serializable {
         hash = 79 * hash + (this.cedula != null ? this.cedula.hashCode() : 0);
         hash = 79 * hash + (this.razonSocial != null ? this.razonSocial.hashCode() : 0);
         hash = 79 * hash + (this.autorizacion != null ? this.autorizacion.hashCode() : 0);
-        hash = 79 * hash + (this.fecha != null ? this.fecha.hashCode() : 0);
-        hash = 79 * hash + (this.unidadEjecutora != null ? this.unidadEjecutora.hashCode() : 0);
         return hash;
     }
 
@@ -133,12 +126,7 @@ public class DocumentoActa extends Documento implements Serializable {
         if ((this.autorizacion == null) ? (other.autorizacion != null) : !this.autorizacion.equals(other.autorizacion)) {
             return false;
         }
-        if (this.fecha != other.fecha && (this.fecha == null || !this.fecha.equals(other.fecha))) {
-            return false;
-        }
-        if (this.unidadEjecutora != other.unidadEjecutora && (this.unidadEjecutora == null || !this.unidadEjecutora.equals(other.unidadEjecutora))) {
-            return false;
-        }
+        
         return true;
     }
     //</editor-fold>

@@ -28,7 +28,7 @@
                         <ice:selectOneMenu id="procesoSelec"                                           
                                            styleClass="form-control"
                                            partialSubmit="true"
-                                           value="#{controllerGestionProceso.command.idTipoProceso}"
+                                           value="#{controllerGestionProceso.command.tipoProceso.idTemporal}"
                                            valueChangeListener="#{controllerGestionProceso.seleccionProceso}">
                                            <f:selectItem itemLabel="N/A" itemValue="-1"/>
                                            <f:selectItems id="procesoSelecItem" value="#{controllerGestionProceso.tiposProceso}"/>
@@ -45,7 +45,7 @@
                         <ice:selectOneMenu id="autorizacionSelec"                                           
                                            styleClass="form-control"
                                            partialSubmit="true"
-                                           value="#{controllerGestionProceso.command.idAutorizacionTipoProceso}"
+                                           value="#{controllerGestionProceso.command.autorizacion.idTemporal}"
                                            valueChangeListener="#{controllerGestionProceso.seleccionAutorizacion}">
                                            <f:selectItem itemLabel="N/A" itemValue="-1"/>
                                            <f:selectItems id="autorizacionSelecItem" value="#{controllerGestionProceso.autorizacionesTipoProceso}"/>
@@ -55,7 +55,7 @@
                                                    style="margin-top:2%" 
                                                    styleClass="btnAgregar_Proceso" 
                                                    partialSubmit="true"
-                                                   rendered="#{controllerGestionProceso.command.idTipoProceso > 0}"
+                                                   rendered="#{controllerGestionProceso.command.tipoProceso.idTemporal > 0}"
                                                    actionListener="#{controllerGestionProceso.mostrarPanel}">
                             <f:attribute id="accion" name="accion"  value="1"/>
                         </ice:commandButton>
@@ -63,7 +63,7 @@
                                                    style="margin-top:2%" 
                                                    styleClass="btnModificar_Proceso" 
                                                    partialSubmit="true"
-                                                   rendered="#{controllerGestionProceso.command.idAutorizacionTipoProceso > 0}"
+                                                   rendered="#{controllerGestionProceso.command.autorizacion.idTemporal > 0}"
                                                    actionListener="#{controllerGestionProceso.mostrarPanel}">
                             <f:attribute id="accion" name="accion"  value="2"/>
                         </ice:commandButton>
@@ -78,7 +78,7 @@
                         <ice:selectOneMenu id="rolSelec"                                           
                                            styleClass="form-control"
                                            partialSubmit="true"
-                                           value="#{controllerGestionProceso.command.idRol}"
+                                           value="#{controllerGestionProceso.command.rol.idTemporal}"
                                            valueChangeListener="#{controllerGestionProceso.seleccionRol}">
                                            <f:selectItem itemLabel="N/A" itemValue="-1"/>
                                            <f:selectItems id="rolSelecItem" value="#{controllerGestionProceso.roles}"/>
@@ -95,7 +95,7 @@
                                                    style="margin-top:2%" 
                                                    styleClass="btnModificar_Proceso" 
                                                    partialSubmit="true"
-                                                   rendered="#{controllerGestionProceso.command.idRol > 0}"
+                                                   rendered="#{controllerGestionProceso.command.rol.idTemporal > 0}"
                                                    actionListener="#{controllerGestionProceso.mostrarPanel}">
                             <f:attribute id="accion" name="accion"  value="4"/>
                         </ice:commandButton>
@@ -136,15 +136,15 @@
                             </table>                        
                         </div>                    
                         <div>
-                            <ice:commandButton image="./imagenes/botones/first.png" partialSubmit="true" actionListener="#{controllerGestionProceso.primero}" rendered="#{controllerListarInformesTecnicos.cantidadPaginas > 1}"/>
-                            <ice:commandButton image="./imagenes/botones/previos.png" partialSubmit="true" actionListener="#{controllerGestionProceso.anterior}" rendered="#{controllerListarInformesTecnicos.cantidadPaginas > 1}"/>
+                            <ice:commandButton image="./imagenes/botones/first.png" partialSubmit="true" actionListener="#{controllerGestionProceso.primero}" rendered="#{controllerGestionProceso.cantidadPaginas > 1}"/>
+                            <ice:commandButton image="./imagenes/botones/previos.png" partialSubmit="true" actionListener="#{controllerGestionProceso.anterior}" rendered="#{controllerGestionProceso.cantidadPaginas > 1}"/>
                             <ui:repeat value="#{controllerGestionProceso.arregloPaginas}" var="pagina">
                                 <ice:commandLink value="#{pagina}" partialSubmit="true" actionListener="#{controllerGestionProceso.irPagina}">
                                     <f:param name="numPag" value="#{pagina}"/>
                                 </ice:commandLink>
                             </ui:repeat>            
-                            <ice:commandButton image="./imagenes/botones/next.png" partialSubmit="true" actionListener="#{controllerGestionProceso.siguiente}" rendered="#{controllerListarInformesTecnicos.cantidadPaginas > 1}"/>
-                            <ice:commandButton image="./imagenes/botones/last.png" partialSubmit="true" actionListener="#{controllerGestionProceso.ultimo}" rendered="#{controllerListarInformesTecnicos.cantidadPaginas > 1}"/>
+                            <ice:commandButton image="./imagenes/botones/next.png" partialSubmit="true" actionListener="#{controllerGestionProceso.siguiente}" rendered="#{controllerGestionProceso.cantidadPaginas > 1}"/>
+                            <ice:commandButton image="./imagenes/botones/last.png" partialSubmit="true" actionListener="#{controllerGestionProceso.ultimo}" rendered="#{controllerGestionProceso.cantidadPaginas > 1}"/>
                         </div>
                     </div>
                 </div>
@@ -177,7 +177,7 @@
                                                 </ice:headerRow>
                                             </ice:columnGroup>
                                         </f:facet>                                
-                                        <h:outputText id="colIdUsuarioTxt" value="#{usuario.idUsuario}"/>
+                                        <h:outputText id="colIdUsuarioTxt" value="#{usuario.id}"/>
                                     </ice:column>
                                     <ice:column id="colNombre">
                                         <f:facet name="header">
@@ -194,7 +194,7 @@
                                                 </ice:headerRow>
                                             </ice:columnGroup>
                                         </f:facet>                                
-                                        <h:outputText id="colNombreTxt" value="#{usuario.nombre_completo}"/>
+                                        <h:outputText id="colNombreTxt" value="#{usuario.nombreCompleto}"/>
                                     </ice:column>                                                                                       
                                     <ice:column style="text-align: center;">
                                         <ice:commandButton id="botonAprobar"

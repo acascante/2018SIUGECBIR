@@ -103,7 +103,7 @@
                                                     </ice:headerRow>
                                                 </ice:columnGroup>
                                             </f:facet>
-                                            <h:outputText id="idBienCell" value="#{bien.idPlaca.placa}"/>
+                                            <h:outputText id="idBienCell" value="#{bien.identificacion.identificacion}"/>
                                         </ice:column>
 
                                         <!-- COLUMNA DESCRIPCION-->
@@ -141,7 +141,7 @@
                                                     </ice:headerRow>
                                                 </ice:columnGroup>
                                             </f:facet>                                
-                                            <h:outputText id="costoCell" value="#{bien.marca}"/>
+                                            <h:outputText id="costoCell" value="#{bien.resumenBien.marca}"/>
                                         </ice:column>
 
                                         <!-- COLUMNA MODELO -->
@@ -160,7 +160,7 @@
                                                     </ice:headerRow>
                                                 </ice:columnGroup>
                                             </f:facet>                                 
-                                            <h:outputText id="costoCell" value="#{bien.modelo}"/>
+                                            <h:outputText id="costoCell" value="#{bien.resumenBien.modelo}"/>
                                         </ice:column>
 
                                         <!-- COLUMNA SERIE -->
@@ -179,7 +179,7 @@
                                                     </ice:headerRow>
                                                 </ice:columnGroup>
                                             </f:facet>                                
-                                            <h:outputText id="costoCell" value="#{bien.serie}"/>
+                                            <h:outputText id="costoCell" value="#{bien.resumenBien.serie}"/>
                                         </ice:column>
 
                                         <!-- SELECCIONAR BIEN -->

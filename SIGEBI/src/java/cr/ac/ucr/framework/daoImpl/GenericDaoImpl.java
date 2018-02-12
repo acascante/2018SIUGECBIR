@@ -18,7 +18,6 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-
 @Repository(value = "dao_framework")
 @Scope("request")
 public class GenericDaoImpl {
@@ -38,7 +37,7 @@ public class GenericDaoImpl {
     }
 
     @Transactional
-    public void persist(Object[] entities) {
+    public void persist(Object[] entities){
         try {
             for (int i = 0; i < entities.length; i++) {
                 persist(entities[i]);
@@ -86,7 +85,7 @@ public class GenericDaoImpl {
         // necesario para que de error si hay registros asociados
         //dao.getHibernateTemplate().flush();
     }
-    
+
     @Transactional
     public Integer obtenerId(String entityName, String nameId) {
         Session session = dao.getSessionFactory().openSession();

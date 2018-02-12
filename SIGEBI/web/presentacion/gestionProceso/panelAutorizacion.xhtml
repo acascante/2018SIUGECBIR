@@ -7,7 +7,7 @@
     <ice:panelPopup
         modal="true" 
         visible="#{(controllerGestionProceso.command.presentarPanelAgregarAutorizacion || controllerGestionProceso.command.presentarPanelModificarAutorizacion)}"
-        rendered="true" 
+        rendered="#{(controllerGestionProceso.command.presentarPanelAgregarAutorizacion || controllerGestionProceso.command.presentarPanelModificarAutorizacion)}"
         styleClass="popup">
 
         <f:facet name="header">
@@ -30,21 +30,21 @@
                                 <ice:inputText id="autorizacionNombre" 
                                                required="true"
                                                styleClass="form-control"
-                                               value="#{controllerGestionProceso.command.autorizacion.nombre}" />
+                                               value="#{controllerGestionProceso.command.autorizacionNew.nombre}" />
                             </div>                                             
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-md-12">
                             <div class="form-group"> 
-                                <label class="control-label" for="txtOrden">
+                                <label class="control-label" for="txtCodigo">
                                     <ice:outputText value="#{label['sigebi.label.vista.gestionProceso.autorizacion.codigo']}" />
                                     <ice:outputText value="#{label['label.requerido']}" />
                                 </label>
-                                <ice:inputText id="autorizacionOrden" 
+                                <ice:inputText id="autorizacionCodigo" 
                                                required="true"
                                                styleClass="form-control"
-                                               value="#{controllerGestionProceso.command.autorizacion.codigo}" />
+                                               value="#{controllerGestionProceso.command.autorizacionNew.codigo}" />
                             </div>                                             
                         </div>
                     </div>
@@ -58,7 +58,7 @@
                                 <ice:inputText id="autorizacionOrden" 
                                                required="true"
                                                styleClass="form-control"
-                                               value="#{controllerGestionProceso.command.autorizacion.orden}" />
+                                               value="#{controllerGestionProceso.command.autorizacionNew.orden}" />
                             </div>                                             
                         </div>
                     </div>
@@ -73,7 +73,7 @@
                                                     required="true"
                                                     styleClass="form-control"
                                                     cols="2" 
-                                                    value="#{controllerGestionProceso.command.autorizacion.detalle}"/>
+                                                    value="#{controllerGestionProceso.command.autorizacionNew.detalle}"/>
                             </div>
                         </div>    
                     </div>

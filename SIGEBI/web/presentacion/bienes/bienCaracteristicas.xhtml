@@ -1,4 +1,4 @@
-<ice:outputHtml id="frmDetalleNotificacion" xmlns:ice="http://www.icesoft.com/icefaces/component" xmlns:icecore="http://www.icefaces.org/icefaces/core" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:c="http://java.sun.com/jstl/core">
+<ice:outputHtml id="frmCaracteristicas" xmlns:ice="http://www.icesoft.com/icefaces/component" xmlns:icecore="http://www.icefaces.org/icefaces/core" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:c="http://java.sun.com/jstl/core">
 
     <div class="container">
         <div class="row">
@@ -15,7 +15,7 @@
                             <div class="form-group"> 
                                 <ice:outputText  value="#{label['sigebi.Bien.Label.SelCaracterist']}" />
                                 <ice:selectOneMenu id="selCaracteristica" styleClass="form-control" partialSubmit="false"
-                                                   value="#{controllerAgregarBienes.command.caracteristicaCommand.id}">
+                                                   value="#{controllerAgregarBienes.command.caracteristicaCommand.idTipo}">
                                     <f:selectItem itemLabel="Seleccionar Caracteristica" itemValue="-1"/>
                                     <f:selectItems id="optSelCaracteristica" value="#{controllerAgregarBienes.itemsCaracteristica}"/>
                                 </ice:selectOneMenu>
@@ -32,7 +32,7 @@
                                     value="#{label['sigebi.Bien.Label.txtDetalle']}"
                                     />
                                 <ice:inputText id="txtCaracteristicaDesc" styleClass="form-control" required="true" partialSubmit="true"
-                                               value="#{controllerAgregarBienes.command.caracteristicaCommand.detalle}">
+                                               value="#{controllerAgregarBienes.command.caracteristicaCommand.caracteristica.detalle}">
                                 </ice:inputText>
                             </div>
                         </div>
@@ -78,48 +78,4 @@
             </div>
         </div>
     </div>
-    
-    <!-- Modal Modificar Caracteristica -->
-    <ice:panelPopup id="modalCaracterist" modal="true" visible="#{controllerAgregarBienes.visiblePanelModificarCaracteristica}" rendered="true" styleClass="popup">
-        <f:facet name="header">
-            <ice:outputText styleClass="flotar_izquierda titulo_popup" value="Modificar Característica"/>
-        </f:facet> 
-
-        <f:facet name="body">
-            <fieldset class="panel_Container" >
-                <div class="container" style="margin-top: 30px;">
-                    <div class="row">
-                        <div class="col-md-12">
-                            <h4>Caracteristica: <ice:outputText value=" #{controllerAgregarBienes.command.caracteristicaCommand.caracteristica.tipo.nombre}"/></h4>
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="col-md-2"></div>
-                        <div class="col-md-10">
-                            <ice:inputText value="#{controllerAgregarBienes.command.caracteristicaCommand.caracteristica.detalle}" styleClass="form-control" />
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="col-md-4 align-content-center">
-                            <ice:commandButton id="btnCancelarCaract" partialSubmit="true" styleClass="boton" value="Cancelar" 
-                                               action="#{controllerAgregarBienes.modificarPanelCaracteristicaCancelar}"/>
-                        </div>
-
-                        <div class="col-md-4 align-content-center">
-                            <ice:commandButton id="btnEliminarCaract" partialSubmit="true" styleClass="boton" value="Eliminar"
-                                               action="#{controllerAgregarBienes.modificarPanelCaracteristicaElminimar}" />
-                        </div>
-                        <div class="col-md-4 align-content-center">
-                            <ice:commandButton id="btnactualizarCaract" partialSubmit="true" styleClass="boton" value="Modificar"
-                                               action="#{controllerAgregarBienes.modificarPanelCaracteristicaModificar}" />
-                        </div>
-                    </div>
-                </div>
-                <br />
-                <br />
-            </fieldset>       
-        </f:facet>  
-    </ice:panelPopup>
 </ice:outputHtml>

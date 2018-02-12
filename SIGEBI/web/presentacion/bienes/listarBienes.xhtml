@@ -13,6 +13,41 @@
                     </ice:commandButton>
                 </div>              
             </div>
+            
+                      
+            <div class="row">
+                <div class='col-sm-3'>
+                    
+                    <ice:commandButton id="btnTraslados" 
+                                       style="float:right" 
+                                       styleClass="boton" 
+                                       partialSubmit="true" 
+                                       action="#{controllerAgregarBienes.listarTraslados}" 
+                                       value="Traslados" >
+                    </ice:commandButton>
+                </div>
+                <div class="col-sm-3">
+                    <ice:commandButton id="btnActas" 
+                                       style="float:right" 
+                                       styleClass="boton" 
+                                       partialSubmit="true" 
+                                       action="#{controllerAgregarBienes.listarActas}" 
+                                       value="Actas" >
+                    </ice:commandButton>
+                </div>     
+                <div class="col-sm-3">
+                    <ice:commandButton id="btnInformes" 
+                                       style="float:right" 
+                                       styleClass="boton" 
+                                       partialSubmit="true" 
+                                       action="#{controllerAgregarBienes.listarInformes}" 
+                                       value="Informes Técnicos" >
+                    </ice:commandButton>
+                </div>             
+            </div>
+            
+            
+            
             <div class="row">
                 <div class="col-sm-12">
                     <ice:outputFormat value="#{label['label.generico.paginacion.encabezado']}">
@@ -57,7 +92,7 @@
                             <f:facet name="header">
                                 <ice:columnGroup>
                                     <ice:headerRow>
-                                        <ice:column id="idNotificacion" rowspan="2" style="vertical-align:top;">
+                                        <ice:column id="idBien" rowspan="2" style="vertical-align:top;">
                                             <ice:outputText value="#{label['sigebi.label.bien.id']} "/>
                                             <ice:inputText id="filtroId" style="width: 130px;" partialSubmit="true"                                                           
                                                            value="#{controllerListarBienes.command.fltIdBien}"
@@ -65,7 +100,7 @@
                                                            valueChangeListener="#{controllerListarBienes.cambioFiltro}"/>
                                         </ice:column>
                                         
-                                        <ice:column id="idNotificacion" rowspan="2" style="vertical-align:top;">
+                                        <ice:column id="idIdentificacion" rowspan="2" style="vertical-align:top;">
                                             <ice:outputText value="#{label['sigebi.label.bien.identificacion']} "/>
                                             <ice:inputText id="filtroIdentificacion" style="width: 130px;" partialSubmit="true"
                                                    value="#{controllerListarBienes.command.fltIdentificacion}"
@@ -109,6 +144,7 @@
                                                 <f:selectItems id="slcEstadoItem" value="#{controllerListarBienes.itemsEstado}"/>
                                             </ice:selectOneMenu>
                                         </ice:column>
+                                        
                                         <ice:column id="tipo" rowspan="2" style="vertical-align:top;">
                                             <ice:outputText value="#{label['sigebi.label.bien.tipo']} "/>
                                             <ice:selectOneMenu id="filtroTipo" partialSubmit="true"
@@ -117,6 +153,13 @@
                                                 <f:selectItem itemLabel="N/A" itemValue="-1"/>
                                                 <f:selectItems id="slcEstadoItem" value="#{controllerListarBienes.itemsTipo}"/>
                                             </ice:selectOneMenu>
+                                        </ice:column>
+                                        
+                                        <ice:column id="unidadEjecutora" rowspan="2" style="vertical-align:top;" rendered="#{controllerListarBienes.command.usuarioAdmnistrador}">
+                                            <ice:outputText value="#{label['sigebi.label.bien.unidadEjecutora']} "/>
+                                            <ice:inputText id="fltUnidadEjecutoraAdmin" style="width: 130px;" partialSubmit="true"
+                                                   value="#{controllerListarBienes.command.fltUnidadEjecutoraAdmin}"
+                                                   valueChangeListener="#{controllerListarBienes.cambioFiltro}"/>
                                         </ice:column>
                                         
                                         <ice:column id="opciones" >
@@ -148,7 +191,9 @@
                             <ice:column>
                                 <h:outputText id="tipoCell" value="#{bien.tipo.nombre}"/>
                             </ice:column>
-
+                            <ice:column rendered="#{controllerListarBienes.command.usuarioAdmnistrador}">
+                                <h:outputText id="tipoCell" value="#{bien.unidadEjecutora.descripcion}"/>
+                            </ice:column>
                             <ice:column style="text-align: center;">
                                 <ice:commandButton id="botonAbrir" style="float:right;margin-top:2%" styleClass="boton" partialSubmit="true" visible="false"
                                                    actionListener="#{controllerAgregarBienes.modificarRegistro}"

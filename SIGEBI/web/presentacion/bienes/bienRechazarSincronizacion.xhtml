@@ -1,6 +1,6 @@
-<ice:outputHtml id="frmDetalleNotificacion" xmlns:ice="http://www.icesoft.com/icefaces/component" xmlns:icecore="http://www.icefaces.org/icefaces/core" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:c="http://java.sun.com/jstl/core">
+<ice:outputHtml id="frmRechazarBien" xmlns:ice="http://www.icesoft.com/icefaces/component" xmlns:icecore="http://www.icefaces.org/icefaces/core" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:c="http://java.sun.com/jstl/core">
     <!-- Modal Agregar Observacion -->
-    <ice:panelPopup modal="true" rendered="true" styleClass="popup"
+    <ice:panelPopup modal="true" rendered="#{controllerAgregarBienes.visiblePanelObservaciones}" styleClass="popup"
         visible="#{controllerAgregarBienes.visiblePanelObservaciones}">
 
         <f:facet name="header">

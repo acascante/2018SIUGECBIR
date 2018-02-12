@@ -5,47 +5,31 @@
  */
 package cr.ac.ucr.sigebi.domain;
 
-import cr.ac.ucr.framework.seguridad.ObjetoBase;
 import java.io.Serializable;
 import java.util.Date;
 import javax.persistence.Column;
+import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.SequenceGenerator;
+import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
 
 /**
  *
  * @author jorge.serrano
  */
-@Entity(name = "Traslado")
-@Table(name = "SIGEBI_OAF.SGB_TRASLADO")
-@SequenceGenerator(name="SGB_SQ_TRASLADO", sequenceName = "SIGEBI_OAF.SGB_SQ_TRASLADO", initialValue=1, allocationSize=1)
-public class Traslado  extends ObjetoBase implements Serializable  {
+@Entity(name = "DocumentoTraslado")
+@Table(name = "SIGEBI_OAF.SIGB_DOCUMENTO_TRASLADO")
+@DiscriminatorValue("3")
+@PrimaryKeyJoinColumn(name = "ID_DOCUMENTO", referencedColumnName = "ID_DOCUMENTO")
+public class DocumentoTraslado  extends Documento implements Serializable  {
     
     private static final long serialVersionUID = 1L;
     
     //<editor-fold defaultstate="collapsed" desc="Atributos">
     
-    @Id
-    @GeneratedValue(strategy=GenerationType.SEQUENCE, generator = "SGB_SQ_TRASLADO")
-    @Column(name = "ID_TRASLADO") // NUMBER SGB_SQ_TRASLADO
-    private Integer idTraslado;
     
-    @Column(name = "FECHA") // DATE 
-    @Temporal(javax.persistence.TemporalType.DATE)
-    private Date fecha;
-    
-    @ManyToOne
-    @JoinColumn(name = "NUM_UNIDAD_EJEC", referencedColumnName = "ID")
-    private UnidadEjecutora numUnidadOrigen;
-    
-            
     @ManyToOne
     @JoinColumn(name = "ID_PERSONA", referencedColumnName = "ID_USUARIO")
     private Usuario idPersona;
@@ -63,10 +47,6 @@ public class Traslado  extends ObjetoBase implements Serializable  {
     @JoinColumn(name = "ID_UBICACION", referencedColumnName = "ID_UBICACION")
     private Ubicacion idUbicacion;
     
-    @ManyToOne
-    @JoinColumn(name = "ID_ESTADO", referencedColumnName = "ID_ESTADO")
-    private  Estado idEstado;
-    
     @Column(name = "OBSERVACIONES") // VARCHAR2 (500 Byte) 
     private String observaciones;
 
@@ -75,29 +55,6 @@ public class Traslado  extends ObjetoBase implements Serializable  {
     
     
     //<editor-fold defaultstate="collapsed" desc="Sets & Gets">
-    public Integer getIdTraslado() {
-        return idTraslado;
-    }
-
-    public void setIdTraslado(Integer idTraslado) {
-        this.idTraslado = idTraslado;
-    }
-
-    public Date getFecha() {
-        return fecha;
-    }
-
-    public void setFecha(Date fecha) {
-        this.fecha = fecha;
-    }
-
-    public UnidadEjecutora getNumUnidadOrigen() {
-        return numUnidadOrigen;
-    }
-
-    public void setNumUnidadOrigen(UnidadEjecutora numUnidadOrigen) {
-        this.numUnidadOrigen = numUnidadOrigen;
-    }
 
     public Usuario getIdPersona() {
         return idPersona;
@@ -131,13 +88,6 @@ public class Traslado  extends ObjetoBase implements Serializable  {
         this.idUbicacion = idUbicacion;
     }
 
-    public  Estado getIdEstado() {
-        return idEstado;
-    }
-
-    public void setIdEstado( Estado idEstado) {
-        this.idEstado = idEstado;
-    }
 
     public String getObservaciones() {
         return observaciones;
@@ -153,8 +103,9 @@ public class Traslado  extends ObjetoBase implements Serializable  {
     
     //<editor-fold defaultstate="collapsed" desc="Constructores">
 
-    public Traslado() {
-        fecha = new Date();
+    public DocumentoTraslado() {
+        super();
+        this.setFecha(new Date());
     }
 
     
@@ -164,18 +115,18 @@ public class Traslado  extends ObjetoBase implements Serializable  {
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (idTraslado != null ? idTraslado.hashCode() : 0);
+        hash += (this.getId() != null ? this.getId().hashCode() : 0);
         return hash;
     }
 
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof Traslado)) {
+        if (!(object instanceof DocumentoTraslado)) {
             return false;
         }
-        Traslado other = (Traslado) object;
-        if ((this.idTraslado == null && other.idTraslado != null) || (this.idTraslado != null && !this.idTraslado.equals(other.idTraslado))) {
+        DocumentoTraslado other = (DocumentoTraslado) object;
+        if ((this.getId() == null && other.getId() != null) || (this.getId() != null && !this.getId().equals(other.getId()))) {
             return false;
         }
         return true;
@@ -183,7 +134,7 @@ public class Traslado  extends ObjetoBase implements Serializable  {
 
     @Override
     public String toString() {
-        return "cr.ac.ucr.sigebi.entities.Traslado[ id=" + idTraslado + " ]";
+        return "cr.ac.ucr.sigebi.entities.Traslado[ id=" + getId() + " ]";
     }
     //</editor-fold>
     

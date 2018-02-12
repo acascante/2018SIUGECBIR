@@ -35,10 +35,6 @@ public class Adjunto  extends ObjetoBase implements Serializable{
     @JoinColumn(name = "ID_TIPO", referencedColumnName = "ID_TIPO")
     private Tipo tipo;
     
-    //usamos esta como el ID_BIEN
-    @Column(name = "ID_DOCUMENTO")
-    private Long idDocumento;
-    
     @Column(name = "DETALLE")
     private String detalle;
     
@@ -61,7 +57,7 @@ public class Adjunto  extends ObjetoBase implements Serializable{
     @Column(name = "NOMBRE")
     private String nombre;
     
-    @Column(name = "REFERENCIA")
+    @Column(name = "ID_REFERENCIA")
     private Long idReferencia;
     //</editor-fold>
     
@@ -71,7 +67,6 @@ public class Adjunto  extends ObjetoBase implements Serializable{
     
     //<editor-fold defaultstate="collapsed" desc="Sets y Gets">
 
-    //</editor-fold>
     public Integer getId() {
         return id;
     }
@@ -86,14 +81,6 @@ public class Adjunto  extends ObjetoBase implements Serializable{
 
     public void setTipo(Tipo tipo) {
         this.tipo = tipo;
-    }
-
-    public Long getIdDocumento() {
-        return idDocumento;
-    }
-
-    public void setIdDocumento(Long idDocumento) {
-        this.idDocumento = idDocumento;
     }
 
     public String getDetalle() {
@@ -159,7 +146,8 @@ public class Adjunto  extends ObjetoBase implements Serializable{
     public void setIdReferencia(Long idReferencia) {
         this.idReferencia = idReferencia;
     }
-    
+    //</editor-fold>
+
     //<editor-fold defaultstate="collapsed" desc="Sobrecargas">
     @Override
     public int hashCode() {

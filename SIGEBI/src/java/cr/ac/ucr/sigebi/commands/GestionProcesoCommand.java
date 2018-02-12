@@ -6,7 +6,9 @@
 package cr.ac.ucr.sigebi.commands;
 
 import cr.ac.ucr.sigebi.domain.Autorizacion;
+import cr.ac.ucr.sigebi.domain.AutorizacionRol;
 import cr.ac.ucr.sigebi.domain.Rol;
+import cr.ac.ucr.sigebi.domain.Tipo;
 import cr.ac.ucr.sigebi.utils.Constantes;
 
 /**
@@ -16,88 +18,43 @@ import cr.ac.ucr.sigebi.utils.Constantes;
 public class GestionProcesoCommand {
 
     //<editor-fold defaultstate="collapsed" desc="Atributos">
-    Long idTipoProceso;
-    Long idAutorizacionTipoProceso;
-    Long idRol;
-
-    //Busqueda listado de usuarios
-    String idUsuario;
-    String nombreCompleto;
-    String correo;
-
     //Se define la accion a realizar
     Integer accion = 0;
     Boolean presentarPanel = false;
 
     //Valores de formulario
+    AutorizacionRol autorizacionRol;
     Autorizacion autorizacion;
     Rol rol;
+    Tipo tipoProceso;
+
+    Autorizacion autorizacionNew;
+    Rol rolNew;
+
+    //Filtros para el usuario
+    String idUsuario;
+    String nombreCompleto;
+    String correo;
 
     //</editor-fold>
-    
     //<editor-fold defaultstate="collapsed" desc="Constructores">
     public GestionProcesoCommand() {
         super();
-        idTipoProceso = -1L;
-        idAutorizacionTipoProceso = -1L;
-        idRol = -1L;
+        autorizacion = new Autorizacion();
+        rol = new Rol();
+        tipoProceso = new Tipo();
+        autorizacionRol = new AutorizacionRol();
+        
+        autorizacionNew = new Autorizacion();
+        rolNew = new Rol();
+        
         idUsuario = null;
         nombreCompleto = null;
         correo = null;
-        autorizacion = new Autorizacion();
-        rol = new Rol();
     }
+
     //</editor-fold>
-
     //<editor-fold defaultstate="collapsed" desc="Get's & Set's">
-    public Long getIdTipoProceso() {
-        return idTipoProceso;
-    }
-
-    public void setIdTipoProceso(Long idTipoProceso) {
-        this.idTipoProceso = idTipoProceso;
-    }
-
-    public Long getIdAutorizacionTipoProceso() {
-        return idAutorizacionTipoProceso;
-    }
-
-    public void setIdAutorizacionTipoProceso(Long idAutorizacionTipoProceso) {
-        this.idAutorizacionTipoProceso = idAutorizacionTipoProceso;
-    }
-
-    public Long getIdRol() {
-        return idRol;
-    }
-
-    public void setIdRol(Long idRol) {
-        this.idRol = idRol;
-    }
-
-    public String getIdUsuario() {
-        return idUsuario;
-    }
-
-    public void setIdUsuario(String idUsuario) {
-        this.idUsuario = idUsuario;
-    }
-
-    public String getNombreCompleto() {
-        return nombreCompleto;
-    }
-
-    public void setNombreCompleto(String nombreCompleto) {
-        this.nombreCompleto = nombreCompleto;
-    }
-
-    public String getCorreo() {
-        return correo;
-    }
-
-    public void setCorreo(String correo) {
-        this.correo = correo;
-    }
-
     public Integer getAccion() {
         return accion;
     }
@@ -130,6 +87,64 @@ public class GestionProcesoCommand {
         this.rol = rol;
     }
 
+    public Tipo getTipoProceso() {
+        return tipoProceso;
+    }
+
+    public void setTipoProceso(Tipo tipoProceso) {
+        this.tipoProceso = tipoProceso;
+    }
+
+    public String getIdUsuario() {
+        return idUsuario;
+    }
+
+    public void setIdUsuario(String idUsuario) {
+        this.idUsuario = idUsuario;
+    }
+
+    public String getNombreCompleto() {
+        return nombreCompleto;
+    }
+
+    public void setNombreCompleto(String nombreCompleto) {
+        this.nombreCompleto = nombreCompleto;
+    }
+
+    public String getCorreo() {
+        return correo;
+    }
+
+    public void setCorreo(String correo) {
+        this.correo = correo;
+    }
+
+    public AutorizacionRol getAutorizacionRol() {
+        return autorizacionRol;
+    }
+
+    public void setAutorizacionRol(AutorizacionRol autorizacionRol) {
+        this.autorizacionRol = autorizacionRol;
+    }
+
+    public Autorizacion getAutorizacionNew() {
+        return autorizacionNew;
+    }
+
+    public void setAutorizacionNew(Autorizacion autorizacionNew) {
+        this.autorizacionNew = autorizacionNew;
+    }
+
+    public Rol getRolNew() {
+        return rolNew;
+    }
+
+    public void setRolNew(Rol rolNew) {
+        this.rolNew = rolNew;
+    }
+
+    //</editor-fold>
+    //<editor-fold defaultstate="collapsed" desc="Metodos">
     public Boolean getPresentarPanelAgregarAutorizacion() {
         return this.presentarPanel && this.accion.equals(Constantes.ACCION_PROCESO_AGREGA_DOCUMENTO);
     }

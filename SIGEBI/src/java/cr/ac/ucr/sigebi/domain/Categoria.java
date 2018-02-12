@@ -30,6 +30,9 @@ public class Categoria extends ObjetoBase implements Serializable {
     @Column(name = "ID")
     private Long id;
 
+    @Column(name = "CODIGO_CATEGORIA")
+    private String codigoCategoria;
+
     @Column(name = "NUMERO_EMPRESA")
     private Integer numeroEmpresa;
 
@@ -104,6 +107,14 @@ public class Categoria extends ObjetoBase implements Serializable {
 
     public void setSubCategorias(List<SubCategoria> subCategorias) {
         this.subCategorias = subCategorias;
+    }
+
+    public String getCodigoCategoria() {
+        return codigoCategoria;
+    }
+
+    public void setCodigoCategoria(String codigoCategoria) {
+        this.codigoCategoria = codigoCategoria;
     }
 
     //</editor-fold>  

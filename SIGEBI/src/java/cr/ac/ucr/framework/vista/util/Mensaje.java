@@ -121,6 +121,19 @@ public class Mensaje {
      * Este mensaje es amarillo.
      * @param mensaje
      */
+    public static void agregarErrorAdvertencia(Exception e, String mensaje ){
+        List<String> lista_mensajes = new ArrayList<String>();
+        lista_mensajes.add(mensaje);
+        VistaMensajes vista= (VistaMensajes) getBeanDeContexto("vistaMensajes");
+        vista.setMensaje(lista_mensajes, VistaMensajes.TIPO.ADVERTENCIA);
+        e.printStackTrace();
+    } 
+    
+    /**
+     * Agrega un mensaje de error a modo de advertencia para mostrar de manera global en pantalla
+     * Este mensaje es amarillo.
+     * @param mensaje
+     */
     public static void agregarErrorAdvertencia(List<String> mensajes){
         VistaMensajes vista= (VistaMensajes) getBeanDeContexto("vistaMensajes");
         vista.setMensaje(mensajes, VistaMensajes.TIPO.ADVERTENCIA);

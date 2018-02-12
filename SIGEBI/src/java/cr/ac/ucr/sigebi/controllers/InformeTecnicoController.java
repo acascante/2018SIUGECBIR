@@ -7,31 +7,35 @@ package cr.ac.ucr.sigebi.controllers;
 
 import com.icesoft.faces.component.inputfile.FileInfo;
 import com.icesoft.faces.component.inputfile.InputFile;
+import cr.ac.ucr.framework.utils.FWExcepcion;
 import cr.ac.ucr.framework.vista.util.Mensaje;
 import cr.ac.ucr.sigebi.utils.Constantes;
 import cr.ac.ucr.framework.vista.util.Util;
-import cr.ac.ucr.sigebi.domain.Documento;
 import cr.ac.ucr.sigebi.domain.DocumentoInformeTecnico;
 import cr.ac.ucr.sigebi.domain.Estado;
 import cr.ac.ucr.sigebi.domain.Tipo;
 import cr.ac.ucr.sigebi.domain.Usuario;
 import cr.ac.ucr.sigebi.domain.Adjunto;
-import cr.ac.ucr.sigebi.models.DocumentoRolEstadoModel;
+import cr.ac.ucr.sigebi.domain.AutorizacionRolPersona;
+import cr.ac.ucr.sigebi.domain.DocumentoAutorizacion;
 import cr.ac.ucr.sigebi.models.EstadoModel;
 import cr.ac.ucr.sigebi.models.DocumentoModel;
-import cr.ac.ucr.sigebi.entities.DocumentoRolEstadoEntity;
 import cr.ac.ucr.sigebi.models.AdjuntoModel;
 import cr.ac.ucr.sigebi.models.AutorizacionRolPersonaModel;
-import cr.ac.ucr.sigebi.models.TipoModel;
+import cr.ac.ucr.sigebi.models.DocumentoAutorizacionModel;
 import cr.ac.ucr.sigebi.models.UsuarioModel;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import javax.faces.event.ActionEvent;
 import javax.faces.event.PhaseId;
+import javax.faces.event.ValueChangeEvent;
 import javax.faces.model.SelectItem;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
@@ -49,7 +53,7 @@ public class InformeTecnicoController extends BaseController {
     private DocumentoModel documentoModel;
 
     @Resource
-    private DocumentoRolEstadoModel documentoRolEstadoModel;
+    private DocumentoAutorizacionModel documentoAutorizacionModel;
 
     @Resource
     private AutorizacionRolPersonaModel autorizacionRolPersonaModel;
@@ -64,22 +68,149 @@ public class InformeTecnicoController extends BaseController {
     UsuarioModel usuarioModel;
 
     DocumentoInformeTecnico informe;
-    List<DocumentoRolEstadoEntity> documentosPorRol;
-    List<DocumentoRolEstadoEntity> documentosPorRolPorAceptar;
+
+    // adjuntos del documento
     List<Adjunto> adjuntos;
 
     // comboBox tipos
     List<SelectItem> tipoOptions;
 
+    //Mapa para la lista de autorizaciones para el documento
+    HashMap<String, DocumentoAutorizacion> documentosAutorizacionesPorRol;
+
     // Se usan en el jsp
     String detalleAdjunto = "";
-    boolean aprobacionEnTramite = false;
+    boolean aprobacionRealizada = false;
     boolean rolPermiteModificar = false;
     Usuario usuario;
+    
+    Tipo tipoAdjunto;
+    
+    //</editor-fold>
+    
+    //<editor-fold defaultstate="collapsed" desc="Get's & Set's">
+    public void setUsuario(Usuario usuario) {
+        this.usuario = usuario;
+    }
+
+    public Tipo getTipoAdjunto() {
+        return tipoAdjunto;
+    }
+
+    public void setTipoAdjunto(Tipo tipoAdjunto) {
+        this.tipoAdjunto = tipoAdjunto;
+    }
+
+    public DocumentoModel getDocumentoModel() {
+        return documentoModel;
+    }
+
+    public void setDocumentoModel(DocumentoModel documentoModel) {
+        this.documentoModel = documentoModel;
+    }
+
+    public DocumentoAutorizacionModel getDocumentoAutorizacionModel() {
+        return documentoAutorizacionModel;
+    }
+
+    public void setDocumentoAutorizacionModel(DocumentoAutorizacionModel documentoAutorizacionModel) {
+        this.documentoAutorizacionModel = documentoAutorizacionModel;
+    }
+
+    public AutorizacionRolPersonaModel getAutorizacionRolPersonaModel() {
+        return autorizacionRolPersonaModel;
+    }
+
+    public void setAutorizacionRolPersonaModel(AutorizacionRolPersonaModel autorizacionRolPersonaModel) {
+        this.autorizacionRolPersonaModel = autorizacionRolPersonaModel;
+    }
+
+    public EstadoModel getEstadoModel() {
+        return estadoModel;
+    }
+
+    public void setEstadoModel(EstadoModel estadoModel) {
+        this.estadoModel = estadoModel;
+    }
+
+    public AdjuntoModel getAdjuntoModel() {
+        return adjuntoModel;
+    }
+
+    public void setAdjuntoModel(AdjuntoModel adjuntoModel) {
+        this.adjuntoModel = adjuntoModel;
+    }
+
+    public UsuarioModel getUsuarioModel() {
+        return usuarioModel;
+    }
+
+    public void setUsuarioModel(UsuarioModel usuarioModel) {
+        this.usuarioModel = usuarioModel;
+    }
+
+    public DocumentoInformeTecnico getInforme() {
+        return informe;
+    }
+
+    public void setInforme(DocumentoInformeTecnico informe) {
+        this.informe = informe;
+    }
+
+    public List<Adjunto> getAdjuntos() {
+        return adjuntos;
+    }
+
+    public void setAdjuntos(List<Adjunto> adjuntos) {
+        this.adjuntos = adjuntos;
+    }
+
+    public List<SelectItem> getTipoOptions() {
+        return tipoOptions;
+    }
+
+    public void setTipoOptions(List<SelectItem> tipoOptions) {
+        this.tipoOptions = tipoOptions;
+    }
+
+    public HashMap<String, DocumentoAutorizacion> getDocumentosAutorizacionesPorRol() {
+        return documentosAutorizacionesPorRol;
+    }
+
+    public void setDocumentosAutorizacionesPorRol(HashMap<String, DocumentoAutorizacion> documentosAutorizacionesPorRol) {
+        this.documentosAutorizacionesPorRol = documentosAutorizacionesPorRol;
+    }
+
+    public String getDetalleAdjunto() {
+        return detalleAdjunto;
+    }
+
+    public void setDetalleAdjunto(String detalleAdjunto) {
+        this.detalleAdjunto = detalleAdjunto;
+    }
+
+    public boolean isAprobacionRealizada() {
+        return aprobacionRealizada;
+    }
+
+    public void setAprobacionRealizada(boolean aprobacionRealizada) {
+        this.aprobacionRealizada = aprobacionRealizada;
+    }
+
+    public boolean isRolPermiteModificar() {
+        return rolPermiteModificar;
+    }
+
+    public void setRolPermiteModificar(boolean rolPermiteModificar) {
+        this.rolPermiteModificar = rolPermiteModificar;
+    }
+
+    public Usuario getUsuario() {
+        return usuario;
+    }
 
     //</editor-fold>
-    //<editor-fold defaultstate="collapsed" desc="Get's & Set's">
-    //</editor-fold>
+    
     //<editor-fold defaultstate="collapsed" desc="Constructor">
     public InformeTecnicoController() {
         super();
@@ -87,19 +218,32 @@ public class InformeTecnicoController extends BaseController {
 
     @PostConstruct
     public final void inicializar() {
+        try {
+            //Se consulta el usuario logueado   
+            usuario = usuarioModel.buscarPorId(lVistaUsuario.getgUsuarioActual().getIdUsuario());
 
-        //Se consulta el usuario logueado   
-        usuario = usuarioModel.buscarPorId(lVistaUsuario.getgUsuarioActual().getIdUsuario());
+            //Se consultan los tipos de informes de exclusion por por dominio
+            tipoOptions = new ArrayList<SelectItem>();
+            for (Tipo item : this.tiposPorDominio(Constantes.DOMINIO_INFORME_TECNICO)) {
+                tipoOptions.add(new SelectItem(item.getId().toString(), item.getNombre()));
+            }
+            
+            tipoAdjunto = this.tipoPorDominioValor(Constantes.DOMINIO_ADJUNTO, Constantes.TIPO_ADJUNTO_DOCUMENTO);
 
-        //Se consultan los tipos por dominio
-        tipoOptions = new ArrayList<SelectItem>();
-        for (Tipo item : this.tiposPorDominio(Constantes.DOMINIO_INFORME_TECNICO)) {
-            tipoOptions.add(new SelectItem(item.getId().toString(), item.getNombre()));
+        } catch (FWExcepcion e) {
+            Mensaje.agregarErrorAdvertencia(e.getError_para_usuario());
+        } catch (Exception e) {
+            Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.error.informeTecnicoController.inicializar"));
         }
     }
 
     //</editor-fold>
-    //<editor-fold defaultstate="collapsed" desc="Metodos">
+    
+    //<editor-fold defaultstate="collapsed" desc="Metodos Informe Tecnico">
+    public Collection<DocumentoAutorizacion> getListaDocumentosAutorizacionesPorRol() {
+        return new ArrayList(documentosAutorizacionesPorRol.values());
+    }
+
     /**
      * Abre la pantalla de detalle
      *
@@ -107,7 +251,6 @@ public class InformeTecnicoController extends BaseController {
      */
     public void verDetalleInforme(ActionEvent pEvent) {
         try {
-
             if (!pEvent.getPhaseId().equals(PhaseId.INVOKE_APPLICATION)) {
                 pEvent.setPhaseId(PhaseId.INVOKE_APPLICATION);
                 pEvent.queue();
@@ -116,30 +259,147 @@ public class InformeTecnicoController extends BaseController {
 
             //Se obtiene el informe que se desea presentar 
             informe = (DocumentoInformeTecnico) pEvent.getComponent().getAttributes().get("informeSel");
-
-            //Se buscan los roles que deben aceptar el informe,
-            documentosPorRol = documentoRolEstadoModel.buscarDocumentosTipoDocumento(informe.getId(), Long.parseLong(Constantes.CODIGO_AUTORIZACION_INFORME_TECNICO.toString()));
-
-            //Se buscan cuales documentos se pueden aceptar segun el usuario y rol 
-            documentosPorRolPorAceptar = documentoRolEstadoModel.buscarDocumentosUsuario(lVistaUsuario.getgUsuarioActual().getIdUsuario(),
-                    unidadEjecutora.getId(), informe.getId(), Long.parseLong(Constantes.CODIGO_AUTORIZACION_INFORME_TECNICO.toString()));
-            for (DocumentoRolEstadoEntity documento : documentosPorRol) {
-                documento.setMarcado(this.permiteAceptarRechazar(documento.getIdDocumento().getIdDocumento(), documento.getIdRol().getIdRol()));
+            if(informe.getTipoInforme() == null){
+                informe.setTipoInforme(new Tipo());
+            }else{
+                informe.getTipoInforme().setIdTemporal(informe.getTipoInforme().getId());
             }
+            this.cargaDatos();
+
+            Util.navegar(Constantes.VISTA_INFORME_TECNICO_DET);
+        } catch (FWExcepcion e) {
+            Mensaje.agregarErrorAdvertencia(e.getError_para_usuario());
+        } catch (Exception e) {
+            Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.error.informeTecnicoController.verDetalleInforme"));
+        }
+    }
+
+    private void cargaDatos() {
+        try {
+            //Se listan las autorizaciones permitidas para el documento, se agrupan por rol. 
+            documentosAutorizacionesPorRol = documentoModel.obtenerDocumentosAutorizacionPorRol(Constantes.CODIGO_AUTORIZACION_INFORME_TECNICO, informe, usuario, unidadEjecutora);
+
+            //Elimina la marca de los documentos, por reglas internas 
+            eliminaMarcaDocumentosAceptarRechazar();
 
             //Se actuaizan banderas
             cambiaEstadoInforme();
 
             //Se buscan los adjuntos del informe
-            adjuntos = adjuntoModel.buscarPorReferencia(informe.getId());
+            adjuntos = adjuntoModel.buscarPorReferencia(tipoAdjunto, informe.getId());
+        } catch (FWExcepcion e) {
+            Mensaje.agregarErrorAdvertencia(e.getError_para_usuario());
+        } catch (Exception e) {
+            Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.error.informeTecnicoController.cargaDatos"));
+        }
 
-            Util.navegar("informe_detalle");
+    }
 
-        } catch (Exception err) {
-            Mensaje.agregarErrorAdvertencia(err.getMessage());
+    public void regresarListado() {
+        if (vistaOrigen != null) {
+            Util.navegar(vistaOrigen);
+        } else {
+            Util.navegar("informe");
         }
     }
 
+    private void eliminaMarcaDocumentosAceptarRechazar() {
+        try {
+            for (Iterator<String> iterator = documentosAutorizacionesPorRol.keySet().iterator(); iterator.hasNext();) {
+                DocumentoAutorizacion documentoAutorizacion = documentosAutorizacionesPorRol.get((String) iterator.next());
+
+                //Si el informe no esta aprobado o anulado se permite modificarlo si es que tiene permisos, solo para los casos marcados en true
+                if (documentoAutorizacion != null && documentoAutorizacion.isMarcado()
+                        && (informe.getEstado().getValor().equals(Constantes.ESTADO_INFORME_TECNICO_APROBADO)
+                        || informe.getEstado().getValor().equals(Constantes.ESTADO_INFORME_TECNICO_ANULADO))) {
+                    documentoAutorizacion.setMarcado(false);
+                }
+            }
+        } catch (FWExcepcion e) {
+            Mensaje.agregarErrorAdvertencia(e.getError_para_usuario());
+        } catch (Exception e) {
+            Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.error.informeTecnicoController.eliminaMarcaDocumentosAceptarRechazar"));
+        }
+    }
+
+    public void cambiarTipoInforme(ValueChangeEvent event) {
+        try {
+            if (!event.getPhaseId().equals(PhaseId.INVOKE_APPLICATION)) {
+                event.setPhaseId(PhaseId.INVOKE_APPLICATION);
+                event.queue();
+                return;
+            }
+
+            // Se obtiene el id del tipoInforme
+            Long valor = informe.getTipoInforme().getIdTemporal();
+            if (valor > 0) {
+                informe.setTipoInforme(this.tipoPorId(valor));
+                informe.getTipoInforme().setIdTemporal(valor);
+            }
+        } catch (FWExcepcion e) {
+            Mensaje.agregarErrorAdvertencia(e.getError_para_usuario());
+        } catch (Exception e) {
+            Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.error.informeTecnicoController.cambiarTipoInforme"));
+        }
+
+    }
+
+    /**
+     * Almacena la informacion del informe
+     */
+    public void guardarDatos() {
+        try {
+            if (validarForm()) {
+
+                //Se almacena la informacion
+                documentoModel.modificar(informe);
+
+                //Se actualizan todas las autorizaciones asociadas al documento
+                Estado estadoPendienteModi = this.estadoPorDominioValor(Constantes.DOMINIO_INFORME_TECNICO, Constantes.ESTADO_INFORME_TECNICO_PROCESO);
+
+                //Si existe alguna aprobacion en tramite se debe eliminar las aprobaciones ya que se cambio el informe
+                if (aprobacionRealizada) {
+
+                    for (Iterator<String> iterator = documentosAutorizacionesPorRol.keySet().iterator(); iterator.hasNext();) {
+                        DocumentoAutorizacion documentoAutorizacion = documentosAutorizacionesPorRol.get((String) iterator.next());
+
+                        //Si el informe no esta aprobado o anulado se permite modificarlo si es que tiene permisos, solo para los casos marcados en true
+                        if (documentoAutorizacion != null && !informe.getEstado().getValor().equals(Constantes.ESTADO_INFORME_TECNICO_PROCESO)) {
+                            documentoAutorizacion.setEstado(estadoPendienteModi);
+                            documentoAutorizacion.setFecha(null);
+                            documentoAutorizacionModel.modificar(documentoAutorizacion);
+                        }
+                    }
+
+                    //Se cargan los datos nuevamente
+                    this.cargaDatos();
+                }
+
+                Mensaje.agregarInfo(Util.getEtiquetas("sigebi.informeTecnicoController.modificado.exitosamente"));
+            }
+
+        } catch (FWExcepcion e) {
+            Mensaje.agregarErrorAdvertencia(e.getError_para_usuario());
+        } catch (Exception e) {
+            Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.error.informeTecnicoController.guardarDatos"));
+        }
+    }
+
+    public boolean validarForm() {
+        if (informe.getEvaluacion().isEmpty()) {
+            Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.error.informeTecnicoController.evaluacion.requerido"));
+            return false;
+        }
+        if (informe.getTipoInforme() == null || informe.getTipoInforme().getId() == null || informe.getTipoInforme().getId() <= 0) {
+            Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.error.informeTecnicoController.tipo.requerido"));
+            return false;
+        }
+        return true;
+    }
+
+    //</editor-fold> 
+    
+    //<editor-fold defaultstate="collapsed" desc="Aprobaciones y rechazos">
     /**
      * Aprueba el informe
      *
@@ -154,20 +414,25 @@ public class InformeTecnicoController extends BaseController {
             }
 
             //Se obtiene el documento a modificar
-            DocumentoRolEstadoEntity documento = (DocumentoRolEstadoEntity) pEvent.getComponent().getAttributes().get("documentoSelApro");
-            documento.setIdEstado(estadoModel.buscarPorDominioEstado(Constantes.DOMINIO_INFORME_TECNICO, Constantes.ESTADO_INFORME_TECNICO_APROBADO));
+            DocumentoAutorizacion documento = (DocumentoAutorizacion) pEvent.getComponent().getAttributes().get("documentoSelApro");
+            documento.setEstado(this.estadoPorDominioValor(Constantes.DOMINIO_INFORME_TECNICO, Constantes.ESTADO_INFORME_TECNICO_APROBADO));
             documento.setFecha(new Date());
-
-            //FIXME Jairo Verificar el usuario que se esta asignando
-            //documento.setIdUsuarioSeguridad(usr);
-            //Se modifica el documento
-            documentoRolEstadoModel.modificar(documento);
+            documento.setUsuarioSeguridad(usuario);
+            if (documento.getId() != null && documento.getId() > 0) {
+                documentoAutorizacionModel.modificar(documento);
+            } else {
+                documentoAutorizacionModel.agregar(documento);
+            }
 
             //Se modifica en el informe en los casos que aplique
             cambiaEstadoInforme();
 
-        } catch (Exception err) {
-            Mensaje.agregarErrorAdvertencia(err.getMessage());
+        } catch (FWExcepcion e) {
+            e.printStackTrace();
+            Mensaje.agregarErrorAdvertencia(e.getError_para_usuario());
+        } catch (Exception e) {
+            e.printStackTrace();
+            Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.error.informeTecnicoController.aprobar"));
         }
     }
 
@@ -185,79 +450,96 @@ public class InformeTecnicoController extends BaseController {
             }
 
             //Se obtiene el documento a modificar
-            DocumentoRolEstadoEntity documento = (DocumentoRolEstadoEntity) pEvent.getComponent().getAttributes().get("documentoSelRech");
-            documento.setIdEstado(estadoModel.buscarPorDominioEstado(Constantes.DOMINIO_INFORME_TECNICO, Constantes.ESTADO_INFORME_TECNICO_RECHAZADO));
+            DocumentoAutorizacion documento = (DocumentoAutorizacion) pEvent.getComponent().getAttributes().get("documentoSelRech");
+            documento.setEstado(this.estadoPorDominioValor(Constantes.DOMINIO_INFORME_TECNICO, Constantes.ESTADO_INFORME_TECNICO_RECHAZADO));
             documento.setFecha(new Date());
-
-            //FIXME Jairo verificar el usuario que se esta asignando
-            //documento.setIdUsuarioSeguridad(usr);
-            //Se modifica el documento
-            documentoRolEstadoModel.modificar(documento);
+            documento.setUsuarioSeguridad(usuario);
+            if (documento.getId() != null && documento.getId() > 0) {
+                documentoAutorizacionModel.modificar(documento);
+            } else {
+                documentoAutorizacionModel.agregar(documento);
+            }
 
             //Se modifica en el informe en los casos que aplique
             cambiaEstadoInforme();
-        } catch (Exception err) {
-            Mensaje.agregarErrorAdvertencia(err.getMessage());
+        } catch (FWExcepcion e) {
+            Mensaje.agregarErrorAdvertencia(e.getError_para_usuario());
+        } catch (Exception e) {
+            Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.error.informeTecnicoController.rechazar"));
         }
-    }
 
-    public boolean permiteAceptarRechazar(Long idDocumento, Long idRol) {
-        if (!informe.getEstado().getValor().equals(Constantes.ESTADO_INFORME_TECNICO_APROBADO)
-                && !informe.getEstado().getValor().equals(Constantes.ESTADO_INFORME_TECNICO_ANULADO)) {
-            for (DocumentoRolEstadoEntity documento : documentosPorRolPorAceptar) {
-                if (documento.getIdDocumento().getIdDocumento().equals(idDocumento)
-                        && documento.getIdRol().getIdRol().equals(idRol)) {
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
-
-    private void cambiaEstadoInforme() {
-        boolean rechazar = true;
-        boolean aprobar = true;
-        aprobacionEnTramite = false;
-        rolPermiteModificar = false;
-
-        //Solo si el informe no esta aprobado
-        if (!informe.getEstado().getValor().equals(Constantes.ESTADO_INFORME_TECNICO_APROBADO)
-                && !informe.getEstado().getValor().equals(Constantes.ESTADO_INFORME_TECNICO_ANULADO)) {
-            for (DocumentoRolEstadoEntity documento : documentosPorRol) {
-                if (!documento.getIdEstado().getValor().equals(Constantes.ESTADO_INFORME_TECNICO_APROBADO)) {
-                    aprobar = false;
-                }
-                if (!documento.getIdEstado().getValor().equals(Constantes.ESTADO_INFORME_TECNICO_RECHAZADO)) {
-                    rechazar = false;
-                }
-                if (documento.getIdEstado().getValor().equals(Constantes.ESTADO_INFORME_TECNICO_APROBADO)) {
-                    aprobacionEnTramite = true;
-                }
-            }
-
-            if (aprobar) {
-                informe.setEstado(estadoModel.buscarPorDominioEstado(Constantes.DOMINIO_INFORME_TECNICO, Constantes.ESTADO_INFORME_TECNICO_APROBADO));
-                documentoModel.modificar(informe);
-            }
-            if (rechazar) {
-                informe.setEstado(estadoModel.buscarPorDominioEstado(Constantes.DOMINIO_INFORME_TECNICO, Constantes.ESTADO_INFORME_TECNICO_RECHAZADO));
-                documentoModel.modificar(informe);
-            }
-
-            if (aprobacionEnTramite) {
-                //Solo se permite modificar si el usuario tiene un rol de tecnico asociado al documento
-                //AutorizacionRolPersona autorizado = autorizacionRolPersonaModel.buscarAutorizacionPorAutorizacionRolUsuario(Constantes.CODIGO_ROL_TECNICO, 
-                //        Constantes.ID_DOCUMENTO_INFORME_TECNICO, lVistaUsuario.getgUsuarioActual().getIdUsuario());
-                //rolPermiteModificar = autorizado != null;
-            } else {
-                //Cualquiera puede modificar no existe ninguna aprobacion
-                rolPermiteModificar = true;
-            }
-        }
     }
 
     /**
-     * Abre la pantalla de detalle
+     * Metodo que cambia el estado del informe para los casos en que todos sus
+     * autorizaciones se aprueben o se rechacen
+     */
+    private void cambiaEstadoInforme() {
+        try {
+            boolean rechazar = true;
+            boolean aprobar = true;
+            aprobacionRealizada = false;
+            rolPermiteModificar = false;
+
+            //Solo si el informe no esta aprobado
+            if (!informe.getEstado().getValor().equals(Constantes.ESTADO_INFORME_TECNICO_APROBADO) && !informe.getEstado().getValor().equals(Constantes.ESTADO_INFORME_TECNICO_ANULADO)) {
+
+                for (Iterator<String> iterator = documentosAutorizacionesPorRol.keySet().iterator(); iterator.hasNext();) {
+
+                    DocumentoAutorizacion documentoAutorizacion = documentosAutorizacionesPorRol.get((String) iterator.next());
+
+                    //Si el informe no esta aprobado o anulado se permite modificarlo si es que tiene permisos
+                    if (documentoAutorizacion != null) {
+
+                        //Se verifica si alguno no esta aprobado
+                        if (!documentoAutorizacion.getEstado().getValor().equals(Constantes.ESTADO_INFORME_TECNICO_APROBADO)) {
+                            aprobar = false;
+                        }
+                        //Se verifica si alguno no esta rechazado
+                        if (!documentoAutorizacion.getEstado().getValor().equals(Constantes.ESTADO_INFORME_TECNICO_RECHAZADO)) {
+                            rechazar = false;
+                        }
+                        //Se verifica si alguno se encuentra pendiente de aprobar
+                        if (documentoAutorizacion.getEstado().getValor().equals(Constantes.ESTADO_INFORME_TECNICO_APROBADO)) {
+                            aprobacionRealizada = true;
+                        }
+                    }
+                }
+
+                //Si todos estan aprobados se aprueba todo el informe
+                if (aprobar) {
+                    informe.setEstado(estadoModel.buscarPorDominioEstado(Constantes.DOMINIO_INFORME_TECNICO, Constantes.ESTADO_INFORME_TECNICO_APROBADO));
+                    documentoModel.modificar(informe);
+                }
+
+                //Si todos estan rechazadas se rechaza todo el informes
+                if (rechazar) {
+                    informe.setEstado(estadoModel.buscarPorDominioEstado(Constantes.DOMINIO_INFORME_TECNICO, Constantes.ESTADO_INFORME_TECNICO_RECHAZADO));
+                    documentoModel.modificar(informe);
+                }
+
+                //Se marca bandera para permitir modificar el informes, solo para los usuarios que tienen un rol de tecnico, asociado al documento. 
+                //Solo aplica si el documento tiene al menos una aprobacion 
+                if (aprobacionRealizada) {
+                    AutorizacionRolPersona autorizado = autorizacionRolPersonaModel.buscar(Constantes.CODIGO_AUTORIZACION_INFORME_TECNICO, Constantes.CODIGO_ROL_TECNICO, usuario, unidadEjecutora);
+                    rolPermiteModificar = autorizado != null;
+                } else {
+                    //Cualquiera puede modificar no existe ninguna aprobacion
+                    rolPermiteModificar = true;
+                }
+            }
+        } catch (FWExcepcion e) {
+            Mensaje.agregarErrorAdvertencia(e.getError_para_usuario());
+        } catch (Exception e) {
+            Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.error.informeTecnicoController.cambiaEstadoInforme"));
+        }
+    }
+
+    //</editor-fold>
+    
+    //<editor-fold defaultstate="collapsed" desc="Adjuntos del documento">
+    /**
+     * Agrega un adjunto al documento
      *
      * @param pEvent
      */
@@ -269,30 +551,30 @@ public class InformeTecnicoController extends BaseController {
                 Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.error.informeTecnicoController.adjunto.requerido"));
             } else {
                 Adjunto adjunto = new Adjunto();
-                adjunto.setEstado(estadoModel.buscarPorDominioEstado(Constantes.DOMINIO_GENERAL, Constantes.ESTADO_GENERAL_ACTIVO));
+                adjunto.setEstado(this.estadoPorDominioValor(Constantes.DOMINIO_GENERAL, Constantes.ESTADO_GENERAL_ACTIVO));
+                adjunto.setTipo(tipoAdjunto);
                 adjunto.setIdReferencia(informe.getId());
-                //adjunto.setIdTipo(tipoModel.buscarPorDominioTipo(Constantes.DOMINIO_TIPO_ADJUNTO, Constantes.TIPO_ADJUNTO_INFORME_TECNICO));
-                //adjunto.setIdTipoDocumento(tipoModel.buscarPorDominioTipo(Constantes.DOMINIO_TIPO_DOCUMENTO, Constantes.TIPO_DOCUMENTO_INFORME_TECNICO));
                 adjunto.setUrl("upload/informesTecnicos/" + fileInfo.getFileName());
                 if (detalleAdjunto != null && detalleAdjunto.length() > 0) {
                     adjunto.setDetalle(detalleAdjunto);
                 } else {
                     adjunto.setDetalle(fileInfo.getFileName());
                 }
-
                 adjuntoModel.agregar(adjunto);
                 detalleAdjunto = "";
                 adjuntos.add(adjunto);
 
                 Mensaje.agregarInfo(Util.getEtiquetas("sigebi.error.informeTecnicoController.adjunto.agregar.exitosamente"));
             }
-        } catch (Exception err) {
-            Mensaje.agregarErrorAdvertencia(err.getMessage());
+        } catch (FWExcepcion e) {
+            Mensaje.agregarErrorAdvertencia(e.getError_para_usuario());
+        } catch (Exception e) {
+            Mensaje.agregarErrorAdvertencia(e, Util.getEtiquetas("sigebi.error.informeTecnicoController.agregarAdjunto"));
         }
     }
 
     /**
-     * Eliminar adjunto
+     * Eliminar adjunto al documento
      *
      * @param pEvent
      */
@@ -315,65 +597,15 @@ public class InformeTecnicoController extends BaseController {
             adjuntoModel.eliminar(adjunto);
 
             //Se buscan los adjuntos del informe
-            adjuntos = adjuntoModel.buscarPorReferencia(informe.getId());
+            adjuntos = adjuntoModel.buscarPorReferencia(tipoAdjunto, informe.getId());
 
-        } catch (Exception err) {
-            Mensaje.agregarErrorAdvertencia(err.getMessage());
+        } catch (FWExcepcion e) {
+            Mensaje.agregarErrorAdvertencia(e.getError_para_usuario());
+        } catch (Exception e) {
+            Mensaje.agregarErrorAdvertencia(e, Util.getEtiquetas("sigebi.error.informeTecnicoController.eliminarAdjunto"));
         }
-    }
-
-    /**
-     * Almacen la informacion del informe
-     */
-    public void guardarDatos() {
-        try {
-            if (validarForm()) {
-
-                //Se almacena la informacion
-                documentoModel.modificar(informe);
-
-                //Si existe alguna aprobacion en tramite se debe eliminar ya que se cambiaron los valores
-                if (aprobacionEnTramite) {
-                    aprobacionEnTramite = false;
-                    Estado estadoPendiente = estadoModel.buscarPorDominioEstado(Constantes.DOMINIO_INFORME_TECNICO, Constantes.ESTADO_INFORME_TECNICO_PROCESO);
-                    for (DocumentoRolEstadoEntity documento : documentosPorRol) {
-                        if (!documento.getIdEstado().getValor().equals(Constantes.ESTADO_INFORME_TECNICO_PROCESO)) {
-                            documento.setIdEstado(estadoPendiente);
-                            documento.setFecha(null);
-                            //documento.setIdUsuarioSeguridad("");
-                            documentoRolEstadoModel.modificar(documento);
-                        }
-                        documento.setMarcado(this.permiteAceptarRechazar(documento.getIdDocumento().getIdDocumento(), documento.getIdRol().getIdRol()));
-                    }
-                }
-
-                Mensaje.agregarInfo(Util.getEtiquetas("sigebi.informeTecnicoController.modificado.exitosamente"));
-            }
-        } catch (Exception err) {
-            Mensaje.agregarErrorAdvertencia(err.getMessage());
-        }
-    }
-
-    public void regresarListado() {
-        if (vistaOrigen != null) {
-            Util.navegar(vistaOrigen);
-        } else {
-            Util.navegar("informe");
-        }
-    }
-
-    public boolean validarForm() {
-
-        if (informe.getEvaluacion().isEmpty()) {
-            Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.error.informeTecnicoController.evaluacion.requerido"));
-            return false;
-        }
-        if (informe.getTipoInforme() == null || informe.getTipoInforme().getId() <= 0) {
-            Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.error.informeTecnicoController.tipo.requerido"));
-            return false;
-        }
-        return true;
     }
 
     //</editor-fold>
+    
 }

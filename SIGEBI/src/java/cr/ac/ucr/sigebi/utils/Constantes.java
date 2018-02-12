@@ -84,9 +84,9 @@ public final class Constantes {
     public static final String DOMINIO_PROCESO = "PROCESO";
     public static final String DOMINIO_DOCUMENTO = "DOCUMENTO";
 
-    //TIPO NOMBRE
-    public static final Integer TIPO_NOMBRE_ADJUNTO = 1;
-    
+    //TIPO ADJUNTO
+    public static final Integer TIPO_ADJUNTO_BIEN = 1;
+    public static final Integer TIPO_ADJUNTO_DOCUMENTO = 2;
     
     //Identificaciones
     public static final Integer IDENTIFICACION_ESTADO_DISPONIBLE = 1;
@@ -97,6 +97,8 @@ public final class Constantes {
     public static final Integer CODIGO_AUTORIZACION_INFORME_TECNICO = 2;
     public static final Integer CODIGO_AUTORIZACION_ACTA_DONACION = 3;
     public static final Integer CODIGO_AUTORIZACION_ACTA_DESECHO = 4;
+    public static final Integer CODIGO_AUTORIZACION_TRASLADO_ENVIAR = 5;
+    public static final Integer CODIGO_AUTORIZACION_TRASLADO_RECIBIR = 6;
 
     public static final String ACTA_ID_TIPO_DONACION = "26";
     public static final String ACTA_ID_TIPO_DESECHO = "27";
@@ -113,7 +115,15 @@ public final class Constantes {
     public static final String VISTA_EXCLUSION_NUEVA_PAGINA = "../exclusiones/exclusionDetalle.xhtml";
     public static final String VISTA_SINCRONIZACION_BIEN = "sincronizar";
     public static final String VISTA_SINCRONIZACION_BIEN_LISTADO = "../bienes/listarBienSincronizar.xhtml";
-
+    
+    
+    public static final String VISTA_INFORME_TECNICO = "informe";
+    public static final String VISTA_INFORME_TECNICO_LISTADO = "../exclusiones/listarInformesTecnicos.xhtml";
+    public static final String VISTA_INFORME_TECNICO_DET = "informe_detalle";
+    public static final String VISTA_INFORME_TECNICO_DETALLE = "../exclusiones/detalleInformeTecnico.xhtml";
+    public static final String VISTA_PROCESOS = "proceso";
+    public static final String VISTA_PROCESO_DIRECCION = "../gestionProceso/gestionProceso.xhtml";
+    
     //BIENES
     public static final String VISTA_LISTAR_BIENES = "../bienes/listarBienes.xhtml";
     public static final String KEY_VISTA_LISTAR_BIENES = "reg_manual";
@@ -154,9 +164,10 @@ public final class Constantes {
     public static final char SINCRONIZAR_ESTADO_TRANSITO_INATIVACION = '4';
 
     // Codigos de rol
-    public static final String CODIGO_ROL_TECNICO = "1";
-    public static final String CODIGO_ROL_DIRECTOR = "2";
-    public static final String CODIGO_ROL_RESPONSABLE = "3";
+    public static final Integer CODIGO_ROL_DIRECTOR = 1;
+    public static final Integer CODIGO_ROL_TECNICO = 2;
+    public static final Integer CODIGO_ROL_RESPONSABLE = 3;
+    public static final Integer CODIGO_ROL_ADMINISTRADOR = 4;
 
     //Discriminator Adjunto
     public static final Integer DISCRIMINATOR_ADJUNTO_BIEN = 1;
@@ -165,6 +176,7 @@ public final class Constantes {
     //Discriminator Documento
     public static final Integer DISCRIMINATOR_DOCUMENTO_INFORME_TECNICO = 1;
     public static final Integer DISCRIMINATOR_DOCUMENTO_ACTA = 2;
+    public static final Integer DISCRIMINATOR_DOCUMENTO_TRASLADO = 3;
 
     //Discriminator Documento Detalle
     public static final Integer DISCRIMINATOR_DOCUMENTO_DETALLE_GENERAL = 1;
@@ -181,4 +193,8 @@ public final class Constantes {
     public static final Integer DISCRIMINATOR_DETALE_SOLICITUD = 1;
     public static final Integer DISCRIMINATOR_DETALE_SOLICITUD_DONACION = 2;
     public static final Integer DISCRIMINATOR_DETALE_SOLICITUD_TRASLADO = 3;
+    
+    //COnsultas en listados de bienes
+    public static final Integer BIENES_LISTADO_ACTAS = 2;
+    
 }

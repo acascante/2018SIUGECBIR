@@ -8,6 +8,7 @@ package cr.ac.ucr.sigebi.models;
 import cr.ac.ucr.framework.utils.FWExcepcion;
 import cr.ac.ucr.sigebi.daos.AutorizacionDao;
 import cr.ac.ucr.sigebi.domain.Autorizacion;
+import cr.ac.ucr.sigebi.domain.Tipo;
 import java.util.List;
 import javax.annotation.Resource;
 import org.springframework.context.annotation.Scope;
@@ -39,9 +40,13 @@ public class AutorizacionModel {
     public Autorizacion buscarPorId(Long idAutorizacion) throws FWExcepcion {
         return autorizacionDao.buscarPorId(idAutorizacion);
     }
+    
+    public Autorizacion buscarPorCodigo(Integer idCodigo){
+        return autorizacionDao.buscarPorCodigo(idCodigo);
+    }
 
-    public List<Autorizacion> buscarPorTipoProceso(Long idTipoProceso) throws FWExcepcion {
-        return autorizacionDao.buscarPorTipoProceso(idTipoProceso);
+    public List<Autorizacion> buscarPorTipoProceso(Tipo tipoProceso) throws FWExcepcion {
+        return autorizacionDao.buscarPorTipoProceso(tipoProceso);
     }
 
     public Long contarAutorizacionsValidator(Long idAutorizacionDiferente, Long idProceso, Integer orden, String nombre, Integer codigo) throws FWExcepcion {

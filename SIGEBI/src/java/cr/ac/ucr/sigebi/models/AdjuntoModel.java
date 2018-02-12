@@ -33,12 +33,8 @@ public class AdjuntoModel {
     }
     
     
-    public List<Adjunto> buscarPorDocumento(Tipo tipoDocumento, Long idDocumento) {
-        return adjuntoDao.buscarPorDocumento(tipoDocumento, idDocumento);
+    public List<Adjunto> buscarPorReferencia(Tipo tipoDocumento, Long idReferencia) {
+        return adjuntoDao.buscarPorReferencia(tipoDocumento, idReferencia);
     }
-    
-    
-    public List<Adjunto> buscarPorReferencia(Long idReferencia){
-        return adjuntoDao.buscarPorReferencia(idReferencia);
-    }    
+      
 }

@@ -57,7 +57,7 @@ public class RolModel {
         return rolDao.contarRoles(codigo, nombre, estado);
     }
 
-    public Long contarRolesValidator(Long idRolDiferente, String codigo, String nombre) {
+    public Long contarRolesValidator(Long idRolDiferente, Integer codigo, String nombre) {
         return rolDao.contarRolesValidator(idRolDiferente, codigo, nombre);
     }
 

@@ -46,7 +46,7 @@ public class DocumentoAutorizacion extends ObjetoBase implements Serializable {
     @ManyToOne
     @JoinColumn(name = "ID_USUARIO", referencedColumnName = "ID_USUARIO")
     private Usuario usuarioSeguridad;
-    
+
     @ManyToOne
     @JoinColumn(name = "ID_ESTADO", referencedColumnName = "ID_ESTADO")
     private Estado estado;
@@ -59,11 +59,23 @@ public class DocumentoAutorizacion extends ObjetoBase implements Serializable {
     
     //<editor-fold defaultstate="collapsed" desc="Constructores">
     
-    //</editor-fold>
+    public DocumentoAutorizacion() {
     
-    //<editor-fold defaultstate="collapsed" desc="GET's y SET's">
-    
+    }
 
+    public DocumentoAutorizacion(Documento documento
+            , AutorizacionRol autorizacionRol
+            , Usuario usuarioSeguridad
+            , Estado estado) {
+        this.documento = documento;
+        this.autorizacionRol = autorizacionRol;
+        this.usuarioSeguridad = usuarioSeguridad;
+        this.estado = estado;
+    }    
+    
+    //</editor-fold>
+
+    //<editor-fold defaultstate="collapsed" desc="GET's y SET's">
     public Long getId() {
         return id;
     }
@@ -111,11 +123,10 @@ public class DocumentoAutorizacion extends ObjetoBase implements Serializable {
     public void setFecha(Date fecha) {
         this.fecha = fecha;
     }
-    
-    //</editor-fold>
 
+    //</editor-fold>
+    
     //<editor-fold defaultstate="collapsed" desc="Metodos">
-   
     @Override
     public int hashCode() {
         int hash = 3;
@@ -160,8 +171,6 @@ public class DocumentoAutorizacion extends ObjetoBase implements Serializable {
         }
         return true;
     }
-    
 
     //</editor-fold>
-
 }

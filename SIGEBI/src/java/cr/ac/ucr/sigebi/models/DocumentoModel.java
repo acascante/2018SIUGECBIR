@@ -8,13 +8,19 @@ package cr.ac.ucr.sigebi.models;
 import cr.ac.ucr.framework.utils.FWExcepcion;
 import cr.ac.ucr.sigebi.daos.DocumentoDao;
 import cr.ac.ucr.sigebi.domain.AutorizacionRol;
+import cr.ac.ucr.sigebi.domain.AutorizacionRolPersona;
 import cr.ac.ucr.sigebi.domain.Bien;
 import cr.ac.ucr.sigebi.domain.Documento;
+import cr.ac.ucr.sigebi.domain.DocumentoAutorizacion;
 import cr.ac.ucr.sigebi.domain.DocumentoDetalle;
 import cr.ac.ucr.sigebi.domain.DocumentoInformeTecnico;
 import cr.ac.ucr.sigebi.domain.Estado;
+import cr.ac.ucr.sigebi.domain.Tipo;
+import cr.ac.ucr.sigebi.domain.UnidadEjecutora;
+import cr.ac.ucr.sigebi.domain.Usuario;
 import cr.ac.ucr.sigebi.utils.Constantes;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import javax.annotation.Resource;
@@ -39,7 +45,10 @@ public class DocumentoModel {
     private AutorizacionRolModel autorizacionRolModel;
 
     @Resource
-    private DocumentoRolEstadoModel documentoRolEstadoModel;
+    private AutorizacionRolPersonaModel autorizacionRolPersonaModel;
+
+    @Resource
+    private DocumentoAutorizacionModel documentoAutorizacionModel;
 
     public void agregar(Documento documento) throws FWExcepcion {
         documentoDao.agregar(documento);
@@ -58,20 +67,16 @@ public class DocumentoModel {
     public void agregarAprobacionSolicitudExclusion(ArrayList<Bien> bienes) {
 
         //Se crea el Documento Informe Tecnico        
-        DocumentoInformeTecnico informe = null;
-        ArrayList<DocumentoDetalle> detalles = null;
+        DocumentoInformeTecnico informe;
+        ArrayList<DocumentoDetalle> detalles;
 
         //Se busca el estado informe tecnico    
         Estado estadoInfome = estadoModel.buscarPorDominioEstado(Constantes.DOMINIO_INFORME_TECNICO, Constantes.ESTADO_INFORME_TECNICO_NUEVO);
-        
-        //FIXME Jairo valorar si se utiliza la vista o no
-        //Se buscan los roles por autorizacion
-        List<AutorizacionRol> autorizacionesRolDocumento = autorizacionRolModel.buscarPorCodigoAutorizacion(Constantes.CODIGO_AUTORIZACION_INFORME_TECNICO);
 
         for (Bien bien : bienes) {
 
             //Se crea el informe
-            informe = new DocumentoInformeTecnico(estadoInfome, null, bien, "");
+            informe = new DocumentoInformeTecnico(estadoInfome, null, bien, "", bien.getUnidadEjecutora());
 
             //Se le asocian los detalles
             detalles = new ArrayList<DocumentoDetalle>();
@@ -83,43 +88,53 @@ public class DocumentoModel {
 
             //Se agregan los detalles por problema de JPA1
             this.agregarDetallesDocumento(detalles);
-
-            //Para cada documento se crean las autorizaciones del documento
-//            for (AutorizacionRol autorizacionRol : autorizacionesRolDocumento) {
-//                
-//                new DocumentoAutorizacion();
-//                
-//                documentoRolEstadoModel.agregar(
-//                        //FIXME Jairo se debe verificar     
-//                        //new DocumentoRolEstadoEntity(informe.getIdInformeTecnico(), documentoRol.getId(), documentoRol.getId(), estadoDocumento)
-//                        null
-//                );
-//            }
         }
     }
 
-    public Long consultaCantidadRegistros(Long unidadEjecutora,
-            Integer idTipoInforme,
-            String identificacionBien,
-            String descripcionBien,
-            String marcaBien,
-            String modeloBien,
-            Integer idEstado
-    ) throws FWExcepcion {
-        return documentoDao.contar(unidadEjecutora, idTipoInforme, identificacionBien, descripcionBien, marcaBien, modeloBien, idEstado);
+    public Long consultaCantidadRegistros(UnidadEjecutora unidadEjecutora, Tipo tipoInforme, String identificacionBien, String descripcionBien, String marcaBien, String modeloBien, Estado estado, Integer tipoDocumento) throws FWExcepcion {
+        return documentoDao.contar(unidadEjecutora, tipoInforme, identificacionBien, descripcionBien, marcaBien, modeloBien, estado, tipoDocumento);
     }
 
-    public List<Documento> listarInformes(Long unidadEjecutora,
-            Integer idTipoInforme,
+    public List<Documento> listarInformes(UnidadEjecutora unidadEjecutora
+            , Tipo tipoInforme,
             String identificacionBien,
             String descripcionBien,
             String marcaBien,
             String modeloBien,
-            Integer idEstado,
+            Estado estado,
             Integer pPrimerRegistro,
-            Integer pUltimoRegistro
-    ) throws FWExcepcion {
-        return documentoDao.listar(unidadEjecutora, idTipoInforme, identificacionBien, descripcionBien, marcaBien, modeloBien, idEstado, pPrimerRegistro, pUltimoRegistro);
+            Integer pUltimoRegistro, Integer tipoDocumento) throws FWExcepcion {
+        return documentoDao.listar(unidadEjecutora, tipoInforme, identificacionBien, descripcionBien, marcaBien, modeloBien, estado, pPrimerRegistro, pUltimoRegistro, tipoDocumento);
+    }
+
+    public HashMap<String, DocumentoAutorizacion> obtenerDocumentosAutorizacionPorRol(Integer codigoAutorizacion, Documento documento, Usuario usuario, UnidadEjecutora unidadEjecutora) {
+
+        HashMap<String, DocumentoAutorizacion> documentoAutorizaciones = new HashMap();
+        Estado estadoAutorizacionProceso = estadoModel.buscarPorDominioEstado(Constantes.DOMINIO_INFORME_TECNICO, Constantes.ESTADO_INFORME_TECNICO_PROCESO);
+
+        //Paso 1: Se obtienen los roles que deben aprobar el documento
+        List<AutorizacionRol> rolesDocumento = autorizacionRolModel.buscarPorCodigoAutorizacion(codigoAutorizacion);
+
+        for (AutorizacionRol autorizacionRol : rolesDocumento) {
+
+            //Solo se contemplan los roles distintos al administrador
+            if (!autorizacionRol.getRol().getCodigo().equals(Constantes.CODIGO_ROL_ADMINISTRADOR)) {
+                //Para cada rol se verifica si el usuario tiene permisos para aplicar o rechazar la autorizacion
+                AutorizacionRolPersona autorizacionRolPersona = autorizacionRolPersonaModel.buscar(autorizacionRol, usuario, unidadEjecutora);
+                Boolean permiteModificar = autorizacionRolPersona != null;
+
+                //Para cada rol se verifica si el documento ya tiene alguna otra aprobacion
+                DocumentoAutorizacion documentoAutorizacion = documentoAutorizacionModel.buscar(autorizacionRol, documento);
+                if (documentoAutorizacion == null) {
+                    documentoAutorizacion = new DocumentoAutorizacion(documento, autorizacionRol, null, estadoAutorizacionProceso);
+                }
+                documentoAutorizacion.setMarcado(permiteModificar);
+                documentoAutorizaciones.put(autorizacionRol.getRol().getNombre(), documentoAutorizacion);
+
+            }
+        }
+
+        return documentoAutorizaciones;
     }
 
 }

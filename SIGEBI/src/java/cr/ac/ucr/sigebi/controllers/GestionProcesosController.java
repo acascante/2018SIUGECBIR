@@ -5,7 +5,6 @@
  */
 package cr.ac.ucr.sigebi.controllers;
 
-import cr.ac.ucr.framework.seguridad.entidades.SegUsuario;
 import cr.ac.ucr.framework.utils.FWExcepcion;
 import cr.ac.ucr.framework.vista.util.Mensaje;
 import cr.ac.ucr.framework.vista.util.Util;
@@ -20,10 +19,7 @@ import cr.ac.ucr.sigebi.domain.Usuario;
 import cr.ac.ucr.sigebi.models.AutorizacionModel;
 import cr.ac.ucr.sigebi.models.AutorizacionRolModel;
 import cr.ac.ucr.sigebi.models.AutorizacionRolPersonaModel;
-import cr.ac.ucr.sigebi.models.EstadoModel;
 import cr.ac.ucr.sigebi.models.RolModel;
-import cr.ac.ucr.sigebi.models.SegUsuarioModel;
-import cr.ac.ucr.sigebi.models.TipoModel;
 import cr.ac.ucr.sigebi.models.UsuarioModel;
 import cr.ac.ucr.sigebi.utils.JsfUtil;
 import java.util.ArrayList;
@@ -47,9 +43,6 @@ public class GestionProcesosController extends BaseController {
 
     //<editor-fold defaultstate="collapsed" desc="Variables Locales">
     @Resource
-    private TipoModel tipoModel;
-
-    @Resource
     private UsuarioModel usuarioModel;
 
     @Resource
@@ -64,31 +57,17 @@ public class GestionProcesosController extends BaseController {
     @Resource
     private AutorizacionRolPersonaModel autorizacionRolPersonaModel;
 
-    @Resource
-    private SegUsuarioModel segUsuarioModel;
-
-    @Resource
-    private EstadoModel estadoModel;
-
     //Listas para agregas
     List<SelectItem> tiposProceso;
     List<SelectItem> autorizacionesTipoProceso;
     List<SelectItem> roles;
-    List<SegUsuario> usuarios;
+    List<Usuario> usuarios;
 
     GestionProcesoCommand command;
 
     //</editor-fold>
     
     //<editor-fold defaultstate="collapsed" desc="Get's & Set's">
-    public TipoModel getTipoModel() {
-        return tipoModel;
-    }
-
-    public void setTipoModel(TipoModel tipoModel) {
-        this.tipoModel = tipoModel;
-    }
-
     public UsuarioModel getUsuarioModel() {
         return usuarioModel;
     }
@@ -129,22 +108,6 @@ public class GestionProcesosController extends BaseController {
         this.autorizacionRolPersonaModel = autorizacionRolPersonaModel;
     }
 
-    public SegUsuarioModel getSegUsuarioModel() {
-        return segUsuarioModel;
-    }
-
-    public void setSegUsuarioModel(SegUsuarioModel segUsuarioModel) {
-        this.segUsuarioModel = segUsuarioModel;
-    }
-
-    public EstadoModel getEstadoModel() {
-        return estadoModel;
-    }
-
-    public void setEstadoModel(EstadoModel estadoModel) {
-        this.estadoModel = estadoModel;
-    }
-
     public List<SelectItem> getTiposProceso() {
         return tiposProceso;
     }
@@ -169,11 +132,11 @@ public class GestionProcesosController extends BaseController {
         this.roles = roles;
     }
 
-    public List<SegUsuario> getUsuarios() {
+    public List<Usuario> getUsuarios() {
         return usuarios;
     }
 
-    public void setUsuarios(List<SegUsuario> usuarios) {
+    public void setUsuarios(List<Usuario> usuarios) {
         this.usuarios = usuarios;
     }
 
@@ -195,21 +158,27 @@ public class GestionProcesosController extends BaseController {
     @PostConstruct
     public final void inicializar() {
 
-        //Se consultan los tipos por dominio, procesos
-        List<Tipo> lista = tipoModel.listarPorDominio(Constantes.DOMINIO_PROCESO);
-        tiposProceso = new ArrayList<SelectItem>();
-        for (Tipo item : lista) {
-            tiposProceso.add(new SelectItem(item.getId().toString(), item.getNombre()));
-        }
+        try {
+            //Se consultan los tipos por dominio, procesos
+            List<Tipo> lista = this.tiposPorDominio(Constantes.DOMINIO_PROCESO);
+            tiposProceso = new ArrayList<SelectItem>();
+            for (Tipo item : lista) {
+                tiposProceso.add(new SelectItem(item.getId().toString(), item.getNombre()));
+            }
 
-        //Se consultan los roles de la aplicacion
-        List<Rol> listaRoles = rolModel.listarTodos();
-        roles = new ArrayList<SelectItem>();
-        for (Rol item : listaRoles) {
-            roles.add(new SelectItem(item.getId().toString(), item.getNombre()));
-        }
+            //Se consultan los roles de la aplicacion
+            List<Rol> listaRoles = rolModel.listarTodos();
+            roles = new ArrayList<SelectItem>();
+            for (Rol item : listaRoles) {
+                roles.add(new SelectItem(item.getId().toString(), item.getNombre()));
+            }
 
-        command = new GestionProcesoCommand();
+            command = new GestionProcesoCommand();
+        } catch (FWExcepcion e) {
+            Mensaje.agregarErrorAdvertencia(e.getError_para_usuario());
+        } catch (Exception e) {
+            Mensaje.agregarErrorAdvertencia(e, Util.getEtiquetas("sigebi.error.controllerGestionProcesos.inicializar"));
+        }
     }
 
     //</editor-fold>
@@ -228,24 +197,32 @@ public class GestionProcesosController extends BaseController {
             return;
         }
 
-        // Se obtiene el id del proceso
-        Long valor = Long.parseLong(event.getNewValue().toString());
-        command.setIdTipoProceso(valor);
+        try {
+            //Se inicializa la lista de autorizaciones
+            autorizacionesTipoProceso = null;
 
-        //Se inicializa el autorizacion y usuarios
-        command.setIdAutorizacionTipoProceso(-1L);
-        autorizacionesTipoProceso = null;
+            // Se obtiene el id del proceso
+            Long valor = command.getTipoProceso().getIdTemporal();
+            if (valor > 0) {
 
-        //Se busca a los usuarios asociados al autorizacion y al rol
-        buscaUsuariosAutorizacionRol();
+                //Se actualiza el tipo de proceso
+                command.setTipoProceso(this.tipoPorId(valor));
+                command.getTipoProceso().setIdTemporal(valor);
 
-        if (valor > 0) {
-            //Se cargan los autorizacions asociados al proceso
-            List<Autorizacion> lista = autorizacionModel.buscarPorTipoProceso(valor);
-            autorizacionesTipoProceso = new ArrayList<SelectItem>();
-            for (Autorizacion item : lista) {
-                autorizacionesTipoProceso.add(new SelectItem(item.getId().toString(), item.getNombre()));
+                //Se cargan los autorizacions asociados al proceso
+                List<Autorizacion> lista = autorizacionModel.buscarPorTipoProceso(command.getTipoProceso());
+                autorizacionesTipoProceso = new ArrayList<SelectItem>();
+                for (Autorizacion item : lista) {
+                    autorizacionesTipoProceso.add(new SelectItem(item.getId().toString(), item.getNombre()));
+                }
             }
+
+            //Se actualiza la lista de usuarios 
+            buscaUsuariosAutorizacionRol();
+        } catch (FWExcepcion e) {
+            Mensaje.agregarErrorAdvertencia(e.getError_para_usuario());
+        } catch (Exception e) {
+            Mensaje.agregarErrorAdvertencia(e, Util.getEtiquetas("sigebi.error.controllerGestionProcesos.seleccionProceso"));
         }
     }
 
@@ -261,13 +238,23 @@ public class GestionProcesosController extends BaseController {
             event.queue();
             return;
         }
+        try {
+            // Se obtiene el id del autorizacion
+            Long valor = command.getAutorizacion().getIdTemporal();
+            if (valor > 0) {
 
-        // Se obtiene el id del autorizacion
-        Long valor = Long.parseLong(event.getNewValue().toString());
-        command.setIdAutorizacionTipoProceso(valor);
+                //Se actualiza la autorizacion
+                command.setAutorizacion(autorizacionModel.buscarPorId(valor));
+                command.getAutorizacion().setIdTemporal(valor);
+            }
 
-        //Se busca a los usuarios asociados al autorizacion y al rol
-        this.buscaUsuariosAutorizacionRol();
+            //Se busca a los usuarios asociados al autorizacion y al rol
+            this.buscaUsuariosAutorizacionRol();
+        } catch (FWExcepcion e) {
+            Mensaje.agregarErrorAdvertencia(e.getError_para_usuario());
+        } catch (Exception e) {
+            Mensaje.agregarErrorAdvertencia(e, Util.getEtiquetas("sigebi.error.controllerGestionProcesos.seleccionAutorizacion"));
+        }
     }
 
     /**
@@ -282,22 +269,43 @@ public class GestionProcesosController extends BaseController {
             event.queue();
             return;
         }
+        try {
+            // Se obtiene el id del rol
+            Long valor = command.getRol().getIdTemporal();
+            if (valor > 0) {
+                //Se actualiza el rol  
+                command.setRol(rolModel.buscarPorId(valor));
+                command.getRol().setIdTemporal(valor);
+            }
 
-        // Se obtiene el id del rol
-        Long valor = Long.parseLong(event.getNewValue().toString());
-        command.setIdRol(valor);
+            //Se busca a los usuarios asociados al autorizacion y al rol
+            this.buscaUsuariosAutorizacionRol();
+        } catch (FWExcepcion e) {
+            Mensaje.agregarErrorAdvertencia(e.getError_para_usuario());
+        } catch (Exception e) {
+            Mensaje.agregarErrorAdvertencia(e, Util.getEtiquetas("sigebi.error.controllerGestionProcesos.seleccionRol"));
+        }
 
-        //Se busca a los usuarios asociados al autorizacion y al rol
-        this.buscaUsuariosAutorizacionRol();
     }
 
     private void buscaUsuariosAutorizacionRol() {
-        usuarios = null;
-        this.setCantidadRegistros(0);
-        if (command.getIdRol() > 0 && command.getIdAutorizacionTipoProceso() > 0) {
-            //Se buscan los usuarios       
-            this.contarUsuarios();
-            this.listarUsuarios();
+        try {
+            usuarios = null;
+            this.setCantidadRegistros(0);
+
+            if (command.getRol().getIdTemporal() > 0 && command.getAutorizacion().getIdTemporal() > 0) {
+
+                //Se busca la autorizacion rol
+                command.setAutorizacionRol(autorizacionRolModel.buscarPorRolAutorizacion(command.getRol().getIdTemporal(), command.getAutorizacion().getIdTemporal()));
+
+                //Se buscan los usuarios       
+                this.contarUsuarios();
+                this.listarUsuarios();
+            }
+        } catch (FWExcepcion e) {
+            Mensaje.agregarErrorAdvertencia(e.getError_para_usuario());
+        } catch (Exception e) {
+            Mensaje.agregarErrorAdvertencia(e, Util.getEtiquetas("sigebi.error.controllerGestionProcesos.buscaUsuariosAutorizacionRol"));
         }
     }
 
@@ -308,16 +316,21 @@ public class GestionProcesosController extends BaseController {
         try {
 
             //Se cargan los usuario asociados al rol
-            List<AutorizacionRolPersona> personasRolAutorizacion = autorizacionRolPersonaModel.buscarPorAutorizacionRol(command.getIdAutorizacionTipoProceso(), command.getIdRol(), unidadEjecutora.getId());
+            List<AutorizacionRolPersona> personasRolAutorizacion = null;
+            if (command.getAutorizacionRol() != null) {
+                personasRolAutorizacion = autorizacionRolPersonaModel.buscar(command.getAutorizacionRol(), unidadEjecutora);
+            }
 
-            //Se buscan los usuarios
-            this.usuarios = segUsuarioModel.listarUsuarios(command.getIdUsuario(), command.getNombreCompleto(), 
-                    command.getCorreo(), this.getPrimerRegistro() - 1, this.getUltimoRegistro());
+            //Se buscan los usuarios del sistema de acuerdo a los filtros
+            this.usuarios = usuarioModel.listarUsuarios(command.getIdUsuario(), command.getNombreCompleto(), command.getCorreo(), this.getPrimerRegistro() - 1, this.getUltimoRegistro());
+
+            //Se marcan aquellos que tengan una autorizacion registrada
             if (personasRolAutorizacion != null) {
+
                 //Se seleccionan los usuarios asociados a los roles
-                for (SegUsuario usuario : usuarios) {
+                for (Usuario usuario : usuarios) {
                     for (AutorizacionRolPersona personaRol : personasRolAutorizacion) {
-                        if (personaRol.getUsuarioSeguridad().getId().equals(usuario.getIdUsuario())) {
+                        if (personaRol.getUsuarioSeguridad().getId().equals(usuario.getId())) {
                             usuario.setMarcado(true);
                         }
                     }
@@ -327,7 +340,7 @@ public class GestionProcesosController extends BaseController {
         } catch (FWExcepcion e) {
             Mensaje.agregarErrorAdvertencia(e.getError_para_usuario());
         } catch (Exception e) {
-            Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.error.controllerGestionProcesos.listarUsuarios"));
+            Mensaje.agregarErrorAdvertencia(e, Util.getEtiquetas("sigebi.error.controllerGestionProcesos.listarUsuarios"));
         }
     }
 
@@ -338,6 +351,7 @@ public class GestionProcesosController extends BaseController {
      */
     public void agregar(ActionEvent pEvent) {
         try {
+
             if (!pEvent.getPhaseId().equals(PhaseId.INVOKE_APPLICATION)) {
                 pEvent.setPhaseId(PhaseId.INVOKE_APPLICATION);
                 pEvent.queue();
@@ -345,28 +359,34 @@ public class GestionProcesosController extends BaseController {
             }
 
             //Se busca el rol autorizacion, si no existe se crea
-            AutorizacionRol autorizacionRol = autorizacionRolModel.buscarPorRolAutorizacion(command.getIdRol(), command.getIdAutorizacionTipoProceso());
+            AutorizacionRol autorizacionRol = command.getAutorizacionRol();
             if (autorizacionRol == null) {
                 autorizacionRol = new AutorizacionRol();
-                autorizacionRol.setRol(rolModel.buscarPorId(command.getIdRol()));
-                autorizacionRol.setAutorizacion(autorizacionModel.buscarPorId(command.getIdAutorizacionTipoProceso()));
+                autorizacionRol.setRol(command.getRol());
+                autorizacionRol.setAutorizacion(command.getAutorizacion());
                 autorizacionRolModel.agregar(autorizacionRol);
+
+                //Se actualiza el command
+                command.setAutorizacionRol(autorizacionRol);
             }
 
-            SegUsuario usuario = (SegUsuario) pEvent.getComponent().getAttributes().get("usuarioSelApro");
-            Usuario usr = usuarioModel.buscarPorId(usuario.getIdUsuario());
+            //Se busca el usuario
+            Usuario usuario = (Usuario) pEvent.getComponent().getAttributes().get("usuarioSelApro");
 
             //Se incluye el usuario al rol
             AutorizacionRolPersona autorizacionRolPersona = new AutorizacionRolPersona();
-            autorizacionRolPersona.setAutorizacionRol(autorizacionRol);            
-            autorizacionRolPersona.setUsuarioSeguridad(usr);
+            autorizacionRolPersona.setAutorizacionRol(autorizacionRol);
+            autorizacionRolPersona.setUsuarioSeguridad(usuario);
             autorizacionRolPersona.setUnidadEjecutora(unidadEjecutora);
             autorizacionRolPersonaModel.agregar(autorizacionRolPersona);
 
+            //Se marca el usuario como incluido
             usuario.setMarcado(true);
 
-        } catch (Exception err) {
-            Mensaje.agregarErrorAdvertencia(err.getMessage());
+        } catch (FWExcepcion e) {
+            Mensaje.agregarErrorAdvertencia(e.getError_para_usuario());
+        } catch (Exception e) {
+            Mensaje.agregarErrorAdvertencia(e, Util.getEtiquetas("sigebi.error.controllerGestionProcesos.agregarUsuario"));
         }
     }
 
@@ -384,19 +404,22 @@ public class GestionProcesosController extends BaseController {
             }
 
             //Se busca el objeto para eliminar
-            SegUsuario usuario = (SegUsuario) pEvent.getComponent().getAttributes().get("usuarioSelRech");
-            AutorizacionRolPersona autorizacionRolPersona = autorizacionRolPersonaModel.buscarPorRolAutorizacionUsuario(command.getIdRol(), command.getIdAutorizacionTipoProceso(), usuario.getIdUsuario());
+            Usuario usuario = (Usuario) pEvent.getComponent().getAttributes().get("usuarioSelRech");
+            AutorizacionRolPersona autorizacionRolPersona = autorizacionRolPersonaModel.buscar(command.getAutorizacionRol(), usuario, unidadEjecutora);
+
             autorizacionRolPersonaModel.eliminar(autorizacionRolPersona);
             usuario.setMarcado(false);
 
-            //Se verifica si la autorizacion rol tiene usuarios asociados
-            if (autorizacionRolPersonaModel.contarPorAutorizacionRol(command.getIdAutorizacionTipoProceso(), command.getIdRol()) == 0) {
-                AutorizacionRol autorizacionRol = autorizacionRolModel.buscarPorRolAutorizacion(command.getIdRol(), command.getIdAutorizacionTipoProceso());
-                autorizacionRolModel.eliminar(autorizacionRol);
+            //Se verifica si la autorizacion rol tiene usuarios asociados para eliminarla
+            if (autorizacionRolPersonaModel.contar(command.getAutorizacionRol()).equals(0L)) {
+                autorizacionRolModel.eliminar(command.getAutorizacionRol());
+                command.setAutorizacionRol(null);
             }
 
-        } catch (Exception err) {
-            Mensaje.agregarErrorAdvertencia(err.getMessage());
+        } catch (FWExcepcion e) {
+            Mensaje.agregarErrorAdvertencia(e.getError_para_usuario());
+        } catch (Exception e) {
+            Mensaje.agregarErrorAdvertencia(e, Util.getEtiquetas("sigebi.error.controllerGestionProcesos.eliminarUsuario"));
         }
     }
 
@@ -404,18 +427,17 @@ public class GestionProcesosController extends BaseController {
      * Contabiliza los usuarios
      */
     private void contarUsuarios() {
-        try {
 
+        try {
             //Se cuenta la cantidad de registros
-            Long contador = segUsuarioModel.contarUsuarios(command.getIdUsuario(), command.getNombreCompleto(), command.getCorreo());
+            Long contador = usuarioModel.contarUsuarios(command.getIdUsuario(), command.getNombreCompleto(), command.getCorreo());
 
             //Se actualiza la cantidad de registros segun los filtros
             this.setCantidadRegistros(contador.intValue());
-
         } catch (FWExcepcion e) {
             Mensaje.agregarErrorAdvertencia(e.getError_para_usuario());
         } catch (Exception e) {
-            Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.error.controllerGestionProcesos.contarUsuarios"));
+            Mensaje.agregarErrorAdvertencia(e, Util.getEtiquetas("sigebi.error.controllerGestionProcesos.contarUsuarios"));
         }
     }
 
@@ -425,6 +447,7 @@ public class GestionProcesosController extends BaseController {
      * @param pEvent
      */
     public void cambioFiltro(ValueChangeEvent pEvent) {
+
         try {
             if (!pEvent.getPhaseId().equals(PhaseId.INVOKE_APPLICATION)) {
                 pEvent.setPhaseId(PhaseId.INVOKE_APPLICATION);
@@ -437,9 +460,10 @@ public class GestionProcesosController extends BaseController {
             this.setPrimerRegistro(1);
 
             this.listarUsuarios();
-
-        } catch (Exception err) {
-            Mensaje.agregarErrorAdvertencia(err.getMessage());
+        } catch (FWExcepcion e) {
+            Mensaje.agregarErrorAdvertencia(e.getError_para_usuario());
+        } catch (Exception e) {
+            Mensaje.agregarErrorAdvertencia(e, Util.getEtiquetas("sigebi.error.controllerGestionProcesos.cambioFiltro"));
         }
 
     }
@@ -450,35 +474,41 @@ public class GestionProcesosController extends BaseController {
      * @param pEvent
      */
     public void mostrarPanel(ActionEvent pEvent) {
+
         try {
             if (!pEvent.getPhaseId().equals(PhaseId.INVOKE_APPLICATION)) {
                 pEvent.setPhaseId(PhaseId.INVOKE_APPLICATION);
                 pEvent.queue();
                 return;
             }
+
             //Se muestra el panel de acuerdo a la accion
             String accion = (String) pEvent.getComponent().getAttributes().get("accion");
             command.setAccion(Integer.parseInt(accion));
             command.setPresentarPanel(Boolean.TRUE);
             if (command.getPresentarPanelAgregarAutorizacion()) {
-                command.setAutorizacion(new Autorizacion());
+                command.setAutorizacionNew(new Autorizacion());
             } else if (command.getPresentarPanelModificarAutorizacion()) {
-                command.setAutorizacion(autorizacionModel.buscarPorId(command.getIdAutorizacionTipoProceso()));
+                command.setAutorizacionNew(command.getAutorizacion());
             } else if (command.getPresentarPanelAgregarRol()) {
-                command.setRol(new Rol());
+                command.setRolNew(new Rol());
             } else if (command.getPresentarPanelModificarRol()) {
-                command.setRol(rolModel.buscarPorId(command.getIdRol()));
+                command.setRolNew(command.getRol());
             }
-        } catch (Exception err) {
-            Mensaje.agregarErrorAdvertencia(err.getMessage());
+        } catch (FWExcepcion e) {
+            Mensaje.agregarErrorAdvertencia(e.getError_para_usuario());
+        } catch (Exception e) {
+            Mensaje.agregarErrorAdvertencia(e, Util.getEtiquetas("sigebi.error.controllerGestionProcesos.mostrarPanel"));
         }
     }
 
     public void cerrarPanel() {
         try {
             command.setPresentarPanel(Boolean.FALSE);
-        } catch (Exception err) {
-            Mensaje.agregarErrorAdvertencia(err.getMessage());
+        } catch (FWExcepcion e) {
+            Mensaje.agregarErrorAdvertencia(e.getError_para_usuario());
+        } catch (Exception e) {
+            Mensaje.agregarErrorAdvertencia(e, Util.getEtiquetas("sigebi.error.controllerGestionProcesos.cerrarPanel"));
         }
     }
     //</editor-fold>
@@ -584,16 +614,19 @@ public class GestionProcesosController extends BaseController {
      */
     public void agregarAutorizacion() {
         try {
-            Autorizacion autorizacion = command.getAutorizacion();
-            autorizacion.setTipoProceso(tipoModel.buscarPorId(command.getIdTipoProceso()));
-            autorizacion.setEstado(estadoModel.buscarPorDominioEstado(Constantes.DOMINIO_GENERAL, Constantes.ESTADO_GENERAL_ACTIVO));
+
+            Autorizacion autorizacion = command.getAutorizacionNew();
+            autorizacion.setTipoProceso(command.getTipoProceso());
+            autorizacion.setEstado(this.estadoPorDominioValor(Constantes.DOMINIO_GENERAL, Constantes.ESTADO_GENERAL_ACTIVO));
             if (validarFormAutorizacion()) {
                 autorizacionModel.agregar(autorizacion);
                 autorizacionesTipoProceso.add(new SelectItem(autorizacion.getId().toString(), autorizacion.getNombre()));
                 command.setPresentarPanel(Boolean.FALSE);
             }
-        } catch (Exception err) {
-            Mensaje.agregarErrorAdvertencia(err.getMessage());
+        } catch (FWExcepcion e) {
+            Mensaje.agregarErrorAdvertencia(e.getError_para_usuario());
+        } catch (Exception e) {
+            Mensaje.agregarErrorAdvertencia(e, Util.getEtiquetas("sigebi.error.controllerGestionProcesos.agregarAutorizacion"));
         }
     }
 
@@ -603,44 +636,51 @@ public class GestionProcesosController extends BaseController {
     public void modificarAutorizacion() {
         try {
             if (validarFormAutorizacion()) {
-                autorizacionModel.modificar(command.getAutorizacion());
-                JsfUtil.modificarItem(autorizacionesTipoProceso, command.getAutorizacion().getId().toString(), command.getAutorizacion().getNombre(), null);
+                Autorizacion autorizacion = command.getAutorizacionNew();
+                autorizacionModel.modificar(autorizacion);
+                JsfUtil.modificarItem(autorizacionesTipoProceso, autorizacion.getId().toString(), autorizacion.getNombre(), null);
+                command.setAutorizacion(autorizacion);
                 command.setPresentarPanel(Boolean.FALSE);
             }
-        } catch (Exception err) {
-            Mensaje.agregarErrorAdvertencia(err.getMessage());
+        } catch (FWExcepcion e) {
+            Mensaje.agregarErrorAdvertencia(e.getError_para_usuario());
+        } catch (Exception e) {
+            Mensaje.agregarErrorAdvertencia(e, Util.getEtiquetas("sigebi.error.controllerGestionProcesos.modificarAutorizacion"));
         }
     }
 
     public boolean validarFormAutorizacion() {
         //Validaciones de campos
-        if (command.getAutorizacion().getNombre().isEmpty()) {
+        if (command.getAutorizacionNew().getNombre().isEmpty()) {
             Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.error.controllerGestionProcesos.autorizacion.nombre.requerido"));
             return false;
         }
-        if (command.getAutorizacion().getDetalle().isEmpty()) {
+        if (command.getAutorizacionNew().getDetalle().isEmpty()) {
             Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.error.controllerGestionProcesos.autorizacion.detalle.requerido"));
             return false;
         }
-        if (!command.getAutorizacion().getOrden().toString().matches(Constantes.PATTERN_NUMERIC)) {
-            Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.error.controllerGestionProcesos.autorizacion.orden.no.numerico"));
-            return false;
-        } else if (command.getAutorizacion().getOrden() == null || command.getAutorizacion().getOrden() <= 0) {
+        
+        if (command.getAutorizacionNew().getOrden() == null || command.getAutorizacionNew().getOrden() <= 0) {
             Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.error.controllerGestionProcesos.autorizacion.orden.requerido"));
             return false;
-        }
-        if (!command.getAutorizacion().getCodigo().toString().matches(Constantes.PATTERN_NUMERIC)) {
-            Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.error.controllerGestionProcesos.autorizacion.codigo.no.numerico"));
+        }else if (!command.getAutorizacionNew().getOrden().toString().matches(Constantes.PATTERN_NUMERIC)) {
+            Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.error.controllerGestionProcesos.autorizacion.orden.no.numerico"));
             return false;
-        } else if (command.getAutorizacion().getCodigo() == null || command.getAutorizacion().getOrden() <= 0) {
+        }
+        
+        if (command.getAutorizacionNew().getCodigo() == null || command.getAutorizacionNew().getOrden() <= 0) {
             Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.error.controllerGestionProcesos.autorizacion.codigo.requerido"));
             return false;
-        }
-        if (command.getAutorizacion().getEstado() == null) {
+        }else if (!command.getAutorizacionNew().getCodigo().toString().matches(Constantes.PATTERN_NUMERIC)) {
+            Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.error.controllerGestionProcesos.autorizacion.codigo.no.numerico"));
+            return false;
+        } 
+        
+        if (command.getAutorizacionNew().getEstado() == null) {
             Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.error.controllerGestionProcesos.autorizacion.estado.requerido"));
             return false;
         }
-        if (command.getAutorizacion().getTipoProceso()== null) {
+        if (command.getAutorizacionNew().getTipoProceso() == null) {
             Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.error.controllerGestionProcesos.autorizacion.proceso.requerido"));
             return false;
         }
@@ -649,37 +689,37 @@ public class GestionProcesosController extends BaseController {
         if (command.getPresentarPanelAgregarAutorizacion()) {
 
             //Se verifica si ya existe un autorizacion con el nombre indicado
-            if (autorizacionModel.contarAutorizacionsValidator(null, command.getIdTipoProceso(), null, command.getAutorizacion().getNombre(),null) > 0) {
+            if (autorizacionModel.contarAutorizacionsValidator(null, null, null, command.getAutorizacionNew().getNombre(), null) > 0) {
                 Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.error.controllerGestionProcesos.autorizacion.nombre.ya.existe"));
                 return false;
             }
 
             //Se verifica si ya existe un autorizacion con el orden indicado
-            if (autorizacionModel.contarAutorizacionsValidator(null, command.getIdTipoProceso(), command.getAutorizacion().getOrden(), null,null) > 0) {
+            if (autorizacionModel.contarAutorizacionsValidator(null, null, command.getAutorizacionNew().getOrden(), null, null) > 0) {
                 Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.error.controllerGestionProcesos.autorizacion.orden.ya.existe"));
                 return false;
             }
-            
+
             //Se verifica si ya existe un autorizacion con el codigo indicado
-            if (autorizacionModel.contarAutorizacionsValidator(null, command.getIdTipoProceso(), null, null, command.getAutorizacion().getCodigo()) > 0) {
+            if (autorizacionModel.contarAutorizacionsValidator(null, null, null, null, command.getAutorizacionNew().getCodigo()) > 0) {
                 Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.error.controllerGestionProcesos.autorizacion.codigo.ya.existe"));
                 return false;
             }
         } else if (command.getPresentarPanelModificarAutorizacion()) {
             //Se verifica si ya existe un autorizacion con el nombre indicado
-            if (autorizacionModel.contarAutorizacionsValidator(command.getAutorizacion().getId(), command.getIdTipoProceso(), null, command.getAutorizacion().getNombre(),null) > 0) {
+            if (autorizacionModel.contarAutorizacionsValidator(command.getAutorizacionNew().getId(), null, null, command.getAutorizacionNew().getNombre(), null) > 0) {
                 Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.error.controllerGestionProcesos.autorizacion.nombre.ya.existe"));
                 return false;
             }
 
             //Se verifica si ya existe un autorizacion con el orden indicado
-            if (autorizacionModel.contarAutorizacionsValidator(command.getAutorizacion().getId(), command.getIdTipoProceso(), command.getAutorizacion().getOrden(), null,null) > 0) {
+            if (autorizacionModel.contarAutorizacionsValidator(command.getAutorizacionNew().getId(),null, command.getAutorizacionNew().getOrden(), null, null) > 0) {
                 Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.error.controllerGestionProcesos.autorizacion.orden.ya.existe"));
                 return false;
             }
 
             //Se verifica si ya existe un autorizacion con el codigo indicado
-            if (autorizacionModel.contarAutorizacionsValidator(command.getAutorizacion().getId(), command.getIdTipoProceso(), null,null, command.getAutorizacion().getCodigo()) > 0) {
+            if (autorizacionModel.contarAutorizacionsValidator(command.getAutorizacionNew().getId(), null, null, null, command.getAutorizacionNew().getCodigo()) > 0) {
                 Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.error.controllerGestionProcesos.autorizacion.codigo.ya.existe"));
                 return false;
             }
@@ -691,26 +731,28 @@ public class GestionProcesosController extends BaseController {
      * Elimina el autorizacion a la base de datos
      */
     public void eliminarAutorizacion() {
+
         try {
             if (validarFormEliminarAutorizacion()) {
-                autorizacionModel.eliminar(command.getAutorizacion());
-                autorizacionesTipoProceso = JsfUtil.eliminarItem(autorizacionesTipoProceso, command.getAutorizacion().getId().toString());
+                autorizacionModel.eliminar(command.getAutorizacionNew());
+                autorizacionesTipoProceso = JsfUtil.eliminarItem(autorizacionesTipoProceso, command.getAutorizacionNew().getId().toString());
                 command.setPresentarPanel(Boolean.FALSE);
-
-                command.setIdAutorizacionTipoProceso(-1L);
+                command.setAutorizacion(new Autorizacion());
 
                 //Se busca los usuarios por rol y autorizacion
                 this.buscaUsuariosAutorizacionRol();
             }
-        } catch (Exception err) {
-            Mensaje.agregarErrorAdvertencia(err.getMessage());
+        } catch (FWExcepcion e) {
+            Mensaje.agregarErrorAdvertencia(e.getError_para_usuario());
+        } catch (Exception e) {
+            Mensaje.agregarErrorAdvertencia(e, Util.getEtiquetas("sigebi.error.controllerGestionProcesos.eliminarAutorizacion"));
         }
     }
 
     public boolean validarFormEliminarAutorizacion() {
 
         //Se valida que el autorizacion no este asociado a un rol
-        if (autorizacionRolModel.contarPorAutorizacion(command.getAutorizacion().getId()) > 0) {
+        if (autorizacionRolModel.contarPorAutorizacion(command.getAutorizacionNew().getId()) > 0) {
             Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.error.controllerGestionProcesos.autorizacion.asociado.rol"));
             return false;
         }
@@ -724,16 +766,20 @@ public class GestionProcesosController extends BaseController {
      * Agregar el rol a la base de datos
      */
     public void agregarRol() {
+
         try {
-            Rol rol = command.getRol();
-            rol.setEstado(estadoModel.buscarPorDominioEstado(Constantes.DOMINIO_GENERAL, Constantes.ESTADO_GENERAL_ACTIVO));
+            Rol rol = command.getRolNew();
+            rol.setEstado(this.estadoPorDominioValor(Constantes.DOMINIO_GENERAL, Constantes.ESTADO_GENERAL_ACTIVO));
             if (validarFormRol()) {
                 rolModel.agregar(rol);
                 roles.add(new SelectItem(rol.getId(), rol.getNombre()));
                 command.setPresentarPanel(Boolean.FALSE);
+                command.setRol(rol);
             }
-        } catch (Exception err) {
-            Mensaje.agregarErrorAdvertencia(err.getMessage());
+        } catch (FWExcepcion e) {
+            Mensaje.agregarErrorAdvertencia(e.getError_para_usuario());
+        } catch (Exception e) {
+            Mensaje.agregarErrorAdvertencia(e, Util.getEtiquetas("sigebi.error.controllerGestionProcesos.agregarRol"));
         }
     }
 
@@ -743,23 +789,27 @@ public class GestionProcesosController extends BaseController {
     public void modificarRol() {
         try {
             if (validarFormRol()) {
-                Rol rol = command.getRol();
+                Rol rol = command.getRolNew();
                 rolModel.modificar(rol);
                 JsfUtil.modificarItem(roles, rol.getId().toString(), rol.getNombre(), null);
                 command.setPresentarPanel(Boolean.FALSE);
             }
-        } catch (Exception err) {
-            Mensaje.agregarErrorAdvertencia(err.getMessage());
+        } catch (FWExcepcion e) {
+            Mensaje.agregarErrorAdvertencia(e.getError_para_usuario());
+        } catch (Exception e) {
+            Mensaje.agregarErrorAdvertencia(e, Util.getEtiquetas("sigebi.error.controllerGestionProcesos.modificarRol"));
         }
     }
 
+    
+    
     public boolean validarFormRol() {
         //Validaciones de campos
-        if (command.getRol().getCodigo().isEmpty()) {
+        if (command.getRolNew().getCodigo() == null || command.getRolNew().getCodigo() < 0) {
             Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.error.controllerGestionProcesos.autorizacion.rol.codigo.requerido"));
             return false;
         }
-        if (command.getRol().getNombre().isEmpty()) {
+        if (command.getRolNew().getNombre().isEmpty()) {
             Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.error.controllerGestionProcesos.autorizacion.rol.nombre.requerido"));
             return false;
         }
@@ -767,25 +817,25 @@ public class GestionProcesosController extends BaseController {
         if (command.getPresentarPanelAgregarRol()) {
 
             //Se verifica si ya existe un rol con el nombre indicado
-            if (rolModel.contarRolesValidator(null, null, command.getRol().getNombre()) > 0) {
+            if (rolModel.contarRolesValidator(null, null, command.getRolNew().getNombre()) > 0) {
                 Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.error.controllerGestionProcesos.rol.nombre.ya.existe"));
                 return false;
             }
 
             //Se verifica si ya existe un autorizacion con el codigo indicado
-            if (rolModel.contarRolesValidator(null, command.getRol().getCodigo(), null) > 0) {
+            if (rolModel.contarRolesValidator(null, command.getRolNew().getCodigo(), null) > 0) {
                 Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.error.controllerGestionProcesos.rol.codigo.ya.existe"));
                 return false;
             }
         } else if (command.getPresentarPanelModificarRol()) {
             //Se verifica si ya existe un rol con el nombre indicado
-            if (rolModel.contarRolesValidator(command.getRol().getId(), null, command.getRol().getNombre()) > 0) {
+            if (rolModel.contarRolesValidator(command.getRolNew().getId(), null, command.getRolNew().getNombre()) > 0) {
                 Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.error.controllerGestionProcesos.rol.nombre.ya.existe"));
                 return false;
             }
 
             //Se verifica si ya existe un rol con el codigo indicado
-            if (rolModel.contarRolesValidator(command.getRol().getId(), command.getRol().getCodigo(), null) > 0) {
+            if (rolModel.contarRolesValidator(command.getRolNew().getId(), command.getRolNew().getCodigo(), null) > 0) {
                 Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.error.controllerGestionProcesos.rol.codigo.ya.existe"));
                 return false;
             }
@@ -797,27 +847,30 @@ public class GestionProcesosController extends BaseController {
      * Elimina el rol a la base de datos
      */
     public void eliminarRol() {
+
         try {
             if (validarFormEliminarRol()) {
-                Rol rol = command.getRol();
+                Rol rol = command.getRolNew();
                 roles = JsfUtil.eliminarItem(roles, rol.getId().toString());
                 rolModel.eliminar(rol);
 
                 command.setPresentarPanel(Boolean.FALSE);
-                command.setIdRol(-1L);
+                command.setRol(new Rol());
 
                 //Se busca los usuarios por rol y autorizacion
                 this.buscaUsuariosAutorizacionRol();
 
             }
-        } catch (Exception err) {
-            Mensaje.agregarErrorAdvertencia(err.getMessage());
+        } catch (FWExcepcion e) {
+            Mensaje.agregarErrorAdvertencia(e.getError_para_usuario());
+        } catch (Exception e) {
+            Mensaje.agregarErrorAdvertencia(e, Util.getEtiquetas("sigebi.error.controllerGestionProcesos.eliminarRol"));
         }
     }
 
     public boolean validarFormEliminarRol() {
 
-        if (rolModel.verificaRolUso(command.getRol().getId()) > 0) {
+        if (rolModel.verificaRolUso(command.getRolNew().getId()) > 0) {
             Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.error.controllerGestionProcesos.rol.asociado"));
             return false;
         }

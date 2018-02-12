@@ -9,6 +9,7 @@ import cr.ac.ucr.framework.daoHibernate.DaoHelper;
 import cr.ac.ucr.framework.daoImpl.GenericDaoImpl;
 import cr.ac.ucr.framework.utils.FWExcepcion;
 import cr.ac.ucr.sigebi.domain.Autorizacion;
+import cr.ac.ucr.sigebi.domain.Tipo;
 import java.util.List;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
@@ -79,12 +80,31 @@ public class AutorizacionDao extends GenericDaoImpl {
     }
     
     @Transactional(readOnly = true)
-    public List<Autorizacion> buscarPorTipoProceso(Long idTipoProceso) throws FWExcepcion {
+    public Autorizacion buscarPorCodigo(Integer idCodigo) throws FWExcepcion {
         Session session = this.dao.getSessionFactory().openSession();
         try {
-            String sql = "SELECT obj FROM Autorizacion obj WHERE obj.tipoProceso.id = :idTipoProceso";
+            String sql = "SELECT obj FROM Autorizacion obj WHERE obj.codigo = :codigo";
             Query query = session.createQuery(sql);
-            query.setParameter("idTipoProceso", idTipoProceso);
+            query.setParameter("codigo", idCodigo);
+
+            //Se obtienen los resutltados
+            return (Autorizacion) query.list().get(0);
+
+        } catch (HibernateException e) {
+            throw new FWExcepcion("sigebi.error.dao.autorizacion.buscarPorId",
+                    "Error obtener los registros de tipo " + this.getClass(), e.getCause());
+        } finally {
+            session.close();
+        }
+    }
+    
+    @Transactional(readOnly = true)
+    public List<Autorizacion> buscarPorTipoProceso(Tipo tipoProceso) throws FWExcepcion {
+        Session session = this.dao.getSessionFactory().openSession();
+        try {
+            String sql = "SELECT obj FROM Autorizacion obj WHERE obj.tipoProceso = :tipoProceso";
+            Query query = session.createQuery(sql);
+            query.setParameter("tipoProceso", tipoProceso);
 
             //Se obtienen los resutltados
             return (List<Autorizacion>) query.list();

@@ -1,6 +1,6 @@
-<ice:outputHtml id="frmDetalleNotificacion" xmlns:ice="http://www.icesoft.com/icefaces/component" xmlns:icecore="http://www.icefaces.org/icefaces/core" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:c="http://java.sun.com/jstl/core">
+<ice:outputHtml id="frmProveedores" xmlns:ice="http://www.icesoft.com/icefaces/component" xmlns:icecore="http://www.icefaces.org/icefaces/core" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:c="http://java.sun.com/jstl/core">
 
-    <ice:panelPopup modal="true" visible="#{controllerAgregarBienes.visiblePanelProveedores}" rendered="true" styleClass="popup">
+    <ice:panelPopup modal="true" visible="#{controllerAgregarBienes.visiblePanelProveedores}" rendered="#{controllerAgregarBienes.visiblePanelProveedores}" styleClass="popup">
 
         <f:facet name="header">
             <ice:outputText styleClass="flotar_izquierda titulo_popup" value="Listado de Proveedores"/>
@@ -13,32 +13,34 @@
                 <!-- LISTAR PROVEEDORES -->
                 <ice:dataTable id="provTabla" value="#{controllerAgregarBienes.proveedores}" var="proveedor" 
                                paginator="true" paginatorPosition="bottom" rows="10">
-                    <ice:column id="colIdentificacion">
+                    <ice:column id="colIdentificacionPro">
                         <f:facet name="header">
                             <ice:outputText value="Identificación"/>
                         </f:facet>
                         
                         <f:facet name="footer">
-                            <ice:inputText id="filtrIdentificacion" 
+                            <ice:inputText id="filtrIdentificacionPro" 
                                            value="#{controllerAgregarBienes.command.proveedorCommand.filtroIdentificacion}" 
+                                           partialSubmit="true"
                                            valueChangeListener="#{controllerAgregarBienes.filtroProveedor}"/>
                         </f:facet>
                         
                         <h:outputText id="idProveedor" value="#{proveedor.identificacion}"/>
                     </ice:column>
 
-                    <ice:column id="colNombre">
+                    <ice:column id="colNombrePro">
                         <f:facet name="header">
                             <ice:outputText value="Nombre"/>
                         </f:facet>
                         
                         <f:facet name="footer">
-                            <ice:inputText id="filtroNombre" 
-                                           value="#{controllerAgregarBienes.command.proveedorCommand.filtroNombre}"                     
+                            <ice:inputText id="filtroNombrePro" 
+                                           value="#{controllerAgregarBienes.command.proveedorCommand.filtroNombre}"     
+                                           partialSubmit="true"                                           
                                            valueChangeListener="#{controllerAgregarBienes.filtroProveedor}"/>
                         </f:facet>
                         
-                        <h:outputText id="lblNomb" value="#{proveedor.nombreCompleto}"/>
+                        <h:outputText id="lblNombPro" value="#{proveedor.nombreCompleto}"/>
                     </ice:column>
 
                     <ice:column style="text-align: center;">

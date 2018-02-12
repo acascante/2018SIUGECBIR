@@ -70,6 +70,18 @@
                                    paginator="true"
                                    paginatorPosition="bottom"
                                    rows="10">
+                            <ice:column id="colId">
+                                <f:facet name="header">
+                                    <ice:columnGroup>
+                                        <ice:headerRow>
+                                            <ice:outputText value="#{label['sigebi.label.vista.listarInformeTecnico.id']}"/>
+                                        </ice:headerRow>
+                                        <ice:headerRow>
+                                        </ice:headerRow>
+                                    </ice:columnGroup>
+                                </f:facet>                                
+                                <h:outputText id="costoCell" value="#{informe.id}"/>
+                            </ice:column>
                             
                             <ice:column id="colTipo">
                                 <f:facet name="header">
@@ -89,7 +101,7 @@
                                         </ice:headerRow>
                                     </ice:columnGroup>
                                 </f:facet>                                
-                                <h:outputText id="costoCell" value="#{informe.tipo.nombre}"/>
+                                <h:outputText id="costoCell" value="#{informe.tipoInforme.nombre}"/>
                             </ice:column>
                             
 <!--                            <ice:column id="idBien">                                 

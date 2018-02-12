@@ -1,4 +1,4 @@
-<ice:outputHtml id="frmDetalleNotificacion" xmlns:ice="http://www.icesoft.com/icefaces/component" xmlns:icecore="http://www.icefaces.org/icefaces/core" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:c="http://java.sun.com/jstl/core">
+<ice:outputHtml id="frmArchivos" xmlns:ice="http://www.icesoft.com/icefaces/component" xmlns:icecore="http://www.icefaces.org/icefaces/core" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:c="http://java.sun.com/jstl/core">
 
     <!-- TAB Adjunto -->
     <div class="container">
@@ -15,8 +15,13 @@
                         <div class="col-md-12">
                             <div class="form-group">
                                 <label class="control-label" for="txtDescripcionAdjunto">Descripción</label>
-                                <ice:inputTextarea id="txtDescripcionAdjunto" styleClass="form-control" required="true" style="resize: none;" partialSubmit="true" maxlength="350"
-                                                   value="#{controllerAgregarBienes.adjuntoCommand.detalle}" />
+                                <ice:inputTextarea id="txtDescripcionAdjunto" 
+                                                   styleClass="form-control" 
+                                                   required="true" 
+                                                   style="resize: none;" 
+                                                   partialSubmit="true" 
+                                                   maxlength="350"
+                                                   value="#{controllerAgregarBienes.adjuntoDetalle}" />
                             </div>
                         </div>
                     </div>

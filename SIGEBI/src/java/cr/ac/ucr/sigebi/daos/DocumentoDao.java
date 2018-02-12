@@ -10,6 +10,9 @@ import cr.ac.ucr.framework.daoImpl.GenericDaoImpl;
 import cr.ac.ucr.framework.utils.FWExcepcion;
 import cr.ac.ucr.sigebi.domain.Documento;
 import cr.ac.ucr.sigebi.domain.DocumentoDetalle;
+import cr.ac.ucr.sigebi.domain.Estado;
+import cr.ac.ucr.sigebi.domain.Tipo;
+import cr.ac.ucr.sigebi.domain.UnidadEjecutora;
 import java.util.List;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
@@ -58,20 +61,21 @@ public class DocumentoDao extends GenericDaoImpl {
     }
 
     @Transactional(readOnly = true)
-    public List<Documento> listar(Long idUnidadEjecutora,
-            Integer idTipoInforme,
+    public List<Documento> listar(UnidadEjecutora unidadEjecutora,
+            Tipo tipoInforme,
             String identificacion,
             String descripcionBien,
             String marcaBien,
             String modeloBien,
-            Integer idEstado,
+            Estado estado,
             Integer pPrimerRegistro,
-            Integer pUltimoRegistro
+            Integer pUltimoRegistro,
+            Integer tipoDocumento
     ) throws FWExcepcion {
         Session session = this.dao.getSessionFactory().openSession();
         try {
             //Se genera el query para la busqueda
-            Query q = this.creaQueryListarInformes(idUnidadEjecutora, idTipoInforme, identificacion, descripcionBien, marcaBien, modeloBien, idEstado, false, session);
+            Query q = this.creaQueryListarInformes(unidadEjecutora, tipoInforme, identificacion, descripcionBien, marcaBien, modeloBien, estado, tipoDocumento, false, session);
 
             //Paginacion
             if (!(pPrimerRegistro.equals(1) && pUltimoRegistro.equals(1))) {
@@ -82,6 +86,7 @@ public class DocumentoDao extends GenericDaoImpl {
             return (List<Documento>) q.list();
 
         } catch (HibernateException e) {
+            e.printStackTrace();
             throw new FWExcepcion("sigebi.error.documentoDao.listarInformes",
                     "Error obtener los registros de tipo " + this.getClass(), e.getCause());
         } finally {
@@ -90,19 +95,20 @@ public class DocumentoDao extends GenericDaoImpl {
     }
 
     @Transactional(readOnly = true)
-    public Long contar(Long idUnidadEjecutora,
-            Integer idTipoInforme,
+    public Long contar(UnidadEjecutora unidadEjecutora,
+            Tipo tipoInforme,
             String identificacion,
             String descripcionBien,
             String marcaBien,
             String modeloBien,
-            Integer idEstado
+            Estado estado,
+            Integer tipoDocumento
     ) throws FWExcepcion {
         Session session = dao.getSessionFactory().openSession();
         try {
 
             //Se genera el query para la busqueda de los bienes
-            Query q = this.creaQueryListarInformes(idUnidadEjecutora, idTipoInforme, identificacion, descripcionBien, marcaBien, modeloBien, idEstado, true, session);
+            Query q = this.creaQueryListarInformes(unidadEjecutora, tipoInforme, identificacion, descripcionBien, marcaBien, modeloBien, estado, tipoDocumento, true, session);
 
             //Se obtienen los resutltados
             return (Long) q.uniqueResult();
@@ -115,31 +121,37 @@ public class DocumentoDao extends GenericDaoImpl {
         }
     }
 
-    private Query creaQueryListarInformes(Long idUnidadEjecutora,
-            Integer idTipoInforme,
+    private Query creaQueryListarInformes(UnidadEjecutora unidadEjecutora,
+            Tipo tipoInforme,
             String identificacionBien,
             String descripcionBien,
             String marcaBien,
             String modeloBien,
-            Integer idEstado,
+            Estado estado,
+            Integer tipoDocumento,
             Boolean contar,
             Session session
     ) {
 
         StringBuilder sql = new StringBuilder(" ");
         if (contar) {
-            sql.append("SELECT count(s) FROM Documento docu ");
+            sql.append("SELECT count(docu) FROM Documento docu ");
         } else {
-            sql.append("SELECT s FROM Documento docu");
+            sql.append("SELECT docu FROM Documento docu");
         }
 
         //Select
-        sql.append(" WHERE docu.bien.unidadEjecutora.id = :idUnidadEjecutora ");
-        if (idTipoInforme != null && idTipoInforme > 0) {
-            sql.append(" AND docu.tipoInforme.id = :idTipoInforme ");
+        sql.append(" WHERE docu.discriminator = :tipoDocumento ");
+        
+        //docu.bien.unidadEjecutora.id = :idUnidadEjecutora 
+        if (tipoInforme != null) {
+            sql.append(" AND docu.tipoInforme = :tipoInforme ");
         }
-        if (idEstado != null && idEstado > 0) {
-            sql.append(" AND docu.estado.id = :idEstado");
+        if (estado != null) {
+            sql.append(" AND docu.estado = :estado");
+        }
+        if (unidadEjecutora != null) {
+            sql.append(" and docu.unidadEjecutora = :unidadEjecutora");
         }
 
         //Filtro de bienes en el detalle
@@ -147,7 +159,7 @@ public class DocumentoDao extends GenericDaoImpl {
                 || (descripcionBien != null && descripcionBien.length() > 0)
                 || (marcaBien != null && marcaBien.length() > 0)
                 || (modeloBien != null && modeloBien.length() > 0)) {
-            sql.append(" AND (select count(1) from DocumentoDetalle deta ");
+            sql.append(" AND (select count(deta) from DocumentoDetalle deta ");
             sql.append(" where deta.documento.id = docu.id");
             if (identificacionBien != null && identificacionBien.length() > 0) {
                 sql.append(" and deta.bien.identificacion.identificacion = like upper(:identificacionBien)");
@@ -166,9 +178,13 @@ public class DocumentoDao extends GenericDaoImpl {
         sql.append(" ORDER BY docu.id desc ");
 
         Query q = session.createQuery(sql.toString());
-        q.setParameter("idUnidadEjecutora", idUnidadEjecutora);
-        if (idTipoInforme != null && idTipoInforme > 0) {
-            q.setParameter("idTipoInforme", idTipoInforme);
+        q.setParameter("tipoDocumento", tipoDocumento);
+
+        if (unidadEjecutora != null) {
+            q.setParameter("unidadEjecutora", unidadEjecutora);
+        }
+        if (tipoInforme != null) {
+            q.setParameter("tipoInforme", tipoInforme);
         }
         if (identificacionBien != null && identificacionBien.length() > 0) {
             q.setParameter("identificacionBien", '%' + identificacionBien + '%');
@@ -182,9 +198,12 @@ public class DocumentoDao extends GenericDaoImpl {
         if (modeloBien != null && modeloBien.length() > 0) {
             q.setParameter("modeloBien", '%' + modeloBien + '%');
         }
-        if (idEstado != null && idEstado > 0) {
-            q.setParameter("idEstado", idEstado);
+        if (estado != null ) {
+            q.setParameter("estado", estado);
         }
         return q;
     }
+
+
+
 }

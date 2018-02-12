@@ -26,6 +26,7 @@ import javax.persistence.Table;
 public class DocumentoInformeTecnico extends Documento implements Serializable {
 
     //<editor-fold defaultstate="collapsed" desc="Atributos">
+    
     @Column(name = "EVALUACION")
     private String evaluacion;
 
@@ -34,18 +35,26 @@ public class DocumentoInformeTecnico extends Documento implements Serializable {
     private Tipo tipoInforme;
 
     //</editor-fold>
+    
+    //<editor-fold defaultstate="collapsed" desc="Constructores">
+    
     public DocumentoInformeTecnico() {
     }
 
-    //<editor-fold defaultstate="collapsed" desc="Constructores">
-    public DocumentoInformeTecnico(Estado estado, Tipo tipoInforme, Bien bien, String evaluacion) {
-        super(estado, Constantes.DISCRIMINATOR_DOCUMENTO_INFORME_TECNICO);
+    public DocumentoInformeTecnico(Estado estado
+            , Tipo tipoInforme
+            , Bien bien
+            , String evaluacion
+            , UnidadEjecutora unidadEjecutora) {
+        super(estado, Constantes.DISCRIMINATOR_DOCUMENTO_INFORME_TECNICO, unidadEjecutora);
         this.evaluacion = evaluacion;
         this.tipoInforme = tipoInforme;
     }
 
     //</editor-fold>
+    
     //<editor-fold defaultstate="collapsed" desc="GET's y SET's">
+    
     public String getEvaluacion() {
         return evaluacion;
     }
@@ -63,7 +72,9 @@ public class DocumentoInformeTecnico extends Documento implements Serializable {
     }
 
     //</editor-fold>
+    
     //<editor-fold defaultstate="collapsed" desc="Metodos">
+   
     @Override
     public int hashCode() {
         int hash = 3;
@@ -92,5 +103,6 @@ public class DocumentoInformeTecnico extends Documento implements Serializable {
         }
         return true;
     }
+    
     //</editor-fold>
 }

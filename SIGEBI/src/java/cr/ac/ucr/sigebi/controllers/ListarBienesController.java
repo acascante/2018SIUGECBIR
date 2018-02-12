@@ -6,16 +6,22 @@
 package cr.ac.ucr.sigebi.controllers;
 
 import cr.ac.ucr.framework.utils.FWExcepcion;
+import cr.ac.ucr.framework.vista.VistaUsuario;
 import cr.ac.ucr.framework.vista.util.Mensaje;
 import cr.ac.ucr.framework.vista.util.Util;
 import cr.ac.ucr.sigebi.commands.ListarBienesCommand;
+import cr.ac.ucr.sigebi.domain.AutorizacionRolPersona;
 import cr.ac.ucr.sigebi.domain.Bien;
 import cr.ac.ucr.sigebi.domain.Estado;
 import cr.ac.ucr.sigebi.domain.Tipo;
 import cr.ac.ucr.sigebi.domain.UnidadEjecutora;
+import cr.ac.ucr.sigebi.domain.Usuario;
+import cr.ac.ucr.sigebi.models.AutorizacionRolPersonaModel;
 import cr.ac.ucr.sigebi.models.BienModel;
 import cr.ac.ucr.sigebi.models.EstadoModel;
 import cr.ac.ucr.sigebi.models.TipoModel;
+import cr.ac.ucr.sigebi.models.UnidadEjecutoraModel;
+import cr.ac.ucr.sigebi.models.UsuarioModel;
 import cr.ac.ucr.sigebi.utils.Constantes;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -41,28 +47,43 @@ import org.springframework.stereotype.Controller;
 @Controller(value = "controllerListarBienes")
 @Scope("session")
 public class ListarBienesController extends BaseController {
- 
-    @Resource protected EstadoModel estadoModel;
-    @Resource protected TipoModel tipoModel;
-    @Resource protected BienModel bienModel;
-    
+
+    @Resource
+    protected EstadoModel estadoModel;
+    @Resource
+    protected TipoModel tipoModel;
+    @Resource
+    protected BienModel bienModel;
+    @Resource
+    protected AutorizacionRolPersonaModel autorizacionRolPersonaModel;
+    @Resource
+    protected UsuarioModel usuarioModel;
+
     List<Bien> bienes;
     List<SelectItem> itemsEstado;
     List<SelectItem> itemsTipo;
+
     Map<Integer, Estado> mapEstados;
     Map<Integer, Tipo> mapTipos;
-    
+
     ListarBienesCommand command;
-   
+    Usuario usuario;
+
+    
     public ListarBienesController() {
         super();
         inicializarDatos();
     }
-    
+
     @PostConstruct
-    protected void inicializar() {
-        this.inicializarListado();
-        
+    public void inicializar() {
+        //Se consulta el usuario logueado   
+        usuario = usuarioModel.buscarPorId(lVistaUsuario.getgUsuarioActual().getIdUsuario());
+
+        //Se verifica si el usuario es administrador
+        AutorizacionRolPersona autorizado = autorizacionRolPersonaModel.buscar(Constantes.CODIGO_ROL_ADMINISTRADOR, usuario);
+        command.setUsuarioAdmnistrador(autorizado != null);
+
         List<Estado> listEstados = estadoModel.listarPorDominio(Constantes.DOMINIO_BIEN);
         if (!listEstados.isEmpty()) {
             mapEstados = new HashMap<Integer, Estado>();
@@ -81,22 +102,26 @@ public class ListarBienesController extends BaseController {
                 mapTipos.put(item.getValor(), item);
             }
         }
+
+        this.inicializarListado();
     }
 
     private void inicializarDatos() {
         this.vistaOrigen = Constantes.KEY_VISTA_LISTAR_BIENES;
         this.command = new ListarBienesCommand();
     }
-    
+
     private void inicializarListado() {
         this.setPrimerRegistro(1);
         this.contarBienes();
         this.listarBienes();
     }
-    
+
     private void contarBienes() {
         try {
-            Long contador = bienModel.contar(unidadEjecutora, command.getFltIdCodigo(), command.getFltIdentificacion(), command.getFltDescripcion(), command.getFltMarca(), command.getFltModelo(), command.getFltSerie(), getFltTipo(), getFltEstadoArray());
+            Long contador = bienModel.contar(command.getUsuarioAdmnistrador() ? null : unidadEjecutora, command.getFltIdCodigo(), 
+                    command.getFltIdentificacion(), command.getFltDescripcion(), command.getFltMarca(), command.getFltModelo(),
+                    command.getFltSerie(), getFltTipo(), command.getFltUnidadEjecutoraAdmin(), getFltEstadoArray());
             this.setCantidadRegistros(contador.intValue());
         } catch (FWExcepcion e) {
             Mensaje.agregarErrorAdvertencia(e.getError_para_usuario());
@@ -104,10 +129,13 @@ public class ListarBienesController extends BaseController {
             Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.error.controllerListarNotificaciones.contarNotificaciones"));
         }
     }
-    
+
     private void listarBienes() {
         try {
-            this.bienes = bienModel.listar(this.getPrimerRegistro()-1, this.getUltimoRegistro(), unidadEjecutora, command.getFltIdCodigo(), command.getFltIdentificacion(), command.getFltDescripcion(), command.getFltMarca(), command.getFltModelo(), command.getFltSerie(), getFltTipo(), getFltEstadoArray());
+            this.bienes = bienModel.listar(this.getPrimerRegistro() - 1, this.getUltimoRegistro(),
+                    command.getUsuarioAdmnistrador() ? null : unidadEjecutora,
+                    command.getFltIdCodigo(), command.getFltIdentificacion(), command.getFltDescripcion(), command.getFltMarca(), 
+                    command.getFltModelo(), command.getFltSerie(), getFltTipo(), command.getFltUnidadEjecutoraAdmin(), getFltEstadoArray());
         } catch (FWExcepcion e) {
             Mensaje.agregarErrorAdvertencia(e.getError_para_usuario());
         } catch (NumberFormatException e) {
@@ -116,7 +144,7 @@ public class ListarBienesController extends BaseController {
             Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.error.controllerListarNotificaciones.listarNotificaciones"));
         }
     }
-    
+
     private Estado[] getFltEstadoArray() {
         if (command.getFltEstado() > 0) {
             Estado[] array = {mapEstados.get(command.getFltEstado())};
@@ -124,14 +152,14 @@ public class ListarBienesController extends BaseController {
         }
         return null;
     }
-    
+
     private Tipo getFltTipo() {
         if (command.getFltTipo() > 0) {
             return mapTipos.get(command.getFltTipo());
         }
         return null;
     }
-    
+
     public void cambioFiltro(ValueChangeEvent pEvent) {
         try {
             if (!pEvent.getPhaseId().equals(PhaseId.INVOKE_APPLICATION)) {
@@ -148,13 +176,21 @@ public class ListarBienesController extends BaseController {
     public void validarFiltroId(FacesContext context, UIComponent component, Object value) throws ValidatorException {
         try {
             Integer.parseInt(value.toString());
-        } catch (NumberFormatException e){
+        } catch (NumberFormatException e) {
             Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.error.controllerListarNotificaciones.cambioFiltro.id"));
             ((UIInput) component).setValid(false);
         }
     }
 
     // <editor-fold defaultstate="collapsed" desc="Get's y Set's">
+    public Usuario getUsuario() {
+        return usuario;
+    }
+
+    public void setUsuario(Usuario usuario) {
+        this.usuario = usuario;
+    }
+
     public List<Bien> getBienes() {
         return bienes;
     }
@@ -186,12 +222,8 @@ public class ListarBienesController extends BaseController {
     public void setCommand(ListarBienesCommand command) {
         this.command = command;
     }
-    
-    public void setUnidadEjecutora(UnidadEjecutora unidadEjecutora) {
-        this.unidadEjecutora = unidadEjecutora;
-    }
+
     // </editor-fold>
-   
     // <editor-fold defaultstate="collapsed" desc="Paginacion">
     public void irPagina(ActionEvent pEvent) {
         if (!pEvent.getPhaseId().equals(PhaseId.INVOKE_APPLICATION)) {
@@ -250,9 +282,10 @@ public class ListarBienesController extends BaseController {
             pEvent.queue();
             return;
         }
-        this.setCantRegistroPorPagina(Integer.parseInt(pEvent.getNewValue().toString()));          
+        this.setCantRegistroPorPagina(Integer.parseInt(pEvent.getNewValue().toString()));
         this.setPrimerRegistro(1);
+        this.contarBienes();
         this.listarBienes();
     }
     // </editor-fold>
- }
+}

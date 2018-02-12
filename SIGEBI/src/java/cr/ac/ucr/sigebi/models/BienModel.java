@@ -50,12 +50,52 @@ public class BienModel {
         return bienDao.buscarPorId(id);
     }
 
-    public List<Bien> listar(Integer primerRegistro, Integer ultimoRegistro, UnidadEjecutora unidadejecutora, Long id, String identificacion, String descripcion, String marca, String modelo, String serie, Tipo tipo, Estado... estados) throws FWExcepcion {
-        return bienDao.listar(primerRegistro, ultimoRegistro, unidadejecutora, id, identificacion, descripcion, marca, modelo, serie, tipo, estados);
+    public List<Bien> listar(Integer primerRegistro
+                            , Integer ultimoRegistro
+                            , UnidadEjecutora unidadejecutora
+                            , Long id
+                            , String identificacion
+                            , String descripcion
+                            , String marca
+                            , String modelo
+                            , String serie
+                            , Tipo tipo
+                            , String nombUnidad
+                            , Estado... estados) throws FWExcepcion {
+        return bienDao.listar(primerRegistro
+                            , ultimoRegistro
+                            , unidadejecutora
+                            , id
+                            , identificacion
+                            , descripcion
+                            , marca
+                            , modelo
+                            , serie
+                            , tipo
+                            , nombUnidad
+                            , estados);
     }
 
-    public Long contar(UnidadEjecutora unidadejecutora, Long id, String identificacion, String descripcion, String marca, String modelo, String serie, Tipo tipo, Estado... estados) throws FWExcepcion {
-        return bienDao.contar(unidadejecutora, id, identificacion, descripcion, marca, modelo, serie, tipo, estados);
+    public Long contar(UnidadEjecutora unidadejecutora
+                        , Long id
+                        , String identificacion
+                        , String descripcion
+                        , String marca
+                        , String modelo
+                        , String serie
+                        , Tipo tipo
+                        , String nombUnidad
+                        , Estado... estados) throws FWExcepcion {
+        return bienDao.contar(unidadejecutora
+                            , id
+                            , identificacion
+                            , descripcion
+                            , marca
+                            , modelo
+                            , serie
+                            , tipo
+                            , nombUnidad
+                            , estados);
     }
 
     public void almacenar(Bien bien) throws FWExcepcion {
@@ -90,7 +130,7 @@ public class BienModel {
         this.actualizar(bien);
     }
 
-    public void sincronizarBien(Bien bien, String usaurioSincro) throws FWExcepcion {
+    public void sincronizarBien(Bien bien, String usaurioSincro) throws FWExcepcion, Exception {
 
         //Se almacena la sincronizacion
         Sincronizar bienSinc = new Sincronizar(bien);

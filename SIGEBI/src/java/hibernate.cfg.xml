@@ -16,8 +16,6 @@
     <mapping class="cr.ac.ucr.framework.seguridad.entidades.SegUsuario"/>
     
     <mapping class="cr.ac.ucr.sigebi.domain.Accesorio"/>
-    <mapping class="cr.ac.ucr.sigebi.domain.Acta"/>
-    <mapping class="cr.ac.ucr.sigebi.domain.ActaDetalle"/>
     <mapping class="cr.ac.ucr.sigebi.domain.Adjunto"/>
     <mapping class="cr.ac.ucr.sigebi.domain.Autorizacion"/>
     <mapping class="cr.ac.ucr.sigebi.domain.AutorizacionRol"/>
@@ -49,7 +47,7 @@
     <mapping class="cr.ac.ucr.sigebi.domain.SubCategoria"/>
     <mapping class="cr.ac.ucr.sigebi.domain.SubClasificacion"/>
     <mapping class="cr.ac.ucr.sigebi.domain.Tipo"/>
-    <mapping class="cr.ac.ucr.sigebi.domain.Traslado"/>
+    <mapping class="cr.ac.ucr.sigebi.domain.DocumentoTraslado"/>
     <mapping class="cr.ac.ucr.sigebi.domain.TrasladoDetalle"/>
     <mapping class="cr.ac.ucr.sigebi.domain.Ubicacion"/>
     <mapping class="cr.ac.ucr.sigebi.domain.UnidadEjecutora"/>

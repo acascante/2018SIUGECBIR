@@ -205,7 +205,7 @@ public class RolDao extends GenericDaoImpl {
     }
 
     @Transactional(readOnly = true)
-    public Long contarRolesValidator(Long idRolDiferente, String codigo, String nombre) throws FWExcepcion {
+    public Long contarRolesValidator(Long idRolDiferente, Integer codigo, String nombre) throws FWExcepcion {
         Session session = dao.getSessionFactory().openSession();
         try {
 
@@ -223,14 +223,14 @@ public class RolDao extends GenericDaoImpl {
         }
     }
 
-    private Query creaQueryContarValidator(Long idRolDiferente, String codigo, String nombre, Session session) {
+    private Query creaQueryContarValidator(Long idRolDiferente, Integer codigo, String nombre, Session session) {
         String sql = "SELECT count(obj) FROM Rol obj ";
         //Select
         sql = sql + " WHERE  1 = 1 ";
         if (idRolDiferente != null && idRolDiferente > 0) {
             sql = sql + " AND obj.id != :idRolDiferente ";
         }
-        if (codigo != null && codigo.length() > 0) {
+        if (codigo != null && codigo > 0) {
             sql = sql + " AND upper(obj.codigo) = upper(:codigo) ";
         }
         if (nombre != null && nombre.length() > 0) {
@@ -241,7 +241,7 @@ public class RolDao extends GenericDaoImpl {
         if (idRolDiferente != null && idRolDiferente > 0) {
             q.setParameter("idRolDiferente", idRolDiferente);
         }
-        if (codigo != null && codigo.length() > 0) {
+        if (codigo != null && codigo > 0) {
             q.setParameter("codigo", codigo);
         }
         if (nombre != null && nombre.length() > 0) {

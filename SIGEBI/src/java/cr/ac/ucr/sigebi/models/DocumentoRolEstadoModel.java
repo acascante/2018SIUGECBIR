@@ -19,31 +19,23 @@ import org.springframework.stereotype.Service;
 @Service(value = "documentoRolEstadoModel")
 @Scope("request")
 public class DocumentoRolEstadoModel {
-    
+
     @Resource
     private FaltaDocumentoRolEstadoDao documentoRolEstadoDao;
 
-    
-    public void agregar(DocumentoRolEstadoEntity documentoRolEstadoEntity){
+    public void agregar(DocumentoRolEstadoEntity documentoRolEstadoEntity) {
         documentoRolEstadoDao.agregar(documentoRolEstadoEntity);
     }
 
-    public void modificar(DocumentoRolEstadoEntity documentoRolEstadoEntity){
+    public void modificar(DocumentoRolEstadoEntity documentoRolEstadoEntity) {
         documentoRolEstadoDao.modificar(documentoRolEstadoEntity);
     }
-    
-    public List<DocumentoRolEstadoEntity> buscarDocumentosUsuario(String idUsuario
-                                                                , Long numUnidadEjec
-                                                                , Long idReferencia
-                                                                , Long idDocumento
-                                                        ) {
-        return documentoRolEstadoDao.buscarDocumentosUsuario(idUsuario
-                                                            , numUnidadEjec
-                                                            , idReferencia
-                                                            , idDocumento);
+
+    public List<DocumentoRolEstadoEntity> buscarDocumentosUsuario(String idUsuario, Long numUnidadEjec, Long idReferencia, Long idDocumento) {
+        return documentoRolEstadoDao.buscarDocumentosUsuario(idUsuario,numUnidadEjec,idReferencia,idDocumento);
     }
-    
-    public List<DocumentoRolEstadoEntity> buscarDocumentosTipoDocumento(Long idReferencia , Long idDocumento) {
+
+    public List<DocumentoRolEstadoEntity> buscarDocumentosTipoDocumento(Long idReferencia, Long idDocumento) {
         return documentoRolEstadoDao.buscarDocumentosTipoDocumento(idReferencia, idDocumento);
     }
 }

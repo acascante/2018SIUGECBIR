@@ -38,7 +38,7 @@
                             />
                         <ice:inputText id="txtActaId" 
                                        styleClass="form-control" 
-                                       value="#{trasladoController.traslado.idTraslado}"
+                                       value="#{trasladoController.traslado.id}"
                                        readonly="true"
                                        partialSubmit="false">
                         </ice:inputText>
@@ -54,13 +54,13 @@
                             />
                         <ice:inputText id="txtEstadoNombre" 
                                        styleClass="form-control" 
-                                       value="#{trasladoController.traslado.idEstado.nombre}"
+                                       value="#{trasladoController.traslado.estado.nombre}"
                                        readonly="true"
                                        partialSubmit="false">
                         </ice:inputText>
 
                         <ice:inputHidden id="hdnEstadoId"
-                                         value="#{trasladoController.traslado.idEstado.id}"
+                                         value="#{trasladoController.traslado.estado.id}"
                                          rendered="true"
                                          >
                         </ice:inputHidden>
@@ -71,7 +71,7 @@
                 <div class="col-md-4">
                     <div class="form-group"> 
                         <ice:outputText 
-                            value="#{label['sigebi.Traslado.Label.Fecha']}"
+                            value="#{label['sigebi.Acta.Label.Fecha']}"
                             />
                         <ice:inputText id="txtActaFecha" 
                                        styleClass="form-control" 
@@ -234,7 +234,7 @@
                                                         </ice:headerRow>
                                                     </ice:columnGroup>
                                                 </f:facet>
-                                                <h:outputText id="idBienCell" value="#{detalle.idBien.identificacion.identificacion}"/>
+                                                <h:outputText id="idBienCell" value="#{detalle.bien.identificacion.identificacion}"/>
                                             </ice:column>
 
                                             <ice:column id="descripcion">
@@ -245,7 +245,7 @@
                                                         </ice:headerRow>
                                                     </ice:columnGroup>
                                                 </f:facet>                                
-                                                <h:outputText id="descripcionCell" value="#{detalle.idBien.descripcion}"/>
+                                                <h:outputText id="descripcionCell" value="#{detalle.bien.descripcion}"/>
                                             </ice:column>
 
 
@@ -257,7 +257,7 @@
                                                         </ice:headerRow>
                                                     </ice:columnGroup>
                                                 </f:facet>                                
-                                                <h:outputText id="marcaCell" value="#{detalle.idBien.resumenBien.marca}"/>
+                                                <h:outputText id="marcaCell" value="#{detalle.bien.resumenBien.marca}"/>
                                             </ice:column>
 
                                             <ice:column id="colModelo">
@@ -268,7 +268,7 @@
                                                         </ice:headerRow>
                                                     </ice:columnGroup>
                                                 </f:facet>                                 
-                                                <h:outputText id="modeloCell" value="#{detalle.idBien.resumenBien.modelo}"/>
+                                                <h:outputText id="modeloCell" value="#{detalle.bien.resumenBien.modelo}"/>
                                             </ice:column>
 
                                             <ice:column id="colSerie">
@@ -279,7 +279,7 @@
                                                         </ice:headerRow>
                                                     </ice:columnGroup>
                                                 </f:facet>    
-                                                <h:outputText id="modeloCell" value="#{detalle.idBien.resumenBien.serie}"/>                            
+                                                <h:outputText id="modeloCell" value="#{detalle.bien.resumenBien.serie}"/>                            
                                             </ice:column>
 
                                             <!-- Columna de ACCIONES Aceptar / Rechazar -->
@@ -294,7 +294,7 @@
 
                                                 <h:outputText id="estadoCell" 
                                                               rendered="#{!detalle.marcado}"
-                                                              value="#{detalle.idEstado.nombre}"/>
+                                                              value="#{detalle.estado.nombre}"/>
                                                 
                                                 <ice:commandButton id="btnAprobar"
                                                                    style="margin-top:2%" 
@@ -318,6 +318,30 @@
 
                                             </ice:column>
 
+                                                
+                                            <ice:column id="colElimin"
+                                                        rendered="#{trasladoController.permiteEdicion}"
+                                                        >
+                                                <f:facet name="header">
+                                                    <ice:columnGroup>
+                                                        <ice:headerRow>
+                                                            <ice:outputText value="#{label['sigebi.label.vista.listarBienSincronizar.eliminar']}"/>
+                                                        </ice:headerRow>
+                                                    </ice:columnGroup>
+                                                </f:facet>
+                                                
+                                                <ice:commandButton id="btnEliminarBien"
+                                                                   style="margin-top:2%" 
+                                                                   styleClass="btnEliminar" 
+                                                                   partialSubmit="true" 
+                                                                   rendered="#{ detalle.estado.id eq trasladoController.estadoGeneralPendiente.id or 
+                                                                                detalle.estado.id eq trasladoController.estadoGeneralRechazado.id }"
+                                                                    actionListener="#{trasladoController.quitarBienSeleccionado}"
+                                                                   >
+                                                    <f:attribute id="bienSeleccionado" name="bienSeleccionado"  value="#{detalle.bien}"/> 
+                                                </ice:commandButton>   
+                                            
+                                            </ice:column>
 
                                         </ice:dataTable>
 
@@ -456,7 +480,7 @@
                                             />
                                         <ice:inputText id="txtJustificBien" 
                                                        styleClass="form-control" 
-                                                       value="#{trasladoController.bienDetalle.idBien.identificacion.identificacion}"
+                                                       value="#{trasladoController.bienDetalle.bien.identificacion.identificacion}"
                                                        readonly="true"
                                                        partialSubmit="false">
                                         </ice:inputText>
@@ -521,7 +545,7 @@
                 >
 
                 <f:facet name="header">
-                    <ice:outputText styleClass="flotar_izquierda titulo_popup" value="#{label['sigebi.Traslado.Mns..Confirmacion.Titulo']}"/>                
+                    <ice:outputText styleClass="flotar_izquierda titulo_popup" value="#{label['sigebi.Traslado.Mns.Confirmacion.Titulo']}"/>                
                 </f:facet> 
 
                 <f:facet name="body">
@@ -615,7 +639,7 @@
                                 </ice:headerRow>
                             </ice:columnGroup>
                         </f:facet>
-                        <h:outputText id="idUnidad" value="#{unidad.idUnidadEjec}"/>
+                        <h:outputText id="idUnidad" value="#{unidad.id}"/>
                     </ice:column>
 
                     <ice:column id="colNombre" >
