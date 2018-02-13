@@ -42,6 +42,8 @@ public class UbicacionDao extends GenericDaoImpl {
             return (List<Ubicacion>) query.list();
         } catch (HibernateException e) {
             throw new FWExcepcion("sigebi.error.notificacionDao.listar", "Error obtener los registros de tipo " + this.getClass(), e.getCause());
+        }finally {
+            session.close();
         }
     }
     

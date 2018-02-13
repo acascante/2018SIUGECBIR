@@ -34,7 +34,6 @@ public class AdjuntoDao extends GenericDaoImpl {
         try {
             this.persist(adjunto);
         } catch (Exception e) {
-            e.printStackTrace();
             throw new FWExcepcion("sigebi.error.dao.adjunto.agregar",
                     "Error obtener los registros de tipo " + this.getClass(), e.getCause());
         }
@@ -45,7 +44,6 @@ public class AdjuntoDao extends GenericDaoImpl {
         try {
              this.delete(adjunto);
         } catch (Exception e) {
-            e.printStackTrace();
             throw new FWExcepcion("sigebi.error.dao.adjunto.eliminar",
                     "Error obtener los registros de tipo " + this.getClass(), e.getCause());
         }
@@ -64,7 +62,6 @@ public class AdjuntoDao extends GenericDaoImpl {
             return (List<Adjunto>) query.list();
 
         } catch (Exception e) {
-            e.printStackTrace();
             throw new FWExcepcion("sigebi.error.dao.adjunto.buscarPorReferencia",
                     "Error obtener los registros de tipo " + this.getClass(), e.getCause());
         } finally {

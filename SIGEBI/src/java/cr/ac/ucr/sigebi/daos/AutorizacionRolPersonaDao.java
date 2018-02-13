@@ -93,8 +93,7 @@ public class AutorizacionRolPersonaDao extends GenericDaoImpl {
             String sql = "SELECT obj FROM AutorizacionRolPersona obj "
                     + " WHERE obj.autorizacionRol.autorizacion = :autorizacion"
                     + " and obj.usuarioSeguridad = :usuario"
-                    + " and obj.unidadEjecutora = :unidadEjecutora"
-                    ;
+                    + " and obj.unidadEjecutora = :unidadEjecutora";
             Query query = session.createQuery(sql);
             query.setParameter("autorizacion", autorizacion);
             query.setParameter("usuario", usuario);
@@ -111,11 +110,10 @@ public class AutorizacionRolPersonaDao extends GenericDaoImpl {
         }
     }
 
-    
     @Transactional(readOnly = true)
     public AutorizacionRolPersona buscar(AutorizacionRol autorizacionRol, Usuario usuario, UnidadEjecutora unidadEjecutora) throws FWExcepcion {
+        Session session = this.dao.getSessionFactory().openSession();
         try {
-            Session session = this.dao.getSessionFactory().openSession();
             String sql = "SELECT obj FROM AutorizacionRolPersona obj "
                     + " WHERE obj.autorizacionRol = :autorizacionRol"
                     + " and obj.unidadEjecutora = :unidadEjecutora"
@@ -133,6 +131,8 @@ public class AutorizacionRolPersonaDao extends GenericDaoImpl {
         } catch (HibernateException e) {
             throw new FWExcepcion("sigebi.error.dao.autorizacionRolPersona.buscar",
                     "Error obtener los registros de tipo " + this.getClass(), e.getCause());
+        } finally {
+            session.close();
         }
     }
 
@@ -158,8 +158,8 @@ public class AutorizacionRolPersonaDao extends GenericDaoImpl {
 
     @Transactional(readOnly = true)
     public AutorizacionRolPersona buscar(Integer codigoAutorizacion, Integer codigoRol, Usuario usuario, UnidadEjecutora unidadEjecutora) throws FWExcepcion {
+        Session session = this.dao.getSessionFactory().openSession();
         try {
-            Session session = this.dao.getSessionFactory().openSession();
             String sql = "SELECT obj FROM AutorizacionRolPersona obj "
                     + " WHERE obj.autorizacionRol.rol.codigo = :codigoRol"
                     + " and obj.autorizacionRol.autorizacion.codigo = :codigoAutorizacion"
@@ -179,12 +179,15 @@ public class AutorizacionRolPersonaDao extends GenericDaoImpl {
         } catch (HibernateException e) {
             throw new FWExcepcion("sigebi.error.dao.autorizacionRolPersona.buscar",
                     "Error obtener los registros de tipo " + this.getClass(), e.getCause());
+        } finally {
+            session.close();
         }
+
     }
 
     public AutorizacionRolPersona buscar(Integer codigoRol, Usuario usuario) throws FWExcepcion {
+        Session session = this.dao.getSessionFactory().openSession();
         try {
-            Session session = this.dao.getSessionFactory().openSession();
             String sql = "SELECT obj FROM AutorizacionRolPersona obj "
                     + " WHERE obj.autorizacionRol.rol.codigo = :codigoRol"
                     + " and obj.usuarioSeguridad = :usuario";
@@ -200,76 +203,9 @@ public class AutorizacionRolPersonaDao extends GenericDaoImpl {
         } catch (HibernateException e) {
             throw new FWExcepcion("sigebi.error.dao.autorizacionRolPersona.buscar",
                     "Error obtener los registros de tipo " + this.getClass(), e.getCause());
+        } finally {
+            session.close();
         }
     }
-    
-    
-//    @Transactional(readOnly = true)
-//    public List<AutorizacionRolPersona> buscarUsuariosPorAutorizacion(Long idAutorizacion, Long numUnidadEjec) throws FWExcepcion {
-//        Session session = this.dao.getSessionFactory().openSession();
-//        try {
-//            String sql = "SELECT obj FROM AutorizacionRolPersona obj "
-//                    + " WHERE obj.autorizacionRol.autorizacion.id = :idAutorizacion"
-//                    + " and obj.unidadEjecutora.id = :numUnidadEjec";
-//            Query query = session.createQuery(sql);
-//            query.setParameter("idAutorizacion", idAutorizacion);
-//            query.setParameter("numUnidadEjec", numUnidadEjec);
-//
-//            //Se obtienen los resutltados
-//            return (List<AutorizacionRolPersona>) query.list();
-//
-//        } catch (HibernateException e) {
-//            throw new FWExcepcion("sigebi.error.dao.autorizacionRolPersonaDao.buscarPorAutorizacionRol",
-//                    "Error obtener los registros de tipo " + this.getClass(), e.getCause());
-//        } finally {
-//            session.close();
-//        }
-//    }
-//    @Transactional(readOnly = true)
-//    public AutorizacionRolPersona buscarAutorizacionPorAutorizacionRolUsuario(String codigoRol
-//                                                                            , Long idAutorizacion
-//                                                                            , String idUsuario
-//                                                                    ) throws FWExcepcion {
-//        try {
-//            Session session = this.dao.getSessionFactory().openSession();
-//            String sql = "select obj from AutorizacionRolPersona obj ";
-//            sql = sql + " where obj.autorizacionRol.rol.codigo = :codigoRol";
-//            sql = sql + " and obj.autorizacionRol.autorizacion.id = :idAutorizacion";
-//            sql = sql + " and obj.usuarioSeguridad.id = :idUsuario";
-//            Query query = session.createQuery(sql);
-//            query.setParameter("idAutorizacion", idAutorizacion);
-//            query.setParameter("codigoRol", codigoRol);
-//            query.setParameter("idUsuario", idUsuario);
-//            List<AutorizacionRolPersona> results = query.list();
-//            if (!results.isEmpty()) {
-//                return (AutorizacionRolPersona) results.get(0);
-//            } else {
-//                return null;
-//            }
-//        } catch (HibernateException e) {
-//            throw new FWExcepcion("sigebi.error.dao.autorizacionRolPersona.buscarAutorizacionAutorizacionRolUsuario",
-//                    "Error obtener los registros de tipo " + this.getClass(), e.getCause());
-//        }
-//    }
-//    @Transactional(readOnly = true)
-//    public List<AutorizacionRolPersona> buscarRolesProAutorizacionUsuario(Long idAutorizacion, String idUsuario, Long unidadEjecutora) throws FWExcepcion {
-//        try {
-//            Session session = this.dao.getSessionFactory().openSession();
-//            String sql = "select obj from AutorizacionRolPersona obj ";
-//            sql = sql + " where obj.autorizacionRol.autorizacion.id = :idAutorizacion";
-//            sql = sql + " and obj.usuarioSeguridad.id = :idUsuario";
-//            sql = sql + " and obj.unidadEjecutora.id = :unidadEjecutora";
-//            Query query = session.createQuery(sql);
-//            query.setParameter("idAutorizacion", idAutorizacion);
-//            query.setParameter("idUsuario", idUsuario);
-//            query.setParameter("unidadEjecutora", unidadEjecutora);
-//
-//            List<AutorizacionRolPersona> results = query.list();
-//
-//            return results;
-//        } catch (HibernateException e) {
-//            throw new FWExcepcion("sigebi.error.dao.autorizacionRolPersona.buscarRolesProAutorizacionUsuario",
-//                    "Error obtener los registros de tipo " + this.getClass(), e.getCause());
-//        }
-//    }
+
 }

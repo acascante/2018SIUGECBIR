@@ -119,8 +119,8 @@ public class AutorizacionRolDao extends GenericDaoImpl {
 
     @Transactional(readOnly = true)
     public AutorizacionRol buscarPorRolAutorizacion(Long idRol, Long idAutorizacion) throws FWExcepcion {
+        Session session = this.dao.getSessionFactory().openSession();
         try {
-            Session session = this.dao.getSessionFactory().openSession();
             String sql = "select obj from AutorizacionRol obj ";
             sql = sql + " where obj.rol.id = :idRol";
             sql = sql + " and obj.autorizacion.id = :idAutorizacion";
@@ -136,31 +136,8 @@ public class AutorizacionRolDao extends GenericDaoImpl {
         } catch (HibernateException e) {
             throw new FWExcepcion("sigebi.error.dao.autorizacionRol.buscarPorRolAutorizacion",
                     "Error obtener los registros de tipo " + this.getClass(), e.getCause());
-        }
-    }
-
-    //FIXME JAIRO se debe coordinar con JORGE si se elimina la vista
-    @Transactional(readOnly = true)
-    public List<ViewDocumAprobEntity> buscarRolDocumId(int idTipoAutorizacion, int idAutorizacion) throws FWExcepcion {
-        Session session = this.dao.getSessionFactory().openSession();
-        try {
-            String sql = "SELECT obj FROM ViewDocumAprobEntity obj "
-                    + " WHERE obj.idAutorizacion = :idTipoDocum "
-                    + " AND (obj.idReferencia = :idAutorizacion "
-                    + "     OR obj.idReferencia IS NULL) ";
-            Query query = session.createQuery(sql);
-            query.setParameter("idTipoDocum", idTipoAutorizacion);
-            query.setParameter("idAutorizacion", idAutorizacion);
-
-            //Se obtienen los resutltados
-            return (List<ViewDocumAprobEntity>) query.list();
-
-        } catch (HibernateException e) {
-            throw new FWExcepcion("sigebi.error.dao.autorizacionRol.buscarRolDocumId",
-                    "Error obtener los registros de tipo " + this.getClass(), e.getCause());
         } finally {
             session.close();
         }
     }
-
 }

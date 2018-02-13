@@ -51,9 +51,9 @@ public class ActaDao extends GenericDaoImpl {
             session.close();
             return resp;
         } catch (Exception e) {
-            if(session.isOpen())
-                session.close();
             return resp;
+        }finally {
+            session.close();
         }
     }
     
@@ -78,10 +78,8 @@ public class ActaDao extends GenericDaoImpl {
             return (List<DocumentoDetalle>) query.list();
         } catch (Exception e) {
             return null;
-        }
-        finally{
-            if(session.isOpen())
-                session.close();
+        }finally {
+            session.close();
         }
     }
     
@@ -149,7 +147,6 @@ public class ActaDao extends GenericDaoImpl {
             return (Long) q.uniqueResult();
 
         } catch (Exception e) {
-            e.printStackTrace();
             throw new FWExcepcion("sigebi.error.dao.informeTecnico.contarInformes",
                     "Error obtener los registros de tipo " + this.getClass(), e.getCause());
         } finally {
@@ -187,7 +184,6 @@ public class ActaDao extends GenericDaoImpl {
             return (List<DocumentoActa>) q.list();
 
         } catch (Exception e) {
-            e.printStackTrace();
             throw new FWExcepcion("sigebi.error.dao.informeTecnico.listarInformes",
                     "Error obtener los registros de tipo " + this.getClass(), e.getCause());
         } finally {

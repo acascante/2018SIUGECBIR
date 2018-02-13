@@ -81,8 +81,7 @@ public class TrasladosDao extends GenericDaoImpl {
     @Transactional
     public void guardarBien(TrasladoDetalle bien){
         try {
-            persist(bien);
-            
+            persist(bien);            
         } catch (DataAccessException e) {
             throw new FWExcepcion("sigebi.error.TrasladosDao.guardarBienes", "Error guardar el registro de tipo " + this.getClass(), e.getCause());
         } catch (Exception ex) {

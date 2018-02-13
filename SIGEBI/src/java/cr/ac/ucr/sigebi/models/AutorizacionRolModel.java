@@ -53,8 +53,4 @@ public class AutorizacionRolModel {
         return autorizacionRolDao.buscarPorRolAutorizacion(idRol, idAutorizacion);
     }
 
-    public List<ViewDocumAprobEntity> buscarRolDocumId(int idTipoAutorizacion, int idAutorizacion) throws FWExcepcion {
-        return autorizacionRolDao.buscarRolDocumId(idTipoAutorizacion, idAutorizacion);
-    }
-
 }

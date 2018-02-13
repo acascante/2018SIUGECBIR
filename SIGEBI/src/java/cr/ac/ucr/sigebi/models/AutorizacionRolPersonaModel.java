@@ -64,27 +64,4 @@ public class AutorizacionRolPersonaModel {
         return autorizacionRolPersonaDao.contar(autorizacionRol);
     }
 
-//    public List<AutorizacionRolPersona> buscarPorAutorizacionRol(Long idAutorizacion, Long idRol, Long numUnidadEjec) throws FWExcepcion{
-//        return autorizacionRolPersonaDao.buscarPorAutorizacionRol(idAutorizacion, idRol, numUnidadEjec);
-//    }
-//
-//    public List<AutorizacionRolPersona> buscarUsuariosPorAutorizacion(Long idAutorizacion, Long numUnidadEjec) throws FWExcepcion{
-//        return autorizacionRolPersonaDao.buscarUsuariosPorAutorizacion(idAutorizacion, numUnidadEjec);
-//    }
-//
-//    public Long contarPorAutorizacionRol(Long idAutorizacion, Long idRol) throws FWExcepcion{
-//        return autorizacionRolPersonaDao.contarPorAutorizacionRol(idAutorizacion, idRol);
-//    }
-//
-//    public AutorizacionRolPersona buscarPorRolAutorizacionUsuario(Long idRol, Long idAutorizacion, String idUsuario) throws FWExcepcion{
-//        return autorizacionRolPersonaDao.buscarPorRolAutorizacionUsuario(idRol, idAutorizacion, idUsuario);
-//    }
-//
-//    public AutorizacionRolPersona buscarAutorizacionPorAutorizacionRolUsuario(String codigoRol, Long idAutorizacion, String idUsuario) throws FWExcepcion {
-//        return autorizacionRolPersonaDao.buscarAutorizacionPorAutorizacionRolUsuario(codigoRol, idAutorizacion, idUsuario);
-//    }
-//
-//    public List<AutorizacionRolPersona> buscarRolesPorAutorizacionUsuario(Long idAutorizacion, String idUsuario, Long unidadEjecutora) throws FWExcepcion{
-//        return autorizacionRolPersonaDao.buscarRolesProAutorizacionUsuario(idAutorizacion, idUsuario, unidadEjecutora);
-//    }
 }
