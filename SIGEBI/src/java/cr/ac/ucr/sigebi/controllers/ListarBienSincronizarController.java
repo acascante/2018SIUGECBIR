@@ -21,7 +21,9 @@ import org.springframework.stereotype.Controller;
 import cr.ac.ucr.framework.vista.util.Util;
 import cr.ac.ucr.sigebi.domain.Bien;
 import cr.ac.ucr.sigebi.domain.Estado;
+import cr.ac.ucr.sigebi.domain.Usuario;
 import cr.ac.ucr.sigebi.models.UnidadEjecutoraModel;
+import cr.ac.ucr.sigebi.models.UsuarioModel;
 import java.util.HashMap;
 import java.util.Map;
 import javax.annotation.PostConstruct;
@@ -44,7 +46,7 @@ public class ListarBienSincronizarController extends BaseController {
 
     @Resource
     private UnidadEjecutoraModel unidadModel;
-
+    
     @Resource
     EstadoModel modelEstado;
 
@@ -233,7 +235,7 @@ public class ListarBienSincronizarController extends BaseController {
 
     public void setBienesEnviarSincronizar(Map<Long, Bien> bienesEnviarSincronizar) {
         this.bienesEnviarSincronizar = bienesEnviarSincronizar;
-    }
+    }    
 
     //</editor-fold>
     
@@ -249,7 +251,6 @@ public class ListarBienSincronizarController extends BaseController {
         bienesPorSincronizar = new HashMap<Long, Bien>();
         bienesPorRechazar = new HashMap<Long, Bien>();
         bienesEnviarSincronizar = new HashMap<Long, Bien>();
-
         estadosFiltros = new ArrayList<Estado>();
         estadosFiltros.add(this.estadoPorDominioValor(Constantes.DOMINIO_BIEN, Constantes.ESTADO_BIEN_PENDIENTE));
         estadosFiltros.add(this.estadoPorDominioValor(Constantes.DOMINIO_BIEN, Constantes.ESTADO_BIEN_PENDIENTE_SINCRONIZAR));
@@ -530,8 +531,8 @@ public class ListarBienSincronizarController extends BaseController {
                 Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.error.controllerListarBienSincronizar.rechazarBien.sin.observacion"));
             } else {
                 Integer telefono = lVistaUsuario.getgUsuarioActual().getTelefono1() != null ? Integer.parseInt(lVistaUsuario.getgUsuarioActual().getTelefono1()) : 0;
-
-                bienMod.cambiaEstadoBien(this.bienesPorRechazar.values(), this.estadoPorDominioValor(Constantes.DOMINIO_BIEN, Constantes.ESTADO_BIEN_PENDIENTE), observacionCliente, telefono);
+                
+                bienMod.cambiaEstadoBien(this.bienesPorRechazar.values(), this.estadoPorDominioValor(Constantes.DOMINIO_BIEN, Constantes.ESTADO_BIEN_PENDIENTE), observacionCliente, telefono, usuarioSIGEBI);
                 this.bienesPorRechazar.clear();
 
                 observacionCliente = "";
@@ -554,7 +555,7 @@ public class ListarBienSincronizarController extends BaseController {
             Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.error.controllerListarBienSincronizar.solicitarSincronizacion.sin.bienes.sincronizar"));
         } else {
             Integer telefono = lVistaUsuario.getgUsuarioActual().getTelefono1() != null ? Integer.parseInt(lVistaUsuario.getgUsuarioActual().getTelefono1()) : 0;
-            bienMod.cambiaEstadoBien(this.bienesPorSincronizar.values(), this.estadoPorDominioValor(Constantes.DOMINIO_BIEN, Constantes.ESTADO_BIEN_PENDIENTE_SINCRONIZAR), observacionCliente, telefono);
+            bienMod.cambiaEstadoBien(this.bienesPorSincronizar.values(), this.estadoPorDominioValor(Constantes.DOMINIO_BIEN, Constantes.ESTADO_BIEN_PENDIENTE_SINCRONIZAR), observacionCliente, telefono, usuarioSIGEBI);
             this.bienesPorSincronizar.clear();
 
             //Se consulta la vista nuevamente

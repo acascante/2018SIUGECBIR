@@ -52,8 +52,9 @@ public class RegistroMovimiento extends ObjetoBase implements Serializable {
     @Temporal(TemporalType.DATE)
     private Date fecha;
 
-    @Column(name = "NUM_PERSONA")
-    private Integer numeroPersona;
+    @ManyToOne
+    @JoinColumn(name = "ID_USUARIO", referencedColumnName = "ID_USUARIO")
+    private Usuario usuario;
 
     @ManyToOne
     @JoinColumn(name = "ID_ESTADO", referencedColumnName = "ID_ESTADO")
@@ -101,14 +102,6 @@ public class RegistroMovimiento extends ObjetoBase implements Serializable {
         this.fecha = fecha;
     }
 
-    public Integer getNumeroPersona() {
-        return numeroPersona;
-    }
-
-    public void setNumeroPersona(Integer numeroPersona) {
-        this.numeroPersona = numeroPersona;
-    }
-
     public Estado getEstado() {
         return estado;
     }
@@ -116,6 +109,16 @@ public class RegistroMovimiento extends ObjetoBase implements Serializable {
     public void setEstado(Estado estado) {
         this.estado = estado;
     }
+
+    public Usuario getUsuario() {
+        return usuario;
+    }
+
+    public void setUsuario(Usuario usuario) {
+        this.usuario = usuario;
+    }
+
+    
     //</editor-fold>
 
     //<editor-fold defaultstate="collapsed" desc="Metodos">
@@ -127,7 +130,6 @@ public class RegistroMovimiento extends ObjetoBase implements Serializable {
         hash = 23 * hash + (this.bien != null ? this.bien.hashCode() : 0);
         hash = 23 * hash + (this.observacion != null ? this.observacion.hashCode() : 0);
         hash = 23 * hash + (this.fecha != null ? this.fecha.hashCode() : 0);
-        hash = 23 * hash + (this.numeroPersona != null ? this.numeroPersona.hashCode() : 0);
         hash = 23 * hash + (this.estado != null ? this.estado.hashCode() : 0);
         return hash;
     }
@@ -157,9 +159,6 @@ public class RegistroMovimiento extends ObjetoBase implements Serializable {
             return false;
         }
         if (this.fecha != other.fecha && (this.fecha == null || !this.fecha.equals(other.fecha))) {
-            return false;
-        }
-        if (this.numeroPersona != other.numeroPersona && (this.numeroPersona == null || !this.numeroPersona.equals(other.numeroPersona))) {
             return false;
         }
         if (this.estado != other.estado && (this.estado == null || !this.estado.equals(other.estado))) {

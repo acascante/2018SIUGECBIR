@@ -13,6 +13,7 @@ import cr.ac.ucr.framework.vista.util.Util;
 import cr.ac.ucr.sigebi.domain.Estado;
 import cr.ac.ucr.sigebi.domain.Tipo;
 import cr.ac.ucr.sigebi.domain.UnidadEjecutora;
+import cr.ac.ucr.sigebi.domain.Usuario;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -41,6 +42,7 @@ public class BaseController extends PaginacionOracle {
     String vistaOrigen;
     String vistaActual;
     UnidadEjecutora unidadEjecutora;
+    Usuario usuarioSIGEBI;
 
     List<Estado> estadosGenerales;
     List<Tipo> tiposGenerales;
@@ -129,12 +131,13 @@ public class BaseController extends PaginacionOracle {
 
         //Obtener el id de la unidad ejecutora
         unidadEjecutora = lVistaUsuario.getUnidadEjecutoraSIGEBI();
-
+        usuarioSIGEBI =lVistaUsuario.getUsuarioSIGEBI();
+        
         //Obtener usuario
         SegUsuario usuario = lVistaUsuario.getgUsuarioActual();
         codPersonaReg = usuario.getIdUsuario();
         usuarioRegistrado = usuario.getNombre_completo();
-
+        
         ArrayList<SelectItem> cantPorPaginas = new ArrayList<SelectItem>();
         cantPorPaginas.add(new SelectItem(5, "5"));
         cantPorPaginas.add(new SelectItem(10, "10"));

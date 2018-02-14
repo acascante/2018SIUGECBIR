@@ -13,6 +13,7 @@ import cr.ac.ucr.sigebi.domain.RegistroMovimiento;
 import cr.ac.ucr.sigebi.domain.Sincronizar;
 import cr.ac.ucr.sigebi.domain.Tipo;
 import cr.ac.ucr.sigebi.domain.UnidadEjecutora;
+import cr.ac.ucr.sigebi.domain.Usuario;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
@@ -106,13 +107,13 @@ public class BienModel {
         bienDao.actualizar(bien);
     }
 
-    public void cambiaEstadoBien(Collection<Bien> bienes, Estado estado, String observacion, Integer telefono) {
+    public void cambiaEstadoBien(Collection<Bien> bienes, Estado estado, String observacion, Integer telefono, Usuario usuario) {
         for (Bien bien : bienes) {
-            this.cambiaEstadoBien(bien, estado, observacion, telefono);
+            this.cambiaEstadoBien(bien, estado, observacion, telefono, usuario);
         }
     }
 
-    public void cambiaEstadoBien(Bien bien, Estado estado, String observacion, Integer telefono) {
+    public void cambiaEstadoBien(Bien bien, Estado estado, String observacion, Integer telefono, Usuario usuario) {
         //Se registra el movimiento
         RegistroMovimiento regisMov = new RegistroMovimiento();
         regisMov.setBien(bien);
@@ -120,9 +121,8 @@ public class BienModel {
         regisMov.setEstado(estado);
         regisMov.setTipo(bien.getTipo());
         regisMov.setObservacion(observacion);
-        regisMov.setNumeroPersona(telefono);
+        regisMov.setUsuario(usuario);
         registroMovimientoModel.agregar(regisMov);
-
         
         //Se actualiza el estado del bien
         bien.setEstado(estado);

@@ -679,7 +679,7 @@ public class AgregarBienController extends BaseController {
                 Integer telefono = lVistaUsuario.getgUsuarioActual().getTelefono1() != null ? Integer.parseInt(lVistaUsuario.getgUsuarioActual().getTelefono1()) : 0;
                 bien.setEstado(this.estadoPorDominioValor(Constantes.DOMINIO_BIEN, Constantes.ESTADO_BIEN_PENDIENTE));
                 this.command.setEstado(bien.getEstado());
-                modelBien.cambiaEstadoBien(bien, bien.getEstado(), command.getObservacionCliente(), telefono);
+                modelBien.cambiaEstadoBien(bien, bien.getEstado(), command.getObservacionCliente(), telefono, usuarioSIGEBI);
                 command.setObservacionCliente("");
                 inicializarBanderasBotones(bien);
                 this.cerrarPanelObservaciones();
@@ -696,7 +696,7 @@ public class AgregarBienController extends BaseController {
             Integer telefono = lVistaUsuario.getgUsuarioActual().getTelefono1() != null ? Integer.parseInt(lVistaUsuario.getgUsuarioActual().getTelefono1()) : 0;
             bien.setEstado(this.estadoPorDominioValor(Constantes.DOMINIO_BIEN, Constantes.ESTADO_BIEN_PENDIENTE_SINCRONIZAR));
             this.command.setEstado(bien.getEstado());
-            modelBien.cambiaEstadoBien(bien, bien.getEstado(), command.getObservacionCliente(), telefono);
+            modelBien.cambiaEstadoBien(bien, bien.getEstado(), command.getObservacionCliente(), telefono, usuarioSIGEBI);
             inicializarBanderasBotones(bien);
             this.cerrarPanelObservaciones();
         } catch (FWExcepcion e) {

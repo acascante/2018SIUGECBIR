@@ -14,9 +14,11 @@ import cr.ac.ucr.framework.vista.util.Util;
 import cr.ac.ucr.sigebi.domain.Estado;
 import cr.ac.ucr.sigebi.domain.Tipo;
 import cr.ac.ucr.sigebi.domain.UnidadEjecutora;
+import cr.ac.ucr.sigebi.domain.Usuario;
 import cr.ac.ucr.sigebi.models.EstadoModel;
 import cr.ac.ucr.sigebi.models.TipoModel;
 import cr.ac.ucr.sigebi.models.UnidadEjecutoraModel;
+import cr.ac.ucr.sigebi.models.UsuarioModel;
 
 import java.util.ArrayList;
 import java.util.Hashtable;
@@ -49,7 +51,10 @@ public class VistaUsuario {
     private EstadoModel estadoModel;
     @Resource
     private TipoModel tipoModel;
-
+    @Resource
+    private UsuarioModel usuarioModel;
+    
+    private Usuario usuarioSIGEBI;
     private UnidadEjecutora unidadEjecutoraSIGEBI;
     private List<Estado> estadosSIGEBI;
     private List<Tipo> tiposSIGEBI;
@@ -308,7 +313,10 @@ public class VistaUsuario {
         //Se asignan los estados y tipos de la aplicacion
         estadosSIGEBI = estadoModel.listar();        
         tiposSIGEBI = tipoModel.listar();
-
+        
+        //Se asigna el usuario
+        usuarioSIGEBI = usuarioModel.buscarPorId(this.gUsuarioActual.getIdUsuario());
+        
         //if
         //Busco la unidad ejecutora seleccionada y actualizo la unidad actual
         Integer unidadEjecSelect = Integer.valueOf(event.getNewValue().toString());
@@ -616,5 +624,22 @@ public class VistaUsuario {
         this.tiposSIGEBI = tiposSIGEBI;
     }
 
+    public UsuarioModel getUsuarioModel() {
+        return usuarioModel;
+    }
+
+    public void setUsuarioModel(UsuarioModel usuarioModel) {
+        this.usuarioModel = usuarioModel;
+    }
+
+    public Usuario getUsuarioSIGEBI() {
+        return usuarioSIGEBI;
+    }
+
+    public void setUsuarioSIGEBI(Usuario usuarioSIGEBI) {
+        this.usuarioSIGEBI = usuarioSIGEBI;
+    }
+    
     // </editor-fold>
+    
 }//fin de la clase
