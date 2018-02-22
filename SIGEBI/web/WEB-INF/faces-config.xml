@@ -17,6 +17,7 @@
             <var>bundle</var>
         </resource-bundle>
     </application>
+    
     <navigation-rule>
         <from-view-id>/index.xhtml</from-view-id>
         <!--from-view-id>/index.xhtml</from-view-id-->

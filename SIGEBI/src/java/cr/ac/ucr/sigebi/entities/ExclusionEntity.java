@@ -7,7 +7,8 @@ package cr.ac.ucr.sigebi.entities;
 
 import cr.ac.ucr.framework.seguridad.ObjetoBase;
 import cr.ac.ucr.sigebi.domain.Bien;
-import cr.ac.ucr.sigebi.utils.Constantes;
+import cr.ac.ucr.sigebi.domain.Estado;
+import cr.ac.ucr.sigebi.domain.Tipo;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
@@ -50,11 +51,11 @@ public class ExclusionEntity extends ObjetoBase implements Serializable {
 
     @JoinColumn(name = "ID_ESTADO", referencedColumnName = "ID_ESTADO")
     @ManyToOne(fetch = FetchType.EAGER)
-    private EstadoEntity estado;
+    private Estado estado;
     
     @JoinColumn(name = "ID_TIPO", referencedColumnName = "ID_TIPO")
     @ManyToOne(fetch = FetchType.EAGER)
-    private TipoEntity tipo;
+    private Tipo tipo;
     
     @Transient
     private List<Bien> bienes;
@@ -64,7 +65,7 @@ public class ExclusionEntity extends ObjetoBase implements Serializable {
     //<editor-fold defaultstate="collapsed" desc="Constructores">
     public ExclusionEntity() {}
 
-    public ExclusionEntity(Integer idExclusion, Long unidadEjecutora, Date fecha, EstadoEntity estado, TipoEntity tipo, List<Bien> bienes) {
+    public ExclusionEntity(Integer idExclusion, Long unidadEjecutora, Date fecha, Estado estado, Tipo tipo, List<Bien> bienes) {
         this.idExclusion = idExclusion;
         this.unidadEjecutora = unidadEjecutora;
         this.fecha = fecha;
@@ -99,19 +100,19 @@ public class ExclusionEntity extends ObjetoBase implements Serializable {
         this.fecha = fecha;
     }
 
-    public EstadoEntity getEstado() {
+    public Estado getEstado() {
         return estado;
     }
 
-    public void setEstado(EstadoEntity estado) {
+    public void setEstado(Estado estado) {
         this.estado = estado;
     }
 
-    public TipoEntity getTipo() {
+    public Tipo getTipo() {
         return tipo;
     }
 
-    public void setTipo(TipoEntity tipo) {
+    public void setTipo(Tipo tipo) {
         this.tipo = tipo;
     }
 

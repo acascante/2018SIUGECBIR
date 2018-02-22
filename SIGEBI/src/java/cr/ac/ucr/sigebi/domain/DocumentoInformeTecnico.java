@@ -34,6 +34,10 @@ public class DocumentoInformeTecnico extends Documento implements Serializable {
     @JoinColumn(name = "ID_TIPO", referencedColumnName = "ID_TIPO")
     private Tipo tipoInforme;
 
+    @ManyToOne
+    @JoinColumn(name = "ID_BIEN", referencedColumnName = "ID_BIEN")
+    private Bien bien;
+
     //</editor-fold>
     
     //<editor-fold defaultstate="collapsed" desc="Constructores">
@@ -49,6 +53,7 @@ public class DocumentoInformeTecnico extends Documento implements Serializable {
         super(estado, Constantes.DISCRIMINATOR_DOCUMENTO_INFORME_TECNICO, unidadEjecutora);
         this.evaluacion = evaluacion;
         this.tipoInforme = tipoInforme;
+        this.bien = bien;
     }
 
     //</editor-fold>
@@ -57,6 +62,14 @@ public class DocumentoInformeTecnico extends Documento implements Serializable {
     
     public String getEvaluacion() {
         return evaluacion;
+    }
+
+    public Bien getBien() {
+        return bien;
+    }
+
+    public void setBien(Bien bien) {
+        this.bien = bien;
     }
 
     public void setEvaluacion(String evaluacion) {

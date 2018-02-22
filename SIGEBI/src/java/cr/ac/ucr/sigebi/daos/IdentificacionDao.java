@@ -10,12 +10,12 @@ import cr.ac.ucr.framework.daoImpl.GenericDaoImpl;
 import cr.ac.ucr.framework.utils.FWExcepcion;
 import cr.ac.ucr.sigebi.domain.Estado;
 import cr.ac.ucr.sigebi.domain.Identificacion;
+import cr.ac.ucr.sigebi.domain.UnidadEjecutora;
 import java.util.List;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,7 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
  * @author alvaro.cascante
  */
 @Repository(value = "IdentificacionDao")
-@Scope("request")
+
 public class IdentificacionDao extends GenericDaoImpl {
     
     @Autowired
@@ -41,12 +41,17 @@ public class IdentificacionDao extends GenericDaoImpl {
     }
     
     @Transactional(readOnly = true)
-    public Identificacion siguienteDisponible(Estado estado) throws FWExcepcion {
+    public Identificacion siguienteDisponible(Estado estado
+                                        , UnidadEjecutora unidadEjecutora
+    ) throws FWExcepcion {
         Session session = dao.getSessionFactory().openSession();
         try {
-            String sql = "SELECT i FROM Identificacion i WHERE i.estado = :estado";
+            String sql = "SELECT i FROM Identificacion i "
+                        + "WHERE i.estado = :estado "
+                        + "     and i.unidadEjecutora = :unidadEjecutora";
             Query query = session.createQuery(sql);
             query.setParameter("estado", estado);
+            query.setParameter("unidadEjecutora", unidadEjecutora);
             query.setMaxResults(1); 
             return (Identificacion) query.uniqueResult();
         } catch (HibernateException e) {

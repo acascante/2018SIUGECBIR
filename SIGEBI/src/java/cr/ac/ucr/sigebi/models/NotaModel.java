@@ -18,7 +18,7 @@ import org.springframework.stereotype.Service;
  * @author jorge.serrano
  */
 @Service(value = "notaModel")
-@Scope("request")
+
 public class NotaModel {
 
     @Resource

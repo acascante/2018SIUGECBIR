@@ -12,11 +12,9 @@ import cr.ac.ucr.sigebi.domain.Documento;
 import cr.ac.ucr.sigebi.domain.DocumentoActa;
 import cr.ac.ucr.sigebi.domain.DocumentoDetalle;
 import java.util.List;
-import javax.annotation.Resource;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,14 +24,11 @@ import org.springframework.transaction.annotation.Transactional;
  * @author jorge.serrano
  */
 @Repository(value = "ActaDao")
-@Scope("request")
+
 public class ActaDao extends GenericDaoImpl {
     
     @Autowired
     private DaoHelper dao;
-    
-    @Resource
-    private FaltaViewBienDao viewBienDao;
     
     @Transactional
     public DocumentoActa traerPorId(Integer pId) {
@@ -126,7 +121,7 @@ public class ActaDao extends GenericDaoImpl {
     
     @Transactional(readOnly = true)
     public Long contarActas(Long unidadEjecutora,
-                                        String fltIdTipo,
+                                        String fltIdActa,
                                         String fltAutorizacion,
                                         String fltEstado,
                                         String fltFecha
@@ -136,7 +131,7 @@ public class ActaDao extends GenericDaoImpl {
 
             //Se genera el query para la busqueda de los bienes
             Query q = this.creaQueryActasConsultar(unidadEjecutora
-                                                , fltIdTipo
+                                                , fltIdActa
                                                 , fltAutorizacion
                                                 , fltEstado
                                                 , fltFecha
@@ -157,7 +152,7 @@ public class ActaDao extends GenericDaoImpl {
     
     @Transactional(readOnly = true)
     public List<DocumentoActa> listarActas(Long unidadEjecutora,
-                                        String fltIdTipo,
+                                        String fltIdActa,
                                         String fltAutorizacion,
                                         String fltEstado,
                                         String fltFecha,
@@ -168,7 +163,7 @@ public class ActaDao extends GenericDaoImpl {
         try {
             //Se genera el query para la busqueda
             Query q = this.creaQueryActasConsultar(unidadEjecutora
-                                                , fltIdTipo
+                                                , fltIdActa
                                                 , fltAutorizacion
                                                 , fltEstado
                                                 , fltFecha
@@ -193,7 +188,7 @@ public class ActaDao extends GenericDaoImpl {
 
     
     private Query creaQueryActasConsultar(Long unidadEjecutora,
-                                        String fltIdTipo,
+                                        String fltIdActa,
                                         String fltAutorizacion,
                                         String fltEstado,
                                         String fltFecha,
@@ -208,25 +203,25 @@ public class ActaDao extends GenericDaoImpl {
             sql = "SELECT s FROM DocumentoActa s ";
         
         sql = sql + " WHERE s.unidadEjecutora.id = :pnumUnidadEjec ";
-        if (fltIdTipo != null && fltIdTipo.length() > 0) 
-            sql = sql + " AND s.tipo.id like :fltIdTipo ";
+        if (fltIdActa != null && fltIdActa.length() > 0) 
+            sql = sql + " AND str( s.id  ) like :fltIdActa ";
         if (fltAutorizacion != null && fltAutorizacion.length() > 0) 
             sql = sql + " AND upper(s.autorizacion) like upper(:fltAutorizacion) ";
         if (fltEstado != null && fltEstado.length() > 0) 
-            sql = sql + " AND s.estado.id = :fltEstado";
+            sql = sql + " AND str( s.estado.id ) = :fltEstado";
         if(fltFecha != null && fltFecha.length() > 0)
-               sql = sql +  " AND upper(s.fecha) like upper(:fltFecha) ";
+               sql = sql +  " AND to_char(s.fecha, 'YYYY-MM-DD') like upper(:fltFecha) ";
 
         Query q = session.createQuery(sql);
         q.setParameter("pnumUnidadEjec", unidadEjecutora);
-        if (fltIdTipo != null && fltIdTipo.length() > 0) 
-            q.setParameter("fltIdTipo", '%' + fltIdTipo + '%');
+        if (fltIdActa != null && fltIdActa.length() > 0) 
+            q.setParameter("fltIdActa", '%' + fltIdActa + '%');
         if (fltAutorizacion != null && fltAutorizacion.length() > 0) 
             q.setParameter("fltAutorizacion", '%' + fltAutorizacion + '%');
         if (fltEstado != null && fltEstado.length() > 0) 
-            q.setParameter("fltEstado", Integer.parseInt(fltEstado));
+            q.setParameter("fltEstado", fltEstado);
         if(fltFecha != null && fltFecha.length() > 0)
-            q.setParameter("fltFecha", '%' + fltFecha + '%');
+            q.setParameter("fltFecha", '%' + fltFecha.replace('/', '-') + '%');
         
         
         

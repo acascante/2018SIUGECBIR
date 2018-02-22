@@ -17,7 +17,7 @@ import org.springframework.stereotype.Service;
  * @author jorge.serrano
  */
 @Service(value = "justificacionModel")
-@Scope("request")
+
 public class JustificacionModel {
     
     @Resource

@@ -9,6 +9,7 @@ import cr.ac.ucr.framework.utils.FWExcepcion;
 import cr.ac.ucr.sigebi.daos.IdentificacionDao;
 import cr.ac.ucr.sigebi.domain.Estado;
 import cr.ac.ucr.sigebi.domain.Identificacion;
+import cr.ac.ucr.sigebi.domain.UnidadEjecutora;
 import javax.annotation.Resource;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
@@ -18,14 +19,16 @@ import org.springframework.stereotype.Service;
  * @author alvaro.cascante
  */
 @Service(value = "identificacionModel")
-@Scope("request")
+
 public class IdentificacionModel {
     
     @Resource
     private IdentificacionDao identificacionDao;
     
-    public Identificacion siguienteDisponible(Estado estado) throws FWExcepcion {
-        return identificacionDao.siguienteDisponible(estado);
+    public Identificacion siguienteDisponible(Estado estado
+                                        , UnidadEjecutora unidadEjecutora
+    ) throws FWExcepcion {
+        return identificacionDao.siguienteDisponible(estado, unidadEjecutora);
     }
 
     public void actualizar(Identificacion identificacion) {

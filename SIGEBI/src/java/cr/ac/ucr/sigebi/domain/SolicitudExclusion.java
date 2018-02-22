@@ -27,7 +27,6 @@ public class SolicitudExclusion extends Solicitud {
     @JoinColumn(name = "ID_TIPO", referencedColumnName = "ID_TIPO")
     @ManyToOne(fetch = FetchType.EAGER)
     private Tipo tipoExclusion;
-
     //</editor-fold>
     
     //<editor-fold defaultstate="collapsed" desc="Get's y Set's">
@@ -38,6 +37,5 @@ public class SolicitudExclusion extends Solicitud {
     public void setTipoExclusion(Tipo tipoExclusion) {
         this.tipoExclusion = tipoExclusion;
     }
-
     //</editor-fold> 
 }

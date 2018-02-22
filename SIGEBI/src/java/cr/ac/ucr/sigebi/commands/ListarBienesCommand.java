@@ -5,7 +5,6 @@
  */
 package cr.ac.ucr.sigebi.commands;
 
-import cr.ac.ucr.sigebi.domain.UnidadEjecutora;
 import cr.ac.ucr.sigebi.utils.Constantes;
 import java.util.TimeZone;
 

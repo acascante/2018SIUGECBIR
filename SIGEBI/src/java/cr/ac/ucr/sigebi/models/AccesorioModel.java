@@ -19,7 +19,7 @@ import org.springframework.stereotype.Service;
  * @author jorge.serrano
  */
 @Service(value = "accesorioModel")
-@Scope("request")
+
 public class AccesorioModel {
     
     @Resource

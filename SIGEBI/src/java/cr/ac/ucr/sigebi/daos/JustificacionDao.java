@@ -23,7 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
  * @author jorge.serrano
  */
 @Repository(value = "JustificacionDao")
-@Scope("request")
+
 public class JustificacionDao extends GenericDaoImpl {
     
     @Autowired

@@ -18,7 +18,7 @@ import org.springframework.stereotype.Service;
  * @author alvaro.cascante
  */
 @Service(value = "viewResumenBienModel")
-@Scope("request")
+
 public class ViewResumenBienModel {
     
     @Resource

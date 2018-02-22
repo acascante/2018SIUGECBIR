@@ -8,10 +8,8 @@ package cr.ac.ucr.sigebi.models;
 import cr.ac.ucr.framework.utils.FWExcepcion;
 import cr.ac.ucr.sigebi.daos.AutorizacionRolDao;
 import cr.ac.ucr.sigebi.domain.AutorizacionRol;
-import cr.ac.ucr.sigebi.entities.ViewDocumAprobEntity;
 import java.util.List;
 import javax.annotation.Resource;
-import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
 /**
@@ -19,7 +17,7 @@ import org.springframework.stereotype.Service;
  * @author jairo.cisneros
  */
 @Service(value = "autorizacionRolModel")
-@Scope("request")
+
 public class AutorizacionRolModel {
 
     @Resource

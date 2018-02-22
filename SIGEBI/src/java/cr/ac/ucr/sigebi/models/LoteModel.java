@@ -18,7 +18,7 @@ import org.springframework.stereotype.Service;
  * @author aocc
  */
 @Service(value = "loteModel")
-@Scope("request")
+
 public class LoteModel {
     
     @Resource

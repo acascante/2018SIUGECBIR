@@ -644,6 +644,8 @@ public class BienCommand {
     private ProveedorCommand proveedorCommand;
     private UbicacionCommand ubicacionCommand;
     private Adjunto adjunto;
+    
+    private boolean cantidadActivo;
     //</editor-fold>
 
     //<editor-fold defaultstate="collapsed" desc="Constructores">
@@ -662,11 +664,16 @@ public class BienCommand {
         this.ubicacionCommand = new UbicacionCommand();
 
         adjunto = new Adjunto();
+        
+        cantidadActivo = true;
+        cantidad = 1;
     }
 
     public BienCommand(UnidadEjecutora unidadEjecutora) {
         this(); // Llama al constructor sin parametros
         this.unidadEjecutora = unidadEjecutora;
+        cantidadActivo = true;
+        cantidad = 1;
     }
 
     public BienCommand(Bien bien) {
@@ -675,6 +682,10 @@ public class BienCommand {
         this.idCategoria = bien.getSubCategoria() != null && bien.getSubCategoria().getCategoria() != null ? bien.getSubCategoria().getCategoria().getId() : -1L;
         this.idClasificacion = bien.getSubClasificacion() != null && bien.getSubClasificacion().getClasificacion() != null ? bien.getSubClasificacion().getClasificacion().getId() : -1L;
         this.idLote = bien.getLote() != null ? bien.getLote().getId() : -1L;
+        
+        //
+        cantidadActivo = idLote < 0;
+        
         this.idMoneda = bien.getMoneda() != null ? bien.getMoneda().getId() : -1L;
         this.idOrigen = bien.getOrigen() != null ? bien.getOrigen().getId() : -1L;
         this.idSubCategoria = bien.getSubCategoria() != null ? bien.getSubCategoria().getId() : -1L;
@@ -1107,5 +1118,16 @@ public class BienCommand {
     public void setUbicacionCommand(UbicacionCommand ubicacionCommand) {
         this.ubicacionCommand = ubicacionCommand;
     }
+    
+    public boolean isCantidadActivo() {
+        return cantidadActivo;
+    }
+
+    public void setCantidadActivo(boolean cantidadActivo) {
+        this.cantidadActivo = cantidadActivo;
+    }
+
     //</editor-fold>
+
+    
 }

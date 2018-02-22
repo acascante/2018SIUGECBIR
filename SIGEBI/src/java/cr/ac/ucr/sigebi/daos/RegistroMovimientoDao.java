@@ -18,7 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
  * @author jairo.cisneros
  */
 @Repository(value = "registroMovimientoDao")
-@Scope("request")
+
 public class RegistroMovimientoDao extends GenericDaoImpl {
 
     @Transactional

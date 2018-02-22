@@ -6,7 +6,6 @@
 package cr.ac.ucr.sigebi.controllers;
 
 import cr.ac.ucr.framework.utils.FWExcepcion;
-import cr.ac.ucr.framework.vista.VistaUsuario;
 import cr.ac.ucr.framework.vista.util.Mensaje;
 import cr.ac.ucr.framework.vista.util.Util;
 import cr.ac.ucr.sigebi.commands.ListarBienesCommand;
@@ -14,13 +13,11 @@ import cr.ac.ucr.sigebi.domain.AutorizacionRolPersona;
 import cr.ac.ucr.sigebi.domain.Bien;
 import cr.ac.ucr.sigebi.domain.Estado;
 import cr.ac.ucr.sigebi.domain.Tipo;
-import cr.ac.ucr.sigebi.domain.UnidadEjecutora;
 import cr.ac.ucr.sigebi.domain.Usuario;
 import cr.ac.ucr.sigebi.models.AutorizacionRolPersonaModel;
 import cr.ac.ucr.sigebi.models.BienModel;
 import cr.ac.ucr.sigebi.models.EstadoModel;
 import cr.ac.ucr.sigebi.models.TipoModel;
-import cr.ac.ucr.sigebi.models.UnidadEjecutoraModel;
 import cr.ac.ucr.sigebi.models.UsuarioModel;
 import cr.ac.ucr.sigebi.utils.Constantes;
 import java.util.ArrayList;
@@ -132,10 +129,20 @@ public class ListarBienesController extends BaseController {
 
     private void listarBienes() {
         try {
-            this.bienes = bienModel.listar(this.getPrimerRegistro() - 1, this.getUltimoRegistro(),
-                    command.getUsuarioAdmnistrador() ? null : unidadEjecutora,
-                    command.getFltIdCodigo(), command.getFltIdentificacion(), command.getFltDescripcion(), command.getFltMarca(), 
-                    command.getFltModelo(), command.getFltSerie(), getFltTipo(), command.getFltUnidadEjecutoraAdmin(), getFltEstadoArray());
+            this.bienes = bienModel.listar(this.getPrimerRegistro() - 1
+                                        , this.getUltimoRegistro()
+                                        , command.getUsuarioAdmnistrador() ? null : unidadEjecutora
+                                        , command.getFltIdCodigo()
+                                        , command.getFltIdentificacion()
+                    
+                                        , command.getFltDescripcion()
+                                        , command.getFltMarca()
+                                        , command.getFltModelo()
+                                        , command.getFltSerie()
+                                        , getFltTipo()
+                    
+                                        , command.getFltUnidadEjecutoraAdmin()
+                                        , getFltEstadoArray());
         } catch (FWExcepcion e) {
             Mensaje.agregarErrorAdvertencia(e.getError_para_usuario());
         } catch (NumberFormatException e) {

@@ -27,7 +27,7 @@ import org.springframework.transaction.annotation.Transactional;
  * @author jairo.cisneros
  */
 @Repository(value = "documentoDao")
-@Scope("request")
+
 public class DocumentoDao extends GenericDaoImpl {
 
     @Autowired
@@ -162,16 +162,16 @@ public class DocumentoDao extends GenericDaoImpl {
             sql.append(" AND (select count(deta) from DocumentoDetalle deta ");
             sql.append(" where deta.documento.id = docu.id");
             if (identificacionBien != null && identificacionBien.length() > 0) {
-                sql.append(" and deta.bien.identificacion.identificacion = like upper(:identificacionBien)");
+                sql.append(" and upper(deta.bien.identificacion.identificacion) like upper(:identificacionBien)");
             }
             if (descripcionBien != null && descripcionBien.length() > 0) {
-                sql.append("and upper(deta.bien.descripcion) like upper(:descripcionBien) ");
+                sql.append(" and upper(deta.bien.descripcion) like upper(:descripcionBien) ");
             }
             if (marcaBien != null && marcaBien.length() > 0) {
-                sql.append("and upper(deta.bien.resumenBien.marca) LIKE UPPER(:marcaBien) ");
+                sql.append(" and upper(deta.bien.resumenBien.marca) like upper(:marcaBien) ");
             }
             if (modeloBien != null && modeloBien.length() > 0) {
-                sql.append("and upper(deta.bien.resumenBien.modelo) LIKE UPPER(:modeloBien) ");
+                sql.append(" and upper(deta.bien.resumenBien.modelo) like upper(:modeloBien) ");
             }
             sql.append(" ) > 0");
         }

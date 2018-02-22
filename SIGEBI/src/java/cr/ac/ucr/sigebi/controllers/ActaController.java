@@ -5,35 +5,33 @@
  */
 package cr.ac.ucr.sigebi.controllers;
 
+import cr.ac.ucr.framework.utils.FWExcepcion;
 import cr.ac.ucr.framework.vista.util.Mensaje;
 import cr.ac.ucr.framework.vista.util.Util;
 import cr.ac.ucr.sigebi.domain.DocumentoActa;
 import cr.ac.ucr.sigebi.domain.DocumentoDetalle;
-import cr.ac.ucr.sigebi.domain.AutorizacionRol;
+import cr.ac.ucr.sigebi.domain.AutorizacionRolPersona;
 import cr.ac.ucr.sigebi.domain.Estado;
-import cr.ac.ucr.sigebi.domain.Rol;
 import cr.ac.ucr.sigebi.domain.Tipo;
 import cr.ac.ucr.sigebi.domain.Usuario;
 import cr.ac.ucr.sigebi.models.ActaModel;
 import cr.ac.ucr.sigebi.models.EstadoModel;
 import cr.ac.ucr.sigebi.domain.Bien;
 import cr.ac.ucr.sigebi.domain.DocumentoAutorizacion;
-import cr.ac.ucr.sigebi.entities.DocumentoEntity;
 import cr.ac.ucr.sigebi.models.TipoModel;
-//import cr.ac.ucr.sigebi.entities.RolEntity;
-import cr.ac.ucr.sigebi.entities.ViewDocumAprobEntity;
-import cr.ac.ucr.sigebi.models.DocumentoRolEstadoModel;
 import cr.ac.ucr.sigebi.models.AutorizacionRolPersonaModel;
-import cr.ac.ucr.sigebi.models.AutorizacionRolModel;
 import cr.ac.ucr.sigebi.models.DocumentoAutorizacionModel;
+import cr.ac.ucr.sigebi.models.DocumentoModel;
 import cr.ac.ucr.sigebi.models.UsuarioModel;
 import cr.ac.ucr.sigebi.utils.Constantes;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import javax.annotation.PostConstruct;
@@ -61,6 +59,8 @@ public class ActaController extends ListadoBienesGeneralController {
     Estado estadoGeneralPendiente;
     Estado estadoGeneralAprobado;
     Estado estadoGeneralRechazado;
+    List<Estado> estadosActa;
+    List<SelectItem> estadosActaOptions;
     
     List<DocumentoActa> actasRegistradas;
     List<DocumentoDetalle> bienesActa;
@@ -101,6 +101,7 @@ public class ActaController extends ListadoBienesGeneralController {
     @Resource private UsuarioModel usuarioModel;
     
     Usuario usuario;
+    String valorDonacion;
     
     //</editor-fold>
     
@@ -118,23 +119,18 @@ public class ActaController extends ListadoBienesGeneralController {
             estadoGeneralPendiente = estadoModel.buscarPorDominioEstado( Constantes.DOMINIO_GENERAL, Constantes.ESTADO_GENERAL_PENDIENTE);
             estadoGeneralAprobado = estadoModel.buscarPorDominioEstado( Constantes.DOMINIO_GENERAL, Constantes.ESTADO_GENERAL_APROBADO);
             estadoGeneralRechazado = estadoModel.buscarPorDominioEstado( Constantes.DOMINIO_GENERAL, Constantes.ESTADO_GENERAL_RECHAZADO);
-    //      
+            
+            estadosActa = new ArrayList<Estado>();
+            estadosActa.add(estadoGeneralActivo);
+            estadosActa.add(estadoGeneralPendiente);
+            estadosActa.add(estadoGeneralAprobado);
+            estadosActa.add(estadoGeneralRechazado);
+            
             usuario = usuarioModel.buscarPorId(codPersonaReg);
-//            rolesDelUsuarioActualDesecho = new HashMap<Long, Rol>();
-//            rolesDelUsuarioActualDonacion = new HashMap<Long, Rol>();
 
             bienesActa = new ArrayList<DocumentoDetalle>();
+            cargarCombos();
             
-            //List<AutorizacionRolPersona> rolesAprobacionDonacion =  autorizacionRolPersonaModel.buscarRolesPorAutorizacionUsuario(Long.parseLong(Constantes.CODIGO_AUTORIZACION_ACTA_DONACION.toString()), usuarioRegistrado.getId(), unidadEjecutora.getId());     
-            //List<AutorizacionRolPersona> rolesAprobacionDesecho =  autorizacionRolPersonaModel.buscarRolesPorAutorizacionUsuario(Long.parseLong(Constantes.CODIGO_AUTORIZACION_ACTA_DESECHO.toString()), usuarioRegistrado.getId(), unidadEjecutora.getId());     
-
-
-            //Estos son los roles registrados para este USUARIO en cada DOCUMENTO
-//            for(AutorizacionRolPersona item : rolesAprobacionDesecho)
-//                rolesDelUsuarioActualDesecho.put(item.getAutorizacionRol().getRol().getId(), item.getAutorizacionRol().getRol());
-//            for(AutorizacionRolPersona item : rolesAprobacionDonacion)
-//                rolesDelUsuarioActualDonacion.put(item.getAutorizacionRol().getRol().getId(), item.getAutorizacionRol().getRol());
-                    
             listadoInicializaDatos();
         }catch(Exception err){
             Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.ActaListar.MSGError.Listado"));
@@ -145,14 +141,12 @@ public class ActaController extends ListadoBienesGeneralController {
         try {
             consultaBienes = Constantes.BIENES_LISTADO_ACTAS;
 
-            tiposActaOptions = new ArrayList<SelectItem>();
             bienesSeleccionados = new HashMap<Long, Bien>();
             actaDetalleMap = new HashMap<Long, DocumentoDetalle>();
             
             bienesActa = new ArrayList<DocumentoDetalle>();
             bienesActaEliminar = new ArrayList<DocumentoDetalle>();
             
-            cargarTipo();
             acta = new DocumentoActa(estadoGeneralPendiente
                                     ,null
                                     ,""
@@ -173,10 +167,11 @@ public class ActaController extends ListadoBienesGeneralController {
             fechaRegistro = formatter.format(acta.getFecha());
 
             actaNombreEstado = estadoGeneralPendiente.getNombre();
-
+            documentosAutorizacionesPorRol = new HashMap<String, DocumentoAutorizacion>(); 
             iniciaListadoBienes();
             
-            documentoRoles = new ArrayList<AutorizacionRol>();
+            //jserrano Roles
+//            documentoRoles = new ArrayList<AutorizacionRol>();
             permitirEdicion = permitirEditar();
 
         } catch (Exception err) {
@@ -186,32 +181,36 @@ public class ActaController extends ListadoBienesGeneralController {
 
     private void cargarDetalle(DocumentoActa item) throws ParseException{
         if (item.getId() > 0) {
-                acta = item;
-                
-                tipoActaSeleccionada = acta.getTipo().getId().toString();
-                esDonacion = tipoActaSeleccionada.equals(Constantes.ACTA_ID_TIPO_DONACION);
-                tipoSeleccionado = acta.getTipo();
-                
-                actaFecha = formatter.parse(formatter.format(acta.getFecha()));
-                fechaRegistro = formatter.format(acta.getFecha());
+            acta = item;
 
-                bienesActa = actaModel.traerBienesActa(acta);
+            tipoActaSeleccionada = acta.getTipo().getId().toString();
+            esDonacion = tipoActaSeleccionada.equals(Constantes.ACTA_ID_TIPO_DONACION);
+            tipoSeleccionado = acta.getTipo();
 
-                if(bienesActa != null)
-                    for (DocumentoDetalle valor : bienesActa) {
-                        bienesSeleccionados.put(valor.getBien().getId(), valor.getBien());
-                        actaDetalleMap.put(valor.getBien().getId(), valor);
-                    }
+            actaFecha = formatter.parse(formatter.format(acta.getFecha()));
+            fechaRegistro = formatter.format(acta.getFecha());
 
-                listarRolesAprobacion();
-                permitirEdicion = permitirEditar();
-                mostrarActivarBtn = permitirEdicion;
-            }
+            bienesActa = actaModel.traerBienesActa(acta);
+
+            if(bienesActa != null)
+                for (DocumentoDetalle valor : bienesActa) {
+                    bienesSeleccionados.put(valor.getBien().getId(), valor.getBien());
+                    actaDetalleMap.put(valor.getBien().getId(), valor);
+                }
+            //jserrano Roles
+//                listarRolesAprobacion();
+            permitirEdicion = permitirEditar();
+            mostrarActivarBtn = permitirEdicion;
+            
+            if(!permitirEdicion)
+                cargaRolesAprobacion();
+        }
     }
     
     
-    void cargarTipo() {
+    void cargarCombos() {
         try {
+            tiposActaOptions = new ArrayList<SelectItem>();
             //Aqui traemos los tipos de bienes para los Select
             List<Tipo> tipoEntity = tipoModel.listarPorDominio(Constantes.DOMINIO_ACTA);
             for (Tipo item : tipoEntity) {
@@ -220,6 +219,10 @@ public class ActaController extends ListadoBienesGeneralController {
                 }
                 tiposActaOptions.add(new SelectItem("" + item.getId(), item.getNombre()));
             }
+            estadosActaOptions = new ArrayList<SelectItem>();
+            for (Estado item : estadosActa) 
+                estadosActaOptions.add(new SelectItem("" + item.getId(), item.getNombre()));
+            
         } catch (Exception err) {
             Mensaje.agregarErrorAdvertencia(err.getMessage());
         }
@@ -229,6 +232,22 @@ public class ActaController extends ListadoBienesGeneralController {
     
     
     //<editor-fold defaultstate="collapsed" desc="GETs & SETs">
+
+    public Estado getEstadoGeneralActivo() {
+        return estadoGeneralActivo;
+    }
+
+    public void setEstadoGeneralActivo(Estado estadoGeneralActivo) {
+        this.estadoGeneralActivo = estadoGeneralActivo;
+    }
+
+    public Estado getEstadoGeneralPendiente() {
+        return estadoGeneralPendiente;
+    }
+
+    public void setEstadoGeneralPendiente(Estado estadoGeneralPendiente) {
+        this.estadoGeneralPendiente = estadoGeneralPendiente;
+    }
 
     public boolean isMostrarActivarBtn() {
         return mostrarActivarBtn;
@@ -587,6 +606,13 @@ public class ActaController extends ListadoBienesGeneralController {
         
     }
 
+    public List<SelectItem> getEstadosActaOptions() {
+        return estadosActaOptions;
+    }
+
+    public void setEstadosActaOptions(List<SelectItem> estadosActaOptions) {
+        this.estadosActaOptions = estadosActaOptions;
+    }
     
     public String getFltEstados() {
         return fltEstados;
@@ -628,6 +654,10 @@ public class ActaController extends ListadoBienesGeneralController {
     
     
     //<editor-fold defaultstate="collapsed" desc="Metodos Registro Acta">
+    
+    public boolean permitirEditar() {
+        return acta.getEstado().getId().equals(estadoGeneralPendiente.getId());
+    }
     
     public void guardar(ActionEvent pEvent) {
         try {
@@ -739,135 +769,6 @@ public class ActaController extends ListadoBienesGeneralController {
     //</editor-fold>
     
     
-    //<editor-fold defaultstate="collapsed" desc="Metodos Listado Roles Aprobacion por Documento">
-    String valorDonacion;
-
-    @Resource
-    private DocumentoAutorizacionModel documRolModel;
-    
-    //Los Roles de la tabla
-    List<AutorizacionRol> documentoRoles;
-    
-    //DocumentoAutorizacion documentoRoles;
-    
-    Map<Integer, ViewDocumAprobEntity> rolesIncluidos;
-
-    public void listarRolesAprobacion() {
-        try {
-            
-
-        } catch (Exception err) {
-            Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.Acta.MsnError.ActaError"));
-            //Mensaje.agregarErrorAdvertencia(err.getCause().getMessage());
-        }
-    }
-
-    public boolean permitirEditar() {
-        return acta.getEstado().getId().equals(estadoGeneralPendiente.getId());
-    }
-
-    @Resource
-    DocumentoRolEstadoModel docRolEstModel;
-    /**
-     * Aprueba el informe
-     *
-     * @param pEvent
-     */
-    public void aprobar(ActionEvent pEvent) {
-        try {
-            if (!pEvent.getPhaseId().equals(PhaseId.INVOKE_APPLICATION)) {
-                pEvent.setPhaseId(PhaseId.INVOKE_APPLICATION);
-                pEvent.queue();
-                return;
-            }
-            // Inicializo el ViewDocumAprobEntity para registrarlo en base de datos
-            ViewDocumAprobEntity docum = (ViewDocumAprobEntity) pEvent.getComponent().getAttributes().get("documentoAprobar");
-            DocumentoEntity documentoEntity = new DocumentoEntity();
-            documentoEntity.setIdDocumento( Long.parseLong(""+docum.getIdDocumento() ) );
-            Rol rolEntity = new Rol();
-//            rolEntity.setId() Long.parseLong(""+docum.getRol() ) );
-            //Inicializo el registro DocumentoRolEstadoEntity
-//            DocumentoRolEstadoEntity registro = new DocumentoRolEstadoEntity( Long.parseLong(""+acta.getId())
-//                                                                            , documentoEntity
-//                                                                            , rolEntity
-//                                                                            , estadoGeneralAprobado);
-            //Completo los datos
-//            registro.setFecha(new Date());
-//            registro.setIdUsuarioSeguridad(usuarioRegistrado);
-//            //Envío a guardar
-//            docRolEstModel.agregar(registro);
-//            
-            listarRolesAprobacion();
-            if(actaAprobada()){
-//                acta.setEstado(estadoGeneralAprobado);
-                actaModel.guardar(acta);
-            }
-                
-            
-        } catch (Exception err) {
-            Mensaje.agregarErrorAdvertencia(err.getMessage());
-        }
-    }
-    
-    private boolean actaAprobada(){
-//        for(AutorizacionRol valor : documentoRoles){
-//            if( (valor.get() == null) || (valor.getIdEstado().getIdEstado().equals( estadoGeneralRechazado.getId() ) ))
-//                return false;
-//        }
-        return true;
-    }
-
-    /**
-     * Rechaza el informe
-     *
-     * @param pEvent
-     */
-    public void rechazar(ActionEvent pEvent) {
-        try {
-            if (!pEvent.getPhaseId().equals(PhaseId.INVOKE_APPLICATION)) {
-                pEvent.setPhaseId(PhaseId.INVOKE_APPLICATION);
-                pEvent.queue();
-                return;
-            }
-            
-            // Inicializo el ViewDocumAprobEntity para registrarlo en base de datos
-            ViewDocumAprobEntity docum = (ViewDocumAprobEntity) pEvent.getComponent().getAttributes().get("documentoRechazar");
-            DocumentoEntity documentoEntity = new DocumentoEntity();
-            documentoEntity.setIdDocumento( Long.parseLong(""+docum.getIdDocumento() ) );
-//            RolEntity rolEntity = new RolEntity();
-//             rolEntity.setIdRol( Long.parseLong(""+docum.getRolId() ) );
-            //Inicializo el registro DocumentoRolEstadoEntity
-//            DocumentoRolEstadoEntity registro = new DocumentoRolEstadoEntity( Long.parseLong(""+acta.getId())
-//                                                                            , documentoEntity
-//                                                                            , rolEntity
-//                                                                            , estadoGeneralRechazado);
-            //Completo los datos
-//            registro.setFecha(new Date());
-//            registro.setIdUsuarioSeguridad(usuarioRegistrado);
-            //Envío a guardar
-//            docRolEstModel.agregar(registro);
-            
-  //          acta.setEstado(estadoGeneralRechazado);
-            actaModel.guardar(acta);
-                
-            listarRolesAprobacion();
-            
-        } catch (Exception err) {
-            Mensaje.agregarErrorAdvertencia(err.getMessage());
-        }
-    }
-
-    public List<AutorizacionRol> getDocumentoRoles() {
-        return documentoRoles;
-    }
-
-    public void setDocumentoRoles(List<AutorizacionRol> documentoRoles) {
-        this.documentoRoles = documentoRoles;
-    }
-
-    //</editor-fold>
-    
-    
     //<editor-fold defaultstate="collapsed" desc="Metodos Listado Bienes">
     public void cerrarListaBienes() {
         try {
@@ -972,5 +873,176 @@ public class ActaController extends ListadoBienesGeneralController {
     
 
     // </editor-fold>
+    
+    
+    
+    //<editor-fold defaultstate="collapsed" desc="Aprobaciones y rechazos">
+    
+    
+    @Resource private DocumentoAutorizacionModel documentoAutorizacionModel;
+    @Resource private DocumentoModel documentoModel;
+
+    //Mapa para la lista de autorizaciones para el documento
+    HashMap<String, DocumentoAutorizacion> documentosAutorizacionesPorRol;
+
+    boolean aprobacionRealizada = false;
+    boolean rolPermiteModificar = false;
+    
+    
+    private void cargaRolesAprobacion()
+    {
+        try {
+        
+            //Se listan las autorizaciones permitidas para el documento, se agrupan por rol. 
+            if(esDonacion)
+                documentosAutorizacionesPorRol = documentoModel.obtenerDocumentosAutorizacionPorRolGeneral(Constantes.CODIGO_AUTORIZACION_ACTA_DONACION, acta, usuario, unidadEjecutora);
+            else
+                documentosAutorizacionesPorRol = documentoModel.obtenerDocumentosAutorizacionPorRolGeneral(Constantes.CODIGO_AUTORIZACION_ACTA_DESECHO, acta, usuario, unidadEjecutora);
+            
+            eliminaMarcaDocumentosAceptarRechazar();
+            
+        } catch (Exception err) {
+            Mensaje.agregarErrorAdvertencia(err, Util.getEtiquetas("sigebi.Acta.MsnError.Cargar"));
+            //Mensaje.agregarErrorAdvertencia(err.getCause().getMessage());
+        }
+    }
+
+    private void eliminaMarcaDocumentosAceptarRechazar() {
+        try {
+            for (Iterator<String> iterator = documentosAutorizacionesPorRol.keySet().iterator(); iterator.hasNext();) {
+                DocumentoAutorizacion documentoAutorizacion = documentosAutorizacionesPorRol.get((String) iterator.next());
+
+                //Si el acta no esta aprobado o anulado se permite modificarlo si es que tiene permisos, solo para los casos marcados en true
+                if (documentoAutorizacion != null && documentoAutorizacion.isMarcado()
+                        && (acta.getEstado().getValor().equals(Constantes.ESTADO_INFORME_TECNICO_APROBADO)
+                        || acta.getEstado().getValor().equals(Constantes.ESTADO_INFORME_TECNICO_ANULADO))) {
+                    documentoAutorizacion.setMarcado(false);
+                }
+            }
+        } catch (FWExcepcion e) {
+            Mensaje.agregarErrorAdvertencia(e.getError_para_usuario());
+        } catch (Exception e) {
+            Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.Acta.MsnError.Cargar"));
+        }
+    }
+
+    
+    /**
+     * Aprueba el acta
+     *
+     * @param pEvent
+     */
+    public void aprobar(ActionEvent pEvent) {
+        try {
+            if (!pEvent.getPhaseId().equals(PhaseId.INVOKE_APPLICATION)) {
+                pEvent.setPhaseId(PhaseId.INVOKE_APPLICATION);
+                pEvent.queue();
+                return;
+            }
+
+            //Se obtiene el documento a modificar
+            DocumentoAutorizacion documento = (DocumentoAutorizacion) pEvent.getComponent().getAttributes().get("documentoSelApro");
+            documento.setEstado(estadoGeneralAprobado);
+            documento.setFecha(new Date());
+            documento.setUsuarioSeguridad(usuario);
+            if (documento.getId() != null && documento.getId() > 0) {
+                documentoAutorizacionModel.modificar(documento);
+            } else {
+                documentoAutorizacionModel.agregar(documento);
+            }
+
+            //Se modifica en el acta en los casos que aplique
+            cambiaEstadoDocumento();
+
+        } catch (FWExcepcion e) {
+            e.printStackTrace();
+            Mensaje.agregarErrorAdvertencia(e.getError_para_usuario());
+        } catch (Exception e) {
+            e.printStackTrace();
+            Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.error.actaController.aprobar"));
+        }
+    }
+
+    /**
+     * Rechaza el acta
+     *
+     * @param pEvent
+     */
+    public void rechazar(ActionEvent pEvent) {
+        try {
+            if (!pEvent.getPhaseId().equals(PhaseId.INVOKE_APPLICATION)) {
+                pEvent.setPhaseId(PhaseId.INVOKE_APPLICATION);
+                pEvent.queue();
+                return;
+            }
+
+            //Se obtiene el documento a modificar
+            DocumentoAutorizacion documento = (DocumentoAutorizacion) pEvent.getComponent().getAttributes().get("documentoSelRech");
+            documento.setEstado(estadoGeneralRechazado);
+            documento.setFecha(new Date());
+            documento.setUsuarioSeguridad(usuario);
+            if (documento.getId() != null && documento.getId() > 0) {
+                documentoAutorizacionModel.modificar(documento);
+            } else {
+                documentoAutorizacionModel.agregar(documento);
+            }
+
+            //Se modifica en el acta en los casos que aplique
+            cambiaEstadoDocumento();
+        } catch (FWExcepcion e) {
+            Mensaje.agregarErrorAdvertencia(e.getError_para_usuario());
+        } catch (Exception e) {
+            Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.error.actaController.rechazar"));
+        }
+
+    }
+
+    /**
+     * Metodo que cambia el estado del acta para los casos en que todos sus
+     * autorizaciones se aprueben o se rechacen
+     */
+    private void cambiaEstadoDocumento() {
+        try {
+
+            //Solo si el acta está en estado Activo
+            if ( acta.getEstado().getId().equals(estadoGeneralActivo.getId()) ) {
+                
+                for (Iterator<String> iterator = documentosAutorizacionesPorRol.keySet().iterator(); iterator.hasNext();) {
+                    DocumentoAutorizacion documentoAutorizacion = documentosAutorizacionesPorRol.get((String) iterator.next());
+                    //Si el acta no esta aprobado o anulado se permite modificarlo si es que tiene permisos
+                    if (documentoAutorizacion != null) {
+                        //Se verifica si alguno está rechazado
+                        if ( documentoAutorizacion.getEstado().getId().equals(estadoGeneralRechazado.getId())) {
+                            acta.setEstado(estadoGeneralRechazado);
+                            documentoModel.modificar(acta);
+                            return;
+                        }
+                        //Si alguno no esta aprobado se sale del 
+                        if ( ! documentoAutorizacion.getEstado().getId().equals(estadoGeneralAprobado.getId()) ) {
+                            aprobacionRealizada = true;
+                            return;
+                        }
+                    }
+                }
+
+                //Si todos estan aprobados se aprueba todo el acta
+                acta.setEstado(estadoGeneralAprobado);
+                documentoModel.modificar(acta);
+                
+            }
+        } catch (FWExcepcion e) {
+            Mensaje.agregarErrorAdvertencia(e.getError_para_usuario());
+        } catch (Exception e) {
+            Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.error.actaController.cambiaEstadoDocumento"));
+        }
+    }
+
+    public Collection<DocumentoAutorizacion> getListaDocumentosAutorizacionesPorRol() {
+        return new ArrayList(documentosAutorizacionesPorRol.values());
+    }
+    
+    //</editor-fold>
+    
+    
     
 }

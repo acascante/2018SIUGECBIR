@@ -18,7 +18,7 @@ import org.springframework.stereotype.Service;
  * @author jairo.cisneros
  */
 @Service(value = "rolModel")
-@Scope("request")
+
 public class RolModel {
 
     @Resource

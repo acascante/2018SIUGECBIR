@@ -19,7 +19,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 @Repository(value = "dao_framework")
-@Scope("request")
+
 public class GenericDaoImpl {
 
     @Autowired

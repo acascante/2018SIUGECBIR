@@ -16,7 +16,7 @@ import org.springframework.stereotype.Repository;
  * @author jairo.cisneros
  */
 @Repository(value = "segUsuarioDao")
-@Scope("request")
+
 public class SegUsuarioDao extends GenericDaoImpl {
 
     @Autowired

@@ -77,8 +77,6 @@
             </div>
             
             <div class="row">
-                
-                
                 <div class="col-md-4">
                     <div class="form-group"> 
                         <ice:outputText 
@@ -122,10 +120,7 @@
             
             <div class="row">
                 <div class="col-sm-12">
-                    
                     <ice:panelGroup visible="#{actaController.esDonacion}">
-                        
-                        
                         <div class="row">
                             
                             <div class="col-md-6">
@@ -182,107 +177,10 @@
             </div>
             
             
-            <ice:panelGroup visible="#{!actaController.permitirEdicion}">
-
-                <!-- Data Table Lista de roles-->
-                <div class="row" style="margin-top:10px">                
-                    <div class="col-sm-12">
-                        <div class="form-group"> 
-                            <h4>
-                                <ice:outputFormat
-                                    value="#{label['sigebi.Acta.Label.RolesAprobacion']}"
-                                    />
-                            </h4>
-                            <div>
-                                <ice:dataTable id="documentosPorRol"
-                                               value="#{actaController.documentoRoles}"
-                                           var="documento"
-                                           paginator="true"
-                                           paginatorPosition="bottom"
-                                           rows="5">
-                                    
-                                    <!-- Columna NOMBRE ROL -->
-                                    <ice:column id="colRol">
-                                        <f:facet name="header">
-                                            <ice:headerRow>
-                                               <ice:outputText value="#{label['sigebi.label.vista.mantenimientoInformeTecnico.rol']}"/>
-                                            </ice:headerRow>
-                                        </f:facet>                                
-                                        <h:outputText id="colRolTxt" value="#{documento.rol.nombre}"/>
-                                    </ice:column>
-
-                                    <!-- Columna Estado -->
-                                    <ice:column id="colEsatdo">
-                                        <f:facet name="header">
-                                            <ice:headerRow>
-                                               <ice:outputText value="#{label['sigebi.label.vista.mantenimientoInformeTecnico.estado']}"/>
-                                            </ice:headerRow>
-                                        </f:facet>                                
-                                        <h:outputText id="colEstadoTxt" value="#{documento.autorizacion.estado.nombre}"/>
-                                    </ice:column>
-                                    
-                                    <!-- Columna Usuario -->
-                                    <ice:column id="colUsuario">
-                                        <f:facet name="header">
-                                            <ice:headerRow>
-                                               <ice:outputText value="#{label['sigebi.label.vista.mantenimientoInformeTecnico.usuario']}"/>
-                                            </ice:headerRow>
-                                        </f:facet>                                
-                                        <h:outputText id="colUsuarioTxt" value="#{documento.autorizacion.detalle}"/>
-                                    </ice:column>     
-                                    
-                                    <!-- Columna Fecha -->
-                                    <ice:column id="colFecha">
-                                        <f:facet name="header">
-                                            <ice:headerRow>
-                                               <ice:outputText value="#{label['sigebi.label.vista.mantenimientoInformeTecnico.fecha']}"/>
-                                            </ice:headerRow>
-                                        </f:facet>                                
-                                        <h:outputText id="colFechaTxt" value="#{documento.autorizacion.nombre}"/>
-                                    </ice:column>                                                         
-
-                                    <!-- Columna Acciones -->
-                                    <ice:column id="colAcciones"
-                                                style="width: 180px; margin: 0px 10px">
-                                        <f:facet name="header">
-                                            <ice:columnGroup>
-                                                <ice:headerRow>
-                                                    <ice:outputText value="#{label['sigebi.label.vista.listarBienSincronizar.acciones']}"/>
-                                                </ice:headerRow>
-                                            </ice:columnGroup>
-                                        </f:facet>                                
-
-                                        <ice:commandButton id="btnAprobar"
-                                                           style="margin-top:2%" 
-                                                           styleClass="btnAprobar" 
-                                                           partialSubmit="true" 
-                                                           rendered="#{documento.marcado}"
-                                                           actionListener="#{actaController.aprobar}">
-                                            <f:attribute id="documentoAprobar" name="documentoAprobar"  value="#{documento}"/> 
-                                        </ice:commandButton>    
-
-
-                                        <ice:commandButton id="btnRechazar"
-                                                           style="margin-top:2%" 
-                                                           styleClass="btnRechazar" 
-                                                           partialSubmit="true" 
-                                                           rendered="#{documento.marcado}"
-                                                           actionListener="#{actaController.rechazar}">
-                                            <f:attribute id="documentoRechazar" name="documentoRechazar"  value="#{documento}"/> 
-                                        </ice:commandButton>   
-
-                                    </ice:column>
-
-
-                                </ice:dataTable>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-            
-            </ice:panelGroup>
-               
+        <!-- Panel de Ubicaciones --> 
+        <ui:insert name="modalUbicaciones">
+            <ui:include src="../exclusiones/rolesActas.xhtml" />
+        </ui:insert>
             
             
             <!-- Listado de Bienes Asociados-->
@@ -429,7 +327,9 @@
             <ice:panelGroup visible="#{actaController.permitirEdicion}">
                 <div class="row" style="margin-top:10px">                
                     <div class="col-sm-8">
+                        <!--
                         <h4><ice:outputFormat value="#{label['sigebi.Acta.Label.EnviarActa']}" /></h4> 
+                        -->
                     </div>   
                     <div class="col-sm-4">
 

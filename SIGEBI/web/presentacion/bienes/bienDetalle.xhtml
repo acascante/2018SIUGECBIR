@@ -81,8 +81,12 @@
                     <div class="col-md-2">
                         <div class="form-group"> 
                             <ice:outputText value="#{label['sigebi.Bien.Label.Lote']}" />  
-                            <ice:selectOneMenu id="selLotes" styleClass="form-control" partialSubmit="true" 
-                                               value="#{controllerAgregarBienes.command.idLote}" >
+                            <ice:selectOneMenu id="selLotes" 
+                                               styleClass="form-control" 
+                                               partialSubmit="true" 
+                                               value="#{controllerAgregarBienes.command.idLote}"
+                                               valueChangeListener="#{controllerAgregarBienes.cambioLote}"
+                                               >
                                 <f:selectItem itemLabel="Ninguno" itemValue="-1"/>
                                 <f:selectItems id="optSelLotes" value="#{controllerAgregarBienes.itemsLote}"/>
                             </ice:selectOneMenu>
@@ -92,7 +96,10 @@
                     <div class="col-md-2">
                         <div class="form-group"> 
                             <ice:outputText value="#{label['sigebi.Bien.Label.Cantidad']}" /> 
-                            <ice:inputText id="txtBiencantidad" styleClass="form-control" required="true" partialSubmit="false"
+                            <ice:inputText id="txtBiencantidad" styleClass="form-control" 
+                                           required="true" 
+                                           partialSubmit="true"
+                                           readonly="#{controllerAgregarBienes.command.cantidadActivo}"
                                            value="#{controllerAgregarBienes.command.cantidad}" >
                             </ice:inputText>
                         </div>                                             

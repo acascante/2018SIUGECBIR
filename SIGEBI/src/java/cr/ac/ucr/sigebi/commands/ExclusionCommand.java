@@ -12,10 +12,10 @@ import cr.ac.ucr.sigebi.domain.SolicitudDetalle;
 import cr.ac.ucr.sigebi.domain.Tipo;
 import cr.ac.ucr.sigebi.domain.UnidadEjecutora;
 import cr.ac.ucr.sigebi.utils.Constantes;
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.TimeZone;
 
 /**
@@ -32,16 +32,24 @@ public class ExclusionCommand extends ListarBienesCommand {
     private Long idExclusion;
     private UnidadEjecutora unidadEjecutora;
     private Estado estado;
-    private Tipo tipo;
+    private Long idTipo;
     private Date fecha;
     private String observacion;
-    private Map<Long, Bien> bienes;
+    private List<Bien> bienes;
     //</editor-fold>
     
     //<editor-fold defaultstate="collapsed" desc="Constructores">
     public ExclusionCommand() {
         super();
-        this.bienes = new HashMap<Long, Bien>();
+        this.bienes = new ArrayList<Bien>();
+    }
+
+    public ExclusionCommand(UnidadEjecutora unidadEjecutora, Estado estado) {
+        super();
+        this.unidadEjecutora = unidadEjecutora;
+        this.estado = estado;
+        this.fecha = getDefaultDate();
+        this.bienes = new ArrayList<Bien>();
     }
 
     public ExclusionCommand(SolicitudExclusion exclusion) {
@@ -50,7 +58,10 @@ public class ExclusionCommand extends ListarBienesCommand {
         this.unidadEjecutora = exclusion.getUnidadEjecutora();
         this.estado = exclusion.getEstado();
         this.fecha = exclusion.getFecha();
-        this.tipo = exclusion.getTipoExclusion();
+        this.idTipo = exclusion.getTipoExclusion().getId();
+        for (SolicitudDetalle detalle : exclusion.getDetalles()) {
+            this.bienes.add(detalle.getBien());
+        }
     }
     
     public ExclusionCommand(SolicitudExclusion exclusion, List<SolicitudDetalle> detalles) {
@@ -58,30 +69,37 @@ public class ExclusionCommand extends ListarBienesCommand {
         this.unidadEjecutora = exclusion.getUnidadEjecutora();
         this.estado = exclusion.getEstado();
         this.fecha = exclusion.getFecha();
-        this.tipo = exclusion.getTipoExclusion();
+        this.idTipo = exclusion.getTipoExclusion().getId();
         
         for (SolicitudDetalle detalle : detalles) {
-            this.bienes.put(detalle.getBien().getId(), detalle.getBien());
+            this.bienes.add(detalle.getBien());
         }
     }
     //</editor-fold>
 
     //<editor-fold defaultstate="collapsed" desc="Metodos">
-    public SolicitudExclusion getExclusion(Estado estado) {
+    public SolicitudExclusion getExclusion(Tipo tipo) {
         SolicitudExclusion exclusion = new SolicitudExclusion();
         exclusion.setUnidadEjecutora(this.unidadEjecutora);
         exclusion.setEstado(this.estado);
         exclusion.setFecha(this.fecha);
-        exclusion.setTipoExclusion(this.tipo);
-        
-        for (Bien bien : this.bienes.values()) {
-            exclusion.getDetalles().add(new SolicitudDetalle(exclusion, bien, estado, Constantes.DISCRIMINATOR_SOLICITUD_EXCLUSION));
+        exclusion.setTipoExclusion(tipo);
+        exclusion.setDiscriminator(Constantes.DISCRIMINATOR_SOLICITUD_EXCLUSION);
+        for (Bien bien : this.bienes) {
+            exclusion.getDetalles().add(new SolicitudDetalle(exclusion, bien, estado));
         }
         return exclusion;
     }
     //</editor-fold>    
     
     //<editor-fold defaultstate="collapsed" desc="Gets y Sets">    
+    private Date getDefaultDate() {
+        Date today = new Date();
+        Calendar calendar = Calendar.getInstance(Constantes.DEFAULT_TIME_ZONE);
+        calendar.setTime(today);
+        return calendar.getTime();
+    }
+    
     public Long getIdExclusion() {
         return idExclusion;
     }
@@ -98,12 +116,12 @@ public class ExclusionCommand extends ListarBienesCommand {
         this.unidadEjecutora = unidadEjecutora;
     }
 
-    public Tipo getTipo() {
-        return tipo;
+    public Long getIdTipo() {
+        return idTipo;
     }
 
-    public void setTipo(Tipo tipo) {
-        this.tipo = tipo;
+    public void setIdTipo(Long idTipo) {
+        this.idTipo = idTipo;
     }
 
     public Estado getEstado() {
@@ -122,14 +140,14 @@ public class ExclusionCommand extends ListarBienesCommand {
         this.fecha = fecha;
     }
     
-    public Map<Long, Bien> getBienes() {
+    public List<Bien> getBienes() {
         if (bienes == null){ 
-            return new HashMap<Long, Bien>();
+            this.bienes = new ArrayList<Bien>();
         }
         return bienes;
     }
 
-    public void setBienes(Map<Long, Bien> bienes) {
+    public void setBienes(List<Bien> bienes) {
         this.bienes = bienes;
     }
     

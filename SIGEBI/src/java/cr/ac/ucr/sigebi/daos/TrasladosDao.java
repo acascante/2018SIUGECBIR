@@ -8,17 +8,13 @@ package cr.ac.ucr.sigebi.daos;
 import cr.ac.ucr.framework.daoHibernate.DaoHelper;
 import cr.ac.ucr.framework.daoImpl.GenericDaoImpl;
 import cr.ac.ucr.framework.utils.FWExcepcion;
-import cr.ac.ucr.sigebi.domain.Estado;
 import cr.ac.ucr.sigebi.domain.UnidadEjecutora;
 import cr.ac.ucr.sigebi.domain.TrasladoDetalle;
 import cr.ac.ucr.sigebi.domain.DocumentoTraslado;
-import cr.ac.ucr.sigebi.entities.UnidadEjecutoraEntity;
 import java.util.List;
-import javax.annotation.Resource;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,14 +24,12 @@ import org.springframework.transaction.annotation.Transactional;
  * @author jorge.serrano
  */
 @Repository(value = "trasladoDao")
-@Scope("request")
+
 public class TrasladosDao extends GenericDaoImpl {
     
     @Autowired
     private DaoHelper dao;
     
-    @Resource
-    private FaltaViewBienDao viewBienDao;
     
     @Transactional
     public void guardar(DocumentoTraslado obj) {
@@ -109,7 +103,7 @@ public class TrasladosDao extends GenericDaoImpl {
     }
     
     @Transactional
-    public List<DocumentoTraslado> traerTodo(UnidadEjecutoraEntity unidadEjecutora) {
+    public List<DocumentoTraslado> traerTodo(UnidadEjecutora unidadEjecutora) {
         Session session = this.dao.getSessionFactory().openSession();
         try {
             String sql = "SELECT obj FROM DocumentoTraslado obj "
@@ -261,14 +255,14 @@ public class TrasladosDao extends GenericDaoImpl {
                sql = sql +  " AND upper(s.id) like upper(:fltIdTraslado) ";
             
             if(fltUnidadOrigen != null && fltUnidadOrigen.length() > 0)
-               sql = sql +  " AND upper(s.unidadEjecutora.dscUnidadEjecutora) like upper(:fltUnidadOrigen) ";
+               sql = sql +  " AND upper(s.unidadEjecutora.descripcion) like upper(:fltUnidadOrigen) ";
             
             if(fltUnidadDestino != null && fltUnidadDestino.length() > 0)
-               sql = sql +  " AND upper(s.numUnidadDestino.dscUnidadEjecutora) like upper(:fltUnidadDestino) ";
+               sql = sql +  " AND upper(s.numUnidadDestino.descripcion) like upper(:fltUnidadDestino) ";
             if(fltFecha != null && fltFecha.length() > 0)
-               sql = sql +  " AND upper(s.fecha) like upper(:fltFecha) ";
+               sql = sql +  " AND to_char(s.fecha, 'YYYY-MM-DD') like upper(:fltFecha) ";
             if( ! fltEstados.equals("-1") )
-               sql = sql +  " AND s.estado.id = :fltEstados ";
+               sql = sql +  " AND str(s.estado.id) = :fltEstados ";
             
             
             Query q = session.createQuery(sql);
@@ -281,9 +275,9 @@ public class TrasladosDao extends GenericDaoImpl {
             if(fltUnidadDestino != null && fltUnidadDestino.length() > 0)
                 q.setParameter("fltUnidadDestino", '%' + fltUnidadDestino + '%');
             if(fltFecha != null && fltFecha.length() > 0)
-                q.setParameter("fltFecha", '%' + fltFecha + '%');
+                q.setParameter("fltFecha", '%' + fltFecha.replace('/', '-') + '%');
             if( ! fltEstados.equals("-1") )
-                q.setParameter("fltEstados",  Integer.parseInt(fltEstados) );
+                q.setParameter("fltEstados",  fltEstados );
             
             
             return q;

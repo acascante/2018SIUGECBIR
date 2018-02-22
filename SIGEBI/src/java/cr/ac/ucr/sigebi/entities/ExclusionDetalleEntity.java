@@ -8,6 +8,7 @@ package cr.ac.ucr.sigebi.entities;
 
 import cr.ac.ucr.framework.seguridad.ObjetoBase;
 import cr.ac.ucr.sigebi.domain.Bien;
+import cr.ac.ucr.sigebi.domain.Estado;
 import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -47,13 +48,13 @@ public class ExclusionDetalleEntity extends ObjetoBase implements Serializable {
     
     @JoinColumn(name = "ID_ESTADO", referencedColumnName = "ID_ESTADO")
     @ManyToOne(fetch = FetchType.EAGER)
-    private EstadoEntity estado;
+    private Estado estado;
     //</editor-fold>
     
     //<editor-fold defaultstate="collapsed" desc="Constructores">
     public ExclusionDetalleEntity() {}
 
-    public ExclusionDetalleEntity(Integer idExclusionDetalle, ExclusionEntity exclusion, Bien bien, EstadoEntity estado) {
+    public ExclusionDetalleEntity(Integer idExclusionDetalle, ExclusionEntity exclusion, Bien bien, Estado estado) {
         this.idExclusionDetalle = idExclusionDetalle;
         this.exclusion = exclusion;
         this.bien = bien;
@@ -87,11 +88,11 @@ public class ExclusionDetalleEntity extends ObjetoBase implements Serializable {
         this.bien = bien;
     }
 
-    public EstadoEntity getEstado() {
+    public Estado getEstado() {
         return estado;
     }
 
-    public void setEstado(EstadoEntity estado) {
+    public void setEstado(Estado estado) {
         this.estado = estado;
     }
     //</editor-fold>

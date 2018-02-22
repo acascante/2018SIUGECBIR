@@ -41,7 +41,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 @Repository(value = "seguridadDao")
-@Scope("request")
+
 public class SeguridadDao extends GenericDaoImpl {
 
     @Autowired

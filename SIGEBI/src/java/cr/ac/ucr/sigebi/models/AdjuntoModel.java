@@ -18,7 +18,7 @@ import org.springframework.stereotype.Service;
  * @author jairo.cisneros
  */
 @Service(value = "adjuntoModel")
-@Scope("request")
+
 public class AdjuntoModel {
     
     @Resource

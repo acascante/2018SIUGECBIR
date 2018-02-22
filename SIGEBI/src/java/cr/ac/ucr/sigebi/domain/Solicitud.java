@@ -7,6 +7,7 @@ package cr.ac.ucr.sigebi.domain;
 
 import cr.ac.ucr.framework.seguridad.ObjetoBase;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import javax.persistence.Column;
@@ -59,7 +60,6 @@ public abstract class Solicitud extends ObjetoBase implements Serializable {
 
     @Transient
     private List<SolicitudDetalle> detalles;
-
     //</editor-fold>
     
     //<editor-fold defaultstate="collapsed" desc="Get's y Set's">
@@ -104,6 +104,9 @@ public abstract class Solicitud extends ObjetoBase implements Serializable {
     }
 
     public List<SolicitudDetalle> getDetalles() {
+        if (this.detalles == null) {
+            this.detalles = new ArrayList<SolicitudDetalle>();
+        }
         return detalles;
     }
 

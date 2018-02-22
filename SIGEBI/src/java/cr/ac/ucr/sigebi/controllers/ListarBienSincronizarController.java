@@ -21,9 +21,7 @@ import org.springframework.stereotype.Controller;
 import cr.ac.ucr.framework.vista.util.Util;
 import cr.ac.ucr.sigebi.domain.Bien;
 import cr.ac.ucr.sigebi.domain.Estado;
-import cr.ac.ucr.sigebi.domain.Usuario;
 import cr.ac.ucr.sigebi.models.UnidadEjecutoraModel;
-import cr.ac.ucr.sigebi.models.UsuarioModel;
 import java.util.HashMap;
 import java.util.Map;
 import javax.annotation.PostConstruct;
@@ -417,7 +415,7 @@ public class ListarBienSincronizarController extends BaseController {
                 );
             }
             for (Bien bien : this.bienes) {
-                bien.setSeleccionado(bienesPorSincronizar.containsKey(bien.getId()) || bienesPorRechazar.containsKey(bien.getId()));
+                bien.setSeleccionado(bienesPorSincronizar.containsKey(bien.getId()) || bienesEnviarSincronizar.containsKey(bien.getId()) || bienesPorRechazar.containsKey(bien.getId()));
             }
         } catch (FWExcepcion err) {
             Mensaje.agregarErrorAdvertencia(err.getError_para_usuario());
@@ -617,18 +615,17 @@ public class ListarBienSincronizarController extends BaseController {
                 Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.sincronizarBien.Lista.ListaVacia"));
                 return;
             }
-
-            for (Map.Entry<Long, Bien> bienSincro : bienesEnviarSincronizar.entrySet()) {
-                Bien bien = bienMod.buscarPorId(bienSincro.getKey());
-                bien.setEstado(this.estadoPorDominioValor(Constantes.DOMINIO_BIEN, Constantes.ESTADO_BIEN_PENDIENTE_ACTIVACION));
-                bienMod.sincronizarBien(bien, lVistaUsuario.getgUsuarioActual().getIdUsuario());
-                bienesEnviarSincronizar.remove(bienSincro.getKey());
-            }
-            bienesPorSincronizar.clear();
-            Mensaje.agregarInfo(Util.getEtiquetas("sigebi.sincronizarBienes.Exito"));
+            
+            bienMod.sincronizarBien(this.bienesEnviarSincronizar.values(), lVistaUsuario.getgUsuarioActual().getIdUsuario(), this.estadoPorDominioValor(Constantes.DOMINIO_BIEN, Constantes.ESTADO_BIEN_PENDIENTE_ACTIVACION));
+            this.bienesEnviarSincronizar.clear();
+            this.bienesPorSincronizar.clear();
+            this.bienesPorRechazar.clear();
 
             //Actualiza la lista
             this.listarBienes();
+
+            Mensaje.agregarInfo(Util.getEtiquetas("sigebi.sincronizarBienes.Exito"));
+
 
         } catch (FWExcepcion err) {
             Mensaje.agregarErrorAdvertencia(err.getError_para_usuario());

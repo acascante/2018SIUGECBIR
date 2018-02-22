@@ -24,7 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
  * @author jairo.cisneros
  */
 @Repository(value = "autorizacionDao")
-@Scope("request")
+
 public class AutorizacionDao extends GenericDaoImpl {
 
     @Autowired

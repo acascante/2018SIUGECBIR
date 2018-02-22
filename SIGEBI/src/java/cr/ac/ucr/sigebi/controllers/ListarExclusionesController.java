@@ -13,9 +13,7 @@ import cr.ac.ucr.sigebi.commands.ListarExclusionesCommand;
 import cr.ac.ucr.sigebi.domain.Estado;
 import cr.ac.ucr.sigebi.domain.SolicitudExclusion;
 import cr.ac.ucr.sigebi.domain.Tipo;
-import cr.ac.ucr.sigebi.models.EstadoModel;
 import cr.ac.ucr.sigebi.models.ExclusionModel;
-import cr.ac.ucr.sigebi.models.TipoModel;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -44,62 +42,60 @@ public class ListarExclusionesController extends BaseController {
     @Resource
     private ExclusionModel exclusionModel;
     
-    @Resource
-    private EstadoModel estadoModel;
-    
-    @Resource
-    private TipoModel tipoModel;
-    
     private List<SolicitudExclusion> exclusiones;
     
     private ListarExclusionesCommand command;
    
-    private List<Estado> estados;
     private List<SelectItem> itemsEstado;
     
-    private List<Tipo> tipos;
     private List<SelectItem> itemsTipo;
     
     public ListarExclusionesController() {
         super();
+        this.inicializarDatos();
     }
     
     @PostConstruct
     public final void inicializar() {
-        command = new ListarExclusionesCommand();
-        
-        this.setPrimerRegistro(1);
-        this.contarExclusiones();
-        this.listarExclusiones();  
-        
-        this.vistaOrigen = Constantes.VISTA_EXCLUSION_LISTADO;
-        
-        estados = estadoModel.listarPorDominio(Constantes.DOMINIO_EXCLUSION);
+        this.inicializarListado();
+        List<Estado> estados = this.estadosPorDominio(Constantes.DOMINIO_EXCLUSION);
         if (!estados.isEmpty()) {
             itemsEstado = new ArrayList<SelectItem>();
             for (Estado item : estados) {
-                itemsEstado.add(new SelectItem(item.getId(), item.getNombre()));
+                this.itemsEstado.add(new SelectItem(item.getId(), item.getNombre()));
             }
         }
         
-        tipos = tipoModel.listarPorDominio(Constantes.DOMINIO_EXCLUSION);
+        List<Tipo> tipos = this.tiposPorDominio(Constantes.DOMINIO_EXCLUSION);
         if (!tipos.isEmpty()) {
             itemsTipo = new ArrayList<SelectItem>();
-            for (Tipo item : tipos) {
-                itemsTipo.add(new SelectItem(item.getId(), item.getNombre()));
+        
+            for (Tipo item : this.tiposPorDominio(Constantes.DOMINIO_EXCLUSION)) {
+                this.itemsTipo.add(new SelectItem(item.getId(), item.getNombre()));
             }
         }
     }
     
     public void regresarListado() {
         Util.navegar(vistaOrigen);
-        inicializar();
+        this.inicializarDatos();
+        this.inicializarListado();
+    }    
+    
+    private void inicializarDatos() {
+        this.command = new ListarExclusionesCommand();
+        this.vistaOrigen = Constantes.VISTA_EXCLUSION_LISTADO;
+    }
+    
+    private void inicializarListado() {
+        this.setPrimerRegistro(1);
+        this.contarExclusiones();
+        this.listarExclusiones();  
     }
     
     private void contarExclusiones() {
         try {
-            //TODO definir si se va a utilizar solo el numero de la unidad ejecutora o todo el objeto
-            Long contador = exclusionModel.contar(unidadEjecutora.getId(), command.getFltIdCodigo(), command.getFltFecha(), command.getFltEstado(), command.getFltTipo());
+            Long contador = exclusionModel.contar(unidadEjecutora, command.getFltIdCodigo(), command.getFltFecha(), command.getFltEstado(), command.getFltTipo());
             this.setCantidadRegistros(contador.intValue());
         } catch (FWExcepcion e) {
             Mensaje.agregarErrorAdvertencia(e.getError_para_usuario());
@@ -110,7 +106,7 @@ public class ListarExclusionesController extends BaseController {
     
     private void listarExclusiones() {
         try {
-            this.exclusiones = exclusionModel.listar(this.getPrimerRegistro()-1, this.getUltimoRegistro(), unidadEjecutora.getId(), command.getFltIdCodigo(), command.getFltFecha(), command.getFltEstado(), command.getFltTipo());
+            this.exclusiones = exclusionModel.listar(this.getPrimerRegistro()-1, this.getUltimoRegistro(), unidadEjecutora, command.getFltIdCodigo(), command.getFltFecha(), command.getFltEstado(), command.getFltTipo());
         } catch (FWExcepcion e) {
             Mensaje.agregarErrorAdvertencia(e.getError_para_usuario());
         } catch (NumberFormatException e) {
@@ -127,9 +123,7 @@ public class ListarExclusionesController extends BaseController {
                 pEvent.queue();
                 return;
             }
-            this.contarExclusiones();
-            this.setPrimerRegistro(1);
-            this.listarExclusiones();
+            this.inicializarListado();
         } catch (Exception err) {
             Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.error.controllerListarExclusiones.contarNotificaciones"));
         }
@@ -172,28 +166,12 @@ public class ListarExclusionesController extends BaseController {
         this.command = command;
     }
 
-    public List<Estado> getEstados() {
-        return estados;
-    }
-
-    public void setEstados(List<Estado> estados) {
-        this.estados = estados;
-    }
-
     public List<SelectItem> getItemsEstado() {
         return itemsEstado;
     }
 
     public void setItemsEstado(List<SelectItem> itemsEstado) {
         this.itemsEstado = itemsEstado;
-    }
-
-    public List<Tipo> getTipos() {
-        return tipos;
-    }
-
-    public void setTipos(List<Tipo> tipos) {
-        this.tipos = tipos;
     }
 
     public List<SelectItem> getItemsTipo() {

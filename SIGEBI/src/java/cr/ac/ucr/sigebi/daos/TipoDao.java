@@ -10,7 +10,6 @@ import cr.ac.ucr.framework.daoImpl.GenericDaoImpl;
 import cr.ac.ucr.framework.utils.FWExcepcion;
 import cr.ac.ucr.sigebi.domain.Tipo;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
@@ -24,7 +23,7 @@ import org.springframework.dao.DataAccessException;
  * @author jairo.cisneros
  */
 @Repository(value = "tipoDao")
-@Scope("request")
+
 public class TipoDao extends GenericDaoImpl {
 
     @Autowired

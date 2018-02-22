@@ -24,7 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
  * @author jorge.serrano
  */
 @Repository(value = "proveedorDao")
-@Scope("request")
+
 public class ProveedorDao extends GenericDaoImpl {
     
     @Autowired
@@ -43,6 +43,10 @@ public class ProveedorDao extends GenericDaoImpl {
         Session session = dao.getSessionFactory().openSession();
         try {
             Query query = this.creaQuery(session, false, identificacion, nombre);
+            
+            query.setFirstResult(0);
+            query.setMaxResults(15);
+                
             return (List<Proveedor>) query.list();
         } catch (HibernateException e) {
             throw new FWExcepcion("sigebi.error.notificacionDao.listar", "Error obtener los registros de tipo " + this.getClass(), e.getCause());
@@ -73,7 +77,7 @@ public class ProveedorDao extends GenericDaoImpl {
             query.setParameter("identificacion", '%' + identificacion + '%');
         }
         if(nombre != null && nombre.length() > 0){
-            query.setParameter("nombre", '%' + nombre + '%');
+            query.setParameter("nombre", '%' + nombre.replace(' ', '%') + '%');
         }
         return query;
     }

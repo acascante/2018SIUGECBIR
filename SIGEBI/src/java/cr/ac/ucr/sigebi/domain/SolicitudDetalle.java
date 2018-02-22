@@ -45,13 +45,6 @@ public class SolicitudDetalle extends ObjetoBase implements Serializable {
     @JoinColumn(name = "ID_BIEN", referencedColumnName = "ID_BIEN")
     @ManyToOne(fetch = FetchType.EAGER)
     private Bien bien;
-
-    @JoinColumn(name = "ID_ESTADO", referencedColumnName = "ID_ESTADO")
-    @ManyToOne(fetch = FetchType.EAGER)
-    private Estado estado;
-
-    @Column(name = "DISCRIMINATOR")
-    private Integer discriminator;
     
     //</editor-fold>
 
@@ -59,11 +52,9 @@ public class SolicitudDetalle extends ObjetoBase implements Serializable {
     public SolicitudDetalle() {
     }
 
-    public SolicitudDetalle(Solicitud solicitud, Bien bien, Estado estado, Integer discriminator) {
+    public SolicitudDetalle(Solicitud solicitud, Bien bien, Estado estado) {
         this.solicitud = solicitud;
         this.bien = bien;
-        this.estado = estado;
-        this.discriminator = discriminator;
     }
 
     //</editor-fold>
@@ -93,22 +84,6 @@ public class SolicitudDetalle extends ObjetoBase implements Serializable {
         this.bien = bien;
     }
 
-    public Estado getEstado() {
-        return estado;
-    }
-
-    public void setEstado(Estado estado) {
-        this.estado = estado;
-    }
-
-    public Integer getDiscriminator() {
-        return discriminator;
-    }
-
-    public void setDiscriminator(Integer discriminator) {
-        this.discriminator = discriminator;
-    }
-
     //</editor-fold>
     
     //<editor-fold defaultstate="collapsed" desc="Sobrecargas">
@@ -118,8 +93,6 @@ public class SolicitudDetalle extends ObjetoBase implements Serializable {
         hash = 59 * hash + (this.id != null ? this.id.hashCode() : 0);
         hash = 59 * hash + (this.solicitud != null ? this.solicitud.hashCode() : 0);
         hash = 59 * hash + (this.bien != null ? this.bien.hashCode() : 0);
-        hash = 59 * hash + (this.estado != null ? this.estado.hashCode() : 0);
-        hash = 59 * hash + (this.discriminator != null ? this.discriminator.hashCode() : 0);
         return hash;
     }
 
@@ -142,12 +115,6 @@ public class SolicitudDetalle extends ObjetoBase implements Serializable {
             return false;
         }
         if (this.bien != other.bien && (this.bien == null || !this.bien.equals(other.bien))) {
-            return false;
-        }
-        if (this.estado != other.estado && (this.estado == null || !this.estado.equals(other.estado))) {
-            return false;
-        }
-        if (this.discriminator != other.discriminator && (this.discriminator == null || !this.discriminator.equals(other.discriminator))) {
             return false;
         }
         return true;

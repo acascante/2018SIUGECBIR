@@ -18,7 +18,7 @@ import java.util.List;
  * @author oscar_acuna
  */
 @Service(value = "tipoModel")
-@Scope("request")
+
 public class TipoModel {
     
     @Resource

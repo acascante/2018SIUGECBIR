@@ -23,7 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
  * @author jairo.cisneros
  */
 @Repository(value = "rolDao")
-@Scope("request")
+
 public class RolDao extends GenericDaoImpl {
 
     @Autowired

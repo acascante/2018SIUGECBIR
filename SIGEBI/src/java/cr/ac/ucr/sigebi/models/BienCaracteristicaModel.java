@@ -20,7 +20,7 @@ import org.springframework.stereotype.Service;
  * @author alvaro.cascante
  */
 @Service(value = "bienCaracteristicaModel")
-@Scope("request")
+
 public class BienCaracteristicaModel {
     
     @Resource

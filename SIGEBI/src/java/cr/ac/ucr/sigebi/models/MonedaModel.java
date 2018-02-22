@@ -18,7 +18,7 @@ import org.springframework.stereotype.Service;
  * @author jorge.serrano
  */
 @Service(value = "monedaModel")
-@Scope("request")
+
 public class MonedaModel {
 
     @Resource

@@ -12,13 +12,24 @@ import cr.ac.ucr.framework.vista.util.Util;
 import cr.ac.ucr.sigebi.models.ExclusionModel;
 import cr.ac.ucr.sigebi.commands.ExclusionCommand;
 import cr.ac.ucr.sigebi.commands.ListarExclusionesCommand;
+import cr.ac.ucr.sigebi.domain.Bien;
+import cr.ac.ucr.sigebi.domain.Estado;
 import cr.ac.ucr.sigebi.domain.SolicitudExclusion;
+import cr.ac.ucr.sigebi.domain.Tipo;
+import cr.ac.ucr.sigebi.models.BienModel;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.annotation.Resource;
 import javax.faces.component.UIInput;
 import javax.faces.component.UIViewRoot;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 import javax.faces.event.PhaseId;
+import javax.faces.model.SelectItem;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
@@ -28,22 +39,52 @@ import org.springframework.stereotype.Controller;
  */
 @Controller(value = "controllerAgregarExclusiones")
 @Scope("session")
-public class AgregarExclusionController extends ListarBienesController {
+public class AgregarExclusionController extends BaseController {
 
+    @Resource
+    private BienModel bienModel;
+    
     @Resource
     private ExclusionModel exclusionModel;
     
     private ExclusionCommand command;
     
+    private List<SelectItem> itemsTipo;
+    private List<Bien> bienes;
+    private Map<Long, Boolean> bienesSeleccionados;
+    
     private String mensajeExito;
     private String mensaje;
+    
+    private boolean visiblePanelBienes;
+    private boolean visibleBotonSolicitar;
   
     public AgregarExclusionController() {
         super();
     }
     
-    private void inicializar(SolicitudExclusion exclusion) {
+    private void inicializarNuevo() {
+        Estado estado = this.estadoPorDominioValor(Constantes.DOMINIO_EXCLUSION, Constantes.ESTADO_EXCLUSION_CREADA);
+        this.command = new ExclusionCommand(this.unidadEjecutora, estado);
+        this.visibleBotonSolicitar = false;
+        inicializarDatos();
+    }
+    
+    private void inicializarDetalle(SolicitudExclusion exclusion) {
         this.command = new ExclusionCommand(exclusion, exclusionModel.listarDetalles(exclusion));
+        this.visibleBotonSolicitar = true;
+        inicializarDatos();
+    }
+
+    private void inicializarDatos() {
+        List<Tipo> tipos = this.tiposPorDominio(Constantes.DOMINIO_EXCLUSION);
+        if (!tipos.isEmpty()) {
+            itemsTipo = new ArrayList<SelectItem>();
+        
+            for (Tipo item : this.tiposPorDominio(Constantes.DOMINIO_EXCLUSION)) {
+                this.itemsTipo.add(new SelectItem(item.getId(), item.getNombre()));
+            }
+        }
     }
     
     public void guardarDatos() {
@@ -53,10 +94,9 @@ public class AgregarExclusionController extends ListarBienesController {
             UIInput component =  new UIInput();
             String messageValidacion = validarForm(root, component);
             if (Constantes.OK.equals(messageValidacion)) {
-                //TODO verificar estado de exclusion, y estados de detalles de exclusion
-                command.setEstado(estadoModel.buscarPorDominioNombre(Constantes.DOMINIO_EXCLUSION, Constantes.ESTADO_EXCLUSION_CREADA_DESC));
-                exclusionModel.salvar(command.getExclusion(command.getEstado()));
-                //TODO Actualizar bienes con nuevo estado en Solicitud de SolicitudExclusion
+                Tipo tipo = this.tipoPorId(command.getIdTipo());
+                this.exclusionModel.salvar(command.getExclusion(tipo));
+                this.bienModel.actualizar(command.getBienes());
                 if (command.getIdExclusion() == null || command.getIdExclusion() == 0) {
                     mensajeExito = "Los datos se salvaron con éxito.";
                 } else {
@@ -68,6 +108,31 @@ public class AgregarExclusionController extends ListarBienesController {
             }
         } catch (FWExcepcion err) {
             mensaje = err.getMessage();
+        } catch (Exception ex) {
+            Logger.getLogger(AgregarExclusionController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    public void solicitarExclusion() {
+        try {
+            FacesContext context = FacesContext.getCurrentInstance();
+            UIViewRoot root = context.getViewRoot();
+            UIInput component = new UIInput();
+            String messageValidacion = validarForm(root, component);
+            if (Constantes.OK.equals(messageValidacion)) {
+                Tipo tipo = this.tipoPorId(command.getIdTipo());
+                Estado estadoSolicitar = this.estadoPorDominioValor(Constantes.DOMINIO_EXCLUSION, Constantes.ESTADO_EXCLUSION_SOLICITADA);
+                this.command.setEstado(estadoSolicitar);
+                this.exclusionModel.salvar(command.getExclusion(tipo));
+                mensajeExito = "Exclusion solicitada.";
+            } else {
+                component.setValid(false);
+                Mensaje.agregarErrorAdvertencia(messageValidacion);
+            }
+        } catch (FWExcepcion err) {
+            mensaje = err.getMessage();
+        } catch (Exception ex) {
+            Logger.getLogger(AgregarExclusionController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     
@@ -78,7 +143,7 @@ public class AgregarExclusionController extends ListarBienesController {
                 event.queue();
                 return;
             }
-            inicializar();
+            inicializarNuevo();
             this.vistaOrigen = event.getComponent().getAttributes().get(Constantes.KEY_VISTA_ORIGEN).toString();
             Util.navegar(Constantes.VISTA_EXCLUSION_NUEVA);
         } catch (FWExcepcion err) {
@@ -88,13 +153,15 @@ public class AgregarExclusionController extends ListarBienesController {
     
     public void detalleRegistro(ActionEvent event) {
         try{
-            SolicitudExclusion exclusion = (SolicitudExclusion) event.getComponent().getAttributes().get(ListarExclusionesCommand.KEY_EXCLUSION);
             if (!event.getPhaseId().equals(PhaseId.INVOKE_APPLICATION)) {
                 event.setPhaseId(PhaseId.INVOKE_APPLICATION);
                 event.queue();
                 return;
             }
-            inicializar(exclusion);
+            
+            Long id = (Long)event.getComponent().getAttributes().get(ListarExclusionesCommand.KEY_EXCLUSION);
+            SolicitudExclusion exclusion = exclusionModel.buscarPorId(id);
+            inicializarDetalle(exclusion);
             this.vistaOrigen = event.getComponent().getAttributes().get(Constantes.KEY_VISTA_ORIGEN).toString();
             Util.navegar(Constantes.VISTA_EXCLUSION_NUEVA);
         } catch (FWExcepcion err) {
@@ -112,6 +179,27 @@ public class AgregarExclusionController extends ListarBienesController {
     }
     //</editor-fold>
     
+    //<editor-fold defaultstate="collapsed" desc="Bienes">
+    public void mostarPanelAgregarBienes() {
+            Estado estado = this.estadoPorDominioValor(Constantes.DOMINIO_BIEN, Constantes.ESTADO_INTERNO_BIEN_NORMAL);
+            this.bienes = bienModel.listarPorUnidadEjecutoraEstado(unidadEjecutora, estado);
+            
+            bienesSeleccionados = new HashMap<Long, Boolean>();
+            this.setVisiblePanelBienes(true);
+    }
+
+    public void cerrarPanelAgregarBienes() {
+        Estado estadoEnSolicitud = this.estadoPorDominioValor(Constantes.DOMINIO_BIEN, Constantes.ESTADO_INTERNO_BIEN_EN_EXCLUSION );
+        for (Bien bien : bienes) {
+            if (bienesSeleccionados.get(bien.getId())) {
+                bien.setEstado(estadoEnSolicitud);
+                command.getBienes().add(bien);
+            }
+        }
+        this.setVisiblePanelBienes(false);
+    }
+    //</editor-fold>
+    
     //<editor-fold defaultstate="collapsed" desc="Gets y Sets">
     public ExclusionCommand getCommand() {
         return command;
@@ -119,6 +207,30 @@ public class AgregarExclusionController extends ListarBienesController {
 
     public void setCommand(ExclusionCommand command) {
         this.command = command;
+    }
+
+    public List<SelectItem> getItemsTipo() {
+        return itemsTipo;
+    }
+
+    public void setItemsTipo(List<SelectItem> itemsTipo) {
+        this.itemsTipo = itemsTipo;
+    }
+
+    public List<Bien> getBienes() {
+        return bienes;
+    }
+
+    public void setBienes(List<Bien> bienes) {
+        this.bienes = bienes;
+    }
+
+    public Map<Long, Boolean> getBienesSeleccionados() {
+        return bienesSeleccionados;
+    }
+
+    public void setBienesSeleccionados(Map<Long, Boolean> bienesSeleccionados) {
+        this.bienesSeleccionados = bienesSeleccionados;
     }
 
     public String getMensajeExito() {
@@ -135,6 +247,22 @@ public class AgregarExclusionController extends ListarBienesController {
 
     public void setMensaje(String mensaje) {
         this.mensaje = mensaje;
+    }
+
+    public boolean isVisiblePanelBienes() {
+        return visiblePanelBienes;
+    }
+
+    public void setVisiblePanelBienes(boolean visiblePanelBienes) {
+        this.visiblePanelBienes = visiblePanelBienes;
+    }
+
+    public boolean isVisibleBotonSolicitar() {
+        return visibleBotonSolicitar;
+    }
+
+    public void setVisibleBotonSolicitar(boolean visibleBotonSolicitar) {
+        this.visibleBotonSolicitar = visibleBotonSolicitar;
     }
     //</editor-fold>
 }

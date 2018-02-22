@@ -26,7 +26,7 @@ import org.springframework.stereotype.Service;
  * @author jorge.serrano
  */
 @Service(value = "bienModel")
-@Scope("request")
+
 public class BienModel {
 
     @Resource
@@ -43,60 +43,60 @@ public class BienModel {
         return bienDao.listarPorUnidadEjecutora(unidadejecutora);
     }
 
-    public List<Bien> listarPorUnidadEjecutoraEstado(UnidadEjecutora unidadejecutora, Estado estado) throws FWExcepcion {
-        return bienDao.listarPorUnidadEjecutoraEstado(unidadejecutora, estado);
+    public List<Bien> listarPorUnidadEjecutoraEstado(UnidadEjecutora unidadEjecutora, Estado estado) throws FWExcepcion {
+        return bienDao.listarPorUnidadEjecutoraEstado(unidadEjecutora, estado);
     }
 
     public Bien buscarPorId(Long id) throws FWExcepcion {
         return bienDao.buscarPorId(id);
     }
 
-    public List<Bien> listar(Integer primerRegistro
-                            , Integer ultimoRegistro
-                            , UnidadEjecutora unidadejecutora
-                            , Long id
-                            , String identificacion
-                            , String descripcion
-                            , String marca
-                            , String modelo
-                            , String serie
-                            , Tipo tipo
-                            , String nombUnidad
-                            , Estado... estados) throws FWExcepcion {
-        return bienDao.listar(primerRegistro
-                            , ultimoRegistro
-                            , unidadejecutora
-                            , id
-                            , identificacion
-                            , descripcion
-                            , marca
-                            , modelo
-                            , serie
-                            , tipo
-                            , nombUnidad
-                            , estados);
+    public List<Bien> listar(Integer primerRegistro,
+             Integer ultimoRegistro,
+             UnidadEjecutora unidadejecutora,
+             Long id,
+             String identificacion,
+             String descripcion,
+             String marca,
+             String modelo,
+             String serie,
+             Tipo tipo,
+             String nombUnidad,
+             Estado... estados) throws FWExcepcion {
+        return bienDao.listar(primerRegistro,
+                 ultimoRegistro,
+                 unidadejecutora,
+                 id,
+                 identificacion,
+                 descripcion,
+                 marca,
+                 modelo,
+                 serie,
+                 tipo,
+                 nombUnidad,
+                 estados);
     }
 
-    public Long contar(UnidadEjecutora unidadejecutora
-                        , Long id
-                        , String identificacion
-                        , String descripcion
-                        , String marca
-                        , String modelo
-                        , String serie
-                        , Tipo tipo
-                        , String nombUnidad
-                        , Estado... estados) throws FWExcepcion {
-        return bienDao.contar(unidadejecutora
-                            , id
-                            , identificacion
-                            , descripcion
-                            , marca
-                            , modelo
-                            , serie
-                            , tipo
-                            , nombUnidad
-                            , estados);
+    public Long contar(UnidadEjecutora unidadejecutora,
+             Long id,
+             String identificacion,
+             String descripcion,
+             String marca,
+             String modelo,
+             String serie,
+             Tipo tipo,
+             String nombUnidad,
+             Estado... estados) throws FWExcepcion {
+        return bienDao.contar(unidadejecutora,
+                 id,
+                 identificacion,
+                 descripcion,
+                 marca,
+                 modelo,
+                 serie,
+                 tipo,
+                 nombUnidad,
+                 estados);
     }
 
     public void almacenar(Bien bien) throws FWExcepcion {
@@ -123,23 +123,29 @@ public class BienModel {
         regisMov.setObservacion(observacion);
         regisMov.setUsuario(usuario);
         registroMovimientoModel.agregar(regisMov);
-        
+
         //Se actualiza el estado del bien
         bien.setEstado(estado);
         bien.setSeleccionado(false);
         this.actualizar(bien);
     }
 
-    public void sincronizarBien(Bien bien, String usaurioSincro) throws FWExcepcion, Exception {
+    public void sincronizarBien(Collection<Bien> bienes, String usaurioSincro, Estado estado) throws FWExcepcion, Exception {
+        for (Bien bien : bienes) {
+            //Se almacena la sincronizacion
+            Sincronizar bienSinc = new Sincronizar(bien);
+            Date today = new Date();
+            bienSinc.setFechaAdicion(today);
+            bienSinc.setAdicionadoPor(usaurioSincro);
+            bienDao.sincronizarBien(bienSinc);
 
-        //Se almacena la sincronizacion
-        Sincronizar bienSinc = new Sincronizar(bien);
-        Date today = new Date();
-        bienSinc.setFechaAdicion(today);
-        bienSinc.setAdicionadoPor(usaurioSincro);
-        bienDao.sincronizarBien(bienSinc);
-        
-        //Se actualiza el bien para cambiar su estado
-        this.actualizar(bien);
+            //Se actualiza el bien para cambiar su estado
+            bien.setEstado(estado);
+            this.actualizar(bien);
+        }
+    }
+    
+    public void actualizar(List<Bien> bienes) throws FWExcepcion, Exception {
+        bienDao.actualizar(bienes);
     }
 }

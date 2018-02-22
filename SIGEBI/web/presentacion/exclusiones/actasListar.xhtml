@@ -91,7 +91,7 @@
                                         </ice:headerRow>
                                         
                                         <ice:headerRow>
-                                            <ice:inputText id="fltIdTraslado"
+                                            <ice:inputText id="fltIdActa"
                                                            style="width: 130px;"
                                                            value="#{actaController.fltIdActa}"                                   
                                                            partialSubmit="true"
@@ -135,7 +135,7 @@
                                                        partialSubmit="true"
                                                        >
                                                 <f:selectItem itemLabel="N/A" itemValue="-1"/>
-                                                <f:selectItems id="slcEstadoItem" value="#{actaController.estadosOptions}"/>
+                                                <f:selectItems id="slcEstadoItem" value="#{actaController.estadosActaOptions}"/>
                                             </ice:selectOneMenu>
                                         </ice:headerRow>
                                     </ice:columnGroup>
@@ -150,7 +150,7 @@
                                             <ice:outputText value="#{label['sigebi.ActaListar.Label.FECHA']}"/>
                                         </ice:headerRow>
                                         <ice:headerRow>
-                                            <ice:inputText id="fltEstado"
+                                            <ice:inputText id="fltFecha"
                                                            style="width: 130px;"
                                                            value="#{actaController.fltFecha}"                                   
                                                            partialSubmit="true"

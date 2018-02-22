@@ -25,7 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
  * @author jorge.serrano
  */
 @Repository(value = "SubCategoriaDao")
-@Scope("request")
+
 public class SubCategoriaDao extends GenericDaoImpl {
 
     @Autowired

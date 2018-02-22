@@ -5,6 +5,7 @@
  */
 package cr.ac.ucr.sigebi.domain;
 
+import cr.ac.ucr.sigebi.utils.Constantes;
 import java.io.Serializable;
 import java.util.Date;
 import javax.persistence.Column;
@@ -102,12 +103,17 @@ public class DocumentoTraslado  extends Documento implements Serializable  {
     
     
     //<editor-fold defaultstate="collapsed" desc="Constructores">
-
+    /*
     public DocumentoTraslado() {
         super();
         this.setFecha(new Date());
+        this.setDiscriminator(Constantes.DISCRIMINATOR_DOCUMENTO_TRASLADO);
     }
-
+    */
+    public DocumentoTraslado(Estado estado
+            , UnidadEjecutora unidadEjecutora) {
+        super(estado, Constantes.DISCRIMINATOR_DOCUMENTO_ACTA, unidadEjecutora);
+    }
     
     //</editor-fold>
     

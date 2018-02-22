@@ -114,7 +114,7 @@
                                         </ice:headerRow>
                                     </ice:columnGroup>
                                 </f:facet>                                
-                                <h:outputText id="costoCell" value="#{traslado.id}"/>
+                                <h:outputText id="txtIdTraslado" value="#{traslado.id}"/>
                             </ice:column>
                             
                             <!-- COLUMNA UNIDAD ORIGEN -->
@@ -133,7 +133,7 @@
                                         </ice:headerRow>
                                     </ice:columnGroup>
                                 </f:facet>
-                                <h:outputText id="idBienCell" value="#{traslado.unidadEjecutora.descripcion}"/>
+                                <h:outputText id="txtUnidadOrigen" value="#{traslado.unidadEjecutora.descripcion}"/>
                             </ice:column>
 
                             <!-- COLUMNA UNIDAD DESTINO -->
@@ -152,7 +152,7 @@
                                         </ice:headerRow>
                                     </ice:columnGroup>
                                 </f:facet>                                
-                                <h:outputText id="descripcionCell" value="#{traslado.numUnidadDestino.descripcion}"/>
+                                <h:outputText id="txtUnidadDestino" value="#{traslado.numUnidadDestino.descripcion}"/>
                             </ice:column>
                             
                             <!-- COLUMNA FECHA -->
@@ -163,7 +163,7 @@
                                             <ice:outputText value="#{label['sigebi.TrasladoListar.Label.FECHA']}"/>
                                         </ice:headerRow>
                                         <ice:headerRow>
-                                            <ice:inputText id="fltFrecha"
+                                            <ice:inputText id="fltFecha"
                                                            style="width: 130px;"
                                                            value="#{trasladoController.fltFecha}"                                   
                                                            partialSubmit="true"
@@ -171,7 +171,7 @@
                                         </ice:headerRow>
                                     </ice:columnGroup>
                                 </f:facet>                                
-                                <h:outputText id="descripcionCell" value="#{traslado.fecha}"/>
+                                <h:outputText id="txtFecha" value="#{traslado.fecha}"/>
                             </ice:column>
 
                             <!-- COLUMNA ESTADO -->
@@ -193,7 +193,7 @@
                                         </ice:headerRow>
                                     </ice:columnGroup>
                                 </f:facet>                                
-                                <h:outputText id="descripcionCell" value="#{traslado.estado.nombre}"/>
+                                <h:outputText id="txtEstados" value="#{traslado.estado.nombre}"/>
                             </ice:column>
 
                             <ice:column id="colDetalle">

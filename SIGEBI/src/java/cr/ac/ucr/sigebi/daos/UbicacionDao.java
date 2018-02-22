@@ -25,7 +25,7 @@ import org.hibernate.Session;
  * @author jorge.serrano
  */
 @Repository(value = "ubicacionDao")
-@Scope("request")
+
 public class UbicacionDao extends GenericDaoImpl {
 
     @Autowired

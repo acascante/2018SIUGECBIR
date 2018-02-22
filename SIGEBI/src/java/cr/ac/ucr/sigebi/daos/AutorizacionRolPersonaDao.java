@@ -27,7 +27,7 @@ import org.springframework.transaction.annotation.Transactional;
  * @author jairo.cisneros
  */
 @Repository(value = "autorizacionRolPersonaDao")
-@Scope("request")
+
 public class AutorizacionRolPersonaDao extends GenericDaoImpl {
 
     @Autowired
@@ -86,6 +86,29 @@ public class AutorizacionRolPersonaDao extends GenericDaoImpl {
     }
 
     // Busco las personas registradas en una Autorización por ROLES
+    @Transactional(readOnly = true)
+    public List<AutorizacionRolPersona> buscar(Autorizacion autorizacion, UnidadEjecutora unidadEjecutora) throws FWExcepcion {
+        Session session = this.dao.getSessionFactory().openSession();
+        try {
+            String sql = "SELECT obj FROM AutorizacionRolPersona obj "
+                    + " WHERE obj.autorizacionRol.autorizacion = :autorizacion"
+                    + " and obj.unidadEjecutora = :unidadEjecutora";
+            Query query = session.createQuery(sql);
+            query.setParameter("autorizacion", autorizacion);
+            query.setParameter("unidadEjecutora", unidadEjecutora);
+
+            //Se obtienen los resutltados
+            return (List<AutorizacionRolPersona>) query.list();
+
+        } catch (HibernateException e) {
+            throw new FWExcepcion("sigebi.error.dao.autorizacionRolPersonaDao.buscarPorAutorizacion",
+                    "Error obtener los registros de buscarPorAutorizacion " + this.getClass(), e.getCause());
+        } finally {
+            session.close();
+        }
+    }
+
+    // Busco si la persona registrada en una Autorización por ROLES
     @Transactional(readOnly = true)
     public List<AutorizacionRolPersona> buscar(Autorizacion autorizacion, UnidadEjecutora unidadEjecutora, Usuario usuario) throws FWExcepcion {
         Session session = this.dao.getSessionFactory().openSession();

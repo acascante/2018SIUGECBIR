@@ -24,7 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
  * @author jorge.serrano
  */
 @Repository(value = "MonedaDao")
-@Scope("request")
+
 public class MonedaDao extends GenericDaoImpl {
 
     @Autowired

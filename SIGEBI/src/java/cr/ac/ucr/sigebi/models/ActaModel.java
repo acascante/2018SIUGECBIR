@@ -19,7 +19,7 @@ import org.springframework.stereotype.Service;
  * @author jorge.serrano
  */
 @Service(value = "actaModel")
-@Scope("request")
+
 public class ActaModel {
     
     @Resource
@@ -67,7 +67,7 @@ public class ActaModel {
     }
     
     public List<DocumentoActa> listarActas(Long unidadEjecutora,
-                                        String fltIdTipo,
+                                        String fltIdActa,
                                         String fltAutorizacion,
                                         String fltEstado,
                                         String fltFecha,
@@ -76,7 +76,7 @@ public class ActaModel {
     ){
         try {
             return actaDao.listarActas(unidadEjecutora,
-                                         fltIdTipo,
+                                         fltIdActa,
                                          fltAutorizacion,
                                          fltEstado,
                                          fltFecha, 

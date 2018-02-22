@@ -18,7 +18,6 @@ import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,7 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
  * @author jorge.serrano
  */
 @Repository(value = "bienDao")
-@Scope("request")
+
 public class BienDao extends GenericDaoImpl {
 
     @Autowired
@@ -58,12 +57,12 @@ public class BienDao extends GenericDaoImpl {
     }
 
     @Transactional(readOnly = true)
-    public List<Bien> listarPorUnidadEjecutoraEstado(UnidadEjecutora unidadejecutora, Estado estado) throws FWExcepcion {
+    public List<Bien> listarPorUnidadEjecutoraEstado(UnidadEjecutora unidadEjecutora, Estado estado) throws FWExcepcion {
         Session session = dao.getSessionFactory().openSession();
         try {
-            String sql = "SELECT b FROM Bien b WHERE b.unidadejecutora = :unidadejecutora AND b.estadoInterno = :estado";
+            String sql = "SELECT b FROM Bien b WHERE b.unidadEjecutora = :unidadEjecutora AND b.estadoInterno = :estado";
             Query query = session.createQuery(sql);
-            query.setParameter("unidadejecutora", unidadejecutora);
+            query.setParameter("unidadEjecutora", unidadEjecutora);
             query.setParameter("estado", estado);
             return (List<Bien>) query.list();
         } catch (HibernateException e) {
@@ -91,20 +90,35 @@ public class BienDao extends GenericDaoImpl {
 
     @Transactional(readOnly = true)
     public List<Bien> listar(Integer primerRegistro
-            , Integer ultimoRegistro
-            , UnidadEjecutora unidadejecutora
-            , Long id
-            , String identificacion
-            , String descripcion
-            , String marca
-            , String modelo
-            , String serie
-            , Tipo tipo
-            , String nombUnidad
-            , Estado... estados) throws FWExcepcion {
+                            , Integer ultimoRegistro
+                            , UnidadEjecutora unidadejecutora
+                            , Long id
+                            , String identificacion
+
+                            , String descripcion
+                            , String marca
+                            , String modelo
+                            , String serie
+                            , Tipo tipo
+
+                            , String nombUnidad
+                            , Estado... estados) throws FWExcepcion {
         Session session = dao.getSessionFactory().openSession();
         try {
-            Query query = this.creaQuery(Boolean.FALSE, session, unidadejecutora, id, identificacion, descripcion, marca, modelo, serie, tipo, nombUnidad, estados);
+            Query query = this.creaQuery(Boolean.FALSE
+                                        , session
+                                        , unidadejecutora
+                                        , id
+                                        , identificacion
+                    
+                                        , descripcion
+                                        , marca
+                                        , modelo
+                                        , serie
+                                        , tipo
+                    
+                                        , nombUnidad
+                                        , estados);
             if (!(primerRegistro.equals(1) && ultimoRegistro.equals(1))) {
                 query.setFirstResult(primerRegistro);
                 query.setMaxResults(ultimoRegistro - primerRegistro);
@@ -122,6 +136,7 @@ public class BienDao extends GenericDaoImpl {
                     , String identificacion
                     , String descripcion
                     , String marca
+            
                     , String modelo
                     , String serie
                     , Tipo tipo
@@ -129,7 +144,20 @@ public class BienDao extends GenericDaoImpl {
                     , Estado... estados) throws FWExcepcion {
         Session session = dao.getSessionFactory().openSession();
         try {
-            Query query = this.creaQuery(Boolean.TRUE, session, unidadejecutora, id, identificacion, descripcion, marca, modelo, serie, tipo, nombUnidad, estados);
+            Query query = this.creaQuery(Boolean.TRUE
+                                        , session
+                                        , unidadejecutora
+                                        , id
+                                        , identificacion
+
+                                        , descripcion
+                                        , marca
+                                        , modelo
+                                        , serie
+                                        , tipo
+
+                                        , nombUnidad
+                                        , estados);
             return (Long) query.uniqueResult();
         } catch (HibernateException e) {
             throw new FWExcepcion("sigebi.error.notificacionDao.contarNotificaciones", "Error contando los registros de tipo " + this.getClass(), e.getCause());
@@ -179,7 +207,7 @@ public class BienDao extends GenericDaoImpl {
             sql.append("WHERE 1 = 1 ");
         }
         if(id != null && id > 0) {
-           sql.append(" AND b.id = :id ");
+           sql.append(" AND str( b.id ) like :id ");
         } else {
             if(identificacion != null && identificacion.length() > 0){
                sql.append(" AND UPPER(b.identificacion.identificacion) LIKE UPPER(:identificacion) ");
@@ -212,10 +240,10 @@ public class BienDao extends GenericDaoImpl {
             q.setParameter("unidadEjecutora", unidadEjecutora);
         }
         if(id != null && id > 0) {
-            q.setParameter("id", id);
+            q.setParameter("id",'%'+ id.toString() + '%');
         } else {
             if (identificacion != null && identificacion.length() > 0) {
-                q.setParameter("identificacion", identificacion);
+                q.setParameter("identificacion",  '%'+ identificacion + '%');
             }
             if (descripcion != null && descripcion.length() > 0) {
                 q.setParameter("descripcion", '%' + descripcion + '%');
@@ -246,6 +274,17 @@ public class BienDao extends GenericDaoImpl {
     public void sincronizarBien(Sincronizar sincronizar) throws FWExcepcion, Exception {
         try {
             persist(sincronizar);
+        } catch (HibernateException e) {
+            throw new FWExcepcion("sigebi.error.dao.bien.sincronizarBien", "Error guardando registro de tipo " + this.getClass(), e.getCause());
+        }catch (Exception e) {
+            throw e;
+        }
+    }
+    
+    @Transactional
+    public void actualizar(List<Bien> bienes) throws FWExcepcion, Exception {
+        try {
+            persist(bienes.toArray());
         } catch (HibernateException e) {
             throw new FWExcepcion("sigebi.error.dao.bien.sincronizarBien", "Error guardando registro de tipo " + this.getClass(), e.getCause());
         }catch (Exception e) {

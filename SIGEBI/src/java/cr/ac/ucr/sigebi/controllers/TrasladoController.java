@@ -303,7 +303,7 @@ public class TrasladoController extends ListadoBienesGeneralController {
 
     private void inicializaTraslado() {
         try {
-            traslado = new DocumentoTraslado();
+            traslado = new DocumentoTraslado(estadoGeneralPendiente, unidadEjecutora);
             trasladoDetalle = new ArrayList<TrasladoDetalle>();
             trasladoDetalleEliminar = new ArrayList<TrasladoDetalle>();
             
@@ -376,12 +376,8 @@ public class TrasladoController extends ListadoBienesGeneralController {
             fechaRegistro = formatter.format(traslado.getFecha());
             permiteEdicion = permitirEdicion();
             permiteRecibir = permitirRecibir();
+            permiteAnular = permitirAnular();
 
-            if (traslado.getEstado().equals(estadoGeneralActivo)) {
-                permiteAnular = usuariosEnviar.containsKey(this.codPersonaReg) || permiteRecibir;
-            } else {
-                permiteAnular = false;
-            }
             trasladoDetalle = trasladoModel.traerBienesTraslado(traslado);
             bienesAsociadosTraslado = new HashMap<Long, TrasladoDetalle>();
             for (TrasladoDetalle valor : trasladoDetalle) {
@@ -646,7 +642,7 @@ public class TrasladoController extends ListadoBienesGeneralController {
 
             //Validar Ubicacion
             if ((traslado.getIdUbicacion().getId() == null) || (traslado.getIdUbicacion().getId() == 0)) {
-                mensaje = Util.getEtiquetas("sigebi.Traslado.Mns.SelecUnidad");
+                mensaje = Util.getEtiquetas("sigebi.Traslado.Mns.SelecUbicacion");
             }
             
             //FIXME Jairo verificar el usuario se esta asignando
@@ -667,14 +663,19 @@ public class TrasladoController extends ListadoBienesGeneralController {
     public void enviarHaciaDestino() {
         //Cambiar estado del traslado
         try {
-            if (validarRegistro()) {
+            if (validarRegistro() && (trasladoDetalle.size() > 0)) {
                 traslado.setEstado(estadoGeneralActivo);
                 trasladoModel.guardar(traslado);
 
+                trasladoModel.eliminarBienes( trasladoDetalleEliminar );
+                trasladoModel.guardarBienes(trasladoDetalle);
                 accion = constAccionEnviarARevision;
                 enviarNotificacion();
                 listarTraslados();
                 Util.navegar(Constantes.KEY_VISTA_TRASLADOS_LISTAR);
+            }else{
+                if(!trasladoDetalle.isEmpty())
+                    Mensaje.agregarErrorFatal(Util.getEtiquetas("sigebi.Acta.MsnError.BienesSeleccionados"));
             }
 
         } catch (Exception err) {
@@ -697,7 +698,7 @@ public class TrasladoController extends ListadoBienesGeneralController {
         traslado.setEstado(estadoGeneralPendiente);
         trasladoModel.guardar(traslado);
 
-        listarTraslados();
+        listadoInicializaDatos();
         Util.navegar(Constantes.KEY_VISTA_TRASLADOS_LISTAR);
 
     }
@@ -767,6 +768,17 @@ public class TrasladoController extends ListadoBienesGeneralController {
         //return true;
     }
 
+    private boolean permitirAnular(){
+        if( (traslado.getId()!=null)&&(traslado.getId() > 0) ){
+            if (traslado.getEstado().equals(estadoGeneralActivo)) {
+                return usuariosEnviar.containsKey(this.codPersonaReg) || permiteRecibir;
+            } else {
+                return false;
+            }
+        }
+        return false;
+    }
+    
     //ACCIONES BIENES
     public void aprobarBien(ActionEvent pEvent) {
         try {
@@ -1267,20 +1279,21 @@ public class TrasladoController extends ListadoBienesGeneralController {
 
             notificacionModel.enviarCorreo(correo);
 
+
             List<AutorizacionRolPersona> usrsNotificar = new ArrayList<AutorizacionRolPersona>();
 
-//            switch (accion) {
-//                case constAccionEnviarARevision:
-//                    usrsNotificar = autorizacionRolPersonaModel.buscarUsuariosPorAutorizacion(autorizacionRecibir.getId(), traslado.getNumUnidadDestino().getId());
-//                    break;
-//                default:
-//                    usrsNotificar = autorizacionRolPersonaModel.buscarUsuariosPorAutorizacion(autorizacionEnviar.getId(), traslado.getNumUnidadOrigen().getId());
-//                    break;
-//            }
+            switch (accion) {
+                case constAccionEnviarARevision:
+                    usrsNotificar = autorizacionRolPersonaModel.buscar(autorizacionEnviar, unidadDestino);
+                    break;
+                default:
+                    usrsNotificar = autorizacionRolPersonaModel.buscar(autorizacionRecibir, unidadDestino);
+                    break;
+            }
 
             for (AutorizacionRolPersona usr : usrsNotificar) {
                 correo.setDestinatario(usr.getUsuarioSeguridad().getCorreo());
-                notificacionModel.enviarCorreo(correo);
+              //  notificacionModel.enviarCorreo(correo);
             }
 
         } catch (Exception err) {

@@ -22,7 +22,7 @@ import org.springframework.stereotype.Service;
  * @author jairo.cisneros
  */
 @Service(value = "autorizacionRolPersonaModel")
-@Scope("request")
+
 public class AutorizacionRolPersonaModel {
 
     @Resource
@@ -48,6 +48,10 @@ public class AutorizacionRolPersonaModel {
         return autorizacionRolPersonaDao.buscar(autorizacion, unidadEjecutora, usuario);
     }
     
+    public List<AutorizacionRolPersona> buscar(Autorizacion autorizacion, UnidadEjecutora unidadEjecutora) throws FWExcepcion  {
+        return autorizacionRolPersonaDao.buscar(autorizacion, unidadEjecutora);
+    }
+    
     public AutorizacionRolPersona buscar(AutorizacionRol autorizacionRol, Usuario usuario, UnidadEjecutora unidadEjecutora) throws FWExcepcion {
         return autorizacionRolPersonaDao.buscar(autorizacionRol, usuario, unidadEjecutora);
     }
@@ -63,5 +67,6 @@ public class AutorizacionRolPersonaModel {
     public Long contar(AutorizacionRol autorizacionRol) throws FWExcepcion {
         return autorizacionRolPersonaDao.contar(autorizacionRol);
     }
+
 
 }

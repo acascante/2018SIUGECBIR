@@ -19,7 +19,7 @@ import org.springframework.stereotype.Service;
  * @author jorge.serrano
  */
 @Service(value = "subClasificacionModel")
-@Scope("request")
+
 public class SubClasificacionModel {
     
     @Resource

@@ -9,10 +9,8 @@ import cr.ac.ucr.sigebi.daos.TrasladosDao;
 import cr.ac.ucr.sigebi.domain.UnidadEjecutora;
 import cr.ac.ucr.sigebi.domain.TrasladoDetalle;
 import cr.ac.ucr.sigebi.domain.DocumentoTraslado;
-import cr.ac.ucr.sigebi.entities.UnidadEjecutoraEntity;
 import java.util.List;
 import javax.annotation.Resource;
-import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
 /**
@@ -20,7 +18,7 @@ import org.springframework.stereotype.Service;
  * @author jorge.serrano
  */
 @Service(value = "trasladoModel")
-@Scope("request")
+
 public class TrasladoModel {
     
     @Resource
@@ -47,7 +45,7 @@ public class TrasladoModel {
         return trasladoDao.traerPorId(pId);
     }
     
-    public List<DocumentoTraslado> traerTodo(UnidadEjecutoraEntity unidadEjecutora) {
+    public List<DocumentoTraslado> traerTodo(UnidadEjecutora unidadEjecutora) {
         return trasladoDao.traerTodo(unidadEjecutora);
     }
     

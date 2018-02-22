@@ -24,6 +24,7 @@
                     </ice:commandButton>
                 </div>
             </div>
+            
             <div class="row">
                 <div class="col-sm-12">
                     <ice:outputText style="color: green;" value="#{controllerAgregarExclusiones.mensajeExito} "/>
@@ -31,9 +32,7 @@
                     <h:messages style="color:red;"/>
                 </div>
             </div>
-        </div>
-
-        <div class="container">
+        
             <div class="row">
                 <div class="col-md-6">
                     <div class="form-group"> 
@@ -42,17 +41,15 @@
                             <ice:outputText value="#{label['label.requerido']}" />
                         </label>
                         <ice:selectOneMenu  id="cmbTipo"
-                                            value="#{controllerAgregarExclusiones.command.tipo}"
+                                            value="#{controllerAgregarExclusiones.command.idTipo}"
                                             partialSubmit="true">
                             <f:selectItem itemLabel="N/A" itemValue="-1"/>
                             <f:selectItems id="slcTipoItem" value="#{controllerAgregarExclusiones.itemsTipo}"/>
                         </ice:selectOneMenu>
                     </div>
-                    
-                    
-                    
                 </div>
             </div>
+            
             <div class="row">
                 <div class="col-md-6">
                     <div class="form-group"> 
@@ -60,42 +57,30 @@
                             <f:facet name="header">
                                 <ice:columnGroup>
                                     <ice:headerRow>
-                                        <ice:column id="isIn" rowspan="2" style="vertical-align:top;">
-                                            <ice:outputText value="#{label['sigebi.label.bien.is.in']} "/>
-                                        </ice:column>
                                         <ice:column id="idBien" rowspan="2" style="vertical-align:top;">
                                             <ice:outputText value="#{label['sigebi.label.bien.id']} "/>
-                                            <ice:inputText id="filtroId" 
-                                                           value="#{controllerAgregarExclusiones.command.fltId}" 
-                                                           validator="#{controllerAgregarExclusiones.validarFiltroId}"
-                                                           valueChangeListener="#{controllerAgregarExclusiones.cambioFiltro}"/>
                                         </ice:column>
                                         
-                                        <ice:column id="cantidad" rowspan="2" style="vertical-align:top;">
-                                            <ice:outputText value="#{label['sigebi.label.bien.cantidad']} "/>
-                                            <ice:inputText id="filtroId" 
-                                                           value="#{controllerAgregarExclusiones.command.fltCantidad}" 
-                                                           validator="#{controllerAgregarExclusiones.validarFiltroCantidad}"
-                                                           valueChangeListener="#{controllerAgregarExclusiones.cambioFiltro}"/>
+                                        <ice:column id="idIdentificacion" rowspan="2" style="vertical-align:top;">
+                                            <ice:outputText value="#{label['sigebi.label.bien.identificacion']} "/>
                                         </ice:column>
                                         
-                                        <ice:column id="fecha" >
-                                            <ice:outputText value="#{label['sigebi.label.bienes.fecha']} "/>
-
-                                            <ice:selectInputDate 
-                                                highlightClass="dateHighlightGray" 
-                                                highlightUnit="DAY_OF_WEEK" 
-                                                highlightValue="1"
-                                                partialSubmit="false" 
-                                                renderAsPopup="true" 
-                                                renderMonthAsDropdown="true" 
-                                                renderYearAsDropdown="true"
-                                                validator="#{controllerAgregarExclusiones.validarFiltroFecha}"
-                                                value="#{controllerAgregarExclusiones.command.fltFecha}" 
-                                                valueChangeListener="#{controllerAgregarExclusiones.cambioFiltro}" >
-                                                <f:convertDateTime pattern="#{controllerAgregarExclusiones.command.datePattern}"  timeZone="#{controllerAgregarExclusiones.command.timeZone}" />
-                                            </ice:selectInputDate>
+                                        <ice:column id="marca" rowspan="2" style="vertical-align:top;">
+                                            <ice:outputText value="#{label['sigebi.label.bien.marca']} "/>
                                         </ice:column>
+                                        
+                                        <ice:column id="modelo" rowspan="2" style="vertical-align:top;">
+                                            <ice:outputText value="#{label['sigebi.label.bien.modelo']} "/>
+                                        </ice:column>
+                                        
+                                        <ice:column id="serie" rowspan="2" style="vertical-align:top;">
+                                            <ice:outputText value="#{label['sigebi.label.bien.serie']} "/>
+                                        </ice:column>
+                                        
+                                        <ice:column id="estado" rowspan="2" style="vertical-align:top;">
+                                            <ice:outputText value="#{label['sigebi.label.bien.estado']} "/>
+                                        </ice:column>
+                                        
                                         
                                         <ice:column id="opciones" >
                                         </ice:column>
@@ -103,18 +88,22 @@
                                 </ice:columnGroup>
                             </f:facet>
                             <ice:column>
-                                <h:selectBooleanCheckbox id="isIn" value="#{bien.id}"/>
+                                <h:outputText id="idCell" value="#{bien.id}"/>
                             </ice:column>
                             <ice:column>
-                                <h:outputText id="idNotificacionCell" value="#{bien.id}"/>
+                                <h:outputText id="identificacionCell" value="#{bien.identificacion.identificacion}"/>
                             </ice:column>
                             <ice:column>
-                                <h:outputText id="asuntoCell" value="#{bien.cantidad}"/>
+                                <h:outputText id="marcaCell" value="#{bien.resumenBien.marca}"/>
                             </ice:column>
-                           <ice:column>
-                                <h:outputText id="fechaCell" value="#{bien.fecAdquisicion}" >
-                                    <f:convertDateTime type="date" pattern="#{controllerAgregarExclusiones.command.datePattern}" />
-                                </h:outputText>
+                            <ice:column>
+                                <h:outputText id="modeloCell" escape="false" value="#{bien.resumenBien.modelo}"/>
+                            </ice:column>
+                            <ice:column>
+                                <h:outputText id="serieCell" escape="false" value="#{bien.resumenBien.serie}"/>
+                            </ice:column>
+                            <ice:column>
+                                <h:outputText id="estadoCell" value="#{bien.estado.nombre}"/>
                             </ice:column>
                         </ice:dataTable>
                     </div>
@@ -122,14 +111,40 @@
             </div>
             
             <div class="row">
+                <div class='col-sm-12'>
+                    <ice:commandButton id="botonAgregarBienes" style="float:right" styleClass="boton" partialSubmit="true" action="#{controllerAgregarExclusiones.mostarPanelAgregarBienes}" value="#{label['sigebi.Bien.Listado.Agregar']}" />
+                </div>
+            </div>
+            
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group"> 
+                        <label class="control-label" for="txtObservacion">
+                            <ice:outputText value="#{label['sigebi.label.exclusiones.observacion']}" />
+                            <ice:outputText value="#{label['label.requerido']}" />
+                        </label>
+                        <ice:inputRichText id="txtObservaciones"
+                                           height="100" 
+                                           language="es"
+                                           skin="silver" 
+                                           toolbar="Basic"
+                                           saveOnSubmit="true"
+                                           value="#{controllerAgregarExclusiones.command.observacion}" />
+                    </div>                                             
+                </div>
+            </div>
+            
+            <div class="row">
                 <div class="col-md-4">
-                    <ice:commandButton id="botonAgregar" 
-                                       value="Guardar" 
-                                       partialSubmit="true" 
-                                       styleClass="boton" 
-                                       action="#{controllerAgregarExclusiones.guardarDatos}"/>
+                    <ice:commandButton id="botonSolicitar"  value="Solicitar"  partialSubmit="true"  styleClass="boton" action="#{controllerAgregarExclusiones.solicitarExclusion}" rendered="#{controllerAgregarExclusiones.visibleBotonSolicitar}"/>
+                    <ice:commandButton id="botonAgregar"  value="Guardar"  partialSubmit="true"  styleClass="boton" action="#{controllerAgregarExclusiones.guardarDatos}"/>
                 </div>
             </div>
         </div>
+        
+        <!-- Panel Agregar Bienes -->
+        <ui:insert name="panelAgregarBienes">
+            <ui:include src="../exclusiones/listadoBienes.xhtml" />
+        </ui:insert>
     </div>
 </ice:form>

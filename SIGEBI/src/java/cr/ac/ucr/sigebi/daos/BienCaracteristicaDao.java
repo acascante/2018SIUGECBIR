@@ -26,7 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
  * @author alvaro.cascante
  */
 @Repository(value = "bienCaracteristicaDao")
-@Scope("request")
+
 public class BienCaracteristicaDao extends GenericDaoImpl {
 
     @Autowired

@@ -18,7 +18,7 @@ import org.springframework.stereotype.Service;
 
 
 @Service(value = "seguridadMgr")
-@Scope("request")
+
 public class SeguridadMgr {
 
     @Resource

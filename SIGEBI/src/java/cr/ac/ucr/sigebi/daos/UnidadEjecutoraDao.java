@@ -24,7 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
  * @author jairo.cisneros
  */
 @Repository(value = "UnidadEjecutoraDao")
-@Scope("request")
+
 public class UnidadEjecutoraDao extends GenericDaoImpl {
 
     @Autowired

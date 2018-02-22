@@ -30,6 +30,10 @@ public final class Constantes {
     public static final Integer ESTADO_BIEN_PENDIENTE_INACTIVACION = 6;
     public static final Integer ESTADO_BIEN_INACTIVO = 7;
 
+    // Estados de un bien
+    public static final Integer ESTADO_INTERNO_BIEN_NORMAL = 1;
+    public static final Integer ESTADO_INTERNO_BIEN_EN_EXCLUSION = 2;
+    
     // Estados de una nota
     public static final int ESTADO_NOTA_CREADA = 1;
     
@@ -48,8 +52,9 @@ public final class Constantes {
 
     // Exclusiones
     public static final int ESTADO_EXCLUSION_CREADA = 1;
-    public static final int ESTADO_EXCLUSION_ENVIADA = 2;
-    public static final int ESTADO_EXCLUSION_ENVIO_FALLIDO = 3;
+    public static final int ESTADO_EXCLUSION_SOLICITADA = 2;
+    public static final int ESTADO_EXCLUSION_APROBADA = 3;
+    public static final int ESTADO_EXCLUSION_EJECUTADA = 4;
     public static final String ESTADO_EXCLUSION_CREADA_DESC = "CREADA";
     public static final String ESTADO_EXCLUSION_ENVIADA_DESC = "EN TRAMITE";
     public static final String ESTADO_EXCLUSION_ENVIO_FALLIDO_DESC = "CERRADA";
