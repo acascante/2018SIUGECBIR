@@ -1,0 +1,161 @@
+<ice:form id="frmListarConvenios" xmlns:ice="http://www.icesoft.com/icefaces/component" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core" xmlns:ui="http://java.sun.com/jsf/facelets">
+    <div class="contenido-pagina">
+        <div class="container">
+            <!-- Encabezado -->
+            <div class="row">
+                <div class='col-sm-6'>
+                    <h1 style="margin: 0;">
+                        <ice:outputFormat value="#{label['sigebi.label.convenios.titulo.listar']} "/>
+                    </h1>
+                </div>                
+            </div>
+            <div class="row">
+                <div class="col-sm-12">
+                    <ice:outputFormat value="#{label['label.generico.paginacion.encabezado']}">
+                        <f:param value="#{controllerListarConvenios.cantidadRegistros}"/>
+                        <f:param value="#{controllerListarConvenios.cantidadRegistrosMostrados}"/>
+                        <f:param value="#{controllerListarConvenios.primerRegistro}"/>
+                        <f:param value="#{controllerListarConvenios.ultimoRegistro}"/>
+                        <f:param value="#{controllerListarConvenios.paginaActual}"/>
+                        <f:param value="#{controllerListarConvenios.cantidadPaginas}"/>
+                    </ice:outputFormat>
+                    <div>
+                        <table>
+                            <tr>
+                                <td style="padding-right: 5px;">
+                                    <ice:outputText value="#{label['label.paginacion.cantidad.pagina']} "/>
+                                </td>
+                                <td>
+                                    
+                                    <ice:selectOneMenu id="cantRegistroPorPagina"
+                                           value="#{controllerListarConvenios.cantRegistroPorPagina}" 
+                                           valueChangeListener="#{controllerListarConvenios.cambioRegistrosPorPagina}"
+                                           partialSubmit="true">
+                                            <f:selectItems id="item_pa" value="#{controllerListarConvenios.listaRegistrosPagina}"/>
+                                    </ice:selectOneMenu>    
+                                    
+                                </td>
+                            </tr>
+                        </table>                        
+                    </div>                    
+                    <div>
+                        <ice:commandButton image="./imagenes/botones/first.png" partialSubmit="true" actionListener="#{controllerListarConvenios.primero}" rendered="#{controllerListarConvenios.cantidadPaginas > 1}"/>
+                        <ice:commandButton image="./imagenes/botones/previos.png" partialSubmit="true" actionListener="#{controllerListarConvenios.anterior}" rendered="#{controllerListarConvenios.cantidadPaginas > 1}"/>
+                        <ui:repeat value="#{controllerListarConvenios.arregloPaginas}" var="pagina">
+                            <ice:commandLink value="#{pagina}" partialSubmit="true" actionListener="#{controllerListarConvenios.irPagina}">
+                                <f:param name="numPag" value="#{pagina}"/>
+                            </ice:commandLink>
+                        </ui:repeat>            
+                        <ice:commandButton image="./imagenes/botones/next.png" partialSubmit="true" actionListener="#{controllerListarConvenios.siguiente}" rendered="#{controllerListarConvenios.cantidadPaginas > 1}"/>
+                        <ice:commandButton image="./imagenes/botones/last.png" partialSubmit="true" actionListener="#{controllerListarConvenios.ultimo}" rendered="#{controllerListarConvenios.cantidadPaginas > 1}"/>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Tabla -->
+            <div class="row">
+                <div class="col-sm-12">                    
+                    <div>
+                        <ice:dataTable id="listadoConvenios" value="#{controllerListarConvenios.convenios}" var="convenio" paginator="true" paginatorPosition="bottom" rows="10">
+                            <f:facet name="header">
+                                <ice:columnGroup>
+                                    <ice:headerRow>
+                                        <!-- ID -->
+                                        <ice:column id="id" rowspan="2" style="vertical-align:top;">
+                                            <ice:outputText value="#{label['sigebi.label.convenios.id']} "/>
+                                            <ice:inputText id="filtroId" 
+                                                           value="#{controllerListarConvenios.command.fltId}" 
+                                                           validator="#{controllerListarConvenios.validarFiltroId}"
+                                                           valueChangeListener="#{controllerListarConvenios.cambioFiltro}"/>
+                                        </ice:column>
+                                        
+                                        <!-- Institucion -->
+                                        <ice:column id="institucion" rowspan="2" style="vertical-align:top;">
+                                            <ice:outputText value="#{label['sigebi.label.convenios.institucion']} "/>
+                                            <ice:inputText id="filtroInstitucion"  
+                                                           value="#{controllerListarConvenios.command.fltInstitucion}" 
+                                                           partialSubmit="true"
+                                                           valueChangeListener="#{controllerListarConvenios.cambioFiltro}"/>
+                                        </ice:column>
+
+                                        <!-- Responsable -->
+                                        <ice:column id="responsable" rowspan="2" style="vertical-align:top;">
+                                            <ice:outputText value="#{label['sigebi.label.convenios.responsable']} "/>
+                                            <ice:inputText id="filtroInstitucion"  
+                                                           value="#{controllerListarConvenios.command.fltResponsable}" 
+                                                           partialSubmit="true"
+                                                           valueChangeListener="#{controllerListarConvenios.cambioFiltro}"/>
+                                        </ice:column>
+
+                                        <!-- Oficio -->
+                                        <ice:column id="oficio" rowspan="2" style="vertical-align:top;">
+                                            <ice:outputText value="#{label['sigebi.label.convenios.oficio']} "/>
+                                            <ice:inputText id="filtroOficio"  
+                                                           value="#{controllerListarConvenios.command.fltOficio}" 
+                                                           partialSubmit="true"
+                                                           valueChangeListener="#{controllerListarConvenios.cambioFiltro}"/>
+                                        </ice:column>
+
+                                        <!-- Prestar -->
+                                        <ice:column id="prestar" rowspan="2"  style="vertical-align:top;">                                 
+                                            <ice:checkbox value="#{label['sigebi.label.convenios.prestar']} "/>
+                                        </ice:column>
+                                        
+                                        <!-- Recibir -->
+                                        <ice:column id="recibir" rowspan="2" style="vertical-align:top;">                                 
+                                            <ice:checkbox value="#{label['sigebi.label.convenios.recibir']} "/>
+                                        </ice:column>
+                            
+                                        <!-- Estado -->
+                                        <ice:column id="estado" rowspan="2" style="vertical-align:top;">                                 
+                                            <ice:outputText value="#{label['sigebi.label.convenios.estado']}"/>
+                                            <ice:selectOneMenu  id="filtroEstado"
+                                                                valueChangeListener="#{controllerListarConvenios.cambioFiltro}"
+                                                                value="#{controllerListarConvenios.command.fltEstado}"
+                                                                partialSubmit="true">
+                                                <f:selectItem itemLabel="N/A" itemValue="-1"/>
+                                                <f:selectItems id="slcEstadoItem" value="#{controllerListarConvenios.itemsEstado}"/>
+                                            </ice:selectOneMenu>
+                                        </ice:column>
+                                        
+                                        <ice:column id="opciones" >
+                                        </ice:column>
+                                    </ice:headerRow>
+                                </ice:columnGroup>
+                            </f:facet>
+                            <ice:column>
+                                <h:outputText id="idCell" value="#{convenio.id}"/>
+                            </ice:column>
+                            <ice:column>
+                                <h:outputText id="institucionCell" escape="false" value="#{convenio.institucion}"/>
+                            </ice:column>
+                            <ice:column>
+                                <h:outputText id="responsableCell" escape="false" value="#{convenio.responsable}"/>
+                            </ice:column>
+                            <ice:column>
+                                <h:outputText id="prestarCell" value="#{convenio.prestar}"/>
+                            </ice:column>
+                            <ice:column>
+                                <h:outputText id="recibirCell" value="#{convenio.recibir}"/>
+                            </ice:column>
+                            <ice:column>
+                                <h:outputText id="oficioCell" escape="false" value="#{convenio.oficio}"/>
+                            </ice:column>
+                            <ice:column>
+                                <h:outputText id="estadoCell" value="#{convenio.estado.nombre}"/>
+                            </ice:column>
+                        </ice:dataTable>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class='col-sm-12'>
+                    <ice:commandButton id="botonNuevo" style="float:right" styleClass="boton" partialSubmit="true" actionListener="#{controllerAgregarConvenios.nuevoRegistro}" value="Nuevo" >
+                       <f:attribute id="vistaOrigen" name="#{controllerListarConvenios.command.keyVistaOrigen}"  value="#{controllerListarConvenios.vistaOrigen}"/>
+                    </ice:commandButton>
+                </div>
+            </div>
+        </div>
+    </div>
+</ice:form>

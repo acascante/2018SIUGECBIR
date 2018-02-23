@@ -1,0 +1,150 @@
+<ice:form id="frmDetallePrestamo" xmlns:ice="http://www.icesoft.com/icefaces/component" xmlns:icecore="http://www.icefaces.org/icefaces/core" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:c="http://java.sun.com/jstl/core">
+    <div class="contenido-pagina">
+        <div class="container">
+            <div class="row">
+                <div class='col-sm-6'>
+                    <h1 style="margin: 0;">
+                        <ice:outputFormat value="#{label['sigebi.label.prestamoes.titulo.mantenimiento']} "/>
+                    </h1>
+                </div>                
+                <div class="col-sm-6">
+                    <ice:commandButton id="boton_regresar" value="Regresar" style="float:right" partialSubmit="false" styleClass="boton" 
+                        action="#{controllerListarPrestamoes.regresarListado}" >
+                    </ice:commandButton>
+                </div>
+            </div>
+            
+            <div class="row">
+                <div class="col-sm-12">
+                    <ice:outputText style="color: green;" value="#{controllerAgregarPrestamoes.mensajeExito} "/>
+                    <ice:outputText style="color: red;" value="#{controllerAgregarPrestamoes.mensaje} "/>
+                    <h:messages style="color:red;"/>
+                </div>
+            </div>
+        
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group"> 
+                        <label class="control-label" for="cmbTipo">
+                            <ice:outputText value="#{label['sigebi.label.prestamoes.tipo']}" />
+                            <ice:outputText value="#{label['label.requerido']}" />
+                        </label>
+                        <ice:selectOneMenu  id="cmbTipo" partialSubmit="true" 
+                                            value="#{controllerAgregarPrestamoes.command.idTipo}"
+                                            valueChangeListener="#{controllerAgregarPrestamoes.cambioTipoEntidad}">
+                            <f:selectItem itemLabel="N/A" itemValue="-1"/>
+                            <f:selectItems id="slcTipoItem" value="#{controllerAgregarPrestamoes.itemsTipo}"/>
+                        </ice:selectOneMenu>
+                    </div>
+                </div>
+                
+                <div class="col-md-6">
+                    <div class="form-group"> 
+                        <ice:outputText value="#{label['sigebi.label.prestamos.entidad']}" />
+                        <ice:selectOneMenu id="selSubCategoria" styleClass="form-control" partialSubmit="true"
+                                           readonly="#{controllerAgregarPrestamoes.disableEntidades}"
+                                           value="#{controllerAgregarPrestamoes.command.entidad}">
+                            <f:selectItem itemLabel="Seleccionar Entidad" itemValue="-1"/>
+                            <f:selectItems id="optEntidades" value="#{controllerAgregarPrestamoes.itemsEntidades}"/>
+                        </ice:selectOneMenu>
+                    </div>                                             
+                </div>
+            </div>
+            
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group"> 
+                        <ice:dataTable id="listadoBienes" value="#{controllerAgregarPrestamoes.command.bienes}" var="bien" paginator="true" paginatorPosition="bottom" rows="10">
+                            <f:facet name="header">
+                                <ice:columnGroup>
+                                    <ice:headerRow>
+                                        <ice:column id="idBien" rowspan="2" style="vertical-align:top;">
+                                            <ice:outputText value="#{label['sigebi.label.bien.id']} "/>
+                                        </ice:column>
+                                        
+                                        <ice:column id="idIdentificacion" rowspan="2" style="vertical-align:top;">
+                                            <ice:outputText value="#{label['sigebi.label.bien.identificacion']} "/>
+                                        </ice:column>
+                                        
+                                        <ice:column id="marca" rowspan="2" style="vertical-align:top;">
+                                            <ice:outputText value="#{label['sigebi.label.bien.marca']} "/>
+                                        </ice:column>
+                                        
+                                        <ice:column id="modelo" rowspan="2" style="vertical-align:top;">
+                                            <ice:outputText value="#{label['sigebi.label.bien.modelo']} "/>
+                                        </ice:column>
+                                        
+                                        <ice:column id="serie" rowspan="2" style="vertical-align:top;">
+                                            <ice:outputText value="#{label['sigebi.label.bien.serie']} "/>
+                                        </ice:column>
+                                        
+                                        <ice:column id="estado" rowspan="2" style="vertical-align:top;">
+                                            <ice:outputText value="#{label['sigebi.label.bien.estado']} "/>
+                                        </ice:column>
+                                        
+                                        
+                                        <ice:column id="opciones" >
+                                        </ice:column>
+                                    </ice:headerRow>
+                                </ice:columnGroup>
+                            </f:facet>
+                            <ice:column>
+                                <h:outputText id="idCell" value="#{bien.id}"/>
+                            </ice:column>
+                            <ice:column>
+                                <h:outputText id="identificacionCell" value="#{bien.identificacion.identificacion}"/>
+                            </ice:column>
+                            <ice:column>
+                                <h:outputText id="marcaCell" value="#{bien.resumenBien.marca}"/>
+                            </ice:column>
+                            <ice:column>
+                                <h:outputText id="modeloCell" escape="false" value="#{bien.resumenBien.modelo}"/>
+                            </ice:column>
+                            <ice:column>
+                                <h:outputText id="serieCell" escape="false" value="#{bien.resumenBien.serie}"/>
+                            </ice:column>
+                            <ice:column>
+                                <h:outputText id="estadoCell" value="#{bien.estado.nombre}"/>
+                            </ice:column>
+                        </ice:dataTable>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="row">
+                <div class='col-sm-12'>
+                    <ice:commandButton id="botonAgregarBienes" style="float:right" styleClass="boton" partialSubmit="true" action="#{controllerAgregarPrestamoes.mostarPanelAgregarBienes}" value="#{label['sigebi.Bien.Listado.Agregar']}" />
+                </div>
+            </div>
+            
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group"> 
+                        <label class="control-label" for="txtObservacion">
+                            <ice:outputText value="#{label['sigebi.label.prestamoes.observacion']}" />
+                            <ice:outputText value="#{label['label.requerido']}" />
+                        </label>
+                        <ice:inputRichText id="txtObservaciones" height="100" language="es" skin="silver" toolbar="Basic"saveOnSubmit="true"
+                                           value="#{controllerAgregarPrestamoes.command.observacion}" />
+                    </div>                                             
+                </div>
+            </div>
+            
+            <div class="row">
+                <div class="col-md-12">
+                    <ice:commandButton id="botonGuardar"  value="Guardar"  partialSubmit="true"  styleClass="boton" action="#{controllerAgregarPrestamoes.guardarDatos}" rendered="#{controllerAgregarPrestamoes.visibleBotonGuardar}"/>
+                    <ice:commandButton id="botonAplicar"  value="Aplicar"  partialSubmit="true"  styleClass="boton" action="#{controllerAgregarPrestamoes.solicitarPrestamo}" rendered="#{controllerAgregarPrestamoes.visibleBotonSolicitar}"/>
+                    <ice:commandButton id="botonAceptar"  value="Aceptar"  partialSubmit="true"  styleClass="boton" action="#{controllerAgregarPrestamoes.aceptarPrestamo}" rendered="#{controllerAgregarPrestamoes.visibleBotonAceptar}"/>
+                    <ice:commandButton id="botonRevisar"  value="Revisar"  partialSubmit="true"  styleClass="boton" action="#{controllerAgregarPrestamoes.revisarDatos}" rendered="#{controllerAgregarPrestamoes.visibleBotonRevisar}"/>
+                    <ice:commandButton id="botonRechazar"  value="Rechazar"  partialSubmit="true"  styleClass="boton" action="#{controllerAgregarPrestamoes.rechazarPrestamo}" rendered="#{controllerAgregarPrestamoes.visibleBotonRechazar}"/>
+                    <ice:commandButton id="botonAnular"  value="Anular"  partialSubmit="true"  styleClass="boton" action="#{controllerAgregarPrestamoes.anularPrestamo}" rendered="#{controllerAgregarPrestamoes.visibleBotonAnular}"/>/>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Panel Agregar Bienes -->
+        <ui:insert name="panelAgregarBienes">
+            <ui:include src="../prestamoes/listadoBienes.xhtml" />
+        </ui:insert>
+    </div>
+</ice:form>

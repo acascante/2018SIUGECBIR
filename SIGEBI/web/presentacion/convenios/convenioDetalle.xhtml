@@ -1,0 +1,183 @@
+<ice:form id="frmDetalleConvenio"  xmlns:ice="http://www.icesoft.com/icefaces/component" xmlns:icecore="http://www.icefaces.org/icefaces/core" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:c="http://java.sun.com/jstl/core">
+    <div class="contenido-pagina">
+        <!-- Header -->
+        <div class="container">
+            <div class="row">
+                <div class='col-sm-6'>
+                    <h1 style="margin: 0;">
+                        <ice:outputFormat value="#{label['sigebi.label.convenios.titulo.mantenimiento']} "/>
+                    </h1>
+                </div>                
+                <div class="col-sm-6">
+                    <ice:commandButton id="botonRegresar" value="Regresar" style="float:right" partialSubmit="false" styleClass="boton" 
+                        action="#{controllerListarConvenios.regresarListado}" >
+                    </ice:commandButton>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-12">
+                    <ice:outputText style="color: green;" value="#{controllerAgregarConvenios.mensajeExito} "/>
+                    <ice:outputText style="color: red;" value="#{controllerAgregarConvenios.mensaje} "/>
+                    <h:messages style="color:red;"/>
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+            <!-- Institucion -->
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group"> 
+                        <label class="control-label" for="txtInstitucion">
+                            <ice:outputText value="#{label['sigebi.label.convenios.institucion']}" />
+                            <ice:outputText value="#{label['label.requerido']}" />
+                        </label>
+                        <ice:inputText id="txtInstitucion" partialSubmit="false" styleClass="form-control"
+                                       value="#{controllerAgregarConvenios.command.institucion}" />
+                    </div>                                             
+                </div>
+            </div>
+            
+            <!-- Responsable -->
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group"> 
+                        <label class="control-label" for="txtResponsable">
+                            <ice:outputText value="#{label['sigebi.label.convenios.responsable']}" />
+                            <ice:outputText value="#{label['label.requerido']}" />
+                        </label>
+                        <ice:inputText id="txtInstitucion" partialSubmit="false" styleClass="form-control"
+                                       value="#{controllerAgregarConvenios.command.responsable}" />
+                    </div>                                             
+                </div>
+            </div>
+            
+            <!-- Objetivo -->
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group"> 
+                        <label class="control-label" for="txtObjetivo">
+                            <ice:outputText value="#{label['sigebi.label.convenios.objetivo']}" />
+                            <ice:outputText value="#{label['label.requerido']}" />
+                        </label>
+                        <ice:inputTextarea id="txtObjetivo" height="200" 
+                                           value="#{controllerAgregarConvenios.command.objetivo}" />
+                    </div>                                             
+                </div>
+            </div>
+            
+            <!-- Fecha Inicio & Fin -->
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group"> 
+                        <label class="control-label" for="txtFechaInicio">
+                            <ice:outputText value="#{label['sigebi.label.convenios.fechaInicio']}" />
+                            <ice:outputText value="#{label['label.requerido']}" />
+                        </label>
+                        <ice:selectInputDate highlightClass="dateHighlightGray" highlightUnit="DAY_OF_WEEK" highlightValue="1" 
+                                             renderAsPopup="true" renderMonthAsDropdown="true" renderYearAsDropdown="true" partialSubmit="false"
+                                             validator="#{controllerAgregarConvenios.validarFecha}"
+                                             value="#{controllerAgregarConvenios.command.fechaInicio}" >
+                            <f:convertDateTime pattern="#{controllerAgregarConvenios.command.datePattern}"  timeZone="#{controllerAgregarConvenios.command.timeZone}" />
+                        </ice:selectInputDate>
+                    </div>                                             
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group"> 
+                        <label class="control-label" for="txtFechaFin">
+                            <ice:outputText value="#{label['sigebi.label.convenios.fechaFin']}" />
+                            <ice:outputText value="#{label['label.requerido']}" />
+                        </label>
+                        <ice:selectInputDate highlightClass="dateHighlightGray" highlightUnit="DAY_OF_WEEK" highlightValue="1" 
+                                             renderAsPopup="true" renderMonthAsDropdown="true" renderYearAsDropdown="true" partialSubmit="false"
+                                             validator="#{controllerAgregarConvenios.validarFecha}"
+                                             value="#{controllerAgregarConvenios.command.fechaFin}" >
+                            <f:convertDateTime pattern="#{controllerAgregarConvenios.command.datePattern}"  timeZone="#{controllerAgregarConvenios.command.timeZone}" />
+                        </ice:selectInputDate>
+                    </div>                                             
+                </div>
+            </div>
+            
+            <!-- Observacion -->
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group"> 
+                        <label class="control-label" for="txtObservacion">
+                            <ice:outputText value="#{label['sigebi.label.convenios.observacion']}" />
+                            <ice:outputText value="#{label['label.requerido']}" />
+                        </label>
+                        <ice:inputTextarea id="txtObjetivo" height="200" 
+                                           value="#{controllerAgregarConvenios.command.observacion}" />
+                    </div>                                             
+                </div>
+            </div>
+            
+            <!-- Adjuntar Archivo & Oficio -->
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <ice:inputFile id="adjuntarArchivo" styleClass="boton" style=" color: #FFFFFF; border: 0 none; border-radius: 2px 2px 2px 2px; background: none repeat scroll 0 0 #0090D8;
+                                           cursor: pointer; display: inline-block; font-family: Arial,sans-serif; font-size: 16px; font-weight: lighter;
+                                           line-height: 20px; margin-bottom: 0; padding: 4px 10px; text-transform: none; transition: all 0.3s ease 0s;
+                                           -moz-transition: all 0.3s ease 0s; -webkit-transition: all 0.3s ease 0s; text-align: center; text-shadow: none;"
+                                           actionListener="#{controllerAgregarConvenios.checkFileLocation}">
+                            </ice:inputFile>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group"> 
+                        <label class="control-label" for="txtOficio">
+                            <ice:outputText value="#{label['sigebi.label.convenios.oficio']}" />
+                            <ice:outputText value="#{label['label.requerido']}" />
+                        </label>
+                        <ice:inputText id="txtOficio" 
+                                       partialSubmit="false"
+                                       styleClass="form-control"
+                                       value="#{controllerAgregarConvenios.command.oficio}" />
+                    </div>
+                </div>
+            </div>
+            
+
+            <!-- Checkboxs -->
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group"> 
+                        <label class="control-label" for="prestar">
+                            <ice:outputText value="#{label['sigebi.label.convenios.prestar']}" />
+                        </label>
+                        <ice:checkbox id="chkPrestar" value="#{controllerAgregarConvenios.command.prestar}" />
+                    </div>                                             
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group"> 
+                        <label class="control-label" for="recibir">
+                            <ice:outputText value="#{label['sigebi.label.convenios.recibir']}" />
+                        </label>
+                        <ice:checkbox id="chkPrestar" value="#{controllerAgregarConvenios.command.recibirPrestamo}" />
+                    </div>                                             
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group"> 
+                        <label class="control-label" for="prestar">
+                            <ice:outputText value="#{label['sigebi.label.convenios.soloUnidad']}" />
+                        </label>
+                        <ice:checkbox id="chkPrestar" value="#{controllerAgregarConvenios.command.soloEstaUnidad}" />
+                    </div>                                             
+                </div>
+            </div>
+            
+            <div class="row">
+                <div class="col-md-4">
+                    <ice:commandButton id="botonGuardar" 
+                                       value="Guardar" 
+                                       partialSubmit="true" 
+                                       styleClass="boton" 
+                                       action="#{controllerAgregarConvenios.guardarDatos}"/>
+                </div>
+            </div>
+        </div>
+    </div>
+</ice:form>

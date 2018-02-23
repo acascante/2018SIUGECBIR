@@ -9,12 +9,12 @@ import cr.ac.ucr.sigebi.utils.Constantes;
 import cr.ac.ucr.framework.utils.FWExcepcion;
 import cr.ac.ucr.framework.vista.util.Mensaje;
 import cr.ac.ucr.framework.vista.util.Util;
-import cr.ac.ucr.sigebi.models.ExclusionModel;
-import cr.ac.ucr.sigebi.commands.ExclusionCommand;
-import cr.ac.ucr.sigebi.commands.ListarExclusionesCommand;
+import cr.ac.ucr.sigebi.models.PrestamoModel;
+import cr.ac.ucr.sigebi.commands.PrestamoCommand;
+import cr.ac.ucr.sigebi.commands.ListarPrestamosCommand;
 import cr.ac.ucr.sigebi.domain.Bien;
 import cr.ac.ucr.sigebi.domain.Estado;
-import cr.ac.ucr.sigebi.domain.SolicitudExclusion;
+import cr.ac.ucr.sigebi.domain.SolicitudPrestamo;
 import cr.ac.ucr.sigebi.domain.Tipo;
 import cr.ac.ucr.sigebi.models.BienModel;
 import java.util.ArrayList;
@@ -29,6 +29,7 @@ import javax.faces.component.UIViewRoot;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 import javax.faces.event.PhaseId;
+import javax.faces.event.ValueChangeEvent;
 import javax.faces.model.SelectItem;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
@@ -37,19 +38,20 @@ import org.springframework.stereotype.Controller;
  *
  * @author alvaro.cascante
  */
-@Controller(value = "controllerAgregarExclusiones")
+@Controller(value = "controllerAgregarPrestamos")
 @Scope("session")
-public class AgregarExclusionController extends BaseController {
+public class AgregarPrestamoController extends BaseController {
 
     @Resource
     private BienModel bienModel;
     
     @Resource
-    private ExclusionModel exclusionModel;
+    private PrestamoModel prestamoModel;
     
-    private ExclusionCommand command;
+    private PrestamoCommand command;
     
     private List<SelectItem> itemsTipo;
+    private List<SelectItem> itemsEntidad;
     private List<Bien> bienes;
     private Map<Long, Boolean> bienesSeleccionados;
     
@@ -58,26 +60,35 @@ public class AgregarExclusionController extends BaseController {
     
     private boolean visiblePanelBienes;
     private boolean visibleBotonSolicitar;
-  
-    public AgregarExclusionController() {
+    private boolean disableEntidades;
+    
+    private boolean visibleBotonGuardar;
+    private boolean visibleBotonAplicar;
+    private boolean visibleBotonAceptar;
+    private boolean visibleBotonRevisar;
+    private boolean visibleBotonRechazar;
+    private boolean visibleBotonAnular;
+    
+    public AgregarPrestamoController() {
         super();
     }
     
     private void inicializarNuevo() {
-        Estado estado = this.estadoPorDominioValor(Constantes.DOMINIO_EXCLUSION, Constantes.ESTADO_EXCLUSION_CREADA);
-        this.command = new ExclusionCommand(this.unidadEjecutora, estado);
+        Estado estado = this.estadoPorDominioValor(Constantes.DOMINIO_PRESTAMO, Constantes.ESTADO_PRESTAMO_CREADO);
+        this.command = new PrestamoCommand(this.unidadEjecutora, estado);
         this.visibleBotonSolicitar = false;
         inicializarDatos();
     }
     
-    private void inicializarDetalle(SolicitudExclusion exclusion) {
-        this.command = new ExclusionCommand(exclusion, exclusionModel.listarDetalles(exclusion));
+    private void inicializarDetalle(SolicitudPrestamo prestamo) {
+        this.command = new PrestamoCommand(prestamo, prestamoModel.listarDetalles(prestamo));
         this.visibleBotonSolicitar = true;
         inicializarDatos();
+        inicializarBotones();
     }
 
     private void inicializarDatos() {
-        List<Tipo> tipos = this.tiposPorDominio(Constantes.DOMINIO_EXCLUSION);
+        List<Tipo> tipos = this.tiposPorDominio(Constantes.DOMINIO_PRESTAMO);
         if (!tipos.isEmpty()) {
             itemsTipo = new ArrayList<SelectItem>();
         
@@ -87,6 +98,16 @@ public class AgregarExclusionController extends BaseController {
         }
     }
     
+    private void inicializarBotones() {
+        // TODO definir los estados para un prestamo y los botones que deben estar disponibles
+        this.visibleBotonGuardar = true;
+        this.visibleBotonAplicar = true;
+        this.visibleBotonAceptar = true;
+        this.visibleBotonRevisar = true;
+        this.visibleBotonRechazar = true;
+        this.visibleBotonAnular = true;
+    }
+    
     public void guardarDatos() {
         try {
             FacesContext context = FacesContext.getCurrentInstance();
@@ -94,10 +115,10 @@ public class AgregarExclusionController extends BaseController {
             UIInput component =  new UIInput();
             String messageValidacion = validarForm(root, component);
             if (Constantes.OK.equals(messageValidacion)) {
-                Tipo tipo = this.tipoPorId(command.getIdTipo());
-                this.exclusionModel.salvar(command.getExclusion(tipo));
+                Tipo tipo = this.tipoPorId(command.getIdTipoEntidad());
+                this.prestamoModel.salvar(command.getPrestamo(tipo));
                 this.bienModel.actualizar(command.getBienes());
-                if (command.getIdExclusion() == null || command.getIdExclusion() == 0) {
+                if (command.getId() == null || command.getId() == 0) {
                     mensajeExito = "Los datos se salvaron con éxito.";
                 } else {
                     mensajeExito = "Los datos se actualizaron con éxito.";
@@ -109,22 +130,22 @@ public class AgregarExclusionController extends BaseController {
         } catch (FWExcepcion err) {
             mensaje = err.getMessage();
         } catch (Exception ex) {
-            Logger.getLogger(AgregarExclusionController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(AgregarPrestamoController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     
-    public void solicitarExclusion() {
+    public void solicitarPrestamo() {
         try {
             FacesContext context = FacesContext.getCurrentInstance();
             UIViewRoot root = context.getViewRoot();
             UIInput component = new UIInput();
             String messageValidacion = validarForm(root, component);
             if (Constantes.OK.equals(messageValidacion)) {
-                Tipo tipo = this.tipoPorId(command.getIdTipo());
+                Tipo tipo = this.tipoPorId(command.getIdTipoEntidad());
                 Estado estadoSolicitar = this.estadoPorDominioValor(Constantes.DOMINIO_EXCLUSION, Constantes.ESTADO_EXCLUSION_SOLICITADA);
                 this.command.setEstado(estadoSolicitar);
-                this.exclusionModel.salvar(command.getExclusion(tipo));
-                mensajeExito = "Exclusion solicitada.";
+                this.prestamoModel.salvar(command.getPrestamo(tipo));
+                mensajeExito = "Prestamo solicitada.";
             } else {
                 component.setValid(false);
                 Mensaje.agregarErrorAdvertencia(messageValidacion);
@@ -132,8 +153,24 @@ public class AgregarExclusionController extends BaseController {
         } catch (FWExcepcion err) {
             mensaje = err.getMessage();
         } catch (Exception ex) {
-            Logger.getLogger(AgregarExclusionController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(AgregarPrestamoController.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+    
+    public void aceptarPrestamo() {
+
+    }
+    
+    public void revisarDatos() {
+
+    }
+    
+    public void rechazarPrestamo() {
+
+    }
+    
+    public void anularPrestamo() {
+
     }
     
     public void nuevoRegistro(ActionEvent event) {
@@ -159,9 +196,9 @@ public class AgregarExclusionController extends BaseController {
                 return;
             }
             
-            Long id = (Long)event.getComponent().getAttributes().get(ListarExclusionesCommand.KEY_EXCLUSION);
-            SolicitudExclusion exclusion = exclusionModel.buscarPorId(id);
-            inicializarDetalle(exclusion);
+            Long id = (Long)event.getComponent().getAttributes().get(ListarPrestamosCommand.KEY_PRESTAMO);
+            SolicitudPrestamo prestamo = prestamoModel.buscarPorId(id);
+            inicializarDetalle(prestamo);
             this.vistaOrigen = event.getComponent().getAttributes().get(Constantes.KEY_VISTA_ORIGEN).toString();
             Util.navegar(Constantes.VISTA_EXCLUSION_NUEVA);
         } catch (FWExcepcion err) {
@@ -172,8 +209,8 @@ public class AgregarExclusionController extends BaseController {
     //<editor-fold defaultstate="collapsed" desc="Validaciones">
     public String validarForm(UIViewRoot root, UIInput component) {
         if (command.getBienes().isEmpty()) {
-            component = (UIInput) root. findComponent("frmDetalleExclusion:lstBienes");
-            return Util.getEtiquetas("sigebi.error.controllerAgregarExclusiones.error.bienes.nulo");
+            component = (UIInput) root. findComponent("frmDetallePrestamo:lstBienes");
+            return Util.getEtiquetas("sigebi.error.controllerAgregarPrestamos.error.bienes.nulo");
         }
         return Constantes.OK;
     }
@@ -200,12 +237,45 @@ public class AgregarExclusionController extends BaseController {
     }
     //</editor-fold>
     
+    //<editor-fold defaultstate="collapsed" desc="Cargar Entidades">
+    public void cambioTipoEntidad(ValueChangeEvent event) {
+        if (!event.getPhaseId().equals(PhaseId.INVOKE_APPLICATION)) {
+            event.setPhaseId(PhaseId.INVOKE_APPLICATION);
+            event.queue();
+            return;
+        }
+        cargarEntidades(this.tipoPorId(command.getIdTipoEntidad()));
+    }
+    
+    private void cargarEntidades(Tipo tipo) {
+        try {
+            if (Constantes.DEFAULT_ID.equals(command.getId())) {
+                itemsEntidad.clear();
+                this.setDisableEntidades(true);
+            } else {
+                switch(tipo.getValor()) {
+                    case Constantes.ESTADO_PRESTAMO_TIPO_ENTIDAD_UCR:
+                        itemsEntidad = new ArrayList<SelectItem>();
+                        // TODO consultar diferentes entidades
+                        break;
+                        
+                }
+            }
+        } catch (FWExcepcion e) {
+            Mensaje.agregarErrorAdvertencia(e.getError_para_usuario());
+        } catch (Exception e) {
+            Mensaje.agregarErrorAdvertencia(e, Util.getEtiquetas("sigebi.error.agregarBienController.cargarSubCategorias"));
+        }
+
+    }
+    //</editor-fold>
+    
     //<editor-fold defaultstate="collapsed" desc="Gets y Sets">
-    public ExclusionCommand getCommand() {
+    public PrestamoCommand getCommand() {
         return command;
     }
 
-    public void setCommand(ExclusionCommand command) {
+    public void setCommand(PrestamoCommand command) {
         this.command = command;
     }
 
@@ -263,6 +333,14 @@ public class AgregarExclusionController extends BaseController {
 
     public void setVisibleBotonSolicitar(boolean visibleBotonSolicitar) {
         this.visibleBotonSolicitar = visibleBotonSolicitar;
+    }
+    
+    public boolean isDisableEntidades() {
+        return disableEntidades;
+    }
+
+    public void setDisableEntidades(boolean disableEntidades) {
+        this.disableEntidades = disableEntidades;
     }
     //</editor-fold>
 }

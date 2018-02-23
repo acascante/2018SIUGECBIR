@@ -9,11 +9,11 @@ import cr.ac.ucr.sigebi.utils.Constantes;
 import cr.ac.ucr.framework.utils.FWExcepcion;
 import cr.ac.ucr.framework.vista.util.Mensaje;
 import cr.ac.ucr.framework.vista.util.Util;
-import cr.ac.ucr.sigebi.commands.ListarExclusionesCommand;
+import cr.ac.ucr.sigebi.commands.ListarPrestamosCommand;
 import cr.ac.ucr.sigebi.domain.Estado;
-import cr.ac.ucr.sigebi.domain.SolicitudExclusion;
+import cr.ac.ucr.sigebi.domain.SolicitudPrestamo;
 import cr.ac.ucr.sigebi.domain.Tipo;
-import cr.ac.ucr.sigebi.models.ExclusionModel;
+import cr.ac.ucr.sigebi.models.PrestamoModel;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -35,22 +35,22 @@ import org.springframework.stereotype.Controller;
  *
  * @author alvaro.cascante
  */
-@Controller(value = "controllerListarExclusiones")
+@Controller(value = "controllerListarPrestamos")
 @Scope("session")
-public class ListarExclusionesController extends BaseController {
+public class ListarPrestamosController extends BaseController {
 
     @Resource
-    private ExclusionModel exclusionModel;
+    private PrestamoModel prestamoModel;
     
-    private List<SolicitudExclusion> exclusiones;
+    private List<SolicitudPrestamo> prestamos;
     
-    private ListarExclusionesCommand command;
+    private ListarPrestamosCommand command;
    
     private List<SelectItem> itemsEstado;
     
     private List<SelectItem> itemsTipo;
     
-    public ListarExclusionesController() {
+    public ListarPrestamosController() {
         super();
         this.inicializarDatos();
     }
@@ -58,7 +58,7 @@ public class ListarExclusionesController extends BaseController {
     @PostConstruct
     public final void inicializar() {
         this.inicializarListado();
-        List<Estado> estados = this.estadosPorDominio(Constantes.DOMINIO_EXCLUSION);
+        List<Estado> estados = this.estadosPorDominio(Constantes.DOMINIO_PRESTAMO);
         if (!estados.isEmpty()) {
             itemsEstado = new ArrayList<SelectItem>();
             for (Estado item : estados) {
@@ -66,7 +66,7 @@ public class ListarExclusionesController extends BaseController {
             }
         }
         
-        List<Tipo> tipos = this.tiposPorDominio(Constantes.DOMINIO_EXCLUSION);
+        List<Tipo> tipos = this.tiposPorDominio(Constantes.DOMINIO_PRESTAMO);
         if (!tipos.isEmpty()) {
             itemsTipo = new ArrayList<SelectItem>();
         
@@ -83,36 +83,36 @@ public class ListarExclusionesController extends BaseController {
     }    
     
     private void inicializarDatos() {
-        this.command = new ListarExclusionesCommand();
+        this.command = new ListarPrestamosCommand();
         this.vistaOrigen = Constantes.VISTA_EXCLUSION_LISTADO;
     }
     
     private void inicializarListado() {
         this.setPrimerRegistro(1);
-        this.contarExclusiones();
-        this.listarExclusiones();  
+        this.contarPrestamos();
+        this.listarPrestamos();  
     }
     
-    private void contarExclusiones() {
+    private void contarPrestamos() {
         try {
-            Long contador = exclusionModel.contar(unidadEjecutora, command.getFltIdCodigo(), command.getFltFecha(), command.getFltEstado(), command.getFltTipo());
+            Long contador = prestamoModel.contar(unidadEjecutora, command.getFltIdCodigo(), command.getFltFecha(), command.getFltEstado(), command.getFltEntidad());
             this.setCantidadRegistros(contador.intValue());
         } catch (FWExcepcion e) {
             Mensaje.agregarErrorAdvertencia(e.getError_para_usuario());
         } catch (Exception e) {
-            Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.error.controllerListarExclusiones.contarNotificaciones"));
+            Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.error.controllerListarPrestamos.contarNotificaciones"));
         }
     }
     
-    private void listarExclusiones() {
+    private void listarPrestamos() {
         try {
-            this.exclusiones = exclusionModel.listar(this.getPrimerRegistro()-1, this.getUltimoRegistro(), unidadEjecutora, command.getFltIdCodigo(), command.getFltFecha(), command.getFltEstado(), command.getFltTipo());
+            this.prestamos = prestamoModel.listar(this.getPrimerRegistro()-1, this.getUltimoRegistro(), unidadEjecutora, command.getFltIdCodigo(), command.getFltFecha(), command.getFltEstado(), command.getFltEntidad());
         } catch (FWExcepcion e) {
             Mensaje.agregarErrorAdvertencia(e.getError_para_usuario());
         } catch (NumberFormatException e) {
-            Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.error.controllerListarExclusiones.contarNotificaciones"));
+            Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.error.controllerListarPrestamos.contarNotificaciones"));
         } catch (Exception e) {
-            Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.error.controllerListarExclusiones.contarNotificaciones"));
+            Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.error.controllerListarPrestamos.contarNotificaciones"));
         }
     }
     
@@ -125,7 +125,7 @@ public class ListarExclusionesController extends BaseController {
             }
             this.inicializarListado();
         } catch (Exception err) {
-            Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.error.controllerListarExclusiones.contarNotificaciones"));
+            Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.error.controllerListarPrestamos.contarNotificaciones"));
         }
     }
 
@@ -133,7 +133,7 @@ public class ListarExclusionesController extends BaseController {
         try {
             Integer.parseInt(value.toString());
         } catch (NumberFormatException e){
-            Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.error.controllerListarExclusiones.cambioFiltro.id"));
+            Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.error.controllerListarPrestamos.cambioFiltro.id"));
             ((UIInput) component).setValid(false);
         }
     }
@@ -144,25 +144,25 @@ public class ListarExclusionesController extends BaseController {
             calendar.setTime((Date) value);
             calendar.getTime();
         } catch (Exception e){
-            Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.error.controllerListarExclusiones.cambioFiltro.fecha"));
+            Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.error.controllerListarPrestamos.cambioFiltro.fecha"));
             ((UIInput) component).setValid(false);
         }
     }
     
     // <editor-fold defaultstate="collapsed" desc="Get's y Set's">
-    public List<SolicitudExclusion> getExclusiones() {
-        return exclusiones;
+    public List<SolicitudPrestamo> getPrestamos() {
+        return prestamos;
     }
 
-    public void setExclusiones(List<SolicitudExclusion> exclusiones) {
-        this.exclusiones = exclusiones;
+    public void setPrestamos(List<SolicitudPrestamo> prestamos) {
+        this.prestamos = prestamos;
     }
 
-    public ListarExclusionesCommand getCommand() {
+    public ListarPrestamosCommand getCommand() {
         return command;
     }
 
-    public void setCommand(ListarExclusionesCommand command) {
+    public void setCommand(ListarPrestamosCommand command) {
         this.command = command;
     }
 
@@ -192,7 +192,7 @@ public class ListarExclusionesController extends BaseController {
         }
         int numeroPagina = Integer.parseInt(Util.getRequestParameter("numPag"));
         this.getPrimerRegistroPagina(numeroPagina);
-        this.listarExclusiones();
+        this.listarPrestamos();
     }
 
     public void siguiente(ActionEvent pEvent) {
@@ -202,7 +202,7 @@ public class ListarExclusionesController extends BaseController {
             return;
         }
         this.getSiguientePagina();
-        this.listarExclusiones();
+        this.listarPrestamos();
     }
 
     public void anterior(ActionEvent pEvent) {
@@ -212,7 +212,7 @@ public class ListarExclusionesController extends BaseController {
             return;
         }
         this.getPaginaAnterior();
-        this.listarExclusiones();
+        this.listarPrestamos();
     }
 
     public void primero(ActionEvent pEvent) {
@@ -222,7 +222,7 @@ public class ListarExclusionesController extends BaseController {
             return;
         }
         this.setPrimerRegistro(1);
-        this.listarExclusiones();
+        this.listarPrestamos();
     }
 
     public void ultimo(ActionEvent pEvent) {
@@ -232,7 +232,7 @@ public class ListarExclusionesController extends BaseController {
             return;
         }
         this.getPrimerRegistroUltimaPagina();
-        this.listarExclusiones();
+        this.listarPrestamos();
     }
 
     public void cambioRegistrosPorPagina(ValueChangeEvent pEvent) {
@@ -243,7 +243,7 @@ public class ListarExclusionesController extends BaseController {
         }
         this.setCantRegistroPorPagina(Integer.parseInt(pEvent.getNewValue().toString()));          
         this.setPrimerRegistro(1);
-        this.listarExclusiones();
+        this.listarPrestamos();
     }
     // </editor-fold>
 }

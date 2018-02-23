@@ -50,6 +50,10 @@ public final class Constantes {
     public static final Integer PRIORIDAD_NOTIFICACION_URGENTE = 1;
     public static final Integer PRIORIDAD_NOTIFICACION_NORMAL = 2;
 
+    // CONVENIOS
+    public static final int ESTADO_CONVENIO_ACTIVO = 1;
+    public static final int ESTADO_CONVENIO_INACTIVO = 2;
+    
     // Exclusiones
     public static final int ESTADO_EXCLUSION_CREADA = 1;
     public static final int ESTADO_EXCLUSION_SOLICITADA = 2;
@@ -59,6 +63,11 @@ public final class Constantes {
     public static final String ESTADO_EXCLUSION_ENVIADA_DESC = "EN TRAMITE";
     public static final String ESTADO_EXCLUSION_ENVIO_FALLIDO_DESC = "CERRADA";
 
+    // PRESTAMOS
+    public static final int ESTADO_PRESTAMO_CREADO = 1;
+    
+    public static final int ESTADO_PRESTAMO_TIPO_ENTIDAD_UCR = 1;
+    
     // Estados de un informe
     public static final Integer ESTADO_INFORME_TECNICO_NUEVO = 1;
     public static final Integer ESTADO_INFORME_TECNICO_PROCESO = 2;
@@ -79,6 +88,7 @@ public final class Constantes {
     public static final String DOMINIO_ADJUNTO = "ADJUNTO";
     public static final String DOMINIO_BIEN = "BIEN";
     public static final String DOMINIO_CARACTERISTICA = "CARACTERISTICA";
+    public static final String DOMINIO_CONVENIO = "CONVENIIO";
     public static final String DOMINIO_EXCLUSION = "EXCLUSION";
     public static final String DOMINIO_GENERAL = "GENERAL";
     public static final String DOMINIO_IDENTIFICACION = "IDENTIFICACION";
@@ -86,6 +96,7 @@ public final class Constantes {
     public static final String DOMINIO_NOTA = "NOTA";
     public static final String DOMINIO_NOTIFICACION = "NOTIFICACION";
     public static final String DOMINIO_ORIGEN = "ORIGEN";
+    public static final String DOMINIO_PRESTAMO = "PRESTAMO";
     public static final String DOMINIO_PROCESO = "PROCESO";
     public static final String DOMINIO_DOCUMENTO = "DOCUMENTO";
 
@@ -121,6 +132,10 @@ public final class Constantes {
     public static final String VISTA_SINCRONIZACION_BIEN = "sincronizar";
     public static final String VISTA_SINCRONIZACION_BIEN_LISTADO = "../bienes/listarBienSincronizar.xhtml";
     
+    public static final String VISTA_CONVENIO_LISTADO = "convenio";
+    public static final String VISTA_CONVENIO_LISTADO_PAGINA = "../convenios/listarConvenios.xhtml";
+    public static final String VISTA_CONVENIO_NUEVA = "convenio_nuevo";
+    public static final String VISTA_CONVENIO_NUEVA_PAGINA = "../convenios/convenioDetalle.xhtml";
     
     public static final String VISTA_INFORME_TECNICO = "informe";
     public static final String VISTA_INFORME_TECNICO_LISTADO = "../exclusiones/listarInformesTecnicos.xhtml";
@@ -193,7 +208,8 @@ public final class Constantes {
     public static final Integer DISCRIMINATOR_SOLICITUD_EXCLUSION = 1;
     public static final Integer DISCRIMINATOR_SOLICITUD_DONACION = 2;
     public static final Integer DISCRIMINATOR_SOLICITUD_TRASLADO = 3;
-
+    public static final Integer DISCRIMINATOR_SOLICITUD_PRESTAMO = 4;
+    
     //Discriminator Detalle Solicitud
     public static final Integer DISCRIMINATOR_DETALE_SOLICITUD = 1;
     public static final Integer DISCRIMINATOR_DETALE_SOLICITUD_DONACION = 2;

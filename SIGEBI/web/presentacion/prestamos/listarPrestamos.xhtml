@@ -1,0 +1,160 @@
+<ice:form id="frm_listarPrestamos" xmlns:ice="http://www.icesoft.com/icefaces/component" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core" xmlns:ui="http://java.sun.com/jsf/facelets">
+    <div class="contenido-pagina">
+        <div class="container">
+            <!-- Encabezado -->
+            <div class="row">
+                <div class='col-sm-6'>
+                    <h1 style="margin: 0;">
+                        <ice:outputFormat value="#{label['sigebi.label.prestamos.titulo.listar']} "/>
+                    </h1>
+                </div>                
+            </div>
+            
+            <div class="row">
+                <div class="col-sm-12">
+                    <ice:outputFormat value="#{label['label.generico.paginacion.encabezado']}">
+                        <f:param value="#{controllerListarPrestamos.cantidadRegistros}"/>
+                        <f:param value="#{controllerListarPrestamos.cantidadRegistrosMostrados}"/>
+                        <f:param value="#{controllerListarPrestamos.primerRegistro}"/>
+                        <f:param value="#{controllerListarPrestamos.ultimoRegistro}"/>
+                        <f:param value="#{controllerListarPrestamos.paginaActual}"/>
+                        <f:param value="#{controllerListarPrestamos.cantidadPaginas}"/>
+                    </ice:outputFormat>
+                    <div>
+                        <table>
+                            <tr>
+                                <td style="padding-right: 5px;">
+                                    <ice:outputText value="#{label['label.paginacion.cantidad.pagina']} "/>
+                                </td>
+                                <td>
+                                    <ice:selectOneMenu id="cantRegistroPorPagina" value="#{controllerListarPrestamos.cantRegistroPorPagina}"  valueChangeListener="#{controllerListarPrestamos.cambioRegistrosPorPagina}" partialSubmit="true">
+                                        <f:selectItems id="item_pa" value="#{controllerListarPrestamos.listaRegistrosPagina}"/>
+                                    </ice:selectOneMenu>
+                                </td>
+                            </tr>
+                        </table>                        
+                    </div>                    
+                    <div>
+                        <ice:commandButton image="./imagenes/botones/first.png" partialSubmit="true" actionListener="#{controllerListarPrestamos.primero}" rendered="#{controllerListarPrestamos.cantidadPaginas > 1}"/>
+                        <ice:commandButton image="./imagenes/botones/previos.png" partialSubmit="true" actionListener="#{controllerListarPrestamos.anterior}" rendered="#{controllerListarPrestamos.cantidadPaginas > 1}"/>
+                        <ui:repeat value="#{controllerListarPrestamos.arregloPaginas}" var="pagina">
+                            <ice:commandLink value="#{pagina}" partialSubmit="true" actionListener="#{controllerListarPrestamos.irPagina}">
+                                <f:param name="numPag" value="#{pagina}"/>
+                            </ice:commandLink>
+                        </ui:repeat>            
+                        <ice:commandButton image="./imagenes/botones/next.png" partialSubmit="true" actionListener="#{controllerListarPrestamos.siguiente}" rendered="#{controllerListarPrestamos.cantidadPaginas > 1}"/>
+                        <ice:commandButton image="./imagenes/botones/last.png" partialSubmit="true" actionListener="#{controllerListarPrestamos.ultimo}" rendered="#{controllerListarPrestamos.cantidadPaginas > 1}"/>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Tabla -->
+            <div class="row">
+                <div class="col-sm-12">                    
+                    <div>
+                        <ice:dataTable id="listadoPrestamos" value="#{controllerListarPrestamos.prestamos}" var="prestamo" paginator="true" paginatorPosition="bottom" rows="10">
+                            <f:facet name="header">
+                                <ice:columnGroup>
+                                    <ice:headerRow>
+                                        <!-- ID -->
+                                        <ice:column id="id" rowspan="2" style="vertical-align:top;">
+                                            <ice:outputText value="#{label['sigebi.label.prestamos.id']} "/>
+                                            <ice:inputText id="filtroId" 
+                                                           value="#{controllerListarPrestamos.command.fltId}" 
+                                                           validator="#{controllerListarPrestamos.validarFiltroId}"
+                                                           valueChangeListener="#{controllerListarPrestamos.cambioFiltro}"/>
+                                        </ice:column>
+                                        
+                                        <!-- Fecha -->
+                                        <ice:column id="fecha" >
+                                            <ice:outputText value="#{label['sigebi.label.prestamos.fecha']} "/>
+
+                                            <ice:selectInputDate 
+                                                highlightClass="dateHighlightGray" 
+                                                highlightUnit="DAY_OF_WEEK" 
+                                                highlightValue="1"
+                                                partialSubmit="false" 
+                                                renderAsPopup="true" 
+                                                renderMonthAsDropdown="true" 
+                                                renderYearAsDropdown="true"
+                                                validator="#{controllerListarPrestamos.validarFiltroFecha}"
+                                                value="#{controllerListarPrestamos.command.fltFecha}" 
+                                                valueChangeListener="#{controllerListarPrestamos.cambioFiltro}" >
+                                                <f:convertDateTime pattern="#{controllerListarPrestamos.command.datePattern}"  timeZone="#{controllerListarPrestamos.command.timeZone}" />
+                                            </ice:selectInputDate>
+                                        </ice:column>
+                            
+                                        <!-- Estado -->
+                                        <ice:column id="estado" rowspan="2" style="vertical-align:top;">                                 
+                                            <ice:outputText value="#{label['sigebi.label.prestamos.estado']}"/>
+                                            <ice:selectOneMenu  id="filtroEstado"
+                                                                valueChangeListener="#{controllerListarPrestamos.cambioFiltro}"
+                                                                value="#{controllerListarPrestamos.command.fltEstado}"
+                                                                partialSubmit="true">
+                                                <f:selectItem itemLabel="N/A" itemValue="-1"/>
+                                                <f:selectItems id="slcEstadoItem" value="#{controllerListarPrestamos.itemsEstado}"/>
+                                            </ice:selectOneMenu>
+                                        </ice:column>
+                                        
+                                        <!-- Tipo Entidad -->
+                                        <ice:column id="tipo" rowspan="2" style="vertical-align:top;">                                 
+                                            <ice:outputText value="#{label['sigebi.label.prestamos.tipoEntidad']}"/>
+                                            <ice:selectOneMenu  id="filtroTipo"
+                                                                valueChangeListener="#{controllerListarPrestamos.cambioFiltro}"
+                                                                value="#{controllerListarPrestamos.command.fltTipo}"
+                                                                partialSubmit="true">
+                                                <f:selectItem itemLabel="N/A" itemValue="-1"/>
+                                                <f:selectItems id="slcTipoItem" value="#{controllerListarPrestamos.itemsTipo}"/>
+                                            </ice:selectOneMenu>
+                                        </ice:column>
+                                        
+                                        <!-- Entidad -->
+                                        <ice:column id="entidad" rowspan="2" style="vertical-align:top;">                                 
+                                            <ice:outputText value="#{label['sigebi.label.prestamos.entidad']} "/>
+                                            <ice:inputText id="filtroDestinatario"  value="#{controllerListarPrestamos.command.fltEntidad}" partialSubmit="true" valueChangeListener="#{controllerListarNotificaciones.cambioFiltro}"/>
+                                        </ice:column>
+                                        
+                                        <ice:column id="opciones" >
+                                        </ice:column>
+                                    </ice:headerRow>
+                                </ice:columnGroup>
+                            </f:facet>
+                            <ice:column>
+                                <h:outputText id="idCell" value="#{prestamo.id}"/>
+                            </ice:column>
+                            <ice:column>
+                                <h:outputText id="fechaCell" value="#{prestamo.fecha}" >
+                                    <f:convertDateTime type="date" pattern="#{controllerListarPrestamos.command.datePattern}" />
+                                </h:outputText>
+                            </ice:column>
+                            <ice:column>
+                                <h:outputText id="estadoCell" value="#{prestamo.estado.nombre}"/>
+                            </ice:column>
+                            <ice:column>
+                                <h:outputText id="tipoCell" value="#{prestamo.tipo.nombre}"/>
+                            </ice:column>
+                            <ice:column>
+                                <h:outputText id="tipoCell" value="#{prestamo.entidad}"/>
+                            </ice:column>
+
+                            <ice:column style="text-align: center;">
+                                <ice:commandButton id="botonDetalle" style="float:right;margin-top:2%" styleClass="boton" partialSubmit="true" actionListener="#{controllerAgregarPrestamos.detalleRegistro}" value="#{label['sigebi.label.prestamos.detalle']}"  >
+                                    <f:attribute id="prestamoDetalle" name="#{controllerListarPrestamos.command.key}"  value="#{prestamo.id}"/>
+                                    <f:attribute id="vistaOrigen" name="#{controllerListarPrestamos.command.keyVistaOrigen}"  value="#{controllerListarPrestamos.vistaOrigen}"/>
+                                </ice:commandButton>
+                            </ice:column>
+                        </ice:dataTable>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class='col-sm-12'>
+                   <ice:commandButton id="botonNuevo" style="float:right" styleClass="boton" partialSubmit="true" actionListener="#{controllerAgregarPrestamos.nuevoRegistro}" value="Nuevo" >
+                       <f:attribute id="vistaOrigen" name="#{controllerListarPrestamos.command.keyVistaOrigen}"  value="#{controllerListarPrestamos.vistaOrigen}"/>
+                    </ice:commandButton>
+                </div>
+            </div>
+        </div>
+    </div>
+</ice:form>
