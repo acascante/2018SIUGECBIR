@@ -1,5 +1,5 @@
 <ice:outputHtml id="frmAgregarBienes" xmlns:ice="http://www.icesoft.com/icefaces/component" xmlns:icecore="http://www.icefaces.org/icefaces/core" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:c="http://java.sun.com/jstl/core">
-    <ice:panelPopup modal="true" visible="#{controllerAgregarExclusiones.visiblePanelBienes}" rendered="#{controllerAgregarExclusiones.visiblePanelBienes}" styleClass="popup">
+    <ice:panelPopup modal="true" visible="#{controllerAgregarPrestamos.visiblePanelBienes}" rendered="#{controllerAgregarPrestamos.visiblePanelBienes}" styleClass="popup">
         <f:facet name="header">
             <ice:outputText styleClass="flotar_izquierda titulo_popup" value="Listado de Bienes"/>
         </f:facet>
@@ -9,7 +9,7 @@
             <fieldset class="panel_Container" >
                 <br></br>
                 <!-- LISTAR BIENES -->
-                <ice:dataTable id="tblAgregarBienes" value="#{controllerAgregarExclusiones.bienes}" var="bien" paginator="true" paginatorPosition="bottom" rows="10">
+                <ice:dataTable id="tblAgregarBienes" value="#{controllerAgregarPrestamos.bienes}" var="bien" paginator="true" paginatorPosition="bottom" rows="10">
                     <f:facet name="header">
                         <ice:columnGroup>
                             <ice:headerRow>
@@ -43,7 +43,7 @@
                         </ice:columnGroup>
                     </f:facet>
                     <ice:column>
-                        <h:selectBooleanCheckbox id="botonSeleccionar" value="#{controllerAgregarExclusiones.bienesSeleccionados[bien.id]}" />
+                        <h:selectBooleanCheckbox id="botonSeleccionar" value="#{controllerAgregarPrestamos.bienesSeleccionados[bien.id]}" />
                     </ice:column>                    
                     <ice:column>
                         <h:outputText id="idCell" value="#{bien.id}"/>
@@ -68,7 +68,7 @@
                 <br/>
                 <br/>
                 <span class="alineado_derecha">
-                    <ice:commandButton id="btnCerrar" action="#{controllerAgregarExclusiones.cerrarPanelAgregarBienes}" styleClass="boton"  value="Regresar" />
+                    <ice:commandButton id="btnCerrar" action="#{controllerAgregarPrestamos.cerrarPanelAgregarBienes}" styleClass="boton"  value="Regresar" />
                 </span>
                 <br/><br/>
             </fieldset>       
