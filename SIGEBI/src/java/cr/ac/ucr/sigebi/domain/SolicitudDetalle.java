@@ -39,7 +39,7 @@ public class SolicitudDetalle extends ObjetoBase implements Serializable {
     private Long id;
 
     @JoinColumn(name = "ID_SOLICITUD", referencedColumnName = "ID_SOLICITUD")
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     private Solicitud solicitud;
 
     @JoinColumn(name = "ID_BIEN", referencedColumnName = "ID_BIEN")
@@ -55,6 +55,7 @@ public class SolicitudDetalle extends ObjetoBase implements Serializable {
     public SolicitudDetalle(Solicitud solicitud, Bien bien, Estado estado) {
         this.solicitud = solicitud;
         this.bien = bien;
+        
     }
 
     //</editor-fold>

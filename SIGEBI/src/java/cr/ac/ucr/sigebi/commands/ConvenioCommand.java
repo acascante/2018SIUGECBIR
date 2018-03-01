@@ -24,6 +24,7 @@ public class ConvenioCommand {
     private String responsable;
     private String oficio;
     private String objetivo;
+    private String observacion;
     private Boolean prestar;
     private Boolean recibirPrestamo;
     private Boolean soloEstaUnidad;
@@ -149,6 +150,38 @@ public class ConvenioCommand {
 
     public void setEstado(Estado estado) {
         this.estado = estado;
+    }
+        
+    public String getResponsable() {
+        return responsable;
+    }
+
+    public void setResponsable(String responsable) {
+        this.responsable = responsable;
+    }
+
+    public Date getFechaInicio() {
+        return fechaInicio;
+    }
+
+    public void setFechaInicio(Date fechaInicio) {
+        this.fechaInicio = fechaInicio;
+    }
+
+    public Date getFechaFin() {
+        return fechaFin;
+    }
+
+    public void setFechaFin(Date fechaFin) {
+        this.fechaFin = fechaFin;
+    }
+    
+    public String getObservacion() {
+        return observacion;
+    }
+
+    public void setObservacion(String observacion) {
+        this.observacion = observacion;
     }
     //</editor-fold>
 }

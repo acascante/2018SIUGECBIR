@@ -106,35 +106,6 @@ public class DocumentoModel {
         return documentoDao.listar(unidadEjecutora, tipoInforme, identificacionBien, descripcionBien, marcaBien, modeloBien, estado, pPrimerRegistro, pUltimoRegistro, tipoDocumento);
     }
 
-    public HashMap<String, DocumentoAutorizacion> obtenerDocumentosAutorizacionPorRol(Integer codigoAutorizacion, Documento documento, Usuario usuario, UnidadEjecutora unidadEjecutora) {
-
-        HashMap<String, DocumentoAutorizacion> documentoAutorizaciones = new HashMap();
-        Estado estadoAutorizacionProceso = estadoModel.buscarPorDominioEstado(Constantes.DOMINIO_INFORME_TECNICO, Constantes.ESTADO_INFORME_TECNICO_PROCESO);
-
-        //Paso 1: Se obtienen los roles que deben aprobar el documento
-        List<AutorizacionRol> rolesDocumento = autorizacionRolModel.buscarPorCodigoAutorizacion(codigoAutorizacion);
-
-        for (AutorizacionRol autorizacionRol : rolesDocumento) {
-
-            //Solo se contemplan los roles distintos al administrador
-            if (!autorizacionRol.getRol().getCodigo().equals(Constantes.CODIGO_ROL_ADMINISTRADOR)) {
-                //Para cada rol se verifica si el usuario tiene permisos para aplicar o rechazar la autorizacion
-                AutorizacionRolPersona autorizacionRolPersona = autorizacionRolPersonaModel.buscar(autorizacionRol, usuario, unidadEjecutora);
-                Boolean permiteModificar = autorizacionRolPersona != null;
-
-                //Para cada rol se verifica si el documento ya tiene alguna otra aprobacion
-                DocumentoAutorizacion documentoAutorizacion = documentoAutorizacionModel.buscar(autorizacionRol, documento);
-                if (documentoAutorizacion == null) {
-                    documentoAutorizacion = new DocumentoAutorizacion(documento, autorizacionRol, null, estadoAutorizacionProceso);
-                }
-                documentoAutorizacion.setMarcado(permiteModificar);
-                documentoAutorizaciones.put(autorizacionRol.getRol().getNombre(), documentoAutorizacion);
-
-            }
-        }
-
-        return documentoAutorizaciones;
-    }
 
     public HashMap<String, DocumentoAutorizacion> obtenerDocumentosAutorizacionPorRolGeneral(Integer codigoAutorizacion, Documento documento, Usuario usuario, UnidadEjecutora unidadEjecutora) {
 

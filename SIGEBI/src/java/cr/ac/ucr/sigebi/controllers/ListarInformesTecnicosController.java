@@ -333,6 +333,7 @@ public class ListarInformesTecnicosController extends BaseController {
         }
         this.setCantRegistroPorPagina(Integer.parseInt(pEvent.getNewValue().toString()));
         this.setPrimerRegistro(1);
+        this.contarInformes();
         this.listarInformes();
 
     }

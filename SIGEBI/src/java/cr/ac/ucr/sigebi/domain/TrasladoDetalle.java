@@ -21,8 +21,8 @@ import javax.persistence.Temporal;
  */
 @Entity(name = "TrasladoDetalle")
 @Table(name = "SIGEBI_OAF.SIGB_TRASLADO_DETALLE")
-@PrimaryKeyJoinColumn(name = "ID_DOCUMENTO_DETALLE", referencedColumnName = "ID_DOCUMENTO_DETALLE")
-public class TrasladoDetalle  extends DocumentoDetalle implements Serializable  {
+@PrimaryKeyJoinColumn(name = "ID_SOLICITUD_DETALLE", referencedColumnName = "ID_SOLICITUD_DETALLE")
+public class TrasladoDetalle  extends SolicitudDetalle implements Serializable  {
     
     private static final long serialVersionUID = 1L;
     
@@ -48,8 +48,9 @@ public class TrasladoDetalle  extends DocumentoDetalle implements Serializable  
     
     //<editor-fold defaultstate="collapsed" desc="Constructor">
 
-    public TrasladoDetalle(Documento documento, Bien bien) {
-        super(documento, bien);
+    public TrasladoDetalle(Solicitud solicitud, Bien bien, Estado estado) {
+        super(solicitud, bien, estado);
+        this.estado = estado;
     }
     
     //</editor-fold>

@@ -81,7 +81,7 @@
                                         <!-- Responsable -->
                                         <ice:column id="responsable" rowspan="2" style="vertical-align:top;">
                                             <ice:outputText value="#{label['sigebi.label.convenios.responsable']} "/>
-                                            <ice:inputText id="filtroInstitucion"  
+                                            <ice:inputText id="filtroResponsable"  
                                                            value="#{controllerListarConvenios.command.fltResponsable}" 
                                                            partialSubmit="true"
                                                            valueChangeListener="#{controllerListarConvenios.cambioFiltro}"/>
@@ -98,12 +98,12 @@
 
                                         <!-- Prestar -->
                                         <ice:column id="prestar" rowspan="2"  style="vertical-align:top;">                                 
-                                            <ice:checkbox value="#{label['sigebi.label.convenios.prestar']} "/>
+                                            <ice:outputText value="#{label['sigebi.label.convenios.prestar']} "/>
                                         </ice:column>
                                         
                                         <!-- Recibir -->
                                         <ice:column id="recibir" rowspan="2" style="vertical-align:top;">                                 
-                                            <ice:checkbox value="#{label['sigebi.label.convenios.recibir']} "/>
+                                            <ice:outputText value="#{label['sigebi.label.convenios.recibir']} "/>
                                         </ice:column>
                             
                                         <!-- Estado -->
@@ -116,9 +116,6 @@
                                                 <f:selectItem itemLabel="N/A" itemValue="-1"/>
                                                 <f:selectItems id="slcEstadoItem" value="#{controllerListarConvenios.itemsEstado}"/>
                                             </ice:selectOneMenu>
-                                        </ice:column>
-                                        
-                                        <ice:column id="opciones" >
                                         </ice:column>
                                     </ice:headerRow>
                                 </ice:columnGroup>
@@ -133,13 +130,13 @@
                                 <h:outputText id="responsableCell" escape="false" value="#{convenio.responsable}"/>
                             </ice:column>
                             <ice:column>
-                                <h:outputText id="prestarCell" value="#{convenio.prestar}"/>
-                            </ice:column>
-                            <ice:column>
-                                <h:outputText id="recibirCell" value="#{convenio.recibir}"/>
-                            </ice:column>
-                            <ice:column>
                                 <h:outputText id="oficioCell" escape="false" value="#{convenio.oficio}"/>
+                            </ice:column>
+                            <ice:column>
+                                <ice:selectBooleanCheckbox id="prestarCell" value="#{convenio.prestar}" disabled="true"/>
+                            </ice:column>
+                            <ice:column>
+                                <ice:selectBooleanCheckbox id="recibirCell" value="#{convenio.recibirPrestamo}" disabled="true"/>
                             </ice:column>
                             <ice:column>
                                 <h:outputText id="estadoCell" value="#{convenio.estado.nombre}"/>

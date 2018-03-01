@@ -10,13 +10,18 @@ import cr.ac.ucr.sigebi.utils.Constantes;
 import cr.ac.ucr.framework.vista.VistaUsuario;
 import cr.ac.ucr.framework.vista.util.PaginacionOracle;
 import cr.ac.ucr.framework.vista.util.Util;
+import cr.ac.ucr.sigebi.domain.Bien;
 import cr.ac.ucr.sigebi.domain.Estado;
+import cr.ac.ucr.sigebi.domain.RegistroMovimiento;
 import cr.ac.ucr.sigebi.domain.Tipo;
 import cr.ac.ucr.sigebi.domain.UnidadEjecutora;
 import cr.ac.ucr.sigebi.domain.Usuario;
+import cr.ac.ucr.sigebi.models.RegistroMovimientoModel;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import javax.annotation.Resource;
 import javax.faces.model.SelectItem;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
@@ -48,6 +53,8 @@ public class BaseController extends PaginacionOracle {
     List<Tipo> tiposGenerales;
 
     Map<Integer, Estado> tiposBienes;
+    
+    @Resource private RegistroMovimientoModel registroMovimientoModel;
     //</editor-fold>
     
     //<editor-fold defaultstate="collapsed" desc="Get's & Set's">
@@ -232,8 +239,24 @@ public class BaseController extends PaginacionOracle {
         return resultado;
     }
 
+    
+    protected void registrarMovimiento(Bien item, String observacion, Tipo tipo, Usuario usuario){
+        RegistroMovimiento registro = new RegistroMovimiento();
+        registro.setTipo(tipo);
+        registro.setEstado(item.getEstado());
+        registro.setBien(item);
+        registro.setFecha(new Date());
+        registro.setUsuario(usuario);
+        registro.setObservacion(observacion);
+        
+        registroMovimientoModel.agregar(registro);
+    }
+    
+    
     public interface PredicateFilter {
         boolean verifica(Object p);
     }
      //</editor-fold>
+    
+    
 }

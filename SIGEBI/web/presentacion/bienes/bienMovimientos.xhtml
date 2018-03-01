@@ -1,0 +1,58 @@
+  <ice:outputHtml id="frmNotas" xmlns:ice="http://www.icesoft.com/icefaces/component" xmlns:icecore="http://www.icefaces.org/icefaces/core" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:c="http://java.sun.com/jstl/core">
+    <div>
+        <div class="row"  style="padding-bottom: 30px">
+
+            <div class="col-md-12">
+                <!-- LISTAR NOTAS-->
+                <ice:dataTable id="notasLista" 
+                               value="#{controllerAgregarBienes.command.movimientos}" 
+                               var="movimiento" 
+                               paginator="true" 
+                               paginatorPosition="bottom" 
+                               rows="10">
+                    <ice:column id="coldetalleNota"  
+                                sortBy="#{movimiento.estado.nombre}" 
+                                filterBy="#{movimiento.estado.nombre}">
+                        <f:facet name="header">
+                            <ice:outputText  value="#{label['sigebi.Bien.Col.TipoMov']}" />
+                        </f:facet>
+                        <h:outputText id="descripcionCellNota" value="#{movimiento.estado.nombre}"/>
+                    </ice:column>
+
+                    <ice:column id="coldetalleNota"  
+                                sortBy="#{movimiento.estado.nombre}" 
+                                filterBy="#{movimiento.estado.nombre}">
+                        <f:facet name="header">
+                            <ice:outputText  value="#{label['sigebi.Bien.Col.Fecha']}" />
+                        </f:facet>
+                        <h:outputText id="descripcionCellNota" value="#{movimiento.fecha}"/>
+                    </ice:column>
+
+                    <ice:column id="coldetalleNota"  
+                                sortBy="#{movimiento.estado.nombre}" 
+                                filterBy="#{movimiento.estado.nombre}">
+                        <f:facet name="header">
+                            <ice:outputText  value="#{label['sigebi.Bien.Col.Usuario']}" />
+                        </f:facet>
+                        <h:outputText id="descripcionCellNota" value="#{movimiento.usuario.nombreCompleto}"/>
+                    </ice:column>
+
+                    <ice:column style="text-align: center;">
+                        <f:facet name="header">
+                            <ice:outputText value="#{label['sigebi.Bien.Btn.Ver']}"  />
+                        </f:facet>
+
+                        <ice:commandButton id="btnVerMovimiento" 
+                                           style="float:right;margin-top:2%" 
+                                           styleClass="boton" 
+                                           partialSubmit="true" 
+                                           actionListener="#{controllerAgregarBienes.consultarMovimiento}"
+                                           value="#{label['sigebi.Bien.Btn.Ver']}"  >
+                            <f:attribute id="movimiento" name="movimiento"  value="#{movimiento}"/>
+                        </ice:commandButton>
+                    </ice:column>
+                </ice:dataTable>
+            </div>
+        </div>
+    </div>
+</ice:outputHtml>

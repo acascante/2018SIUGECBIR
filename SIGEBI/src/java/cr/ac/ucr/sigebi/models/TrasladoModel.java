@@ -8,7 +8,7 @@ package cr.ac.ucr.sigebi.models;
 import cr.ac.ucr.sigebi.daos.TrasladosDao;
 import cr.ac.ucr.sigebi.domain.UnidadEjecutora;
 import cr.ac.ucr.sigebi.domain.TrasladoDetalle;
-import cr.ac.ucr.sigebi.domain.DocumentoTraslado;
+import cr.ac.ucr.sigebi.domain.SolicitudTraslado;
 import java.util.List;
 import javax.annotation.Resource;
 import org.springframework.stereotype.Service;
@@ -25,7 +25,7 @@ public class TrasladoModel {
     private TrasladosDao trasladoDao;
 
     
-    public void guardar(DocumentoTraslado obj) {
+    public void guardar(SolicitudTraslado obj) {
         trasladoDao.guardar(obj);
     }
     
@@ -41,19 +41,19 @@ public class TrasladoModel {
         trasladoDao.guardarBien(bien);
     }
     
-    public DocumentoTraslado traerPorId(Integer pId) {
+    public SolicitudTraslado traerPorId(Integer pId) {
         return trasladoDao.traerPorId(pId);
     }
     
-    public List<DocumentoTraslado> traerTodo(UnidadEjecutora unidadEjecutora) {
+    public List<SolicitudTraslado> traerTodo(UnidadEjecutora unidadEjecutora) {
         return trasladoDao.traerTodo(unidadEjecutora);
     }
     
-    public List<TrasladoDetalle> traerBienesTraslado(DocumentoTraslado traslado) {
+    public List<TrasladoDetalle> traerBienesTraslado(SolicitudTraslado traslado) {
         return trasladoDao.traerBienesTraslado(traslado);
     }
     
-    public List<DocumentoTraslado> trasladosListado(
+    public List<SolicitudTraslado> trasladosListado(
             UnidadEjecutora unidadEjecutora
             , String fltIdTraslado
             , String fltUnidadOrigen

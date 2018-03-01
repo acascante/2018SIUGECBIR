@@ -226,7 +226,7 @@ public class AgregarPrestamoController extends BaseController {
     }
 
     public void cerrarPanelAgregarBienes() {
-        Estado estadoEnSolicitud = this.estadoPorDominioValor(Constantes.DOMINIO_BIEN, Constantes.ESTADO_INTERNO_BIEN_EN_EXCLUSION );
+        Estado estadoEnSolicitud = this.estadoPorDominioValor(Constantes.DOMINIO_BIEN, Constantes.ESTADO_INTERNO_BIEN_EXCLUSION );
         for (Bien bien : bienes) {
             if (bienesSeleccionados.get(bien.getId())) {
                 bien.setEstado(estadoEnSolicitud);

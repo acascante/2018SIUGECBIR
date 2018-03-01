@@ -7,11 +7,9 @@ package cr.ac.ucr.sigebi.domain;
 
 import java.util.Date;
 import javax.persistence.Column;
-import javax.persistence.DiscriminatorColumn;
+import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
-import javax.persistence.Inheritance;
-import javax.persistence.InheritanceType;
-import javax.persistence.SequenceGenerator;
+import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 
@@ -20,10 +18,9 @@ import javax.persistence.Temporal;
  * @author alvaro.cascante
  */
 @Entity(name = "SolicitudDetallePrestamo")
-@Table(name = "SIGEBI_OAF.SIGB_SOLICITUD_DETALLE_PRESTAMO")
-@Inheritance(strategy = InheritanceType.JOINED)
-@DiscriminatorColumn(name = "discriminator")
-@SequenceGenerator(name = "SGB_SQ_SOLICITUDES_DETA", sequenceName = "SIGEBI_OAF.SGB_SQ_SOLICITUDES_DETA", initialValue = 1, allocationSize = 1)
+@Table(name = "SIGEBI_OAF.SIGB_PRESTAMO_DETALLE")
+@PrimaryKeyJoinColumn(name = "ID_SOLICITUD_DETALLE", referencedColumnName = "ID_SOLICITUD_DETALLE")
+@DiscriminatorValue("1")
 public class SolicitudDetallePrestamo extends SolicitudDetalle {
 
     //<editor-fold defaultstate="collapsed" desc="Atributos">

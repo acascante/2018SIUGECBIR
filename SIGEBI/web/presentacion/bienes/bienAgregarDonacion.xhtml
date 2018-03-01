@@ -1,0 +1,45 @@
+<ice:form id="frmDetalleBienDonacion" 
+          xmlns:ice="http://www.icesoft.com/icefaces/component" 
+          xmlns:icecore="http://www.icefaces.org/icefaces/core" 
+          xmlns:h="http://java.sun.com/jsf/html" 
+          xmlns:f="http://java.sun.com/jsf/core" 
+          xmlns:ui="http://java.sun.com/jsf/facelets">
+
+    <ice:panelPopup modal="true" visible="true" styleClass="popup popupBien">
+        <f:facet name="body">
+            <fieldset class="panel_Container" >    
+                <div class="contenido-pagina">
+                    <div class="container">
+                        <div class="row">
+                            <div class='col-sm-6'>
+                                <h1 style="margin: 0;">
+                                    <ice:outputFormat value="#{label['sigebi.Bien.Label.HeaderBienes']}" />
+                                </h1>
+                            </div>
+
+                            <div class="col-sm-6">
+                                <ice:commandButton id="boton_regresar" style="float:right" partialSubmit="true" styleClass="boton" 
+                                                   value="#{label['sigebi.Bien.Btn.Regresar']}"  
+                                                   action="#{controllerAgregarBienes.regresarListado}"/>
+                            </div>
+                        </div>
+
+                        <!-- Agrega los campos para agregar un bien-->
+                        <ui:insert name="detalledelBien">
+                                <ui:include src="../bienes/bienDetalleInclude.xhtml" />
+                        </ui:insert>
+
+                        <div class="row">
+                            <div class="col-md-4">    
+                                <ice:commandButton id="botonGuardar" value="#{label['sigebi.Bien.Btn.Guardar']}" partialSubmit="true" styleClass="boton" 
+                                                   action="#{controllerAgregarBienes.agregarBienDonacion}"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <br></br>               
+            </fieldset>       
+        </f:facet>
+    </ice:panelPopup>
+    
+</ice:form>

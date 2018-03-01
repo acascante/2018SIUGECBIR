@@ -1883,6 +1883,7 @@ body{
 
 .iceSelInpDate{
     background-color: #ffffff;
+    width: 200px;
 }
 
 .iceSelInpDatePopup {
@@ -2195,6 +2196,15 @@ body{
     margin-bottom: 10px;
     cursor:pointer;
 
+}
+
+.btnEliminar_bien{
+    background: transparent url(../../imagenes/botones/borrar.png) no-repeat;
+    width: 79px;
+    height: 22px;
+    border: none;
+    margin-bottom: 10px;
+    cursor:pointer;
 }
 
 .btnAgregar_usuario{

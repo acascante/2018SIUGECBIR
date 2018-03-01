@@ -734,7 +734,9 @@ root {
   transform: translate(-0%, -40%);
   min-width: 520px;
 }
-
+.popupBien {
+    top:349px !important;
+}
 .popupancho{
     background: white url(../../imagenes/fondoPopUp.jpg) no-repeat;
     padding: 1em;

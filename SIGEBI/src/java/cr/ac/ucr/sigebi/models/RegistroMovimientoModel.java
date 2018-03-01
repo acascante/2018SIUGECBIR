@@ -7,7 +7,9 @@ package cr.ac.ucr.sigebi.models;
 
 import cr.ac.ucr.framework.utils.FWExcepcion;
 import cr.ac.ucr.sigebi.daos.RegistroMovimientoDao;
+import cr.ac.ucr.sigebi.domain.Bien;
 import cr.ac.ucr.sigebi.domain.RegistroMovimiento;
+import java.util.List;
 import javax.annotation.Resource;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
@@ -27,4 +29,9 @@ public class RegistroMovimientoModel {
         registroMovimientoDao.agregar(registroMovimientoEntity);
     }
 
+    
+    public List<RegistroMovimiento> movimientosPorBien(Bien bien){
+        return registroMovimientoDao.movimientosPorBien(bien);
+    }
+    
 }

@@ -1,0 +1,116 @@
+<ice:form id="frm_listarInformeTecnico" 
+          xmlns:ice="http://www.icesoft.com/icefaces/component"
+          xmlns:h="http://java.sun.com/jsf/html"
+          xmlns:f="http://java.sun.com/jsf/core"
+          xmlns:ui="http://java.sun.com/jsf/facelets"
+          >
+    <div class="contenido-pagina">
+
+        <div class="container"> 
+            <!-- Titulo -->
+            <div class="row">
+                <div class='col-sm-6 align-middle'>
+                    <h1 class="align-middle">
+                        <ice:outputFormat value="#{label['sigebi.Reporte.Movimientos.Titulo']}"/>
+                    </h1>
+                </div>    
+                <div class='col-sm-3'>
+                    <h3 style="margin: 0;">
+                        <ice:outputFormat value="#{label['sigebi.Reporte.Traslados.tipoReporte']}"/>
+                    </h3>
+                </div> 
+                <div class='col-sm-3'>
+                    <ice:selectOneMenu id="selTipoReporte" styleClass="form-control"
+                                        value="#{controllerReporte.tipoReporteSelec}" >
+                         <f:selectItems id="optSelTipoBien" value="#{controllerReporte.itemsTiposReporte}"/>
+                     </ice:selectOneMenu>
+                </div> 
+                
+                        
+                
+            </div>
+
+            <div class="row justify-content-md-center">
+                
+                 <div class='col-sm-11'>
+                     <ice:panelGroup style="margin: 20px 0px">
+                         <ice:panelTabSet>
+                             
+                             <ice:panelTab id="tabFiltros" label="#{label['sigebi.Reporte.Label.Configuracion']}">
+                             
+                                 <div class="row">
+                                     <div class='col-sm-3 align-middle'>
+                                         <h3 class="align-middle" style="margin-top: 15px">
+                                            <ice:outputFormat value="#{label['sigebi.Reporte.Label.FiltrosReporte']}"/>
+                                        </h3>
+                                     </div>
+                                    <div class='col-sm-3'>
+                                       <ice:outputText  value="#{label['sigebi.Reporte.Label.Identificacion']}" />
+                                        <ice:inputText id="txtIdentificacion" 
+                                                       styleClass="form-control" 
+                                                       maxlength="10"
+                                                       partialSubmit="false"
+                                                       value="#{controllerReporte.commandMovimiento.identificacion}" >
+                                        </ice:inputText>
+                                       
+                                   </div>  
+                                   <div class="col-md-3">
+                                       <div class="form-group ">
+                                           <ice:outputText value="#{label['sigebi.Reporte.Label.Descripcion']}" />
+                                            <ice:inputText id="txtDescripcion" 
+                                                           styleClass="form-control" 
+                                                           maxlength="30"
+                                                           partialSubmit="false"
+                                                           value="#{controllerReporte.commandMovimiento.descripcion}" >
+                                            </ice:inputText>
+                                       </div>
+                                   </div>
+                                </div>
+                             
+                             </ice:panelTab>
+                            
+                             
+                         </ice:panelTabSet>
+                             
+                     </ice:panelGroup>
+                </div>  
+                
+                 
+
+            </div>
+            
+            
+            
+            <div class="row">
+                 <div class='col-sm-10'>
+                </div>  
+                 <div class='col-sm-2'>
+                </div>  
+            </div>
+            
+            <!-- Botones para generar -->
+            <div class="row">
+                 <div class='col-sm-2'>
+                </div>  
+                 <div class='col-sm-8'>
+                </div>  
+                 <div class='col-sm-2'>
+                    <ice:commandButton id="btnReporteMovimiento"
+                                       style="float: left" 
+                                       styleClass="boton" 
+                                       partialSubmit="true" 
+                                       action="#{controllerReporte.mostrarReporteMovimientos}"
+                                       value="Reporte Movimientos">
+                    </ice:commandButton>
+                </div>  
+            </div>
+            
+
+        </div>    
+    </div>
+
+
+</ice:form>
+
+
+

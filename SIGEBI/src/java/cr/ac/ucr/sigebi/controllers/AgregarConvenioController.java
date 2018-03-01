@@ -14,14 +14,19 @@ import cr.ac.ucr.framework.vista.util.Util;
 import cr.ac.ucr.sigebi.commands.ConvenioCommand;
 import cr.ac.ucr.sigebi.domain.Adjunto;
 import cr.ac.ucr.sigebi.domain.Estado;
+import cr.ac.ucr.sigebi.domain.Tipo;
+import cr.ac.ucr.sigebi.models.AdjuntoModel;
 import cr.ac.ucr.sigebi.models.ConvenioModel;
-import java.util.regex.Pattern;
+import java.util.Calendar;
+import java.util.Date;
 import javax.annotation.Resource;
+import javax.faces.component.UIComponent;
 import javax.faces.component.UIInput;
 import javax.faces.component.UIViewRoot;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 import javax.faces.event.PhaseId;
+import javax.faces.validator.ValidatorException;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
@@ -34,6 +39,7 @@ import org.springframework.stereotype.Controller;
 public class AgregarConvenioController extends BaseController {
 
     @Resource private ConvenioModel convenioModel;
+    @Resource private AdjuntoModel adjuntoModel;
     
     private ConvenioCommand command;
     
@@ -55,6 +61,7 @@ public class AgregarConvenioController extends BaseController {
             FacesContext context = FacesContext.getCurrentInstance();
             UIViewRoot root = context.getViewRoot();
             UIInput component =  new UIInput();
+
             String messageValidacion = validarForm(root, component);
             if (Constantes.OK.equals(messageValidacion)) {
                 Estado estadoActivo = this.estadoPorDominioValor(Constantes.DOMINIO_CONVENIO, Constantes.ESTADO_CONVENIO_ACTIVO);
@@ -91,27 +98,35 @@ public class AgregarConvenioController extends BaseController {
     }
     
     //<editor-fold defaultstate="collapsed" desc="Adjuntar Archivo">  
-    public void checkFileLocation(ActionEvent event) {
+    public void agregarAdjunto(ActionEvent pEvent) {
         try {
-            InputFile inputFile = (InputFile) event.getSource();
+            InputFile inputFile = (InputFile) pEvent.getSource();
             FileInfo fileInfo = inputFile.getFileInfo();
-            Adjunto adjunto = new Adjunto();
-            if (fileInfo.isSaved()) {
-                if (inputFile.getId().endsWith("2")) {
-                    adjunto.setUrl(fileInfo.getPhysicalPath());
-                    adjunto.setNombre(fileInfo.getFileName());
-                    adjunto.setTamano(fileInfo.getSize() / 1024); // pasar a bites 
-                    adjunto.setTipoMime(fileInfo.getContentType());
-                    String[] extencion = (String[]) adjunto.getNombre().split(Pattern.quote("."));
-                    int cant = extencion.length;
-                    // TODO determinar como se van a almacenar los archivos adjuntos para convenios
+            if (fileInfo.getFileName() != null) {
+                // TODO Buscar tipo correcto
+                Tipo tipoAdjunto = this.tipoPorDominioValor(Constantes.DOMINIO_ADJUNTO, Constantes.TIPO_ADJUNTO_DOCUMENTO);
+                String detalleAdjunto = new String();
+
+                Adjunto adjunto = new Adjunto();
+                adjunto.setEstado(this.estadoPorDominioValor(Constantes.DOMINIO_GENERAL, Constantes.ESTADO_GENERAL_ACTIVO));
+                adjunto.setTipo(tipoAdjunto);
+//                adjunto.setIdReferencia(informe.getId());
+                adjunto.setUrl("upload/informesTecnicos/" + fileInfo.getFileName());
+                if (detalleAdjunto != null && detalleAdjunto.length() > 0) {
+                    adjunto.setDetalle(detalleAdjunto);
+                } else {
+                    adjunto.setDetalle(fileInfo.getFileName());
                 }
+                adjuntoModel.agregar(adjunto);
+
+                Mensaje.agregarInfo(Util.getEtiquetas("sigebi.error.informeTecnicoController.adjunto.agregar.exitosamente"));
             }
-        } catch (Exception err) {
-            Mensaje.agregarErrorAdvertencia(err, Util.getEtiquetas("sigebi.Bien.Error.Registro"));
+        } catch (FWExcepcion e) {
+            Mensaje.agregarErrorAdvertencia(e.getError_para_usuario());
+        } catch (Exception e) {
+            Mensaje.agregarErrorAdvertencia(e, Util.getEtiquetas("sigebi.error.informeTecnicoController.agregarAdjunto"));
         }
     }
-
     
     //<editor-fold defaultstate="collapsed" desc="Validaciones">  
     public String validarForm(UIViewRoot root, UIInput component) {
@@ -127,6 +142,26 @@ public class AgregarConvenioController extends BaseController {
         }        
         return Constantes.OK;
     }
+    
+    public void validarFecha(FacesContext context, UIComponent component, Object value) throws ValidatorException {
+        try {
+            Date fecha = (Date)value;
+            
+            Date today = new Date();
+            Calendar calendar = Calendar.getInstance(Constantes.DEFAULT_TIME_ZONE);
+            calendar.setTime(today);
+            calendar.add(Calendar.DATE, -1);
+
+            if (fecha.before(calendar.getTime())) {
+                Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.error.controllerAgregarNotificaciones.error.fecha.anterior"));
+                ((UIInput) component).setValid(false); 
+            } 
+        } catch (Exception e ) {
+            Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.error.controllerAgregarNotificaciones.error.fecha.formato"));
+            ((UIInput) component).setValid(false);
+        }
+    }
+
     //</editor-fold>
     
     //<editor-fold defaultstate="collapsed" desc="Gets y Sets">

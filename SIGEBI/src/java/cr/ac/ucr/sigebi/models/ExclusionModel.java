@@ -35,6 +35,10 @@ public class ExclusionModel {
         exclusionDao.salvarDetalles(exclusion.getDetalles());
     }
     
+    public void eliminarDetalles(List<SolicitudDetalle> detalles) throws FWExcepcion {
+        exclusionDao.eliminarDetalles(detalles);
+    }
+    
     public SolicitudExclusion buscarPorId(Long id) throws FWExcepcion {
         return exclusionDao.buscarPorId(id);
     }

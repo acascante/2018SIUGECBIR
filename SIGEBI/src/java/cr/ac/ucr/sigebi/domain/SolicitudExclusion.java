@@ -18,7 +18,7 @@ import javax.persistence.Table;
  * @author alvaro.cascante
  */
 @Entity(name = "SolicitudExclusion")
-@Table(name = "SIGEBI_OAF.SIGB_SOLITUD_EXCLUSION")
+@Table(name = "SIGEBI_OAF.SIGB_SOLICITUD_EXCLUSION")
 @PrimaryKeyJoinColumn(name = "ID_SOLICITUD", referencedColumnName = "ID_SOLICITUD")
 @DiscriminatorValue("1")
 public class SolicitudExclusion extends Solicitud {

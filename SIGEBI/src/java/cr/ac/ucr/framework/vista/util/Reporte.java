@@ -30,8 +30,12 @@ public class Reporte {
     private ByteArrayOutputStream outputStream;
     private ByteArrayResource resource;
     private int eaarchivo;
-    private JRExporter exporter = null;
+    private JRExporter exporter;
     String barra = "/";
+
+    public Reporte() {
+        this.exporter = null;
+    }
 
     public enum Imagenes {
         ruta_imagen_ucr("/imagenes/sippres/LogosReporte/UCR.png");

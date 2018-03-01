@@ -19,19 +19,19 @@ import javax.persistence.Table;
  * @author alvaro.cascante
  */
 @Entity(name = "SolicitudPrestamo")
-@Table(name = "SIGEBI_OAF.SIGB_SOLITUD_PRESTAMO")
+@Table(name = "SIGEBI_OAF.SIGB_SOLICITUD_PRESTAMO")
 @PrimaryKeyJoinColumn(name = "ID_SOLICITUD", referencedColumnName = "ID_SOLICITUD")
 @DiscriminatorValue("2")
 public class SolicitudPrestamo extends Solicitud {
 
     //<editor-fold defaultstate="collapsed" desc="Atributos">
-    @Column(name = "OBSERVACIONES")
+    @Column(name = "OBSERVACION")
     private String observacion;
     
     @Column(name = "ENTIDAD")
     private String entidad;    
     
-    @JoinColumn(name = "TIPO_ENTIDAD", referencedColumnName = "ID_TIPO")
+    @JoinColumn(name = "ID_TIPO_ENTIDAD", referencedColumnName = "ID_TIPO")
     @ManyToOne(fetch = FetchType.EAGER)
     private Tipo tipo;
     //</editor-fold>

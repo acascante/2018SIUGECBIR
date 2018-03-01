@@ -29,7 +29,7 @@ public class Adjunto  extends ObjetoBase implements Serializable{
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SGB_SQ_ADJUNTO")
     @Column(name = "ID_ADJUNTO")
-    private Integer id;
+    private Long id;
     
     @ManyToOne
     @JoinColumn(name = "ID_TIPO", referencedColumnName = "ID_TIPO")
@@ -67,11 +67,11 @@ public class Adjunto  extends ObjetoBase implements Serializable{
     
     //<editor-fold defaultstate="collapsed" desc="Sets y Gets">
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

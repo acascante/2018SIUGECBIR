@@ -18,7 +18,6 @@ import cr.ac.ucr.sigebi.domain.Usuario;
 import cr.ac.ucr.sigebi.domain.Adjunto;
 import cr.ac.ucr.sigebi.domain.AutorizacionRolPersona;
 import cr.ac.ucr.sigebi.domain.DocumentoAutorizacion;
-import cr.ac.ucr.sigebi.models.EstadoModel;
 import cr.ac.ucr.sigebi.models.DocumentoModel;
 import cr.ac.ucr.sigebi.models.AdjuntoModel;
 import cr.ac.ucr.sigebi.models.AutorizacionRolPersonaModel;
@@ -57,9 +56,6 @@ public class InformeTecnicoController extends BaseController {
 
     @Resource
     private AutorizacionRolPersonaModel autorizacionRolPersonaModel;
-
-    @Resource
-    private EstadoModel estadoModel;
 
     @Resource
     private AdjuntoModel adjuntoModel;
@@ -122,14 +118,6 @@ public class InformeTecnicoController extends BaseController {
 
     public void setAutorizacionRolPersonaModel(AutorizacionRolPersonaModel autorizacionRolPersonaModel) {
         this.autorizacionRolPersonaModel = autorizacionRolPersonaModel;
-    }
-
-    public EstadoModel getEstadoModel() {
-        return estadoModel;
-    }
-
-    public void setEstadoModel(EstadoModel estadoModel) {
-        this.estadoModel = estadoModel;
     }
 
     public AdjuntoModel getAdjuntoModel() {
@@ -291,7 +279,7 @@ public class InformeTecnicoController extends BaseController {
     private void consultaAutorizaciones() {
         try {
             //Se listan las autorizaciones permitidas para el documento, se agrupan por rol. 
-            documentosAutorizacionesPorRol = documentoModel.obtenerDocumentosAutorizacionPorRol(Constantes.CODIGO_AUTORIZACION_INFORME_TECNICO, informe, usuario, unidadEjecutora);
+            documentosAutorizacionesPorRol = documentoModel.obtenerDocumentosAutorizacionPorRolGeneral(Constantes.CODIGO_AUTORIZACION_INFORME_TECNICO, informe, usuario, unidadEjecutora);
 
             //Elimina la marca de los documentos, por reglas internas 
             eliminaMarcaDocumentosAceptarRechazar();
@@ -360,15 +348,15 @@ public class InformeTecnicoController extends BaseController {
         try {
             if (validarForm()) {
 
-                //Se actualizan todas las autorizaciones asociadas al documento
-                Estado estadoPendienteModi = this.estadoPorDominioValor(Constantes.DOMINIO_INFORME_TECNICO, Constantes.ESTADO_INFORME_TECNICO_PROCESO);
-
                 //Se almacena la informacion
-                informe.setEstado(estadoPendienteModi);
+                informe.setEstado(this.estadoPorDominioValor(Constantes.DOMINIO_INFORME_TECNICO, Constantes.ESTADO_INFORME_TECNICO_PROCESO));
                 documentoModel.modificar(informe);
 
                 //Si existe alguna aprobacion en tramite se debe eliminar las aprobaciones ya que se cambio el informe
                 if (aprobacionRealizada) {
+
+                    //Se actualizan todas las autorizaciones asociadas al documento
+                    Estado estadoPendienteModi = this.estadoPorDominioValor(Constantes.DOMINIO_GENERAL, Constantes.ESTADO_GENERAL_PROCESO);
 
                     for (Iterator<String> iterator = documentosAutorizacionesPorRol.keySet().iterator(); iterator.hasNext();) {
                         DocumentoAutorizacion documentoAutorizacion = documentosAutorizacionesPorRol.get((String) iterator.next());
@@ -423,7 +411,7 @@ public class InformeTecnicoController extends BaseController {
 
             //Se obtiene el documento a modificar
             DocumentoAutorizacion documento = (DocumentoAutorizacion) pEvent.getComponent().getAttributes().get("documentoSelApro");
-            documento.setEstado(this.estadoPorDominioValor(Constantes.DOMINIO_INFORME_TECNICO, Constantes.ESTADO_INFORME_TECNICO_APROBADO));
+            documento.setEstado(this.estadoPorDominioValor(Constantes.DOMINIO_GENERAL, Constantes.ESTADO_GENERAL_APROBADO));
             documento.setFecha(new Date());
             documento.setUsuarioSeguridad(usuario);
             if (documento.getId() != null && documento.getId() > 0) {
@@ -457,7 +445,7 @@ public class InformeTecnicoController extends BaseController {
 
             //Se obtiene el documento a modificar
             DocumentoAutorizacion documento = (DocumentoAutorizacion) pEvent.getComponent().getAttributes().get("documentoSelRech");
-            documento.setEstado(this.estadoPorDominioValor(Constantes.DOMINIO_INFORME_TECNICO, Constantes.ESTADO_INFORME_TECNICO_RECHAZADO));
+            documento.setEstado(this.estadoPorDominioValor(Constantes.DOMINIO_GENERAL, Constantes.ESTADO_GENERAL_RECHAZADO));
             documento.setFecha(new Date());
             documento.setUsuarioSeguridad(usuario);
             if (documento.getId() != null && documento.getId() > 0) {
@@ -499,15 +487,15 @@ public class InformeTecnicoController extends BaseController {
                     if (documentoAutorizacion != null) {
 
                         //Se verifica si alguno no esta aprobado
-                        if (!documentoAutorizacion.getEstado().getValor().equals(Constantes.ESTADO_INFORME_TECNICO_APROBADO)) {
+                        if (!documentoAutorizacion.getEstado().getValor().equals(Constantes.ESTADO_GENERAL_APROBADO)) {
                             aprobar = false;
                         }
                         //Se verifica si alguno no esta rechazado
-                        if (!documentoAutorizacion.getEstado().getValor().equals(Constantes.ESTADO_INFORME_TECNICO_RECHAZADO)) {
+                        if (!documentoAutorizacion.getEstado().getValor().equals(Constantes.ESTADO_GENERAL_RECHAZADO)) {
                             rechazar = false;
                         }
                         //Se verifica si alguno se encuentra pendiente de aprobar
-                        if (documentoAutorizacion.getEstado().getValor().equals(Constantes.ESTADO_INFORME_TECNICO_APROBADO)) {
+                        if (documentoAutorizacion.getEstado().getValor().equals(Constantes.ESTADO_GENERAL_APROBADO)) {
                             aprobacionRealizada = true;
                         }
                     }
@@ -515,14 +503,14 @@ public class InformeTecnicoController extends BaseController {
 
                 //Si todos estan aprobados se aprueba todo el informe
                 if (aprobar) {
-                    informe.setEstado(estadoModel.buscarPorDominioEstado(Constantes.DOMINIO_INFORME_TECNICO, Constantes.ESTADO_INFORME_TECNICO_APROBADO));
+                    informe.setEstado(this.estadoPorDominioValor(Constantes.DOMINIO_INFORME_TECNICO, Constantes.ESTADO_INFORME_TECNICO_APROBADO));
                     documentoModel.modificar(informe);
                     this.consultaAutorizaciones();
 
                 } else {
                     //Si todos estan rechazadas se rechaza todo el informes
                     if (rechazar) {
-                        informe.setEstado(estadoModel.buscarPorDominioEstado(Constantes.DOMINIO_INFORME_TECNICO, Constantes.ESTADO_INFORME_TECNICO_RECHAZADO));
+                        informe.setEstado(this.estadoPorDominioValor(Constantes.DOMINIO_INFORME_TECNICO, Constantes.ESTADO_INFORME_TECNICO_RECHAZADO));
                         documentoModel.modificar(informe);
                     }
 

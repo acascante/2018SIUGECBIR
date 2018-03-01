@@ -82,8 +82,18 @@ public class GenericDaoImpl {
     @Transactional
     public void delete(Object entidad) {
         dao.getHibernateTemplate().delete(entidad);
-        // necesario para que de error si hay registros asociados
-        //dao.getHibernateTemplate().flush();
+    }
+
+    @Transactional
+    public void delete(Object[] entities){
+        try {
+            for (Object entitie : entities) {
+                delete(entitie);
+                dao.getHibernateTemplate().flush();
+            }
+        } catch (Exception e) {
+            throw new FWExcepcion(e);
+        }
     }
 
     @Transactional

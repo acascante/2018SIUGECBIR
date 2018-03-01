@@ -41,11 +41,11 @@ public class Convenio extends ObjetoBase implements Serializable {
     @Column(name = "RESPONSABLE")
     private String responsable;
     
-    @Column(name = "OFICIO")
-    private String oficio;
-    
     @Column(name = "OBJETIVO")
     private String objetivo;
+    
+    @Column(name = "OFICIO")
+    private String oficio;
     
     @Column(name = "PRESTAR")
     private Boolean prestar;

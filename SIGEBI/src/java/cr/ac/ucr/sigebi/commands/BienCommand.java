@@ -17,6 +17,7 @@ import cr.ac.ucr.sigebi.domain.Lote;
 import cr.ac.ucr.sigebi.domain.Moneda;
 import cr.ac.ucr.sigebi.domain.Nota;
 import cr.ac.ucr.sigebi.domain.Proveedor;
+import cr.ac.ucr.sigebi.domain.RegistroMovimiento;
 import cr.ac.ucr.sigebi.domain.SubCategoria;
 import cr.ac.ucr.sigebi.domain.SubClasificacion;
 import cr.ac.ucr.sigebi.domain.Tipo;
@@ -635,6 +636,7 @@ public class BienCommand {
     private List<Adjunto> adjuntos;
     private List<BienCaracteristica> caracteristicas;
     private List<Nota> notas;
+    private List<RegistroMovimiento> movimientos;
 
     private AccesorioCommand accesorioCommand;
     private AdjuntoCommand adjuntoCommand;
@@ -719,6 +721,8 @@ public class BienCommand {
         this.proveedorCommand = new ProveedorCommand(bien);
         this.ubicacionCommand = new UbicacionCommand(bien);
 
+        movimientos = new ArrayList<RegistroMovimiento>();
+        
         adjunto = new Adjunto();
         this.calculaCapitalizable();
 
@@ -758,11 +762,21 @@ public class BienCommand {
         bien.setCaracteristicas(this.caracteristicas);
         bien.setCapitalizable(this.esCapitalizable());
 
+        
         return bien;
     }
     //</editor-fold>
 
     //<editor-fold defaultstate="collapsed" desc="GET's y SET's">
+
+    public List<RegistroMovimiento> getMovimientos() {
+        return movimientos;
+    }
+
+    public void setMovimientos(List<RegistroMovimiento> movimientos) {
+        this.movimientos = movimientos;
+    }
+    
     public String getKeyVistaOrigen() {
         return Constantes.KEY_VISTA_ORIGEN;
     }

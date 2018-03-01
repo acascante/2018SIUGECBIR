@@ -101,7 +101,7 @@
                                             <ice:outputText value="#{label['sigebi.label.prestamos.tipoEntidad']}"/>
                                             <ice:selectOneMenu  id="filtroTipo"
                                                                 valueChangeListener="#{controllerListarPrestamos.cambioFiltro}"
-                                                                value="#{controllerListarPrestamos.command.fltTipo}"
+                                                                value="#{controllerListarPrestamos.command.fltTipoEntidad}"
                                                                 partialSubmit="true">
                                                 <f:selectItem itemLabel="N/A" itemValue="-1"/>
                                                 <f:selectItems id="slcTipoItem" value="#{controllerListarPrestamos.itemsTipo}"/>
@@ -114,8 +114,7 @@
                                             <ice:inputText id="filtroDestinatario"  value="#{controllerListarPrestamos.command.fltEntidad}" partialSubmit="true" valueChangeListener="#{controllerListarNotificaciones.cambioFiltro}"/>
                                         </ice:column>
                                         
-                                        <ice:column id="opciones" >
-                                        </ice:column>
+                                        <ice:column id="opciones" />
                                     </ice:headerRow>
                                 </ice:columnGroup>
                             </f:facet>

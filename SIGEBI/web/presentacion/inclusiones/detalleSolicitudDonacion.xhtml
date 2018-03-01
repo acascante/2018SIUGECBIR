@@ -1,0 +1,192 @@
+<ice:form id="frmDetalleSolicitudDonacion" 
+          xmlns:ice="http://www.icesoft.com/icefaces/component" 
+          xmlns:icecore="http://www.icefaces.org/icefaces/core" 
+          xmlns:h="http://java.sun.com/jsf/html" 
+          xmlns:f="http://java.sun.com/jsf/core" 
+          xmlns:ui="http://java.sun.com/jsf/facelets"
+          xmlns:c="http://java.sun.com/jstl/core">
+    
+    <div class="contenido-pagina">
+        <div class="container">
+            
+            <div class="row">
+                <div class='col-sm-8'>
+                    <h1 style="margin: 0;">
+                        <ice:outputFormat value="#{label['sigebi.label.vista.detalleSolicitudDonacion.titulo']}" />
+                    </h1>
+                </div>
+
+                <div class="col-sm-4">
+                    <ice:commandButton id="boton_regresar" value="Regresar" style="float:right" partialSubmit="true" styleClass="boton" action="#{controllerSolicitudDonacion.regresarListado}"/>
+                </div>
+            </div>
+            
+           <div class="row">
+                <div class="col-md-3">
+                    <div class="form-group"> 
+                        <label class="control-label" for="txtConsecutivo">
+                            <ice:outputText value="#{label['sigebi.label.vista.detalleSolicitudDonacion.consecutivo']}" />                            
+                        </label>
+                        <ice:inputText id="txtConsecutivo" 
+                                       partialSubmit="false"
+                                       required="true"
+                                       styleClass="form-control"
+                                       readonly="true"
+                                       value="#{controllerSolicitudDonacion.command.solicitudDonacion.id}" />
+                    </div>                                             
+                </div>
+               <div class="col-md-3">
+                    <div class="form-group"> 
+                        <label class="control-label" for="txtTipo">
+                            <ice:outputText value="#{label['sigebi.label.vista.detalleSolicitudDonacion.tipo']}" />
+                            <ice:outputText value="#{label['label.requerido']}" />
+                        </label>                                               
+                         
+                        <ice:selectOneMenu id="txtTipo"                                           
+                                           styleClass="form-control"
+                                           partialSubmit="true"
+                                           value="#{controllerSolicitudDonacion.command.solicitudDonacion.tipoDonacion.idTemporal}"
+                                           valueChangeListener="#{controllerSolicitudDonacion.cambiarTipoDonacion}">
+                                           <f:selectItem itemLabel="N/A" itemValue="-1"/>
+                                           <f:selectItems id="slcTipoItem" value="#{controllerSolicitudDonacion.command.tipoDonacionOptions}"/>
+                        </ice:selectOneMenu>
+                    </div>                                             
+                </div>               
+               
+                <div class="col-md-6">
+                    <div class="row">
+                        <div class="col-sm-10"> 
+                            <div class="form-group">
+                                <label class="control-label" for="txtUbicacion">
+                                    <ice:outputText value="#{label['sigebi.label.vista.detalleSolicitudDonacion.unidadReceptora']}" /> 
+                                    <ice:outputText value="#{label['label.requerido']}" />
+                                </label>                                               
+                                <ice:inputText id="txtUbicacion" 
+                                               styleClass="form-control" 
+                                               required="true" 
+                                               readonly="true" 
+                                               partialSubmit="true"
+                                               value="#{controllerSolicitudDonacion.command.solicitudDonacion.unidadReceptora.descripcion}" >
+                                </ice:inputText>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-2">
+                            <ice:commandButton id="botonBuscarUnidad" value="#{label['sigebi.label.vista.detalleSolicitudDonacion.buscar']}"  partialSubmit="true" styleClass="boton" style="margin-top: 1.5rem"
+                                               actionListener="#{controllerSolicitudDonacion.mostrarPanel}">
+                                <f:attribute id="accion" name="accion"  value="1"/>
+                            </ice:commandButton>
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="form-group"> 
+                        <label class="control-label" for="txtFecha">
+                            <ice:outputText value="#{label['sigebi.label.vista.detalleSolicitudDonacion.fecha']}" />
+                            <ice:outputText value="#{label['label.requerido']}" />
+                        </label>
+                        <ice:selectInputDate id="txtFecha" 
+                                             partialSubmit="false" 
+                                             styleClass="form-control" 
+                                             renderAsPopup="true" 
+                                             renderMonthAsDropdown="true"
+                                             value="#{controllerSolicitudDonacion.command.solicitudDonacion.fecha}">
+                            <f:convertDateTime pattern="dd/MM/yyyy" timeZone="GMT-6:00" />
+                        </ice:selectInputDate>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group"> 
+                        <label class="control-label" for="txtDonante">
+                            <ice:outputText value="#{label['sigebi.label.vista.detalleSolicitudDonacion.donante']}" />                            
+                            <ice:outputText value="#{label['label.requerido']}" />                        
+                        </label>
+                        <ice:inputText id="txtDonante" 
+                                       partialSubmit="false"
+                                       required="true"
+                                       styleClass="form-control"
+                                       value="#{controllerSolicitudDonacion.command.solicitudDonacion.donante}" />
+                    </div>                                             
+                </div>                                
+               <div class="col-md-3">
+                    <div class="form-group"> 
+                        <label class="control-label" for="txtPais">
+                            <ice:outputText value="#{label['sigebi.label.vista.detalleSolicitudDonacion.pais']}" />
+                            <ice:outputText value="#{label['label.requerido']}" />
+                        </label>                                               
+                         
+                        <ice:selectOneMenu id="txtPais"                                           
+                                           styleClass="form-control"
+                                           partialSubmit="true"
+                                           value="#{controllerSolicitudDonacion.command.solicitudDonacion.pais.idTemporal}"
+                                           valueChangeListener="#{controllerSolicitudDonacion.cambiarPais}">
+                                           <f:selectItem itemLabel="N/A" itemValue="-1"/>
+                                           <f:selectItems id="slcPaisItem" value="#{controllerSolicitudDonacion.command.paisOptions}"/>
+                        </ice:selectOneMenu>
+                    </div>                                             
+                </div>                               
+                <div class="col-md-3">
+                    <div class="form-group"> 
+                        <label class="control-label" for="txtCiudad">
+                            <ice:outputText value="#{label['sigebi.label.vista.detalleSolicitudDonacion.ciudad']}" /> 
+                            <ice:outputText value="#{label['label.requerido']}" />                            
+                        </label>
+                        <ice:inputText id="txtCiudad" 
+                                       partialSubmit="false"
+                                       required="true"
+                                       styleClass="form-control"
+                                       value="#{controllerSolicitudDonacion.command.solicitudDonacion.ciudad}" />
+                    </div>                                             
+                </div>                
+            </div>
+            
+            <div class="row">
+                <div class="col-md-3">
+                    <ice:commandButton id="botonGuardar" 
+                                       value="Guardar" 
+                                       rendered="#{controllerSolicitudDonacion.rolPermiteModificar}"
+                                       partialSubmit="true" 
+                                       styleClass="boton" action="#{controllerSolicitudDonacion.guardarDatos}"/>
+                </div>
+                <div class="col-md-3">
+                    <ice:commandButton id="botonAplicar" 
+                                       value="Aplicar" 
+                                       rendered="#{controllerSolicitudDonacion.rolPermiteAplicar}"
+                                       partialSubmit="true" 
+                                       styleClass="boton" action="#{controllerSolicitudDonacion.aplicarSolicitud}"/>
+                </div>
+                <div class="col-md-3">
+                    <ice:commandButton id="botonAnular" 
+                                       value="Anular" 
+                                       rendered="#{controllerSolicitudDonacion.rolPermiteAnular}"
+                                       partialSubmit="true" 
+                                       styleClass="boton" action="#{controllerSolicitudDonacion.anularSolicitud}"/>
+                </div>
+                <div class="col-md-3">
+                    <ice:commandButton id="botonRechazar" 
+                                       value="Rechazar" 
+                                       rendered="#{controllerSolicitudDonacion.rolPermiteRechazar}"
+                                       partialSubmit="true" 
+                                       styleClass="boton" action="#{controllerSolicitudDonacion.rechazarSolicitud}"/>
+                </div>
+            </div>
+                        
+        </div>
+        
+         <!-- Panel de unidades --> 
+        <ui:insert name="modalUnidades">
+            <ui:include src="../inclusiones/unidadReceptoraDonacion.xhtml" />
+        </ui:insert>
+         
+         <!-- Tabs --> 
+        <ui:insert name="tabsDoncacion">
+            <ui:include src="../inclusiones/tabsDonacion.xhtml" />
+        </ui:insert>
+         
+         
+    </div>
+</ice:form>

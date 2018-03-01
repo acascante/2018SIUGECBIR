@@ -1,0 +1,93 @@
+
+<ice:outputHtml id="frmFacturasDonacion" xmlns:ice="http://www.icesoft.com/icefaces/component" xmlns:icecore="http://www.icefaces.org/icefaces/core" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:c="http://java.sun.com/jstl/core">
+    <div class="container">
+        <!-- Adjuntar documentos-->
+        <div class="row">
+            <div class="col-md-6">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group"> 
+                            <label class="control-label" for="txtFacturaNumero">
+                                <ice:outputText value="#{label['sigebi.label.vista.detalleSolicitudDonacion.factura.numero']}" />
+                                <ice:outputText value="#{label['label.requerido']}" />
+                            </label>
+                            <ice:inputText id="detalleAdjunto"
+                                               styleClass="form-control"
+                                               partialSubmit="false"                                           
+                                               value="#{controllerSolicitudDonacion.command.factura.numero}"/>
+                        </div>                                             
+                    </div>
+                    <div class="col-md-12">
+                        <div class="form-group"> 
+                            <label class="control-label" for="txtFecha">
+                                <ice:outputText value="#{label['sigebi.label.vista.detalleSolicitudDonacion.factura.fecha']}" />
+                                <ice:outputText value="#{label['label.requerido']}" />
+                            </label>
+                            <ice:selectInputDate id="txtFecha" 
+                                                 partialSubmit="false" 
+                                                 styleClass="form-control" 
+                                                 renderAsPopup="true" 
+                                                 renderMonthAsDropdown="true"
+                                                 value="#{controllerSolicitudDonacion.command.factura.fecha}">
+                                <f:convertDateTime pattern="dd/MM/yyyy" timeZone="GMT-6:00" />
+                            </ice:selectInputDate>                    
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="form-group"> 
+                            <span class="alineado_izquierda">
+                                <ice:commandButton id="btn_agregar_factura" 
+                                                   partialSubmit="true" 
+                                                   action="#{controllerSolicitudDonacion.agregarFactura}" 
+                                                   styleClass="boton"  value="Agregar" />
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group"> 
+                    <label class="control-label" for="txtTituloFacturas">
+                        <ice:outputText value="#{label['sigebi.label.vista.detalleSolicitudDonacion.facturas']}" />
+                    </label>  
+                    <div>
+                        <ice:dataTable id="facturasDonacion"
+                                       value="#{controllerSolicitudDonacion.command.facturas}"
+                                       var="factura"
+                                       paginator="true"
+                                       paginatorPosition="bottom"
+                                       rows="5">
+
+                            <ice:column id="colNumero">
+                                <f:facet name="header">
+                                    <ice:headerRow>
+                                       <ice:outputText value="#{label['sigebi.label.vista.detalleSolicitudDonacion.factura.numero']}"/>
+                                    </ice:headerRow>
+                                </f:facet>                                
+                                <h:outputText id="colNumeroTxt" value="#{factura.numero}"/>
+                            </ice:column>
+                            <ice:column id="colFecha">
+                                <f:facet name="header">
+                                    <ice:headerRow>
+                                       <ice:outputText value="#{label['sigebi.label.vista.detalleSolicitudDonacion.factura.fecha']}"/>
+                                    </ice:headerRow>
+                                </f:facet>                                
+                                <h:outputText id="colFechaTxt" value="#{factura.fecha}"/>
+                            </ice:column>
+                            <ice:column style="text-align: center;">
+                                <ice:commandButton id="botonEliminarFactura"
+                                                   style="margin-top:2%" 
+                                                   styleClass="btnEliminar_adjunto" 
+                                                   partialSubmit="true"
+                                                   actionListener="#{controllerSolicitudDonacion.eliminarFactura}">
+                                    <f:attribute id="adjuntoEliminarSel" name="facturaEliminarSel"  value="#{factura}"/>                                
+                                </ice:commandButton>
+                            </ice:column>
+                        </ice:dataTable>
+                    </div>
+                </div>
+            </div>                
+        </div>
+    </div>
+    
+</ice:outputHtml>

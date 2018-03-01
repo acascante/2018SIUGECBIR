@@ -1,0 +1,84 @@
+<ice:outputHtml id="frmUnidadesReceptoras" 
+                xmlns:ice="http://www.icesoft.com/icefaces/component" 
+                xmlns:icecore="http://www.icefaces.org/icefaces/core" 
+                xmlns:h="http://java.sun.com/jsf/html" 
+                xmlns:f="http://java.sun.com/jsf/core" 
+                xmlns:ui="http://java.sun.com/jsf/facelets" 
+                xmlns:c="http://java.sun.com/jstl/core">
+
+    <ice:panelPopup modal="true" visible="#{controllerSolicitudDonacion.command.presentarPanelBuscarReceptor}" rendered="#{controllerSolicitudDonacion.command.presentarPanelBuscarReceptor}" styleClass="popup">        
+        <f:facet name="body">
+            <fieldset class="panel_Container" >
+                <div class="container"> 
+                    
+                     <!-- Titulo -->
+                    <div class="row">
+                        <div class='col-sm-12'>
+                            <h1 style="margin: 0px;">
+                                <ice:outputFormat value="#{label['sigebi.label.vista.detalleSolicitudDonacion.titulo.receptor']}"/>
+                            </h1>
+                        </div>                
+                    </div>
+                    <div class="row">
+                        <div class='col-sm-12'>
+                            <!-- Donaciones -->                
+                            <ice:dataTable id="unidadesReceptorasTabl" value="#{controllerSolicitudDonacion.command.unidadEjecutoras}" 
+                                           var="unidad" 
+                                           paginator="true" 
+                                           rows="5">
+
+                                <ice:column id="colIdUnidad">
+                                    <f:facet name="header">
+                                        <ice:columnGroup>
+                                            <ice:headerRow>
+                                                <ice:outputText value="#{label['sigebi.label.vista.detalleSolicitudDonacion.id.unidad']}"/>
+                                            </ice:headerRow>
+                                            <ice:headerRow>
+                                                <ice:inputText id="fltIdUnidad"
+                                                               value="#{controllerSolicitudDonacion.command.fltIdUnidad}"                                   
+                                                               partialSubmit="true"
+                                                               valueChangeListener="#{controllerSolicitudDonacion.filtroUnidadesReceptoras}"/>
+                                            </ice:headerRow>
+                                        </ice:columnGroup>
+                                    </f:facet>                                
+                                    <h:outputText id="txtIdUnidad" value="#{unidad.id}"/>
+                                </ice:column>
+
+                                <ice:column id="colDescripcionUnidad">
+                                    <f:facet name="header">
+                                        <ice:columnGroup>
+                                            <ice:headerRow>
+                                                <ice:outputText value="#{label['sigebi.label.vista.detalleSolicitudDonacion.descripcion.unidad']}"/>
+                                            </ice:headerRow>
+                                            <ice:headerRow>
+                                                <ice:inputText id="fltDescripcionUnidad"
+                                                               value="#{controllerSolicitudDonacion.command.fltDescripcionUnidad}"                                   
+                                                               partialSubmit="true"
+                                                               valueChangeListener="#{controllerSolicitudDonacion.filtroUnidadesReceptoras}"/>
+                                            </ice:headerRow>
+                                        </ice:columnGroup>
+                                    </f:facet>                                
+                                    <h:outputText id="txtDescripcionUnidad" value="#{unidad.descripcion}"/>
+                                </ice:column>
+                                <ice:column style="text-align: center;">
+                                    <ice:commandButton id="botonSeleccionarReceptor" style="float:right;margin-top:2%"  styleClass="boton"  partialSubmit="true" 
+                                                       value="Seleccionar"  
+                                                       actionListener="#{controllerSolicitudDonacion.selecionarUnidad}">
+                                        <f:attribute id="unidadSeleccionada" name="unidadSeleccionada" value="#{unidad}"/>
+                                    </ice:commandButton>
+                                </ice:column>
+                            </ice:dataTable>         
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class='col-sm-12'>
+                            <span class="alineado_derecha">
+                                <ice:commandButton id="btn_cancelar" partialSubmit="true" action="#{controllerSolicitudDonacion.cerrarPanel}" styleClass="boton"  value="Regresar" />
+                            </span>
+                        </div>
+                    </div>
+                </div>   
+            </fieldset>   
+        </f:facet>
+    </ice:panelPopup>
+</ice:outputHtml>

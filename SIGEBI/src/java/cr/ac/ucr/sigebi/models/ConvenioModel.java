@@ -34,7 +34,7 @@ public class ConvenioModel {
         convenioDao.salvar(convenio);
     }
 
-    public Long contar(Long id, String institucion, String oficio, String responsable, Integer estado) throws FWExcepcion {
+    public Long contar(Long id, String institucion, String responsable, String oficio, Integer estado) throws FWExcepcion {
         return convenioDao.contar(id, institucion, responsable, oficio, estado);
     }
 }

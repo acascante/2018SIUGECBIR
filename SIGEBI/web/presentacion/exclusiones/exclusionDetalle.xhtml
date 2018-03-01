@@ -1,25 +1,18 @@
 <ice:form id="frmDetalleExclusion" 
           xmlns:ice="http://www.icesoft.com/icefaces/component" 
-          xmlns:icecore="http://www.icefaces.org/icefaces/core" 
           xmlns:h="http://java.sun.com/jsf/html" 
           xmlns:f="http://java.sun.com/jsf/core" 
-          xmlns:ui="http://java.sun.com/jsf/facelets"
-          xmlns:c="http://java.sun.com/jstl/core">
+          xmlns:ui="http://java.sun.com/jsf/facelets">
     <div class="contenido-pagina">
         <div class="container">
             <div class="row">
-                <div class='col-sm-6'>
+                <div class='col-sm-10'>
                     <h1 style="margin: 0;">
                         <ice:outputFormat value="#{label['sigebi.label.exclusiones.titulo.mantenimiento']} "/>
                     </h1>
                 </div>                
-                <div class="col-sm-6">
-                    <ice:commandButton 
-                        id="boton_regresar" 
-                        value="Regresar" 
-                        style="float:right" 
-                        partialSubmit="false" 
-                        styleClass="boton" 
+                <div class="col-sm-2">
+                    <ice:commandButton id="botonRegresar" value="Regresar" style="float:right" partialSubmit="false" styleClass="boton" 
                         action="#{controllerListarExclusiones.regresarListado}" >
                     </ice:commandButton>
                 </div>
@@ -34,7 +27,7 @@
             </div>
         
             <div class="row">
-                <div class="col-md-6">
+                <div class="col-md-4">
                     <div class="form-group"> 
                         <label class="control-label" for="cmbTipo">
                             <ice:outputText value="#{label['sigebi.label.exclusiones.tipo']}" />
@@ -50,94 +43,117 @@
                 </div>
             </div>
             
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="form-group"> 
-                        <ice:dataTable id="listadoBienes" value="#{controllerAgregarExclusiones.command.bienes}" var="bien" paginator="true" paginatorPosition="bottom" rows="10">
-                            <f:facet name="header">
-                                <ice:columnGroup>
-                                    <ice:headerRow>
-                                        <ice:column id="idBien" rowspan="2" style="vertical-align:top;">
-                                            <ice:outputText value="#{label['sigebi.label.bien.id']} "/>
-                                        </ice:column>
-                                        
-                                        <ice:column id="idIdentificacion" rowspan="2" style="vertical-align:top;">
-                                            <ice:outputText value="#{label['sigebi.label.bien.identificacion']} "/>
-                                        </ice:column>
-                                        
-                                        <ice:column id="marca" rowspan="2" style="vertical-align:top;">
-                                            <ice:outputText value="#{label['sigebi.label.bien.marca']} "/>
-                                        </ice:column>
-                                        
-                                        <ice:column id="modelo" rowspan="2" style="vertical-align:top;">
-                                            <ice:outputText value="#{label['sigebi.label.bien.modelo']} "/>
-                                        </ice:column>
-                                        
-                                        <ice:column id="serie" rowspan="2" style="vertical-align:top;">
-                                            <ice:outputText value="#{label['sigebi.label.bien.serie']} "/>
-                                        </ice:column>
-                                        
-                                        <ice:column id="estado" rowspan="2" style="vertical-align:top;">
-                                            <ice:outputText value="#{label['sigebi.label.bien.estado']} "/>
-                                        </ice:column>
-                                        
-                                        
-                                        <ice:column id="opciones" >
-                                        </ice:column>
-                                    </ice:headerRow>
-                                </ice:columnGroup>
-                            </f:facet>
-                            <ice:column>
-                                <h:outputText id="idCell" value="#{bien.id}"/>
-                            </ice:column>
-                            <ice:column>
-                                <h:outputText id="identificacionCell" value="#{bien.identificacion.identificacion}"/>
-                            </ice:column>
-                            <ice:column>
-                                <h:outputText id="marcaCell" value="#{bien.resumenBien.marca}"/>
-                            </ice:column>
-                            <ice:column>
-                                <h:outputText id="modeloCell" escape="false" value="#{bien.resumenBien.modelo}"/>
-                            </ice:column>
-                            <ice:column>
-                                <h:outputText id="serieCell" escape="false" value="#{bien.resumenBien.serie}"/>
-                            </ice:column>
-                            <ice:column>
-                                <h:outputText id="estadoCell" value="#{bien.estado.nombre}"/>
-                            </ice:column>
-                        </ice:dataTable>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="row">
-                <div class='col-sm-12'>
-                    <ice:commandButton id="botonAgregarBienes" style="float:right" styleClass="boton" partialSubmit="true" action="#{controllerAgregarExclusiones.mostarPanelAgregarBienes}" value="#{label['sigebi.Bien.Listado.Agregar']}" />
-                </div>
-            </div>
-            
+            <!--Observcion-->
             <div class="row">
                 <div class="col-md-12">
                     <div class="form-group"> 
-                        <label class="control-label" for="txtObservacion">
-                            <ice:outputText value="#{label['sigebi.label.exclusiones.observacion']}" />
-                            <ice:outputText value="#{label['label.requerido']}" />
-                        </label>
-                        <ice:inputRichText id="txtObservaciones"
-                                           height="100" 
-                                           language="es"
-                                           skin="silver" 
-                                           toolbar="Basic"
-                                           saveOnSubmit="true"
-                                           value="#{controllerAgregarExclusiones.command.observacion}" />
+                        <ice:outputText value="#{label['sigebi.label.exclusiones.observacion']}" />
+
+                        <ice:inputTextarea id="txtObservacion" styleClass="form-control" style="resize: none" cols="4" partialSubmit="false"
+                                           value="#{controllerAgregarExclusiones.command.observacion}">
+                        </ice:inputTextarea>
                     </div>                                             
                 </div>
             </div>
             
+            <!--Botones -->
             <div class="row">
-                <div class="col-md-4">
-                    <ice:commandButton id="botonSolicitar"  value="Solicitar"  partialSubmit="true"  styleClass="boton" action="#{controllerAgregarExclusiones.solicitarExclusion}" rendered="#{controllerAgregarExclusiones.visibleBotonSolicitar}"/>
-                    <ice:commandButton id="botonAgregar"  value="Guardar"  partialSubmit="true"  styleClass="boton" action="#{controllerAgregarExclusiones.guardarDatos}"/>
+                <div class="col-md-12">
+                    <ice:commandButton id="botonSolicitar" style="float: right" value="Solicitar"  partialSubmit="true"  styleClass="boton" action="#{controllerAgregarExclusiones.solicitarExclusion}" rendered="#{controllerAgregarExclusiones.visibleBotonSolicitar}"/>
+                    <ice:commandButton id="botonAgregar" style="float: right" value="Guardar"  partialSubmit="true"  styleClass="boton" action="#{controllerAgregarExclusiones.guardarDatos}"/>
+                </div>
+            </div>
+            
+            <!--Tabla Bienes-->
+            <div class="row">
+                <div class="col-sm-12">
+                    <ice:panelGroup visible="true" style="padding-top: 1rem">
+                        <div class="container" style="overflow: auto; padding-bottom: 20px;">
+                            <div class="row">
+                                <div class="col-sm-10">
+                                    <h4>
+                                        <ice:outputFormat value="#{label['sigebi.Acta.Label.BienesAsociados']}" />
+                                    </h4>
+                                </div>
+                                <div class='col-sm-2'>
+                                    <ice:commandButton id="botonAgregarBienes" style="margin-bottom: 1rem" styleClass="boton" partialSubmit="true" action="#{controllerAgregarExclusiones.mostarPanelAgregarBienes}" value="#{label['sigebi.Bien.Listado.Agregar']}" />
+                                </div>
+                            </div>
+                            <div class="row" >
+                                <div class="col-md-12">
+                                    <div class="form-group"> 
+                                        <ice:dataTable id="listadoBienes" value="#{controllerAgregarExclusiones.command.listBienes}" var="bien" paginator="true" paginatorPosition="bottom" rows="10">
+                                            <f:facet name="header">
+                                                <ice:columnGroup>
+                                                    <ice:headerRow>
+                                                        <ice:column id="id" rowspan="2" style="vertical-align:top;">
+                                                            <ice:outputText value="#{label['sigebi.label.bien.id']} "/>
+                                                        </ice:column>
+                                                        
+                                                        <ice:column id="identificacion" rowspan="2" style="vertical-align:top;">
+                                                            <ice:outputText value="#{label['sigebi.label.bien.identificacion']} "/>
+                                                        </ice:column>
+
+                                                        <ice:column id="descripcion" rowspan="2" style="vertical-align:top;">
+                                                            <ice:outputText value="#{label['sigebi.label.bien.descripcion']} "/>
+                                                        </ice:column>
+
+                                                        <ice:column id="marca" rowspan="2" style="vertical-align:top;">
+                                                            <ice:outputText value="#{label['sigebi.label.bien.marca']} "/>
+                                                        </ice:column>
+
+                                                        <ice:column id="modelo" rowspan="2" style="vertical-align:top;">
+                                                            <ice:outputText value="#{label['sigebi.label.bien.modelo']} "/>
+                                                        </ice:column>
+
+                                                        <ice:column id="serie" rowspan="2" style="vertical-align:top;">
+                                                            <ice:outputText value="#{label['sigebi.label.bien.serie']} "/>
+                                                        </ice:column>
+
+                                                        <ice:column id="estado" rowspan="2" style="vertical-align:top;">
+                                                            <ice:outputText value="#{label['sigebi.label.bien.estado']} "/>
+                                                        </ice:column>
+
+                                                        <ice:column id="opciones" >
+                                                            <ice:outputText value="#{label['sigebi.label.bien.opciones']} "/>
+                                                        </ice:column>
+                                                    </ice:headerRow>
+                                                </ice:columnGroup>
+                                            </f:facet>
+                                            <ice:column>
+                                                <h:outputText id="idCell" value="#{bien.id}"/>
+                                            </ice:column>
+                                            <ice:column>
+                                                <h:outputText id="identificacionCell" value="#{bien.identificacion.identificacion}"/>
+                                            </ice:column>
+                                            <ice:column>
+                                                <h:outputText id="descripcionCell" value="#{bien.descripcion}"/>
+                                            </ice:column>
+                                            <ice:column>
+                                                <h:outputText id="marcaCell" value="#{bien.resumenBien.marca}"/>
+                                            </ice:column>
+                                            <ice:column>
+                                                <h:outputText id="modeloCell" escape="false" value="#{bien.resumenBien.modelo}"/>
+                                            </ice:column>
+                                            <ice:column>
+                                                <h:outputText id="serieCell" escape="false" value="#{bien.resumenBien.serie}"/>
+                                            </ice:column>
+                                            <ice:column>
+                                                <h:outputText id="estadoCell" value="#{bien.estado.nombre}"/>
+                                            </ice:column>
+                                            
+                                            <ice:column>
+                                                <ice:commandButton id="btnEliminarBien" style="margin-top:2%" styleClass="btnEliminar" partialSubmit="true" 
+                                                                    actionListener="#{controllerAgregarExclusiones.eliminarBien}">
+                                                    <f:attribute id="bienSeleccionado" name="bienSeleccionado"  value="#{bien.id}"/> 
+                                                </ice:commandButton>
+                                            </ice:column>
+                                        </ice:dataTable>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </ice:panelGroup>
                 </div>
             </div>
         </div>

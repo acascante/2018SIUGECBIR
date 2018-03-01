@@ -43,14 +43,23 @@ public class UnidadEjecutoraDao extends GenericDaoImpl {
     public List<UnidadEjecutora> listar(String idUnidad, String nombreUnidad) throws FWExcepcion {
         Session session = dao.getSessionFactory().openSession();
         try {
-            StringBuilder sql = new StringBuilder ("select obj from UnidadEjecutora obj where to_char(obj.id) like :idUnidad ");
-            sql.append("AND UPPER(obj.descripcion) LIKE :nombreUnidad");
+            StringBuilder sql = new StringBuilder ("select obj from UnidadEjecutora obj where 1 = 1  ");
+            if(idUnidad != null && idUnidad.length() > 0){
+                sql.append(" and to_char(obj.id) like :idUnidad");
+            }
+            if(nombreUnidad != null && nombreUnidad.length() > 0){
+                sql.append(" and UPPER(obj.descripcion) LIKE upper(:nombreUnidad)");
+            }
             Query query = session.createQuery(sql.toString());
-            query.setParameter("idUnidad", '%'+ idUnidad +'%');
-            query.setParameter("nombreUnidad", '%'+ nombreUnidad +'%');
+            if(idUnidad != null && idUnidad.length() > 0){
+                query.setParameter("idUnidad", '%'+ idUnidad +'%');
+            }
+            if(nombreUnidad != null && nombreUnidad.length() > 0){
+                query.setParameter("nombreUnidad", '%'+ nombreUnidad +'%');
+            }
 
             query.setFirstResult(0);
-            query.setMaxResults(10);
+            query.setMaxResults(5);
                 
             return (List<UnidadEjecutora>) query.list();
         } catch (HibernateException e) {

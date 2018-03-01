@@ -61,7 +61,26 @@ public abstract class Solicitud extends ObjetoBase implements Serializable {
     @Transient
     private List<SolicitudDetalle> detalles;
     //</editor-fold>
+
+    //<editor-fold defaultstate="collapsed" desc="Constructor">
+    public Solicitud() {
+    }
+
+    public Solicitud(Integer discriminator, UnidadEjecutora  unidadEjecutora) {
+        this.fecha = new Date();
+        this.discriminator = discriminator;
+        this.unidadEjecutora = unidadEjecutora;
+    }
     
+    public Solicitud(Integer discriminator, UnidadEjecutora  unidadEjecutora, Estado estado) {
+        this.fecha = new Date();
+        this.discriminator = discriminator;
+        this.unidadEjecutora = unidadEjecutora;
+        this.estado = estado;
+    }
+
+    //</editor-fold>
+
     //<editor-fold defaultstate="collapsed" desc="Get's y Set's">
     public Long getId() {
         return id;
@@ -117,15 +136,11 @@ public abstract class Solicitud extends ObjetoBase implements Serializable {
     //</editor-fold>
     
     //<editor-fold defaultstate="collapsed" desc="Sobrecargas">
+    
     @Override
     public int hashCode() {
         int hash = 7;
-        hash = 37 * hash + (this.id != null ? this.id.hashCode() : 0);
-        hash = 37 * hash + (this.fecha != null ? this.fecha.hashCode() : 0);
-        hash = 37 * hash + (this.estado != null ? this.estado.hashCode() : 0);
-        hash = 37 * hash + (this.unidadEjecutora != null ? this.unidadEjecutora.hashCode() : 0);
-        hash = 37 * hash + (this.discriminator != null ? this.discriminator.hashCode() : 0);
-        hash = 37 * hash + (this.detalles != null ? this.detalles.hashCode() : 0);
+        hash = 97 * hash + (this.id != null ? this.id.hashCode() : 0);
         return hash;
     }
 
@@ -144,23 +159,10 @@ public abstract class Solicitud extends ObjetoBase implements Serializable {
         if (this.id != other.id && (this.id == null || !this.id.equals(other.id))) {
             return false;
         }
-        if (this.fecha != other.fecha && (this.fecha == null || !this.fecha.equals(other.fecha))) {
-            return false;
-        }
-        if (this.estado != other.estado && (this.estado == null || !this.estado.equals(other.estado))) {
-            return false;
-        }
-        if (this.unidadEjecutora != other.unidadEjecutora && (this.unidadEjecutora == null || !this.unidadEjecutora.equals(other.unidadEjecutora))) {
-            return false;
-        }
-        if (this.discriminator != other.discriminator && (this.discriminator == null || !this.discriminator.equals(other.discriminator))) {
-            return false;
-        }
-        if (this.detalles != other.detalles && (this.detalles == null || !this.detalles.equals(other.detalles))) {
-            return false;
-        }
         return true;
     }
+    
 
     //</editor-fold>
+
 }

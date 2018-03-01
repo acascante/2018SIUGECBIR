@@ -9,7 +9,7 @@
                             <!-- TAB Caracteristicas-->
                             <ice:panelTab id="tabGarantia"  disabled="#{!controllerAgregarBienes.bienRegistrado}" label="Caracteristicas">
                                 <ice:panelTab id="tabCaracteristicas" label="#{label['sigebi.Bien.Label.Caracteristicas']}" disabled="#{!controllerAgregarBienes.bienRegistrado}">
-                                    <ui:insert name="modalBuscarBienes">
+                                    <ui:insert name="addCaracteristicas">
                                         <ui:include src="../bienes/bienCaracteristicas.xhtml" />
                                     </ui:insert>
                                 </ice:panelTab>
@@ -17,29 +17,36 @@
 
                             <!-- TAB GARANTIA -->
                             <ice:panelTab id="tabGarantia"  disabled="#{!controllerAgregarBienes.bienRegistrado}" label="Garantía">
-                                <ui:insert name="modalTabGarantia">
+                                <ui:insert name="addGarantia">
                                     <ui:include src="../bienes/bienGarantia.xhtml" />
                                 </ui:insert>
                             </ice:panelTab>
 
                             <!-- TAB NOTAS -->
                             <ice:panelTab id="tabNotas" disabled="#{!controllerAgregarBienes.bienRegistrado}" label="#{label['sigebi.Bien.Label.tabNotas']}">
-                                <ui:insert name="modalTabNotas">
+                                <ui:insert name="addNotas">
                                     <ui:include src="../bienes/bienNotas.xhtml" />
                                 </ui:insert>
                             </ice:panelTab>
 
                             <!-- TAB ARCHIVOS -->                                
                             <ice:panelTab id="tabArchivos" disabled="#{!controllerAgregarBienes.bienRegistrado}" label="Archivos">
-                                <ui:insert name="modalBuscarBienes">
+                                <ui:insert name="addArchivos">
                                     <ui:include src="../bienes/bienArchivos.xhtml" />
                                 </ui:insert>
                             </ice:panelTab>
 
                             <!-- TAB ACCESORIOS -->                                
                             <ice:panelTab id="tabAccesorios" disabled="#{!controllerAgregarBienes.bienRegistrado}" label="Accesorios">
-                                <ui:insert name="modalBuscarBienes">
+                                <ui:insert name="addAccesorios">
                                     <ui:include src="../bienes/bienAccesorios.xhtml" />
+                                </ui:insert>
+                            </ice:panelTab>
+                            
+                            <!-- TAB MOVIMIENTOS -->                                
+                            <ice:panelTab id="TabMovimientos" disabled="#{!controllerAgregarBienes.bienRegistrado}" label="Movimientos">
+                                <ui:insert name="addMovimientos">
+                                    <ui:include src="../bienes/bienMovimientos.xhtml" />
                                 </ui:insert>
                             </ice:panelTab>
                         </ice:panelTabSet>

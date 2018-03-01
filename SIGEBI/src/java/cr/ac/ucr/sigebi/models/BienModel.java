@@ -18,7 +18,6 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import javax.annotation.Resource;
-import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
 /**
@@ -43,7 +42,12 @@ public class BienModel {
         return bienDao.listarPorUnidadEjecutora(unidadejecutora);
     }
 
-    public List<Bien> listarPorUnidadEjecutoraEstado(UnidadEjecutora unidadEjecutora, Estado estado) throws FWExcepcion {
+    public List<Bien> listarPorUnidadEjecutoraEstado(UnidadEjecutora unidadejecutora, Estado estado) throws FWExcepcion {
+        return bienDao.listarPorUnidadEjecutoraEstado(unidadejecutora, estado);
+    }
+    
+    public List<Bien> listarPorUnidadEjecutoraEstado(Integer primerRegistro, Integer ultimoRegistro, UnidadEjecutora unidadEjecutora, Estado estado, String identificacion,
+             String descripcion, String marca, String modelo, String serie) throws FWExcepcion {
         return bienDao.listarPorUnidadEjecutoraEstado(unidadEjecutora, estado);
     }
 
@@ -106,6 +110,10 @@ public class BienModel {
     public void actualizar(Bien bien) throws FWExcepcion {
         bienDao.actualizar(bien);
     }
+    
+    public void eliminar(Bien bien) throws FWExcepcion {
+        bienDao.eliminar(bien);        
+    }
 
     public void cambiaEstadoBien(Collection<Bien> bienes, Estado estado, String observacion, Integer telefono, Usuario usuario) {
         for (Bien bien : bienes) {
@@ -147,5 +155,13 @@ public class BienModel {
     
     public void actualizar(List<Bien> bienes) throws FWExcepcion, Exception {
         bienDao.actualizar(bienes);
+    }
+ 
+    public List<Bien> listar(Integer primerRegistro, Integer ultimoRegistro, Long id, UnidadEjecutora unidadejecutora, String identificacion, String descripcion, String marca, String modelo, String serie, Estado estadoInterno) throws FWExcepcion {
+        return bienDao.listar(primerRegistro, ultimoRegistro, id, unidadejecutora, identificacion, descripcion, marca, modelo, serie, estadoInterno);
+    }
+    
+    public Long contar(Long id, UnidadEjecutora unidadejecutora, String identificacion, String descripcion, String marca, String modelo, String serie, Estado estadoInterno) throws FWExcepcion {
+        return bienDao.contar(id, unidadejecutora, identificacion, descripcion, marca, modelo, serie, estadoInterno);
     }
 }

@@ -24,6 +24,7 @@
     <mapping class="cr.ac.ucr.sigebi.domain.BienCaracteristica"/>
     <mapping class="cr.ac.ucr.sigebi.domain.Categoria"/>
     <mapping class="cr.ac.ucr.sigebi.domain.Clasificacion"/>
+    <mapping class="cr.ac.ucr.sigebi.domain.Convenio"/>
     <mapping class="cr.ac.ucr.sigebi.domain.Documento"/>
     <mapping class="cr.ac.ucr.sigebi.domain.DocumentoActa"/>
     <mapping class="cr.ac.ucr.sigebi.domain.DocumentoAutorizacion"/>
@@ -41,7 +42,9 @@
     <mapping class="cr.ac.ucr.sigebi.domain.Rol"/>
     <mapping class="cr.ac.ucr.sigebi.domain.Solicitud"/>
     <mapping class="cr.ac.ucr.sigebi.domain.SolicitudDetalle"/>
+    <mapping class="cr.ac.ucr.sigebi.domain.SolicitudDetallePrestamo"/>    
     <mapping class="cr.ac.ucr.sigebi.domain.SolicitudExclusion"/>
+    <mapping class="cr.ac.ucr.sigebi.domain.SolicitudPrestamo"/>
     <mapping class="cr.ac.ucr.sigebi.domain.SolicitudTraslado"/>
     <mapping class="cr.ac.ucr.sigebi.domain.Sincronizar"/>
     <mapping class="cr.ac.ucr.sigebi.domain.SubCategoria"/>
@@ -53,7 +56,11 @@
     <mapping class="cr.ac.ucr.sigebi.domain.UnidadEjecutora"/>
     <mapping class="cr.ac.ucr.sigebi.domain.Usuario"/>
     <mapping class="cr.ac.ucr.sigebi.domain.ViewResumenBien"/>
-    
+    <mapping class="cr.ac.ucr.sigebi.domain.Factura"/>
+    <mapping class="cr.ac.ucr.sigebi.domain.Pais"/>
+    <mapping class="cr.ac.ucr.sigebi.domain.SolicitudAutorizacion"/>
+    <mapping class="cr.ac.ucr.sigebi.domain.SolicitudDonacion"/>
+
     
     
     <!--<mapping class="cr.ac.ucr.sigebi.entities.AccesoriosEntity"/>

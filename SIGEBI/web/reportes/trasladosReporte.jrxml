@@ -1,0 +1,294 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="trasladosReporte" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="f3eb3432-9ff9-4e28-8d6c-60ec9d6c686b">
+	<property name="ireport.zoom" value="0.9090909090909136"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="fechaInicial" class="java.util.Date">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="fechaFin" class="java.util.Date">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="unidadEjecutora" class="java.lang.Long">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="identificacion" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="descripcion" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="marca" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="modelo" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="serie" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="nomUnidadOrigen" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="nomUnidadDestino" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="nomEstado" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[    SELECT
+              TRA.ID_SOLICITUD
+            , IDEN.NUMERO_IDENTIFICACION IDENTIFICACION
+            , BIEN.DESCRIPCION         DESCRIPCION
+            , NVL(CAR.MARCA, '--')               MARCA
+            , NVL(CAR.MODELO, '--')               MODELO
+            , NVL(CAR.SERIE, '--')                SERIE
+            , UN_OR.DSC_UNIDAD_EJECUTORA    UNIDAD_ORIGEN
+            , UN_DES.DSC_UNIDAD_EJECUTORA   UNIDAD_DESTINO
+            , EST.NOMBRE                ESTADO
+    FROM SIGEBI_OAF.SIGB_SOLICITUD_TRASLADO TRA
+        LEFT JOIN SIGEBI_OAF.SIGB_SOLICITUD SOL
+            ON(TRA.ID_SOLICITUD = SOL.ID_SOLICITUD)
+        LEFT JOIN SIGEBI_OAF.V_SIGB_UNIDAD_EJECUTORA UN_OR
+            ON( SOL.ID_UNIDAD_EJECUTORA = UN_OR.ID )
+
+        LEFT JOIN SIGEBI_OAF.V_SIGB_UNIDAD_EJECUTORA UN_DES
+            ON( TRA.ID_UNIDAD_EJECU_DEST = UN_DES.ID )
+        LEFT JOIN SIGEBI_OAF.SIGB_SOLICITUD_DETALLE DET
+            ON (TRA.ID_SOLICITUD = DET.ID_SOLICITUD)
+        LEFT JOIN SIGEBI_OAF.SIGB_BIEN BIEN
+            ON(DET.ID_BIEN = BIEN.ID_BIEN)
+        LEFT JOIN SIGEBI_OAF.SIGB_IDENTIFICACION IDEN
+            ON (BIEN.ID_IDENTIFICACION = IDEN.ID_IDENTIFICACION)
+        LEFT JOIN SIGEBI_OAF.V_SIGB_BIEN_CARACTERISTICA CAR
+            ON (BIEN.ID_BIEN = CAR.ID)
+        LEFT JOIN SIGEBI_OAF.SIGB_ESTADO EST
+            ON (BIEN.ID_ESTADO = EST.ID_ESTADO)
+	WHERE SOL.FECHA >= $P{fechaInicial}
+        AND   SOL.FECHA <= $P{fechaFin}
+        AND ( SOL.ID_UNIDAD_EJECUTORA = $P{unidadEjecutora}
+            OR UN_DES.ID = $P{unidadEjecutora} )
+        AND UPPER(IDEN.NUMERO_IDENTIFICACION) LIKE  UPPER($P{identificacion})
+        AND UPPER(BIEN.DESCRIPCION) LIKE  UPPER($P{descripcion})
+        AND UPPER(NVL(CAR.MARCA, '--')) LIKE  UPPER($P{marca})
+        AND UPPER(NVL(CAR.MODELO, '--')) LIKE  UPPER($P{modelo})
+        AND UPPER(NVL(CAR.SERIE, '--')) LIKE  UPPER($P{serie})
+        AND UPPER(UN_OR.DSC_UNIDAD_EJECUTORA) LIKE  UPPER($P{nomUnidadOrigen})
+        AND UPPER(UN_DES.DSC_UNIDAD_EJECUTORA) LIKE  UPPER($P{nomUnidadDestino})
+        AND UPPER(EST.NOMBRE) LIKE  UPPER($P{nomEstado})]]>
+	</queryString>
+	<field name="ID_SOLICITUD" class="java.math.BigDecimal"/>
+	<field name="IDENTIFICACION" class="java.lang.String"/>
+	<field name="DESCRIPCION" class="java.lang.String"/>
+	<field name="MARCA" class="java.lang.String"/>
+	<field name="MODELO" class="java.lang.String"/>
+	<field name="SERIE" class="java.lang.String"/>
+	<field name="UNIDAD_ORIGEN" class="java.lang.String"/>
+	<field name="UNIDAD_DESTINO" class="java.lang.String"/>
+	<field name="ESTADO" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="67" splitType="Stretch">
+			<image>
+				<reportElement x="8" y="6" width="540" height="54" uuid="a91acfd4-05c1-4856-bbf1-609580e4db6b"/>
+				<imageExpression><![CDATA["C:\\SIGEBI_V7\\web\\imagenes\\Reporte\\reporteHeader.jpg"]]></imageExpression>
+			</image>
+			<textField pattern="dd/MM/yyyy">
+				<reportElement x="435" y="44" width="100" height="16" forecolor="#FFFFFF" uuid="5862f6bf-5ba6-4cf8-a7cc-add7dad1e729"/>
+				<textElement textAlignment="Right">
+					<font fontName="Calibri"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="38" splitType="Stretch">
+			<staticText>
+				<reportElement x="8" y="0" width="335" height="35" forecolor="#333333" uuid="43f5631d-a56e-40e0-ab79-122c183e07e7"/>
+				<textElement>
+					<font fontName="SansSerif" size="24"/>
+				</textElement>
+				<text><![CDATA[Reporte de Traslados]]></text>
+			</staticText>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="49" splitType="Stretch">
+			<elementGroup/>
+			<staticText>
+				<reportElement x="15" y="4" width="37" height="16" uuid="5f1bb0ce-ca90-4e3f-b509-18420b7bc705"/>
+				<textElement>
+					<font fontName="SansSerif" isBold="true"/>
+				</textElement>
+				<text><![CDATA[DOC]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="67" y="4" width="89" height="16" uuid="cef2591d-e91b-4c00-91ab-a5afdef5444a"/>
+				<textElement>
+					<font fontName="SansSerif" isBold="true"/>
+				</textElement>
+				<text><![CDATA[IDENTIFICACION]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="169" y="4" width="110" height="16" uuid="5de12cf9-66dd-40fb-bb0b-aa3a085f656b"/>
+				<textElement>
+					<font fontName="SansSerif" isBold="true"/>
+				</textElement>
+				<text><![CDATA[DESCRIPCION]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="299" y="4" width="70" height="16" uuid="3e5dceca-7c86-41ca-874e-d0303e5dfb5f"/>
+				<textElement>
+					<font fontName="SansSerif" isBold="true"/>
+				</textElement>
+				<text><![CDATA[MARCA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="388" y="4" width="62" height="16" uuid="aaa32bab-e556-4411-b9f0-d2c2739ebe44"/>
+				<textElement>
+					<font fontName="SansSerif" isBold="true"/>
+				</textElement>
+				<text><![CDATA[MODELO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="459" y="4" width="78" height="16" uuid="afc36a9d-606f-4854-ae65-83e3bc186325"/>
+				<textElement>
+					<font fontName="SansSerif" isBold="true"/>
+				</textElement>
+				<text><![CDATA[SERIE]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="15" y="22" width="155" height="18" uuid="c1f55ad4-e9c7-40d6-94bd-46adb9031d08"/>
+				<textElement>
+					<font fontName="SansSerif" isBold="true"/>
+				</textElement>
+				<text><![CDATA[UNIDAD ORIGEN]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="208" y="22" width="147" height="18" uuid="03048e5f-2cd2-4f7b-931b-de8098b23a06"/>
+				<textElement>
+					<font fontName="SansSerif" isBold="true"/>
+				</textElement>
+				<text><![CDATA[UNIDAD DESTINO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="448" y="22" width="100" height="18" uuid="c6efc1c8-ac53-4699-92cb-218f30030361"/>
+				<textElement>
+					<font fontName="SansSerif" isBold="true"/>
+				</textElement>
+				<text><![CDATA[ESTADO]]></text>
+			</staticText>
+			<line>
+				<reportElement x="14" y="47" width="530" height="1" uuid="3ac62dd7-c9a4-464e-b471-9a7d955f6e08"/>
+			</line>
+			<line>
+				<reportElement x="14" y="2" width="530" height="1" uuid="7960045d-5bd8-4af2-b06c-c48868174ec7"/>
+			</line>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="46" splitType="Stretch">
+			<elementGroup/>
+			<textField>
+				<reportElement x="15" y="5" width="37" height="16" uuid="2aa6e095-322e-4a4c-80c6-0de8ef758679"/>
+				<textElement>
+					<font fontName="SansSerif"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{ID_SOLICITUD}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="67" y="5" width="89" height="16" uuid="2b0aa8b6-e521-4585-88c3-44b03abd59f6"/>
+				<textElement>
+					<font fontName="SansSerif"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{IDENTIFICACION}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="169" y="5" width="110" height="16" uuid="8f146ebe-d7c9-42ac-a5d6-e6bbfcdf37fb"/>
+				<textElement>
+					<font fontName="SansSerif"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{DESCRIPCION}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="299" y="5" width="70" height="16" uuid="af98663e-5185-42c8-9427-9d8a539a0934"/>
+				<textElement>
+					<font fontName="SansSerif"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{MARCA}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="388" y="5" width="62" height="16" uuid="1dd71ff4-ca07-4a54-a77e-92bdbe5ab15d"/>
+				<textElement>
+					<font fontName="SansSerif"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{MODELO}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="466" y="5" width="78" height="16" uuid="42f13d91-fe42-4b74-bf75-4304ff947da1"/>
+				<textElement>
+					<font fontName="SansSerif"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{SERIE}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="15" y="22" width="193" height="20" uuid="c04ef7b2-f285-44d6-a18f-ebda43d63846"/>
+				<textElement>
+					<font fontName="SansSerif"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{UNIDAD_ORIGEN}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="208" y="22" width="213" height="20" uuid="8899a484-cb55-482a-bd4f-aecc9f4aa540"/>
+				<textElement>
+					<font fontName="SansSerif"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{UNIDAD_DESTINO}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="446" y="22" width="100" height="20" uuid="af1a1ef9-f439-404d-a802-4fdaae9f5ed2"/>
+				<textElement>
+					<font fontName="SansSerif"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{ESTADO}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="7">
+			<line>
+				<reportElement x="13" y="3" width="530" height="1" uuid="b907ad45-dc28-4fc4-b1b5-8161c6a660b7"/>
+			</line>
+		</band>
+	</columnFooter>
+	<pageFooter>
+		<band height="27" splitType="Stretch">
+			<staticText>
+				<reportElement x="450" y="4" width="50" height="15" uuid="4cf85d63-621f-4022-9261-2f0cc1bc1a29"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="SansSerif"/>
+				</textElement>
+				<text><![CDATA[Página:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="510" y="4" width="25" height="15" uuid="3ba73e26-5159-402f-9ec1-f78a47c27396"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="SansSerif"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+	<summary>
+		<band height="92" splitType="Stretch">
+			<image>
+				<reportElement x="8" y="11" width="540" height="76" uuid="37dd1d39-8ff6-4898-8250-d83fa1d3084d"/>
+				<imageExpression><![CDATA["C:\\SIGEBI_V7\\web\\imagenes\\Reporte\\reporteFooter.jpg"]]></imageExpression>
+			</image>
+		</band>
+	</summary>
+</jasperReport>

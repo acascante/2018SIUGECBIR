@@ -15,253 +15,30 @@
                                        action="#{controllerAgregarBienes.regresarListado}"/>
                 </div>
             </div>
-        </div>
+            
+            <!-- Agrega los campos para agregar un bien-->
+            <ui:insert name="detalledelBien">
+                    <ui:include src="../bienes/bienDetalleInclude.xhtml" />
+            </ui:insert>
 
-        <div class="container">
-            <div class="col-md-12">
-                <!-- ROW IDENTIFICACION -->
-                <div class="row">
-                    <div class="col-md-4">
-                        <ice:outputText value="#{label['sigebi.Bien.Label.Identificacion']}" />
-                        <ice:inputText id="txtBienId" styleClass="form-control" readonly="true" partialSubmit="false"
-                                       value="#{controllerAgregarBienes.command.identificacion.identificacion}">
-                        </ice:inputText>
-                    </div>                                             
+            <div class="row">
+                <div class="col-md-4">    
+                    <ice:commandButton id="botonGuardar" value="#{label['sigebi.Bien.Btn.Guardar']}" partialSubmit="true" styleClass="boton" 
+                                       action="#{controllerAgregarBienes.agregarBien}"/>
 
-                    <div class="col-md-8">
-                        <ice:outputText value="#{label['sigebi.Bien.Label.Descripcion']}" />
-                        <ice:inputText id="txtDescripcion" styleClass="form-control" required="true" partialSubmit="false"
-                                       value="#{controllerAgregarBienes.command.descripcion}" >
-                        </ice:inputText>
-                    </div>
-                </div>
-                
-                <!-- ROW TIPO -->
-                <div class="row">
-                    <div class="col-md-4">
-                        <ice:outputText value="#{label['sigebi.Bien.Label.Tipo']}" />
+                    <ice:commandButton id="botonSincronizar" value="#{label['sigebi.Bien.Btn.Sincronizacion']}" style="float:right" styleClass="boton" partialSubmit="true" 
+                               rendered="#{controllerAgregarBienes.visibleBotonSincronizar}"
+                               action="#{controllerAgregarBienes.solicitarSincronizacion}">
+                    </ice:commandButton>
 
-                        <ice:selectOneMenu id="selTipoBien" styleClass="form-control"
-                                           value="#{controllerAgregarBienes.command.idTipo}" >
-                            <f:selectItem itemLabel="#{label['sigebi.Bien.Select.Tipo']}" itemValue="-1"/>
-                            <f:selectItems id="optSelTipoBien" value="#{controllerAgregarBienes.itemsTipo}"/>
-                        </ice:selectOneMenu>
-                    </div>
-
-                    <div class="col-md-8">
-                        <ice:outputText value="#{label['sigebi.Bien.Label.Origen']}" />  
-                        <ice:selectOneMenu id="selOrigen" styleClass="form-control" partialSubmit="false"
-                                           value="#{controllerAgregarBienes.command.idOrigen}" >
-                            <f:selectItem itemLabel="Seleccione un valor" itemValue="-1"/>
-                            <f:selectItems id="optSelOrigen" value="#{controllerAgregarBienes.itemsOrigen}"/>
-                        </ice:selectOneMenu>
-                    </div>
-                </div>
-
-                <!-- ROW CAPITALIZABLE -->
-                <div class="row">
-                    <div class="col-md-4">
-                        <div class="form-group"> 
-                            <ice:outputText value="#{label['sigebi.Bien.Label.Capitalizable']}" />  
-                            <ice:inputText id="txtCapitalizable" styleClass="form-control" readonly="true" partialSubmit="false"
-                                           value="#{controllerAgregarBienes.command.capitalizableSTR}" >
-                            </ice:inputText>
-                        </div>                                             
-                    </div>
-
-                    <div class="col-md-4">
-                        <div class="form-group">
-                            <ice:outputText value="#{label['sigebi.Bien.Label.Estado']}" />
-                            <ice:inputText id="txtEstado" styleClass="form-control" readonly="true" partialSubmit="false"
-                                           value="#{controllerAgregarBienes.command.estado.nombre}" >
-                            </ice:inputText>
-                        </div>                                        
-                    </div>
-
-                    <div class="col-md-2">
-                        <div class="form-group"> 
-                            <ice:outputText value="#{label['sigebi.Bien.Label.Lote']}" />  
-                            <ice:selectOneMenu id="selLotes" 
-                                               styleClass="form-control" 
-                                               partialSubmit="true" 
-                                               value="#{controllerAgregarBienes.command.idLote}"
-                                               valueChangeListener="#{controllerAgregarBienes.cambioLote}"
-                                               >
-                                <f:selectItem itemLabel="Ninguno" itemValue="-1"/>
-                                <f:selectItems id="optSelLotes" value="#{controllerAgregarBienes.itemsLote}"/>
-                            </ice:selectOneMenu>
-                        </div>
-                    </div>
-
-                    <div class="col-md-2">
-                        <div class="form-group"> 
-                            <ice:outputText value="#{label['sigebi.Bien.Label.Cantidad']}" /> 
-                            <ice:inputText id="txtBiencantidad" styleClass="form-control" 
-                                           required="true" 
-                                           partialSubmit="true"
-                                           readonly="#{controllerAgregarBienes.command.cantidadActivo}"
-                                           value="#{controllerAgregarBienes.command.cantidad}" >
-                            </ice:inputText>
-                        </div>                                             
-                    </div>
-                </div>
-
-                <!-- ROW CATEGORIA -->
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="form-group"> 
-                            <ice:outputText value="#{label['sigebi.Bien.Label.Categoria']}" />                                 
-                            <ice:selectOneMenu  id="selCategoria" styleClass="form-control" partialSubmit="true"
-                                                valueChangeListener="#{controllerAgregarBienes.cambioCategoria}"
-                                                value="#{controllerAgregarBienes.command.idCategoria}" >
-                                    <f:selectItem itemLabel="Seleccionar Categoría" itemValue="-1"/>
-                                    <f:selectItems id="optSelCategoria" value="#{controllerAgregarBienes.itemsCategoria}"/>
-                            </ice:selectOneMenu>
-                        </div>                                             
-                    </div>
-
-                    <div class="col-md-6">
-                        <div class="form-group"> 
-                            <ice:outputText value="#{label['sigebi.Bien.Label.SubCategoria']}" /> 
-                            <ice:selectOneMenu id="selSubCategoria" styleClass="form-control" partialSubmit="true"
-                                               readonly="#{controllerAgregarBienes.disableSubCategorias}"
-                                               value="#{controllerAgregarBienes.command.idSubCategoria}" 
-                                               valueChangeListener="#{controllerAgregarBienes.cambioSubCategoria}">
-                                <f:selectItem itemLabel="Seleccionar Sub Categoría" itemValue="-1"/>
-                                <f:selectItems id="optSelSubCateg" value="#{controllerAgregarBienes.itemsSubCategoria}"/>
-                            </ice:selectOneMenu>
-                        </div>                                             
-                    </div>
-                </div>
-
-                <!-- ROW CLASIFICACION -->
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="form-group"> 
-                            <ice:outputText value="#{label['sigebi.Bien.Label.Clasificacion']}" /> 
-                            <ice:selectOneMenu id="selClasificacion" styleClass="form-control" partialSubmit="true"
-                                               readonly="#{controllerAgregarBienes.disableClasificaciones}"
-                                               value="#{controllerAgregarBienes.command.idClasificacion}" 
-                                               valueChangeListener="#{controllerAgregarBienes.cambioClasificacion}">
-                                <f:selectItem itemLabel="Seleccionar Clasificación" itemValue="-1"/>
-                                <f:selectItems id="optSelClasificacion" value="#{controllerAgregarBienes.itemsClasificacion}"/>
-                            </ice:selectOneMenu>
-                        </div>                                             
-                    </div>
-
-                    <div class="col-md-6">
-                        <div class="form-group"> 
-                            <ice:outputText value="#{label['sigebi.Bien.Label.SubClasificacion']}" /> 
-                            <ice:selectOneMenu id="selSubClasificacion" styleClass="form-control" partialSubmit="false"
-                                               readonly="#{controllerAgregarBienes.disableSubClasificaciones}"
-                                               value="#{controllerAgregarBienes.command.idSubClasificacion}">
-                                <f:selectItem itemLabel="#{label['sigebi.Bien.Select.SubClasificacion']}" itemValue="-1"/>
-                                <f:selectItems id="optSelSubclasificacion" value="#{controllerAgregarBienes.itemsSubClasificacion}"/>
-                            </ice:selectOneMenu>
-                        </div>                                             
-                    </div>
-                </div>
-
-                <!-- ROW UBICACION -->
-                <div class="row">
-                    <div class="col-sm-8"> 
-                        <div class="form-group">
-                            <ice:outputText value="#{label['sigebi.Bien.Label.Ubicacion']}" /> 
-                            <ice:inputText id="txtUbicacionDescr" styleClass="form-control" required="true" readonly="true" partialSubmit="true"
-                                           value="#{controllerAgregarBienes.command.ubicacionCommand.descripcion}" >
-                            </ice:inputText>
-                        </div>
-                    </div>
-                    
-                    <div class="col-sm-2">
-                        <ice:commandButton id="btnBuscarUbicacion" value="#{label['sigebi.Bien.Btn.Buscar']}"  partialSubmit="true" styleClass="boton" style="margin-top: 1.5rem"
-                                           action="#{controllerAgregarBienes.mostrarPanelUbicaciones}"/>
-                    </div>
-
-                    <div class="col-sm-2">
-                        <ice:commandButton id="btnUbicacionLimpiar" value="#{label['sigebi.Bien.Btn.Limpiar']}" partialSubmit="true" styleClass="boton" style="margin-top: 1.5rem"
-                                           action="#{controllerAgregarBienes.limpiarUbicacion}"/>
-                    </div>
-                </div>
-
-                <!-- ROW PROVEEDOR -->
-                <div class="row">
-                    <div class="col-sm-8"> 
-                        <div class="form-group">
-                            <ice:outputText value="#{label['sigebi.Bien.Label.Proveedor']}" /> 
-                            <ice:inputText id="txtProvedor" styleClass="form-control" value="#{controllerAgregarBienes.command.proveedorCommand.descripcion}" required="true" readonly="true" partialSubmit="true"/>
-                        </div>
-                    </div>
-                    <div class="col-sm-2">
-                        <ice:commandButton id="botonProveedores" value="#{label['sigebi.Bien.Btn.Buscar']}" partialSubmit="true" styleClass="boton" style="margin-top: 1.5rem"
-                                           action="#{controllerAgregarBienes.mostrarPanelProveedores}"/>
-                    </div>
-                    <div class="col-sm-2">
-                        <ice:commandButton id="botonProveedoresLimpiar" value="#{label['sigebi.Bien.Btn.Limpiar']}" partialSubmit="true" styleClass="boton" style="margin-top: 1.5rem"
-                                           action="#{controllerAgregarBienes.limpiarProveedor}"/>
-                    </div>
-                </div>
-
-                <!-- ROW FECHA ADQUISICION -->
-                <div class="row">
-                    <div class="col-md-5">
-
-                        <ice:outputText value="#{label['sigebi.Bien.Label.FecAdqui']}" />
-
-                        <ice:selectInputDate id="txtFecAdquisic" partialSubmit="false" styleClass="form-control" renderAsPopup="true" renderMonthAsDropdown="true" title="Fecha Adquisición"
-                                             value="#{controllerAgregarBienes.command.fechaAdquisicion}">
-                            <f:convertDateTime pattern="dd/MM/yyyy" timeZone="GMT-6:00" />
-                        </ice:selectInputDate>
-                    </div>
-
-                    <div class="col-md-3">
-                        <ice:outputText value="#{label['sigebi.Bien.Label.Moneda']}"/>
-                        <ice:selectOneMenu id="selMoneda" styleClass="form-control" partialSubmit="true"
-                                           valueChangeListener="#{controllerAgregarBienes.verificaCapitalizable}"
-                                           value="#{controllerAgregarBienes.command.idMoneda}" >
-                            <f:selectItem itemLabel="#{label['sigebi.Bien.Select.Moneda']}" itemValue="-1"/>
-                            <f:selectItems id="optSelMoneda" value="#{controllerAgregarBienes.itemsMoneda}"/>
-                        </ice:selectOneMenu>
-                    </div>
-
-                    <div class="col-md-4">
-                        <ice:outputText value="#{label['sigebi.Bien.Label.Monto']}"/>
-                        <ice:inputText id="txtMonto" styleClass="form-control" required="true" partialSubmit="true"
-                                       valueChangeListener="#{controllerAgregarBienes.verificaCapitalizable}"
-                                       value="#{controllerAgregarBienes.command.costo}" >
-                        </ice:inputText>
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div class="col-md-4">    
-                        <ice:commandButton id="botonGuardar" value="#{label['sigebi.Bien.Btn.Guardar']}" partialSubmit="true" styleClass="boton" 
-                                           action="#{controllerAgregarBienes.agregarBien}"/>
-
-                        <ice:commandButton id="botonSincronizar" value="#{label['sigebi.Bien.Btn.Sincronizacion']}" style="float:right" styleClass="boton" partialSubmit="true" 
-                                   rendered="#{controllerAgregarBienes.visibleBotonSincronizar}"
-                                   action="#{controllerAgregarBienes.solicitarSincronizacion}">
-                        </ice:commandButton>
-
-                        <ice:commandButton id="botonRechazar" value="#{label['sigebi.Bien.Btn.Rechazar']}" style="float:right" styleClass="boton" partialSubmit="true"
-                                           rendered="#{controllerAgregarBienes.visibleBotonRechazar}"
-                                           actionListener="#{controllerAgregarBienes.mostrarPanelObservaciones}">
-                        </ice:commandButton>
-                    </div>
+                    <ice:commandButton id="botonRechazar" value="#{label['sigebi.Bien.Btn.Rechazar']}" style="float:right" styleClass="boton" partialSubmit="true"
+                                       rendered="#{controllerAgregarBienes.visibleBotonRechazar}"
+                                       actionListener="#{controllerAgregarBienes.mostrarPanelObservaciones}">
+                    </ice:commandButton>
                 </div>
             </div>
         </div>
 
-        <!-- Panel de Ubicaciones --> 
-        <ui:insert name="modalUbicaciones">
-            <ui:include src="../bienes/bienUbicaciones.xhtml" />
-        </ui:insert>
-                
-        <!-- Panel de Proveedores --> 
-        <ui:insert name="modalProveedores">
-            <ui:include src="../bienes/bienProveedores.xhtml" />
-        </ui:insert>
-        
         <!-- Modal para rechazar un bien pendiente de sincronizar --> 
         <ui:insert name="modalSincronizacion">
             <ui:include src="../bienes/bienRechazarSincronizacion.xhtml" />

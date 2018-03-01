@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="pruebas" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="0c674cb7-8c8f-4e9a-ab3c-5e14a0cc3fe6">
+	<property name="ireport.zoom" value="1.2100000000000004"/>
+	<property name="ireport.x" value="54"/>
+	<property name="ireport.y" value="23"/>
+	<queryString>
+		<![CDATA[SELECT
+                  TRA.ID_DOCUMENTO
+                , IDEN.NUMERO_IDENTIFICACION IDENTIFICACION
+                , BIEN.DESCRIPCION         DESCRIPCION
+                , CAR.MARCA                MARCA
+                , CAR.MODELO               MODELO
+                , CAR.SERIE                SERIE
+                , UN_OR.DSC_UNIDAD_EJECUTORA    UNIDAD_ORIGEN
+                , UN_DES.DSC_UNIDAD_EJECUTORA   UNIDAD_DESTINO
+                , EST.NOMBRE                ESTADO
+        FROM SIGEBI_OAF.SIGB_DOCUMENTO_TRASLADO TRA
+            LEFT JOIN SIGEBI_OAF.SIGB_DOCUMENTO DOC
+            ON(TRA.ID_DOCUMENTO = DOC.ID_DOCUMENTO)
+            LEFT JOIN SIGEBI_OAF.V_SIGB_UNIDAD_EJECUTORA UN_OR
+            ON( DOC.ID_UNIDAD_EJECUTORA = UN_OR.ID )
+            LEFT JOIN SIGEBI_OAF.V_SIGB_UNIDAD_EJECUTORA UN_DES
+            ON( TRA.NUM_UNIDAD_EJEC_RECIBE = UN_DES.ID )
+            LEFT JOIN SIGEBI_OAF.SIGB_DOCUMENTO_DETALLE DET
+            ON (TRA.ID_DOCUMENTO = DET.ID_DOCUMENTO)
+            LEFT JOIN SIGEBI_OAF.SIGB_BIEN BIEN
+            ON(DET.ID_BIEN = BIEN.ID_BIEN)
+            LEFT JOIN SIGEBI_OAF.SIGB_IDENTIFICACION IDEN
+            ON (BIEN.ID_IDENTIFICACION = IDEN.ID_IDENTIFICACION)
+            LEFT JOIN SIGEBI_OAF.V_SIGB_BIEN_CARACTERISTICA CAR
+            ON (BIEN.ID_BIEN = CAR.ID)
+            LEFT JOIN SIGEBI_OAF.SIGB_ESTADO EST
+            ON (BIEN.ID_ESTADO = EST.ID_ESTADO)]]>
+	</queryString>
+	<field name="ID_DOCUMENTO" class="java.math.BigDecimal"/>
+	<field name="IDENTIFICACION" class="java.lang.String"/>
+	<field name="DESCRIPCION" class="java.lang.String"/>
+	<field name="MARCA" class="java.lang.String"/>
+	<field name="MODELO" class="java.lang.String"/>
+	<field name="SERIE" class="java.lang.String"/>
+	<field name="UNIDAD_ORIGEN" class="java.lang.String"/>
+	<field name="UNIDAD_DESTINO" class="java.lang.String"/>
+	<field name="ESTADO" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="61" splitType="Stretch">
+			<image>
+				<reportElement x="7" y="4" width="540" height="54" uuid="d3a783db-d2f6-47c7-a89e-1e128cf6309d"/>
+				<imageExpression><![CDATA["C:\\SIGEBI_V6\\web\\imagenes\\Reporte\\reporteHeader.jpg"]]></imageExpression>
+			</image>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="47" splitType="Stretch">
+			<staticText>
+				<reportElement x="18" y="5" width="334" height="32" forecolor="#333333" uuid="8431a44a-3e85-4945-a06b-c5953c24256d"/>
+				<textElement>
+					<font fontName="SansSerif" size="24"/>
+				</textElement>
+				<text><![CDATA[Reporte de Traslados]]></text>
+			</staticText>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="58" splitType="Stretch">
+			<staticText>
+				<reportElement x="16" y="2" width="45" height="20" uuid="a1963267-53a4-4ac2-b2f3-3c2dbf9a5cf0"/>
+				<text><![CDATA[DOCUM]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="72" y="2" width="81" height="20" uuid="80da1768-6666-4c6f-aff4-3732de0a0517"/>
+				<text><![CDATA[IDENTIFICACION]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="165" y="2" width="146" height="20" uuid="fb3b4c5a-cc31-472d-be9a-2e7dc903e46c"/>
+				<text><![CDATA[DESCRIPCION]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="325" y="2" width="65" height="20" uuid="d08e8168-6dcd-4da8-9944-74ec9e8af73d"/>
+				<text><![CDATA[MARCA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="401" y="2" width="54" height="20" uuid="80c1bdf8-0c80-43bd-b18e-c173772bd777"/>
+				<text><![CDATA[MODELO]]></text>
+			</staticText>
+			<line>
+				<reportElement x="7" y="46" width="540" height="1" uuid="79c96cfe-9b90-42d4-952a-dac4d43d843d"/>
+			</line>
+			<staticText>
+				<reportElement x="16" y="26" width="100" height="15" uuid="e24282e1-fe6e-421c-93c6-4d95e220699b"/>
+				<text><![CDATA[UNIDAD_ORIGEN]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="202" y="26" width="100" height="15" uuid="71fa9d03-a19f-4e62-971f-a64ed2446c49"/>
+				<text><![CDATA[UNIDAD_DESTINO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="453" y="26" width="100" height="15" uuid="4e350f8a-bc4f-4073-9c4b-82b5c65fe74b"/>
+				<text><![CDATA[ESTADO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="476" y="2" width="70" height="15" uuid="95853441-6c8d-4849-8929-d9ef50185b4b"/>
+				<text><![CDATA[SERIE]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="48" splitType="Stretch">
+			<textField>
+				<reportElement x="16" y="5" width="45" height="15" uuid="f37987d0-186b-4cbf-b0c9-3bd0e31c7fc6"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$F{ID_DOCUMENTO}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="76" y="5" width="77" height="15" uuid="b48db5d7-e9df-4415-9d71-2b2113280f81"/>
+				<textFieldExpression><![CDATA[$F{IDENTIFICACION}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="156" y="5" width="146" height="15" uuid="4ebc0bba-f25c-4c17-9c7f-fa31a9c45150"/>
+				<textFieldExpression><![CDATA[$F{DESCRIPCION}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="325" y="5" width="65" height="15" uuid="3d8baf0e-5c3b-49e8-a976-68cb80650835"/>
+				<textFieldExpression><![CDATA[$F{MARCA}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="401" y="5" width="54" height="15" uuid="a2d1e464-1234-4ea9-86c9-e28a0a6fe6ff"/>
+				<textFieldExpression><![CDATA[$F{MODELO}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="16" y="24" width="205" height="15" uuid="65af902a-21c5-4a67-baf5-35b24119e94c"/>
+				<textFieldExpression><![CDATA[$F{UNIDAD_ORIGEN}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="232" y="24" width="203" height="15" uuid="309802bd-2613-4211-b5b7-9656cf674b2d"/>
+				<textFieldExpression><![CDATA[$F{UNIDAD_DESTINO}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="446" y="24" width="100" height="15" uuid="db751592-3787-4fa4-93c2-ab9424bd3bc5"/>
+				<textFieldExpression><![CDATA[$F{ESTADO}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="476" y="5" width="70" height="15" uuid="1ebc07e3-db92-4f86-941f-287c133cafe8"/>
+				<textFieldExpression><![CDATA[$F{SERIE}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="7" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="28" splitType="Stretch">
+			<staticText>
+				<reportElement x="461" y="7" width="50" height="15" uuid="9dec3ae0-47ef-42cc-b331-311ee4c60cd2"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<text><![CDATA[Página:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="515" y="7" width="25" height="15" uuid="ca86ae11-eaaf-43c8-a187-a12fb8dc3438"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="7" y="2" width="540" height="1" uuid="3c95df08-a042-4de5-a993-02838e12583d"/>
+			</line>
+		</band>
+	</pageFooter>
+	<summary>
+		<band height="86" splitType="Stretch">
+			<image>
+				<reportElement x="7" y="4" width="540" height="76" uuid="9f6bbe5b-f478-40a1-aede-f37ab5b68ff8"/>
+				<imageExpression><![CDATA["C:\\SIGEBI_V6\\web\\imagenes\\Reporte\\reporteFooter.jpg"]]></imageExpression>
+			</image>
+		</band>
+	</summary>
+</jasperReport>

@@ -12,11 +12,11 @@ import cr.ac.ucr.framework.vista.util.Mensaje;
 import cr.ac.ucr.framework.vista.util.Util;
 import cr.ac.ucr.sigebi.commands.BienCommand;
 import cr.ac.ucr.sigebi.commands.BienCommand.NotaCommand;
+import cr.ac.ucr.sigebi.commands.SolicitudDonacionCommand;
 import cr.ac.ucr.sigebi.domain.Accesorio;
 import cr.ac.ucr.sigebi.domain.Adjunto;
 import cr.ac.ucr.sigebi.domain.Bien;
 import cr.ac.ucr.sigebi.domain.BienCaracteristica;
-import cr.ac.ucr.sigebi.domain.Clasificacion;
 import cr.ac.ucr.sigebi.domain.Lote;
 import cr.ac.ucr.sigebi.domain.Moneda;
 import cr.ac.ucr.sigebi.domain.Tipo;
@@ -24,10 +24,13 @@ import cr.ac.ucr.sigebi.models.CategoriaModel;
 import cr.ac.ucr.sigebi.models.ClasificacionModel;
 import cr.ac.ucr.sigebi.models.MonedaModel;
 import cr.ac.ucr.sigebi.domain.Categoria;
+import cr.ac.ucr.sigebi.domain.Clasificacion;
 import cr.ac.ucr.sigebi.domain.Estado;
 import cr.ac.ucr.sigebi.domain.Identificacion;
 import cr.ac.ucr.sigebi.domain.Nota;
 import cr.ac.ucr.sigebi.domain.Proveedor;
+import cr.ac.ucr.sigebi.domain.RegistroMovimiento;
+import cr.ac.ucr.sigebi.domain.SolicitudDetalle;
 import cr.ac.ucr.sigebi.domain.SubCategoria;
 import cr.ac.ucr.sigebi.domain.SubClasificacion;
 import cr.ac.ucr.sigebi.domain.Ubicacion;
@@ -39,11 +42,12 @@ import cr.ac.ucr.sigebi.models.IdentificacionModel;
 import cr.ac.ucr.sigebi.models.LoteModel;
 import cr.ac.ucr.sigebi.models.NotaModel;
 import cr.ac.ucr.sigebi.models.ProveedorModel;
+import cr.ac.ucr.sigebi.models.RegistroMovimientoModel;
+import cr.ac.ucr.sigebi.models.SolicitudModel;
 import cr.ac.ucr.sigebi.models.SubCategoriaModel;
 import cr.ac.ucr.sigebi.models.SubClasificacionModel;
 import cr.ac.ucr.sigebi.models.UbicacionModel;
 import cr.ac.ucr.sigebi.utils.Constantes;
-import cr.ac.ucr.sigebi.utils.JsfUtil;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -113,6 +117,10 @@ public class AgregarBienController extends BaseController {
     private SubClasificacionModel modelSubClasificacion;
     @Resource
     private UbicacionModel modelUbicacion;
+    @Resource
+    private RegistroMovimientoModel modelMovimientos;
+    @Resource
+    private SolicitudModel solicitudModel;
 
     private List<Proveedor> proveedores;
     private List<Accesorio> accesorios;
@@ -146,9 +154,9 @@ public class AgregarBienController extends BaseController {
 
     private Tipo tipoAdjuntoDoc;
     private Estado estadoGeneralActivo;
-
+    private SolicitudDonacionCommand solicitudDonacionCommand;
     //</editor-fold>
-    
+
     //<editor-fold defaultstate="collapsed" desc="Inicializa Datos y Modificacion del bien">
     public AgregarBienController() {
         super();
@@ -156,14 +164,14 @@ public class AgregarBienController extends BaseController {
         estadoGeneralActivo = this.estadoPorDominioValor(Constantes.DOMINIO_IDENTIFICACION, Constantes.ESTADO_GENERAL_ACTIVO);
     }
 
-    private void inicializarNuevo() {
+    private void inicializarNuevo(Boolean donacion) {
         this.command = new BienCommand(unidadEjecutora);
         Estado estado = this.estadoPorDominioValor(Constantes.DOMINIO_BIEN, Constantes.ESTADO_BIEN_PENDIENTE);
         this.command.setEstado(estado);
         this.command.setEstadoInterno(estado); // TODO Revisar cual es el estado interno para BIENES
         this.bienRegistrado = false;
         inicializarDatos();
-        cargarCombos();
+        cargarCombos(donacion);
     }
 
     private void inicializarBanderasBotones(Bien bien) {
@@ -195,7 +203,7 @@ public class AgregarBienController extends BaseController {
         notaDetalle = "";
         cargarAdjuntos();
 
-        cargarCombos();
+        cargarCombos(false);
 
         if (command.getIdSubCategoria() != null) {
             cargarSubCategorias(command.getItemCommand().getItemsCategoria().get(command.getIdCategoria()));
@@ -206,6 +214,9 @@ public class AgregarBienController extends BaseController {
         if (command.getIdSubClasificacion() != null) {
             cargarSubClasificaciones(command.getItemCommand().getItemsClasificacion().get(command.getIdClasificacion()));
         }
+
+        command.setMovimientos(modelMovimientos.movimientosPorBien(bien));
+
     }
 
     private void inicializarDatos() {
@@ -229,7 +240,7 @@ public class AgregarBienController extends BaseController {
         this.bienRegistrado = false;
     }
 
-    private void cargarCombos() {
+    private void cargarCombos(Boolean donacion) {
         try {
             List<Tipo> tipos = this.tiposPorDominio(Constantes.DOMINIO_BIEN);
             if (!tipos.isEmpty()) {
@@ -239,13 +250,20 @@ public class AgregarBienController extends BaseController {
                     command.getItemCommand().getItemsTipo().put(item.getId(), item);
                 }
             }
-
-            List<Tipo> tiposOrigen = this.tiposPorDominio(Constantes.DOMINIO_ORIGEN);
-            if (!tiposOrigen.isEmpty()) {
+            if (donacion) {
+                Tipo item = this.tipoPorDominioValor(Constantes.DOMINIO_ORIGEN, Constantes.TIPO_ORIGEN_EXTERNA);
                 itemsOrigen = new ArrayList<SelectItem>();
-                for (Tipo item : tiposOrigen) {
-                    itemsOrigen.add(new SelectItem(item.getId(), item.getNombre()));
-                    command.getItemCommand().getItemsOrigen().put(item.getId(), item);
+                itemsOrigen.add(new SelectItem(item.getId(), item.getNombre()));
+                command.getItemCommand().getItemsOrigen().put(item.getId(), item);
+            } else {
+                
+                List<Tipo> tiposOrigen = this.tiposPorDominio(Constantes.DOMINIO_ORIGEN);
+                if (!tiposOrigen.isEmpty()) {
+                    itemsOrigen = new ArrayList<SelectItem>();
+                    for (Tipo item : tiposOrigen) {
+                        itemsOrigen.add(new SelectItem(item.getId(), item.getNombre()));
+                        command.getItemCommand().getItemsOrigen().put(item.getId(), item);
+                    }
                 }
             }
 
@@ -323,54 +341,97 @@ public class AgregarBienController extends BaseController {
         FacesContext context = FacesContext.getCurrentInstance();
         UIViewRoot root = context.getViewRoot();
         UIInput component = new UIInput();
-        ReentrantLock reentrantLock = new ReentrantLock();
         String messageValidacion = validarForm(root, component);
         if (Constantes.OK.equals(messageValidacion)) {
             try {
-                reentrantLock.lock();
-                //Se busca la identificacion del bien
-                if (!bienRegistrado) {
-                    Estado estadoDisponible = this.estadoPorDominioValor(Constantes.DOMINIO_IDENTIFICACION, Constantes.IDENTIFICACION_ESTADO_DISPONIBLE);
-                    Identificacion identificacion = modelIdentificacion.siguienteDisponible(estadoDisponible, unidadEjecutora);
-                    if (identificacion == null) {
-                        Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.error.agregarBienController.identificacion.requerido"));
-                    } else {
-                        command.setIdentificacion(identificacion);
-                        bien = command.getBien(null);
 
-                        Estado estadoOcupado = this.estadoPorDominioValor(Constantes.DOMINIO_IDENTIFICACION, Constantes.IDENTIFICACION_ESTADO_OCUPADA);
-                        bien.getIdentificacion().setEstado(estadoOcupado);
+                //Se crea el bien
+                this.procesarBien();
 
-                        modelBien.almacenar(bien);
-                        
-                        modelIdentificacion.actualizar(bien.getIdentificacion());
-                        bienRegistrado = true;
-                        inicializarDetalle(bien);
-                        Mensaje.agregarInfo(Util.getEtiquetas("sigebi.error.agregarBienController.mensaje.exito"));
-                    }
-                } else {
-                    modelBien.actualizar(command.getBien(bien));
-                    inicializarDetalle(bien);
-                    Mensaje.agregarInfo(Util.getEtiquetas("sigebi.error.agregarBienController.mensaje.exito"));
-                }
+                Mensaje.agregarInfo(Util.getEtiquetas("sigebi.error.agregarBienController.mensaje.exito"));
+
             } catch (Exception exception) {
-                //Se retorna la identificacion
-                if (!bienRegistrado && command.getIdentificacion() != null && command.getIdentificacion().getId() != null && command.getIdentificacion().getId() > 0) {
-                    Estado estadoDispo = this.estadoPorDominioValor(Constantes.DOMINIO_IDENTIFICACION, Constantes.IDENTIFICACION_ESTADO_DISPONIBLE);
-                    bien.getIdentificacion().setEstado(estadoDispo);
-                    modelIdentificacion.actualizar(bien.getIdentificacion());
-                }
                 if (exception instanceof FWExcepcion) {
                     Mensaje.agregarErrorAdvertencia(((FWExcepcion) exception).getError_para_usuario());
                 } else {
                     Mensaje.agregarErrorAdvertencia(exception, Util.getEtiquetas("sigebi.error.agregarBienController.actualizar"));
                 }
-            } finally {
-                reentrantLock.unlock();
             }
         } else {
             component.setValid(false);
             Mensaje.agregarErrorAdvertencia(messageValidacion);
+        }
+    }
+
+    public void agregarBienDonacion() {
+        FacesContext context = FacesContext.getCurrentInstance();
+        UIViewRoot root = context.getViewRoot();
+        UIInput component = new UIInput();
+        String messageValidacion = validarForm(root, component);
+        if (Constantes.OK.equals(messageValidacion)) {
+            try {
+                //Se crea el bien
+                this.procesarBien();
+
+                //Se crea el detalle para la solicitud
+                SolicitudDetalle solicitudDetalle = new SolicitudDetalle(solicitudDonacionCommand.getSolicitudDonacion(), bien, estadoGeneralActivo);
+                solicitudModel.agregarDetalleSolicitud(solicitudDetalle);
+                this.solicitudDonacionCommand.getBienesDetalles().add(solicitudDetalle);
+
+                Util.navegar(vistaOrigen);
+                Mensaje.agregarInfo(Util.getEtiquetas("sigebi.error.agregarBienController.mensaje.exito"));
+
+            } catch (Exception exception) {
+                if (exception instanceof FWExcepcion) {
+                    Mensaje.agregarErrorAdvertencia(((FWExcepcion) exception).getError_para_usuario());
+                } else {
+                    Mensaje.agregarErrorAdvertencia(exception, Util.getEtiquetas("sigebi.error.agregarBienController.actualizar"));
+                }
+            }
+        } else {
+            component.setValid(false);
+            Mensaje.agregarErrorAdvertencia(messageValidacion);
+        }
+    }
+
+    private void procesarBien() throws Exception {
+        ReentrantLock reentrantLock = new ReentrantLock();
+        try {
+            reentrantLock.lock();
+            //Se busca la identificacion del bien
+            if (!bienRegistrado) {
+                Estado estadoDisponible = this.estadoPorDominioValor(Constantes.DOMINIO_IDENTIFICACION, Constantes.IDENTIFICACION_ESTADO_DISPONIBLE);
+                Identificacion identificacion = modelIdentificacion.siguienteDisponible(estadoDisponible, unidadEjecutora);
+                if (identificacion == null) {
+                    Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.error.agregarBienController.identificacion.requerido"));
+                } else {
+                    command.setIdentificacion(identificacion);
+                    bien = command.getBien(null);
+
+                    Estado estadoOcupado = this.estadoPorDominioValor(Constantes.DOMINIO_IDENTIFICACION, Constantes.IDENTIFICACION_ESTADO_OCUPADA);
+                    bien.getIdentificacion().setEstado(estadoOcupado);
+
+                    modelBien.almacenar(bien);
+
+                    modelIdentificacion.actualizar(bien.getIdentificacion());
+                    bienRegistrado = true;
+                    inicializarDetalle(bien);
+                }
+            } else {
+                modelBien.actualizar(command.getBien(bien));
+                inicializarDetalle(bien);
+                Mensaje.agregarInfo(Util.getEtiquetas("sigebi.error.agregarBienController.mensaje.exito"));
+            }
+        } catch (Exception exception) {
+            //Se retorna la identificacion
+            if (!bienRegistrado && command.getIdentificacion() != null && command.getIdentificacion().getId() != null && command.getIdentificacion().getId() > 0) {
+                Estado estadoDispo = this.estadoPorDominioValor(Constantes.DOMINIO_IDENTIFICACION, Constantes.IDENTIFICACION_ESTADO_DISPONIBLE);
+                bien.getIdentificacion().setEstado(estadoDispo);
+                modelIdentificacion.actualizar(bien.getIdentificacion());
+            }
+            throw exception;
+        } finally {
+            reentrantLock.unlock();
         }
     }
 
@@ -383,11 +444,8 @@ public class AgregarBienController extends BaseController {
         command.calculaCapitalizable();
     }
 
-    
     //</editor-fold>
-    
     //<editor-fold defaultstate="collapsed" desc="Funciones Lote">
-    
     public void cambioLote(ValueChangeEvent event) {
         if (!event.getPhaseId().equals(PhaseId.INVOKE_APPLICATION)) {
             event.setPhaseId(PhaseId.INVOKE_APPLICATION);
@@ -395,18 +453,15 @@ public class AgregarBienController extends BaseController {
             return;
         }
         Long valor = command.getIdLote();
-        if( valor != -1L ){
+        if (valor != -1L) {
             command.setCantidadActivo(false);
-        }
-        else{
+        } else {
             command.setCantidadActivo(true);
             command.setCantidad(1);
         }
     }
 
-    
     //</editor-fold>
-    
     //<editor-fold defaultstate="collapsed" desc="Navegación del MENÚ">
     public void nuevoRegistro(ActionEvent event) {
         if (!event.getPhaseId().equals(PhaseId.INVOKE_APPLICATION)) {
@@ -414,11 +469,23 @@ public class AgregarBienController extends BaseController {
             event.queue();
             return;
         }
-        inicializarNuevo();
+        inicializarNuevo(false);
         this.vistaOrigen = event.getComponent().getAttributes().get(Constantes.KEY_VISTA_ORIGEN).toString();
         Util.navegar(Constantes.KEY_VISTA_DETALLE_BIEN);
     }
-    
+
+    public void nuevoRegistroDonacion(ActionEvent event) {
+        if (!event.getPhaseId().equals(PhaseId.INVOKE_APPLICATION)) {
+            event.setPhaseId(PhaseId.INVOKE_APPLICATION);
+            event.queue();
+            return;
+        }
+        inicializarNuevo(true);
+        this.vistaOrigen = event.getComponent().getAttributes().get(Constantes.KEY_VISTA_ORIGEN).toString();
+        solicitudDonacionCommand = (SolicitudDonacionCommand) event.getComponent().getAttributes().get("donacionCommand");
+        Util.navegar(Constantes.KEY_VISTA_DETALLE_BIEN_DONACION);
+    }
+
     public void modificarRegistro(ActionEvent event) {
         if (!event.getPhaseId().equals(PhaseId.INVOKE_APPLICATION)) {
             event.setPhaseId(PhaseId.INVOKE_APPLICATION);
@@ -427,7 +494,7 @@ public class AgregarBienController extends BaseController {
         }
         Bien bienSecc = (Bien) event.getComponent().getAttributes().get("bienSeleccionado");
         bien = modelBien.buscarPorId(bienSecc.getId());
-        
+
         inicializarDetalle(bien);
         this.vistaOrigen = event.getComponent().getAttributes().get(Constantes.KEY_VISTA_ORIGEN).toString();
         Util.navegar(Constantes.KEY_VISTA_DETALLE_BIEN);
@@ -798,7 +865,6 @@ public class AgregarBienController extends BaseController {
     }
 
     //</editor-fold>
-    
     //<editor-fold defaultstate="collapsed" desc="Tab Garantías">
     public boolean validarGarantia() {
         return command.getInicioGarantia().compareTo(command.getFinGarantia()) < 0;
@@ -1034,7 +1100,6 @@ public class AgregarBienController extends BaseController {
     }
 
     //</editor-fold>
-    
     //<editor-fold defaultstate="collapsed" desc="Tab Accesorios">
     public void guardarAccesorio() {
         try {
@@ -1094,12 +1159,10 @@ public class AgregarBienController extends BaseController {
     //</editor-fold>
 
     //<editor-fold defaultstate="collapsed" desc="Tab Características">
-    
-    public void listarCaracteristicas(){
-        
+    public void listarCaracteristicas() {
+
         this.caracteristicas = modelBienCaracteristica.listarPorBien(bien);
-        
-        
+
         this.itemsCaracteristica = new ArrayList<SelectItem>();
         this.tiposCaracteristica = this.tiposPorDominio(Constantes.DOMINIO_CARACTERISTICA);
         if (!this.tiposCaracteristica.isEmpty()) {
@@ -1118,7 +1181,7 @@ public class AgregarBienController extends BaseController {
             }
         }
     }
-    
+
     public void guardarCaracteristica() {
         try {
 
@@ -1136,7 +1199,7 @@ public class AgregarBienController extends BaseController {
                 modelBienCaracteristica.almacenar(caracteristica);
 
                 listarCaracteristicas();
-                
+
             } else {
                 Mensaje.agregarErrorAdvertencia(mensajeError);
             }
@@ -1261,8 +1324,15 @@ public class AgregarBienController extends BaseController {
     }
 
     //</editor-fold>
-    
     //<editor-fold defaultstate="collapsed" desc="Get's y Set's">
+    public SolicitudDonacionCommand getSolicitudDonacionCommand() {
+        return solicitudDonacionCommand;
+    }
+
+    public void setSolicitudDonacionCommand(SolicitudDonacionCommand solicitudDonacionCommand) {
+        this.solicitudDonacionCommand = solicitudDonacionCommand;
+    }
+
     public List<SelectItem> getItemsCategoria() {
         return itemsCategoria;
     }
@@ -1544,4 +1614,27 @@ public class AgregarBienController extends BaseController {
     }
     //</editor-fold>
 
+    //<editor-fold defaultstate="collapsed" desc="Tab Características">
+    public void consultarMovimiento(ActionEvent event) {
+        try {
+            if (!event.getPhaseId().equals(PhaseId.INVOKE_APPLICATION)) {
+                event.setPhaseId(PhaseId.INVOKE_APPLICATION);
+                event.queue();
+                return;
+            }
+            RegistroMovimiento verMovimiento = (RegistroMovimiento) event.getComponent().getAttributes().get("caracteristicaSelccionada");
+
+//            //Se asigna la caracteristica consultada
+//            this.command.getCaracteristicaCommand().setCaracteristica((BienCaracteristica) event.getComponent().getAttributes().get("caracteristicaSelccionada"));
+//            this.command.getCaracteristicaCommand().setDetalleModificar(command.getCaracteristicaCommand().getCaracteristica().getDetalle());
+//
+//            //Se presenta el panel
+//            this.setVisiblePanelModificarCaracteristica(true);
+        } catch (Exception err) {
+
+            mensajeCaracteristica = err.getMessage();
+        }
+    }
+
+    //</editor-fold>
 }

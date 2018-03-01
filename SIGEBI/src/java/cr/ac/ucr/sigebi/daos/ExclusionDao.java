@@ -169,6 +169,15 @@ public class ExclusionDao extends GenericDaoImpl {
         }
     }
     
+    @Transactional
+    public void eliminarDetalles(List<SolicitudDetalle> detalles) throws FWExcepcion {
+        try {
+            delete(detalles.toArray());
+        } catch (DataAccessException e) {
+            throw new FWExcepcion("sigebi.error.exclusionDao.salvar", "Error guardando registro de tipo " + this.getClass(), e.getCause());
+        }
+    }
+    
     @Transactional(readOnly = true)
     public Long contarDetalles(SolicitudExclusion exclusion) throws FWExcepcion {
         Session session = dao.getSessionFactory().openSession();

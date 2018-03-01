@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="movimientosReporte" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="45ebc7ba-f90d-49b4-b5cc-02b86b890ba6">
+	<property name="ireport.zoom" value="1.4641000000000013"/>
+	<property name="ireport.x" value="106"/>
+	<property name="ireport.y" value="51"/>
+	<queryString>
+		<![CDATA[SELECT IDEN.NUMERO_IDENTIFICACION IDENTIFICACION
+            , BIEN.DESCRIPCION DESCRIPCION
+            , TIPO.NOMBRE       MOVIMIENTO
+            , ESTADO.NOMBRE     ESTADO
+            , MOV.FECHA
+        FROM SIGEBI_OAF.SIGB_REGISTRO_MOVIMIENTO MOV
+            LEFT JOIN SIGEBI_OAF.SIGB_BIEN BIEN
+            ON(MOV.ID_BIEN = BIEN.ID_BIEN)
+            LEFT JOIN SIGEBI_OAF.SIGB_IDENTIFICACION IDEN
+            ON (BIEN.ID_IDENTIFICACION = IDEN.ID_IDENTIFICACION)
+            LEFT JOIN SIGEBI_OAF.SIGB_TIPO TIPO
+            ON (MOV.ID_TIPO = TIPO.ID_TIPO)
+            LEFT JOIN SIGEBI_OAF.SIGB_ESTADO ESTADO
+            ON (MOV.ID_ESTADO = ESTADO.ID_ESTADO)
+        ORDER BY IDEN.NUMERO_IDENTIFICACION]]>
+	</queryString>
+	<field name="IDENTIFICACION" class="java.lang.String"/>
+	<field name="DESCRIPCION" class="java.lang.String"/>
+	<field name="MOVIMIENTO" class="java.lang.String"/>
+	<field name="ESTADO" class="java.lang.String"/>
+	<field name="FECHA" class="java.sql.Timestamp"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="64" splitType="Stretch">
+			<image>
+				<reportElement x="9" y="5" width="540" height="54" uuid="f9531680-7378-4f7f-b82a-df1f7edf5479"/>
+				<imageExpression><![CDATA["C:\\SIGEBI_V6\\web\\imagenes\\Reporte\\reporteHeader.jpg"]]></imageExpression>
+			</image>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="39" splitType="Stretch">
+			<staticText>
+				<reportElement x="10" y="2" width="335" height="35" forecolor="#333333" uuid="8842b1c2-7c1d-43ac-8984-50ef23cce85f"/>
+				<textElement>
+					<font fontName="SansSerif" size="24"/>
+				</textElement>
+				<text><![CDATA[Reporte de Movimientos]]></text>
+			</staticText>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="42" splitType="Stretch">
+			<line>
+				<reportElement x="12" y="38" width="530" height="1" uuid="4baa4390-ba33-4ea5-9902-9be528424818"/>
+			</line>
+			<staticText>
+				<reportElement x="12" y="22" width="84" height="15" uuid="f56f7ce8-7514-4994-b8ca-6d58d1da0c6d"/>
+				<textElement>
+					<font fontName="SansSerif"/>
+				</textElement>
+				<text><![CDATA[IDENTIFICACION]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="104" y="22" width="100" height="15" uuid="525180cc-8978-4e4e-b18d-639bf5e4e197"/>
+				<textElement>
+					<font fontName="SansSerif"/>
+				</textElement>
+				<text><![CDATA[DESCRIPCION]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="365" y="5" width="151" height="15" uuid="d379c988-c7b7-48f8-a10e-303b90873779"/>
+				<textElement>
+					<font fontName="SansSerif"/>
+				</textElement>
+				<text><![CDATA[MOVIMIENTO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="104" y="5" width="120" height="15" uuid="aa905e4c-d2be-4387-9b23-4bf976a5f486"/>
+				<textElement>
+					<font fontName="SansSerif"/>
+				</textElement>
+				<text><![CDATA[ESTADO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="12" y="5" width="50" height="15" uuid="89937cdf-4a48-432c-a260-55d40da9cfc0"/>
+				<textElement>
+					<font fontName="SansSerif"/>
+				</textElement>
+				<text><![CDATA[FECHA]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="43" splitType="Stretch">
+			<textField>
+				<reportElement x="15" y="24" width="64" height="15" uuid="147750f9-40d1-42ac-9b5a-e4ed18041d10"/>
+				<textElement>
+					<font fontName="SansSerif"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{IDENTIFICACION}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="100" y="24" width="245" height="15" uuid="4a80f54f-5399-44af-af88-8b07ff3c24cc"/>
+				<textElement>
+					<font fontName="SansSerif"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{DESCRIPCION}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="363" y="7" width="176" height="15" uuid="16929d78-fdfb-49c7-90b9-82d0a63dd793"/>
+				<textElement>
+					<font fontName="SansSerif"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{MOVIMIENTO}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="100" y="7" width="227" height="15" uuid="9fc3b173-2801-48d2-b338-23cd68178306"/>
+				<textElement>
+					<font fontName="SansSerif"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{ESTADO}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="16" y="7" width="51" height="15" uuid="59ab02a3-72c5-419a-ac30-977ebc58c2b7"/>
+				<textElement>
+					<font fontName="SansSerif"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{FECHA}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="9" splitType="Stretch">
+			<line>
+				<reportElement x="16" y="4" width="530" height="1" uuid="b5e957da-f913-4951-bc8e-7422d39c8c0c"/>
+			</line>
+		</band>
+	</columnFooter>
+	<pageFooter>
+		<band height="18" splitType="Stretch">
+			<staticText>
+				<reportElement x="456" y="3" width="50" height="15" uuid="3c4d3da0-12c2-40f6-b4a1-c2fede7b33ab"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="SansSerif"/>
+				</textElement>
+				<text><![CDATA[Página:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="516" y="3" width="25" height="15" uuid="441948c2-292e-4b98-bd27-612b00a1a1ac"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="SansSerif"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+	<summary>
+		<band height="78" splitType="Stretch">
+			<image>
+				<reportElement x="7" y="1" width="540" height="76" uuid="accb6354-7230-4ea0-af25-18d40fffd65f"/>
+				<imageExpression><![CDATA["C:\\SIGEBI_V6\\web\\imagenes\\Reporte\\reporteFooter.jpg"]]></imageExpression>
+			</image>
+		</band>
+	</summary>
+</jasperReport>

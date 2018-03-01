@@ -9,13 +9,16 @@
         <div class="container"> 
             <!-- Titulo -->
             <div class="row">
-                <div class='col-sm-10'>
+                <div class='col-sm-8'>
                     <h1 style="margin: 0;">
                         <ice:outputFormat value="#{label['sigebi.Traslado.Listar.Titulo']}"/>
                     </h1>
                 </div> 
                 <div class='col-sm-2'>
-                    <ice:commandButton id="botonAbrir"
+                    
+                </div>   
+                <div class='col-sm-2'>
+                    <ice:commandButton id="btnAbrir"
                                        style="float: right" 
                                        styleClass="boton" 
                                        partialSubmit="true" 
@@ -152,7 +155,7 @@
                                         </ice:headerRow>
                                     </ice:columnGroup>
                                 </f:facet>                                
-                                <h:outputText id="txtUnidadDestino" value="#{traslado.numUnidadDestino.descripcion}"/>
+                                <h:outputText id="txtUnidadDestino" value="#{traslado.unidadEjecutoraDestino.descripcion}"/>
                             </ice:column>
                             
                             <!-- COLUMNA FECHA -->
