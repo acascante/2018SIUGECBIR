@@ -35,6 +35,10 @@ public class PrestamoModel {
         prestamoDao.salvarDetalles(prestamo.getDetalles());
     }
     
+    public void eliminarDetalles(List<SolicitudDetalle> detalles) throws FWExcepcion {
+        prestamoDao.eliminarDetalles(detalles);
+    }
+    
     public SolicitudPrestamo buscarPorId(Long id) throws FWExcepcion {
         return prestamoDao.buscarPorId(id);
     }

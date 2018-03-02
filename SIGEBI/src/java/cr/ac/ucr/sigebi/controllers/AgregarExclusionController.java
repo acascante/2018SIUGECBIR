@@ -11,16 +11,13 @@ import cr.ac.ucr.framework.vista.util.Mensaje;
 import cr.ac.ucr.framework.vista.util.Util;
 import cr.ac.ucr.sigebi.models.ExclusionModel;
 import cr.ac.ucr.sigebi.commands.ExclusionCommand;
-import cr.ac.ucr.sigebi.commands.ListarBienesCommand;
 import cr.ac.ucr.sigebi.commands.ListarExclusionesCommand;
 import cr.ac.ucr.sigebi.domain.Bien;
 import cr.ac.ucr.sigebi.domain.Estado;
-import cr.ac.ucr.sigebi.domain.SolicitudDetalle;
 import cr.ac.ucr.sigebi.domain.SolicitudExclusion;
 import cr.ac.ucr.sigebi.domain.Tipo;
 import cr.ac.ucr.sigebi.models.BienModel;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
@@ -31,7 +28,6 @@ import javax.faces.component.UIViewRoot;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 import javax.faces.event.PhaseId;
-import javax.faces.event.ValueChangeEvent;
 import javax.faces.model.SelectItem;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
@@ -44,171 +40,7 @@ import org.springframework.stereotype.Controller;
 @Scope("session")
 public class AgregarExclusionController extends BaseController {
 
-    public class ListadoBienes extends BaseController {
-        
-        private ListarBienesCommand command;
-        private Estado estadoInternoNormal;
-        private Map<Long, Bien> bienes;
-        private Map<Long, Boolean> bienesSeleccionados;
-
-        public ListadoBienes() {
-            this.command = new ListarBienesCommand();
-            this.estadoInternoNormal = estadoPorDominioValor(Constantes.DOMINIO_BIEN_INTERNO, Constantes.ESTADO_INTERNO_BIEN_NORMAL);
-            this.bienes = new HashMap<Long, Bien>();
-            this.bienesSeleccionados = new HashMap<Long, Boolean>();
-            inicializarListado();            
-        }
-        
-        private void inicializarListado() {
-            this.setPrimerRegistro(1);
-            this.contarBienes();
-            this.listarBienes();
-        }
-        
-        private void contarBienes() {
-            try {
-                Long contador = bienModel.contar(this.command.getFltIdCodigo(), this.unidadEjecutora, this.command.getFltIdentificacion(), this.command.getFltDescripcion(), this.command.getFltMarca(), this.command.getFltModelo(), this.command.getFltSerie(), this.estadoInternoNormal);
-                this.setCantidadRegistros(contador.intValue());
-            } catch (FWExcepcion e) {
-                Mensaje.agregarErrorAdvertencia(e.getError_para_usuario());
-            } catch (NumberFormatException e) {
-                Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.error.controllerListarNotificaciones.contarNotificaciones"));
-            }
-        }
-
-        private void listarBienes() {
-            try {
-               List<Bien> itemsBienes = bienModel.listar(this.getPrimerRegistro() - 1, this.getUltimoRegistro(), this.command.getFltIdCodigo(), this.unidadEjecutora , command.getFltIdentificacion(), command.getFltDescripcion(), command.getFltMarca(), command.getFltModelo(), command.getFltSerie(), this.estadoInternoNormal);
-                for (Bien item : itemsBienes) {
-                    this.bienes.put(item.getId(), item);
-                }
-           } catch (FWExcepcion e) {
-               Mensaje.agregarErrorAdvertencia(e.getError_para_usuario());
-           } catch (NumberFormatException e) {
-               Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.error.controllerListarNotificaciones.listarNotificaciones"));
-           } catch (Exception e) {
-               Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.error.controllerListarNotificaciones.listarNotificaciones"));
-           }
-       }
-
-        public void cambioFiltro(ValueChangeEvent pEvent) {
-            try {
-                if (!pEvent.getPhaseId().equals(PhaseId.INVOKE_APPLICATION)) {
-                    pEvent.setPhaseId(PhaseId.INVOKE_APPLICATION);
-                    pEvent.queue();
-                    return;
-                }
-                this.inicializarListado();
-            } catch (Exception err) {
-                Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.error.controllerListarNotificaciones.cambioFiltro"));
-            }
-        }
-
-        // <editor-fold defaultstate="collapsed" desc="Get's Set's">
-        public List<Bien> getItemsBienes() {
-            List<Bien> list = new ArrayList<Bien>(bienes.values());
-            return list;
-        }
-
-        public ListarBienesCommand getCommand() {
-            return command;
-        }
-
-        public void setCommand(ListarBienesCommand command) {
-            this.command = command;
-        }
-
-        public Estado getEstadoInternoNormal() {
-            return estadoInternoNormal;
-        }
-
-        public void setEstadoInternoNormal(Estado estadoInternoNormal) {
-            this.estadoInternoNormal = estadoInternoNormal;
-        }
-
-        public Map<Long, Bien> getBienes() {
-            return bienes;
-        }
-
-        public void setBienes(Map<Long, Bien> bienes) {
-            this.bienes = bienes;
-        }
-
-        public Map<Long, Boolean> getBienesSeleccionados() {
-            return bienesSeleccionados;
-        }
-
-        public void setBienesSeleccionados(Map<Long, Boolean> bienesSeleccionados) {
-            this.bienesSeleccionados = bienesSeleccionados;
-        }
-        // </editor-fold>
-        
-        // <editor-fold defaultstate="collapsed" desc="Paginacion">
-        public void irPagina(ActionEvent pEvent) {
-            if (!pEvent.getPhaseId().equals(PhaseId.INVOKE_APPLICATION)) {
-                pEvent.setPhaseId(PhaseId.INVOKE_APPLICATION);
-                pEvent.queue();
-                return;
-            }
-            int numeroPagina = Integer.parseInt(Util.getRequestParameter("numPag"));
-            this.getPrimerRegistroPagina(numeroPagina);
-            this.listarBienes();
-        }
-
-        public void siguiente(ActionEvent pEvent) {
-            if (!pEvent.getPhaseId().equals(PhaseId.INVOKE_APPLICATION)) {
-                pEvent.setPhaseId(PhaseId.INVOKE_APPLICATION);
-                pEvent.queue();
-                return;
-            }
-            this.getSiguientePagina();
-            this.listarBienes();
-        }
-
-        public void anterior(ActionEvent pEvent) {
-            if (!pEvent.getPhaseId().equals(PhaseId.INVOKE_APPLICATION)) {
-                pEvent.setPhaseId(PhaseId.INVOKE_APPLICATION);
-                pEvent.queue();
-                return;
-            }
-            this.getPaginaAnterior();
-            this.listarBienes();
-        }
-
-        public void primero(ActionEvent pEvent) {
-            if (!pEvent.getPhaseId().equals(PhaseId.INVOKE_APPLICATION)) {
-                pEvent.setPhaseId(PhaseId.INVOKE_APPLICATION);
-                pEvent.queue();
-                return;
-            }
-            this.setPrimerRegistro(1);
-            this.listarBienes();
-        }
-
-        public void ultimo(ActionEvent pEvent) {
-            if (!pEvent.getPhaseId().equals(PhaseId.INVOKE_APPLICATION)) {
-                pEvent.setPhaseId(PhaseId.INVOKE_APPLICATION);
-                pEvent.queue();
-                return;
-            }
-            this.getPrimerRegistroUltimaPagina();
-            this.listarBienes();
-        }
-
-        public void cambioRegistrosPorPagina(ValueChangeEvent pEvent) {
-            if (!pEvent.getPhaseId().equals(PhaseId.INVOKE_APPLICATION)) {
-                pEvent.setPhaseId(PhaseId.INVOKE_APPLICATION);
-                pEvent.queue();
-                return;
-            }
-            this.setCantRegistroPorPagina(Integer.parseInt(pEvent.getNewValue().toString()));          
-            this.setPrimerRegistro(1);
-            this.listarBienes();
-        }
-        // </editor-fold>
-    }
-    
-    ListadoBienes listadoBienes;
+    ListarBienesAgregarController listadoBienes;
     
     @Resource private BienModel bienModel;
     @Resource private ExclusionModel exclusionModel;
@@ -230,16 +62,15 @@ public class AgregarExclusionController extends BaseController {
     private void inicializarNuevo() {
         Estado estado = this.estadoPorDominioValor(Constantes.DOMINIO_EXCLUSION, Constantes.ESTADO_EXCLUSION_CREADA);
         this.command = new ExclusionCommand(this.unidadEjecutora, estado);
-        this.listadoBienes = new ListadoBienes();
+        this.listadoBienes = new ListarBienesAgregarController();
         this.visibleBotonSolicitar = false;
         inicializarDatos();
     }
     
     private void inicializarDetalle(SolicitudExclusion exclusion) {
-        exclusion.setDetalles(exclusionModel.listarDetalles(exclusion));
         this.command = new ExclusionCommand(exclusion);
         this.visibleBotonSolicitar = true;
-        this.listadoBienes = new ListadoBienes();
+        this.listadoBienes = new ListarBienesAgregarController();
         inicializarDatos();
     }
 
@@ -338,6 +169,7 @@ public class AgregarExclusionController extends BaseController {
             
             Long id = (Long)event.getComponent().getAttributes().get(ListarExclusionesCommand.KEY_EXCLUSION);
             SolicitudExclusion exclusion = exclusionModel.buscarPorId(id);
+            exclusion.setDetalles(exclusionModel.listarDetalles(exclusion));
             inicializarDetalle(exclusion);
             this.vistaOrigen = event.getComponent().getAttributes().get(Constantes.KEY_VISTA_ORIGEN).toString();
             Util.navegar(Constantes.VISTA_EXCLUSION_NUEVA);
@@ -365,9 +197,9 @@ public class AgregarExclusionController extends BaseController {
         this.setVisiblePanelBienes(false);
         Estado estadoEnSolicitud = this.estadoPorDominioValor(Constantes.DOMINIO_BIEN_INTERNO, Constantes.ESTADO_INTERNO_BIEN_EXCLUSION );
         
-        for (Map.Entry<Long, Boolean> entry : this.listadoBienes.bienesSeleccionados.entrySet()) {
+        for (Map.Entry<Long, Boolean> entry : this.listadoBienes.getBienesSeleccionados().entrySet()) {
             if (entry.getValue()) {
-                Bien bien = this.listadoBienes.bienes.get(entry.getKey());
+                Bien bien = this.listadoBienes.getBienes().get(entry.getKey());
                 bien.setEstadoInterno(estadoEnSolicitud);
                 this.command.getBienes().put(bien.getId(), bien);
                 this.command.getBienesAgregar().add(bien);
@@ -439,11 +271,11 @@ public class AgregarExclusionController extends BaseController {
         this.visibleBotonSolicitar = visibleBotonSolicitar;
     }
     
-    public ListadoBienes getListadoBienes() {
+    public ListarBienesAgregarController getListadoBienes() {
         return listadoBienes;
     }
 
-    public void setListadoBienes(ListadoBienes listadoBienes) {
+    public void setListadoBienes(ListarBienesAgregarController listadoBienes) {
         this.listadoBienes = listadoBienes;
     }
     //</editor-fold>

@@ -24,7 +24,7 @@ import java.util.TimeZone;
  *
  * @author alvaro.cascante
  */
-public class ExclusionCommand extends ListarBienesCommand {
+public class ExclusionCommand {
     
     //<editor-fold defaultstate="collapsed" desc="Constantes">
     public static final TimeZone DEFAULT_TIME_ZONE = TimeZone.getDefault();

@@ -69,7 +69,6 @@ public class ListarExclusionesController extends BaseController {
         List<Tipo> tipos = this.tiposPorDominio(Constantes.DOMINIO_EXCLUSION);
         if (!tipos.isEmpty()) {
             itemsTipo = new ArrayList<SelectItem>();
-        
             for (Tipo item : tipos) {
                 this.itemsTipo.add(new SelectItem(item.getId(), item.getNombre()));
             }
@@ -117,16 +116,12 @@ public class ListarExclusionesController extends BaseController {
     }
     
     public void cambioFiltro(ValueChangeEvent pEvent) {
-        try {
-            if (!pEvent.getPhaseId().equals(PhaseId.INVOKE_APPLICATION)) {
-                pEvent.setPhaseId(PhaseId.INVOKE_APPLICATION);
-                pEvent.queue();
-                return;
-            }
-            this.inicializarListado();
-        } catch (Exception err) {
-            Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.error.controllerListarExclusiones.contarNotificaciones"));
+        if (!pEvent.getPhaseId().equals(PhaseId.INVOKE_APPLICATION)) {
+            pEvent.setPhaseId(PhaseId.INVOKE_APPLICATION);
+            pEvent.queue();
+            return;
         }
+        this.inicializarListado();
     }
 
     public void validarFiltroId(FacesContext context, UIComponent component, Object value) throws ValidatorException {

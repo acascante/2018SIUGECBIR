@@ -15,15 +15,17 @@ import cr.ac.ucr.sigebi.utils.Constantes;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.TimeZone;
 
 /**
  *
  * @author alvaro.cascante
  */
-public class PrestamoCommand extends ListarBienesCommand {
-    // TODO revisar si se debe heredar de ListarBienesCommand
+public class PrestamoCommand {
+
     //<editor-fold defaultstate="collapsed" desc="Constantes">
     public static final TimeZone DEFAULT_TIME_ZONE = TimeZone.getDefault();
     //</editor-fold>
@@ -33,15 +35,21 @@ public class PrestamoCommand extends ListarBienesCommand {
     private UnidadEjecutora unidadEjecutora;
     private Estado estado;
     private Long idTipoEntidad;
+    private String entidad;
     private Date fecha;
     private String observacion;
-    private List<Bien> bienes;
+    private List<Bien> bienesEliminar;  // Bienes a eliminar
+    private List<Bien> bienesAgregar;   // Bienes a agregar
+    private List<SolicitudDetalle> detallesEliminar;
+    private Map<Long, Bien> bienes;     // Bienes existenetes en la solicitud
+    private Map<Long, SolicitudDetalle> detalles;
     //</editor-fold>
     
     //<editor-fold defaultstate="collapsed" desc="Constructores">
     public PrestamoCommand() {
         super();
-        this.bienes = new ArrayList<Bien>();
+        this.bienes = new HashMap<Long, Bien>();
+        this.detalles = new HashMap<Long, SolicitudDetalle>();
     }
 
     public PrestamoCommand(UnidadEjecutora unidadEjecutora, Estado estado) {
@@ -49,7 +57,8 @@ public class PrestamoCommand extends ListarBienesCommand {
         this.unidadEjecutora = unidadEjecutora;
         this.estado = estado;
         this.fecha = getDefaultDate();
-        this.bienes = new ArrayList<Bien>();
+        this.bienes = new HashMap<Long, Bien>();
+        this.detalles = new HashMap<Long, SolicitudDetalle>();
     }
 
     public PrestamoCommand(SolicitudPrestamo prestamo) {
@@ -59,20 +68,10 @@ public class PrestamoCommand extends ListarBienesCommand {
         this.estado = prestamo.getEstado();
         this.fecha = prestamo.getFecha();
         this.idTipoEntidad = prestamo.getTipo().getId();
+        this.entidad = prestamo.getEntidad();
         for (SolicitudDetalle detalle : prestamo.getDetalles()) {
-            this.bienes.add(detalle.getBien());
-        }
-    }
-    
-    public PrestamoCommand(SolicitudPrestamo prestamo, List<SolicitudDetalle> detalles) {
-        this.id = prestamo.getId();
-        this.unidadEjecutora = prestamo.getUnidadEjecutora();
-        this.estado = prestamo.getEstado();
-        this.fecha = prestamo.getFecha();
-        this.idTipoEntidad = prestamo.getTipo().getId();
-        
-        for (SolicitudDetalle detalle : detalles) {
-            this.bienes.add(detalle.getBien());
+            this.bienes.put(detalle.getBien().getId(), detalle.getBien());
+            this.detalles.put(detalle.getBien().getId(), detalle);
         }
     }
     //</editor-fold>
@@ -80,14 +79,20 @@ public class PrestamoCommand extends ListarBienesCommand {
     //<editor-fold defaultstate="collapsed" desc="Metodos">
     public SolicitudPrestamo getPrestamo(Tipo tipo) {
         SolicitudPrestamo prestamo = new SolicitudPrestamo();
+        prestamo.setId(this.id);
         prestamo.setUnidadEjecutora(this.unidadEjecutora);
         prestamo.setEstado(this.estado);
         prestamo.setFecha(this.fecha);
         prestamo.setTipo(tipo);
+        prestamo.setEntidad(this.entidad);
         prestamo.setObservacion(this.observacion);
         prestamo.setDiscriminator(Constantes.DISCRIMINATOR_SOLICITUD_PRESTAMO);
-        for (Bien bien : this.bienes) {
-            prestamo.getDetalles().add(new SolicitudDetalle(prestamo, bien, estado));
+        
+        List<SolicitudDetalle> listDetalles = new ArrayList<SolicitudDetalle>(this.detalles.values());
+        prestamo.setDetalles(listDetalles);
+        
+        for (Bien bien : this.getBienesAgregar()) {
+            prestamo.getDetalles().add(new SolicitudDetalle(prestamo, bien, this.estado));
         }
         return prestamo;
     }
@@ -117,6 +122,14 @@ public class PrestamoCommand extends ListarBienesCommand {
         this.unidadEjecutora = unidadEjecutora;
     }
 
+    public Estado getEstado() {
+        return estado;
+    }
+
+    public void setEstado(Estado estado) {
+        this.estado = estado;
+    }
+
     public Long getIdTipoEntidad() {
         return idTipoEntidad;
     }
@@ -125,12 +138,12 @@ public class PrestamoCommand extends ListarBienesCommand {
         this.idTipoEntidad = idTipoEntidad;
     }
 
-    public Estado getEstado() {
-        return estado;
+    public String getEntidad() {
+        return entidad;
     }
 
-    public void setEstado(Estado estado) {
-        this.estado = estado;
+    public void setEntidad(String entidad) {
+        this.entidad = entidad;
     }
 
     public Date getFecha() {
@@ -140,24 +153,67 @@ public class PrestamoCommand extends ListarBienesCommand {
     public void setFecha(Date fecha) {
         this.fecha = fecha;
     }
-    
-    public List<Bien> getBienes() {
-        if (bienes == null){ 
-            this.bienes = new ArrayList<Bien>();
-        }
-        return bienes;
-    }
 
-    public void setBienes(List<Bien> bienes) {
-        this.bienes = bienes;
-    }
-    
     public String getObservacion() {
         return observacion;
     }
 
     public void setObservacion(String observacion) {
         this.observacion = observacion;
+    }
+
+    public List<Bien> getBienesEliminar() {
+        if (this.bienesEliminar == null) {
+            this.bienesEliminar = new ArrayList<Bien>();
+        }
+        return bienesEliminar;
+    }
+
+    public void setBienesEliminar(List<Bien> bienesEliminar) {
+        this.bienesEliminar = bienesEliminar;
+    }
+
+    public List<Bien> getBienesAgregar() {
+        if (this.bienesAgregar == null) {
+            this.bienesAgregar = new ArrayList<Bien>();
+        }
+        return bienesAgregar;
+    }
+
+    public void setBienesAgregar(List<Bien> bienesAgregar) {
+        this.bienesAgregar = bienesAgregar;
+    }
+
+    public List<SolicitudDetalle> getDetallesEliminar() {
+        if (this.detallesEliminar == null) {
+            this.detallesEliminar = new ArrayList<SolicitudDetalle>();
+        }
+        return detallesEliminar;
+    }
+
+    public void setDetallesEliminar(List<SolicitudDetalle> detallesEliminar) {
+        this.detallesEliminar = detallesEliminar;
+    }
+
+    public Map<Long, Bien> getBienes() {
+        return bienes;
+    }
+    
+    public List<Bien> getListBienes() {
+        List<Bien> list = new ArrayList<Bien>(bienes.values());
+        return list;
+    }
+
+    public void setBienes(Map<Long, Bien> bienes) {
+        this.bienes = bienes;
+    }
+
+    public Map<Long, SolicitudDetalle> getDetalles() {
+        return detalles;
+    }
+
+    public void setDetalles(Map<Long, SolicitudDetalle> detalles) {
+        this.detalles = detalles;
     }
     //</editor-fold>
 }

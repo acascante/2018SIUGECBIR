@@ -42,26 +42,22 @@ import org.springframework.stereotype.Controller;
 @Scope("session")
 public class AgregarPrestamoController extends BaseController {
 
-    @Resource
-    private BienModel bienModel;
+    ListarBienesAgregarController listadoBienes;
     
-    @Resource
-    private PrestamoModel prestamoModel;
+    @Resource private BienModel bienModel;
+    @Resource private PrestamoModel prestamoModel;
     
     private PrestamoCommand command;
     
     private List<SelectItem> itemsTipo;
     private List<SelectItem> itemsEntidad;
-    private List<Bien> bienes;
-    private Map<Long, Boolean> bienesSeleccionados;
     
     private String mensajeExito;
     private String mensaje;
     
     private boolean visiblePanelBienes;
-    private boolean visibleBotonSolicitar;
     private boolean disableEntidades;
-    
+    private boolean visibleBotonSolicitar;
     private boolean visibleBotonGuardar;
     private boolean visibleBotonAplicar;
     private boolean visibleBotonAceptar;
@@ -77,21 +73,29 @@ public class AgregarPrestamoController extends BaseController {
         Estado estado = this.estadoPorDominioValor(Constantes.DOMINIO_PRESTAMO, Constantes.ESTADO_PRESTAMO_CREADO);
         this.command = new PrestamoCommand(this.unidadEjecutora, estado);
         this.visibleBotonSolicitar = false;
+        this.visibleBotonGuardar = false;
+        this.visibleBotonAplicar = false;
+        this.visibleBotonAceptar = false;
+        this.visibleBotonRevisar = false;
+        this.visibleBotonRechazar = false;
+        this.visibleBotonAnular = false;
         inicializarDatos();
     }
     
     private void inicializarDetalle(SolicitudPrestamo prestamo) {
-        this.command = new PrestamoCommand(prestamo, prestamoModel.listarDetalles(prestamo));
+        this.command = new PrestamoCommand(prestamo);
         this.visibleBotonSolicitar = true;
         inicializarDatos();
         inicializarBotones();
     }
 
     private void inicializarDatos() {
+        this.mensajeExito = new String();
+        this.mensaje = new String();
+
         List<Tipo> tipos = this.tiposPorDominio(Constantes.DOMINIO_PRESTAMO);
         if (!tipos.isEmpty()) {
             itemsTipo = new ArrayList<SelectItem>();
-        
             for (Tipo item : tipos) {
                 this.itemsTipo.add(new SelectItem(item.getId(), item.getNombre()));
             }
@@ -116,8 +120,16 @@ public class AgregarPrestamoController extends BaseController {
             String messageValidacion = validarForm(root, component);
             if (Constantes.OK.equals(messageValidacion)) {
                 Tipo tipo = this.tipoPorId(command.getIdTipoEntidad());
+                
+                // Almaceno o actualizo Solicitud
                 this.prestamoModel.salvar(command.getPrestamo(tipo));
-                this.bienModel.actualizar(command.getBienes());
+                this.prestamoModel.eliminarDetalles(command.getDetallesEliminar());
+                
+                List<Bien> listBienes = new ArrayList<Bien>(command.getBienes().values());
+                List<Bien> listBienesEliminar = new ArrayList<Bien>(command.getBienesEliminar());
+                this.bienModel.actualizar(listBienes);
+                this.bienModel.actualizar(listBienesEliminar);
+                
                 if (command.getId() == null || command.getId() == 0) {
                     mensajeExito = "Los datos se salvaron con éxito.";
                 } else {
@@ -135,26 +147,7 @@ public class AgregarPrestamoController extends BaseController {
     }
     
     public void solicitarPrestamo() {
-        try {
-            FacesContext context = FacesContext.getCurrentInstance();
-            UIViewRoot root = context.getViewRoot();
-            UIInput component = new UIInput();
-            String messageValidacion = validarForm(root, component);
-            if (Constantes.OK.equals(messageValidacion)) {
-                Tipo tipo = this.tipoPorId(command.getIdTipoEntidad());
-                Estado estadoSolicitar = this.estadoPorDominioValor(Constantes.DOMINIO_EXCLUSION, Constantes.ESTADO_EXCLUSION_SOLICITADA);
-                this.command.setEstado(estadoSolicitar);
-                this.prestamoModel.salvar(command.getPrestamo(tipo));
-                mensajeExito = "Prestamo solicitada.";
-            } else {
-                component.setValid(false);
-                Mensaje.agregarErrorAdvertencia(messageValidacion);
-            }
-        } catch (FWExcepcion err) {
-            mensaje = err.getMessage();
-        } catch (Exception ex) {
-            Logger.getLogger(AgregarPrestamoController.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        
     }
     
     public void aceptarPrestamo() {
@@ -182,7 +175,7 @@ public class AgregarPrestamoController extends BaseController {
             }
             inicializarNuevo();
             this.vistaOrigen = event.getComponent().getAttributes().get(Constantes.KEY_VISTA_ORIGEN).toString();
-            Util.navegar(Constantes.VISTA_EXCLUSION_NUEVA);
+            Util.navegar(Constantes.VISTA_PRESTAMO_NUEVO);
         } catch (FWExcepcion err) {
             mensaje = err.getMessage();
         }
@@ -198,6 +191,7 @@ public class AgregarPrestamoController extends BaseController {
             
             Long id = (Long)event.getComponent().getAttributes().get(ListarPrestamosCommand.KEY_PRESTAMO);
             SolicitudPrestamo prestamo = prestamoModel.buscarPorId(id);
+            prestamo.setDetalles(prestamoModel.listarDetalles(prestamo));
             inicializarDetalle(prestamo);
             this.vistaOrigen = event.getComponent().getAttributes().get(Constantes.KEY_VISTA_ORIGEN).toString();
             Util.navegar(Constantes.VISTA_EXCLUSION_NUEVA);
@@ -218,22 +212,34 @@ public class AgregarPrestamoController extends BaseController {
     
     //<editor-fold defaultstate="collapsed" desc="Bienes">
     public void mostarPanelAgregarBienes() {
-            Estado estado = this.estadoPorDominioValor(Constantes.DOMINIO_BIEN, Constantes.ESTADO_INTERNO_BIEN_NORMAL);
-            this.bienes = bienModel.listarPorUnidadEjecutoraEstado(unidadEjecutora, estado);
-            
-            bienesSeleccionados = new HashMap<Long, Boolean>();
-            this.setVisiblePanelBienes(true);
+        this.setVisiblePanelBienes(true);
     }
 
     public void cerrarPanelAgregarBienes() {
-        Estado estadoEnSolicitud = this.estadoPorDominioValor(Constantes.DOMINIO_BIEN, Constantes.ESTADO_INTERNO_BIEN_EXCLUSION );
-        for (Bien bien : bienes) {
-            if (bienesSeleccionados.get(bien.getId())) {
-                bien.setEstado(estadoEnSolicitud);
-                command.getBienes().add(bien);
+        this.setVisiblePanelBienes(false);
+        Estado estadoEnSolicitud = this.estadoPorDominioValor(Constantes.DOMINIO_BIEN_INTERNO, Constantes.ESTADO_INTERNO_BIEN_PRESTAMO );        
+        for (Map.Entry<Long, Boolean> entry : this.listadoBienes.getBienesSeleccionados().entrySet()) {
+            if (entry.getValue()) {
+                Bien bien = this.listadoBienes.getBienes().get(entry.getKey());
+                bien.setEstadoInterno(estadoEnSolicitud);
+                this.command.getBienes().put(bien.getId(), bien);
+                this.command.getBienesAgregar().add(bien);
             }
         }
-        this.setVisiblePanelBienes(false);
+    }
+    
+    public void eliminarBien(ActionEvent event) {
+        Long idBien = (Long) event.getComponent().getAttributes().get("bienSeleccionado");
+        Bien bien = this.command.getBienes().get(idBien);
+        
+        Estado estadoInternoNormal = estadoPorDominioValor(Constantes.DOMINIO_BIEN_INTERNO, Constantes.ESTADO_INTERNO_BIEN_NORMAL);
+        bien.setEstadoInterno(estadoInternoNormal);
+        this.command.getBienesEliminar().add(bien); // Lo agrego a la lista de bienes a eliminar
+        this.command.getBienes().remove(idBien);    // Lo saco de la lista de bienes que se muestran en pantalla
+        if (this.command.getDetalles().containsKey(bien.getId())) { // Si esta en la lista de detalles, es xq se trata de un detalle existente en la BD
+            this.command.getDetallesEliminar().add(this.command.getDetalles().get(bien.getId()));   // Lo agrego a la lista de detalles a eliminar
+            this.command.getDetalles().remove(bien.getId());    // Lo elimino de la lista de detalles, esto ahorita no sirve
+        }                                                       // xq la version de hibernate no permite actualizar colecciones
     }
     //</editor-fold>
     
@@ -271,6 +277,14 @@ public class AgregarPrestamoController extends BaseController {
     //</editor-fold>
     
     //<editor-fold defaultstate="collapsed" desc="Gets y Sets">
+    public ListarBienesAgregarController getListadoBienes() {
+        return listadoBienes;
+    }
+
+    public void setListadoBienes(ListarBienesAgregarController listadoBienes) {
+        this.listadoBienes = listadoBienes;
+    }
+
     public PrestamoCommand getCommand() {
         return command;
     }
@@ -287,20 +301,12 @@ public class AgregarPrestamoController extends BaseController {
         this.itemsTipo = itemsTipo;
     }
 
-    public List<Bien> getBienes() {
-        return bienes;
+    public List<SelectItem> getItemsEntidad() {
+        return itemsEntidad;
     }
 
-    public void setBienes(List<Bien> bienes) {
-        this.bienes = bienes;
-    }
-
-    public Map<Long, Boolean> getBienesSeleccionados() {
-        return bienesSeleccionados;
-    }
-
-    public void setBienesSeleccionados(Map<Long, Boolean> bienesSeleccionados) {
-        this.bienesSeleccionados = bienesSeleccionados;
+    public void setItemsEntidad(List<SelectItem> itemsEntidad) {
+        this.itemsEntidad = itemsEntidad;
     }
 
     public String getMensajeExito() {
@@ -327,6 +333,14 @@ public class AgregarPrestamoController extends BaseController {
         this.visiblePanelBienes = visiblePanelBienes;
     }
 
+    public boolean isDisableEntidades() {
+        return disableEntidades;
+    }
+
+    public void setDisableEntidades(boolean disableEntidades) {
+        this.disableEntidades = disableEntidades;
+    }
+
     public boolean isVisibleBotonSolicitar() {
         return visibleBotonSolicitar;
     }
@@ -334,13 +348,53 @@ public class AgregarPrestamoController extends BaseController {
     public void setVisibleBotonSolicitar(boolean visibleBotonSolicitar) {
         this.visibleBotonSolicitar = visibleBotonSolicitar;
     }
-    
-    public boolean isDisableEntidades() {
-        return disableEntidades;
+
+    public boolean isVisibleBotonGuardar() {
+        return visibleBotonGuardar;
     }
 
-    public void setDisableEntidades(boolean disableEntidades) {
-        this.disableEntidades = disableEntidades;
+    public void setVisibleBotonGuardar(boolean visibleBotonGuardar) {
+        this.visibleBotonGuardar = visibleBotonGuardar;
+    }
+
+    public boolean isVisibleBotonAplicar() {
+        return visibleBotonAplicar;
+    }
+
+    public void setVisibleBotonAplicar(boolean visibleBotonAplicar) {
+        this.visibleBotonAplicar = visibleBotonAplicar;
+    }
+
+    public boolean isVisibleBotonAceptar() {
+        return visibleBotonAceptar;
+    }
+
+    public void setVisibleBotonAceptar(boolean visibleBotonAceptar) {
+        this.visibleBotonAceptar = visibleBotonAceptar;
+    }
+
+    public boolean isVisibleBotonRevisar() {
+        return visibleBotonRevisar;
+    }
+
+    public void setVisibleBotonRevisar(boolean visibleBotonRevisar) {
+        this.visibleBotonRevisar = visibleBotonRevisar;
+    }
+
+    public boolean isVisibleBotonRechazar() {
+        return visibleBotonRechazar;
+    }
+
+    public void setVisibleBotonRechazar(boolean visibleBotonRechazar) {
+        this.visibleBotonRechazar = visibleBotonRechazar;
+    }
+
+    public boolean isVisibleBotonAnular() {
+        return visibleBotonAnular;
+    }
+
+    public void setVisibleBotonAnular(boolean visibleBotonAnular) {
+        this.visibleBotonAnular = visibleBotonAnular;
     }
     //</editor-fold>
 }

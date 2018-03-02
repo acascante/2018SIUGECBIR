@@ -10,8 +10,6 @@ import cr.ac.ucr.framework.daoHibernate.DaoHelper;
 import cr.ac.ucr.framework.daoImpl.GenericDaoImpl;
 import cr.ac.ucr.framework.utils.FWExcepcion;
 import cr.ac.ucr.framework.vista.util.Util;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 import javax.faces.context.FacesContext;
 import javax.servlet.ServletContext;
