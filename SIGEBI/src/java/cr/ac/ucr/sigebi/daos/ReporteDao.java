@@ -57,14 +57,14 @@ public class ReporteDao extends GenericDaoImpl {
             try {
                 JRProperties.setProperty("net.sf.jasperreports.query.executer.factory.plsql",
                          "com.jaspersoft.jrx.query.PlSqlQueryExecuterFactory");
-                reporte = (JasperReport) JRLoader.loadObjectFromFile(direccionReporte);
+  //              reporte = (JasperReport) JRLoader.loadObjectFromFile(direccionReporte);
 
-                jasperPrint = JasperFillManager.fillReport(reporte, parametros, dao.getHibernateTemplate().getSessionFactory().getCurrentSession().connection());
-            } catch (JRException ex) {
-                ex.printStackTrace();
-                throw new FWExcepcion(Util.getEtiquetas("siiagc.error.reporte.generacion"),
-                        "Error llenar la información del reporte en la clase " + this.getClass()
-                        + " en el método ejecutarReporte(String idReporte, String direccionReporte, Map parametros, String formatoReporte)", ex);
+    //            jasperPrint = JasperFillManager.fillReport(reporte, parametros, dao.getHibernateTemplate().getSessionFactory().getCurrentSession().connection());
+//            } catch (JRException ex) {
+//                ex.printStackTrace();
+//                throw new FWExcepcion(Util.getEtiquetas("siiagc.error.reporte.generacion"),
+//                        "Error llenar la información del reporte en la clase " + this.getClass()
+//                        + " en el método ejecutarReporte(String idReporte, String direccionReporte, Map parametros, String formatoReporte)", ex);
             } catch (Exception e) {
                 e.printStackTrace();
                 throw new FWExcepcion(Util.getEtiquetas("siiagc.error.reporte.generacion"),

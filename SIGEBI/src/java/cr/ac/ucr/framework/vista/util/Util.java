@@ -324,6 +324,18 @@ public class Util {
     }
 
     /**
+     * Remover una variable a sesion
+     * @param pNombre Nombre de la variable
+     */
+    public static void removerVariableSession(String pNombre) {
+        FacesContext facesContext = FacesContext.getCurrentInstance();
+        //Con esto obtenemos la request
+        HttpServletRequest request = (HttpServletRequest) facesContext.getExternalContext().getRequest();
+        //Acceso a la sesión http
+        HttpSession session = request.getSession();
+        session.removeAttribute(pNombre);
+    }
+    /**
      * Ordena una lista de elementos, segun su numero de orden.
      * @param lista_elementos lista de elementos a ordenar
      * @return Lista de elementos ordenada

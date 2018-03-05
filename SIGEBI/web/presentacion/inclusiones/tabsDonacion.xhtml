@@ -6,7 +6,20 @@
                 <ice:panelGroup rendered="#{controllerSolicitudDonacion.yaRegistrada}">
                     <ice:panelGroup id="tabDonacion" style="padding-bottom: 60px; padding-top: 10px;" styleClass="tabsContent panelTabSetContainer">
                         <ice:panelTabSet>
-
+                            <!-- TAB Bienes-->
+                            <ice:panelTab id="tabBienPanel" label="#{label['sigebi.label.vista.detalleSolicitudDonacion.tab.bienes']}">
+                                <ui:insert name="tabBien">
+                                    <ui:include src="../inclusiones/tabDonacionBienes.xhtml" />
+                                </ui:insert>
+                            </ice:panelTab>
+                            
+                            <!-- TAB Aprobaciones-->
+                            <ice:panelTab id="tabAprobacionPanel" label="#{label['sigebi.label.vista.detalleSolicitudDonacion.tab.aprobaciones']}">
+                                <ui:insert name="tabAprobacion">
+                                    <ui:include src="../inclusiones/tabDonacionAprobaciones.xhtml" />
+                                </ui:insert>
+                            </ice:panelTab>
+                            
                             <!-- TAB Adjuntos -->
                             <ice:panelTab id="tabAdjuntoPanel" rendered="#{controllerSolicitudDonacion.yaRegistrada}" label="#{label['sigebi.label.vista.detalleSolicitudDonacion.tab.adjuntos']}">
                                 <ui:insert name="tabAdjunto">
@@ -18,20 +31,6 @@
                             <ice:panelTab id="tabFacturaPanel" label="#{label['sigebi.label.vista.detalleSolicitudDonacion.tab.facturas']}">
                                 <ui:insert name="tabFactura">
                                     <ui:include src="../inclusiones/tabDonacionFacturas.xhtml" />
-                                </ui:insert>
-                            </ice:panelTab>
-                            
-                            <!-- TAB Bienes-->
-                            <ice:panelTab id="tabBienPanel" label="#{label['sigebi.label.vista.detalleSolicitudDonacion.tab.bienes']}">
-                                <ui:insert name="tabBien">
-                                    <ui:include src="../inclusiones/tabDonacionBienes.xhtml" />
-                                </ui:insert>
-                            </ice:panelTab>
-                            
-                            <!-- TAB Bienes-->
-                            <ice:panelTab id="tabAprobacionPanel" label="#{label['sigebi.label.vista.detalleSolicitudDonacion.tab.aprobaciones']}">
-                                <ui:insert name="tabAprobacion">
-                                    <ui:include src="../inclusiones/tabDonacionAprobaciones.xhtml" />
                                 </ui:insert>
                             </ice:panelTab>
 

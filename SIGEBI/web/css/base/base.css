@@ -2207,6 +2207,15 @@ body{
     cursor:pointer;
 }
 
+.btnModificar_bien{
+    background: transparent url(../../imagenes/botones/modificar.png) no-repeat;
+    width: 89px;
+    height: 22px;
+    border: none;
+    margin-bottom: 10px;
+    cursor:pointer;
+}
+
 .btnAgregar_usuario{
     background: transparent url(../../imagenes/botones/agregar.png) no-repeat;
     width: 79px;

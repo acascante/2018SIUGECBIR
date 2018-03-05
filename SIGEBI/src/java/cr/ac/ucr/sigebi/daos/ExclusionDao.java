@@ -88,13 +88,13 @@ public class ExclusionDao extends GenericDaoImpl {
     }
     
     @Transactional(readOnly = true)
-    public Long contar(UnidadEjecutora unidadEjecutora, Long id, Date fecha, Integer estado, Integer tipoExclusion) throws FWExcepcion {
+    public Long contar(UnidadEjecutora unidadEjecutora, Long id, Date fecha, Long estado, Long tipoExclusion) throws FWExcepcion {
         Session session = dao.getSessionFactory().openSession();
         try {
             Query query = this.queryListar(session, true, unidadEjecutora, id, fecha, estado, tipoExclusion);
             return (Long)query.uniqueResult();
 
-        } catch (HibernateException e) {
+        } catch (FWExcepcion e) {
             throw new FWExcepcion("sigebi.error.exclusionDao.contarsExclusiones", "Error contando los registros de tipo " + this.getClass(), e.getCause());
         }finally{
             session.close();        
@@ -102,7 +102,7 @@ public class ExclusionDao extends GenericDaoImpl {
     }
     
     @Transactional(readOnly = true)
-    public List<SolicitudExclusion> listar(Integer primerRegistro, Integer ultimoRegistro, UnidadEjecutora unidadEjecutora, Long id, Date fecha, Integer estado, Integer tipo) throws FWExcepcion {
+    public List<SolicitudExclusion> listar(Integer primerRegistro, Integer ultimoRegistro, UnidadEjecutora unidadEjecutora, Long id, Date fecha, Long estado, Long tipo) throws FWExcepcion {
         Session session = dao.getSessionFactory().openSession();
         try {
             Query query = this.queryListar(session, false, unidadEjecutora, id, fecha, estado, tipo);
@@ -118,7 +118,7 @@ public class ExclusionDao extends GenericDaoImpl {
         }        
     }
     
-    private Query queryListar(Session session, Boolean contar, UnidadEjecutora unidadEjecutora, Long id, Date fecha, Integer idEstado, Integer idTipoExclusion) {
+    private Query queryListar(Session session, Boolean contar, UnidadEjecutora unidadEjecutora, Long id, Date fecha, Long idEstado, Long idTipoExclusion) {
         StringBuilder sql = new StringBuilder("SELECT ");
         if (contar) {
             sql.append("COUNT(exc) FROM SolicitudExclusion exc ");

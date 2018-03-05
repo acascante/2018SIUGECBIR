@@ -35,6 +35,7 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import javax.faces.event.ActionEvent;
 import javax.faces.event.PhaseId;
@@ -84,7 +85,6 @@ public class SolicitudDonacionController extends BaseController {
     SolicitudDonacionCommand command;
 
     Estado estadoBienInactivo = this.estadoPorDominioValor(Constantes.DOMINIO_BIEN, Constantes.ESTADO_BIEN_INACTIVO);
-    
     //</editor-fold>
     
     //<editor-fold defaultstate="collapsed" desc="Get's & Set's">
@@ -181,12 +181,7 @@ public class SolicitudDonacionController extends BaseController {
             event.queue();
             return;
         }
-        aprobacionRealizada = false;
-        yaRegistrada = true;
-        rolPermiteModificar = false;
-        rolPermiteAplicar = false;
-        rolPermiteRechazar = false;
-        rolPermiteAnular = false;
+
         this.prepararModificacionSolicitudDonacion((SolicitudDonacion) event.getComponent().getAttributes().get("solicitudSeleccionada"));
 
         this.vistaOrigen = event.getComponent().getAttributes().get(Constantes.KEY_VISTA_ORIGEN).toString();
@@ -206,8 +201,18 @@ public class SolicitudDonacionController extends BaseController {
     //<editor-fold defaultstate="collapsed" desc="Constructor">
     public SolicitudDonacionController() {
         super();
+        
     }
-
+    
+    @PostConstruct
+    public void initRegresar() {
+        Object id = Util.obtenerVariableSession("idDonacion");
+        if(id != null){
+            Util.removerVariableSession("idDonacion");
+            this.prepararModificacionSolicitudDonacion((SolicitudDonacion)solicitudModel.buscarPorId((Long)id));
+        }
+    }
+    
     private void prepararCreacionSolicitudDonacion() {
 
         command = new SolicitudDonacionCommand(unidadEjecutora);
@@ -217,7 +222,7 @@ public class SolicitudDonacionController extends BaseController {
     }
 
     private void prepararModificacionSolicitudDonacion(SolicitudDonacion solicitudDonacion) {
-
+        yaRegistrada = true;
         command = new SolicitudDonacionCommand(solicitudDonacion);
         this.cargaDatosGenerales();
 
@@ -322,26 +327,12 @@ public class SolicitudDonacionController extends BaseController {
             boolean rechazar = true;
             boolean aprobar = true;
             aprobacionRealizada = false;
-            SolicitudDonacion solicitud = command.getSolicitudDonacion();
+            this.rolPermiteModificar = false;
+            this.rolPermiteAplicar = false;
+            this.rolPermiteAnular = false;
+            this.rolPermiteRechazar = false;
 
-            if (solicitud.getEstado().getValor().equals(Constantes.ESTADO_SOLITUD_DONACION_NUEVO)) {
-                rolPermiteModificar = true;
-                if (yaRegistrada) {
-                    rolPermiteAplicar = true;
-                    rolPermiteAnular = true;
-                }
-            } else if (solicitud.getEstado().getValor().equals(Constantes.ESTADO_SOLITUD_DONACION_PROCESO)) {
-                rolPermiteModificar = true;
-                if (yaRegistrada) {
-                    rolPermiteAnular = true;
-                    rolPermiteRechazar = true;
-                }
-            } else if (solicitud.getEstado().getValor().equals(Constantes.ESTADO_SOLITUD_DONACION_RECHAZADA)) {
-                rolPermiteModificar = true;
-                if (yaRegistrada) {
-                    rolPermiteAnular = true;
-                }
-            }
+            SolicitudDonacion solicitud = command.getSolicitudDonacion();
 
             //Se determina las reglas segun las autorizaciones para los casos de solicitudes pendientes o rezhazadas
             //Se verifica que no este anulada, aprobada o nueva
@@ -383,11 +374,34 @@ public class SolicitudDonacionController extends BaseController {
                         solicitudModel.modificar(solicitud);
                     }
 
-                    //Solo aplica si la solicitud no tiene aprobaciones
-                    rolPermiteModificar = !aprobacionRealizada; //Aqui se incluye la verificacion por rol
                 }
             }
+            
+            //Banderas de botones
+            if (solicitud.getEstado().getValor().equals(Constantes.ESTADO_SOLITUD_DONACION_NUEVO)) {
+                //Solo aplica si la solicitud no tiene aprobaciones
+                rolPermiteModificar = !aprobacionRealizada; //Aqui se incluye la verificacion por rol
 
+                if (yaRegistrada) {
+                    rolPermiteAplicar = true;
+                    rolPermiteAnular = true;
+                }
+            } else if (solicitud.getEstado().getValor().equals(Constantes.ESTADO_SOLITUD_DONACION_PROCESO)) {
+                //Solo aplica si la solicitud no tiene aprobaciones
+                rolPermiteModificar = !aprobacionRealizada; //Aqui se incluye la verificacion por rol
+
+                if (yaRegistrada) {
+                    rolPermiteAnular = true;
+                    rolPermiteRechazar = true;
+                }
+            } else if (solicitud.getEstado().getValor().equals(Constantes.ESTADO_SOLITUD_DONACION_RECHAZADA)) {
+                //Solo aplica si la solicitud no tiene aprobaciones
+                rolPermiteModificar = !aprobacionRealizada; //Aqui se incluye la verificacion por rol
+                if (yaRegistrada) {
+                    rolPermiteAnular = true;
+                }
+            }
+            
         } catch (FWExcepcion e) {
             Mensaje.agregarErrorAdvertencia(e.getError_para_usuario());
         } catch (Exception e) {
@@ -458,15 +472,17 @@ public class SolicitudDonacionController extends BaseController {
                 //Se almacena la informacion
                 solicitudModel.modificar(command.getSolicitudDonacion());
 
-                //Si existe alguna aprobacion en tramite se debe eliminar las aprobaciones ya que se cambio el solicitud
+                //Si existe alguna aprobacion en tramite se debe eliminar las aprobaciones ya que se cambio la solicitud
                 if (aprobacionRealizada) {
                     this.eliminarAprobaciones();
                 }
 
+                this.yaRegistrada = true;
+
                 //Se cargan los datos nuevamente
                 //Aprobaciones
                 this.consultaAutorizaciones();
-
+                
                 //Se actuaizan banderas
                 this.cambiaEstadoSolicitud();
 
@@ -552,7 +568,8 @@ public class SolicitudDonacionController extends BaseController {
 
             //Se actuaizan banderas
             this.cambiaEstadoSolicitud();
-
+            
+            command.setPresentarPanel(Boolean.FALSE);
             Mensaje.agregarInfo(Util.getEtiquetas("sigebi.solicitudDonacionController.modificado.exitosamente"));
 
         } catch (FWExcepcion e) {
@@ -645,6 +662,8 @@ public class SolicitudDonacionController extends BaseController {
             command.setPresentarPanel(Boolean.TRUE);
             if (command.getPresentarPanelBuscarReceptor()) {
                 buscarUnidadesReceptoras();
+            }else if (command.getPresentarPanelAnularConfirmar()){
+                command.setMensajeConfirmacion(Util.getEtiquetas("sigebi.solicitudDonacionController.mensaje.anular"));
             }
         } catch (FWExcepcion e) {
             Mensaje.agregarErrorAdvertencia(e.getError_para_usuario());
@@ -933,9 +952,6 @@ public class SolicitudDonacionController extends BaseController {
             //Se obtiene el detalle
             SolicitudDetalle detalle = (SolicitudDetalle) pEvent.getComponent().getAttributes().get("detalleSeleccionado");
 
-            //Se elimina del mapa
-            command.getBienesDonacion().remove(detalle.getId());
-            
             //Se marca el bien como rechazado
             Integer telefono = lVistaUsuario.getgUsuarioActual().getTelefono1() != null ? Integer.parseInt(lVistaUsuario.getgUsuarioActual().getTelefono1()) : 0;
             bienModel.cambiaEstadoBien(detalle.getBien(), estadoBienInactivo, command.getObservacion(), telefono, usuarioSIGEBI);

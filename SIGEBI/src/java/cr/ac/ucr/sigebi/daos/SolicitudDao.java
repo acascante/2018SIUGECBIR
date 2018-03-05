@@ -8,6 +8,7 @@ package cr.ac.ucr.sigebi.daos;
 import cr.ac.ucr.framework.daoHibernate.DaoHelper;
 import cr.ac.ucr.framework.daoImpl.GenericDaoImpl;
 import cr.ac.ucr.framework.utils.FWExcepcion;
+import cr.ac.ucr.sigebi.domain.Bien;
 import cr.ac.ucr.sigebi.domain.Estado;
 import cr.ac.ucr.sigebi.domain.Rol;
 import cr.ac.ucr.sigebi.domain.Solicitud;
@@ -50,7 +51,23 @@ public class SolicitudDao extends GenericDaoImpl {
             throw new FWExcepcion("sigebi.error.solicitudDao.salvar", "Error guardando registro de tipo " + this.getClass(), e.getCause());
         }
     }
+    
+    @Transactional(readOnly = true)
+    public Solicitud buscarPorId(Long id) throws FWExcepcion {
+        Session session = dao.getSessionFactory().openSession();
+        try {
+            String sql = "SELECT b FROM Solicitud b WHERE b.id = :id";
+            Query query = session.createQuery(sql);
+            query.setParameter("id", id);
 
+            return (Solicitud) query.uniqueResult();
+        } catch (HibernateException e) {
+            throw new FWExcepcion("sigebi.error.solicitudDao.buscarPorId", "Error obtener los registros de tipo " + this.getClass(), e.getCause());
+        } finally {
+            session.close();
+        }
+    }
+    
     @Transactional
     public void agregarDetalleSolicitud(SolicitudDetalle solicitudDetalle) throws FWExcepcion {
         try {
@@ -140,7 +157,7 @@ public class SolicitudDao extends GenericDaoImpl {
         sql.append(" WHERE obj.discriminator = :tipoSolicitud ");
 
         if (id != null && id.length() > 0) {
-            sql.append(" AND obj.id = :id ");
+            sql.append(" AND upper(obj.id) like upper(:id)");
         } else {
 
             if (estado != null) {
@@ -170,7 +187,7 @@ public class SolicitudDao extends GenericDaoImpl {
         q.setParameter("tipoSolicitud", tipoSolicitud);
 
         if (id != null && id.length() > 0) {
-            q.setParameter("id", id);
+            q.setParameter("id", '%' + id + '%');
         } else {
 
             if (estado != null) {

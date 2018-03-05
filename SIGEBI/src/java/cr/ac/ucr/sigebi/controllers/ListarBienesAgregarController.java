@@ -55,7 +55,7 @@ public class ListarBienesAgregarController extends BaseController {
             this.setCantidadRegistros(contador.intValue());
         } catch (FWExcepcion e) {
             Mensaje.agregarErrorAdvertencia(e.getError_para_usuario());
-        } catch (NumberFormatException e) {
+        } catch (Exception e) {
             Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.error.controllerListarNotificaciones.contarNotificaciones"));
         }
     }

@@ -35,6 +35,7 @@ public class SolicitudDonacionCommand {
     Bien bien = null;
     Factura factura = null;
     Adjunto adjunto = null;
+    String mensajeConfirmacion = "";
 
     //Mapa para la lista de autorizaciones para la solicitud
     HashMap<Long, SolicitudDetalle> bienesDonacion = null;
@@ -148,6 +149,14 @@ public class SolicitudDonacionCommand {
 
     public Bien getBien() {
         return bien;
+    }
+
+    public String getMensajeConfirmacion() {
+        return mensajeConfirmacion;
+    }
+
+    public void setMensajeConfirmacion(String mensajeConfirmacion) {
+        this.mensajeConfirmacion = mensajeConfirmacion;
     }
 
     public void setBien(Bien bien) {
@@ -273,6 +282,10 @@ public class SolicitudDonacionCommand {
         return this.presentarPanel && this.accion.equals(Constantes.ACCION_DONACION_BUSCAR_RECEPTOR);
     }
 
+    public Boolean getPresentarPanelAnularConfirmar() {
+        return this.presentarPanel && this.accion.equals(Constantes.ACCION_DONACION_ANULAR);
+    }
+    
     public ArrayList<Adjunto> getAdjuntos() {
         return new ArrayList<Adjunto>(this.adjuntosDonacion.values());
     }

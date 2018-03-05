@@ -55,6 +55,10 @@ public class SolicitudModel {
         solicitudDao.agregar(solicitud);
     }
 
+    public Solicitud buscarPorId(Long id) throws FWExcepcion{
+        return solicitudDao.buscarPorId(id);
+    }
+            
     public void agregarDetallesSolicitud(ArrayList<SolicitudDetalle> detalles) throws FWExcepcion {
         for (Iterator iterator = detalles.iterator(); iterator.hasNext();) {
             this.agregarDetalleSolicitud((SolicitudDetalle) iterator.next());

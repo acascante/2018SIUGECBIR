@@ -85,7 +85,7 @@
                                                 validator="#{controllerListarPrestamos.validarFiltroFecha}"
                                                 value="#{controllerListarPrestamos.command.fltFecha}" 
                                                 valueChangeListener="#{controllerListarPrestamos.cambioFiltro}" >
-                                                <f:convertDateTime pattern="#{controllerListarPrestamos.command.datePattern}"  timeZone="#{controllerListarPrestamos.command.timeZone}" />
+                                                <f:convertDateTime pattern="#{controllerListarPrestamos.command.datePattern}" timeZone="#{controllerListarPrestamos.command.timeZone}" />
                                             </ice:selectInputDate>
                                         </ice:column>
                             
@@ -116,10 +116,12 @@
                                         <!-- Entidad -->
                                         <ice:column id="entidad" rowspan="2" style="vertical-align:top;">                                 
                                             <ice:outputText value="#{label['sigebi.label.prestamos.entidad']} "/>
-                                            <ice:inputText id="filtroDestinatario"  value="#{controllerListarPrestamos.command.fltEntidad}" partialSubmit="true" valueChangeListener="#{controllerListarNotificaciones.cambioFiltro}"/>
+                                            <ice:inputText id="filtroEntidad"  value="#{controllerListarPrestamos.command.fltEntidad}" partialSubmit="true" valueChangeListener="#{controllerListarNotificaciones.cambioFiltro}"/>
                                         </ice:column>
                                         
-                                        <ice:column id="opciones" />
+                                        <ice:column id="opciones" >
+                                            <ice:outputText value="#{label['sigebi.label.prestamos.opciones']} "/>
+                                        </ice:column>
                                     </ice:headerRow>
                                 </ice:columnGroup>
                             </f:facet>

@@ -59,10 +59,10 @@ public final class Constantes {
     public static final int ESTADO_CONVENIO_INACTIVO = 2;
     
     // Exclusiones
-    public static final int ESTADO_EXCLUSION_CREADA = 1;
-    public static final int ESTADO_EXCLUSION_SOLICITADA = 2;
-    public static final int ESTADO_EXCLUSION_APROBADA = 3;
-    public static final int ESTADO_EXCLUSION_EJECUTADA = 4;
+    public static final Integer ESTADO_EXCLUSION_CREADA = 1;
+    public static final Integer ESTADO_EXCLUSION_SOLICITADA = 2;
+    public static final Integer ESTADO_EXCLUSION_APROBADA = 3;
+    public static final Integer ESTADO_EXCLUSION_EJECUTADA = 4;
     public static final String ESTADO_EXCLUSION_CREADA_DESC = "CREADA";
     public static final String ESTADO_EXCLUSION_ENVIADA_DESC = "EN TRAMITE";
     public static final String ESTADO_EXCLUSION_ENVIO_FALLIDO_DESC = "CERRADA";
@@ -216,6 +216,7 @@ public final class Constantes {
 
     //Acciones solicitud donacion
     public static final Integer ACCION_DONACION_BUSCAR_RECEPTOR = 1;
+    public static final Integer ACCION_DONACION_ANULAR = 2;
     
     //Sincronizar
     public static final char SINCRONIZAR_ESTADO_ACTIVO = '1';

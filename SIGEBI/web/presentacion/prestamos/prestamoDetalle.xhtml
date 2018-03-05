@@ -10,7 +10,7 @@
             <div class="row">
                 <div class='col-sm-6'>
                     <h1 style="margin: 0;">
-                        <ice:outputFormat value="#{label['sigebi.label.prestamoes.titulo.mantenimiento']} "/>
+                        <ice:outputFormat value="#{label['sigebi.label.prestamos.titulo.mantenimiento']} "/>
                     </h1>
                 </div>                
                 <div class="col-sm-6">
@@ -30,15 +30,23 @@
             </div>
         
             <div class="row">
+                <!--ID-->
+                <div class="col-sm-4">
+                    <div class="form-group"> 
+                        <ice:outputText value="#{label['sigebi.label.prestamos.id']}" />
+                        <ice:inputText id="txtExclusionId" styleClass="form-control" readonly="true" partialSubmit="false" 
+                                       value="#{controllerAgregarExclusiones.command.id}">
+                        </ice:inputText>
+                    </div>
+                </div>
+                
                 <!--Tipo Entidad-->
                 <div class="col-md-4">
                     <div class="form-group"> 
-                        <label class="control-label" for="cmbTipo">
-                            <ice:outputText value="#{label['sigebi.label.prestamoes.tipo']}" />
-                            <ice:outputText value="#{label['label.requerido']}" />
-                        </label>
+                        <ice:outputText value="#{label['sigebi.label.prestamos.tipoEntidad']}" />
+                        <ice:outputText value="#{label['label.requerido']}" />
                         <ice:selectOneMenu  id="cmbTipo" partialSubmit="true" 
-                                            value="#{controllerAgregarPrestamos.command.idTipo}"
+                                            value="#{controllerAgregarPrestamos.command.idTipoEntidad}"
                                             valueChangeListener="#{controllerAgregarPrestamos.cambioTipoEntidad}">
                             <f:selectItem itemLabel="N/A" itemValue="-1"/>
                             <f:selectItems id="slcTipoItem" value="#{controllerAgregarPrestamos.itemsTipo}"/>
@@ -54,19 +62,9 @@
                                            readonly="#{controllerAgregarPrestamos.disableEntidades}"
                                            value="#{controllerAgregarPrestamos.command.entidad}">
                             <f:selectItem itemLabel="Seleccionar Entidad" itemValue="-1"/>
-                            <f:selectItems id="optEntidades" value="#{controllerAgregarPrestamos.itemsEntidades}"/>
+                            <f:selectItems id="optEntidades" value="#{controllerAgregarPrestamos.itemsEntidad}"/>
                         </ice:selectOneMenu>
                     </div>                                             
-                </div>
-                
-                <!--ID-->
-                <div class="col-sm-2">
-                    <div class="form-group"> 
-                        <ice:outputText value="#{label['sigebi.Traslado.Label.Identificacion']}" />
-                        <ice:inputText id="txtExclusionId" styleClass="form-control" readonly="true" partialSubmit="false"
-                                       value="#{controllerAgregarExclusiones.command.idExclusion}">
-                        </ice:inputText>
-                    </div>
                 </div>
             </div>
             
@@ -174,7 +172,7 @@
             <div class="row">
                 <div class="col-md-12">
                     <div class="form-group"> 
-                        <ice:outputText value="#{label['sigebi.label.prestamoes.observacio']}" />
+                        <ice:outputText value="#{label['sigebi.label.prestamos.observacion']}" />
                         <ice:inputTextarea id="txtObservacion" styleClass="form-control" style="resize: none" cols="4" partialSubmit="false"
                                            value="#{controllerAgregarPrestamos.command.observacion}">
                         </ice:inputTextarea>
@@ -189,7 +187,7 @@
                     <ice:commandButton id="botonAceptar"  value="Aceptar"  partialSubmit="true"  styleClass="boton" action="#{controllerAgregarPrestamos.aceptarPrestamo}" rendered="#{controllerAgregarPrestamos.visibleBotonAceptar}"/>
                     <ice:commandButton id="botonRevisar"  value="Revisar"  partialSubmit="true"  styleClass="boton" action="#{controllerAgregarPrestamos.revisarDatos}" rendered="#{controllerAgregarPrestamos.visibleBotonRevisar}"/>
                     <ice:commandButton id="botonRechazar"  value="Rechazar"  partialSubmit="true"  styleClass="boton" action="#{controllerAgregarPrestamos.rechazarPrestamo}" rendered="#{controllerAgregarPrestamos.visibleBotonRechazar}"/>
-                    <ice:commandButton id="botonAnular"  value="Anular"  partialSubmit="true"  styleClass="boton" action="#{controllerAgregarPrestamos.anularPrestamo}" rendered="#{controllerAgregarPrestamos.visibleBotonAnular}"/>/>
+                    <ice:commandButton id="botonAnular"  value="Anular"  partialSubmit="true"  styleClass="boton" action="#{controllerAgregarPrestamos.anularPrestamo}" rendered="#{controllerAgregarPrestamos.visibleBotonAnular}"/>
                 </div>
             </div>
         </div>

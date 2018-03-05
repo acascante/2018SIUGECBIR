@@ -145,28 +145,32 @@
             </div>
             
             <div class="row">
-                <div class="col-md-3">
+                <div class="col-md-2">
                     <ice:commandButton id="botonGuardar" 
                                        value="Guardar" 
                                        rendered="#{controllerSolicitudDonacion.rolPermiteModificar}"
                                        partialSubmit="true" 
                                        styleClass="boton" action="#{controllerSolicitudDonacion.guardarDatos}"/>
                 </div>
-                <div class="col-md-3">
+                <div class="col-md-2">
                     <ice:commandButton id="botonAplicar" 
                                        value="Aplicar" 
                                        rendered="#{controllerSolicitudDonacion.rolPermiteAplicar}"
                                        partialSubmit="true" 
                                        styleClass="boton" action="#{controllerSolicitudDonacion.aplicarSolicitud}"/>
                 </div>
-                <div class="col-md-3">
+                <div class="col-md-2">
                     <ice:commandButton id="botonAnular" 
                                        value="Anular" 
                                        rendered="#{controllerSolicitudDonacion.rolPermiteAnular}"
                                        partialSubmit="true" 
-                                       styleClass="boton" action="#{controllerSolicitudDonacion.anularSolicitud}"/>
+                                       styleClass="boton" 
+                                       actionListener="#{controllerSolicitudDonacion.mostrarPanel}">                            
+                        <f:attribute id="accion" name="accion"  value="2"/>
+                    </ice:commandButton> 
+                     
                 </div>
-                <div class="col-md-3">
+                <div class="col-md-2">
                     <ice:commandButton id="botonRechazar" 
                                        value="Rechazar" 
                                        rendered="#{controllerSolicitudDonacion.rolPermiteRechazar}"
@@ -176,6 +180,11 @@
             </div>
                         
         </div>
+        
+        <!-- Panel de confirmacion --> 
+        <ui:insert name="modalConfirmacion">
+            <ui:include src="../inclusiones/panelConfirmacionDonacion.xhtml" />
+        </ui:insert>
         
          <!-- Panel de unidades --> 
         <ui:insert name="modalUnidades">

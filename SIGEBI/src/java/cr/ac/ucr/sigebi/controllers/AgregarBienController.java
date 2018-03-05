@@ -12,7 +12,6 @@ import cr.ac.ucr.framework.vista.util.Mensaje;
 import cr.ac.ucr.framework.vista.util.Util;
 import cr.ac.ucr.sigebi.commands.BienCommand;
 import cr.ac.ucr.sigebi.commands.BienCommand.NotaCommand;
-import cr.ac.ucr.sigebi.commands.SolicitudDonacionCommand;
 import cr.ac.ucr.sigebi.domain.Accesorio;
 import cr.ac.ucr.sigebi.domain.Adjunto;
 import cr.ac.ucr.sigebi.domain.Bien;
@@ -31,6 +30,7 @@ import cr.ac.ucr.sigebi.domain.Nota;
 import cr.ac.ucr.sigebi.domain.Proveedor;
 import cr.ac.ucr.sigebi.domain.RegistroMovimiento;
 import cr.ac.ucr.sigebi.domain.SolicitudDetalle;
+import cr.ac.ucr.sigebi.domain.SolicitudDonacion;
 import cr.ac.ucr.sigebi.domain.SubCategoria;
 import cr.ac.ucr.sigebi.domain.SubClasificacion;
 import cr.ac.ucr.sigebi.domain.Ubicacion;
@@ -151,10 +151,11 @@ public class AgregarBienController extends BaseController {
     private boolean visiblePanelAdjunto;
     private boolean visiblePanelEliminarAccesorio;
     private boolean bienRegistrado;
+    private boolean donacion;
 
     private Tipo tipoAdjuntoDoc;
     private Estado estadoGeneralActivo;
-    private SolicitudDonacionCommand solicitudDonacionCommand;
+    private SolicitudDonacion solicitudDonacion;
     //</editor-fold>
 
     //<editor-fold defaultstate="collapsed" desc="Inicializa Datos y Modificacion del bien">
@@ -164,14 +165,14 @@ public class AgregarBienController extends BaseController {
         estadoGeneralActivo = this.estadoPorDominioValor(Constantes.DOMINIO_IDENTIFICACION, Constantes.ESTADO_GENERAL_ACTIVO);
     }
 
-    private void inicializarNuevo(Boolean donacion) {
+    private void inicializarNuevo() {
         this.command = new BienCommand(unidadEjecutora);
         Estado estado = this.estadoPorDominioValor(Constantes.DOMINIO_BIEN, Constantes.ESTADO_BIEN_PENDIENTE);
         this.command.setEstado(estado);
         this.command.setEstadoInterno(estado); // TODO Revisar cual es el estado interno para BIENES
         this.bienRegistrado = false;
         inicializarDatos();
-        cargarCombos(donacion);
+        cargarCombos();
     }
 
     private void inicializarBanderasBotones(Bien bien) {
@@ -203,7 +204,7 @@ public class AgregarBienController extends BaseController {
         notaDetalle = "";
         cargarAdjuntos();
 
-        cargarCombos(false);
+        cargarCombos();
 
         if (command.getIdSubCategoria() != null) {
             cargarSubCategorias(command.getItemCommand().getItemsCategoria().get(command.getIdCategoria()));
@@ -237,10 +238,10 @@ public class AgregarBienController extends BaseController {
         this.visiblePanelAdjunto = false;
         this.visiblePanelEliminarAccesorio = false;
 
-        this.bienRegistrado = false;
+        this.bienRegistrado = false;        
     }
 
-    private void cargarCombos(Boolean donacion) {
+    private void cargarCombos() {
         try {
             List<Tipo> tipos = this.tiposPorDominio(Constantes.DOMINIO_BIEN);
             if (!tipos.isEmpty()) {
@@ -363,7 +364,7 @@ public class AgregarBienController extends BaseController {
         }
     }
 
-    public void agregarBienDonacion() {
+    public void guardarBienDonacion() {
         FacesContext context = FacesContext.getCurrentInstance();
         UIViewRoot root = context.getViewRoot();
         UIInput component = new UIInput();
@@ -373,11 +374,8 @@ public class AgregarBienController extends BaseController {
                 //Se crea el bien
                 this.procesarBien();
 
-                //Se crea el detalle para la solicitud
-                SolicitudDetalle solicitudDetalle = new SolicitudDetalle(solicitudDonacionCommand.getSolicitudDonacion(), bien, estadoGeneralActivo);
-                solicitudModel.agregarDetalleSolicitud(solicitudDetalle);
-                this.solicitudDonacionCommand.getBienesDetalles().add(solicitudDetalle);
-
+                context.getExternalContext().getSessionMap().remove("controllerSolicitudDonacion");
+                Util.agregarVariableSession("idDonacion", solicitudDonacion.getId());
                 Util.navegar(vistaOrigen);
                 Mensaje.agregarInfo(Util.getEtiquetas("sigebi.error.agregarBienController.mensaje.exito"));
 
@@ -414,8 +412,15 @@ public class AgregarBienController extends BaseController {
                     modelBien.almacenar(bien);
 
                     modelIdentificacion.actualizar(bien.getIdentificacion());
+
                     bienRegistrado = true;
                     inicializarDetalle(bien);
+                    
+                    //Se crea el detalle para la solicitud
+                    if(donacion){
+                       SolicitudDetalle solicitudDetalle = new SolicitudDetalle(solicitudDonacion, bien, estadoGeneralActivo);
+                       solicitudModel.agregarDetalleSolicitud(solicitudDetalle);
+                    }        
                 }
             } else {
                 modelBien.actualizar(command.getBien(bien));
@@ -445,6 +450,7 @@ public class AgregarBienController extends BaseController {
     }
 
     //</editor-fold>
+    
     //<editor-fold defaultstate="collapsed" desc="Funciones Lote">
     public void cambioLote(ValueChangeEvent event) {
         if (!event.getPhaseId().equals(PhaseId.INVOKE_APPLICATION)) {
@@ -462,6 +468,7 @@ public class AgregarBienController extends BaseController {
     }
 
     //</editor-fold>
+    
     //<editor-fold defaultstate="collapsed" desc="Navegación del MENÚ">
     public void nuevoRegistro(ActionEvent event) {
         if (!event.getPhaseId().equals(PhaseId.INVOKE_APPLICATION)) {
@@ -469,7 +476,8 @@ public class AgregarBienController extends BaseController {
             event.queue();
             return;
         }
-        inicializarNuevo(false);
+        this.donacion = false;
+        inicializarNuevo();
         this.vistaOrigen = event.getComponent().getAttributes().get(Constantes.KEY_VISTA_ORIGEN).toString();
         Util.navegar(Constantes.KEY_VISTA_DETALLE_BIEN);
     }
@@ -480,9 +488,27 @@ public class AgregarBienController extends BaseController {
             event.queue();
             return;
         }
-        inicializarNuevo(true);
+        this.donacion = true;
+        inicializarNuevo();
         this.vistaOrigen = event.getComponent().getAttributes().get(Constantes.KEY_VISTA_ORIGEN).toString();
-        solicitudDonacionCommand = (SolicitudDonacionCommand) event.getComponent().getAttributes().get("donacionCommand");
+        solicitudDonacion = (SolicitudDonacion) event.getComponent().getAttributes().get("solicitudDonacion");
+        Util.navegar(Constantes.KEY_VISTA_DETALLE_BIEN_DONACION);
+    }
+    
+    public void modificarRegistroDonacion(ActionEvent event) {
+        if (!event.getPhaseId().equals(PhaseId.INVOKE_APPLICATION)) {
+            event.setPhaseId(PhaseId.INVOKE_APPLICATION);
+            event.queue();
+            return;
+        }
+
+        this.donacion = true;
+        Bien bienSecc = (Bien) event.getComponent().getAttributes().get("bienSeleccionado");
+        bien = modelBien.buscarPorId(bienSecc.getId());
+        inicializarDetalle(bien);
+        solicitudDonacion = (SolicitudDonacion) event.getComponent().getAttributes().get("solicitudDonacion");
+
+        this.vistaOrigen = event.getComponent().getAttributes().get(Constantes.KEY_VISTA_ORIGEN).toString();
         Util.navegar(Constantes.KEY_VISTA_DETALLE_BIEN_DONACION);
     }
 
@@ -492,6 +518,7 @@ public class AgregarBienController extends BaseController {
             event.queue();
             return;
         }
+        this.donacion = false;
         Bien bienSecc = (Bien) event.getComponent().getAttributes().get("bienSeleccionado");
         bien = modelBien.buscarPorId(bienSecc.getId());
 
@@ -865,6 +892,7 @@ public class AgregarBienController extends BaseController {
     }
 
     //</editor-fold>
+    
     //<editor-fold defaultstate="collapsed" desc="Tab Garantías">
     public boolean validarGarantia() {
         return command.getInicioGarantia().compareTo(command.getFinGarantia()) < 0;
@@ -1100,6 +1128,7 @@ public class AgregarBienController extends BaseController {
     }
 
     //</editor-fold>
+    
     //<editor-fold defaultstate="collapsed" desc="Tab Accesorios">
     public void guardarAccesorio() {
         try {
@@ -1322,15 +1351,17 @@ public class AgregarBienController extends BaseController {
         }
         return mensajeUsuario;
     }
-
-    //</editor-fold>
-    //<editor-fold defaultstate="collapsed" desc="Get's y Set's">
-    public SolicitudDonacionCommand getSolicitudDonacionCommand() {
-        return solicitudDonacionCommand;
+    
+    public SolicitudDonacion getSolicitudDonacion() {
+        return solicitudDonacion;
     }
 
-    public void setSolicitudDonacionCommand(SolicitudDonacionCommand solicitudDonacionCommand) {
-        this.solicitudDonacionCommand = solicitudDonacionCommand;
+    //</editor-fold>
+    
+    //<editor-fold defaultstate="collapsed" desc="Get's y Set's">
+    
+    public void setSolicitudDonacion(SolicitudDonacion solicitudDonacion) {    
+        this.solicitudDonacion = solicitudDonacion;
     }
 
     public List<SelectItem> getItemsCategoria() {
@@ -1563,6 +1594,14 @@ public class AgregarBienController extends BaseController {
 
     public void setBienRegistrado(boolean bienRegistrado) {
         this.bienRegistrado = bienRegistrado;
+    }
+
+    public boolean isDonacion() {
+        return donacion;
+    }
+
+    public void setDonacion(boolean donacion) {
+        this.donacion = donacion;
     }
 
     public boolean isVisiblePanelModificarCaracteristica() {

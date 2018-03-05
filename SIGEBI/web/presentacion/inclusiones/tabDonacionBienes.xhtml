@@ -1,14 +1,16 @@
 
-<ice:outputHtml id="frmAdjuntosDonacion" xmlns:ice="http://www.icesoft.com/icefaces/component" xmlns:icecore="http://www.icefaces.org/icefaces/core" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:c="http://java.sun.com/jstl/core">
+<ice:outputHtml id="frmBienesDonacion" xmlns:ice="http://www.icesoft.com/icefaces/component" xmlns:icecore="http://www.icefaces.org/icefaces/core" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:c="http://java.sun.com/jstl/core">
 
     <div class="container">
         <!-- Data Table Lista de roles-->
         <div class="row" style="margin-top:10px">                
             <div class="col-sm-12">
                 <ice:commandButton id="botonNuevo" style="float:right" styleClass="boton" partialSubmit="true"
-                                   actionListener="#{controllerAgregarBienes.nuevoRegistroDonacion}" value="Nuevo" >
+                                   actionListener="#{controllerAgregarBienes.nuevoRegistroDonacion}"
+                                   rendered="#{controllerSolicitudDonacion.rolPermiteModificar}"
+                                   value="Nuevo" >
                    <f:attribute id="vistaOrigen" name="keyVistaOrigen"  value="donacion_deta"/>
-                   <f:attribute id="donacionCommand" name="donacionCommand"  value="#{controllerSolicitudDonacion.command}"/>
+                   <f:attribute id="solicitudDonacionAddBien" name="solicitudDonacion"  value="#{controllerSolicitudDonacion.command.solicitudDonacion}"/>
 
                 </ice:commandButton>
             </div>              
@@ -36,31 +38,7 @@
                                     </ice:headerRow>
                                 </f:facet>                                
                                 <h:outputText id="colDescripcionTxt" value="#{detalle.bien.descripcion}"/>
-                            </ice:column>
-                            <ice:column id="colMarca">
-                                <f:facet name="header">
-                                    <ice:headerRow>
-                                       <ice:outputText value="#{label['sigebi.label.vista.detalleSolicitudDonacion.bien.marca']}"/>
-                                    </ice:headerRow>
-                                </f:facet>                                
-                                <h:outputText id="colMarcaTxt" value="#{detalle.bien.resumenBien.marca}"/>
-                            </ice:column>
-                            <ice:column id="colModelo">
-                                <f:facet name="header">
-                                    <ice:headerRow>
-                                       <ice:outputText value="#{label['sigebi.label.vista.detalleSolicitudDonacion.bien.modelo']}"/>
-                                    </ice:headerRow>
-                                </f:facet>                                
-                                <h:outputText id="colModeloTxt" value="#{detalle.bien.resumenBien.modelo}"/>
-                            </ice:column>
-                            <ice:column id="colSerie">
-                                <f:facet name="header">
-                                    <ice:headerRow>
-                                       <ice:outputText value="#{label['sigebi.label.vista.detalleSolicitudDonacion.bien.serie']}"/>
-                                    </ice:headerRow>
-                                </f:facet>                                
-                                <h:outputText id="colSerieTxt" value="#{detalle.bien.resumenBien.serie}"/>
-                            </ice:column>
+                            </ice:column>                           
                             <ice:column id="colEstado">
                                 <f:facet name="header">
                                     <ice:headerRow>
@@ -83,7 +61,7 @@
                                        <ice:outputText value="#{label['sigebi.label.vista.detalleSolicitudDonacion.bien.moneda']}"/>
                                     </ice:headerRow>
                                 </f:facet>                                
-                                <h:outputText id="colMonedaTxt" value="#{detalle.bien.moneda.signo}"/>
+                                <h:outputText id="colMonedaTxt" value="#{detalle.bien.moneda.descripcion}"/>
                             </ice:column>
                             <ice:column id="colCosto">
                                 <f:facet name="header">
@@ -93,14 +71,25 @@
                                 </f:facet>                                
                                 <h:outputText id="colCostoTxt" value="#{detalle.bien.costo}"/>
                             </ice:column>
-                            <ice:column style="text-align: center;">
+                            <ice:column style="text-align: center;" 
+                                        rendered="#{controllerSolicitudDonacion.rolPermiteModificar}">
+                                <ice:commandButton id="botonModificarBien"
+                                                   style="margin-top:2%" 
+                                                   styleClass="btnModificar_bien" 
+                                                   partialSubmit="true"
+                                                   rendered="#{controllerSolicitudDonacion.estadoBienInactivo.valor != detalle.bien.estado.valor}"
+                                                   actionListener="#{controllerAgregarBienes.modificarRegistroDonacion}">
+                                    <f:attribute id="modificarBienSel" name="bienSeleccionado"  value="#{detalle.bien}"/>                                
+                                    <f:attribute id="solicitudDonacionModBien" name="solicitudDonacion"  value="#{controllerSolicitudDonacion.command.solicitudDonacion}"/> 
+                                    <f:attribute id="vistaOrigenModBien" name="keyVistaOrigen"  value="donacion_deta"/>
+                                </ice:commandButton>
                                 <ice:commandButton id="botonEliminarBien"
                                                    style="margin-top:2%" 
                                                    styleClass="btnEliminar_bien" 
                                                    partialSubmit="true"
                                                    rendered="#{controllerSolicitudDonacion.estadoBienInactivo.valor != detalle.bien.estado.valor}"
                                                    actionListener="#{controllerSolicitudDonacion.rechazarDetalleBien}">
-                                    <f:attribute id="documentoSelRech" name="bienSeleccionado"  value="#{detalle}"/>                                
+                                    <f:attribute id="eliminarBienSel" name="detalleSeleccionado"  value="#{detalle}"/>                                
                                 </ice:commandButton>
                             </ice:column>
                         </ice:dataTable>

@@ -94,7 +94,7 @@ public class ListarExclusionesController extends BaseController {
     
     private void contarExclusiones() {
         try {
-            Long contador = exclusionModel.contar(unidadEjecutora, command.getFltIdCodigo(), command.getFltFecha(), command.getFltEstado(), command.getFltTipo());
+            Long contador = exclusionModel.contar(unidadEjecutora, command.getFltIdCodigo(), command.getFltFecha(), command.getFltEstado().longValue(), command.getFltTipo().longValue());
             this.setCantidadRegistros(contador.intValue());
         } catch (FWExcepcion e) {
             Mensaje.agregarErrorAdvertencia(e.getError_para_usuario());
@@ -105,7 +105,7 @@ public class ListarExclusionesController extends BaseController {
     
     private void listarExclusiones() {
         try {
-            this.exclusiones = exclusionModel.listar(this.getPrimerRegistro()-1, this.getUltimoRegistro(), unidadEjecutora, command.getFltIdCodigo(), command.getFltFecha(), command.getFltEstado(), command.getFltTipo());
+            this.exclusiones = exclusionModel.listar(this.getPrimerRegistro()-1, this.getUltimoRegistro(), unidadEjecutora, command.getFltIdCodigo(), command.getFltFecha(), command.getFltEstado().longValue(), command.getFltTipo().longValue());
         } catch (FWExcepcion e) {
             Mensaje.agregarErrorAdvertencia(e.getError_para_usuario());
         } catch (NumberFormatException e) {

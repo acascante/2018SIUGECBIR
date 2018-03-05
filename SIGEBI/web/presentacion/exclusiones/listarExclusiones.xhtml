@@ -84,7 +84,7 @@
                                                 validator="#{controllerListarExclusiones.validarFiltroFecha}"
                                                 value="#{controllerListarExclusiones.command.fltFecha}" 
                                                 valueChangeListener="#{controllerListarExclusiones.cambioFiltro}" >
-                                                <f:convertDateTime pattern="#{controllerListarExclusiones.command.datePattern}"  timeZone="#{controllerListarExclusiones.command.timeZone}" />
+                                                <f:convertDateTime pattern="#{controllerListarExclusiones.command.datePattern}" timeZone="#{controllerListarExclusiones.command.timeZone}" />
                                             </ice:selectInputDate>
                                         </ice:column>
                             
@@ -113,11 +113,13 @@
                                         </ice:column>
                                         
                                         <!-- Unidad Ejecutora -->
-                                        <ice:column id="unidadEjecutora" rowspan="2" style="vertical-align:top;">
+                                        <ice:column id="unidadEjecutora">
                                             <ice:outputText value="#{label['sigebi.label.exclusiones.unidadEjecutora']} "/>
                                         </ice:column>
                                         
-                                        <ice:column id="opciones" />
+                                        <ice:column id="opciones" >
+                                            <ice:outputText value="#{label['sigebi.label.prestamos.opciones']} "/>
+                                        </ice:column>
                                     </ice:headerRow>
                                 </ice:columnGroup>
                             </f:facet>

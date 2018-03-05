@@ -29,24 +29,11 @@
                 </div>
             </div>
         
+            <!--ID-->
             <div class="row">
-                <div class="col-md-4">
-                    <div class="form-group"> 
-                        <label class="control-label" for="cmbTipo">
-                            <ice:outputText value="#{label['sigebi.label.exclusiones.tipo']}" />
-                            <ice:outputText value="#{label['label.requerido']}" />
-                        </label>
-                        <ice:selectOneMenu  id="cmbTipo"
-                                            value="#{controllerAgregarExclusiones.command.idTipo}"
-                                            partialSubmit="true">
-                            <f:selectItem itemLabel="N/A" itemValue="-1"/>
-                            <f:selectItems id="slcTipoItem" value="#{controllerAgregarExclusiones.itemsTipo}"/>
-                        </ice:selectOneMenu>
-                    </div>
-                </div>
                 <div class="col-sm-2">
                     <div class="form-group"> 
-                        <ice:outputText value="#{label['sigebi.Traslado.Label.Identificacion']}" />
+                        <ice:outputText value="#{label['sigebi.label.exclusiones.id']}" />
                         <ice:inputText id="txtExclusionId" styleClass="form-control" readonly="true" partialSubmit="false"
                                        value="#{controllerAgregarExclusiones.command.idExclusion}">
                         </ice:inputText>
@@ -54,15 +41,29 @@
                 </div>
             </div>
             
-            <!--Observcion-->
+            <!--Tipo y Estado-->
             <div class="row">
-                <div class="col-md-12">
+                <div class="col-md-4">
                     <div class="form-group"> 
-                        <ice:outputText value="#{label['sigebi.label.exclusiones.observacion']}" />
-                        <ice:inputTextarea id="txtObservacion" styleClass="form-control" style="resize: none" cols="4" partialSubmit="false"
-                                           value="#{controllerAgregarExclusiones.command.observacion}">
-                        </ice:inputTextarea>
-                    </div>                                             
+                        <label class="control-label" for="cmbTipo">
+                            <ice:outputText value="#{label['sigebi.label.exclusiones.tipo']}" />
+                            <ice:outputText value="#{label['label.requerido']}" />
+                        </label>
+                        <ice:selectOneMenu  id="cmbTipo" partialSubmit="true" styleClass="form-control"
+                                            value="#{controllerAgregarExclusiones.command.idTipo}">
+                            <f:selectItem itemLabel="N/A" itemValue="-1"/>
+                            <f:selectItems id="slcTipoItem" value="#{controllerAgregarExclusiones.itemsTipo}"/>
+                        </ice:selectOneMenu>
+                    </div>
+                </div>
+                <div class="col-md-4"></div>
+                <div class="col-md-4">
+                    <div class="form-group"> 
+                        <ice:outputText value="#{label['sigebi.label.exclusiones.estado']}" />
+                        <ice:inputText id="txtExclusionId" styleClass="form-control" readonly="true" partialSubmit="false"
+                                       value="#{controllerAgregarExclusiones.command.estado.nombre}">
+                        </ice:inputText>
+                    </div>
                 </div>
             </div>
             
@@ -77,8 +78,8 @@
                                         <ice:outputFormat value="#{label['sigebi.Acta.Label.BienesAsociados']}" />
                                     </h4>
                                 </div>
-                                <div class='col-sm-2'>
-                                    <ice:commandButton id="botonAgregarBienes" style="margin-bottom: 1rem" styleClass="boton" partialSubmit="true" action="#{controllerAgregarExclusiones.mostarPanelAgregarBienes}" value="#{label['sigebi.Bien.Listado.Agregar']}" />
+                                <div class="col-sm-2">
+                                    <ice:commandButton id="botonAgregarBienes" action="#{controllerAgregarExclusiones.mostarPanelAgregarBienes}" value="#{label['sigebi.label.exclusiones.agregar']}" rendered="#{controllerAgregarExclusiones.visibleBotonAgregarBienes}" style="margin-bottom: 1rem; float:right" styleClass="boton" partialSubmit="true"/>
                                 </div>
                             </div>
                             <div class="row" >
@@ -158,12 +159,24 @@
                     </ice:panelGroup>
                 </div>
             </div>
-        
+            
+            <!--Observcion-->
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group"> 
+                        <ice:outputText value="#{label['sigebi.label.exclusiones.observacion']}" />
+                        <ice:inputTextarea id="txtObservacion" styleClass="form-control" style="resize: none" cols="4" partialSubmit="false"
+                                           value="#{controllerAgregarExclusiones.command.observacion}">
+                        </ice:inputTextarea>
+                    </div>                                             
+                </div>
+            </div>
+            
             <!--Botones -->
             <div class="row">
                 <div class="col-md-12">
-                    <ice:commandButton id="botonSolicitar" style="float: right" value="Solicitar"  partialSubmit="true"  styleClass="boton" action="#{controllerAgregarExclusiones.solicitarExclusion}" rendered="#{controllerAgregarExclusiones.visibleBotonSolicitar}"/>
-                    <ice:commandButton id="botonAgregar" style="float: right" value="Guardar"  partialSubmit="true"  styleClass="boton" action="#{controllerAgregarExclusiones.guardarDatos}"/>
+                    <ice:commandButton id="botonSolicitar" style="float: right" value="#{label['sigebi.label.exclusiones.solicitar']}" action="#{controllerAgregarExclusiones.solicitarExclusion}" rendered="#{controllerAgregarExclusiones.visibleBotonSolicitar}" partialSubmit="true"  styleClass="boton"/>
+                    <ice:commandButton id="botonAgregar" style="float: right" value="#{label['sigebi.label.exclusiones.guardar']}" action="#{controllerAgregarExclusiones.guardarDatos}" rendered="#{controllerAgregarExclusiones.visibleBotonGuardar}" partialSubmit="true"  styleClass="boton"/>
                 </div>
             </div>
         </div>
