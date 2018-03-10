@@ -39,6 +39,9 @@
     <mapping class="cr.ac.ucr.sigebi.domain.Notificacion"/>
     <mapping class="cr.ac.ucr.sigebi.domain.Proveedor"/>
     <mapping class="cr.ac.ucr.sigebi.domain.RegistroMovimiento"/>
+    <mapping class="cr.ac.ucr.sigebi.domain.RegistroMovimientoBien"/>
+    <mapping class="cr.ac.ucr.sigebi.domain.RegistroMovimientoSolicitud"/>
+    <mapping class="cr.ac.ucr.sigebi.domain.RegistroMovimientoDocumento"/>
     <mapping class="cr.ac.ucr.sigebi.domain.Rol"/>
     <mapping class="cr.ac.ucr.sigebi.domain.Solicitud"/>
     <mapping class="cr.ac.ucr.sigebi.domain.SolicitudDetalle"/>
@@ -61,6 +64,9 @@
     <mapping class="cr.ac.ucr.sigebi.domain.SolicitudAutorizacion"/>
     <mapping class="cr.ac.ucr.sigebi.domain.SolicitudDonacion"/>
 
+    <mapping class="cr.ac.ucr.sigebi.domain.InterfazBien"/>
+    <mapping class="cr.ac.ucr.sigebi.domain.InterfazAdjunto"/>
+    <mapping class="cr.ac.ucr.sigebi.domain.InterfazAccesorio"/>
     
     
     <!--<mapping class="cr.ac.ucr.sigebi.entities.AccesoriosEntity"/>

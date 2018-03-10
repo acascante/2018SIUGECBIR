@@ -9,9 +9,10 @@ import cr.ac.ucr.framework.utils.FWExcepcion;
 import cr.ac.ucr.sigebi.daos.RegistroMovimientoDao;
 import cr.ac.ucr.sigebi.domain.Bien;
 import cr.ac.ucr.sigebi.domain.RegistroMovimiento;
+import cr.ac.ucr.sigebi.domain.Solicitud;
+import cr.ac.ucr.sigebi.domain.SolicitudDetalle;
 import java.util.List;
 import javax.annotation.Resource;
-import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
 /**
@@ -30,7 +31,7 @@ public class RegistroMovimientoModel {
     }
 
     
-    public List<RegistroMovimiento> movimientosPorBien(Bien bien){
+    public List<Solicitud> movimientosPorBien(Bien bien){
         return registroMovimientoDao.movimientosPorBien(bien);
     }
     

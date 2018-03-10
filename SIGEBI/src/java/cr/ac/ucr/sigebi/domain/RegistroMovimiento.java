@@ -9,10 +9,13 @@ import cr.ac.ucr.framework.seguridad.ObjetoBase;
 import java.io.Serializable;
 import java.util.Date;
 import javax.persistence.Column;
+import javax.persistence.DiscriminatorColumn;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
@@ -26,6 +29,8 @@ import javax.persistence.TemporalType;
  */
 @Entity(name = "RegistroMovimiento")
 @Table(name = "SIGEBI_OAF.SIGB_REGISTRO_MOVIMIENTO")
+@Inheritance(strategy = InheritanceType.JOINED)
+@DiscriminatorColumn(name = "discriminator")
 @SequenceGenerator(name = "SGB_SQ_REG_MOV_ID_REG_MOV", sequenceName = "SIGEBI_OAF.SGB_SQ_REG_MOV_ID_REG_MOV", initialValue = 1, allocationSize = 1)
 public class RegistroMovimiento extends ObjetoBase implements Serializable {
 
@@ -41,12 +46,11 @@ public class RegistroMovimiento extends ObjetoBase implements Serializable {
     @JoinColumn(name = "ID_TIPO", referencedColumnName = "ID_TIPO")
     private Tipo tipo;
 
-    @ManyToOne
-    @JoinColumn(name = "ID_BIEN", referencedColumnName = "ID_BIEN")
-    private Bien bien;
-
     @Column(name = "OBSERVACION")
     private String observacion;
+
+    @Column(name = "TELEFONO")
+    private Integer telefono;
 
     @Column(name = "FECHA")
     @Temporal(TemporalType.DATE)
@@ -59,11 +63,39 @@ public class RegistroMovimiento extends ObjetoBase implements Serializable {
     @ManyToOne
     @JoinColumn(name = "ID_ESTADO", referencedColumnName = "ID_ESTADO")
     private Estado estado;
+
+    @Column(name = "DISCRIMINATOR")
+    private Integer discriminator;
     //</editor-fold>
 
+    //<editor-fold defaultstate="collapsed" desc="Metodos">
+    
+    public RegistroMovimiento() {
+    }
+
+    public RegistroMovimiento(Tipo tipo, String observacion, Integer telefono, Date fecha, Usuario usuario, Estado estado, Integer discriminator) {
+        this.tipo = tipo;
+        this.observacion = observacion;
+        this.fecha = fecha;
+        this.usuario = usuario;
+        this.estado = estado;
+        this.discriminator = discriminator;
+        this.telefono = telefono;
+    }
+
+    //</editor-fold>
+    
     //<editor-fold defaultstate="collapsed" desc="GET's y SET's">
     public Integer getId() {
         return id;
+    }
+
+    public Integer getTelefono() {
+        return telefono;
+    }
+
+    public void setTelefono(Integer telefono) {
+        this.telefono = telefono;
     }
 
     public void setId(Integer id) {
@@ -76,14 +108,6 @@ public class RegistroMovimiento extends ObjetoBase implements Serializable {
 
     public void setTipo(Tipo tipo) {
         this.tipo = tipo;
-    }
-
-    public Bien getBien() {
-        return bien;
-    }
-
-    public void setBien(Bien bien) {
-        this.bien = bien;
     }
 
     public String getObservacion() {
@@ -118,16 +142,22 @@ public class RegistroMovimiento extends ObjetoBase implements Serializable {
         this.usuario = usuario;
     }
 
-    
-    //</editor-fold>
+    public Integer getDiscriminator() {
+        return discriminator;
+    }
 
+    public void setDiscriminator(Integer discriminator) {
+        this.discriminator = discriminator;
+    }
+
+    //</editor-fold>
+    
     //<editor-fold defaultstate="collapsed" desc="Metodos">
     @Override
     public int hashCode() {
         int hash = 5;
         hash = 23 * hash + (this.id != null ? this.id.hashCode() : 0);
         hash = 23 * hash + (this.tipo != null ? this.tipo.hashCode() : 0);
-        hash = 23 * hash + (this.bien != null ? this.bien.hashCode() : 0);
         hash = 23 * hash + (this.observacion != null ? this.observacion.hashCode() : 0);
         hash = 23 * hash + (this.fecha != null ? this.fecha.hashCode() : 0);
         hash = 23 * hash + (this.estado != null ? this.estado.hashCode() : 0);
@@ -153,9 +183,6 @@ public class RegistroMovimiento extends ObjetoBase implements Serializable {
             return false;
         }
         if (this.tipo != other.tipo && (this.tipo == null || !this.tipo.equals(other.tipo))) {
-            return false;
-        }
-        if (this.bien != other.bien && (this.bien == null || !this.bien.equals(other.bien))) {
             return false;
         }
         if (this.fecha != other.fecha && (this.fecha == null || !this.fecha.equals(other.fecha))) {

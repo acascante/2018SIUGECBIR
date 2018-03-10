@@ -31,7 +31,7 @@ public class NotificacionCommand {
     //<editor-fold defaultstate="collapsed" desc="Constructores">
     public NotificacionCommand() {
         super();
-        this.fecha = getDefaultDate();
+        this.fecha = this.getDefaultDate();
         this.prioridad = Constantes.PRIORIDAD_NOTIFICACION_NORMAL;
     }
 

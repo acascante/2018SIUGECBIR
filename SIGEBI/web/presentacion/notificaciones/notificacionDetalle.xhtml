@@ -1,10 +1,8 @@
 <ice:form id="frmDetalleNotificacion" 
           xmlns:ice="http://www.icesoft.com/icefaces/component" 
-          xmlns:icecore="http://www.icefaces.org/icefaces/core" 
           xmlns:h="http://java.sun.com/jsf/html" 
-          xmlns:f="http://java.sun.com/jsf/core" 
-          xmlns:ui="http://java.sun.com/jsf/facelets"
-          xmlns:c="http://java.sun.com/jstl/core">
+          xmlns:f="http://java.sun.com/jsf/core">
+    
     <div class="contenido-pagina">
         <div class="container">
             <div class="row">
@@ -14,12 +12,7 @@
                     </h1>
                 </div>                
                 <div class="col-sm-6">
-                    <ice:commandButton 
-                        id="boton_regresar" 
-                        value="Regresar" 
-                        style="float:right" 
-                        partialSubmit="false" 
-                        styleClass="boton" 
+                    <ice:commandButton id="botonRegresar" value="Regresar" style="float:right" partialSubmit="false" styleClass="boton" 
                         action="#{controllerListarNotificaciones.regresarListado}" >
                     </ice:commandButton>
                 </div>

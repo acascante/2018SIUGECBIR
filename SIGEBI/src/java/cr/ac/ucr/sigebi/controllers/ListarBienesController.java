@@ -114,6 +114,12 @@ public class ListarBienesController extends BaseController {
         this.listarBienes();
     }
 
+    public void regresarListado() {
+        Util.navegar(vistaOrigen);
+        this.inicializarDatos();
+        this.inicializarListado();
+    }
+    
     private void contarBienes() {
         try {
             Long contador = bienModel.contar(command.getUsuarioAdmnistrador() ? null : unidadEjecutora, command.getFltIdCodigo(), 

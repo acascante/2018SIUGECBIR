@@ -14,7 +14,6 @@ import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -32,7 +31,7 @@ public class CategoriaDao extends GenericDaoImpl {
     @Transactional(readOnly = true)
     public List<Categoria> listar() throws FWExcepcion {
         try {
-            return dao.getHibernateTemplate().find("from Categoria");
+            return dao.getHibernateTemplate().find("from Categoria c ORDER BY c.descripcion");
         } catch (HibernateException e) {
             throw new FWExcepcion("sigebi.error.notificacionDao.listar", "Error obtener los registros de tipo " + this.getClass(), e.getCause());
         }

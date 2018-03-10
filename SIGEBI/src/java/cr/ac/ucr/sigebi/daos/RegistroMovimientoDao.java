@@ -10,6 +10,8 @@ import cr.ac.ucr.framework.daoImpl.GenericDaoImpl;
 import cr.ac.ucr.framework.utils.FWExcepcion;
 import cr.ac.ucr.sigebi.domain.Bien;
 import cr.ac.ucr.sigebi.domain.RegistroMovimiento;
+import cr.ac.ucr.sigebi.domain.Solicitud;
+import cr.ac.ucr.sigebi.domain.SolicitudDetalle;
 import java.util.List;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
@@ -41,13 +43,13 @@ public class RegistroMovimientoDao extends GenericDaoImpl {
     
     
     @Transactional(readOnly = true)
-    public List<RegistroMovimiento> movimientosPorBien(Bien bien) throws FWExcepcion {
+    public List<Solicitud> movimientosPorBien(Bien bien) throws FWExcepcion {
         Session session = dao.getSessionFactory().openSession();
         try {
-            String sql = "SELECT m FROM RegistroMovimiento m WHERE m.bien = :bien";
+            String sql = "SELECT m FROM SolicitudDetalle m WHERE m.bien = :bien";
             Query query = session.createQuery(sql);
             query.setParameter("bien", bien);
-            return (List<RegistroMovimiento>) query.list();
+            return (List<Solicitud>) query.list();
         } catch (HibernateException e) {
             throw new FWExcepcion("sigebi.error.notificacionDao.listar", "Error obtener los registros de tipo " + this.getClass(), e.getCause());
         } finally {

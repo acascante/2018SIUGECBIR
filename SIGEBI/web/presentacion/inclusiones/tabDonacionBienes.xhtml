@@ -88,9 +88,10 @@
                                                    styleClass="btnEliminar_bien" 
                                                    partialSubmit="true"
                                                    rendered="#{controllerSolicitudDonacion.estadoBienInactivo.valor != detalle.bien.estado.valor}"
-                                                   actionListener="#{controllerSolicitudDonacion.rechazarDetalleBien}">
+                                                   actionListener="#{controllerSolicitudDonacion.mostrarPanel}">
                                     <f:attribute id="eliminarBienSel" name="detalleSeleccionado"  value="#{detalle}"/>                                
-                                </ice:commandButton>
+                                    <f:attribute id="accion" name="accion"  value="3"/>
+                                </ice:commandButton>                                
                             </ice:column>
                         </ice:dataTable>
                     </div>

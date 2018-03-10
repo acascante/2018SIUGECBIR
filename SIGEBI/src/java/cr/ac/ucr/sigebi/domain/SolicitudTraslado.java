@@ -33,9 +33,6 @@ public class SolicitudTraslado extends Solicitud {
     @JoinColumn(name = "ID_UNIDAD_EJECU_DEST", referencedColumnName = "ID")
     private UnidadEjecutora unidadEjecutoraDestino;
 
-    @ManyToOne
-    @JoinColumn(name = "ID_USUARIO", referencedColumnName = "ID_USUARIO")
-    private Usuario persona;
 
 //    @ManyToOne
 //    @JoinColumn(name = "ID_USUARIO_RECIBE", referencedColumnName = "ID_USUARIO")
@@ -67,16 +64,6 @@ public class SolicitudTraslado extends Solicitud {
     //</editor-fold>
 
     
-    
-    //<editor-fold defaultstate="collapsed" desc="Get's y Set's">
-//    public UnidadEjecutora getUnidadEjecutoraOrigen() {
-//        return unidadEjecutoraOrigen;
-//    }
-//
-//    public void setUnidadEjecutoraOrigen(UnidadEjecutora unidadEjecutoraOrigen) {
-//        this.unidadEjecutoraOrigen = unidadEjecutoraOrigen;
-//    }
-
     public UnidadEjecutora getUnidadEjecutoraDestino() {
         return unidadEjecutoraDestino;
     }
@@ -85,21 +72,6 @@ public class SolicitudTraslado extends Solicitud {
         this.unidadEjecutoraDestino = unidadEjecutoraDestino;
     }
 
-    public Usuario getPersona() {
-        return persona;
-    }
-
-    public void setPersona(Usuario persona) {
-        this.persona = persona;
-    }
-
-//    public Usuario getPersonaRecibe() {
-//        return personaRecibe;
-//    }
-//
-//    public void setPersonaRecibe(Usuario personaRecibe) {
-//        this.personaRecibe = personaRecibe;
-//    }
 
     public Ubicacion getUbicacion() {
         return ubicacion;
@@ -123,10 +95,7 @@ public class SolicitudTraslado extends Solicitud {
     @Override
     public int hashCode() {
         int hash = 5;
-//        hash = 89 * hash + (this.unidadEjecutoraOrigen != null ? this.unidadEjecutoraOrigen.hashCode() : 0);
         hash = 89 * hash + (this.unidadEjecutoraDestino != null ? this.unidadEjecutoraDestino.hashCode() : 0);
-        hash = 89 * hash + (this.persona != null ? this.persona.hashCode() : 0);
-//        hash = 89 * hash + (this.personaRecibe != null ? this.personaRecibe.hashCode() : 0);
         hash = 89 * hash + (this.ubicacion != null ? this.ubicacion.hashCode() : 0);
         hash = 89 * hash + (this.observaciones != null ? this.observaciones.hashCode() : 0);
         return hash;
@@ -153,12 +122,6 @@ public class SolicitudTraslado extends Solicitud {
         if (this.unidadEjecutoraDestino != other.unidadEjecutoraDestino && (this.unidadEjecutoraDestino == null || !this.unidadEjecutoraDestino.equals(other.unidadEjecutoraDestino))) {
             return false;
         }
-        if (this.persona != other.persona && (this.persona == null || !this.persona.equals(other.persona))) {
-            return false;
-        }
-//        if (this.personaRecibe != other.personaRecibe && (this.personaRecibe == null || !this.personaRecibe.equals(other.personaRecibe))) {
-//            return false;
-//        }
         if (this.ubicacion != other.ubicacion && (this.ubicacion == null || !this.ubicacion.equals(other.ubicacion))) {
             return false;
         }

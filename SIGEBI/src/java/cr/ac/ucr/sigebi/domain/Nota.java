@@ -22,7 +22,7 @@ import javax.persistence.Table;
  * @author jorge.serrano
  */
 @Entity(name = "Nota")
-@Table(name = "SIGEBI_OAF.SGB_NOTA")
+@Table(name = "SIGEBI_OAF.SIGB_NOTA")
 @SequenceGenerator(name = "SGB_SQ_NOTAS", sequenceName = "SIGEBI_OAF.SGB_SQ_NOTAS", initialValue = 1, allocationSize = 1)
 public class Nota extends ObjetoBase implements Serializable  {
     

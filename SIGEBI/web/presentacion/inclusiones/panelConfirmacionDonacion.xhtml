@@ -6,8 +6,12 @@
     <!-- Modal para confirmar -->
     <ice:panelPopup
         modal="true" 
-        visible="#{controllerSolicitudDonacion.command.presentarPanelAnularConfirmar}"
-        rendered="#{controllerSolicitudDonacion.command.presentarPanelAnularConfirmar}"
+        visible="#{(controllerSolicitudDonacion.command.presentarPanelAnularConfirmar 
+                   || controllerSolicitudDonacion.command.presentarPanelEliminarBienConfirmar
+                   || controllerSolicitudDonacion.command.presentarPanelRechazarAutorizacionConfirmar)}"
+        rendered="#{(controllerSolicitudDonacion.command.presentarPanelAnularConfirmar 
+                    || controllerSolicitudDonacion.command.presentarPanelEliminarBienConfirmar
+                    || controllerSolicitudDonacion.command.presentarPanelRechazarAutorizacionConfirmar)}"
         styleClass="popup">
         
         <f:facet name="body">
@@ -28,6 +32,20 @@
                         </div>
                     </div>
                     <div class="row">
+                        <div class="col-md-12" style="margin-top: 20px;">
+                            <div class="form-group">
+                                <label class="control-label" for="txtDetalle">
+                                    <ice:outputText value="#{label['sigebi.label.vista.donacion.confirmacion.observacion']}"/> 
+                                </label>
+                                <ice:inputTextarea  id="observacionConfirmacion" 
+                                                    required="true"
+                                                    styleClass="form-control"
+                                                    cols="2" 
+                                                    value="#{controllerSolicitudDonacion.command.observacionConfirmacion}"/>
+                            </div>
+                        </div>    
+                    </div>
+                    <div class="row"  style="margin-top: 20px; margin-bottom: 20px;">
                         <div class='col-md-6'>
                             <span class="alineado_derecha">
                                 <ice:commandButton id="btn_cancelar" partialSubmit="true" action="#{controllerSolicitudDonacion.cerrarPanel}" styleClass="boton"  value="Regresar" />
@@ -38,8 +56,24 @@
                                        value="Anular" 
                                        rendered="#{controllerSolicitudDonacion.command.presentarPanelAnularConfirmar}"
                                        partialSubmit="true" 
-                                       styleClass="boton" action="#{controllerSolicitudDonacion.anularSolicitud}"/>                            
+                                       styleClass="boton" 
+                                       action="#{controllerSolicitudDonacion.anularSolicitud}"/>                            
+                            
+                            <ice:commandButton id="botonEliminarBien"
+                                                   value="Eliminar" 
+                                                   partialSubmit="true"
+                                                   styleClass="boton" 
+                                                   rendered="#{controllerSolicitudDonacion.command.presentarPanelEliminarBienConfirmar}"
+                                                   action="#{controllerSolicitudDonacion.rechazarDetalleBien}"/>
+                            
+                            <ice:commandButton id="botonRechazar"
+                                                   value="Rechazar" 
+                                                   partialSubmit="true"
+                                                   styleClass="boton" 
+                                                   rendered="#{controllerSolicitudDonacion.command.presentarPanelRechazarAutorizacionConfirmar}"
+                                                   action="#{controllerSolicitudDonacion.rechazar}"/>
                         </div>
+                        
                     </div>
                 </div>                
             </fieldset>       

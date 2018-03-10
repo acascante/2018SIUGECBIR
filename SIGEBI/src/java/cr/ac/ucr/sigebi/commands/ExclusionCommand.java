@@ -42,6 +42,8 @@ public class ExclusionCommand {
     private List<SolicitudDetalle> detallesEliminar;
     private Map<Long, Bien> bienes;     // Bienes existenetes en la solicitud
     private Map<Long, SolicitudDetalle> detalles;
+    
+    private String observacionConfirmacion;
     //</editor-fold>
     
     //<editor-fold defaultstate="collapsed" desc="Constructores">
@@ -204,6 +206,14 @@ public class ExclusionCommand {
 
     public void setDetalles(Map<Long, SolicitudDetalle> detalles) {
         this.detalles = detalles;
+    }
+    
+    public String getObservacionConfirmacion() {
+        return observacionConfirmacion;
+    }
+
+    public void setObservacionConfirmacion(String observacionConfirmacion) {
+        this.observacionConfirmacion = observacionConfirmacion;
     }
     //</editor-fold>
 }

@@ -48,6 +48,7 @@ public class PrestamoCommand {
     //<editor-fold defaultstate="collapsed" desc="Constructores">
     public PrestamoCommand() {
         super();
+        this.fecha = this.getDefaultDate();
         this.bienes = new HashMap<Long, Bien>();
         this.detalles = new HashMap<Long, SolicitudDetalle>();
     }

@@ -59,9 +59,10 @@
                                                    styleClass="btnRechazar_informe" 
                                                    partialSubmit="true"
                                                    rendered="#{solicitudAutorizacion.marcado}"
-                                                   actionListener="#{controllerSolicitudDonacion.rechazar}">
+                                                   actionListener="#{controllerSolicitudDonacion.mostrarPanel}">
+                                    <f:attribute id="accion" name="accion"  value="4"/>
                                     <f:attribute id="documentoSelRech" name="solicitudSelRech"  value="#{solicitudAutorizacion}"/>                                
-                                </ice:commandButton>
+                                </ice:commandButton>                                
                             </ice:column>
                         </ice:dataTable>
                     </div>

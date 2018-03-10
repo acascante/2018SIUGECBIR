@@ -11,7 +11,6 @@ import cr.ac.ucr.sigebi.domain.Estado;
 import cr.ac.ucr.sigebi.domain.Identificacion;
 import cr.ac.ucr.sigebi.domain.UnidadEjecutora;
 import javax.annotation.Resource;
-import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
 /**
@@ -25,13 +24,15 @@ public class IdentificacionModel {
     @Resource
     private IdentificacionDao identificacionDao;
     
-    public Identificacion siguienteDisponible(Estado estado
-                                        , UnidadEjecutora unidadEjecutora
-    ) throws FWExcepcion {
+    public Identificacion siguienteDisponible(Estado estado, UnidadEjecutora unidadEjecutora) throws FWExcepcion {
         return identificacionDao.siguienteDisponible(estado, unidadEjecutora);
     }
 
     public void actualizar(Identificacion identificacion) {
         identificacionDao.actualizar(identificacion);
+    }
+    
+    public Identificacion buscarPorIdentificacion(String identificacion) throws FWExcepcion{
+        return identificacionDao.buscarPorIdentificacion(identificacion);
     }
 }

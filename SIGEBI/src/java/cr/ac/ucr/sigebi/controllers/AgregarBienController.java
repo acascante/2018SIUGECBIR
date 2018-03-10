@@ -26,19 +26,25 @@ import cr.ac.ucr.sigebi.domain.Categoria;
 import cr.ac.ucr.sigebi.domain.Clasificacion;
 import cr.ac.ucr.sigebi.domain.Estado;
 import cr.ac.ucr.sigebi.domain.Identificacion;
+import cr.ac.ucr.sigebi.domain.InterfazAccesorio;
+import cr.ac.ucr.sigebi.domain.InterfazAdjunto;
+import cr.ac.ucr.sigebi.domain.InterfazBien;
 import cr.ac.ucr.sigebi.domain.Nota;
 import cr.ac.ucr.sigebi.domain.Proveedor;
 import cr.ac.ucr.sigebi.domain.RegistroMovimiento;
+import cr.ac.ucr.sigebi.domain.Solicitud;
 import cr.ac.ucr.sigebi.domain.SolicitudDetalle;
 import cr.ac.ucr.sigebi.domain.SolicitudDonacion;
 import cr.ac.ucr.sigebi.domain.SubCategoria;
 import cr.ac.ucr.sigebi.domain.SubClasificacion;
 import cr.ac.ucr.sigebi.domain.Ubicacion;
+import cr.ac.ucr.sigebi.domain.UnidadEjecutora;
 import cr.ac.ucr.sigebi.models.AccesorioModel;
 import cr.ac.ucr.sigebi.models.AdjuntoModel;
 import cr.ac.ucr.sigebi.models.BienCaracteristicaModel;
 import cr.ac.ucr.sigebi.models.BienModel;
 import cr.ac.ucr.sigebi.models.IdentificacionModel;
+import cr.ac.ucr.sigebi.models.InterfazBienModel;
 import cr.ac.ucr.sigebi.models.LoteModel;
 import cr.ac.ucr.sigebi.models.NotaModel;
 import cr.ac.ucr.sigebi.models.ProveedorModel;
@@ -47,6 +53,7 @@ import cr.ac.ucr.sigebi.models.SolicitudModel;
 import cr.ac.ucr.sigebi.models.SubCategoriaModel;
 import cr.ac.ucr.sigebi.models.SubClasificacionModel;
 import cr.ac.ucr.sigebi.models.UbicacionModel;
+import cr.ac.ucr.sigebi.models.UnidadEjecutoraModel;
 import cr.ac.ucr.sigebi.utils.Constantes;
 import java.io.File;
 import java.io.FileInputStream;
@@ -83,6 +90,7 @@ public class AgregarBienController extends BaseController {
     private List<SelectItem> itemsClasificacion;
     private List<SelectItem> itemsLote;
     private List<SelectItem> itemsMoneda;
+    private List<SelectItem> itemsUnidades;
     private List<SelectItem> itemsOrigen;
     private List<SelectItem> itemsSubCategoria;
     private List<SelectItem> itemsSubClasificacion;
@@ -121,6 +129,10 @@ public class AgregarBienController extends BaseController {
     private RegistroMovimientoModel modelMovimientos;
     @Resource
     private SolicitudModel solicitudModel;
+    @Resource
+    private UnidadEjecutoraModel unidadEjecutoraModel;
+    @Resource
+    private InterfazBienModel interfazBienModel;
 
     private List<Proveedor> proveedores;
     private List<Accesorio> accesorios;
@@ -152,12 +164,14 @@ public class AgregarBienController extends BaseController {
     private boolean visiblePanelEliminarAccesorio;
     private boolean bienRegistrado;
     private boolean donacion;
+    private boolean interfaz;
 
     private Tipo tipoAdjuntoDoc;
     private Estado estadoGeneralActivo;
     private SolicitudDonacion solicitudDonacion;
-    //</editor-fold>
+    private InterfazBien interfazBien;
 
+    //</editor-fold>
     //<editor-fold defaultstate="collapsed" desc="Inicializa Datos y Modificacion del bien">
     public AgregarBienController() {
         super();
@@ -216,7 +230,8 @@ public class AgregarBienController extends BaseController {
             cargarSubClasificaciones(command.getItemCommand().getItemsClasificacion().get(command.getIdClasificacion()));
         }
 
-        command.setMovimientos(modelMovimientos.movimientosPorBien(bien));
+        List<Solicitud> movs = modelMovimientos.movimientosPorBien(bien);
+        command.setMovimientos(movs);
 
     }
 
@@ -238,7 +253,7 @@ public class AgregarBienController extends BaseController {
         this.visiblePanelAdjunto = false;
         this.visiblePanelEliminarAccesorio = false;
 
-        this.bienRegistrado = false;        
+        this.bienRegistrado = false;
     }
 
     private void cargarCombos() {
@@ -257,7 +272,7 @@ public class AgregarBienController extends BaseController {
                 itemsOrigen.add(new SelectItem(item.getId(), item.getNombre()));
                 command.getItemCommand().getItemsOrigen().put(item.getId(), item);
             } else {
-                
+
                 List<Tipo> tiposOrigen = this.tiposPorDominio(Constantes.DOMINIO_ORIGEN);
                 if (!tiposOrigen.isEmpty()) {
                     itemsOrigen = new ArrayList<SelectItem>();
@@ -364,34 +379,6 @@ public class AgregarBienController extends BaseController {
         }
     }
 
-    public void guardarBienDonacion() {
-        FacesContext context = FacesContext.getCurrentInstance();
-        UIViewRoot root = context.getViewRoot();
-        UIInput component = new UIInput();
-        String messageValidacion = validarForm(root, component);
-        if (Constantes.OK.equals(messageValidacion)) {
-            try {
-                //Se crea el bien
-                this.procesarBien();
-
-                context.getExternalContext().getSessionMap().remove("controllerSolicitudDonacion");
-                Util.agregarVariableSession("idDonacion", solicitudDonacion.getId());
-                Util.navegar(vistaOrigen);
-                Mensaje.agregarInfo(Util.getEtiquetas("sigebi.error.agregarBienController.mensaje.exito"));
-
-            } catch (Exception exception) {
-                if (exception instanceof FWExcepcion) {
-                    Mensaje.agregarErrorAdvertencia(((FWExcepcion) exception).getError_para_usuario());
-                } else {
-                    Mensaje.agregarErrorAdvertencia(exception, Util.getEtiquetas("sigebi.error.agregarBienController.actualizar"));
-                }
-            }
-        } else {
-            component.setValid(false);
-            Mensaje.agregarErrorAdvertencia(messageValidacion);
-        }
-    }
-
     private void procesarBien() throws Exception {
         ReentrantLock reentrantLock = new ReentrantLock();
         try {
@@ -415,12 +402,12 @@ public class AgregarBienController extends BaseController {
 
                     bienRegistrado = true;
                     inicializarDetalle(bien);
-                    
+
                     //Se crea el detalle para la solicitud
-                    if(donacion){
-                       SolicitudDetalle solicitudDetalle = new SolicitudDetalle(solicitudDonacion, bien, estadoGeneralActivo);
-                       solicitudModel.agregarDetalleSolicitud(solicitudDetalle);
-                    }        
+                    if (donacion) {
+                        SolicitudDetalle solicitudDetalle = new SolicitudDetalle(solicitudDonacion, bien, estadoGeneralActivo);
+                        solicitudModel.agregarDetalleSolicitud(solicitudDetalle);
+                    }
                 }
             } else {
                 modelBien.actualizar(command.getBien(bien));
@@ -450,7 +437,6 @@ public class AgregarBienController extends BaseController {
     }
 
     //</editor-fold>
-    
     //<editor-fold defaultstate="collapsed" desc="Funciones Lote">
     public void cambioLote(ValueChangeEvent event) {
         if (!event.getPhaseId().equals(PhaseId.INVOKE_APPLICATION)) {
@@ -468,7 +454,6 @@ public class AgregarBienController extends BaseController {
     }
 
     //</editor-fold>
-    
     //<editor-fold defaultstate="collapsed" desc="Navegación del MENÚ">
     public void nuevoRegistro(ActionEvent event) {
         if (!event.getPhaseId().equals(PhaseId.INVOKE_APPLICATION)) {
@@ -477,39 +462,10 @@ public class AgregarBienController extends BaseController {
             return;
         }
         this.donacion = false;
+        this.interfaz = false;
         inicializarNuevo();
         this.vistaOrigen = event.getComponent().getAttributes().get(Constantes.KEY_VISTA_ORIGEN).toString();
         Util.navegar(Constantes.KEY_VISTA_DETALLE_BIEN);
-    }
-
-    public void nuevoRegistroDonacion(ActionEvent event) {
-        if (!event.getPhaseId().equals(PhaseId.INVOKE_APPLICATION)) {
-            event.setPhaseId(PhaseId.INVOKE_APPLICATION);
-            event.queue();
-            return;
-        }
-        this.donacion = true;
-        inicializarNuevo();
-        this.vistaOrigen = event.getComponent().getAttributes().get(Constantes.KEY_VISTA_ORIGEN).toString();
-        solicitudDonacion = (SolicitudDonacion) event.getComponent().getAttributes().get("solicitudDonacion");
-        Util.navegar(Constantes.KEY_VISTA_DETALLE_BIEN_DONACION);
-    }
-    
-    public void modificarRegistroDonacion(ActionEvent event) {
-        if (!event.getPhaseId().equals(PhaseId.INVOKE_APPLICATION)) {
-            event.setPhaseId(PhaseId.INVOKE_APPLICATION);
-            event.queue();
-            return;
-        }
-
-        this.donacion = true;
-        Bien bienSecc = (Bien) event.getComponent().getAttributes().get("bienSeleccionado");
-        bien = modelBien.buscarPorId(bienSecc.getId());
-        inicializarDetalle(bien);
-        solicitudDonacion = (SolicitudDonacion) event.getComponent().getAttributes().get("solicitudDonacion");
-
-        this.vistaOrigen = event.getComponent().getAttributes().get(Constantes.KEY_VISTA_ORIGEN).toString();
-        Util.navegar(Constantes.KEY_VISTA_DETALLE_BIEN_DONACION);
     }
 
     public void modificarRegistro(ActionEvent event) {
@@ -519,6 +475,7 @@ public class AgregarBienController extends BaseController {
             return;
         }
         this.donacion = false;
+        this.interfaz = false;
         Bien bienSecc = (Bien) event.getComponent().getAttributes().get("bienSeleccionado");
         bien = modelBien.buscarPorId(bienSecc.getId());
 
@@ -534,8 +491,333 @@ public class AgregarBienController extends BaseController {
             Util.navegar(Constantes.KEY_VISTA_LISTAR_BIENES);
         }
     }
-    //</editor-fold>
 
+    //</editor-fold>
+    //<editor-fold defaultstate="collapsed" desc="Donacion">
+    public void guardarBienDonacion() {
+        FacesContext context = FacesContext.getCurrentInstance();
+        UIViewRoot root = context.getViewRoot();
+        UIInput component = new UIInput();
+        String messageValidacion = validarForm(root, component);
+        if (Constantes.OK.equals(messageValidacion)) {
+            try {
+                //Se crea el bien
+                this.procesarBien();
+
+                context.getExternalContext().getSessionMap().remove("controllerSolicitudDonacion");
+                Util.agregarVariableSession("idDonacion", solicitudDonacion.getId());
+                Util.navegar(vistaOrigen);
+                Mensaje.agregarInfo(Util.getEtiquetas("sigebi.error.agregarBienController.mensaje.exito"));
+
+            } catch (Exception exception) {
+                if (exception instanceof FWExcepcion) {
+                    Mensaje.agregarErrorAdvertencia(((FWExcepcion) exception).getError_para_usuario());
+                } else {
+                    Mensaje.agregarErrorAdvertencia(exception, Util.getEtiquetas("sigebi.error.agregarBienController.actualizar"));
+                }
+            }
+        } else {
+            component.setValid(false);
+            Mensaje.agregarErrorAdvertencia(messageValidacion);
+        }
+    }
+
+    public void nuevoRegistroDonacion(ActionEvent event) {
+        if (!event.getPhaseId().equals(PhaseId.INVOKE_APPLICATION)) {
+            event.setPhaseId(PhaseId.INVOKE_APPLICATION);
+            event.queue();
+            return;
+        }
+        this.donacion = true;
+        this.interfaz = false;
+        inicializarNuevo();
+        this.vistaOrigen = event.getComponent().getAttributes().get(Constantes.KEY_VISTA_ORIGEN).toString();
+        solicitudDonacion = (SolicitudDonacion) event.getComponent().getAttributes().get("solicitudDonacion");
+        Util.navegar(Constantes.KEY_VISTA_DETALLE_BIEN_DONACION);
+    }
+
+    public void modificarRegistroDonacion(ActionEvent event) {
+        if (!event.getPhaseId().equals(PhaseId.INVOKE_APPLICATION)) {
+            event.setPhaseId(PhaseId.INVOKE_APPLICATION);
+            event.queue();
+            return;
+        }
+
+        this.donacion = true;
+        this.interfaz = false;
+        Bien bienSecc = (Bien) event.getComponent().getAttributes().get("bienSeleccionado");
+        bien = modelBien.buscarPorId(bienSecc.getId());
+        inicializarDetalle(bien);
+        solicitudDonacion = (SolicitudDonacion) event.getComponent().getAttributes().get("solicitudDonacion");
+
+        this.vistaOrigen = event.getComponent().getAttributes().get(Constantes.KEY_VISTA_ORIGEN).toString();
+        Util.navegar(Constantes.KEY_VISTA_DETALLE_BIEN_DONACION);
+    }
+
+    //</editor-fold>
+    
+    //<editor-fold defaultstate="collapsed" desc="Interfaz Bien">
+    public void nuevoRegistroInterfaz(ActionEvent event) {
+        if (!event.getPhaseId().equals(PhaseId.INVOKE_APPLICATION)) {
+            event.setPhaseId(PhaseId.INVOKE_APPLICATION);
+            event.queue();
+            return;
+        }
+
+        //Se obtiene la interfaz        
+        interfazBien = (InterfazBien) event.getComponent().getAttributes().get("interfazBien");
+        String messageValidacion = this.validarBienInterfaz();
+        if (Constantes.OK.equals(messageValidacion)) {
+            try {
+                this.donacion = false;
+                this.interfaz = true;
+
+                //Se carga la pantalla de acuerdo a los datos en la interfaz
+                inicializarBienInterfaz();
+
+                this.vistaOrigen = event.getComponent().getAttributes().get(Constantes.KEY_VISTA_ORIGEN).toString();
+                Util.navegar(Constantes.KEY_VISTA_DETALLE_BIEN_INTERFAZ);
+
+            } catch (Exception exception) {
+                if (exception instanceof FWExcepcion) {
+                    Mensaje.agregarErrorAdvertencia(((FWExcepcion) exception).getError_para_usuario());
+                } else {
+                    Mensaje.agregarErrorAdvertencia(exception, Util.getEtiquetas("sigebi.error.agregarBienController.actualizar"));
+                }
+            }
+        } else {
+
+            //Se debe modificar la interfaz            
+            interfazBien.setEstado(this.estadoPorDominioValor(Constantes.DOMINIO_INTERFAZ_BIEN, Constantes.ESTADO_INTERFAZ_BIEN_ERRONEO));
+            interfazBienModel.modificar(interfazBien);
+
+            //Se presenta un mensaje con el error
+            Mensaje.agregarErrorAdvertencia(messageValidacion);
+        }
+    }
+
+    public String validarBienInterfaz() {
+        //Se validan los datos requeridos 
+        String mensajeUsuario = Constantes.OK;
+        Identificacion identificacion = modelIdentificacion.buscarPorIdentificacion(interfazBien.getIdentificacionBien());
+        Estado estadoDispo = this.estadoPorDominioValor(Constantes.DOMINIO_IDENTIFICACION, Constantes.IDENTIFICACION_ESTADO_DISPONIBLE);
+        if (identificacion == null) {
+            mensajeUsuario = Util.getEtiquetas("sigebi.error.agregarBienController.nuevoRegistroInterfaz.identificacion.requerido");
+        } else if (!identificacion.getEstado().getValor().equals(estadoDispo.getValor())) {
+            mensajeUsuario = Util.getEtiquetas("sigebi.error.agregarBienController.nuevoRegistroInterfaz.identificacion.no.disponible");
+        }
+        return mensajeUsuario;
+    }
+
+    private void inicializarBienInterfaz() {
+
+        Moneda moneda = modelMoneda.buscarPorId(Long.parseLong(interfazBien.getMoneda()));
+        moneda = moneda == null ? new Moneda() : moneda;
+
+        Tipo tipoBien = this.tipoPorDominioValor(Constantes.DOMINIO_BIEN, interfazBien.getTipo());
+        tipoBien = tipoBien == null ? new Tipo() : tipoBien;
+
+        Tipo tipoOrigen = this.tipoPorDominioValor(Constantes.DOMINIO_ORIGEN, interfazBien.getOrigen());
+        tipoOrigen = tipoOrigen == null ? new Tipo() : tipoOrigen;
+
+        Proveedor proveedor = modelProveedor.buscarPorId(Long.parseLong(interfazBien.getProveedor()));
+        proveedor = proveedor == null ? new Proveedor() : proveedor;
+
+        //Estado del bien
+        Estado estado = estadoPorDominioValor(Constantes.DOMINIO_BIEN, Constantes.ESTADO_BIEN_PENDIENTE);
+
+        //Se busca la identificacion del bien en el sistema
+        Identificacion identificacion = modelIdentificacion.buscarPorIdentificacion(interfazBien.getIdentificacionBien());
+
+        //Se busca la unidad ejecutora enviada y si no se debe solicitar por pantalla
+        UnidadEjecutora unidadBien = null;
+        if (interfazBien.getUnidadEjecutora() != null && interfazBien.getUnidadEjecutora() > 0L) {
+            unidadBien = unidadEjecutoraModel.buscarPorId(interfazBien.getUnidadEjecutora());
+        }
+        unidadBien = unidadBien == null ? new UnidadEjecutora() : unidadBien;
+
+        //Se inicializa el command
+        command = new BienCommand(interfazBien, unidadBien, tipoBien, tipoOrigen, estado, proveedor, moneda, identificacion);
+        inicializarDatos();
+        this.bienRegistrado = false;
+        cargarCombos();
+        
+
+        //Se buscan las unidades
+        List<UnidadEjecutora> unidades = unidadEjecutoraModel.listar();
+        if (!unidades.isEmpty()) {
+            itemsUnidades = new ArrayList<SelectItem>();
+            for (UnidadEjecutora item : unidades) {
+                itemsUnidades.add(new SelectItem(item.getId(), item.getDescripcion()));
+                command.getItemCommand().getItemsUnidad().put(item.getId(), item);
+            }
+        }
+
+        //Se cargan las caracteristicas        
+        BienCaracteristica bienCaracteristica;
+        if (interfazBien.getMarca() != null && interfazBien.getMarca().length() > 0) {
+            bienCaracteristica = new BienCaracteristica();
+            bienCaracteristica.setTipo(this.tipoPorDominioValor(Constantes.DOMINIO_CARACTERISTICA, Constantes.TIPO_CARACTERISTICA_MARCA));
+            bienCaracteristica.setDetalle(interfazBien.getMarca());
+            bienCaracteristica.setEstado(this.estadoPorDominioValor(Constantes.DOMINIO_GENERAL, Constantes.ESTADO_GENERAL_ACTIVO));
+            command.getCaracteristicas().add(bienCaracteristica);
+        }
+        if (interfazBien.getModelo() != null && interfazBien.getModelo().length() > 0) {
+            bienCaracteristica = new BienCaracteristica();
+            bienCaracteristica.setTipo(this.tipoPorDominioValor(Constantes.DOMINIO_CARACTERISTICA, Constantes.TIPO_CARACTERISTICA_MODELO));
+            bienCaracteristica.setDetalle(interfazBien.getModelo());
+            bienCaracteristica.setEstado(this.estadoPorDominioValor(Constantes.DOMINIO_GENERAL, Constantes.ESTADO_GENERAL_ACTIVO));
+            command.getCaracteristicas().add(bienCaracteristica);
+        }
+        if (interfazBien.getSerie() != null && interfazBien.getSerie().length() > 0) {
+            bienCaracteristica = new BienCaracteristica();
+            bienCaracteristica.setTipo(this.tipoPorDominioValor(Constantes.DOMINIO_CARACTERISTICA, Constantes.TIPO_CARACTERISTICA_SERIE));
+            bienCaracteristica.setDetalle(interfazBien.getSerie());
+            bienCaracteristica.setEstado(this.estadoPorDominioValor(Constantes.DOMINIO_GENERAL, Constantes.ESTADO_GENERAL_ACTIVO));
+            command.getCaracteristicas().add(bienCaracteristica);
+        }
+        this.caracteristicas = command.getCaracteristicas();
+
+        //Se cargan los accesorios
+        this.accesorios = new ArrayList<Accesorio>();
+
+        Accesorio accesorio;
+        List<InterfazAccesorio> accesoriosInterfaz = interfazBienModel.listarInterfazAccesorios(interfazBien.getIdentificacionBien());
+        for (InterfazAccesorio interfazAccesorio : accesoriosInterfaz) {
+            accesorio = new Accesorio();
+            accesorio.setDetalle(interfazAccesorio.getDescripcion());
+            accesorio.setEstado(this.estadoPorDominioValor(Constantes.DOMINIO_GENERAL, Constantes.ESTADO_GENERAL_ACTIVO));
+            this.accesorios.add(accesorio);
+        }
+
+        //Se cargan los adjuntos
+        Adjunto adjunto;
+        Tipo tipoAdjunto = this.tipoPorDominioValor(Constantes.DOMINIO_ADJUNTO, Constantes.TIPO_ADJUNTO_BIEN);
+        List<InterfazAdjunto> adjuntosInterfaz = interfazBienModel.listarInterfazAdjuntos(interfazBien.getIdentificacionBien());
+        for (InterfazAdjunto interfazAdjunto : adjuntosInterfaz) {
+            adjunto = new Adjunto();
+            adjunto.setNombre(interfazAdjunto.getDescripcion());
+            adjunto.setTipo(tipoAdjunto);
+            adjunto.setUrl(interfazAdjunto.getUrl());
+            adjunto.setDetalle(interfazAdjunto.getDescripcion());
+            adjunto.setEstado(this.estadoPorDominioValor(Constantes.DOMINIO_GENERAL, Constantes.ESTADO_GENERAL_ACTIVO));
+            command.getAdjuntos().add(adjunto);
+        }
+
+    }
+
+    public void guardarBienInterfaz() {
+        FacesContext context = FacesContext.getCurrentInstance();
+        UIViewRoot root = context.getViewRoot();
+        UIInput component = new UIInput();
+
+        String messageValidacion = validarForm(root, component);
+        if (Constantes.OK.equals(messageValidacion)) {
+            try {
+
+                ReentrantLock reentrantLock = new ReentrantLock();
+                try {
+
+                    reentrantLock.lock();
+
+                    Identificacion identificacion = command.getIdentificacion();
+                    if (identificacion == null) {
+                        Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.error.agregarBienController.identificacion.requerido"));
+                    } else {
+                        bien = command.getBien(null);
+
+                        Estado estadoOcupado = this.estadoPorDominioValor(Constantes.DOMINIO_IDENTIFICACION, Constantes.IDENTIFICACION_ESTADO_OCUPADA);
+                        bien.getIdentificacion().setEstado(estadoOcupado);
+
+                        modelBien.almacenar(bien);
+
+                        modelIdentificacion.actualizar(bien.getIdentificacion());
+
+                        bienRegistrado = true;
+
+                        //Se crea actualiza la interfaz
+                        interfazBien.setEstado(this.estadoPorDominioValor(Constantes.DOMINIO_INTERFAZ_BIEN, Constantes.ESTADO_INTERFAZ_BIEN_PROCESADO));
+                        interfazBienModel.modificar(interfazBien);
+
+                        //Se crean las caracteristicas
+                        if (command.getCaracteristicas() != null) {
+                            for (BienCaracteristica caracteristica : command.getCaracteristicas()) {
+                                caracteristica.setBien(bien);
+                                modelBienCaracteristica.almacenar(caracteristica);
+                            }
+                        }
+
+                        //Se crean los accesorios
+                        if (this.getAccesorios() != null) {
+                            for (Accesorio accesorio : this.getAccesorios()) {
+                                accesorio.setBien(bien);
+                                modelAccesorio.almacenar(accesorio);
+                            }
+                        }
+
+                        //Se crean los adjuntos
+                        if (command.getAdjuntos() != null) {
+                            for (Adjunto adjunto : command.getAdjuntos()) {
+                                adjunto.setIdReferencia(bien.getId());
+                                modelAdjunto.agregar(adjunto);
+                            }
+                        }
+
+                        //Se retorna al listado
+                        //context.getExternalContext().getSessionMap().remove("controllerListarInterfazBien");
+                        Util.navegar(vistaOrigen);
+                        Mensaje.agregarInfo(Util.getEtiquetas("sigebi.error.agregarBienController.mensaje.exito"));
+
+                    }
+                } catch (Exception exception) {
+                    Estado estadoDispo = this.estadoPorDominioValor(Constantes.DOMINIO_IDENTIFICACION, Constantes.IDENTIFICACION_ESTADO_DISPONIBLE);
+                    bien.getIdentificacion().setEstado(estadoDispo);
+                    modelIdentificacion.actualizar(bien.getIdentificacion());
+                    throw exception;
+                } finally {
+                    reentrantLock.unlock();
+                }
+            } catch (Exception exception) {
+                if (exception instanceof FWExcepcion) {
+                    Mensaje.agregarErrorAdvertencia(((FWExcepcion) exception).getError_para_usuario());
+                } else {
+                    Mensaje.agregarErrorAdvertencia(exception, Util.getEtiquetas("sigebi.error.agregarBienController.actualizar"));
+                }
+            }
+        } else {
+            component.setValid(false);
+            Mensaje.agregarErrorAdvertencia(messageValidacion);
+        }
+    }
+
+    /**
+     * Metodo que busca y asigna al command la unidad
+     *
+     * @param event
+     */
+    public void cambiarUnidad(ValueChangeEvent event) {
+        try {
+            if (!event.getPhaseId().equals(PhaseId.INVOKE_APPLICATION)) {
+                event.setPhaseId(PhaseId.INVOKE_APPLICATION);
+                event.queue();
+                return;
+            }
+
+            // Se obtiene el id del tipoDonacion
+            Long valor = command.getUnidadEjecutora().getIdTemporal();
+            if (valor > 0) {
+                command.setUnidadEjecutora(command.getItemCommand().getItemsUnidad().get(valor));
+                command.getUnidadEjecutora().setIdTemporal(valor);
+            }
+        } catch (FWExcepcion e) {
+            Mensaje.agregarErrorAdvertencia(e.getError_para_usuario());
+        } catch (Exception e) {
+            Mensaje.agregarErrorAdvertencia(e, Util.getEtiquetas("sigebi.error.agregarBienController.cambiarUnidad"));
+        }
+    }
+
+    //</editor-fold>
+    
     //<editor-fold defaultstate="collapsed" desc="Categorias y Clasificaciones">
     public void cambioCategoria(ValueChangeEvent event) {
         if (!event.getPhaseId().equals(PhaseId.INVOKE_APPLICATION)) {
@@ -763,7 +1045,7 @@ public class AgregarBienController extends BaseController {
                 Integer telefono = lVistaUsuario.getgUsuarioActual().getTelefono1() != null ? Integer.parseInt(lVistaUsuario.getgUsuarioActual().getTelefono1()) : 0;
                 bien.setEstado(this.estadoPorDominioValor(Constantes.DOMINIO_BIEN, Constantes.ESTADO_BIEN_PENDIENTE));
                 this.command.setEstado(bien.getEstado());
-                modelBien.cambiaEstadoBien(bien, bien.getEstado(), command.getObservacionCliente(), telefono, usuarioSIGEBI);
+                modelBien.cambiaEstadoBien(bien, bien.getEstado(), command.getObservacionCliente(), telefono, usuarioSIGEBI, this.tipoPorDominioValor(Constantes.DOMINIO_REGISTRO_MOVIMIENTO, Constantes.TIPO_REGISTRO_MOVIMIENTO_CAMBIO_ESTADO_BIEN));
                 command.setObservacionCliente("");
                 inicializarBanderasBotones(bien);
                 this.cerrarPanelObservaciones();
@@ -780,7 +1062,7 @@ public class AgregarBienController extends BaseController {
             Integer telefono = lVistaUsuario.getgUsuarioActual().getTelefono1() != null ? Integer.parseInt(lVistaUsuario.getgUsuarioActual().getTelefono1()) : 0;
             bien.setEstado(this.estadoPorDominioValor(Constantes.DOMINIO_BIEN, Constantes.ESTADO_BIEN_PENDIENTE_SINCRONIZAR));
             this.command.setEstado(bien.getEstado());
-            modelBien.cambiaEstadoBien(bien, bien.getEstado(), command.getObservacionCliente(), telefono, usuarioSIGEBI);
+            modelBien.cambiaEstadoBien(bien, bien.getEstado(), command.getObservacionCliente(), telefono, usuarioSIGEBI, this.tipoPorDominioValor(Constantes.DOMINIO_REGISTRO_MOVIMIENTO, Constantes.TIPO_REGISTRO_MOVIMIENTO_CAMBIO_ESTADO_BIEN));
             inicializarBanderasBotones(bien);
             this.cerrarPanelObservaciones();
         } catch (FWExcepcion e) {
@@ -892,7 +1174,6 @@ public class AgregarBienController extends BaseController {
     }
 
     //</editor-fold>
-    
     //<editor-fold defaultstate="collapsed" desc="Tab Garantías">
     public boolean validarGarantia() {
         return command.getInicioGarantia().compareTo(command.getFinGarantia()) < 0;
@@ -1128,7 +1409,6 @@ public class AgregarBienController extends BaseController {
     }
 
     //</editor-fold>
-    
     //<editor-fold defaultstate="collapsed" desc="Tab Accesorios">
     public void guardarAccesorio() {
         try {
@@ -1351,16 +1631,14 @@ public class AgregarBienController extends BaseController {
         }
         return mensajeUsuario;
     }
-    
+
     public SolicitudDonacion getSolicitudDonacion() {
         return solicitudDonacion;
     }
 
     //</editor-fold>
-    
     //<editor-fold defaultstate="collapsed" desc="Get's y Set's">
-    
-    public void setSolicitudDonacion(SolicitudDonacion solicitudDonacion) {    
+    public void setSolicitudDonacion(SolicitudDonacion solicitudDonacion) {
         this.solicitudDonacion = solicitudDonacion;
     }
 
@@ -1394,6 +1672,14 @@ public class AgregarBienController extends BaseController {
 
     public void setItemsLote(List<SelectItem> itemsLote) {
         this.itemsLote = itemsLote;
+    }
+
+    public List<SelectItem> getItemsUnidades() {
+        return itemsUnidades;
+    }
+
+    public void setItemsUnidades(List<SelectItem> itemsUnidades) {
+        this.itemsUnidades = itemsUnidades;
     }
 
     public List<SelectItem> getItemsMoneda() {
@@ -1604,6 +1890,14 @@ public class AgregarBienController extends BaseController {
         this.donacion = donacion;
     }
 
+    public boolean isInterfaz() {
+        return interfaz;
+    }
+
+    public void setInterfaz(boolean interfaz) {
+        this.interfaz = interfaz;
+    }
+
     public boolean isVisiblePanelModificarCaracteristica() {
         return visiblePanelModificarCaracteristica;
     }
@@ -1653,7 +1947,7 @@ public class AgregarBienController extends BaseController {
     }
     //</editor-fold>
 
-    //<editor-fold defaultstate="collapsed" desc="Tab Características">
+    //<editor-fold defaultstate="collapsed" desc="Tab Movimientos">
     public void consultarMovimiento(ActionEvent event) {
         try {
             if (!event.getPhaseId().equals(PhaseId.INVOKE_APPLICATION)) {
@@ -1661,8 +1955,9 @@ public class AgregarBienController extends BaseController {
                 event.queue();
                 return;
             }
-            RegistroMovimiento verMovimiento = (RegistroMovimiento) event.getComponent().getAttributes().get("caracteristicaSelccionada");
+            Solicitud verMovimiento = (Solicitud) event.getComponent().getAttributes().get("movimientoSelccionado");
 
+                Mensaje.agregarInfo("el bien se debe consultar.");
 //            //Se asigna la caracteristica consultada
 //            this.command.getCaracteristicaCommand().setCaracteristica((BienCaracteristica) event.getComponent().getAttributes().get("caracteristicaSelccionada"));
 //            this.command.getCaracteristicaCommand().setDetalleModificar(command.getCaracteristicaCommand().getCaracteristica().getDetalle());
@@ -1671,7 +1966,7 @@ public class AgregarBienController extends BaseController {
 //            this.setVisiblePanelModificarCaracteristica(true);
         } catch (Exception err) {
 
-            mensajeCaracteristica = err.getMessage();
+                Mensaje.agregarErrorAdvertencia(err.getCause().getMessage());
         }
     }
 

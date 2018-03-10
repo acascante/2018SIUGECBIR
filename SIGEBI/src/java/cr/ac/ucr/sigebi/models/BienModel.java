@@ -10,10 +10,12 @@ import cr.ac.ucr.sigebi.daos.BienDao;
 import cr.ac.ucr.sigebi.domain.Bien;
 import cr.ac.ucr.sigebi.domain.Estado;
 import cr.ac.ucr.sigebi.domain.RegistroMovimiento;
+import cr.ac.ucr.sigebi.domain.RegistroMovimientoBien;
 import cr.ac.ucr.sigebi.domain.Sincronizar;
 import cr.ac.ucr.sigebi.domain.Tipo;
 import cr.ac.ucr.sigebi.domain.UnidadEjecutora;
 import cr.ac.ucr.sigebi.domain.Usuario;
+import cr.ac.ucr.sigebi.utils.Constantes;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
@@ -33,6 +35,9 @@ public class BienModel {
 
     @Resource
     RegistroMovimientoModel registroMovimientoModel;
+
+    @Resource
+    TipoModel tipoModel;
 
     public List<Bien> listar() throws FWExcepcion {
         return bienDao.listar();
@@ -115,21 +120,16 @@ public class BienModel {
         bienDao.eliminar(bien);        
     }
 
-    public void cambiaEstadoBien(Collection<Bien> bienes, Estado estado, String observacion, Integer telefono, Usuario usuario) {
+    public void cambiaEstadoBien(Collection<Bien> bienes, Estado estado, String observacion, Integer telefono, Usuario usuario, Tipo tipoMovimiento) {
         for (Bien bien : bienes) {
-            this.cambiaEstadoBien(bien, estado, observacion, telefono, usuario);
+            this.cambiaEstadoBien(bien, estado, observacion, telefono, usuario, tipoMovimiento);
         }
     }
 
-    public void cambiaEstadoBien(Bien bien, Estado estado, String observacion, Integer telefono, Usuario usuario) {
+    public void cambiaEstadoBien(Bien bien, Estado estado, String observacion, Integer telefono, Usuario usuario, Tipo tipoMovimiento) {
+        
         //Se registra el movimiento
-        RegistroMovimiento regisMov = new RegistroMovimiento();
-        regisMov.setBien(bien);
-        regisMov.setFecha(new Date());
-        regisMov.setEstado(estado);
-        regisMov.setTipo(bien.getTipo());
-        regisMov.setObservacion(observacion);
-        regisMov.setUsuario(usuario);
+        RegistroMovimientoBien regisMov = new RegistroMovimientoBien(tipoMovimiento, observacion, telefono, new Date(), usuario, estado, bien);
         registroMovimientoModel.agregar(regisMov);
 
         //Se actualiza el estado del bien
@@ -138,18 +138,19 @@ public class BienModel {
         this.actualizar(bien);
     }
 
-    public void sincronizarBien(Collection<Bien> bienes, String usaurioSincro, Estado estado) throws FWExcepcion, Exception {
+    public void sincronizarBien(Collection<Bien> bienes, String observacion, Integer telefono, Usuario usuario, Estado estado) throws FWExcepcion, Exception {
+
         for (Bien bien : bienes) {
             //Se almacena la sincronizacion
             Sincronizar bienSinc = new Sincronizar(bien);
             Date today = new Date();
             bienSinc.setFechaAdicion(today);
-            bienSinc.setAdicionadoPor(usaurioSincro);
+            bienSinc.setAdicionadoPor(usuario.getId());
             bienDao.sincronizarBien(bienSinc);
 
-            //Se actualiza el bien para cambiar su estado
-            bien.setEstado(estado);
-            this.actualizar(bien);
+            //Se actualiza el bien y cambia su estado
+            Tipo tipoMovimento = tipoModel.buscarPorDominioTipo(Constantes.DOMINIO_REGISTRO_MOVIMIENTO, Constantes.TIPO_REGISTRO_MOVIMIENTO_CAMBIO_ESTADO_BIEN);
+            this.cambiaEstadoBien(bien, estado, observacion, telefono, usuario, tipoMovimento);            
         }
     }
     
@@ -157,11 +158,11 @@ public class BienModel {
         bienDao.actualizar(bienes);
     }
  
-    public List<Bien> listar(Integer primerRegistro, Integer ultimoRegistro, Long id, UnidadEjecutora unidadejecutora, String identificacion, String descripcion, String marca, String modelo, String serie, Estado estadoInterno) throws FWExcepcion {
+    public List<Bien> listar(Integer primerRegistro, Integer ultimoRegistro, Long id, UnidadEjecutora unidadejecutora, String identificacion, String descripcion, String marca, String modelo, String serie, Estado... estadoInterno) throws FWExcepcion {
         return bienDao.listar(primerRegistro, ultimoRegistro, id, unidadejecutora, identificacion, descripcion, marca, modelo, serie, estadoInterno);
     }
     
-    public Long contar(Long id, UnidadEjecutora unidadejecutora, String identificacion, String descripcion, String marca, String modelo, String serie, Estado estadoInterno) throws FWExcepcion {
+    public Long contar(Long id, UnidadEjecutora unidadejecutora, String identificacion, String descripcion, String marca, String modelo, String serie, Estado... estadoInterno) throws FWExcepcion {
         return bienDao.contar(id, unidadejecutora, identificacion, descripcion, marca, modelo, serie, estadoInterno);
     }
 }

@@ -1,0 +1,15 @@
+  <ice:outputHtml id="frmAccesorios"  xmlns:ice="http://www.icesoft.com/icefaces/component" xmlns:icecore="http://www.icefaces.org/icefaces/core" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:c="http://java.sun.com/jstl/core">
+    <!-- TAB Accesorios -->
+    <div class="container">
+        <div class="row"  style="padding-bottom: 30px">
+            <div class="col-md-12">
+                <ice:dataTable id="accesoriosLista" var="accesorio" paginator="true" paginatorPosition="bottom" rows="10" value="#{controllerAgregarBienes.accesorios}">
+                    <ice:column id="colDetalleAccesorio" headerText="descripcion" sortBy="#{accesorio.detalle}" filterBy="#{accesorio.detalle}"  filterMatchMode="contains">
+                        <f:facet name="header"> Detalle </f:facet>
+                        <h:outputText id="colDetAccesorio" value="#{accesorio.detalle}"/>
+                    </ice:column>
+                </ice:dataTable>
+            </div>
+        </div>
+    </div>
+</ice:outputHtml>

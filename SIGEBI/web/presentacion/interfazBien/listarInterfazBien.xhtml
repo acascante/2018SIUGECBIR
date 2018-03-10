@@ -1,0 +1,238 @@
+<ice:form id="frm_listarInterfazBien" 
+          xmlns:ice="http://www.icesoft.com/icefaces/component"
+          xmlns:h="http://java.sun.com/jsf/html"
+          xmlns:f="http://java.sun.com/jsf/core"
+          xmlns:ui="http://java.sun.com/jsf/facelets"
+          >
+    <div class="contenido-pagina">
+
+        <div class="container"> 
+            <!-- Titulo -->
+            <div class="row">
+                <div class='col-sm-12'>
+                    <h1 style="margin: 0;">
+                    </h1>
+                </div>                
+            </div>
+            <div class="row">
+                <div class='col-sm-6'>
+                    <h1 style="margin: 0;">                       
+                        <ice:outputFormat value="#{label['sigebi.label.vista.listarInterfazBien.titulo']}"/>
+                    </h1>
+                </div>
+            </div> 
+            <!-- Paginacion -->
+            <div class="row">
+                <div class="col-sm-12">
+                    <ice:outputFormat value="#{label['label.generico.paginacion.encabezado']}">
+                        <f:param value="#{controllerListarInterfazBien.cantidadRegistros}"/>
+                        <f:param value="#{controllerListarInterfazBien.cantidadRegistrosMostrados}"/>
+                        <f:param value="#{controllerListarInterfazBien.primerRegistro}"/>
+                        <f:param value="#{controllerListarInterfazBien.ultimoRegistro}"/>
+                        <f:param value="#{controllerListarInterfazBien.paginaActual}"/>
+                        <f:param value="#{controllerListarInterfazBien.cantidadPaginas}"/>
+                    </ice:outputFormat>
+                    <div>
+                        <table>
+                            <tr>
+                                <td style="padding-right: 5px;">
+                                    <ice:outputText value="#{label['label.paginacion.cantidad.pagina']} "/>
+                                </td>
+                                <td>
+                                    
+                                    <ice:selectOneMenu id="cantRegistroPorPagina"
+                                           value="#{controllerListarInterfazBien.cantRegistroPorPagina}" 
+                                           valueChangeListener="#{controllerListarInterfazBien.cambioRegistrosPorPagina}"
+                                           partialSubmit="true">
+                                            <f:selectItems id="item_pa" value="#{controllerListarInterfazBien.listaRegistrosPagina}"/>
+                                    </ice:selectOneMenu>    
+                                    
+                                </td>
+                            </tr>
+                        </table>                        
+                    </div>                    
+                    <div>
+                        <ice:commandButton image="./imagenes/botones/first.png" partialSubmit="true" actionListener="#{controllerListarInterfazBien.primero}" rendered="#{controllerListarInterfazBien.cantidadPaginas > 1}"/>
+                        <ice:commandButton image="./imagenes/botones/previos.png" partialSubmit="true" actionListener="#{controllerListarInterfazBien.anterior}" rendered="#{controllerListarInterfazBien.cantidadPaginas > 1}"/>
+                        <ui:repeat value="#{controllerListarInterfazBien.arregloPaginas}" var="pagina">
+                            <ice:commandLink value="#{pagina}" partialSubmit="true" actionListener="#{controllerListarInterfazBien.irPagina}">
+                                <f:param name="numPag" value="#{pagina}"/>
+                            </ice:commandLink>
+                        </ui:repeat>            
+                        <ice:commandButton image="./imagenes/botones/next.png" partialSubmit="true" actionListener="#{controllerListarInterfazBien.siguiente}" rendered="#{controllerListarInterfazBien.cantidadPaginas > 1}"/>
+                        <ice:commandButton image="./imagenes/botones/last.png" partialSubmit="true" actionListener="#{controllerListarInterfazBien.ultimo}" rendered="#{controllerListarInterfazBien.cantidadPaginas > 1}"/>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Data Table -->
+            <div class="row">
+                <div class="col-sm-12">
+                    <div>
+                        <ice:dataTable id="solicitudsTecnicos"
+                                       value="#{controllerListarInterfazBien.interfazBienes}"
+                                   var="interfaze"
+                                   paginator="true"
+                                   paginatorPosition="bottom"
+                                   rows="10">
+                            
+                            <ice:column id="colId">
+                                <f:facet name="header">
+                                    <ice:columnGroup>
+                                        <ice:headerRow>
+                                            <ice:outputText value="#{label['sigebi.label.vista.listarInterfazBien.id']}"/>
+                                        </ice:headerRow>
+                                        <ice:headerRow>
+                                            <ice:inputText id="fltIdDonacion"
+                                                           style="width: 130px;"
+                                                           value="#{controllerListarInterfazBien.fltId}"                                   
+                                                           partialSubmit="true"
+                                                           valueChangeListener="#{controllerListarInterfazBien.cambioFiltro}"/>
+                                        </ice:headerRow>
+                                    </ice:columnGroup>
+                                </f:facet>                                
+                                <h:outputText id="idCell" value="#{interfaze.id}"/>
+                            </ice:column>
+                            
+                            <ice:column id="colDescripcion">
+                                <f:facet name="header">
+                                    <ice:columnGroup>
+                                        <ice:headerRow>
+                                            <ice:outputText value="#{label['sigebi.label.vista.listarInterfazBien.descripcion']}"/>
+                                        </ice:headerRow>
+                                        <ice:headerRow>
+                                            <ice:inputText id="fltDescripcion"
+                                                           style="width: 130px;"
+                                                           value="#{controllerListarInterfazBien.fltDescripcion}"                                   
+                                                           partialSubmit="true"
+                                                           valueChangeListener="#{controllerListarInterfazBien.cambioFiltro}"/>
+                                        </ice:headerRow>
+                                    </ice:columnGroup>
+                                </f:facet>                                
+                                <h:outputText id="descripcionCell" value="#{interfaze.descripcion}"/>
+                            </ice:column>                            
+                            
+                            <ice:column id="colMarca">
+                                <f:facet name="header">
+                                    <ice:columnGroup>
+                                        <ice:headerRow>
+                                            <ice:outputText value="#{label['sigebi.label.vista.listarInterfazBien.marca']}"/>
+                                        </ice:headerRow>
+                                        <ice:headerRow>
+                                            <ice:inputText id="fltMarca"
+                                                           style="width: 130px;"
+                                                           value="#{controllerListarInterfazBien.fltMarca}"                                   
+                                                           partialSubmit="true"
+                                                           valueChangeListener="#{controllerListarInterfazBien.cambioFiltro}"/>
+                                        </ice:headerRow>
+                                    </ice:columnGroup>
+                                </f:facet>                                
+                                <h:outputText id="marcaCell" value="#{interfaze.marca}"/>
+                            </ice:column>                            
+                            
+                            <ice:column id="colModelo">
+                                <f:facet name="header">
+                                    <ice:columnGroup>
+                                        <ice:headerRow>
+                                            <ice:outputText value="#{label['sigebi.label.vista.listarInterfazBien.modelo']}"/>
+                                        </ice:headerRow>
+                                        <ice:headerRow>
+                                            <ice:inputText id="fltModelo"
+                                                           style="width: 130px;"
+                                                           value="#{controllerListarInterfazBien.fltModelo}"                                   
+                                                           partialSubmit="true"
+                                                           valueChangeListener="#{controllerListarInterfazBien.cambioFiltro}"/>
+                                        </ice:headerRow>
+                                    </ice:columnGroup>
+                                </f:facet>                                
+                                <h:outputText id="modeloCell" value="#{interfaze.modelo}"/>
+                            </ice:column>                            
+                            
+                            <ice:column id="colSerie">
+                                <f:facet name="header">
+                                    <ice:columnGroup>
+                                        <ice:headerRow>
+                                            <ice:outputText value="#{label['sigebi.label.vista.listarInterfazBien.serie']}"/>
+                                        </ice:headerRow>
+                                        <ice:headerRow>
+                                            <ice:inputText id="fltSerie"
+                                                           style="width: 130px;"
+                                                           value="#{controllerListarInterfazBien.fltSerie}"                                   
+                                                           partialSubmit="true"
+                                                           valueChangeListener="#{controllerListarInterfazBien.cambioFiltro}"/>
+                                        </ice:headerRow>
+                                    </ice:columnGroup>
+                                </f:facet>                                
+                                <h:outputText id="serieCell" value="#{interfaze.serie}"/>
+                            </ice:column>                            
+
+                            
+                            <ice:column id="colUnidad">
+                                <f:facet name="header">
+                                    <ice:columnGroup>
+                                        <ice:headerRow>
+                                            <ice:outputText value="#{label['sigebi.label.vista.listarInterfazBien.unidad']}"/>
+                                        </ice:headerRow>
+                                        <ice:headerRow>
+                                            <ice:inputText id="fltUnidad"
+                                                           style="width: 130px;"
+                                                           value="#{controllerListarInterfazBien.fltUnidadEjecutora}"                                   
+                                                           partialSubmit="true"
+                                                           valueChangeListener="#{controllerListarInterfazBien.cambioFiltro}"/>
+                                        </ice:headerRow>
+                                    </ice:columnGroup>
+                                </f:facet>                                
+                                <h:outputText id="unidadCell" value="#{interfaze.unidadEjecutora}"/>
+                            </ice:column>                            
+                            
+                            <ice:column id="colEstado">
+                                <f:facet name="header">
+                                    <ice:columnGroup>
+                                        <ice:headerRow>
+                                            <ice:outputText value="#{label['sigebi.label.vista.listarInterfazBien.estado']}"/>
+                                        </ice:headerRow>
+                                        <ice:headerRow>
+                                           <ice:selectOneMenu id="filtroEstado"
+                                                       valueChangeListener="#{controllerListarInterfazBien.cambioFiltro}"
+                                                       value="#{controllerListarInterfazBien.fltEstado}"
+                                                       partialSubmit="true">
+                                                <f:selectItem itemLabel="N/A" itemValue="-1"/>
+                                                <f:selectItems id="slcEstadoItem" value="#{controllerListarInterfazBien.estadosOptions}"/>
+                                            </ice:selectOneMenu>
+                                        </ice:headerRow>
+                                    </ice:columnGroup>
+                                </f:facet>                                
+                                <h:outputText id="estadoCell" value="#{interfaze.estado.nombre}"/>
+                            </ice:column>
+
+                            <ice:column style="text-align: center;">
+
+                                 <ice:commandButton id="botonDetalle"
+                                                   style="float:right;margin-top:2%" 
+                                                   styleClass="boton" 
+                                                   partialSubmit="true" 
+                                                   actionListener="#{controllerInterfazBien.detalle}"
+                                                   value="#{label['sigebi.label.vista.listarInterfazBien.detalle']}"  >
+                                    <f:attribute id="bienSeleccionado" name="interfazSeleccionada"  value="#{interfaze}"/>
+                                    <f:attribute id="vistaOrigenParam" name="keyVistaOrigen"  value="pre_ingreso"/>
+                                </ice:commandButton>
+                                 <ice:commandButton id="botonProcesar"
+                                                   style="float:right;margin-top:2%" 
+                                                   styleClass="boton" 
+                                                   partialSubmit="true"
+                                                   rendered="#{(controllerListarInterfazBien.estadoBienPendiente.valor == interfaze.estado.valor
+                                                               || controllerListarInterfazBien.estadoBienErroneo.valor == interfaze.estado.valor)}"
+                                                   actionListener="#{controllerAgregarBienes.nuevoRegistroInterfaz}"
+                                                   value="#{label['sigebi.label.vista.listarInterfazBien.procesar']}"  >
+                                    <f:attribute id="interfazBien" name="interfazBien"  value="#{interfaze}"/>
+                                    <f:attribute id="vistaOrigenParam" name="keyVistaOrigen"  value="pre_ingreso"/>
+                                </ice:commandButton>
+
+                            </ice:column>
+                        </ice:dataTable>
+                    </div>
+                </div>
+            </div>
+        </div>    
+    </div>
+</ice:form>

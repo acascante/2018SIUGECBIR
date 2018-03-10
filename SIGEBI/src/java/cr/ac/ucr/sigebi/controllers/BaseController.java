@@ -54,7 +54,6 @@ public class BaseController extends PaginacionOracle {
 
     Map<Integer, Estado> tiposBienes;
     
-    @Resource private RegistroMovimientoModel registroMovimientoModel;
     //</editor-fold>
     
     //<editor-fold defaultstate="collapsed" desc="Get's & Set's">
@@ -238,20 +237,6 @@ public class BaseController extends PaginacionOracle {
         }
         return resultado;
     }
-
-    
-    protected void registrarMovimiento(Bien item, String observacion, Tipo tipo, Usuario usuario){
-        RegistroMovimiento registro = new RegistroMovimiento();
-        registro.setTipo(tipo);
-        registro.setEstado(item.getEstado());
-        registro.setBien(item);
-        registro.setFecha(new Date());
-        registro.setUsuario(usuario);
-        registro.setObservacion(observacion);
-        
-        registroMovimientoModel.agregar(registro);
-    }
-    
     
     public interface PredicateFilter {
         boolean verifica(Object p);

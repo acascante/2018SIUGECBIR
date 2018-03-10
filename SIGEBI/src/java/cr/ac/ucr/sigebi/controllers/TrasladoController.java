@@ -20,7 +20,6 @@ import cr.ac.ucr.sigebi.domain.UnidadEjecutora;
 import cr.ac.ucr.sigebi.domain.Usuario;
 import cr.ac.ucr.sigebi.domain.Ubicacion;
 import cr.ac.ucr.sigebi.domain.SolicitudTraslado;
-import cr.ac.ucr.sigebi.domain.SolicitudTraslado;
 import cr.ac.ucr.sigebi.models.BienModel;
 import cr.ac.ucr.sigebi.models.AutorizacionModel;
 import cr.ac.ucr.sigebi.models.AutorizacionRolPersonaModel;
@@ -87,7 +86,6 @@ public class TrasladoController extends ListadoBienesGeneralController {
     boolean permiteAnular;
 
     // VARIBLES PARA COMPROBAR USUARIOS CON PERMISOS
-    Tipo tipoProcesoTraslado;
     Autorizacion autorizacionEnviar;
     Autorizacion autorizacionRecibir;
 
@@ -284,9 +282,7 @@ public class TrasladoController extends ListadoBienesGeneralController {
 
             estadoBienActivo = estadoModel.buscarPorDominioEstado(Constantes.DOMINIO_BIEN, Constantes.ESTADO_BIEN_ACTIVO);
             estadoBienTraslado = estadoModel.buscarPorDominioEstado(Constantes.DOMINIO_BIEN, Constantes.ESTADO_BIEN_TRASLADO);
-            
-            tipoProcesoTraslado = this.tipoPorId(Constantes.TIPO_TRASLADO);
-            
+                        
             estadosOptions = new ArrayList<SelectItem>();
 
             estadosOptions.add(new SelectItem(estadoGeneralPendiente.getId().toString(), estadoGeneralPendiente.getNombre()));
@@ -630,21 +626,21 @@ public class TrasladoController extends ListadoBienesGeneralController {
                 trasladoModel.guardar(traslado);
 
                 //Actualizo el estado de lso Bienes que se eliminan
+                Integer telefono = lVistaUsuario.getgUsuarioActual().getTelefono1() != null ? Integer.parseInt(lVistaUsuario.getgUsuarioActual().getTelefono1()) : 0;
+                Tipo tipoMovimientoTraslado = this.tipoPorDominioValor(Constantes.DOMINIO_REGISTRO_MOVIMIENTO, Constantes.TIPO_REGISTRO_MOVIMIENTO_CAMBIO_ESTADO_BIEN);                
                 for(TrasladoDetalle item : trasladoDetalleEliminar){
+                    //Se registra el movimiento y se actualiza el bien
                     item.getBien().setEstado(estadoBienActivo);
-                    //Actualizo el estado del Bien
-                    bienModel.actualizar(item.getBien());
-                    
-                    this.registrarMovimiento(item.getBien(), Util.getEtiquetas("sigebi.Traslado.Mns.Movimiento"), tipoProcesoTraslado, usuarioRegistradoClass);
-                    
+                    bienModel.cambiaEstadoBien(item.getBien(), item.getBien().getEstado(), Util.getEtiquetas("sigebi.Traslado.Mns.Movimiento"), telefono, usuarioRegistradoClass, tipoMovimientoTraslado);
+
                 }
+                
                 //Actualizo el estado de los Bienes que se agregan
                 for(TrasladoDetalle item : trasladoDetalle){
                     if(item.getBien().getEstado().getId() != estadoBienTraslado.getId()){
+                        //Se registra el movimiento y se actualiza el bien
                         item.getBien().setEstado(estadoBienTraslado);
-                        bienModel.actualizar(item.getBien());
-                        
-                        this.registrarMovimiento(item.getBien(), Util.getEtiquetas("sigebi.Traslado.Mns.Movimiento"), tipoProcesoTraslado, usuarioRegistradoClass);
+                        bienModel.cambiaEstadoBien(item.getBien(), item.getBien().getEstado(), Util.getEtiquetas("sigebi.Traslado.Mns.Movimiento"), telefono, usuarioRegistradoClass, tipoMovimientoTraslado);
                     }
                 }
                 
@@ -846,20 +842,11 @@ public class TrasladoController extends ListadoBienesGeneralController {
             Bien bien = bienModel.buscarPorId(bienDetalle.getBien().getId());
             bien.setUnidadEjecutora(traslado.getUnidadEjecutoraDestino());
             bien.setEstado(estadoBienActivo);
-            bienModel.actualizar(bien);
-
             
-            //Se registra el movimiento
-            this.registrarMovimiento(bien, Util.getEtiquetas("sigebi.Traslado.Movimiento"), tipoProcesoTraslado, usuarioRegistradoClass);
-                    
-//            RegistroMovimiento regisMov = new RegistroMovimiento();
-//            regisMov.setBien(bien);
-//            regisMov.setFecha(new Date());
-//            regisMov.setEstado(estadoGeneralPendiente);
-//            regisMov.setTipo(this.tipoPorId(Constantes.TIPO_TRASLADO));
-//            regisMov.setObservacion(Util.getEtiquetas("sigebi.Traslado.Registro.Movimiento"));
-//            regisMov.setUsuario(this.usuarioRegistradoClass);
-//            registroMovimientoModel.agregar(regisMov);
+            //Se registra el movimiento y se actualiza el bien
+            Integer telefono = lVistaUsuario.getgUsuarioActual().getTelefono1() != null ? Integer.parseInt(lVistaUsuario.getgUsuarioActual().getTelefono1()) : 0;
+            bienModel.cambiaEstadoBien(bien, bien.getEstado(), Util.getEtiquetas("sigebi.Traslado.Movimiento"), telefono, 
+                    usuarioSIGEBI, this.tipoPorDominioValor(Constantes.DOMINIO_REGISTRO_MOVIMIENTO, Constantes.TIPO_REGISTRO_MOVIMIENTO_CAMBIO_ESTADO_BIEN));
             
             //PENDIENTE SINCRONIZAR CON SIAF
             if (estaAprobada()) {

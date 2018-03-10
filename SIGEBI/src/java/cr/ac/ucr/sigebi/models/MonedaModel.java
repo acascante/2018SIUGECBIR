@@ -31,4 +31,5 @@ public class MonedaModel {
     public Moneda buscarPorId(Long id) throws FWExcepcion {
         return monedaDao.buscarPorId(id);
     }
+
 }

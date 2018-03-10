@@ -21,7 +21,7 @@ import javax.persistence.Table;
 @Entity(name = "SolicitudPrestamo")
 @Table(name = "SIGEBI_OAF.SIGB_SOLICITUD_PRESTAMO")
 @PrimaryKeyJoinColumn(name = "ID_SOLICITUD", referencedColumnName = "ID_SOLICITUD")
-@DiscriminatorValue("2")
+@DiscriminatorValue("4")
 public class SolicitudPrestamo extends Solicitud {
 
     //<editor-fold defaultstate="collapsed" desc="Atributos">

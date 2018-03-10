@@ -10,6 +10,7 @@ import cr.ac.ucr.framework.daoImpl.GenericDaoImpl;
 import cr.ac.ucr.framework.utils.FWExcepcion;
 import cr.ac.ucr.sigebi.domain.Estado;
 import cr.ac.ucr.sigebi.domain.Identificacion;
+import cr.ac.ucr.sigebi.domain.Moneda;
 import cr.ac.ucr.sigebi.domain.UnidadEjecutora;
 import java.util.List;
 import org.hibernate.HibernateException;
@@ -24,7 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
  *
  * @author alvaro.cascante
  */
-@Repository(value = "IdentificacionDao")
+@Repository(value = "identificacionDao")
 
 public class IdentificacionDao extends GenericDaoImpl {
     
@@ -36,7 +37,7 @@ public class IdentificacionDao extends GenericDaoImpl {
         try {
             return dao.getHibernateTemplate().find("from Identificacion"); 
         } catch (DataAccessException e) {
-            throw new FWExcepcion("sigebi.error.notificacionDao.listar", "Error obtener los registros de tipo " + this.getClass(), e.getCause());
+            throw new FWExcepcion("sigebi.error.identificacionDao.listar", "Error obtener los registros de tipo " + this.getClass(), e.getCause());
         }
     }
     
@@ -55,17 +56,34 @@ public class IdentificacionDao extends GenericDaoImpl {
             query.setMaxResults(1); 
             return (Identificacion) query.uniqueResult();
         } catch (HibernateException e) {
-            throw new FWExcepcion("sigebi.error.notificacionDao.listar", "Error obtener los registros de tipo " + this.getClass(), e.getCause());
+            throw new FWExcepcion("sigebi.error.identificacionDao.listar", "Error obtener los registros de tipo " + this.getClass(), e.getCause());
         } finally {
             session.close();
         }
     }
 
+    @Transactional
     public void actualizar(Identificacion identificacion) {
         try {
             persist(identificacion);
         } catch (DataAccessException e) {
-            throw new FWExcepcion("sigebi.error.notificacionDao.salvar", "Error guardando registro de tipo " + this.getClass(), e.getCause());
+            throw new FWExcepcion("sigebi.error.identificacionDao.salvar", "Error guardando registro de tipo " + this.getClass(), e.getCause());
+        }
+    }
+    
+    
+    @Transactional(readOnly = true)
+    public Identificacion buscarPorIdentificacion(String identificacion) throws FWExcepcion {
+        Session session = dao.getSessionFactory().openSession();
+        try {
+            String sql = "SELECT obj FROM Identificacion obj WHERE upper(obj.identificacion) = upper(:identificacion)";
+            Query query = session.createQuery(sql);
+            query.setParameter("identificacion", identificacion);
+            return (Identificacion) query.uniqueResult();
+        } catch (HibernateException e) {
+            throw new FWExcepcion("sigebi.error.identificacionDao.buscarPorIdentificacion", "Error obtener los registros de tipo " + this.getClass(), e.getCause());
+        } finally {
+            session.close();
         }
     }
 }

@@ -54,6 +54,7 @@ public class ListarNotificacionesController extends BaseController {
         this.inicializarDatos();
     }
     
+    
     @PostConstruct
     public final void inicializar() {
         this.inicializarListado();

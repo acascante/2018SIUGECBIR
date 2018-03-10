@@ -36,6 +36,7 @@ public class SolicitudDonacionCommand {
     Factura factura = null;
     Adjunto adjunto = null;
     String mensajeConfirmacion = "";
+    String observacionConfirmacion = "";
 
     //Mapa para la lista de autorizaciones para la solicitud
     HashMap<Long, SolicitudDetalle> bienesDonacion = null;
@@ -120,6 +121,9 @@ public class SolicitudDonacionCommand {
         this.paisOptions = new ArrayList<SelectItem>();
     }
 
+    //</editor-fold>
+    
+    //<editor-fold defaultstate="collapsed" desc="Get's & Set's">
     public String getFltIdUnidad() {
         return fltIdUnidad;
     }
@@ -130,11 +134,16 @@ public class SolicitudDonacionCommand {
 
     public String getFltDescripcionUnidad() {
         return fltDescripcionUnidad;
+    }    
+
+    public String getObservacionConfirmacion() {
+        return observacionConfirmacion;
     }
 
-    //</editor-fold>
+    public void setObservacionConfirmacion(String observacionConfirmacion) {
+        this.observacionConfirmacion = observacionConfirmacion;
+    }
     
-    //<editor-fold defaultstate="collapsed" desc="Get's & Set's">
     public void setFltDescripcionUnidad(String fltDescripcionUnidad) {
         this.fltDescripcionUnidad = fltDescripcionUnidad;
     }
@@ -284,6 +293,14 @@ public class SolicitudDonacionCommand {
 
     public Boolean getPresentarPanelAnularConfirmar() {
         return this.presentarPanel && this.accion.equals(Constantes.ACCION_DONACION_ANULAR);
+    }
+    
+    public Boolean getPresentarPanelEliminarBienConfirmar() {
+        return this.presentarPanel && this.accion.equals(Constantes.ACCION_DONACION_ELIMINAR_BIEN);
+    }
+
+    public Boolean getPresentarPanelRechazarAutorizacionConfirmar() {
+        return this.presentarPanel && this.accion.equals(Constantes.ACCION_DONACION_RECHAZAR_AUTORIZACION);
     }
     
     public ArrayList<Adjunto> getAdjuntos() {

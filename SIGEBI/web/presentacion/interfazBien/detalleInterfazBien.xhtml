@@ -1,0 +1,417 @@
+<ice:form id="frmDetalleInterfazBien" 
+          xmlns:ice="http://www.icesoft.com/icefaces/component" 
+          xmlns:icecore="http://www.icefaces.org/icefaces/core" 
+          xmlns:h="http://java.sun.com/jsf/html" 
+          xmlns:f="http://java.sun.com/jsf/core" 
+          xmlns:ui="http://java.sun.com/jsf/facelets"
+          xmlns:c="http://java.sun.com/jstl/core">
+    
+    <div class="contenido-pagina">
+        <div class="container">
+            
+            <div class="row">
+                <div class='col-sm-8'>
+                    <h1 style="margin: 0;">
+                        <ice:outputFormat value="#{label['sigebi.label.vista.detalleInterfazBien.detalle.titulo']}" />
+                    </h1>
+                </div>
+
+                <div class="col-sm-4">
+                    <ice:commandButton id="boton_regresar" value="Regresar" style="float:right" partialSubmit="true" styleClass="boton" action="#{controllerInterfazBien.regresarListado}"/>
+                </div>
+            </div>
+            
+           <div class="row">
+                <div class="col-md-3">
+                    <div class="form-group"> 
+                        <label class="control-label" for="idLabel">
+                            <ice:outputText value="#{label['sigebi.label.vista.detalleInterfazBien.id']}" />                            
+                        </label>
+                        <ice:inputText id="idTxt" 
+                                       partialSubmit="false"
+                                       required="true"
+                                       styleClass="form-control"
+                                       readonly="true"
+                                       value="#{controllerInterfazBien.command.interfazBien.id}" />
+                    </div>                                             
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group"> 
+                        <label class="control-label" for="identificacionOrigenLabel">
+                            <ice:outputText value="#{label['sigebi.label.vista.detalleInterfazBien.identificacionOrigen']}" />                            
+                        </label>
+                        <ice:inputText id="identificacionOrigenTxt" 
+                                       partialSubmit="false"
+                                       required="true"
+                                       styleClass="form-control"
+                                       readonly="true"
+                                       value="#{controllerInterfazBien.command.interfazBien.identificacionOrigen}" />
+                    </div>                                             
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group"> 
+                        <label class="control-label" for="idOrigenTecnicoLabel">
+                            <ice:outputText value="#{label['sigebi.label.vista.detalleInterfazBien.idOrigenTecnico']}" />                            
+                        </label>
+                        <ice:inputText id="idOrigenTecnicoTxt" 
+                                       partialSubmit="false"
+                                       required="true"
+                                       styleClass="form-control"
+                                       readonly="true"
+                                       value="#{controllerInterfazBien.command.interfazBien.idOrigenTecnico}" />
+                    </div>                                             
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group"> 
+                        <label class="control-label" for="identificacionBienLabel">
+                            <ice:outputText value="#{label['sigebi.label.vista.detalleInterfazBien.identificacionBien']}" />                            
+                        </label>
+                        <ice:inputText id="identificacionBienTxt" 
+                                       partialSubmit="false"
+                                       required="true"
+                                       styleClass="form-control"
+                                       readonly="true"
+                                       value="#{controllerInterfazBien.command.interfazBien.identificacionBien}" />
+                    </div>                                             
+                </div>                
+            </div>
+            
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="form-group"> 
+                        <label class="control-label" for="identificacionAlternativaLabel">
+                            <ice:outputText value="#{label['sigebi.label.vista.detalleInterfazBien.identificacionAlternativa']}" />                            
+                        </label>
+                        <ice:inputText id="identificacionAlternativaTxt" 
+                                       partialSubmit="false"
+                                       required="true"
+                                       styleClass="form-control"
+                                       readonly="true"
+                                       value="#{controllerInterfazBien.command.interfazBien.identificacionAlternativa}" />
+                    </div>                                             
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group"> 
+                        <label class="control-label" for="descripcionLabel">
+                            <ice:outputText value="#{label['sigebi.label.vista.detalleInterfazBien.descripcion']}" />                            
+                        </label>
+                        <ice:inputText id="descripcionTxt" 
+                                       partialSubmit="false"
+                                       required="true"
+                                       styleClass="form-control"
+                                       readonly="true"
+                                       value="#{controllerInterfazBien.command.interfazBien.descripcion}" />
+                    </div>                                             
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group"> 
+                        <label class="control-label" for="tipoLabel">
+                            <ice:outputText value="#{label['sigebi.label.vista.detalleInterfazBien.tipo']}" />                            
+                        </label>
+                        <ice:inputText id="tipoTxt" 
+                                       partialSubmit="false"
+                                       required="true"
+                                       styleClass="form-control"
+                                       readonly="true"
+                                       value="#{controllerInterfazBien.command.interfazBien.tipo}" />
+                    </div>                                             
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group"> 
+                        <label class="control-label" for="origenLabel">
+                            <ice:outputText value="#{label['sigebi.label.vista.detalleInterfazBien.origen']}" />                            
+                        </label>
+                        <ice:inputText id="origenTxt" 
+                                       partialSubmit="false"
+                                       required="true"
+                                       styleClass="form-control"
+                                       readonly="true"
+                                       value="#{controllerInterfazBien.command.interfazBien.origen}" />
+                    </div>                                             
+                </div>                
+            </div> 
+
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="form-group"> 
+                        <label class="control-label" for="cuentaContableLabel">
+                            <ice:outputText value="#{label['sigebi.label.vista.detalleInterfazBien.cuentaContable']}" />                            
+                        </label>
+                        <ice:inputText id="cuentaContableTxt" 
+                                       partialSubmit="false"
+                                       required="true"
+                                       styleClass="form-control"
+                                       readonly="true"
+                                       value="#{controllerInterfazBien.command.interfazBien.cuentaContable}" />
+                    </div>                                             
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group"> 
+                        <label class="control-label" for="cuentaPresupuestariaLabel">
+                            <ice:outputText value="#{label['sigebi.label.vista.detalleInterfazBien.cuentaPresupuestaria']}" />                            
+                        </label>
+                        <ice:inputText id="cuentaPresupuestariaTxt" 
+                                       partialSubmit="false"
+                                       required="true"
+                                       styleClass="form-control"
+                                       readonly="true"
+                                       value="#{controllerInterfazBien.command.interfazBien.cuentaPresupuestaria}" />
+                    </div>                                             
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group"> 
+                        <label class="control-label" for="unidadEjecutoraLabel">
+                            <ice:outputText value="#{label['sigebi.label.vista.detalleInterfazBien.unidadEjecutora']}" />                            
+                        </label>
+                        <ice:inputText id="unidadEjecutoraTxt" 
+                                       partialSubmit="false"
+                                       required="true"
+                                       styleClass="form-control"
+                                       readonly="true"
+                                       value="#{controllerInterfazBien.command.interfazBien.unidadEjecutora}" />
+                    </div>                                             
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group"> 
+                        <label class="control-label" for="proveedorLabel">
+                            <ice:outputText value="#{label['sigebi.label.vista.detalleInterfazBien.proveedor']}" />                            
+                        </label>
+                        <ice:inputText id="proveedorTxt" 
+                                       partialSubmit="false"
+                                       required="true"
+                                       styleClass="form-control"
+                                       readonly="true"
+                                       value="#{controllerInterfazBien.command.interfazBien.proveedor}" />
+                    </div>                                             
+                </div>                
+            </div>    
+            
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="form-group"> 
+                        <label class="control-label" for="tipoProveedorLabel">
+                            <ice:outputText value="#{label['sigebi.label.vista.detalleInterfazBien.tipoProveedor']}" />                            
+                        </label>
+                        <ice:inputText id="tipoProveedorTxt" 
+                                       partialSubmit="false"
+                                       required="true"
+                                       styleClass="form-control"
+                                       readonly="true"
+                                       value="#{controllerInterfazBien.command.interfazBien.tipoProveedor}" />
+                    </div>                                             
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group"> 
+                        <label class="control-label" for="fechaAdquisicionLabel">
+                            <ice:outputText value="#{label['sigebi.label.vista.detalleInterfazBien.fechaAdquisicion']}" />                            
+                        </label>
+                        <ice:inputText id="fechaAdquisicionTxt" 
+                                       partialSubmit="false"
+                                       required="true"
+                                       styleClass="form-control"
+                                       readonly="true"
+                                       value="#{controllerInterfazBien.command.interfazBien.fechaAdquisicion}" />
+                    </div>                                             
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group"> 
+                        <label class="control-label" for="monedaLabel">
+                            <ice:outputText value="#{label['sigebi.label.vista.detalleInterfazBien.moneda']}" />                            
+                        </label>
+                        <ice:inputText id="monedaTxt" 
+                                       partialSubmit="false"
+                                       required="true"
+                                       styleClass="form-control"
+                                       readonly="true"
+                                       value="#{controllerInterfazBien.command.interfazBien.moneda}" />
+                    </div>                                             
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group"> 
+                        <label class="control-label" for="valorInicialLabel">
+                            <ice:outputText value="#{label['sigebi.label.vista.detalleInterfazBien.valorInicial']}" />                            
+                        </label>
+                        <ice:inputText id="valorInicialTxt" 
+                                       partialSubmit="false"
+                                       required="true"
+                                       styleClass="form-control"
+                                       readonly="true"
+                                       value="#{controllerInterfazBien.command.interfazBien.valorInicial}" />
+                    </div>                                             
+                </div>                
+            </div>    
+        
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="form-group"> 
+                        <label class="control-label" for="documentoAdquisicionLabel">
+                            <ice:outputText value="#{label['sigebi.label.vista.detalleInterfazBien.documentoAdquisicion']}" />                            
+                        </label>
+                        <ice:inputText id="documentoAdquisicionTxt" 
+                                       partialSubmit="false"
+                                       required="true"
+                                       styleClass="form-control"
+                                       readonly="true"
+                                       value="#{controllerInterfazBien.command.interfazBien.documentoAdquisicion}" />
+                    </div>                                             
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group"> 
+                        <label class="control-label" for="cantidadLabel">
+                            <ice:outputText value="#{label['sigebi.label.vista.detalleInterfazBien.cantidad']}" />                            
+                        </label>
+                        <ice:inputText id="cantidadTxt" 
+                                       partialSubmit="false"
+                                       required="true"
+                                       styleClass="form-control"
+                                       readonly="true"
+                                       value="#{controllerInterfazBien.command.interfazBien.cantidad}" />
+                    </div>                                             
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group"> 
+                        <label class="control-label" for="marcaLabel">
+                            <ice:outputText value="#{label['sigebi.label.vista.detalleInterfazBien.marca']}" />                            
+                        </label>
+                        <ice:inputText id="marcaTxt" 
+                                       partialSubmit="false"
+                                       required="true"
+                                       styleClass="form-control"
+                                       readonly="true"
+                                       value="#{controllerInterfazBien.command.interfazBien.marca}" />
+                    </div>                                             
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group"> 
+                        <label class="control-label" for="serieLabel">
+                            <ice:outputText value="#{label['sigebi.label.vista.detalleInterfazBien.serie']}" />                            
+                        </label>
+                        <ice:inputText id="serieTxt" 
+                                       partialSubmit="false"
+                                       required="true"
+                                       styleClass="form-control"
+                                       readonly="true"
+                                       value="#{controllerInterfazBien.command.interfazBien.serie}" />
+                    </div>                                             
+                </div>                
+            </div>        
+
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="form-group"> 
+                        <label class="control-label" for="modeloLabel">
+                            <ice:outputText value="#{label['sigebi.label.vista.detalleInterfazBien.modelo']}" />                            
+                        </label>
+                        <ice:inputText id="modeloTxt" 
+                                       partialSubmit="false"
+                                       required="true"
+                                       styleClass="form-control"
+                                       readonly="true"
+                                       value="#{controllerInterfazBien.command.interfazBien.modelo}" />
+                    </div>                                             
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group"> 
+                        <label class="control-label" for="fechaInicioGarantiaLabel">
+                            <ice:outputText value="#{label['sigebi.label.vista.detalleInterfazBien.fechaInicioGarantia']}" />                            
+                        </label>
+                        <ice:inputText id="fechaInicioGarantiaTxt" 
+                                       partialSubmit="false"
+                                       required="true"
+                                       styleClass="form-control"
+                                       readonly="true"
+                                       value="#{controllerInterfazBien.command.interfazBien.fechaInicioGarantia}" />
+                    </div>                                             
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group"> 
+                        <label class="control-label" for="fechaFinGarantiaLabel">
+                            <ice:outputText value="#{label['sigebi.label.vista.detalleInterfazBien.fechaFinGarantia']}" />                            
+                        </label>
+                        <ice:inputText id="fechaFinGarantiaTxt" 
+                                       partialSubmit="false"
+                                       required="true"
+                                       styleClass="form-control"
+                                       readonly="true"
+                                       value="#{controllerInterfazBien.command.interfazBien.fechaFinGarantia}" />
+                    </div>                                             
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group"> 
+                        <label class="control-label" for="descripcionGarantiaLabel">
+                            <ice:outputText value="#{label['sigebi.label.vista.detalleInterfazBien.descripcionGarantia']}" />                            
+                        </label>
+                        <ice:inputText id="descripcionGarantiaTxt" 
+                                       partialSubmit="false"
+                                       required="true"
+                                       styleClass="form-control"
+                                       readonly="true"
+                                       value="#{controllerInterfazBien.command.interfazBien.descripcionGarantia}" />
+                    </div>                                             
+                </div>                
+            </div> 
+            
+          <div class="row">
+                <div class="col-md-3">
+                    <div class="form-group"> 
+                        <label class="control-label" for="observacionesLabel">
+                            <ice:outputText value="#{label['sigebi.label.vista.detalleInterfazBien.observaciones']}" />                            
+                        </label>
+                        <ice:inputText id="observacionesTxt" 
+                                       partialSubmit="false"
+                                       required="true"
+                                       styleClass="form-control"
+                                       readonly="true"
+                                       value="#{controllerInterfazBien.command.interfazBien.observaciones}" />
+                    </div>                                             
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group"> 
+                        <label class="control-label" for="consecutivoLabel">
+                            <ice:outputText value="#{label['sigebi.label.vista.detalleInterfazBien.consecutivo']}" />                            
+                        </label>
+                        <ice:inputText id="consecutivoTxt" 
+                                       partialSubmit="false"
+                                       required="true"
+                                       styleClass="form-control"
+                                       readonly="true"
+                                       value="#{controllerInterfazBien.command.interfazBien.consecutivo}" />
+                    </div>                                             
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group"> 
+                        <label class="control-label" for="fechaMigracionLabel">
+                            <ice:outputText value="#{label['sigebi.label.vista.detalleInterfazBien.fechaMigracion']}" />                            
+                        </label>
+                        <ice:inputText id="fechaMigracionTxt" 
+                                       partialSubmit="false"
+                                       required="true"
+                                       styleClass="form-control"
+                                       readonly="true"
+                                       value="#{controllerInterfazBien.command.interfazBien.fechaMigracion}" />
+                    </div>                                             
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group"> 
+                        <label class="control-label" for="estadoLabel">
+                            <ice:outputText value="#{label['sigebi.label.vista.detalleInterfazBien.estado']}" />                            
+                        </label>
+                        <ice:inputText id="estadoTxt" 
+                                       partialSubmit="false"
+                                       required="true"
+                                       styleClass="form-control"
+                                       readonly="true"
+                                       value="#{controllerInterfazBien.command.interfazBien.estado.nombre}" />
+                    </div>                                             
+                </div>                
+            </div>             
+        </div>
+        
+         <!-- Tabs --> 
+        <ui:insert name="tabsInterfazBien">
+            <ui:include src="../interfazBien/tabsInterfazBien.xhtml" />
+        </ui:insert>
+         
+         
+    </div>
+</ice:form>

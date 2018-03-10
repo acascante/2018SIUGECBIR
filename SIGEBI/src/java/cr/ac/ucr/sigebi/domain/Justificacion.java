@@ -24,7 +24,7 @@ import javax.persistence.Temporal;
  * @author jorge.serrano
  */
 @Entity(name = "Justificacion")
-@Table(name = "SIGEBI_OAF.SGB_JUSTIFICACION")
+@Table(name = "SIGEBI_OAF.SIGB_JUSTIFICACION")
 @SequenceGenerator(name="SGB_SQ_JUSTIFICACIONES", sequenceName = "SIGEBI_OAF.SGB_SQ_JUSTIFICACIONES", initialValue=1, allocationSize=1)
 public class Justificacion  extends ObjetoBase implements Serializable  {
     

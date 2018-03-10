@@ -1,0 +1,35 @@
+<ice:outputHtml id="frmArchivos" xmlns:ice="http://www.icesoft.com/icefaces/component" xmlns:icecore="http://www.icefaces.org/icefaces/core" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:c="http://java.sun.com/jstl/core">
+
+    <!-- TAB Adjunto -->
+    <div class="container">
+        <div class="row"  style="padding-bottom: 30px">
+            <div class="col-md-12">
+                <!-- LISTAR ARCHIVOS-->
+                <ice:dataTable id="adjuntosLista" var="adjunto" paginator="true" paginatorPosition="bottom" rows="10" value="#{controllerAgregarBienes.command.adjuntos}">
+
+                    <ice:column id="colNombreAdjunto"  headerText="descripcion" sortBy="#{adjunto.nombre}" filterBy="#{adjunto.nombre}"  filterMatchMode="contains">
+                        <f:facet name="header"> Nombre </f:facet>
+                        <h:outputText id="descripcionCellAdjunto" value="#{adjunto.nombre}"/>
+                    </ice:column>
+
+                    <ice:column id="colTamannoAdjunto"  headerText="Tamaño"  sortBy="#{adjunto.tamano}" filterBy="#{adjunto.tamano}"  filterMatchMode="contains">
+                        <f:facet name="header"> Tamaño </f:facet>
+                        <h:outputText id="tamanoCellAdjunto" value="#{adjunto.tamano}"/>
+                    </ice:column>
+
+                    <ice:column style="text-align: center;">
+                        <f:facet name="header">
+                            <ice:outputText value="Detalle"  />
+                        </f:facet>
+
+                        <ice:commandButton id="btnDetalleAdjunto" style="float:right;margin-top:2%" styleClass="boton" partialSubmit="true" value="Detalle" 
+                                           actionListener="#{controllerAgregarBienes.adjuntoMostrarDetalle}">
+                            <f:attribute id="adjuntoSeleccionado" name="adjuntoSeleccionado" value="#{adjunto}"/>
+                        </ice:commandButton>
+                        
+                    </ice:column>
+                </ice:dataTable>
+            </div>
+        </div>
+    </div>
+</ice:outputHtml>

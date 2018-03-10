@@ -9,6 +9,7 @@ import cr.ac.ucr.sigebi.utils.Constantes;
 import cr.ac.ucr.framework.utils.FWExcepcion;
 import cr.ac.ucr.framework.vista.util.Mensaje;
 import cr.ac.ucr.framework.vista.util.Util;
+import cr.ac.ucr.sigebi.commands.ListarBienesCommand;
 import cr.ac.ucr.sigebi.models.PrestamoModel;
 import cr.ac.ucr.sigebi.commands.PrestamoCommand;
 import cr.ac.ucr.sigebi.commands.ListarPrestamosCommand;
@@ -42,7 +43,175 @@ import org.springframework.stereotype.Controller;
 @Scope("session")
 public class AgregarPrestamoController extends BaseController {
 
-    ListarBienesAgregarController listadoBienes;
+    public class ListadoBienes extends BaseController {
+        
+        private ListarBienesCommand command;
+        private Estado estadoInternoNormal;
+        private Map<Long, Bien> bienes;
+        private Map<Long, Boolean> bienesSeleccionados;
+
+        public ListadoBienes() {
+            super();
+            this.command = new ListarBienesCommand();
+            this.bienes = new HashMap<Long, Bien>();
+            this.bienesSeleccionados = new HashMap<Long, Boolean>();            
+        }
+
+        public ListadoBienes(Estado estadoNormal) {
+            this();
+            this.estadoInternoNormal = estadoNormal;
+        }
+        
+        private void inicializarListado() {
+            this.setPrimerRegistro(1);
+            this.contarBienes();
+            this.listarBienes();
+        }
+        
+        private void contarBienes() {
+            try {
+                Long contador = bienModel.contar(this.command.getFltIdCodigo(), this.unidadEjecutora, this.command.getFltIdentificacion(), this.command.getFltDescripcion(), this.command.getFltMarca(), this.command.getFltModelo(), this.command.getFltSerie(), this.estadoInternoNormal);
+                this.setCantidadRegistros(contador.intValue());
+            } catch (FWExcepcion e) {
+                Mensaje.agregarErrorAdvertencia(e.getError_para_usuario());
+            } catch (NumberFormatException e) {
+                Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.error.controllerListarNotificaciones.contarNotificaciones"));
+            }
+        }
+
+        private void listarBienes() {
+            try {
+               List<Bien> itemsBienes = bienModel.listar(this.getPrimerRegistro() - 1, this.getUltimoRegistro(), this.command.getFltIdCodigo(), this.unidadEjecutora , command.getFltIdentificacion(), command.getFltDescripcion(), command.getFltMarca(), command.getFltModelo(), command.getFltSerie(), this.estadoInternoNormal);
+                for (Bien item : itemsBienes) {
+                    this.bienes.put(item.getId(), item);
+                }
+           } catch (FWExcepcion e) {
+               Mensaje.agregarErrorAdvertencia(e.getError_para_usuario());
+           } catch (NumberFormatException e) {
+               Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.error.controllerListarNotificaciones.listarNotificaciones"));
+           } catch (Exception e) {
+               Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.error.controllerListarNotificaciones.listarNotificaciones"));
+           }
+       }
+
+        public void cambioFiltro(ValueChangeEvent pEvent) {
+            try {
+                if (!pEvent.getPhaseId().equals(PhaseId.INVOKE_APPLICATION)) {
+                    pEvent.setPhaseId(PhaseId.INVOKE_APPLICATION);
+                    pEvent.queue();
+                    return;
+                }
+                this.inicializarListado();
+            } catch (Exception err) {
+                Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.error.controllerListarNotificaciones.cambioFiltro"));
+            }
+        }
+
+        // <editor-fold defaultstate="collapsed" desc="Get's Set's">
+        public List<Bien> getItemsBienes() {
+            List<Bien> list = new ArrayList<Bien>(bienes.values());
+            return list;
+        }
+
+        public ListarBienesCommand getCommand() {
+            return command;
+        }
+
+        public void setCommand(ListarBienesCommand command) {
+            this.command = command;
+        }
+
+        public Estado getEstadoInternoNormal() {
+            return estadoInternoNormal;
+        }
+
+        public void setEstadoInternoNormal(Estado estadoInternoNormal) {
+            this.estadoInternoNormal = estadoInternoNormal;
+        }
+
+        public Map<Long, Bien> getBienes() {
+            return bienes;
+        }
+
+        public void setBienes(Map<Long, Bien> bienes) {
+            this.bienes = bienes;
+        }
+
+        public Map<Long, Boolean> getBienesSeleccionados() {
+            return bienesSeleccionados;
+        }
+
+        public void setBienesSeleccionados(Map<Long, Boolean> bienesSeleccionados) {
+            this.bienesSeleccionados = bienesSeleccionados;
+        }
+        // </editor-fold>
+        
+        // <editor-fold defaultstate="collapsed" desc="Paginacion">
+        public void irPagina(ActionEvent pEvent) {
+            if (!pEvent.getPhaseId().equals(PhaseId.INVOKE_APPLICATION)) {
+                pEvent.setPhaseId(PhaseId.INVOKE_APPLICATION);
+                pEvent.queue();
+                return;
+            }
+            int numeroPagina = Integer.parseInt(Util.getRequestParameter("numPag"));
+            this.getPrimerRegistroPagina(numeroPagina);
+            this.listarBienes();
+        }
+
+        public void siguiente(ActionEvent pEvent) {
+            if (!pEvent.getPhaseId().equals(PhaseId.INVOKE_APPLICATION)) {
+                pEvent.setPhaseId(PhaseId.INVOKE_APPLICATION);
+                pEvent.queue();
+                return;
+            }
+            this.getSiguientePagina();
+            this.listarBienes();
+        }
+
+        public void anterior(ActionEvent pEvent) {
+            if (!pEvent.getPhaseId().equals(PhaseId.INVOKE_APPLICATION)) {
+                pEvent.setPhaseId(PhaseId.INVOKE_APPLICATION);
+                pEvent.queue();
+                return;
+            }
+            this.getPaginaAnterior();
+            this.listarBienes();
+        }
+
+        public void primero(ActionEvent pEvent) {
+            if (!pEvent.getPhaseId().equals(PhaseId.INVOKE_APPLICATION)) {
+                pEvent.setPhaseId(PhaseId.INVOKE_APPLICATION);
+                pEvent.queue();
+                return;
+            }
+            this.setPrimerRegistro(1);
+            this.listarBienes();
+        }
+
+        public void ultimo(ActionEvent pEvent) {
+            if (!pEvent.getPhaseId().equals(PhaseId.INVOKE_APPLICATION)) {
+                pEvent.setPhaseId(PhaseId.INVOKE_APPLICATION);
+                pEvent.queue();
+                return;
+            }
+            this.getPrimerRegistroUltimaPagina();
+            this.listarBienes();
+        }
+
+        public void cambioRegistrosPorPagina(ValueChangeEvent pEvent) {
+            if (!pEvent.getPhaseId().equals(PhaseId.INVOKE_APPLICATION)) {
+                pEvent.setPhaseId(PhaseId.INVOKE_APPLICATION);
+                pEvent.queue();
+                return;
+            }
+            this.setCantRegistroPorPagina(Integer.parseInt(pEvent.getNewValue().toString()));          
+            this.setPrimerRegistro(1);
+            this.listarBienes();
+        }
+        // </editor-fold>
+    }
+    
+    ListadoBienes listadoBienes;
     
     @Resource private BienModel bienModel;
     @Resource private PrestamoModel prestamoModel;
@@ -52,6 +221,7 @@ public class AgregarPrestamoController extends BaseController {
     private List<SelectItem> itemsTipo;
     private List<SelectItem> itemsEntidad;
     
+    private Estado estadoInternoNormal;
     private String mensajeExito;
     private String mensaje;
     
@@ -64,6 +234,7 @@ public class AgregarPrestamoController extends BaseController {
     private boolean visibleBotonRevisar;
     private boolean visibleBotonRechazar;
     private boolean visibleBotonAnular;
+    private boolean exclusionRegistrada;
     
     public AgregarPrestamoController() {
         super();
@@ -72,24 +243,20 @@ public class AgregarPrestamoController extends BaseController {
     private void inicializarNuevo() {
         Estado estado = this.estadoPorDominioValor(Constantes.DOMINIO_PRESTAMO, Constantes.ESTADO_PRESTAMO_CREADO);
         this.command = new PrestamoCommand(this.unidadEjecutora, estado);
-        this.visibleBotonSolicitar = false;
-        this.visibleBotonGuardar = false;
-        this.visibleBotonAplicar = false;
-        this.visibleBotonAceptar = false;
-        this.visibleBotonRevisar = false;
-        this.visibleBotonRechazar = false;
-        this.visibleBotonAnular = false;
+        this.exclusionRegistrada = false;
         inicializarDatos();
     }
     
     private void inicializarDetalle(SolicitudPrestamo prestamo) {
+        prestamo.setDetalles(prestamoModel.listarDetalles(prestamo));
         this.command = new PrestamoCommand(prestamo);
-        this.visibleBotonSolicitar = true;
+        this.exclusionRegistrada = true;
         inicializarDatos();
-        inicializarBotones();
     }
 
     private void inicializarDatos() {
+        this.estadoInternoNormal = estadoPorDominioValor(Constantes.DOMINIO_BIEN_INTERNO, Constantes.ESTADO_INTERNO_BIEN_NORMAL);
+        this.listadoBienes = new ListadoBienes(estadoInternoNormal);
         this.mensajeExito = new String();
         this.mensaje = new String();
 
@@ -100,6 +267,7 @@ public class AgregarPrestamoController extends BaseController {
                 this.itemsTipo.add(new SelectItem(item.getId(), item.getNombre()));
             }
         }
+                inicializarBotones();
     }
     
     private void inicializarBotones() {
@@ -130,7 +298,7 @@ public class AgregarPrestamoController extends BaseController {
                 this.bienModel.actualizar(listBienes);
                 this.bienModel.actualizar(listBienesEliminar);
                 
-                if (command.getId() == null || command.getId() == 0) {
+                if (!this.exclusionRegistrada) {
                     mensajeExito = "Los datos se salvaron con éxito.";
                 } else {
                     mensajeExito = "Los datos se actualizaron con éxito.";
@@ -191,7 +359,6 @@ public class AgregarPrestamoController extends BaseController {
             
             Long id = (Long)event.getComponent().getAttributes().get(ListarPrestamosCommand.KEY_PRESTAMO);
             SolicitudPrestamo prestamo = prestamoModel.buscarPorId(id);
-            prestamo.setDetalles(prestamoModel.listarDetalles(prestamo));
             inicializarDetalle(prestamo);
             this.vistaOrigen = event.getComponent().getAttributes().get(Constantes.KEY_VISTA_ORIGEN).toString();
             Util.navegar(Constantes.VISTA_EXCLUSION_NUEVA);
@@ -203,8 +370,11 @@ public class AgregarPrestamoController extends BaseController {
     //<editor-fold defaultstate="collapsed" desc="Validaciones">
     public String validarForm(UIViewRoot root, UIInput component) {
         if (command.getBienes().isEmpty()) {
-            component = (UIInput) root. findComponent("frmDetallePrestamo:lstBienes");
-            return Util.getEtiquetas("sigebi.error.controllerAgregarPrestamos.error.bienes.nulo");
+            return Util.getEtiquetas("sigebi.error.controllerAgregarExclusion.validacion.bienes");
+        }
+        if (command.getIdTipoEntidad().equals(Constantes.DEFAULT_ID)) {
+            component = (UIInput) root.findComponent("frmDetallePrestamo:cmbTipo");
+            return Util.getEtiquetas("sigebi.error.controllerAgregarExclusion.validacion.tipo");
         }
         return Constantes.OK;
     }
@@ -212,6 +382,7 @@ public class AgregarPrestamoController extends BaseController {
     
     //<editor-fold defaultstate="collapsed" desc="Bienes">
     public void mostarPanelAgregarBienes() {
+        this.listadoBienes.inicializarListado();
         this.setVisiblePanelBienes(true);
     }
 
@@ -232,8 +403,7 @@ public class AgregarPrestamoController extends BaseController {
         Long idBien = (Long) event.getComponent().getAttributes().get("bienSeleccionado");
         Bien bien = this.command.getBienes().get(idBien);
         
-        Estado estadoInternoNormal = estadoPorDominioValor(Constantes.DOMINIO_BIEN_INTERNO, Constantes.ESTADO_INTERNO_BIEN_NORMAL);
-        bien.setEstadoInterno(estadoInternoNormal);
+        bien.setEstadoInterno(this.estadoInternoNormal);
         this.command.getBienesEliminar().add(bien); // Lo agrego a la lista de bienes a eliminar
         this.command.getBienes().remove(idBien);    // Lo saco de la lista de bienes que se muestran en pantalla
         if (this.command.getDetalles().containsKey(bien.getId())) { // Si esta en la lista de detalles, es xq se trata de un detalle existente en la BD
@@ -277,11 +447,11 @@ public class AgregarPrestamoController extends BaseController {
     //</editor-fold>
     
     //<editor-fold defaultstate="collapsed" desc="Gets y Sets">
-    public ListarBienesAgregarController getListadoBienes() {
+    public ListadoBienes getListadoBienes() {
         return listadoBienes;
     }
 
-    public void setListadoBienes(ListarBienesAgregarController listadoBienes) {
+    public void setListadoBienes(ListadoBienes listadoBienes) {
         this.listadoBienes = listadoBienes;
     }
 
@@ -307,6 +477,14 @@ public class AgregarPrestamoController extends BaseController {
 
     public void setItemsEntidad(List<SelectItem> itemsEntidad) {
         this.itemsEntidad = itemsEntidad;
+    }
+
+    public Estado getEstadoInternoNormal() {
+        return estadoInternoNormal;
+    }
+
+    public void setEstadoInternoNormal(Estado estadoInternoNormal) {
+        this.estadoInternoNormal = estadoInternoNormal;
     }
 
     public String getMensajeExito() {
@@ -395,6 +573,14 @@ public class AgregarPrestamoController extends BaseController {
 
     public void setVisibleBotonAnular(boolean visibleBotonAnular) {
         this.visibleBotonAnular = visibleBotonAnular;
+    }
+
+    public boolean isExclusionRegistrada() {
+        return exclusionRegistrada;
+    }
+
+    public void setExclusionRegistrada(boolean exclusionRegistrada) {
+        this.exclusionRegistrada = exclusionRegistrada;
     }
     //</editor-fold>
 }

@@ -1,0 +1,29 @@
+
+<ice:outputHtml id="frmFooterInterfazBien" xmlns:ice="http://www.icesoft.com/icefaces/component" xmlns:icecore="http://www.icefaces.org/icefaces/core" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:c="http://java.sun.com/jstl/core">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <ice:panelGroup>
+                    <ice:panelGroup id="tabDonacion" style="padding-bottom: 60px; padding-top: 10px;" styleClass="tabsContent panelTabSetContainer">
+                        <ice:panelTabSet>
+                            <!-- TAB Adjuntos -->
+                            <ice:panelTab id="tabAdjuntoInterfaz" label="#{label['sigebi.label.vista.detalleInterfazBien.tab.adjuntos']}">
+                                <ui:insert name="tabAdjunto">
+                                    <ui:include src="../interfazBien/tabInterfazAdjuntos.xhtml" />
+                                </ui:insert>
+                            </ice:panelTab>
+
+                            <!-- TAB Accesorios -->
+                            <ice:panelTab id="tabFacturaInterfaz" label="#{label['sigebi.label.vista.detalleInterfazBien.tab.accesorios']}">
+                                <ui:insert name="tabFactura">
+                                    <ui:include src="../interfazBien/tabInterfazAccesorios.xhtml" />
+                                </ui:insert>
+                            </ice:panelTab>
+
+                        </ice:panelTabSet>
+                    </ice:panelGroup>
+                </ice:panelGroup>
+            </div>
+        </div>
+    </div>
+</ice:outputHtml>

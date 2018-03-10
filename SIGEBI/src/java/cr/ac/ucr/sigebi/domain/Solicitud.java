@@ -58,6 +58,10 @@ public abstract class Solicitud extends ObjetoBase implements Serializable {
     @Column(name = "DISCRIMINATOR")
     private Integer discriminator;
 
+    @ManyToOne
+    @JoinColumn(name = "ID_USUARIO", referencedColumnName = "ID_USUARIO")
+    private Usuario persona;
+    
     @Transient
     private List<SolicitudDetalle> detalles;
     //</editor-fold>
@@ -132,7 +136,16 @@ public abstract class Solicitud extends ObjetoBase implements Serializable {
     public void setDetalles(List<SolicitudDetalle> detalles) {
         this.detalles = detalles;
     }
+    
+    public Usuario getPersona() {
+        return persona;
+    }
 
+    public void setPersona(Usuario persona) {
+        this.persona = persona;
+    }
+
+    
     //</editor-fold>
     
     //<editor-fold defaultstate="collapsed" desc="Sobrecargas">

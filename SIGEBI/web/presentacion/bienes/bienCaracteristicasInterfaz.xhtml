@@ -1,0 +1,26 @@
+<ice:outputHtml id="frmCaracteristicas" xmlns:ice="http://www.icesoft.com/icefaces/component" xmlns:icecore="http://www.icefaces.org/icefaces/core" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:c="http://java.sun.com/jstl/core">
+
+    <div class="container">
+        <div class="row">
+
+            <!-- TABLA DE CARACTERISTICAS -->
+            <div class="col-md-12">
+                <ice:dataTable id="caracteristicasLista" var="caracteristica" paginator="true" paginatorPosition="bottom" rows="10" value="#{controllerAgregarBienes.caracteristicas}">
+                    <ice:column id="colidCarac" headerText="ID" sortBy="#{caracteristica.detalle}" filterBy="#{caracteristicadetalle}"  filterMatchMode="contains">
+                        <f:facet name="header">
+                            <ice:outputText  value="#{label['sigebi.Bien.Label.Caracteristica']}" />
+                        </f:facet>
+                        <h:outputText id="txtCaracteristica" value="#{caracteristica.tipo.nombre}"/>
+                    </ice:column>
+
+                    <ice:column id="coldetalleCaracteristica" headerText="descripcion" sortBy="#{caracteristica.detalle}" filterBy="#{caracteristica.detalle}" filterMatchMode="contains">
+                        <f:facet name="header">
+                            <ice:outputText value="#{label['sigebi.Bien.Label.colDetalle']}"/>
+                        </f:facet>
+                        <h:outputText id="descripcionCellCaracterist" value="#{caracteristica.detalle}"/>
+                    </ice:column>
+                </ice:dataTable>
+            </div>
+        </div>
+    </div>
+</ice:outputHtml>

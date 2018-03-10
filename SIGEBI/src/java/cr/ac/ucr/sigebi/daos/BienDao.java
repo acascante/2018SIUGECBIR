@@ -299,7 +299,7 @@ public class BienDao extends GenericDaoImpl {
     }
 
     @Transactional(readOnly = true)
-    public List<Bien> listar(Integer primerRegistro, Integer ultimoRegistro, Long id, UnidadEjecutora unidadejecutora, String identificacion, String descripcion, String marca, String modelo, String serie, Estado estadoInterno) throws FWExcepcion {
+    public List<Bien> listar(Integer primerRegistro, Integer ultimoRegistro, Long id, UnidadEjecutora unidadejecutora, String identificacion, String descripcion, String marca, String modelo, String serie, Estado... estadoInterno) throws FWExcepcion {
         Session session = dao.getSessionFactory().openSession();
         try {
             Query query = this.creaQuery(Boolean.FALSE, session, id, unidadejecutora, identificacion, descripcion, marca, modelo, serie, estadoInterno);
@@ -315,7 +315,7 @@ public class BienDao extends GenericDaoImpl {
         }
     }
 
-    public Long contar(Long id, UnidadEjecutora unidadejecutora, String identificacion, String descripcion, String marca, String modelo, String serie, Estado estadoInterno) throws FWExcepcion {
+    public Long contar(Long id, UnidadEjecutora unidadejecutora, String identificacion, String descripcion, String marca, String modelo, String serie, Estado... estadoInterno) throws FWExcepcion {
         Session session = dao.getSessionFactory().openSession();
         try {
             Query query = this.creaQuery(Boolean.TRUE, session, id, unidadejecutora, identificacion, descripcion, marca, modelo, serie, estadoInterno);
@@ -327,7 +327,7 @@ public class BienDao extends GenericDaoImpl {
         }
     }
 
-    private Query creaQuery(Boolean contar, Session session, Long id, UnidadEjecutora unidadEjecutora, String identificacion, String descripcion, String marca, String modelo,  String serie, Estado estadoInterno) {
+    private Query creaQuery(Boolean contar, Session session, Long id, UnidadEjecutora unidadEjecutora, String identificacion, String descripcion, String marca, String modelo,  String serie, Estado... estados) {
         StringBuilder sql = new StringBuilder("SELECT ");
         if (contar) {
             sql.append("count(entity) FROM Bien entity ");
@@ -336,7 +336,7 @@ public class BienDao extends GenericDaoImpl {
         }
 
         sql.append("WHERE entity.unidadEjecutora = :unidadEjecutora ");
-        sql.append("AND entity.estadoInterno = :estadoInterno ");
+        sql.append("AND entity.estadoInterno IN (:estados)");
         if(id != null && id > 0) {
             sql.append("AND entity.id = :id ");
         } else {
@@ -360,7 +360,7 @@ public class BienDao extends GenericDaoImpl {
         
         Query q = session.createQuery(sql.toString());
         q.setParameter("unidadEjecutora", unidadEjecutora);
-        q.setParameter("estadoInterno", estadoInterno);
+        q.setParameterList("estados", estados);
         
         if(id != null && id > 0) {
             q.setParameter("id", id);

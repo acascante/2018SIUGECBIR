@@ -15,9 +15,9 @@
                     </h1>
                 </div>    
                 <div class='col-sm-3'>
-                    <h3 style="margin: 0;">
+                    <h4 style="margin: 0;">
                         <ice:outputFormat value="#{label['sigebi.Reporte.Traslados.tipoReporte']}"/>
-                    </h3>
+                    </h4>
                 </div> 
                 <div class='col-sm-3'>
                     <ice:selectOneMenu id="selTipoReporte" styleClass="form-control"
@@ -25,8 +25,6 @@
                          <f:selectItems id="optSelTipoBien" value="#{controllerReporte.itemsTiposReporte}"/>
                      </ice:selectOneMenu>
                 </div> 
-                
-                        
                 
             </div>
 
@@ -38,13 +36,48 @@
                              
                              <ice:panelTab id="tabFiltros" label="#{label['sigebi.Reporte.Label.Configuracion']}">
                              
+                                 
+                                 <div class="row">
+
+                                     <div class='col-sm-3 align-middle'>
+                                         <h4 class="align-middle" style="margin-top: 15px">
+                                            <ice:outputFormat value="#{label['sigebi.Reporte.Label.tipoReporte']}"/>
+                                        </h4>
+                                     </div>
+                                    <div class='col-sm-4'>
+                                       <ice:outputText  value="#{label['sigebi.Reporte.Label.Desde']}" />
+                                       <ice:selectInputDate id="txtFecInic" partialSubmit="false" 
+                                                            styleClass="form-control" 
+                                                            renderAsPopup="true" 
+                                                            renderMonthAsDropdown="true" 
+                                                            title="Fecha Inicial"
+                                                            value="#{controllerReporte.commandMovimiento.fechaInicio}">
+                                           <f:convertDateTime pattern="dd/MM/yyyy" timeZone="GMT-6:00" />
+                                       </ice:selectInputDate>
+                                   </div>  
+                                   <div class="col-md-4">
+                                       <div class="form-group ">
+                                           <ice:outputText value="#{label['sigebi.Reporte.Label.Hasta']}" />
+                                           <ice:selectInputDate id="txtFecFin" partialSubmit="false" 
+                                                                styleClass="form-control" 
+                                                                renderAsPopup="true" 
+                                                                renderMonthAsDropdown="true" 
+                                                                title="Fecha Final"
+                                                                value="#{controllerReporte.commandMovimiento.fechaFin}">
+                                               <f:convertDateTime pattern="dd/MM/yyyy" timeZone="GMT-6:00" />
+                                           </ice:selectInputDate>
+                                       </div>
+                                   </div>
+                                </div>
+                                 
+                                 
                                  <div class="row">
                                      <div class='col-sm-3 align-middle'>
-                                         <h3 class="align-middle" style="margin-top: 15px">
+                                         <h4 class="align-middle" style="margin-top: 15px">
                                             <ice:outputFormat value="#{label['sigebi.Reporte.Label.FiltrosReporte']}"/>
-                                        </h3>
+                                        </h4>
                                      </div>
-                                    <div class='col-sm-3'>
+                                    <div class='col-sm-4'>
                                        <ice:outputText  value="#{label['sigebi.Reporte.Label.Identificacion']}" />
                                         <ice:inputText id="txtIdentificacion" 
                                                        styleClass="form-control" 
@@ -54,19 +87,100 @@
                                         </ice:inputText>
                                        
                                    </div>  
-                                   <div class="col-md-3">
+                                   <div class="col-md-4">
                                        <div class="form-group ">
                                            <ice:outputText value="#{label['sigebi.Reporte.Label.Descripcion']}" />
                                             <ice:inputText id="txtDescripcion" 
                                                            styleClass="form-control" 
-                                                           maxlength="30"
+                                                           maxlength="50"
                                                            partialSubmit="false"
                                                            value="#{controllerReporte.commandMovimiento.descripcion}" >
                                             </ice:inputText>
                                        </div>
                                    </div>
                                 </div>
+                                 
+                                 
+                                 
+                                <div class="row">
+                                    <div class='col-sm-3 align-middle'>
+                                    </div>
+                                   <div class="col-md-4">
+                                       <div class="form-group ">
+                                           <ice:outputText value="#{label['sigebi.Reporte.Label.Estado']}" />
+                                            <ice:inputText id="txtEstado" 
+                                                           styleClass="form-control" 
+                                                           maxlength="50"
+                                                           partialSubmit="false"
+                                                           value="#{controllerReporte.commandMovimiento.estado}" >
+                                            </ice:inputText>
+                                       </div>
+                                   </div>
+                                   <div class="col-md-4">
+                                       <div class="form-group ">
+                                           <ice:outputText value="#{label['sigebi.Reporte.Label.TipoMov']}" />
+                                            <ice:inputText id="txtTipoMov" 
+                                                           styleClass="form-control" 
+                                                           maxlength="50"
+                                                           partialSubmit="false"
+                                                           value="#{controllerReporte.commandMovimiento.tipoMovimiento}" >
+                                            </ice:inputText>
+                                       </div>
+                                   </div>
+                                 
+                                </div>
                              
+                                 
+                                 
+                                 <div class="row">
+                                     <div class='col-sm-3 align-middle'>
+                                         <h4 class="align-middle" style="margin-top: 15px">
+                                            <ice:outputFormat value="#{label['sigebi.Reporte.Label.OrdenReporte']}"/>
+                                        </h4>
+                                     </div>
+                                    <div class='col-sm-3'>
+                                        <div class="form-group ">
+                                            <ice:outputText  value="#{label['sigebi.Reporte.Label.TipoOrden']}" />
+                                            <ice:selectOneMenu id="selTipoOrden" 
+                                                               styleClass="form-control"
+                                                               value="#{controllerReporte.commandMovimiento.tipoOrden}" >
+                                                 <f:selectItems id="optSelTipoBien" value="#{controllerReporte.itemsTipoOrden}"/>
+                                             </ice:selectOneMenu>
+                                        </div>
+                                   </div>  
+                                 </div>
+                             
+                                 
+                                 <div class="row">
+                                     <div class='col-sm-3 align-middle'>
+                                     </div>
+                                    <div class='col-sm-3'>
+                                        <div class="form-group ">
+                                            <ice:outputText  value="#{label['sigebi.Reporte.Label.Orden1']}" />
+                                            <ice:selectOneMenu id="selOrden1" 
+                                                               styleClass="form-control"
+                                                               partialSubmit="true"
+                                                               valueChangeListener="#{controllerReporte.commandMovimiento.cambioOrden1}"
+                                                               value="#{controllerReporte.commandMovimiento.orden1}" >
+                                                 <f:selectItems id="optSelTipoBien" value="#{controllerReporte.commandMovimiento.itemsOrdenColumnas1}"/>
+                                             </ice:selectOneMenu>
+                                        </div>
+                                   </div>  
+                                   <div class="col-md-3">
+                                       <div class="form-group ">
+                                           <ice:outputText value="#{label['sigebi.Reporte.Label.Orden2']}" />
+                                            <ice:selectOneMenu id="selOrden2" 
+                                                               styleClass="form-control"
+                                                               partialSubmit="true"
+                                                               value="#{controllerReporte.commandMovimiento.orden2}" >
+                                                 <f:selectItems id="optSelTipoBien" value="#{controllerReporte.commandMovimiento.itemsOrdenColumnas2}"/>
+                                             </ice:selectOneMenu>
+                                       </div>
+                                   </div>
+                                 </div>
+                             
+                                 
+                                 
                              </ice:panelTab>
                             
                              

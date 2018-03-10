@@ -61,7 +61,7 @@
                 <div class="row">
                     <div class="col-sm-12">
                         <div>
-                            <ice:dataTable id="tblAgregarBienes" value="#{controllerAgregarExclusiones.listadoBienes.itemsBienes}" var="bien" paginator="true" paginatorPosition="bottom" rows="10">
+                            <ice:dataTable id="tblAgregarBienes" value="#{controllerAgregarExclusiones.listadoBienes.itemsBienes}" var="bien" paginator="true" paginatorPosition="bottom" rows="5">
                                 <f:facet name="header">
                                     <ice:columnGroup>
                                         <ice:headerRow>
@@ -148,7 +148,7 @@
                     <div class="col-md-11 align-self-md-end">
                         <ice:commandButton id="btnCerrar" action="#{controllerAgregarExclusiones.cerrarPanelAgregarBienes}" styleClass="boton" style="margin-bottom: 1rem;" value="Regresar" />
                     </div>
-                    </div>
+                </div>
             </fieldset>       
         </f:facet>
     </ice:panelPopup>

@@ -14,7 +14,6 @@ import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,7 +32,7 @@ public class SubClasificacionDao extends GenericDaoImpl{
     @Transactional(readOnly = true)
     public List<SubClasificacion> listar() throws FWExcepcion {
         try {
-            return dao.getHibernateTemplate().find("from SubClasificacion"); 
+            return dao.getHibernateTemplate().find("from SubClasificacion sc ORDER BY sc.nombre"); 
         } catch (DataAccessException e) {
             throw new FWExcepcion("sigebi.error.notificacionDao.listar", "Error obtener los registros de tipo " + this.getClass(), e.getCause());
         }
@@ -57,11 +56,9 @@ public class SubClasificacionDao extends GenericDaoImpl{
     public List<SubClasificacion> listar(Clasificacion clasificacion) {
         Session session = dao.getSessionFactory().openSession();
         try {
-            String sql = "SELECT sc FROM SubClasificacion sc WHERE sc.clasificacion = :clasificacion";
+            String sql = "SELECT sc FROM SubClasificacion sc WHERE sc.clasificacion = :clasificacion ORDER BY sc.nombre";
             Query query = session.createQuery(sql);
             query.setParameter("clasificacion", clasificacion);
-            System.out.println("-------querry----------- " + query.getQueryString());
-
             return (List<SubClasificacion>) query.list();
         } catch (HibernateException e) {
             throw new FWExcepcion("sigebi.error.notificacionDao.listar", "Error obtener los registros de tipo " + this.getClass(), e.getCause());

@@ -1,77 +1,154 @@
-<ice:outputHtml id="frmAgregarBienes" xmlns:ice="http://www.icesoft.com/icefaces/component" xmlns:icecore="http://www.icefaces.org/icefaces/core" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:c="http://java.sun.com/jstl/core">
-    <ice:panelPopup modal="true" visible="#{controllerAgregarPrestamos.visiblePanelBienes}" rendered="#{controllerAgregarPrestamos.visiblePanelBienes}" styleClass="popup">
+<div xmlns:ice="http://www.icesoft.com/icefaces/component"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core" >
+    <ice:panelPopup modal="true" visible="#{controllerAgregarPrestamos.visiblePanelBienes}" rendered="true" styleClass="popup">
         <f:facet name="header">
-            <ice:outputText styleClass="flotar_izquierda titulo_popup" value="Listado de Bienes"/>
+            <ice:outputFormat  value="#{label['sigebi.label.bien.seleccionarBien']}"/>
         </f:facet>
-        <br/>
         
         <f:facet name="body">
             <fieldset class="panel_Container" >
-                <br></br>
+                <div class="row">
+                    <div class="col-md-12">
+                        <h4><ice:outputFormat value="#{label['sigebi.label.bien.seleccionarBien']}" /> </h4>
+                    </div>
+                </div>
+                <!-- PARAMETROS PAGINACIÓN -->
+                <div class="row">
+                    <div class="col-sm-12">
+                        <ice:outputFormat value="#{label['label.generico.paginacion.encabezado']}">
+                            <f:param value="#{controllerAgregarPrestamos.listadoBienes.cantidadRegistros}"/>
+                            <f:param value="#{controllerAgregarPrestamos.listadoBienes.cantidadRegistrosMostrados}"/>
+                            <f:param value="#{controllerAgregarPrestamos.listadoBienes.primerRegistro}"/>
+                            <f:param value="#{controllerAgregarPrestamos.listadoBienes.ultimoRegistro}"/>
+                            <f:param value="#{controllerAgregarPrestamos.listadoBienes.paginaActual}"/>
+                            <f:param value="#{controllerAgregarPrestamos.listadoBienes.cantidadPaginas}"/>
+                        </ice:outputFormat>
+                        <div>
+                            <table>
+                                <tr>
+                                    <td style="padding-right: 5px;">
+                                        <ice:outputText value="#{label['label.paginacion.cantidad.pagina']} "/>
+                                    </td>
+                                    <td>
+                                        <ice:selectOneMenu id="cantRegistroPorPagina"
+                                               value="#{controllerAgregarPrestamos.listadoBienes.cantRegistroPorPagina}" 
+                                               valueChangeListener="#{controllerAgregarPrestamos.listadoBienes.cambioRegistrosPorPagina}"
+                                               partialSubmit="true">
+                                                <f:selectItems id="item_pa" value="#{controllerAgregarPrestamos.listadoBienes.listaRegistrosPagina}"/>
+                                        </ice:selectOneMenu>
+                                    </td>
+                                </tr>
+                            </table>                        
+                        </div>                    
+                        <div>
+                            <ice:commandButton image="./imagenes/botones/first.png" partialSubmit="true" actionListener="#{controllerAgregarPrestamos.listadoBienes.primero}" rendered="#{controllerAgregarPrestamos.listadoBienes.cantidadPaginas > 1}"/>
+                            <ice:commandButton image="./imagenes/botones/previos.png" partialSubmit="true" actionListener="#{controllerAgregarPrestamos.listadoBienes.anterior}" rendered="#{controllerAgregarPrestamos.listadoBienes.cantidadPaginas > 1}"/>
+                            <ui:repeat value="#{controllerAgregarPrestamos.listadoBienes.arregloPaginas}" var="pagina">
+                                <ice:commandLink value="#{pagina}" partialSubmit="true" actionListener="#{controllerAgregarPrestamos.listadoBienes.irPagina}">
+                                    <f:param name="numPag" value="#{pagina}"/>
+                                </ice:commandLink>
+                            </ui:repeat>            
+                            <ice:commandButton image="./imagenes/botones/next.png" partialSubmit="true" actionListener="#{controllerAgregarPrestamos.listadoBienes.siguiente}" rendered="#{controllerAgregarPrestamos.listadoBienes.cantidadPaginas > 1}"/>
+                            <ice:commandButton image="./imagenes/botones/last.png" partialSubmit="true" actionListener="#{controllerAgregarPrestamos.listadoBienes.ultimo}" rendered="#{controllerAgregarPrestamos.listadoBienes.cantidadPaginas > 1}"/>
+                        </div>
+                    </div>
+                </div>
+                
                 <!-- LISTAR BIENES -->
-                <ice:dataTable id="tblAgregarBienes" value="#{controllerAgregarPrestamos.bienes}" var="bien" paginator="true" paginatorPosition="bottom" rows="10">
-                    <f:facet name="header">
-                        <ice:columnGroup>
-                            <ice:headerRow>
-                                <ice:column id="seleccionado" style="vertical-align:top;">
-                                </ice:column>
-                                
-                                <ice:column id="idBien" style="vertical-align:top;">
-                                    <ice:outputText value="#{label['sigebi.label.bien.id']} "/>
-                                </ice:column>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div>
+                            <ice:dataTable id="tblAgregarBienes" value="#{controllerAgregarPrestamos.listadoBienes.itemsBienes}" var="bien" paginator="true" paginatorPosition="bottom" rows="10">
+                                <f:facet name="header">
+                                    <ice:columnGroup>
+                                        <ice:headerRow>
+                                            <ice:column id="seleccionar" style="vertical-align:top;" >
+                                                <ice:outputText value="#{label['sigebi.label.bien.seleccionar']} "/>
+                                            </ice:column>
 
-                                <ice:column id="idIdentificacion" style="vertical-align:top;">
-                                    <ice:outputText value="#{label['sigebi.label.bien.identificacion']} "/>
-                                </ice:column>
+                                            <!--Id-->
+                                            <ice:column id="id" rowspan="2" style="vertical-align:top;">
+                                                <ice:outputText value="#{label['sigebi.label.bien.id']} "/>
+                                                <ice:inputText id="filtroId" style="width: 130px;" partialSubmit="true"
+                                                       value="#{controllerAgregarPrestamos.listadoBienes.command.fltIdBien}"
+                                                       valueChangeListener="#{controllerAgregarPrestamos.listadoBienes.cambioFiltro}"/>
+                                            </ice:column>
 
-                                <ice:column id="marca" style="vertical-align:top;">
-                                    <ice:outputText value="#{label['sigebi.label.bien.marca']} "/>
-                                </ice:column>
+                                            <!--Identificacion-->
+                                            <ice:column id="identificacion" rowspan="2" style="vertical-align:top;">
+                                                <ice:outputText value="#{label['sigebi.label.bien.identificacion']} "/>
+                                                <ice:inputText id="filtroIdentificacion" style="width: 130px;" partialSubmit="true"
+                                                       value="#{controllerAgregarPrestamos.listadoBienes.command.fltIdentificacion}"
+                                                       valueChangeListener="#{controllerAgregarPrestamos.listadoBienes.cambioFiltro}"/>
+                                            </ice:column>
 
-                                <ice:column id="modelo" style="vertical-align:top;">
-                                    <ice:outputText value="#{label['sigebi.label.bien.modelo']} "/>
-                                </ice:column>
+                                            <!--Descripcion-->
+                                            <ice:column id="descripcion" rowspan="2" style="vertical-align:top;">
+                                                <ice:outputText value="#{label['sigebi.label.bien.descripcion']} "/>
+                                                <ice:inputText id="filtroDescripcion" style="width: 130px;" partialSubmit="true"
+                                                       value="#{controllerAgregarPrestamos.listadoBienes.command.fltDescripcion}"
+                                                       valueChangeListener="#{controllerAgregarPrestamos.listadoBienes.cambioFiltro}"/>
+                                            </ice:column>
 
-                                <ice:column id="serie" style="vertical-align:top;">
-                                    <ice:outputText value="#{label['sigebi.label.bien.serie']} "/>
-                                </ice:column>
+                                            <!--Marca-->
+                                            <ice:column id="marca" rowspan="2" style="vertical-align:top;">
+                                                <ice:outputText value="#{label['sigebi.label.bien.marca']} "/>
+                                                <ice:inputText id="filtroMarca" style="width: 130px;" partialSubmit="true"
+                                                       value="#{controllerAgregarPrestamos.listadoBienes.command.fltMarca}"
+                                                       valueChangeListener="#{controllerAgregarPrestamos.listadoBienes.cambioFiltro}"/>
+                                            </ice:column>
 
-                                <ice:column id="descripcion"  style="vertical-align:top;">
-                                    <ice:outputText value="#{label['sigebi.label.bien.descripcion']} "/>
-                                </ice:column>
-                            </ice:headerRow>
-                        </ice:columnGroup>
-                    </f:facet>
-                    <ice:column>
-                        <h:selectBooleanCheckbox id="botonSeleccionar" value="#{controllerAgregarPrestamos.bienesSeleccionados[bien.id]}" />
-                    </ice:column>                    
-                    <ice:column>
-                        <h:outputText id="idCell" value="#{bien.id}"/>
-                    </ice:column>
-                    <ice:column>
-                        <h:outputText id="identificacionCell" value="#{bien.identificacion.identificacion}"/>
-                    </ice:column>
-                    <ice:column>
-                        <h:outputText id="marcaCell" value="#{bien.resumenBien.marca}"/>
-                    </ice:column>
-                    <ice:column>
-                        <h:outputText id="modeloCell" escape="false" value="#{bien.resumenBien.modelo}"/>
-                    </ice:column>
-                    <ice:column>
-                        <h:outputText id="serieCell" escape="false" value="#{bien.resumenBien.serie}"/>
-                    </ice:column>
-                    <ice:column>
-                        <h:outputText id="descripcionCell" escape="false" value="#{bien.descripcion}"/>
-                    </ice:column>                    
-                </ice:dataTable>
+                                            <!--Modelo-->
+                                            <ice:column id="modelo" rowspan="2" style="vertical-align:top;">
+                                                <ice:outputText value="#{label['sigebi.label.bien.modelo']} "/>
+                                                <ice:inputText id="filtroModelo" style="width: 130px;" partialSubmit="true"
+                                                       value="#{controllerAgregarPrestamos.listadoBienes.command.fltModelo}"
+                                                       valueChangeListener="#{controllerAgregarPrestamos.listadoBienes.cambioFiltro}"/>
+                                            </ice:column>
 
-                <br/>
-                <br/>
-                <span class="alineado_derecha">
-                    <ice:commandButton id="btnCerrar" action="#{controllerAgregarPrestamos.cerrarPanelAgregarBienes}" styleClass="boton"  value="Regresar" />
-                </span>
-                <br/><br/>
+                                            <!--Serie-->
+                                            <ice:column id="serie" rowspan="2" style="vertical-align:top;">
+                                                <ice:outputText value="#{label['sigebi.label.bien.serie']} "/>
+                                                <ice:inputText id="filtroSerie" style="width: 130px;" partialSubmit="true"
+                                                       value="#{controllerAgregarPrestamos.listadoBienes.command.fltSerie}"
+                                                       valueChangeListener="#{controllerAgregarPrestamos.listadoBienes.cambioFiltro}"/>
+                                            </ice:column>
+                                        </ice:headerRow>
+                                    </ice:columnGroup>
+                                </f:facet>
+                                <ice:column>
+                                    <h:selectBooleanCheckbox id="botonSeleccionar" value="#{controllerAgregarPrestamos.listadoBienes.bienesSeleccionados[bien.id]}" />
+                                </ice:column>                    
+                                <ice:column>
+                                    <h:outputText id="idCell" value="#{bien.id}"/>
+                                </ice:column>
+                                <ice:column>
+                                    <h:outputText id="identificacionCell" value="#{bien.identificacion.identificacion}"/>
+                                </ice:column>
+                                <ice:column>
+                                    <h:outputText id="descripcionCell" escape="false" value="#{bien.descripcion}"/>
+                                </ice:column> 
+                                <ice:column>
+                                    <h:outputText id="marcaCell" escape="false" value="#{bien.resumenBien.marca}"/>
+                                </ice:column>
+                                <ice:column>
+                                    <h:outputText id="modeloCell" escape="false" value="#{bien.resumenBien.modelo}"/>
+                                </ice:column>
+                                <ice:column>
+                                    <h:outputText id="serieCell" escape="false" value="#{bien.resumenBien.serie}"/>
+                                </ice:column>
+                            </ice:dataTable>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-11 align-self-md-end">
+                        <ice:commandButton id="btnCerrar" action="#{controllerAgregarPrestamos.cerrarPanelAgregarBienes}" styleClass="boton" style="margin-bottom: 1rem;" value="Regresar" />
+                    </div>
+                </div>
             </fieldset>       
         </f:facet>
     </ice:panelPopup>
-</ice:outputHtml>
+</div>

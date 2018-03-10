@@ -4,37 +4,31 @@
 
             <div class="col-md-12">
                 <!-- LISTAR NOTAS-->
-                <ice:dataTable id="notasLista" 
+                <ice:dataTable id="movimientosLista" 
                                value="#{controllerAgregarBienes.command.movimientos}" 
                                var="movimiento" 
                                paginator="true" 
                                paginatorPosition="bottom" 
                                rows="10">
-                    <ice:column id="coldetalleNota"  
-                                sortBy="#{movimiento.estado.nombre}" 
-                                filterBy="#{movimiento.estado.nombre}">
+                    <ice:column id="colEstadoMovim" >
                         <f:facet name="header">
                             <ice:outputText  value="#{label['sigebi.Bien.Col.TipoMov']}" />
                         </f:facet>
-                        <h:outputText id="descripcionCellNota" value="#{movimiento.estado.nombre}"/>
+                        <h:outputText id="estadoCelMovim" value="#{movimiento.estado.nombre}"/>
                     </ice:column>
 
-                    <ice:column id="coldetalleNota"  
-                                sortBy="#{movimiento.estado.nombre}" 
-                                filterBy="#{movimiento.estado.nombre}">
+                    <ice:column id="colFechaMovim"  >
                         <f:facet name="header">
                             <ice:outputText  value="#{label['sigebi.Bien.Col.Fecha']}" />
                         </f:facet>
-                        <h:outputText id="descripcionCellNota" value="#{movimiento.fecha}"/>
+                        <h:outputText id="fechaCelMovim" value="#{movimiento.fecha}"/>
                     </ice:column>
 
-                    <ice:column id="coldetalleNota"  
-                                sortBy="#{movimiento.estado.nombre}" 
-                                filterBy="#{movimiento.estado.nombre}">
+                    <ice:column id="colUsuarioMovim"  >
                         <f:facet name="header">
                             <ice:outputText  value="#{label['sigebi.Bien.Col.Usuario']}" />
                         </f:facet>
-                        <h:outputText id="descripcionCellNota" value="#{movimiento.usuario.nombreCompleto}"/>
+                        <h:outputText id="personaCelMovim" value="#{movimiento.persona.nombreCompleto}"/>
                     </ice:column>
 
                     <ice:column style="text-align: center;">

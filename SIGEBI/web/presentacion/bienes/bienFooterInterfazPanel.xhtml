@@ -1,0 +1,124 @@
+  <ice:outputHtml id="frmFooter" xmlns:ice="http://www.icesoft.com/icefaces/component" xmlns:icecore="http://www.icefaces.org/icefaces/core" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:c="http://java.sun.com/jstl/core">
+      <!-- Seccion de TAB en el FOOTER -->
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <ice:panelGroup>
+                    <ice:panelGroup id="tabAdicionales" style="padding-bottom: 60px; padding-top: 10px;" styleClass="tabsContent panelTabSetContainer">
+                        <ice:panelTabSet>
+                            <!-- TAB Caracteristicas-->
+                            <ice:panelTab id="tabGarantia" label="Caracteristicas">
+                                <ice:panelTab id="tabCaracteristicas" label="#{label['sigebi.Bien.Label.Caracteristicas']}" disabled="#{!controllerAgregarBienes.bienRegistrado}">
+                                    <ui:insert name="addCaracteristicas">
+                                        <ui:include src="../bienes/bienCaracteristicasInterfaz.xhtml" />
+                                    </ui:insert>
+                                </ice:panelTab>
+                            </ice:panelTab>
+
+                            <!-- TAB GARANTIA -->
+                            <ice:panelTab id="tabGarantia"  label="Garantía">
+                                <ui:insert name="addGarantia">
+                                    <ui:include src="../bienes/bienGarantiaInterfaz.xhtml" />
+                                </ui:insert>
+                            </ice:panelTab>
+
+                            <!-- TAB ARCHIVOS -->                                
+                            <ice:panelTab id="tabArchivos" label="Archivos">
+                                <ui:insert name="addArchivos">
+                                    <ui:include src="../bienes/bienArchivosInterfaz.xhtml" />
+                                </ui:insert>
+                            </ice:panelTab>
+
+                            <!-- TAB ACCESORIOS -->                                
+                            <ice:panelTab id="tabAccesorios" label="Accesorios">
+                                <ui:insert name="addAccesorios">
+                                    <ui:include src="../bienes/bienAccesoriosInterfaz.xhtml" />
+                                </ui:insert>
+                            </ice:panelTab>
+
+                        </ice:panelTabSet>
+                    </ice:panelGroup>
+                </ice:panelGroup>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Detalle Adjunto -->
+    <ice:panelPopup modal="true" visible="#{controllerAgregarBienes.visiblePanelAdjunto}" 
+                    rendered="#{controllerAgregarBienes.visiblePanelAdjunto}" styleClass="popup">
+
+        <f:facet name="header">
+            <ice:outputText styleClass="flotar_izquierda titulo_popup" value="Detalle Adjunto"/>
+        </f:facet> 
+
+        <f:facet name="body">
+            <fieldset class="panel_Container" >
+                <div class="container" style="margin-top: 30px;">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <h4>Detalle del archivo adjunto: </h4>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-sm-1"></div>
+                        <div class="col-sm-11">
+                            <div class="form-group"> 
+                                <label class="control-label" for="txtAdjuntoNombre">Nombre: </label>
+                                <ice:inputText id="txtAdjuntoNombre" styleClass="form-control" readonly="true" partialSubmit="false"
+                                               value="#{controllerAgregarBienes.command.adjunto.nombre}">
+                                </ice:inputText>
+                            </div>     
+
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-sm-1"></div>
+                        <div class="col-sm-11">
+
+                            <div class="form-group"> 
+                                <label class="control-label" for="txtAdjuntoTamano">Tamaño: </label>
+                                <ice:inputText id="txtAdjuntoTamano" styleClass="form-control" readonly="true" partialSubmit="false" 
+                                               value="#{controllerAgregarBienes.command.adjuntoCommand.tamano}">
+                                </ice:inputText>
+                            </div>     
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-sm-1"></div>
+                        <div class="col-sm-5">
+                            <div class="form-group"> 
+                                <label class="control-label" for="txtAdjuntoDetalle">Detalle: </label>
+
+                                <ice:inputTextarea id="txtAdjuntoDetalle" styleClass="form-control" style="resize: none;" partialSubmit="false" readonly="true"
+                                                   value="#{controllerAgregarBienes.command.adjunto.detalle}">
+                                </ice:inputTextarea>
+
+                            </div>     
+                        </div>
+
+                        <div class="col-sm-6 center-block">
+                            <ice:outputLink id="imgFichero" value="#{controllerAgregarBienes.adjuntoDescargar}" download="#{controllerAgregarBienes.adjuntoNombreDescarga}" target="_blank">
+                                <ice:graphicImage alt="Registro no encontrado" url="#{controllerAgregarBienes.adjuntoMostrar}" style="border:0; max-height: 90px; max-width: 130px;"/>
+                            </ice:outputLink>
+                            <ice:commandButton id="btnAdjuntoDescargar" value="Download" styleClass="boton center-block" partialSubmit="true" 
+                                               action="#{controllerAgregarBienes.downloadFile}" />
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 center-block">
+                            <ice:commandButton id="btnCancelarAdjunto" partialSubmit="true" styleClass="boton" value="Cancelar" 
+                                               action="#{controllerAgregarBienes.adjuntoEliminarCancelar}" />
+                        </div>
+                    </div>
+                </div>
+                <br />
+                <br />
+            </fieldset>       
+        </f:facet>  
+    </ice:panelPopup>
+
+</ice:outputHtml>

@@ -18,6 +18,7 @@ import cr.ac.ucr.sigebi.domain.Adjunto;
 import cr.ac.ucr.sigebi.domain.Bien;
 import cr.ac.ucr.sigebi.domain.Factura;
 import cr.ac.ucr.sigebi.domain.Pais;
+import cr.ac.ucr.sigebi.domain.RegistroMovimientoSolicitud;
 import cr.ac.ucr.sigebi.domain.SolicitudAutorizacion;
 import cr.ac.ucr.sigebi.domain.SolicitudDetalle;
 import cr.ac.ucr.sigebi.domain.SolicitudDonacion;
@@ -26,6 +27,7 @@ import cr.ac.ucr.sigebi.models.AdjuntoModel;
 import cr.ac.ucr.sigebi.models.BienModel;
 import cr.ac.ucr.sigebi.models.FacturaModel;
 import cr.ac.ucr.sigebi.models.PaisModel;
+import cr.ac.ucr.sigebi.models.RegistroMovimientoModel;
 import cr.ac.ucr.sigebi.models.SolicitudAutorizacionModel;
 import cr.ac.ucr.sigebi.models.SolicitudModel;
 import cr.ac.ucr.sigebi.models.UnidadEjecutoraModel;
@@ -63,6 +65,9 @@ public class SolicitudDonacionController extends BaseController {
     private FacturaModel facturaModel;
 
     @Resource
+    private RegistroMovimientoModel registroMovimientoModel;
+
+    @Resource
     private PaisModel paisModel;
 
     @Resource
@@ -85,6 +90,11 @@ public class SolicitudDonacionController extends BaseController {
     SolicitudDonacionCommand command;
 
     Estado estadoBienInactivo = this.estadoPorDominioValor(Constantes.DOMINIO_BIEN, Constantes.ESTADO_BIEN_INACTIVO);
+    
+    SolicitudDetalle detalleEliminar;
+
+    SolicitudAutorizacion autorizacionRechazar;
+    
     //</editor-fold>
     
     //<editor-fold defaultstate="collapsed" desc="Get's & Set's">
@@ -554,14 +564,20 @@ public class SolicitudDonacionController extends BaseController {
             command.getSolicitudDonacion().setEstado(this.estadoPorDominioValor(Constantes.DOMINIO_SOLI_DONACION, Constantes.ESTADO_SOLITUD_DONACION_ANULADA));
             solicitudModel.modificar(command.getSolicitudDonacion());
 
-            //Se cambia el estado a todos los bienes asociados a la solicitud
+            //Se registra un movimiento para la solicitud
+            Integer telefono = lVistaUsuario.getgUsuarioActual().getTelefono1() != null ? Integer.parseInt(lVistaUsuario.getgUsuarioActual().getTelefono1()) : 0;
+            RegistroMovimientoSolicitud registroMovimientoSolicitud = new RegistroMovimientoSolicitud(this.tipoPorDominioValor(Constantes.DOMINIO_REGISTRO_MOVIMIENTO, Constantes.TIPO_REGISTRO_MOVIMIENTO_CAMBIO_ESTADO_SOLICITUD), command.getObservacionConfirmacion(), telefono, new Date(), 
+                    usuarioSIGEBI, command.getSolicitudDonacion().getEstado(), command.getSolicitudDonacion());
+            registroMovimientoModel.agregar(registroMovimientoSolicitud);
+
+            //Se cambia el estado a todos los bienes asociados a la solicitud y se registra el movimiento
             ArrayList<Bien> bienes = new ArrayList<Bien>();
             for (SolicitudDetalle bienesDetalle : command.getBienesDetalles()) {
                 bienes.add(bienesDetalle.getBien());
             }
-            Integer telefono = lVistaUsuario.getgUsuarioActual().getTelefono1() != null ? Integer.parseInt(lVistaUsuario.getgUsuarioActual().getTelefono1()) : 0;
-            bienModel.cambiaEstadoBien(bienes, estadoBienInactivo, command.getObservacion(), telefono, usuarioSIGEBI);
-
+            bienModel.cambiaEstadoBien(bienes, estadoBienInactivo, command.getObservacionConfirmacion(), telefono,
+                    usuarioSIGEBI, this.tipoPorDominioValor(Constantes.DOMINIO_REGISTRO_MOVIMIENTO, Constantes.TIPO_REGISTRO_MOVIMIENTO_CAMBIO_ESTADO_BIEN));
+            
             //Se cargan los datos nuevamente
             //Aprobaciones
             this.consultaAutorizaciones();
@@ -664,6 +680,15 @@ public class SolicitudDonacionController extends BaseController {
                 buscarUnidadesReceptoras();
             }else if (command.getPresentarPanelAnularConfirmar()){
                 command.setMensajeConfirmacion(Util.getEtiquetas("sigebi.solicitudDonacionController.mensaje.anular"));
+                command.setObservacionConfirmacion("");
+            }else if (command.getPresentarPanelEliminarBienConfirmar()){
+                detalleEliminar = (SolicitudDetalle) pEvent.getComponent().getAttributes().get("detalleSeleccionado");
+                command.setMensajeConfirmacion(Util.getEtiquetas("sigebi.solicitudDonacionController.mensaje.eliminar.bien"));
+                command.setObservacionConfirmacion("");
+            }else if (command.getPresentarPanelRechazarAutorizacionConfirmar()){
+                autorizacionRechazar = (SolicitudAutorizacion) pEvent.getComponent().getAttributes().get("solicitudSelRech");
+                command.setMensajeConfirmacion(Util.getEtiquetas("sigebi.solicitudDonacionController.mensaje.rechazar.autorizacion"));
+                command.setObservacionConfirmacion("");
             }
         } catch (FWExcepcion e) {
             Mensaje.agregarErrorAdvertencia(e.getError_para_usuario());
@@ -711,7 +736,8 @@ public class SolicitudDonacionController extends BaseController {
 
             //Se modifica en el solicitud en los casos que aplique
             cambiaEstadoSolicitud();
-
+            
+                
         } catch (FWExcepcion e) {
             Mensaje.agregarErrorAdvertencia(e, e.getError_para_usuario());
         } catch (Exception e) {
@@ -721,27 +747,27 @@ public class SolicitudDonacionController extends BaseController {
 
     /**
      * Rechaza el solicitud
-     *
-     * @param pEvent
      */
-    public void rechazar(ActionEvent pEvent) {
+    public void rechazar() {
         try {
-            if (!pEvent.getPhaseId().equals(PhaseId.INVOKE_APPLICATION)) {
-                pEvent.setPhaseId(PhaseId.INVOKE_APPLICATION);
-                pEvent.queue();
-                return;
+            
+            //Se registra un movimiento para la solicitud para cada rechazo de un detalle
+            Integer telefono = lVistaUsuario.getgUsuarioActual().getTelefono1() != null ? Integer.parseInt(lVistaUsuario.getgUsuarioActual().getTelefono1()) : 0;
+            RegistroMovimientoSolicitud registroMovimientoSolicitud = new RegistroMovimientoSolicitud(this.tipoPorDominioValor(Constantes.DOMINIO_REGISTRO_MOVIMIENTO, Constantes.TIPO_REGISTRO_MOVIMIENTO_CAMBIO_ESTADO_SOLICITUD), command.getObservacionConfirmacion(), telefono, new Date(), 
+                    usuarioSIGEBI, command.getSolicitudDonacion().getEstado(), command.getSolicitudDonacion());
+            registroMovimientoModel.agregar(registroMovimientoSolicitud);
+            
+            //Se obtiene el solicitud a modificar
+            autorizacionRechazar.setEstado(this.estadoPorDominioValor(Constantes.DOMINIO_GENERAL, Constantes.ESTADO_GENERAL_RECHAZADO));
+            autorizacionRechazar.setFecha(new Date());
+            autorizacionRechazar.setUsuarioSeguridad(this.usuarioSIGEBI);
+            if (autorizacionRechazar.getId() != null && autorizacionRechazar.getId() > 0) {
+                solicitudAutorizacionModel.modificar(autorizacionRechazar);
+            } else {
+                solicitudAutorizacionModel.agregar(autorizacionRechazar);
             }
 
-            //Se obtiene el solicitud a modificar
-            SolicitudAutorizacion solicitud = (SolicitudAutorizacion) pEvent.getComponent().getAttributes().get("solicitudSelRech");
-            solicitud.setEstado(this.estadoPorDominioValor(Constantes.DOMINIO_GENERAL, Constantes.ESTADO_GENERAL_RECHAZADO));
-            solicitud.setFecha(new Date());
-            solicitud.setUsuarioSeguridad(this.usuarioSIGEBI);
-            if (solicitud.getId() != null && solicitud.getId() > 0) {
-                solicitudAutorizacionModel.modificar(solicitud);
-            } else {
-                solicitudAutorizacionModel.agregar(solicitud);
-            }
+            command.setPresentarPanel(false);
 
             //Se modifica en el solicitud en los casos que aplique
             cambiaEstadoSolicitud();
@@ -751,7 +777,6 @@ public class SolicitudDonacionController extends BaseController {
         } catch (Exception e) {
             Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.error.solicitudDonacionController.rechazar"));
         }
-
     }
 
     //</editor-fold>
@@ -938,24 +963,14 @@ public class SolicitudDonacionController extends BaseController {
 
     /**
      * Elimina un bien a la solicitud
-     *
-     * @param pEvent
      */
-    public void rechazarDetalleBien(ActionEvent pEvent) {
+    public void rechazarDetalleBien() {
         try {
-            if (!pEvent.getPhaseId().equals(PhaseId.INVOKE_APPLICATION)) {
-                pEvent.setPhaseId(PhaseId.INVOKE_APPLICATION);
-                pEvent.queue();
-                return;
-            }
-
-            //Se obtiene el detalle
-            SolicitudDetalle detalle = (SolicitudDetalle) pEvent.getComponent().getAttributes().get("detalleSeleccionado");
-
             //Se marca el bien como rechazado
             Integer telefono = lVistaUsuario.getgUsuarioActual().getTelefono1() != null ? Integer.parseInt(lVistaUsuario.getgUsuarioActual().getTelefono1()) : 0;
-            bienModel.cambiaEstadoBien(detalle.getBien(), estadoBienInactivo, command.getObservacion(), telefono, usuarioSIGEBI);
-
+            bienModel.cambiaEstadoBien(detalleEliminar.getBien(), estadoBienInactivo, command.getObservacionConfirmacion(), telefono, 
+                    usuarioSIGEBI, this.tipoPorDominioValor(Constantes.DOMINIO_REGISTRO_MOVIMIENTO, Constantes.TIPO_REGISTRO_MOVIMIENTO_CAMBIO_ESTADO_BIEN));
+            command.setPresentarPanel(Boolean.FALSE);
         } catch (FWExcepcion e) {
             Mensaje.agregarErrorAdvertencia(e.getError_para_usuario());
         } catch (Exception e) {

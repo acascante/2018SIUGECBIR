@@ -1,0 +1,31 @@
+
+<ice:outputHtml id="frmAccesoriosInterfaz" xmlns:ice="http://www.icesoft.com/icefaces/component" xmlns:icecore="http://www.icefaces.org/icefaces/core" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:c="http://java.sun.com/jstl/core">
+    <div class="container">
+        <!-- Adjuntar documentos-->
+        <div class="row">
+            <div class="col-md-12">
+                <div class="form-group"> 
+                    <div>
+                        <ice:dataTable id="adjuntosTableAcceriosInterfaz"
+                                       value="#{controllerInterfazBien.command.accesoriosList}"
+                                       var="accesorio"
+                                       paginator="true"
+                                       paginatorPosition="bottom"
+                                       rows="10">
+
+                            <ice:column id="colAccesorioDesc">
+                                <f:facet name="header">
+                                    <ice:headerRow>
+                                       <ice:outputText value="#{label['sigebi.label.vista.detalleInterfazBien.descripcion']}"/>
+                                    </ice:headerRow>
+                                </f:facet>                                
+                                <h:outputText id="colAccesorioDescTxt" value="#{accesorio.descripcion}"/>
+                            </ice:column>
+                        </ice:dataTable>
+                    </div>
+                </div>
+            </div>                
+        </div>
+    </div>
+    
+</ice:outputHtml>

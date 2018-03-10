@@ -6,6 +6,7 @@
 package cr.ac.ucr.sigebi.domain;
 
 import cr.ac.ucr.framework.seguridad.ObjetoBase;
+import cr.ac.ucr.sigebi.utils.Constantes;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
@@ -348,10 +349,40 @@ public class Bien extends ObjetoBase implements Serializable {
         this.caracteristicas = caracteristicas;
     }
     //</editor-fold>
+
+    //<editor-fold defaultstate="collapsed" desc="Metodos para visibilidad de opciones en los listados">
+    public boolean getExclusionRechazar() {
+        if (Constantes.ESTADO_INTERNO_BIEN_EXCLUSION_SOLICITADO.equals(this.getEstadoInterno().getValor())) {
+            return true;
+        }
+        return false;
+    }
+    
+    public boolean getExclusionSolicitar() {
+        if (Constantes.ESTADO_INTERNO_BIEN_EXCLUSION_SOLICITADO.equals(this.getEstadoInterno().getValor()) ||
+            Constantes.ESTADO_INTERNO_BIEN_EXCLUSION_APROBADO.equals(this.getEstadoInterno().getValor())) {
+            return false;
+        }
+        return true;
+    }
+    
+    public boolean getExclusionAprobar() {
+        if (Constantes.ESTADO_INTERNO_BIEN_EXCLUSION_SOLICITADO.equals(this.getEstadoInterno().getValor())) {
+            return true;
+        }
+        return false;
+    }
+    
+    public boolean getExclusionEliminar() {
+        if (Constantes.ESTADO_INTERNO_BIEN_EXCLUSION_SOLICITADO.equals(this.getEstadoInterno().getValor()) ||
+            Constantes.ESTADO_INTERNO_BIEN_EXCLUSION_APROBADO.equals(this.getEstadoInterno().getValor())) {
+            return false;
+        }
+        return true;
+    }
+    //</editor-fold>
     
     //<editor-fold defaultstate="collapsed" desc="Metodos">
-    
-    
     @Override
     public int hashCode() {
         int hash = 7;
@@ -480,8 +511,6 @@ public class Bien extends ObjetoBase implements Serializable {
         }
         return true;
     }
-
-    
     //</editor-fold>
 
 }

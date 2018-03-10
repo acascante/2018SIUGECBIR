@@ -13,11 +13,14 @@ import cr.ac.ucr.sigebi.domain.Categoria;
 import cr.ac.ucr.sigebi.domain.Clasificacion;
 import cr.ac.ucr.sigebi.domain.Estado;
 import cr.ac.ucr.sigebi.domain.Identificacion;
+import cr.ac.ucr.sigebi.domain.InterfazBien;
 import cr.ac.ucr.sigebi.domain.Lote;
 import cr.ac.ucr.sigebi.domain.Moneda;
 import cr.ac.ucr.sigebi.domain.Nota;
 import cr.ac.ucr.sigebi.domain.Proveedor;
 import cr.ac.ucr.sigebi.domain.RegistroMovimiento;
+import cr.ac.ucr.sigebi.domain.Solicitud;
+import cr.ac.ucr.sigebi.domain.SolicitudDetalle;
 import cr.ac.ucr.sigebi.domain.SubCategoria;
 import cr.ac.ucr.sigebi.domain.SubClasificacion;
 import cr.ac.ucr.sigebi.domain.Tipo;
@@ -272,6 +275,7 @@ public class BienCommand {
         private Map<Long, Clasificacion> itemsClasificacion;
         private Map<Long, Lote> itemsLote;
         private Map<Long, Moneda> itemsMoneda;
+        private Map<Long, UnidadEjecutora> itemsUnidad;
         private Map<Long, Tipo> itemsOrigen;
         private Map<Long, SubCategoria> itemsSubCategoria;
         private Map<Long, SubClasificacion> itemsSubClasificacion;
@@ -280,7 +284,26 @@ public class BienCommand {
 
         public ItemCommand() {
         }
-
+        
+        public ItemCommand(Moneda moneda, Tipo origen, Tipo tipo) {
+            this.itemsAccesorio = new HashMap<Long, Accesorio>();
+            this.itemsCaracteristica = new HashMap<Long, Tipo>();
+            this.itemsCategoria = new HashMap<Long, Categoria>();
+            this.itemsClasificacion = new HashMap<Long, Clasificacion>();
+            this.itemsLote = new HashMap<Long, Lote>();
+            this.itemsMoneda = new HashMap<Long, Moneda>();
+            this.itemsUnidad = new HashMap<Long, UnidadEjecutora>();
+            this.itemsOrigen = new HashMap<Long, Tipo>();
+            this.itemsSubCategoria = new HashMap<Long, SubCategoria>();
+            this.itemsSubClasificacion = new HashMap<Long, SubClasificacion>();
+            this.itemsTipo = new HashMap<Long, Tipo>();
+            this.itemsUbicacion = new HashMap<Long, Ubicacion>();
+            
+            itemsMoneda.put(moneda.getId(), moneda);
+            itemsOrigen.put(origen.getId(), origen);
+            itemsTipo.put(tipo.getId(), tipo);
+        }
+        
         public ItemCommand(Bien bien) {
             this.itemsAccesorio = new HashMap<Long, Accesorio>();
             this.itemsCaracteristica = new HashMap<Long, Tipo>();
@@ -288,6 +311,7 @@ public class BienCommand {
             this.itemsClasificacion = new HashMap<Long, Clasificacion>();
             this.itemsLote = new HashMap<Long, Lote>();
             this.itemsMoneda = new HashMap<Long, Moneda>();
+            this.itemsUnidad = new HashMap<Long, UnidadEjecutora>();
             this.itemsOrigen = new HashMap<Long, Tipo>();
             this.itemsSubCategoria = new HashMap<Long, SubCategoria>();
             this.itemsSubClasificacion = new HashMap<Long, SubClasificacion>();
@@ -384,6 +408,17 @@ public class BienCommand {
             this.itemsMoneda = itemsMoneda;
         }
 
+        public Map<Long, UnidadEjecutora> getItemsUnidad() {
+            if (this.itemsUnidad == null) {
+                itemsUnidad = new HashMap<Long, UnidadEjecutora>();
+            }
+            return itemsUnidad;
+        }
+
+        public void setItemsUnidad(Map<Long, UnidadEjecutora> itemsUnidad) {
+            this.itemsUnidad = itemsUnidad;
+        }
+        
         public Map<Long, Tipo> getItemsOrigen() {
             if (this.itemsOrigen == null) {
                 itemsOrigen = new HashMap<Long, Tipo>();
@@ -514,9 +549,9 @@ public class BienCommand {
             //this.proveedor = new Proveedor();
         }
 
-        private ProveedorCommand(Bien bien) {
-            this.proveedor = bien.getProveedor();
-            this.descripcion = this.proveedor.getNombreCompleto();
+        private ProveedorCommand(Proveedor proveedor) {
+            this.proveedor = proveedor;
+            this.descripcion = proveedor.getNombreCompleto();
         }
 
         //<editor-fold defaultstate="collapsed" desc="GET's y SET's">
@@ -566,10 +601,10 @@ public class BienCommand {
             this.ubicacion = new Ubicacion();
         }
 
-        private UbicacionCommand(Bien bien) {
-            this.ubicacion = bien.getUbicacion();
-            this.idUbicacion = this.ubicacion.getId();
-            this.descripcion = this.ubicacion.getDetalle();
+        private UbicacionCommand(Ubicacion ubicacion) {
+            this.ubicacion = ubicacion;
+            this.idUbicacion = ubicacion.getId();
+            this.descripcion = ubicacion.getDetalle();
         }
 
         //<editor-fold defaultstate="collapsed" desc="GET's y SET's">
@@ -636,7 +671,7 @@ public class BienCommand {
     private List<Adjunto> adjuntos;
     private List<BienCaracteristica> caracteristicas;
     private List<Nota> notas;
-    private List<RegistroMovimiento> movimientos;
+    private List<Solicitud> movimientos;
 
     private AccesorioCommand accesorioCommand;
     private AdjuntoCommand adjuntoCommand;
@@ -718,15 +753,57 @@ public class BienCommand {
         this.caracteristicaCommand = new CaracteristicaCommand();
         this.itemCommand = new ItemCommand(bien);
         this.notaCommand = new NotaCommand(bien);
-        this.proveedorCommand = new ProveedorCommand(bien);
-        this.ubicacionCommand = new UbicacionCommand(bien);
+        this.proveedorCommand = new ProveedorCommand(bien.getProveedor());
+        this.ubicacionCommand = new UbicacionCommand(bien.getUbicacion());
 
-        movimientos = new ArrayList<RegistroMovimiento>();
+        movimientos = new ArrayList<Solicitud>();
         
         adjunto = new Adjunto();
         this.calculaCapitalizable();
 
     }
+    
+     public BienCommand(InterfazBien interfazBien, UnidadEjecutora unidadEjecutora, Tipo tipoBien, Tipo tipoOrigen, Estado estadoBien, Proveedor proveedor, Moneda moneda, Identificacion identificacion) {
+         
+        this(); // Llama al constructor sin parametros
+        this.itemCommand = new ItemCommand(moneda, tipoOrigen, tipoBien);
+        this.descripcion = interfazBien.getDescripcion();
+        this.idTipo = tipoBien != null ? tipoBien.getId() : -1L;
+        this.idOrigen = tipoOrigen != null ? tipoOrigen.getId() : -1L;     
+        this.estado = estadoBien;
+        this.estadoInterno = estadoBien;
+        this.idLote = -1L;
+        cantidadActivo = idLote < 0;
+        this.cantidad = interfazBien.getCantidad();
+
+        this.idCategoria = -1L;
+        this.idSubCategoria = -1L;
+        this.idClasificacion = -1L;
+        this.idSubClasificacion = -1L;
+
+        this.ubicacionCommand = new UbicacionCommand();        
+        this.proveedorCommand = new ProveedorCommand(proveedor);
+        this.persona = 0;
+        this.fechaAdquisicion = interfazBien.getFechaAdquisicion();
+        this.idMoneda = moneda != null ? moneda.getId() : -1L;        
+        this.costo = interfazBien.getValorInicial();
+        this.unidadEjecutora = unidadEjecutora;
+        this.unidadEjecutora.setIdTemporal(unidadEjecutora.getId()); 
+
+        //Caracteristicas
+        this.caracteristicas = new ArrayList<BienCaracteristica>();
+
+        //Caracteristicas
+        this.adjuntos = new ArrayList<Adjunto>();
+        
+        //Datos garantia
+        this.inicioGarantia = interfazBien.getFechaInicioGarantia();
+        this.finGarantia = interfazBien.getFechaFinGarantia();
+        this.descripcionGarantia = interfazBien.getDescripcionGarantia();
+        this.identificacion = identificacion;
+        this.calculaCapitalizable();
+    }
+     
     //</editor-fold>
 
     //<editor-fold defaultstate="collapsed" desc="Metodos">
@@ -769,11 +846,11 @@ public class BienCommand {
 
     //<editor-fold defaultstate="collapsed" desc="GET's y SET's">
 
-    public List<RegistroMovimiento> getMovimientos() {
+    public List<Solicitud> getMovimientos() {
         return movimientos;
     }
 
-    public void setMovimientos(List<RegistroMovimiento> movimientos) {
+    public void setMovimientos(List<Solicitud> movimientos) {
         this.movimientos = movimientos;
     }
     
