@@ -1,6 +1,4 @@
 <div xmlns:ice="http://www.icesoft.com/icefaces/component"
-      xmlns:ui="http://java.sun.com/jsf/facelets"
-      xmlns:h="http://java.sun.com/jsf/html"
       xmlns:f="http://java.sun.com/jsf/core" >
 
     <!-- Modal para confirmar -->
@@ -35,13 +33,13 @@
                     <div class="row"  style="margin-top: 20px; margin-bottom: 20px;">
                         <div class='col-md-6'>
                             <span class="alineado_derecha">
-                                <ice:commandButton id="btnCancelar" partialSubmit="true" action="#{controllerAgregarExclusiones.cerrarPanelObservaciones}" styleClass="boton"  value="Regresar" />
+                                <ice:commandButton id="btnCancelar" value="#{label['label.regresar']}" action="#{controllerAgregarExclusiones.cerrarPanelObservaciones}" partialSubmit="true" styleClass="boton"  />
                             </span>
                         </div>
                         <div class="col-md-6 align-content-center">
-                            <ice:commandButton id="botonRechazarBienObservacion" value="#{label['sigebi.label.exclusiones.rechazar']}" action="#{controllerAgregarExclusiones.rechazarBienObservacion}" rendered="#{controllerAgregarExclusiones.visibleBotonRechazarBienObservacion}" partialSubmit="true" style="float: right" styleClass="boton"/>
-                            <ice:commandButton id="botonRechazarObservacion" value="#{label['sigebi.label.exclusiones.rechazar']}" action="#{controllerAgregarExclusiones.rechazarExclusionObservacion}" rendered="#{controllerAgregarExclusiones.visibleBotonRechazarObservacion}" partialSubmit="true" style="float: right" styleClass="boton"/>
-                            <ice:commandButton id="botonRevisarObservacion" value="#{label['sigebi.label.exclusiones.revisar']}" action="#{controllerAgregarExclusiones.revisarExclusionObservacion}" rendered="#{controllerAgregarExclusiones.visibleBotonRevisarObservacion}" partialSubmit="true" style="float: right" styleClass="boton"/>
+                            <ice:commandButton id="botonRechazarBienObservacion" value="#{label['label.rechazar']}" action="#{controllerAgregarExclusiones.rechazarBienObservacion}" rendered="#{controllerAgregarExclusiones.visibleBotonRechazarBienObservacion}" partialSubmit="true" style="float: right" styleClass="boton"/>
+                            <ice:commandButton id="botonRechazarObservacion" value="#{label['label.rechazar']}" action="#{controllerAgregarExclusiones.rechazarExclusionObservacion}" rendered="#{controllerAgregarExclusiones.visibleBotonRechazarObservacion}" partialSubmit="true" style="float: right" styleClass="boton"/>
+                            <ice:commandButton id="botonRevisarObservacion" value="#{label['labelrevisar']}" action="#{controllerAgregarExclusiones.revisarExclusionObservacion}" rendered="#{controllerAgregarExclusiones.visibleBotonRevisarObservacion}" partialSubmit="true" style="float: right" styleClass="boton"/>
                         </div>
                     </div>
                 </div>                

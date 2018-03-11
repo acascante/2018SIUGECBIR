@@ -58,6 +58,7 @@ public class ConvenioCommand {
     //<editor-fold defaultstate="collapsed" desc="Metodos">
     public Convenio getConvenio() {
         Convenio convenio = new Convenio();
+        convenio.setId(this.id);
         convenio.setInstitucion(this.institucion);
         convenio.setResponsable(this.responsable);
         convenio.setOficio(this.oficio);

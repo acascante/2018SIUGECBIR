@@ -35,6 +35,7 @@ public class PrestamoCommand {
     private UnidadEjecutora unidadEjecutora;
     private Estado estado;
     private Long idTipoEntidad;
+    private Long idEntidad;
     private String entidad;
     private Date fecha;
     private String observacion;
@@ -43,6 +44,8 @@ public class PrestamoCommand {
     private List<SolicitudDetalle> detallesEliminar;
     private Map<Long, Bien> bienes;     // Bienes existenetes en la solicitud
     private Map<Long, SolicitudDetalle> detalles;
+    
+    private String observacionConfirmacion;
     //</editor-fold>
     
     //<editor-fold defaultstate="collapsed" desc="Constructores">
@@ -70,6 +73,8 @@ public class PrestamoCommand {
         this.fecha = prestamo.getFecha();
         this.idTipoEntidad = prestamo.getTipo().getId();
         this.entidad = prestamo.getEntidad();
+        this.bienes = new HashMap<Long, Bien>();
+        this.detalles = new HashMap<Long, SolicitudDetalle>();
         for (SolicitudDetalle detalle : prestamo.getDetalles()) {
             this.bienes.put(detalle.getBien().getId(), detalle.getBien());
             this.detalles.put(detalle.getBien().getId(), detalle);
@@ -107,6 +112,14 @@ public class PrestamoCommand {
         return calendar.getTime();
     }
     
+    public TimeZone getTimeZone() {
+        return Constantes.DEFAULT_TIME_ZONE;
+    }
+    
+    public String getDatePattern() {
+        return Constantes.DEFAULT_DATE_PATTERN;
+    }
+    
     public Long getId() {
         return id;
     }
@@ -139,6 +152,15 @@ public class PrestamoCommand {
         this.idTipoEntidad = idTipoEntidad;
     }
 
+    public Long getIdEntidad() {
+        return idEntidad;
+    }
+
+    public void setIdEntidad(Long idEntidad) {
+        this.idEntidad = idEntidad;
+    }
+
+    
     public String getEntidad() {
         return entidad;
     }
@@ -207,6 +229,14 @@ public class PrestamoCommand {
 
     public void setBienes(Map<Long, Bien> bienes) {
         this.bienes = bienes;
+    }
+
+    public String getObservacionConfirmacion() {
+        return observacionConfirmacion;
+    }
+
+    public void setObservacionConfirmacion(String observacionConfirmacion) {
+        this.observacionConfirmacion = observacionConfirmacion;
     }
 
     public Map<Long, SolicitudDetalle> getDetalles() {

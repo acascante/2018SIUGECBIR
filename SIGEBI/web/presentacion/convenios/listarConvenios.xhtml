@@ -72,27 +72,24 @@
                                         <!-- Institucion -->
                                         <ice:column id="institucion" rowspan="2" style="vertical-align:top;">
                                             <ice:outputText value="#{label['sigebi.label.convenios.institucion']} "/>
-                                            <ice:inputText id="filtroInstitucion"  
+                                            <ice:inputText id="filtroInstitucion" partialSubmit="true"
                                                            value="#{controllerListarConvenios.command.fltInstitucion}" 
-                                                           partialSubmit="true"
                                                            valueChangeListener="#{controllerListarConvenios.cambioFiltro}"/>
                                         </ice:column>
 
                                         <!-- Responsable -->
                                         <ice:column id="responsable" rowspan="2" style="vertical-align:top;">
                                             <ice:outputText value="#{label['sigebi.label.convenios.responsable']} "/>
-                                            <ice:inputText id="filtroResponsable"  
+                                            <ice:inputText id="filtroResponsable" partialSubmit="true"
                                                            value="#{controllerListarConvenios.command.fltResponsable}" 
-                                                           partialSubmit="true"
                                                            valueChangeListener="#{controllerListarConvenios.cambioFiltro}"/>
                                         </ice:column>
 
                                         <!-- Oficio -->
                                         <ice:column id="oficio" rowspan="2" style="vertical-align:top;">
                                             <ice:outputText value="#{label['sigebi.label.convenios.oficio']} "/>
-                                            <ice:inputText id="filtroOficio"  
+                                            <ice:inputText id="filtroOficio" partialSubmit="true"
                                                            value="#{controllerListarConvenios.command.fltOficio}" 
-                                                           partialSubmit="true"
                                                            valueChangeListener="#{controllerListarConvenios.cambioFiltro}"/>
                                         </ice:column>
 
@@ -109,10 +106,9 @@
                                         <!-- Estado -->
                                         <ice:column id="estado" rowspan="2" style="vertical-align:top;">                                 
                                             <ice:outputText value="#{label['sigebi.label.convenios.estado']}"/>
-                                            <ice:selectOneMenu  id="filtroEstado"
+                                            <ice:selectOneMenu  id="filtroEstado" partialSubmit="true"
                                                                 valueChangeListener="#{controllerListarConvenios.cambioFiltro}"
-                                                                value="#{controllerListarConvenios.command.fltEstado}"
-                                                                partialSubmit="true">
+                                                                value="#{controllerListarConvenios.command.fltEstado}">
                                                 <f:selectItem itemLabel="N/A" itemValue="-1"/>
                                                 <f:selectItems id="slcEstadoItem" value="#{controllerListarConvenios.itemsEstado}"/>
                                             </ice:selectOneMenu>

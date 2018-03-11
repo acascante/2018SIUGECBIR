@@ -28,7 +28,6 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.Resource;
-import javax.faces.component.UIInput;
 import javax.faces.component.UIViewRoot;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
@@ -98,8 +97,6 @@ public class AgregarExclusionController extends BaseController {
            } catch (FWExcepcion e) {
                Mensaje.agregarErrorAdvertencia(e.getError_para_usuario());
            } catch (NumberFormatException e) {
-               Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.error.controllerListarNotificaciones.listarNotificaciones"));
-           } catch (Exception e) {
                Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.error.controllerListarNotificaciones.listarNotificaciones"));
            }
        }
@@ -303,28 +300,28 @@ public class AgregarExclusionController extends BaseController {
         try {
             FacesContext context = FacesContext.getCurrentInstance();
             UIViewRoot root = context.getViewRoot();
-            UIInput component =  new UIInput();
-            String messageValidacion = validarForm(root, component);
+            String messageValidacion = validarForm(root);
             if (Constantes.OK.equals(messageValidacion)) {
                 Tipo tipo = this.tipoPorId(command.getIdTipo());
                 
                 // Almaceno o actualizo Solicitud
-                this.exclusionModel.salvar(command.getExclusion(tipo));
+                SolicitudExclusion exclusion = command.getExclusion(tipo);
+                this.exclusionModel.salvar(exclusion);
                 this.exclusionModel.eliminarDetalles(command.getDetallesEliminar());
 
                 List<Bien> listBienes = new ArrayList<Bien>(command.getBienes().values());
                 List<Bien> listBienesEliminar = new ArrayList<Bien>(command.getBienesEliminar());
                 this.bienModel.actualizar(listBienes);
                 this.bienModel.actualizar(listBienesEliminar);                
-                almacenarObservacion(tipo);
                 if (!this.exclusionRegistrada) {
                     this.exclusionRegistrada = true;
                     mensajeExito = "Los datos se salvaron con éxito.";
                 } else {
+                    almacenarObservacion(tipo);
                     mensajeExito = "Los datos se actualizaron con éxito.";
                 }
+                command.setIdExclusion(exclusion.getId());
             } else {
-                component.setValid(false);
                 Mensaje.agregarErrorAdvertencia(messageValidacion);
             }
         } catch (FWExcepcion err) {
@@ -368,12 +365,11 @@ public class AgregarExclusionController extends BaseController {
     }
     
     //<editor-fold defaultstate="collapsed" desc="Validaciones">
-    public String validarForm(UIViewRoot root, UIInput component) {
+    public String validarForm(UIViewRoot root) {
         if (command.getBienes().isEmpty()) {
             return Util.getEtiquetas("sigebi.error.controllerAgregarExclusion.validacion.bienes");
         }
         if (command.getIdTipo().equals(Constantes.DEFAULT_ID)) {
-            component = (UIInput) root.findComponent("frmDetalleExclusion:cmbTipo");
             return Util.getEtiquetas("sigebi.error.controllerAgregarExclusion.validacion.tipo");
         }
         return Constantes.OK;
@@ -419,7 +415,7 @@ public class AgregarExclusionController extends BaseController {
         try {
             Tipo tipo = this.tipoPorId(command.getIdTipo());
             Estado estadoSolicitud = this.estadoPorDominioValor(Constantes.DOMINIO_EXCLUSION, solicitud);
-            this.command.setEstado( estadoSolicitud);
+            this.command.setEstado(estadoSolicitud);
             this.exclusionModel.salvar(command.getExclusion(tipo));
             
             // Actualiza todos los bienes con el estado segun el movimiento que se hizo a la solicitud

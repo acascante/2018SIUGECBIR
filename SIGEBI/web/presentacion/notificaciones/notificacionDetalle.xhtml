@@ -28,6 +28,14 @@
 
         <div class="container">
             <div class="row">
+                <div class="col-md-2">
+                    <div class="form-group"> 
+                        <ice:outputText value="#{label['sigebi.label.notificaciones.id']}" />
+                        <ice:inputText id="txtId" value="#{controllerAgregarNotificaciones.command.idNotificacion}" styleClass="form-control" readonly="true" partialSubmit="false" />
+                    </div>                                             
+                </div>
+            </div>
+            <div class="row">
                 <div class="col-md-6">
                     <div class="form-group"> 
                         <label class="control-label" for="txtAsunto">

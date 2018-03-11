@@ -39,8 +39,7 @@ import org.springframework.stereotype.Controller;
 @Scope("session")
 public class ListarPrestamosController extends BaseController {
 
-    @Resource
-    private PrestamoModel prestamoModel;
+    @Resource private PrestamoModel prestamoModel;
     
     private List<SolicitudPrestamo> prestamos;
     
@@ -66,7 +65,7 @@ public class ListarPrestamosController extends BaseController {
             }
         }
         
-        List<Tipo> tipos = this.tiposPorDominio(Constantes.DOMINIO_PRESTAMO);
+        List<Tipo> tipos = this.tiposPorDominio(Constantes.DOMINIO_PRESTAMO_ENTIDAD);
         if (!tipos.isEmpty()) {
             itemsTipo = new ArrayList<SelectItem>();
             for (Tipo item : tipos) {

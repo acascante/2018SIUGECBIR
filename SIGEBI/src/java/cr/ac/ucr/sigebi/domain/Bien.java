@@ -351,31 +351,38 @@ public class Bien extends ObjetoBase implements Serializable {
     //</editor-fold>
 
     //<editor-fold defaultstate="collapsed" desc="Metodos para visibilidad de opciones en los listados">
-    public boolean getExclusionRechazar() {
-        if (Constantes.ESTADO_INTERNO_BIEN_EXCLUSION_SOLICITADO.equals(this.getEstadoInterno().getValor())) {
+    public boolean getRechazar() {
+        if (Constantes.ESTADO_INTERNO_BIEN_EXCLUSION_SOLICITADO.equals(this.getEstadoInterno().getValor()) ||
+            Constantes.ESTADO_INTERNO_BIEN_PRESTAMO_SOLICITADO.equals(this.getEstadoInterno().getValor())) {
             return true;
         }
         return false;
     }
     
-    public boolean getExclusionSolicitar() {
+    public boolean getSolicitar() {
         if (Constantes.ESTADO_INTERNO_BIEN_EXCLUSION_SOLICITADO.equals(this.getEstadoInterno().getValor()) ||
-            Constantes.ESTADO_INTERNO_BIEN_EXCLUSION_APROBADO.equals(this.getEstadoInterno().getValor())) {
+            Constantes.ESTADO_INTERNO_BIEN_EXCLUSION_APROBADO.equals(this.getEstadoInterno().getValor()) ||
+            Constantes.ESTADO_INTERNO_BIEN_PRESTAMO_SOLICITADO.equals(this.getEstadoInterno().getValor()) ||
+            Constantes.ESTADO_INTERNO_BIEN_PRESTAMO_APROBADO.equals(this.getEstadoInterno().getValor())) {
             return false;
         }
         return true;
     }
     
-    public boolean getExclusionAprobar() {
-        if (Constantes.ESTADO_INTERNO_BIEN_EXCLUSION_SOLICITADO.equals(this.getEstadoInterno().getValor())) {
+    public boolean getAprobar() {
+        if (Constantes.ESTADO_INTERNO_BIEN_EXCLUSION_SOLICITADO.equals(this.getEstadoInterno().getValor()) ||
+            Constantes.ESTADO_INTERNO_BIEN_PRESTAMO_SOLICITADO.equals(this.getEstadoInterno().getValor())) {
             return true;
         }
         return false;
     }
     
-    public boolean getExclusionEliminar() {
+    public boolean getEliminar() {
         if (Constantes.ESTADO_INTERNO_BIEN_EXCLUSION_SOLICITADO.equals(this.getEstadoInterno().getValor()) ||
-            Constantes.ESTADO_INTERNO_BIEN_EXCLUSION_APROBADO.equals(this.getEstadoInterno().getValor())) {
+            Constantes.ESTADO_INTERNO_BIEN_EXCLUSION_APROBADO.equals(this.getEstadoInterno().getValor()) ||
+            Constantes.ESTADO_INTERNO_BIEN_PRESTAMO_SOLICITADO.equals(this.getEstadoInterno().getValor()) ||
+            Constantes.ESTADO_INTERNO_BIEN_PRESTAMO_ANULADO.equals(this.getEstadoInterno().getValor()) ||
+            Constantes.ESTADO_INTERNO_BIEN_PRESTAMO_APROBADO.equals(this.getEstadoInterno().getValor())) {
             return false;
         }
         return true;

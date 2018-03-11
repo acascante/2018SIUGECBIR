@@ -38,6 +38,10 @@ public final class Constantes {
     public static final Integer ESTADO_INTERNO_BIEN_EXCLUSION_RECHAZADO = 22;
     public static final Integer ESTADO_INTERNO_BIEN_EXCLUSION_APROBADO = 23;
     public static final Integer ESTADO_INTERNO_BIEN_PRESTAMO = 3;
+    public static final Integer ESTADO_INTERNO_BIEN_PRESTAMO_SOLICITADO = 31;
+    public static final Integer ESTADO_INTERNO_BIEN_PRESTAMO_RECHAZADO = 32;
+    public static final Integer ESTADO_INTERNO_BIEN_PRESTAMO_APROBADO = 33;
+    public static final Integer ESTADO_INTERNO_BIEN_PRESTAMO_ANULADO = 34;
     public static final Integer ESTADO_INTERNO_BIEN_TRASLADO = 4;
     public static final Integer ESTADO_INTERNO_BIEN_ACTA = 5;
 
@@ -68,9 +72,11 @@ public final class Constantes {
     public static final Integer ESTADO_EXCLUSION_APROBADA = 4;
 
     // PRESTAMOS
-    public static final int ESTADO_PRESTAMO_CREADO = 1;
-
-    public static final int ESTADO_PRESTAMO_TIPO_ENTIDAD_UCR = 1;
+    public static final Integer ESTADO_PRESTAMO_CREADO = 1;
+    public static final Integer ESTADO_PRESTAMO_SOLICITADO = 2;
+    public static final Integer ESTADO_PRESTAMO_RECHAZADO = 3;
+    public static final Integer ESTADO_PRESTAMO_APROBADO = 4;
+    public static final Integer ESTADO_PRESTAMO_ANULADO = 5;
 
     // Estados de un informe
     public static final Integer ESTADO_INFORME_TECNICO_NUEVO = 1;
@@ -116,6 +122,7 @@ public final class Constantes {
     public static final String DOMINIO_NOTIFICACION = "NOTIFICACION";
     public static final String DOMINIO_ORIGEN = "ORIGEN";
     public static final String DOMINIO_PRESTAMO = "PRESTAMO";
+    public static final String DOMINIO_PRESTAMO_ENTIDAD = "PRESTAMO_ENTIDAD";
     public static final String DOMINIO_PROCESO = "PROCESO";
     public static final String DOMINIO_DOCUMENTO = "DOCUMENTO";
     public static final String DOMINIO_SOLI_DONACION = "SOL_DONACION";

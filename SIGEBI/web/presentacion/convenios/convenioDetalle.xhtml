@@ -27,6 +27,16 @@
         </div>
 
         <div class="container">
+            <!-- ID -->
+            <div class="row">
+                <div class="col-md-2">
+                    <div class="form-group"> 
+                        <ice:outputText value="#{label['sigebi.label.convenios.id']}" />
+                        <ice:inputText id="txtId" value="#{controllerAgregarConvenios.command.id}" partialSubmit="false" styleClass="form-control" readonly="true"/>
+                    </div>                                             
+                </div>
+            </div>
+            
             <!-- Institucion -->
             <div class="row">
                 <div class="col-md-6">
@@ -40,7 +50,6 @@
                     </div>                                             
                 </div>
             </div>
-            
             <!-- Responsable -->
             <div class="row">
                 <div class="col-md-6">

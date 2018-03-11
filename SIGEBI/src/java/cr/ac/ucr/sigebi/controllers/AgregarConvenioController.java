@@ -13,6 +13,7 @@ import cr.ac.ucr.framework.vista.util.Mensaje;
 import cr.ac.ucr.framework.vista.util.Util;
 import cr.ac.ucr.sigebi.commands.ConvenioCommand;
 import cr.ac.ucr.sigebi.domain.Adjunto;
+import cr.ac.ucr.sigebi.domain.Convenio;
 import cr.ac.ucr.sigebi.domain.Estado;
 import cr.ac.ucr.sigebi.domain.Tipo;
 import cr.ac.ucr.sigebi.models.AdjuntoModel;
@@ -60,24 +61,22 @@ public class AgregarConvenioController extends BaseController {
         try {
             FacesContext context = FacesContext.getCurrentInstance();
             UIViewRoot root = context.getViewRoot();
-            UIInput component =  new UIInput();
-
-            String messageValidacion = validarForm(root, component);
+            String messageValidacion = validarForm(root);
             if (Constantes.OK.equals(messageValidacion)) {
                 Estado estadoActivo = this.estadoPorDominioValor(Constantes.DOMINIO_CONVENIO, Constantes.ESTADO_CONVENIO_ACTIVO);
                 command.setEstado(estadoActivo);
+                Convenio convenio = command.getConvenio();
+                convenioModel.salvar(convenio);
                 if (command.getId() == null || command.getId() == 0) {
-                    convenioModel.salvar(command.getConvenio());
                     mensajeExito = "Los datos se salvaron con éxito.";
                 } else {
-                    convenioModel.salvar(command.getConvenio());
                     mensajeExito = "Los datos se actualizaron con éxito.";
                 }
+                command.setId(convenio.getId());
             } else {
-                component.setValid(false);
                 Mensaje.agregarErrorAdvertencia(messageValidacion);
             }
-        } catch (FWExcepcion err) {
+        } catch (Exception err) {
             mensaje = err.getMessage();
         }
     }
@@ -91,7 +90,7 @@ public class AgregarConvenioController extends BaseController {
             }
             inicializar();
             this.vistaOrigen = event.getComponent().getAttributes().get(Constantes.KEY_VISTA_ORIGEN).toString();
-            Util.navegar(Constantes.VISTA_NOTIFICACION_NUEVA);
+            Util.navegar(Constantes.VISTA_CONVENIO_NUEVO);
         } catch (FWExcepcion err) {
             mensaje = err.getMessage();
         }
@@ -129,17 +128,18 @@ public class AgregarConvenioController extends BaseController {
     }
     
     //<editor-fold defaultstate="collapsed" desc="Validaciones">  
-    public String validarForm(UIViewRoot root, UIInput component) {
-        // TODO definir validaciones para convenios
+    public String validarForm(UIViewRoot root) {
         if (!command.getPrestar() && !command.getRecibirPrestamo()) {
-            component = (UIInput) root. findComponent("frmDetalleConvenio:txtRecibir");
-            return Util.getEtiquetas("sigebi.error.controllerAgregarConvenios.error.asunto.nulo");
+            return Util.getEtiquetas("sigebi.error.controllerAgregarConvenios.error.prestar.recibir");
         }
         
         if (command.getInstitucion().isEmpty()) {
-            component = (UIInput) root. findComponent("frmDetalleConvenio:txtInstitucion");
-            return Util.getEtiquetas("sigebi.error.controllerAgregarConvenios.error.correo.nulo");
+            return Util.getEtiquetas("sigebi.error.controllerAgregarConvenios.error.institucion");
         }        
+
+        if (command.getFechaFin().before(command.getFechaInicio())) {
+            return Util.getEtiquetas("sigebi.error.controllerAgregarConvenios.error.fechas");
+        } 
         return Constantes.OK;
     }
     
@@ -153,15 +153,14 @@ public class AgregarConvenioController extends BaseController {
             calendar.add(Calendar.DATE, -1);
 
             if (fecha.before(calendar.getTime())) {
-                Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.error.controllerAgregarNotificaciones.error.fecha.anterior"));
+                Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.error.controllerAgregarConvenios.error.fecha.menor.hoy"));
                 ((UIInput) component).setValid(false); 
             } 
         } catch (Exception e ) {
-            Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.error.controllerAgregarNotificaciones.error.fecha.formato"));
+            Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.error.controllerAgregarConvenios.error.fecha.invalida"));
             ((UIInput) component).setValid(false);
         }
     }
-
     //</editor-fold>
     
     //<editor-fold defaultstate="collapsed" desc="Gets y Sets">

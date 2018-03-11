@@ -144,7 +144,7 @@
                             </ice:column>
 
                             <ice:column style="text-align: center;">
-                                <ice:commandButton id="botonDetalle" style="float:right;margin-top:2%" styleClass="boton" partialSubmit="true" actionListener="#{controllerAgregarPrestamos.detalleRegistro}" value="#{label['sigebi.label.prestamos.detalle']}"  >
+                                <ice:commandButton id="botonDetalle" actionListener="#{controllerAgregarPrestamos.detalleRegistro}" value="#{label['label.detalle']}" style="float:right;margin-top:2%" styleClass="boton" partialSubmit="true">
                                     <f:attribute id="prestamoDetalle" name="#{controllerListarPrestamos.command.key}"  value="#{prestamo.id}"/>
                                     <f:attribute id="vistaOrigen" name="#{controllerListarPrestamos.command.keyVistaOrigen}"  value="#{controllerListarPrestamos.vistaOrigen}"/>
                                 </ice:commandButton>

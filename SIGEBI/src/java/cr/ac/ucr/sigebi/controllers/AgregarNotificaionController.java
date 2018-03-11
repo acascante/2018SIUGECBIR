@@ -11,6 +11,7 @@ import cr.ac.ucr.framework.vista.util.Mensaje;
 import cr.ac.ucr.framework.vista.util.Util;
 import cr.ac.ucr.sigebi.models.EstadoModel;
 import cr.ac.ucr.sigebi.commands.NotificacionCommand;
+import cr.ac.ucr.sigebi.domain.Notificacion;
 import cr.ac.ucr.sigebi.models.NotificacionModel;
 import java.util.Calendar;
 import java.util.Date;
@@ -59,19 +60,19 @@ public class AgregarNotificaionController {
         try {
             FacesContext context = FacesContext.getCurrentInstance();
             UIViewRoot root = context.getViewRoot();
-            UIInput component =  new UIInput();
-            String messageValidacion = validarForm(root, component);
+            String messageValidacion = validarForm(root);
             if (Constantes.OK.equals(messageValidacion)) {
                 command.setEstado(estadoModel.buscarPorDominioNombre(Constantes.DOMINIO_NOTIFICACION, Constantes.ESTADO_NOTIFICACION_CREADA_DESC));
+                Notificacion notificacion = command.getNotificacion();
                 if (command.getIdNotificacion() == null || command.getIdNotificacion() == 0) {
-                    notificacionModel.salvar(command.getNotificacion());
+                    notificacionModel.salvar(notificacion);
                     mensajeExito = "Los datos se salvaron con éxito.";
                 } else {
-                    notificacionModel.salvar(command.getNotificacion());
+                    notificacionModel.salvar(notificacion);
                     mensajeExito = "Los datos se actualizaron con éxito.";
                 }
+                command.setIdNotificacion(notificacion.getId());
             } else {
-                component.setValid(false);
                 Mensaje.agregarErrorAdvertencia(messageValidacion);
             }
         } catch (FWExcepcion err) {
@@ -141,24 +142,20 @@ public class AgregarNotificaionController {
         }
     }
     
-    public String validarForm(UIViewRoot root, UIInput component) {
+    public String validarForm(UIViewRoot root) {
         if (command.getAsunto().isEmpty()) {
-            component = (UIInput) root. findComponent("frmDetalleNotificacion:txtAsunto");
             return Util.getEtiquetas("sigebi.error.controllerAgregarNotificaciones.error.asunto.nulo");
         }
         
         if (command.getDestinatario().isEmpty()) {
-            component = (UIInput) root. findComponent("frmDetalleNotificacion:txtDestinatario");
             return Util.getEtiquetas("sigebi.error.controllerAgregarNotificaciones.error.correo.nulo");
         }
         
         if (command.getMensajeCorreo().isEmpty()) {
-            component = (UIInput) root. findComponent("frmDetalleNotificacion:txtMensajeCorreo");
             return Util.getEtiquetas("sigebi.error.controllerAgregarNotificaciones.error.mensaje.nulo");
         }
         
         if (command.getFecha() == null) {
-            component = (UIInput) root. findComponent("frmDetalleNotificacion:txtFecha");
             return Util.getEtiquetas("sigebi.error.controllerAgregarNotificaciones.error.fecha.nulo");
         }
         return Constantes.OK;

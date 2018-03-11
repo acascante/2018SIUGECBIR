@@ -55,9 +55,7 @@
                 </div>
                 <div class="col-md-4">
                     <div class="form-group"> 
-                        <label class="control-label" for="txtExclusionId">
-                            <ice:outputText value="#{label['sigebi.label.exclusiones.estado']}" />
-                        </label>
+                        <ice:outputText value="#{label['sigebi.label.exclusiones.estado']}" />
                         <ice:inputText id="txtEstado" value="#{controllerAgregarExclusiones.command.estado.nombre}" styleClass="form-control" readonly="true" partialSubmit="false" />
                     </div>
                 </div>
@@ -144,21 +142,21 @@
                                             <ice:column>
                                                 <ice:commandButton id="btnEliminarBien" partialSubmit="true" value="Eliminar" style="float: right" styleClass="boton"
                                                                     actionListener="#{controllerAgregarExclusiones.eliminarBien}" 
-                                                                    rendered="#{bien.exclusionEliminar and controllerAgregarExclusiones.visibleBotonEliminarBien}">
+                                                                    rendered="#{bien.eliminar and controllerAgregarExclusiones.visibleBotonEliminarBien}">
                                                     <f:attribute id="bienSeleccionado" name="bienSeleccionado"  value="#{bien.id}"/> 
                                                 </ice:commandButton>
                                             </ice:column>
                                             <ice:column>
                                                 <ice:commandButton id="btnSolicitarBien" partialSubmit="true" value="Solicitar" style="float: right" styleClass="boton"
                                                                     actionListener="#{controllerAgregarExclusiones.solicitarBien}" 
-                                                                    rendered="#{bien.exclusionSolicitar and controllerAgregarExclusiones.visibleBotonSolicitarBien}">
+                                                                    rendered="#{bien.solicitar and controllerAgregarExclusiones.visibleBotonSolicitarBien}">
                                                     <f:attribute id="bienSeleccionado" name="bienSeleccionado"  value="#{bien.id}"/> 
                                                 </ice:commandButton>
                                             </ice:column>
                                             <ice:column >
                                                 <ice:commandButton id="btnRechazarBien" partialSubmit="true" value="Rechazar" style="float: right" styleClass="boton"
                                                                     actionListener="#{controllerAgregarExclusiones.rechazarBien}"
-                                                                    rendered="#{bien.exclusionRechazar and controllerAgregarExclusiones.visibleBotonRechazarBien}">
+                                                                    rendered="#{bien.rechazar and controllerAgregarExclusiones.visibleBotonRechazarBien}">
                                                     <f:attribute id="bienSeleccionado" name="bienSeleccionado"  value="#{bien.id}"/> 
                                                 </ice:commandButton>
                                             </ice:column>

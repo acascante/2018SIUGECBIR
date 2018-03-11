@@ -49,6 +49,7 @@ public class NotificacionCommand {
     //<editor-fold defaultstate="collapsed" desc="Metodos">
     public Notificacion getNotificacion() {
         Notificacion notificacion = new Notificacion();
+        notificacion.setId(this.idNotificacion);
         notificacion.setAsunto(this.asunto);
         notificacion.setDestinatario(this.destinatario);
         notificacion.setMensaje(this.mensajeCorreo);
