@@ -6,6 +6,7 @@
 package cr.ac.ucr.sigebi.models;
 
 import cr.ac.ucr.framework.utils.FWExcepcion;
+import cr.ac.ucr.sigebi.daos.AutorizacionDao;
 import cr.ac.ucr.sigebi.daos.AutorizacionRolPersonaDao;
 import cr.ac.ucr.sigebi.domain.Autorizacion;
 import cr.ac.ucr.sigebi.domain.AutorizacionRol;
@@ -14,7 +15,6 @@ import cr.ac.ucr.sigebi.domain.UnidadEjecutora;
 import cr.ac.ucr.sigebi.domain.Usuario;
 import java.util.List;
 import javax.annotation.Resource;
-import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
 /**
@@ -25,8 +25,8 @@ import org.springframework.stereotype.Service;
 
 public class AutorizacionRolPersonaModel {
 
-    @Resource
-    private AutorizacionRolPersonaDao autorizacionRolPersonaDao;
+    @Resource private AutorizacionDao autorizacionDao;
+    @Resource private AutorizacionRolPersonaDao autorizacionRolPersonaDao;
 
     public void agregar(AutorizacionRolPersona obj) throws FWExcepcion {
         autorizacionRolPersonaDao.agregar(obj);
@@ -68,5 +68,8 @@ public class AutorizacionRolPersonaModel {
         return autorizacionRolPersonaDao.contar(autorizacionRol);
     }
 
-
+    public boolean buscarAutorizacion(Integer codigoAutorizacion, UnidadEjecutora unidadEjecutora, Usuario usuario) {
+        Autorizacion autorizacion = autorizacionDao.buscarPorCodigo(codigoAutorizacion);
+        return autorizacionRolPersonaDao.buscarAutorizacion(autorizacion, unidadEjecutora, usuario);
+    }
 }

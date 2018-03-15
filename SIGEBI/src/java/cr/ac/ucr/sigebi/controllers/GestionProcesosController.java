@@ -203,11 +203,13 @@ public class GestionProcesosController extends BaseController {
 
             // Se obtiene el id del proceso
             Long valor = command.getTipoProceso().getIdTemporal();
+            command.getAutorizacion().setIdTemporal(-1L);
+            
             if (valor > 0) {
 
                 //Se actualiza el tipo de proceso
                 command.setTipoProceso(this.tipoPorId(valor));
-                command.getTipoProceso().setIdTemporal(valor);
+                command.getTipoProceso().setIdTemporal(valor);                
 
                 //Se cargan los autorizacions asociados al proceso
                 List<Autorizacion> lista = autorizacionModel.buscarPorTipoProceso(command.getTipoProceso());

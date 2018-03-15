@@ -1,4 +1,8 @@
-<ice:form id="frmListarConvenios" xmlns:ice="http://www.icesoft.com/icefaces/component" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core" xmlns:ui="http://java.sun.com/jsf/facelets">
+<ice:form id="frmListarConvenios" 
+          xmlns:ice="http://www.icesoft.com/icefaces/component" 
+          xmlns:h="http://java.sun.com/jsf/html" 
+          xmlns:f="http://java.sun.com/jsf/core" 
+          xmlns:ui="http://java.sun.com/jsf/facelets">
     <div class="contenido-pagina">
         <div class="container">
             <!-- Encabezado -->
@@ -26,14 +30,9 @@
                                     <ice:outputText value="#{label['label.paginacion.cantidad.pagina']} "/>
                                 </td>
                                 <td>
-                                    
-                                    <ice:selectOneMenu id="cantRegistroPorPagina"
-                                           value="#{controllerListarConvenios.cantRegistroPorPagina}" 
-                                           valueChangeListener="#{controllerListarConvenios.cambioRegistrosPorPagina}"
-                                           partialSubmit="true">
+                                    <ice:selectOneMenu id="cantRegistroPorPagina" value="#{controllerListarConvenios.cantRegistroPorPagina}"  valueChangeListener="#{controllerListarConvenios.cambioRegistrosPorPagina}" partialSubmit="true">
                                             <f:selectItems id="item_pa" value="#{controllerListarConvenios.listaRegistrosPagina}"/>
                                     </ice:selectOneMenu>    
-                                    
                                 </td>
                             </tr>
                         </table>                        
@@ -113,6 +112,11 @@
                                                 <f:selectItems id="slcEstadoItem" value="#{controllerListarConvenios.itemsEstado}"/>
                                             </ice:selectOneMenu>
                                         </ice:column>
+                                        
+                                        <!--Opciones-->
+                                        <ice:column id="opciones" >
+                                            <ice:outputText value="#{label['sigebi.label.convenios.opciones']} "/>
+                                        </ice:column>
                                     </ice:headerRow>
                                 </ice:columnGroup>
                             </f:facet>
@@ -137,6 +141,12 @@
                             <ice:column>
                                 <h:outputText id="estadoCell" value="#{convenio.estado.nombre}"/>
                             </ice:column>
+                            <ice:column style="text-align: center;">
+                                <ice:commandButton id="botonDetalle" actionListener="#{controllerAgregarConvenios.detalleRegistro}" value="#{label['label.detalle']}"  style="float:right;margin-top:2%" styleClass="boton" partialSubmit="true">
+                                    <f:attribute id="exclusionDetalle" name="#{controllerListarConvenios.command.key}"  value="#{convenio.id}"/>
+                                    <f:attribute id="vistaOrigen" name="#{controllerListarConvenios.command.keyVistaOrigen}"  value="#{controllerListarConvenios.vistaOrigen}"/>
+                                </ice:commandButton>
+                            </ice:column>
                         </ice:dataTable>
                     </div>
                 </div>
@@ -144,7 +154,7 @@
 
             <div class="row">
                 <div class='col-sm-12'>
-                    <ice:commandButton id="botonNuevo" style="float:right" styleClass="boton" partialSubmit="true" actionListener="#{controllerAgregarConvenios.nuevoRegistro}" value="Nuevo" >
+                    <ice:commandButton id="botonNuevo" actionListener="#{controllerAgregarConvenios.nuevoRegistro}" value="#{label['label.nuevo']}" style="float:right" styleClass="boton" partialSubmit="true">
                        <f:attribute id="vistaOrigen" name="#{controllerListarConvenios.command.keyVistaOrigen}"  value="#{controllerListarConvenios.vistaOrigen}"/>
                     </ice:commandButton>
                 </div>

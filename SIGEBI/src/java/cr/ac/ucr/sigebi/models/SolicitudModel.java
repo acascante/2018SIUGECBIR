@@ -9,6 +9,7 @@ import cr.ac.ucr.framework.utils.FWExcepcion;
 import cr.ac.ucr.sigebi.daos.SolicitudDao;
 import cr.ac.ucr.sigebi.domain.AutorizacionRol;
 import cr.ac.ucr.sigebi.domain.AutorizacionRolPersona;
+import cr.ac.ucr.sigebi.domain.Bien;
 import cr.ac.ucr.sigebi.domain.Solicitud;
 import cr.ac.ucr.sigebi.domain.SolicitudAutorizacion;
 import cr.ac.ucr.sigebi.domain.SolicitudDetalle;
@@ -116,4 +117,10 @@ public class SolicitudModel {
     public void eliminarDetalleSolicitud(SolicitudDetalle solicitud) throws FWExcepcion {
         solicitudDao.eliminarDetalleSolicitud(solicitud);
     }
+    
+    public List<Solicitud> movimientosPorBien(Bien bien){
+        return solicitudDao.movimientosPorBien(bien);
+    }
+    
+    
 }

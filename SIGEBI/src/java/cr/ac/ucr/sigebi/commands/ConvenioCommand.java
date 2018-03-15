@@ -7,6 +7,7 @@ package cr.ac.ucr.sigebi.commands;
 
 import cr.ac.ucr.sigebi.domain.Estado;
 import cr.ac.ucr.sigebi.domain.Convenio;
+import cr.ac.ucr.sigebi.domain.UnidadEjecutora;
 import cr.ac.ucr.sigebi.utils.Constantes;
 import java.util.Calendar;
 import java.util.Date;
@@ -31,6 +32,7 @@ public class ConvenioCommand {
     private Date fechaInicio;
     private Date fechaFin;
     private Estado estado;
+    private UnidadEjecutora unidadEjecutora;
     //</editor-fold>
     
     //<editor-fold defaultstate="collapsed" desc="Constructores">
@@ -39,7 +41,12 @@ public class ConvenioCommand {
         this.fechaInicio = getDefaultDate();
         this.fechaFin = getDefaultDate();
     }
-
+    
+    public ConvenioCommand(UnidadEjecutora unidadEjecutora) {
+        this();
+        this.unidadEjecutora = unidadEjecutora;
+    }
+    
     public ConvenioCommand(Convenio convenio) {
         this.id = convenio.getId();
         this.institucion = convenio.getInstitucion();
@@ -52,6 +59,7 @@ public class ConvenioCommand {
         this.fechaInicio = convenio.getFechaInicio();
         this.fechaFin = convenio.getFechaFin();
         this.estado = convenio.getEstado();
+        this.unidadEjecutora = convenio.getUnidadEjecutora();
     }
     //</editor-fold>
     
@@ -69,6 +77,7 @@ public class ConvenioCommand {
         convenio.setFechaInicio(this.fechaInicio);
         convenio.setFechaFin(this.fechaFin);
         convenio.setEstado(this.estado);
+        convenio.setUnidadEjecutora(this.unidadEjecutora);
         return convenio;
     }
     //</editor-fold>    
@@ -184,5 +193,13 @@ public class ConvenioCommand {
     public void setObservacion(String observacion) {
         this.observacion = observacion;
     }
-    //</editor-fold>
+    
+    public UnidadEjecutora getUnidadEjecutora() {
+        return unidadEjecutora;
+    }
+
+    public void setUnidadEjecutora(UnidadEjecutora unidadEjecutora) {
+        this.unidadEjecutora = unidadEjecutora;
+    }
+    //</editor-fold>49
 }

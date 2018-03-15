@@ -619,8 +619,12 @@ public class ListarBienSincronizarController extends BaseController {
             }
             
             Integer telefono = lVistaUsuario.getgUsuarioActual().getTelefono1() != null ? Integer.parseInt(lVistaUsuario.getgUsuarioActual().getTelefono1()) : 0;
-            bienMod.sincronizarBien(this.bienesEnviarSincronizar.values(), "Solicitud de sincronizacion", telefono, this.usuarioSIGEBI, 
-                    this.estadoPorDominioValor(Constantes.DOMINIO_BIEN, Constantes.ESTADO_BIEN_PENDIENTE_ACTIVACION));
+            bienMod.sincronizarBien(this.bienesEnviarSincronizar.values()
+                                    , "Solicitud de sincronizacion"
+                                    , telefono
+                                    , this.usuarioSIGEBI
+                                    , this.estadoPorDominioValor(Constantes.DOMINIO_BIEN, Constantes.ESTADO_BIEN_PENDIENTE_ACTIVACION)
+                                    );
             this.bienesEnviarSincronizar.clear();
             this.bienesPorSincronizar.clear();
             this.bienesPorRechazar.clear();

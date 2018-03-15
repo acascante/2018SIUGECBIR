@@ -29,8 +29,8 @@ public class UnidadEjecutoraModel {
         return unidadDao.listar();
     }
 
-    public List<UnidadEjecutora> listar(String idUnidad, String nombreUnidad) throws FWExcepcion{
-        return unidadDao.listar(idUnidad, nombreUnidad);
+    public List<UnidadEjecutora> listar(String idUnidad, String nombreUnidad, Long unidadActual) throws FWExcepcion{
+        return unidadDao.listar(idUnidad, nombreUnidad, unidadActual);
     }
     
     public UnidadEjecutora buscarPorId(Long id) throws FWExcepcion{

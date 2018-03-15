@@ -46,6 +46,9 @@ public class Moneda extends ObjetoBase implements Serializable {
     @Column(name = "MONTO_CAPITALIZABLE")
     private Double montoCapitalizable;
 
+    @Column(name = "CODIGO_ISO")
+    private String codigoISO;
+
     //</editor-fold>
 
     //<editor-fold defaultstate="collapsed" desc="GET's y SET's">
@@ -55,6 +58,14 @@ public class Moneda extends ObjetoBase implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getCodigoISO() {
+        return codigoISO;
+    }
+
+    public void setCodigoISO(String codigoISO) {
+        this.codigoISO = codigoISO;
     }
 
     public Integer getNumeroEmpresa() {

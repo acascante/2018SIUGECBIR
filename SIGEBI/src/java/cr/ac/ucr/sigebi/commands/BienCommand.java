@@ -18,9 +18,7 @@ import cr.ac.ucr.sigebi.domain.Lote;
 import cr.ac.ucr.sigebi.domain.Moneda;
 import cr.ac.ucr.sigebi.domain.Nota;
 import cr.ac.ucr.sigebi.domain.Proveedor;
-import cr.ac.ucr.sigebi.domain.RegistroMovimiento;
 import cr.ac.ucr.sigebi.domain.Solicitud;
-import cr.ac.ucr.sigebi.domain.SolicitudDetalle;
 import cr.ac.ucr.sigebi.domain.SubCategoria;
 import cr.ac.ucr.sigebi.domain.SubClasificacion;
 import cr.ac.ucr.sigebi.domain.Tipo;
@@ -590,6 +588,26 @@ public class BienCommand {
         //</editor-fold>
     }
 
+    public class IdentificacionCommand {
+
+        private String filtroIdentificacion;
+
+
+        private IdentificacionCommand() {
+        }
+
+        //<editor-fold defaultstate="collapsed" desc="GET's y SET's">
+        public String getFiltroIdentificacion() {
+            return filtroIdentificacion;
+        }
+
+        public void setFiltroIdentificacion(String filtroIdentificacion) {
+            this.filtroIdentificacion = filtroIdentificacion;
+        }        
+        //</editor-fold>
+
+    }
+    
     public class UbicacionCommand {
 
         private Long idUbicacion;
@@ -679,6 +697,7 @@ public class BienCommand {
     private ItemCommand itemCommand;
     private NotaCommand notaCommand;
     private ProveedorCommand proveedorCommand;
+    private IdentificacionCommand identificacionCommand;
     private UbicacionCommand ubicacionCommand;
     private Adjunto adjunto;
     
@@ -698,6 +717,7 @@ public class BienCommand {
         this.itemCommand = new ItemCommand();
         this.notaCommand = new NotaCommand();
         this.proveedorCommand = new ProveedorCommand();
+        this.identificacionCommand = new IdentificacionCommand();
         this.ubicacionCommand = new UbicacionCommand();
 
         adjunto = new Adjunto();
@@ -755,6 +775,7 @@ public class BienCommand {
         this.notaCommand = new NotaCommand(bien);
         this.proveedorCommand = new ProveedorCommand(bien.getProveedor());
         this.ubicacionCommand = new UbicacionCommand(bien.getUbicacion());
+        this.identificacionCommand = new IdentificacionCommand();
 
         movimientos = new ArrayList<Solicitud>();
         
@@ -768,8 +789,8 @@ public class BienCommand {
         this(); // Llama al constructor sin parametros
         this.itemCommand = new ItemCommand(moneda, tipoOrigen, tipoBien);
         this.descripcion = interfazBien.getDescripcion();
-        this.idTipo = tipoBien != null ? tipoBien.getId() : -1L;
-        this.idOrigen = tipoOrigen != null ? tipoOrigen.getId() : -1L;     
+        this.idTipo = tipoBien.getId() != null ? tipoBien.getId() : -1L;
+        this.idOrigen = tipoOrigen.getId() != null ? tipoOrigen.getId() : -1L;     
         this.estado = estadoBien;
         this.estadoInterno = estadoBien;
         this.idLote = -1L;
@@ -783,9 +804,10 @@ public class BienCommand {
 
         this.ubicacionCommand = new UbicacionCommand();        
         this.proveedorCommand = new ProveedorCommand(proveedor);
+        this.identificacionCommand = new IdentificacionCommand();
         this.persona = 0;
         this.fechaAdquisicion = interfazBien.getFechaAdquisicion();
-        this.idMoneda = moneda != null ? moneda.getId() : -1L;        
+        this.idMoneda = moneda.getId() != null ? moneda.getId() : -1L;        
         this.costo = interfazBien.getValorInicial();
         this.unidadEjecutora = unidadEjecutora;
         this.unidadEjecutora.setIdTemporal(unidadEjecutora.getId()); 
@@ -842,6 +864,15 @@ public class BienCommand {
         
         return bien;
     }
+    
+    public void inicializarComplementos(){
+        
+        this.accesorioCommand = new AccesorioCommand();
+        this.adjuntoCommand = new AdjuntoCommand();
+        this.caracteristicaCommand = new CaracteristicaCommand();
+        this.notaCommand = new NotaCommand();
+    }
+    
     //</editor-fold>
 
     //<editor-fold defaultstate="collapsed" desc="GET's y SET's">
@@ -1200,6 +1231,14 @@ public class BienCommand {
 
     public void setProveedorCommand(ProveedorCommand proveedorCommand) {
         this.proveedorCommand = proveedorCommand;
+    }
+
+    public IdentificacionCommand getIdentificacionCommand() {
+        return identificacionCommand;
+    }
+
+    public void setIdentificacionCommand(IdentificacionCommand identificacionCommand) {
+        this.identificacionCommand = identificacionCommand;
     }
 
     public UbicacionCommand getUbicacionCommand() {

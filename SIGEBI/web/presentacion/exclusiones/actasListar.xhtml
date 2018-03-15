@@ -46,7 +46,7 @@
                                     
                                     <ice:selectOneMenu id="cantRegistroPorPagina"
                                            value="#{actaController.cantRegistroPorPagina}" 
-                                           valueChangeListener="#{actaController.cambioRegistrosPorPagina}"
+                                           valueChangeListener="#{actaController.actaCambioRegistrosPorPagina}"
                                            partialSubmit="true">
                                             <f:selectItems id="item_pa" value="#{actaController.listaRegistrosPagina}"/>
                                     </ice:selectOneMenu>    
@@ -56,15 +56,30 @@
                         </table>                        
                     </div>                    
                     <div>
-                        <ice:commandButton image="./imagenes/botones/first.png" partialSubmit="true" actionListener="#{actaController.primero}" rendered="#{actaController.cantidadPaginas > 1}"/>
-                        <ice:commandButton image="./imagenes/botones/previos.png" partialSubmit="true" actionListener="#{actaController.anterior}" rendered="#{actaController.cantidadPaginas > 1}"/>
-                        <ui:repeat value="#{actaController.arregloPaginas}" var="pagina">
-                            <ice:commandLink value="#{pagina}" partialSubmit="true" actionListener="#{actaController.irPagina}">
+                        <ice:commandButton image="./imagenes/botones/first.png" 
+                                           partialSubmit="true" 
+                                           actionListener="#{actaController.actaPrimero}" 
+                                           rendered="#{actaController.cantidadPaginas > 1}"/>
+                        <ice:commandButton image="./imagenes/botones/previos.png" 
+                                           partialSubmit="true" 
+                                           actionListener="#{actaController.actaAnterior}" 
+                                           rendered="#{actaController.cantidadPaginas > 1}"/>
+                        <ui:repeat value="#{actaController.arregloPaginas}" 
+                                   var="pagina">
+                            <ice:commandLink value="#{pagina}" 
+                                             partialSubmit="true" 
+                                             actionListener="#{actaController.actaIrPagina}">
                                 <f:param name="numPag" value="#{pagina}"/>
                             </ice:commandLink>
                         </ui:repeat>            
-                        <ice:commandButton image="./imagenes/botones/next.png" partialSubmit="true" actionListener="#{actaController.siguiente}" rendered="#{actaController.cantidadPaginas > 1}"/>
-                        <ice:commandButton image="./imagenes/botones/last.png" partialSubmit="true" actionListener="#{actaController.ultimo}" rendered="#{actaController.cantidadPaginas > 1}"/>
+                        <ice:commandButton image="./imagenes/botones/next.png" 
+                                           partialSubmit="true" 
+                                           actionListener="#{actaController.actaSiguiente}" 
+                                           rendered="#{actaController.cantidadPaginas > 1}"/>
+                        <ice:commandButton image="./imagenes/botones/last.png" 
+                                           partialSubmit="true" 
+                                           actionListener="#{actaController.actaUltimo}" 
+                                           rendered="#{actaController.cantidadPaginas > 1}"/>
                     </div>
                 </div>
             </div>

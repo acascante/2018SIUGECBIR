@@ -199,25 +199,28 @@
             </div>
             
             <!--Observacion-->
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="form-group"> 
-                        <ice:outputText value="#{label['sigebi.label.prestamos.observacion']}" />
-                        <ice:inputTextarea id="txtObservacion" styleClass="form-control" style="resize: none" cols="4" partialSubmit="false"
-                                           value="#{controllerAgregarPrestamos.command.observacion}">
-                        </ice:inputTextarea>
-                    </div>                                             
+            <ice:panelGroup rendered="#{controllerAgregarPrestamos.solicitudRegistrada}" >
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group"> 
+                            <ice:outputText value="#{label['sigebi.label.prestamos.observacion']}" />
+                            <ice:inputTextarea id="txtObservacion" styleClass="form-control" style="resize: none" cols="4" partialSubmit="false"
+                                               value="#{controllerAgregarPrestamos.command.observacion}">
+                            </ice:inputTextarea>
+                        </div>                                             
+                    </div>
                 </div>
-            </div>
+            </ice:panelGroup>
             
+            <!--Botones-->
             <div class="row">
                 <div class="col-md-12">
-                    <ice:commandButton id="botonGuardar"  value="Guardar"  partialSubmit="true"  styleClass="boton" action="#{controllerAgregarPrestamos.guardarDatos}" rendered="#{controllerAgregarPrestamos.visibleBotonGuardar}"/>
-                    <ice:commandButton id="botonAplicar"  value="Aplicar"  partialSubmit="true"  styleClass="boton" action="#{controllerAgregarPrestamos.solicitarPrestamo}" rendered="#{controllerAgregarPrestamos.visibleBotonSolicitar}"/>
-                    <ice:commandButton id="botonRechazar"  value="Rechazar"  partialSubmit="true"  styleClass="boton" action="#{controllerAgregarPrestamos.rechazarPrestamo}" rendered="#{controllerAgregarPrestamos.visibleBotonRechazar}"/>
-                    <ice:commandButton id="botonAceptar"  value="Aceptar"  partialSubmit="true"  styleClass="boton" action="#{controllerAgregarPrestamos.aprobarPrestamo}" rendered="#{controllerAgregarPrestamos.visibleBotonAprobar}"/>
-                    <ice:commandButton id="botonRevisar"  value="Revisar"  partialSubmit="true"  styleClass="boton" action="#{controllerAgregarPrestamos.revisarPrestamo}" rendered="#{controllerAgregarPrestamos.visibleBotonRevisar}"/>
-                    <ice:commandButton id="botonAnular"  value="Anular"  partialSubmit="true"  styleClass="boton" action="#{controllerAgregarPrestamos.anularPrestamo}" rendered="#{controllerAgregarPrestamos.visibleBotonAnular}"/>
+                    <ice:commandButton id="botonGuardar" value="#{label['label.guardar']}" partialSubmit="true"  styleClass="boton" action="#{controllerAgregarPrestamos.guardarDatos}" rendered="#{controllerAgregarPrestamos.visibleBotonGuardar}"/>
+                    <ice:commandButton id="botonAplicar" value="#{label['label.aplicar']}"  partialSubmit="true"  styleClass="boton" action="#{controllerAgregarPrestamos.solicitarPrestamo}" rendered="#{controllerAgregarPrestamos.visibleBotonSolicitar}"/>
+                    <ice:commandButton id="botonRechazar" value="#{label['label.rechazar']}" partialSubmit="true"  styleClass="boton" action="#{controllerAgregarPrestamos.rechazarPrestamo}" rendered="#{controllerAgregarPrestamos.visibleBotonRechazar}"/>
+                    <ice:commandButton id="botonAceptar" value="#{label['label.aceptar']}"  partialSubmit="true"  styleClass="boton" action="#{controllerAgregarPrestamos.aprobarPrestamo}" rendered="#{controllerAgregarPrestamos.visibleBotonAprobar}"/>
+                    <ice:commandButton id="botonRevisar" value="#{label['label.revisar']}"  partialSubmit="true"  styleClass="boton" action="#{controllerAgregarPrestamos.revisarPrestamo}" rendered="#{controllerAgregarPrestamos.visibleBotonRevisar}"/>
+                    <ice:commandButton id="botonAnular" value="#{label['label.anular']}"  partialSubmit="true"  styleClass="boton" action="#{controllerAgregarPrestamos.anularPrestamo}" rendered="#{controllerAgregarPrestamos.visibleBotonAnular}"/>
                 </div>
             </div>
         </div>

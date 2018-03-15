@@ -18,7 +18,6 @@ import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -125,6 +124,31 @@ public class AutorizacionRolPersonaDao extends GenericDaoImpl {
             //Se obtienen los resutltados
             return (List<AutorizacionRolPersona>) query.list();
 
+        } catch (HibernateException e) {
+            throw new FWExcepcion("sigebi.error.dao.autorizacionRolPersonaDao.buscarPorAutorizacion",
+                    "Error obtener los registros de buscarPorAutorizacion " + this.getClass(), e.getCause());
+        } finally {
+            session.close();
+        }
+    }
+
+    @Transactional(readOnly = true)
+    public boolean buscarAutorizacion(Autorizacion autorizacion, UnidadEjecutora unidadEjecutora, Usuario usuario) throws FWExcepcion {
+        Session session = this.dao.getSessionFactory().openSession();
+        try {
+            StringBuilder sql = new StringBuilder("SELECT obj FROM AutorizacionRolPersona obj");
+                    sql.append(" WHERE obj.autorizacionRol.autorizacion = :autorizacion");
+                    sql.append(" AND obj.usuarioSeguridad = :usuario");
+                    sql.append(" AND obj.unidadEjecutora = :unidadEjecutora");
+
+            Query query = session.createQuery(sql.toString());
+            query.setParameter("autorizacion", autorizacion);
+            query.setParameter("usuario", usuario);
+            query.setParameter("unidadEjecutora", unidadEjecutora);
+
+            //Se obtienen los resutltados
+            List<AutorizacionRolPersona> items  = query.list();
+            return !items.isEmpty();
         } catch (HibernateException e) {
             throw new FWExcepcion("sigebi.error.dao.autorizacionRolPersonaDao.buscarPorAutorizacion",
                     "Error obtener los registros de buscarPorAutorizacion " + this.getClass(), e.getCause());

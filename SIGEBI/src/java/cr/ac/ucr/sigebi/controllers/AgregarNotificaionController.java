@@ -9,7 +9,6 @@ import cr.ac.ucr.sigebi.utils.Constantes;
 import cr.ac.ucr.framework.utils.FWExcepcion;
 import cr.ac.ucr.framework.vista.util.Mensaje;
 import cr.ac.ucr.framework.vista.util.Util;
-import cr.ac.ucr.sigebi.models.EstadoModel;
 import cr.ac.ucr.sigebi.commands.NotificacionCommand;
 import cr.ac.ucr.sigebi.domain.Notificacion;
 import cr.ac.ucr.sigebi.models.NotificacionModel;
@@ -35,16 +34,15 @@ import org.springframework.stereotype.Controller;
  */
 @Controller(value = "controllerAgregarNotificaciones")
 @Scope("session")
-public class AgregarNotificaionController {
+public class AgregarNotificaionController extends BaseController {
 
     @Resource private NotificacionModel notificacionModel;
-    @Resource private EstadoModel estadoModel;
     
     private NotificacionCommand command;
     
     private String mensajeExito;
     private String mensaje;
-    private String vistaOrigen;
+    private Boolean notificacionRegistrada;
   
     public AgregarNotificaionController() {
         super();
@@ -54,6 +52,7 @@ public class AgregarNotificaionController {
         this.mensajeExito = "";
         this.mensaje = "";
         this.command = new NotificacionCommand();
+        this.notificacionRegistrada = false;
     }
     
     public void guardarDatos() {
@@ -62,21 +61,22 @@ public class AgregarNotificaionController {
             UIViewRoot root = context.getViewRoot();
             String messageValidacion = validarForm(root);
             if (Constantes.OK.equals(messageValidacion)) {
-                command.setEstado(estadoModel.buscarPorDominioNombre(Constantes.DOMINIO_NOTIFICACION, Constantes.ESTADO_NOTIFICACION_CREADA_DESC));
+                this.command.setEstado(this.estadoPorDominioValor(Constantes.DOMINIO_NOTIFICACION, Constantes.ESTADO_NOTIFICACION_CREADA));
                 Notificacion notificacion = command.getNotificacion();
-                if (command.getIdNotificacion() == null || command.getIdNotificacion() == 0) {
-                    notificacionModel.salvar(notificacion);
-                    mensajeExito = "Los datos se salvaron con éxito.";
+                if (!notificacionRegistrada) {
+                    this.notificacionModel.salvar(notificacion);
+                    this.notificacionRegistrada = true;
+                    this.mensajeExito = "Los datos se salvaron con éxito.";
+                    this.command.setIdNotificacion(notificacion.getId());
                 } else {
-                    notificacionModel.salvar(notificacion);
-                    mensajeExito = "Los datos se actualizaron con éxito.";
+                    this.notificacionModel.salvar(notificacion);
+                    this.mensajeExito = "Los datos se actualizaron con éxito.";
                 }
-                command.setIdNotificacion(notificacion.getId());
             } else {
                 Mensaje.agregarErrorAdvertencia(messageValidacion);
             }
         } catch (FWExcepcion err) {
-            mensaje = err.getMessage();
+            this.mensaje = err.getMessage();
         }
     }
     
@@ -185,14 +185,6 @@ public class AgregarNotificaionController {
 
     public void setMensaje(String mensaje) {
         this.mensaje = mensaje;
-    }
-
-    public String getVistaOrigen() {
-        return vistaOrigen;
-    }
-
-    public void setVistaOrigen(String vistaOrigen) {
-        this.vistaOrigen = vistaOrigen;
     }
     //</editor-fold>
 }

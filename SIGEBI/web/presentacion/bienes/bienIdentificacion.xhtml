@@ -1,0 +1,59 @@
+<ice:outputHtml id="frmIdentificacion" xmlns:ice="http://www.icesoft.com/icefaces/component" xmlns:icecore="http://www.icefaces.org/icefaces/core" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:c="http://java.sun.com/jstl/core">
+
+    <ice:panelPopup modal="true" visible="#{controllerAgregarBienes.visiblePanelIdentificador}" rendered="#{controllerAgregarBienes.visiblePanelIdentificador}" styleClass="popup">
+
+        <f:facet name="header">
+            <ice:outputText styleClass="flotar_izquierda titulo_popup" value="Listado de identificaciones"/>
+        </f:facet>
+        <br/>
+        
+        <f:facet name="body">
+            <fieldset class="panel_Container" >
+                <br></br>
+                
+                <!-- LISTAR Identificaciones -->
+                <ice:dataTable id="provedoresTabla" 
+                               value="#{controllerAgregarBienes.identificaciones}" 
+                               var="identificacion" 
+                               paginator="true" 
+                               paginatorPosition="bottom"                                
+                               rows="10">
+                    
+                    <ice:column id="colIdentificacion">
+                        <f:facet name="header">
+                            <ice:columnGroup>
+                                <ice:headerRow>
+                                    <ice:outputText value="#{label['sigebi.Modal.General.Label.Identificacion']}"/>
+                                </ice:headerRow>
+                                <ice:headerRow>
+                                    <ice:inputText id="filtrIdentificacion" 
+                                                   value="#{controllerAgregarBienes.command.identificacionCommand.filtroIdentificacion}" 
+                                                   partialSubmit="true"                                                    
+                                                   valueChangeListener="#{controllerAgregarBienes.filtroIdentificacion}"/>
+                                </ice:headerRow>
+                            </ice:columnGroup>
+                        </f:facet>                                
+                        <h:outputText value="#{identificacion.identificacion}"/>
+                    </ice:column>
+                    
+                    <ice:column style="text-align: center;">
+                        <ice:commandButton id="botonSeleccionarIdentificacion" 
+                                           style="float:right;margin-top:2%"  
+                                           styleClass="boton"  
+                                           partialSubmit="true" 
+                                           value="Seleccionar"  
+                                           actionListener="#{controllerAgregarBienes.selecionarIdentificacion}">
+                            <f:attribute id="provSeleccionado" name="identificacionSeleccionado" value="#{identificacion}"/>
+                        </ice:commandButton>
+                    </ice:column>
+                </ice:dataTable>
+                <br/>
+                <br/>
+                <span class="alineado_derecha">
+                    <ice:commandButton id="btn_cancelar" partialSubmit="true" action="#{controllerAgregarBienes.cerrarPanelIdentificacion}" styleClass="boton"  value="Regresar" />
+                </span>
+                <br/><br/>
+            </fieldset>       
+        </f:facet>
+    </ice:panelPopup>
+</ice:outputHtml>

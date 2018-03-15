@@ -9,7 +9,7 @@ import cr.ac.ucr.framework.daoHibernate.DaoHelper;
 import cr.ac.ucr.framework.daoImpl.GenericDaoImpl;
 import cr.ac.ucr.framework.utils.FWExcepcion;
 import cr.ac.ucr.sigebi.domain.UnidadEjecutora;
-import cr.ac.ucr.sigebi.domain.TrasladoDetalle;
+import cr.ac.ucr.sigebi.domain.SolicitudDetalleTraslado;
 import cr.ac.ucr.sigebi.domain.SolicitudTraslado;
 import java.util.List;
 import org.hibernate.Query;
@@ -36,16 +36,16 @@ public class TrasladosDao extends GenericDaoImpl {
         try {
             this.persist(obj);
         } catch (Exception e) {
-            e.printStackTrace();
+            //e.printStackTrace();
             throw new FWExcepcion("sigebi.error.dao.rol.agregar",
                     "Error obtener los registros de tipo " + this.getClass(), e.getCause());
         }
     }
     
     @Transactional
-    public void guardarBienes(List<TrasladoDetalle> bienes){
+    public void guardarBienes(List<SolicitudDetalleTraslado> bienes){
         try {
-            for(TrasladoDetalle valor : bienes) {
+            for(SolicitudDetalleTraslado valor : bienes) {
                 persist(valor);
             }
             
@@ -58,9 +58,9 @@ public class TrasladosDao extends GenericDaoImpl {
     
     
     @Transactional
-    public void eliminarBienes(List<TrasladoDetalle> bienes){
+    public void eliminarBienes(List<SolicitudDetalleTraslado> bienes){
         try {
-            for(TrasladoDetalle valor : bienes) {
+            for(SolicitudDetalleTraslado valor : bienes) {
                 delete(valor);
             }
             
@@ -73,7 +73,7 @@ public class TrasladosDao extends GenericDaoImpl {
     
     
     @Transactional
-    public void guardarBien(TrasladoDetalle bien){
+    public void guardarBien(SolicitudDetalleTraslado bien){
         try {
             persist(bien);            
         } catch (DataAccessException e) {
@@ -126,7 +126,7 @@ public class TrasladosDao extends GenericDaoImpl {
     }
     
     @Transactional
-    public List<TrasladoDetalle> traerBienesTraslado(SolicitudTraslado trasladoId) {
+    public List<SolicitudDetalleTraslado> traerBienesTraslado(SolicitudTraslado trasladoId) {
         Session session = this.dao.getSessionFactory().openSession();
         try {
             String sql = "SELECT obj FROM TrasladoDetalle obj "
@@ -135,7 +135,7 @@ public class TrasladosDao extends GenericDaoImpl {
             query.setParameter("traslado", trasladoId.getId());
 
             //Se obtienen los resutltados
-            return (List<TrasladoDetalle>) query.list();
+            return (List<SolicitudDetalleTraslado>) query.list();
 
         } catch (Exception e) {
             e.printStackTrace();

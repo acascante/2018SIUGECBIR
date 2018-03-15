@@ -54,4 +54,19 @@ public class MonedaDao extends GenericDaoImpl {
             session.close();
         }
     }
+    
+    @Transactional(readOnly = true)
+    public Moneda buscarPorCodigoISO(String codigoISO) throws FWExcepcion {
+        Session session = dao.getSessionFactory().openSession();
+        try {
+            String sql = "SELECT obj FROM Moneda obj WHERE obj.codigoISO = :codigoISO";
+            Query query = session.createQuery(sql);
+            query.setParameter("codigoISO", codigoISO);
+            return (Moneda) query.uniqueResult();
+        } catch (HibernateException e) {
+            throw new FWExcepcion("sigebi.error.moneda.dao.buscarPorId", "Error obtener los registros de tipo " + this.getClass(), e.getCause());
+        } finally {
+            session.close();
+        }
+    }
 }

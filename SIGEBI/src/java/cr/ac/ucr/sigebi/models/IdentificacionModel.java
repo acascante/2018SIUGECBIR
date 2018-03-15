@@ -10,6 +10,7 @@ import cr.ac.ucr.sigebi.daos.IdentificacionDao;
 import cr.ac.ucr.sigebi.domain.Estado;
 import cr.ac.ucr.sigebi.domain.Identificacion;
 import cr.ac.ucr.sigebi.domain.UnidadEjecutora;
+import java.util.List;
 import javax.annotation.Resource;
 import org.springframework.stereotype.Service;
 
@@ -24,6 +25,10 @@ public class IdentificacionModel {
     @Resource
     private IdentificacionDao identificacionDao;
     
+    public List<Identificacion> listar(Estado estado, UnidadEjecutora unidadEjecutora, String identificacion){
+        return identificacionDao.listar(estado, unidadEjecutora, identificacion);
+    }
+            
     public Identificacion siguienteDisponible(Estado estado, UnidadEjecutora unidadEjecutora) throws FWExcepcion {
         return identificacionDao.siguienteDisponible(estado, unidadEjecutora);
     }

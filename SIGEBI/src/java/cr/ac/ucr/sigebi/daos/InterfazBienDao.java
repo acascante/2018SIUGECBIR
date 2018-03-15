@@ -65,12 +65,12 @@ public class InterfazBienDao extends GenericDaoImpl {
             String unidadEjecutora,
             Estado estado,
             Integer pPrimerRegistro,
-            Integer pUltimoRegistro) throws FWExcepcion {
+            Integer pUltimoRegistro, String fltIdentificacionBien) throws FWExcepcion {
 
         Session session = this.dao.getSessionFactory().openSession();
         try {
             //Se genera el query para la busqueda
-            Query q = this.creaQueryListar(id, marca, modelo, serie, descripcion, unidadEjecutora, estado, false, session);
+            Query q = this.creaQueryListar(id, marca, modelo, serie, descripcion, unidadEjecutora, estado, fltIdentificacionBien, false, session);
 
             //Paginacion
             if (!(pPrimerRegistro.equals(1) && pUltimoRegistro.equals(1))) {
@@ -94,14 +94,15 @@ public class InterfazBienDao extends GenericDaoImpl {
             String serie,
             String descripcion,
             String unidadEjecutora,
-            Estado estado) throws FWExcepcion {
+            Estado estado, 
+            String fltIdentificacionBien) throws FWExcepcion {
         
         Session session = dao.getSessionFactory().openSession();
         try {
             //Se genera el query para la busqueda de los bienes
-            Query q = this.creaQueryListar(id, marca, modelo, serie, descripcion, unidadEjecutora, estado, true, session);
+            Query q = this.creaQueryListar(id, marca, modelo, serie, descripcion, unidadEjecutora, estado, fltIdentificacionBien, true, session);
 
-            //Se obtienen los resutltados
+            //Se obtienen los resutltadosfltIdentificacionBien
             return (Long) q.uniqueResult();
 
         } catch (HibernateException e) {
@@ -118,6 +119,7 @@ public class InterfazBienDao extends GenericDaoImpl {
             String descripcion,
             String unidadEjecutora,
             Estado estado,
+            String fltIdentificacionBien,
             Boolean contar,
             Session session
     ) {
@@ -135,6 +137,10 @@ public class InterfazBienDao extends GenericDaoImpl {
         if (id != null && id.length() > 0) {
             sql.append(" AND upper(obj.id) like upper(:id)");
         } else {
+
+            if (fltIdentificacionBien != null && fltIdentificacionBien.length() > 0) {
+                sql.append(" and upper(obj.fltIdentificacionBien) like upper(:fltIdentificacionBien)");
+            }
 
             if (marca != null && marca.length() > 0) {
                 sql.append(" and upper(obj.marca) like upper(:marca)");
@@ -167,7 +173,11 @@ public class InterfazBienDao extends GenericDaoImpl {
         if (id != null && id.length() > 0) {
             q.setParameter("id", '%' + id + '%');
         } else {
-
+            
+            if (fltIdentificacionBien != null && fltIdentificacionBien.length() > 0) {
+                q.setParameter("fltIdentificacionBien", '%' + fltIdentificacionBien + '%');
+            }
+            
             if (marca != null && marca.length() > 0) {
                 q.setParameter("marca", '%' + marca + '%');
             }
@@ -197,12 +207,13 @@ public class InterfazBienDao extends GenericDaoImpl {
     }
 
     @Transactional(readOnly = true)
-    public List<InterfazAdjunto> listarInterfazAdjuntos(String identificacionBien) throws FWExcepcion {
+    public List<InterfazAdjunto> listarInterfazAdjuntos(String identificacionOrigen,  Integer idOrigenTecnico) throws FWExcepcion {
         Session session = dao.getSessionFactory().openSession();
         try {
-            String sql = "SELECT b FROM InterfazAdjunto b WHERE b.identificacionBien = :identificacionBien";
+            String sql = "SELECT b FROM InterfazAdjunto b WHERE b.identificacionOrigen = :identificacionOrigen and b.idOrigenTecnico = :idOrigenTecnico";
             Query query = session.createQuery(sql);
-            query.setParameter("identificacionBien", identificacionBien);
+            query.setParameter("identificacionOrigen", identificacionOrigen);
+            query.setParameter("idOrigenTecnico", idOrigenTecnico);
             return (List<InterfazAdjunto>) query.list();
         } catch (HibernateException e) {
             throw new FWExcepcion("sigebi.error.solicitudDao.listarInterfazAdjuntos", "Error obtener los registros de tipo " + this.getClass(), e.getCause());
@@ -212,12 +223,13 @@ public class InterfazBienDao extends GenericDaoImpl {
     }
 
     @Transactional(readOnly = true)
-    public List<InterfazAccesorio> listarInterfazAccesorios(String identificacionBien) throws FWExcepcion {
+    public List<InterfazAccesorio> listarInterfazAccesorios(String identificacionOrigen, Integer idOrigenTecnico) throws FWExcepcion {
         Session session = dao.getSessionFactory().openSession();
         try {
-            String sql = "SELECT b FROM InterfazAccesorio b WHERE b.identificacionBien = :identificacionBien";
+            String sql = "SELECT b FROM InterfazAccesorio b WHERE b.identificacionOrigen = :identificacionOrigen and b.idOrigenTecnico = :idOrigenTecnico";
             Query query = session.createQuery(sql);
-            query.setParameter("identificacionBien", identificacionBien);
+            query.setParameter("identificacionOrigen", identificacionOrigen);
+            query.setParameter("idOrigenTecnico", idOrigenTecnico);
             return (List<InterfazAccesorio>) query.list();
         } catch (HibernateException e) {
             throw new FWExcepcion("sigebi.error.solicitudDao.listarInterfazAccesorios", "Error obtener los registros de tipo " + this.getClass(), e.getCause());

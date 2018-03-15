@@ -32,10 +32,7 @@ public class InterfazAccesorio extends ObjetoBase implements Serializable {
 
     @Column(name = "ID_ORIGEN_TECNICO")
     private Integer idOrigenTecnico;
-
-    @Column(name = "IDENTIFICACION_BIEN")
-    private String identificacionBien;
-
+    
     @Column(name = "IDENTIFICACION_ORIGEN")
     private String identificacionOrigen;
 
@@ -63,14 +60,6 @@ public class InterfazAccesorio extends ObjetoBase implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public String getIdentificacionBien() {
-        return identificacionBien;
-    }
-
-    public void setIdentificacionBien(String identificacionBien) {
-        this.identificacionBien = identificacionBien;
     }
 
     public Integer getIdOrigenTecnico() {

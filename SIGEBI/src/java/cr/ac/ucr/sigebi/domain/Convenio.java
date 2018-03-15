@@ -67,6 +67,10 @@ public class Convenio extends ObjetoBase implements Serializable {
     @JoinColumn(name = "ID_ESTADO", referencedColumnName = "ID_ESTADO")
     @ManyToOne(fetch = FetchType.EAGER)
     private Estado estado;
+    
+    @ManyToOne
+    @JoinColumn(name = "ID_UNIDAD_EJECUTORA", referencedColumnName = "ID")
+    private UnidadEjecutora unidadEjecutora;
     //</editor-fold>
     
     //<editor-fold defaultstate="collapsed" desc="Constructores">
@@ -160,6 +164,14 @@ public class Convenio extends ObjetoBase implements Serializable {
 
     public void setEstado(Estado estado) {
         this.estado = estado;
+    }
+
+    public UnidadEjecutora getUnidadEjecutora() {
+        return unidadEjecutora;
+    }
+
+    public void setUnidadEjecutora(UnidadEjecutora unidadEjecutora) {
+        this.unidadEjecutora = unidadEjecutora;
     }
     //</editor-fold>
     

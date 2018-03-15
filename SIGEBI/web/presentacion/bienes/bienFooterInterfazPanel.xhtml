@@ -6,6 +6,31 @@
                 <ice:panelGroup>
                     <ice:panelGroup id="tabAdicionales" style="padding-bottom: 60px; padding-top: 10px;" styleClass="tabsContent panelTabSetContainer">
                         <ice:panelTabSet>
+                            <!-- TAB Bien-->
+                            <ice:panelTab id="tabBien" label="Datos del bien">
+                                <ice:panelTab id="tabBienes" label="#{label['sigebi.Bien.Label.bien']}" disabled="#{!controllerAgregarBienes.bienRegistrado}">
+                                    <ui:insert name="addBien">
+                                        <!-- ROW Unidad -->
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <ice:outputText value="#{label['sigebi.Bien.Label.unidad']}" />
+
+                                                <ice:selectOneMenu id="selUnidadBien"                                           
+                                                           styleClass="form-control"
+                                                           partialSubmit="true"
+                                                           value="#{controllerAgregarBienes.command.unidadEjecutora.idTemporal}"
+                                                           valueChangeListener="#{controllerAgregarBienes.cambiarUnidad}">
+                                                           <f:selectItem itemLabel="#{label['sigebi.Bien.Select.Unidad']}" itemValue="-1"/>
+                                                          <f:selectItems id="optSelUnidadBien" value="#{controllerAgregarBienes.itemsUnidades}"/>
+                                                </ice:selectOneMenu>
+                                            </div>
+
+                                        </div>  
+                                        <ui:include src="../bienes/bienDetalleInclude.xhtml" />
+                                    </ui:insert>
+                                </ice:panelTab>
+                            </ice:panelTab>
+
                             <!-- TAB Caracteristicas-->
                             <ice:panelTab id="tabGarantia" label="Caracteristicas">
                                 <ice:panelTab id="tabCaracteristicas" label="#{label['sigebi.Bien.Label.Caracteristicas']}" disabled="#{!controllerAgregarBienes.bienRegistrado}">

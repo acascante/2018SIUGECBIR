@@ -94,6 +94,24 @@
                                 <h:outputText id="idCell" value="#{interfaze.id}"/>
                             </ice:column>
                             
+                            <ice:column id="colPlaca">
+                                <f:facet name="header">
+                                    <ice:columnGroup>
+                                        <ice:headerRow>
+                                            <ice:outputText value="#{label['sigebi.label.vista.listarInterfazBien.identificacionBien']}"/>
+                                        </ice:headerRow>
+                                        <ice:headerRow>
+                                            <ice:inputText id="fltPlaca"
+                                                           style="width: 130px;"
+                                                           value="#{controllerListarInterfazBien.fltIdentificacionBien}"                                   
+                                                           partialSubmit="true"
+                                                           valueChangeListener="#{controllerListarInterfazBien.cambioFiltro}"/>
+                                        </ice:headerRow>
+                                    </ice:columnGroup>
+                                </f:facet>                                
+                                <h:outputText id="descripcionCell" value="#{interfaze.identificacionBien}"/>
+                            </ice:column>                               
+                            
                             <ice:column id="colDescripcion">
                                 <f:facet name="header">
                                     <ice:columnGroup>

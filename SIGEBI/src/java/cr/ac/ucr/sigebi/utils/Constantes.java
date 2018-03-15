@@ -70,6 +70,11 @@ public final class Constantes {
     public static final Integer ESTADO_EXCLUSION_SOLICITADA = 2;
     public static final Integer ESTADO_EXCLUSION_RECHAZADA = 3;
     public static final Integer ESTADO_EXCLUSION_APROBADA = 4;
+    
+    public static final int TIPO_EXCLUSION_RETORNO = 4;
+    public static final int TIPO_EXCLUSION_PRESTAMO = 3;
+    public static final int TIPO_EXCLUSION_DESECHO = 2 ;
+    public static final int TIPO_EXCLUSION_DONACION = 1;
 
     // PRESTAMOS
     public static final Integer ESTADO_PRESTAMO_CREADO = 1;
@@ -84,6 +89,13 @@ public final class Constantes {
     public static final Integer ESTADO_INFORME_TECNICO_APROBADO = 3;
     public static final Integer ESTADO_INFORME_TECNICO_RECHAZADO = 4;
     public static final Integer ESTADO_INFORME_TECNICO_ANULADO = 5;
+    
+    public static final Integer TIPO_INFORME_TECNICO_REUBICAR = 1;
+    public static final Integer TIPO_INFORME_TECNICO_DESECHAR = 4;
+    public static final Integer TIPO_INFORME_TECNICO_REPARAR = 6;
+    public static final Integer TIPO_INFORME_TECNICO_DONAR = 2;
+    public static final Integer TIPO_INFORME_TECNICO_OTROS = 3;
+    public static final Integer TIPO_INFORME_TECNICO_USAR_PIEZAS = 5;
 
     // Estados de una donacion
     public static final Integer ESTADO_SOLITUD_DONACION_NUEVO = 1;
@@ -142,7 +154,14 @@ public final class Constantes {
     public static final Integer TIPO_REGISTRO_MOVIMIENTO_CAMBIO_ESTADO_SOLICITUD = 2;
     public static final Integer TIPO_REGISTRO_MOVIMIENTO_CAMBIO_ESTADO_DOCUMENTO = 3;
     public static final Integer TIPO_REGISTRO_MOVIMIENTO_RECHAZAR_AUTORIZACION = 4;
+    public static final Integer TIPO_REGISTRO_MOVIMIENTO_CAMBIO_CONVENIO = 5;
 
+    public static final String TIPO_MOVIMIENTO_SINCRONIZAR_AGREGAR = "AGREGAR";
+    public static final String TIPO_MOVIMIENTO_SINCRONIZAR_EXCLUIR = "EXCLUIR";
+    public static final String TIPO_MOVIMIENTO_SINCRONIZAR_MODIFICAR = "MODIFICAR";
+    public static final String TIPO_MOVIMIENTO_SINCRONIZAR_TRASLADAR = "TRASLADAR";
+    
+    
     //TIPO CARACTERISTICA BIEN
     public static final Integer TIPO_CARACTERISTICA_SERIE = 1;
     public static final Integer TIPO_CARACTERISTICA_MODELO = 2;
@@ -160,6 +179,9 @@ public final class Constantes {
     public static final Integer CODIGO_AUTORIZACION_TRASLADO_ENVIAR = 5;
     public static final Integer CODIGO_AUTORIZACION_TRASLADO_RECIBIR = 6;
     public static final Integer CODIGO_AUTORIZACION_DONACION = 7;
+    public static final Integer CODIGO_AUTORIZACION_CAMBIAR_IDENTIFICACION_BIEN = 8;
+    public static final Integer CODIGO_AUTORIZACION_EXCLUSION_DESECHO = 9;
+    public static final Integer CODIGO_AUTORIZACION_EXCLUSION_DONACION = 10;
 
     public static final String ACTA_ID_TIPO_DONACION = "26";
     public static final String ACTA_ID_TIPO_DESECHO = "27";
@@ -294,6 +316,7 @@ public final class Constantes {
     public static final Integer DISCRIMINATOR_REGISTRO_MOVIMIENTO_BIEN = 1;
     public static final Integer DISCRIMINATOR_REGISTRO_MOVIMIENTO_DOCUMENTO = 2;
     public static final Integer DISCRIMINATOR_REGISTRO_MOVIMIENTO_SOLICITUD = 3;
+    public static final Integer DISCRIMINATOR_REGISTRO_MOVIMIENTO_CONVENIO= 4;
 
     //COnsultas en listados de bienes
     public static final Integer BIENES_LISTADO_ACTAS = 2;

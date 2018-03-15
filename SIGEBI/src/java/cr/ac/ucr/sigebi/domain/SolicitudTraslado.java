@@ -58,10 +58,15 @@ public class SolicitudTraslado extends Solicitud {
     */
     public SolicitudTraslado(Estado estado
             , UnidadEjecutora unidadEjecutora) {
-        super(Constantes.DISCRIMINATOR_DOCUMENTO_ACTA, unidadEjecutora, estado);
+        super(Constantes.DISCRIMINATOR_SOLICITUD_TRASLADO, unidadEjecutora, estado);
     }
     
     //</editor-fold>
+
+    public SolicitudTraslado() {
+       super();
+      this.setDiscriminator(Constantes.DISCRIMINATOR_SOLICITUD_TRASLADO);
+    }
 
     
     public UnidadEjecutora getUnidadEjecutoraDestino() {

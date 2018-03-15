@@ -46,7 +46,8 @@ public class ListarInterfazBienController extends BaseController {
     String fltModelo = "";
     String fltSerie = "";
     String fltDescripcion = "";
-
+    String fltIdentificacionBien;
+    
     // comboBox estados
     List<SelectItem> estadosOptions;
     
@@ -145,6 +146,14 @@ public class ListarInterfazBienController extends BaseController {
         this.estadosOptions = estadosOptions;
     }
 
+    public String getFltIdentificacionBien() {
+        return fltIdentificacionBien;
+    }
+
+    public void setFltIdentificacionBien(String fltIdentificacionBien) {
+        this.fltIdentificacionBien = fltIdentificacionBien;
+    }
+
     //</editor-fold>
 
     //<editor-fold defaultstate="collapsed" desc="Constructor">
@@ -203,7 +212,7 @@ public class ListarInterfazBienController extends BaseController {
         try {
 
             //Se cuenta la cantidad de registros
-            Long contador = interfazBienModel.contar(fltId, fltMarca, fltModelo, fltSerie, fltDescripcion, fltUnidadEjecutora, this.estadoPorId(Long.parseLong(fltEstado)));
+            Long contador = interfazBienModel.contar(fltId, fltMarca, fltModelo, fltSerie, fltDescripcion, fltUnidadEjecutora, this.estadoPorId(Long.parseLong(fltEstado)), fltIdentificacionBien);
 
             //Se actualiza la cantidad de registros segun los filtros
             this.setCantidadRegistros(contador.intValue());
@@ -222,7 +231,7 @@ public class ListarInterfazBienController extends BaseController {
         try {
 
             this.interfazBienes = interfazBienModel.listar(fltId, fltMarca, fltModelo, fltSerie, fltDescripcion, fltUnidadEjecutora,
-                     this.estadoPorId(Long.parseLong(fltEstado)), this.getPrimerRegistro() - 1, this.getUltimoRegistro());
+                     this.estadoPorId(Long.parseLong(fltEstado)), this.getPrimerRegistro() - 1, this.getUltimoRegistro(), fltIdentificacionBien);
         } catch (FWExcepcion e) {
             Mensaje.agregarErrorAdvertencia(e.getError_para_usuario());
         } catch (Exception e) {

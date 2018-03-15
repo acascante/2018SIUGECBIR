@@ -125,16 +125,30 @@ public class Bien extends ObjetoBase implements Serializable {
     @JoinColumn(name = "ID_IDENTIFICACION", referencedColumnName = "ID_IDENTIFICACION")
     private Identificacion identificacion;    
 
+    @ManyToOne
+    @JoinColumn(name = "ID_INTERFAZ", referencedColumnName = "ID_INTERFAZ_BIEN")
+    private InterfazBien interfazBien;    
+    
     @Transient
     private List<Accesorio> accesorios;
     
     @Transient
     private List<BienCaracteristica> caracteristicas;
+    
+    
     //</editor-fold>
 
     //<editor-fold defaultstate="collapsed" desc="GET's y SET's">
     public Long getId() {
         return id;
+    }
+
+    public InterfazBien getInterfazBien() {
+        return interfazBien;
+    }
+
+    public void setInterfazBien(InterfazBien interfazBien) {
+        this.interfazBien = interfazBien;
     }
 
     public void setId(Long id) {

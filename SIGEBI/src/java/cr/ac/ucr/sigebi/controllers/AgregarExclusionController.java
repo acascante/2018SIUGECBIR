@@ -14,11 +14,14 @@ import cr.ac.ucr.sigebi.commands.ExclusionCommand;
 import cr.ac.ucr.sigebi.commands.ListarBienesCommand;
 import cr.ac.ucr.sigebi.commands.ListarExclusionesCommand;
 import cr.ac.ucr.sigebi.domain.Bien;
+import cr.ac.ucr.sigebi.domain.DocumentoInformeTecnico;
 import cr.ac.ucr.sigebi.domain.Estado;
 import cr.ac.ucr.sigebi.domain.RegistroMovimientoSolicitud;
 import cr.ac.ucr.sigebi.domain.SolicitudExclusion;
 import cr.ac.ucr.sigebi.domain.Tipo;
+import cr.ac.ucr.sigebi.models.AutorizacionRolPersonaModel;
 import cr.ac.ucr.sigebi.models.BienModel;
+import cr.ac.ucr.sigebi.models.DocumentoModel;
 import cr.ac.ucr.sigebi.models.RegistroMovimientoModel;
 import java.util.ArrayList;
 import java.util.Date;
@@ -228,7 +231,9 @@ public class AgregarExclusionController extends BaseController {
     
     ListadoBienes listadoBienes;
     
+    @Resource private AutorizacionRolPersonaModel autorizacionRolPersonaModel;
     @Resource private BienModel bienModel;
+    @Resource private DocumentoModel documentoModel;
     @Resource private ExclusionModel exclusionModel;
     @Resource private RegistroMovimientoModel registroMovimientoModel;
     
@@ -258,6 +263,8 @@ public class AgregarExclusionController extends BaseController {
     private boolean visibleBotonRechazarBienObservacion;
     private boolean visibleBotonRevisarObservacion;
     
+    private boolean autorizadoAprobar;
+    
     private boolean exclusionRegistrada;
     
     private int accion;
@@ -277,7 +284,27 @@ public class AgregarExclusionController extends BaseController {
         exclusion.setDetalles(exclusionModel.listarDetalles(exclusion));
         this.command = new ExclusionCommand(exclusion);
         this.exclusionRegistrada = true;
+        this.autorizadoAprobar = inicializarAutorizaciones();        
         inicializarDatos();
+    }
+    
+    private boolean inicializarAutorizaciones() {
+        Tipo tipo = this.tipoPorId(this.command.getIdTipo());
+        int codigoAutorizacion = 0;
+        switch (tipo.getValor()) {
+            case Constantes.TIPO_EXCLUSION_DESECHO:
+                codigoAutorizacion = Constantes.CODIGO_AUTORIZACION_EXCLUSION_DESECHO;
+            break;
+            
+            case Constantes.TIPO_EXCLUSION_DONACION:
+                codigoAutorizacion = Constantes.CODIGO_AUTORIZACION_EXCLUSION_DONACION;
+            break;
+        }
+        
+        if (codigoAutorizacion != 0) {
+            return autorizacionRolPersonaModel.buscarAutorizacion(codigoAutorizacion, this.unidadEjecutora, this.usuarioSIGEBI);
+        }
+        return false;
     }
 
     private void inicializarDatos() {
@@ -289,7 +316,7 @@ public class AgregarExclusionController extends BaseController {
 
         List<Tipo> tipos = this.tiposPorDominio(Constantes.DOMINIO_EXCLUSION);
         if (!tipos.isEmpty()) {
-            itemsTipo = new ArrayList<SelectItem>();
+            this.itemsTipo = new ArrayList<SelectItem>();
             for (Tipo item : tipos) {
                 this.itemsTipo.add(new SelectItem(item.getId(), item.getNombre()));
             }
@@ -307,20 +334,29 @@ public class AgregarExclusionController extends BaseController {
                 // Almaceno o actualizo Solicitud
                 SolicitudExclusion exclusion = command.getExclusion(tipo);
                 this.exclusionModel.salvar(exclusion);
-                this.exclusionModel.eliminarDetalles(command.getDetallesEliminar());
-
+                
+                if (!command.getDetallesEliminar().isEmpty()) {
+                    this.exclusionModel.eliminarDetalles(command.getDetallesEliminar());
+                }
+                
                 List<Bien> listBienes = new ArrayList<Bien>(command.getBienes().values());
+                if (!listBienes.isEmpty()) {
+                    this.bienModel.actualizar(listBienes);
+                }
+                
                 List<Bien> listBienesEliminar = new ArrayList<Bien>(command.getBienesEliminar());
-                this.bienModel.actualizar(listBienes);
-                this.bienModel.actualizar(listBienesEliminar);                
+                if (!listBienesEliminar.isEmpty()) {
+                    this.bienModel.actualizar(listBienesEliminar);
+                }
+                
                 if (!this.exclusionRegistrada) {
                     this.exclusionRegistrada = true;
+                    command.setIdExclusion(exclusion.getId());
                     mensajeExito = "Los datos se salvaron con éxito.";
                 } else {
                     almacenarObservacion(tipo);
                     mensajeExito = "Los datos se actualizaron con éxito.";
-                }
-                command.setIdExclusion(exclusion.getId());
+                }                
             } else {
                 Mensaje.agregarErrorAdvertencia(messageValidacion);
             }
@@ -364,6 +400,46 @@ public class AgregarExclusionController extends BaseController {
         }
     }
     
+    private void almacenarObservacion(Tipo tipo) {
+        if (!command.getObservacionConfirmacion().isEmpty()) {
+            Integer telefono = lVistaUsuario.getgUsuarioActual().getTelefono1() != null ? Integer.parseInt(lVistaUsuario.getgUsuarioActual().getTelefono1()) : 0;
+
+            RegistroMovimientoSolicitud registroMovimientoSolicitud = new RegistroMovimientoSolicitud(
+                this.tipoPorDominioValor(Constantes.DOMINIO_REGISTRO_MOVIMIENTO, Constantes.TIPO_REGISTRO_MOVIMIENTO_CAMBIO_ESTADO_SOLICITUD), 
+                command.getObservacionConfirmacion(), 
+                telefono, 
+                new Date(), 
+                usuarioSIGEBI, 
+                command.getEstado(),
+                command.getExclusion(tipo));
+            registroMovimientoModel.agregar(registroMovimientoSolicitud);
+        }
+        
+        if (!command.getObservacion().isEmpty()) {
+            Integer telefono = lVistaUsuario.getgUsuarioActual().getTelefono1() != null ? Integer.parseInt(lVistaUsuario.getgUsuarioActual().getTelefono1()) : 0;
+
+            RegistroMovimientoSolicitud registroMovimientoSolicitud = new RegistroMovimientoSolicitud(
+                this.tipoPorDominioValor(Constantes.DOMINIO_REGISTRO_MOVIMIENTO, Constantes.TIPO_REGISTRO_MOVIMIENTO_CAMBIO_ESTADO_SOLICITUD), 
+                command.getObservacion(), 
+                telefono, 
+                new Date(), 
+                usuarioSIGEBI, 
+                command.getEstado(),
+                command.getExclusion(tipo));
+            registroMovimientoModel.agregar(registroMovimientoSolicitud);
+        }
+    }
+    
+    public void verDetalle(SolicitudExclusion exclusion, String vistaOrigen) {
+        try{
+            
+            inicializarDetalle(exclusion);
+            this.vistaOrigen = vistaOrigen;
+            Util.navegar(Constantes.VISTA_EXCLUSION_NUEVA);
+        } catch (FWExcepcion err) {
+            mensaje = err.getMessage();
+        }
+    }
     //<editor-fold defaultstate="collapsed" desc="Validaciones">
     public String validarForm(UIViewRoot root) {
         if (command.getBienes().isEmpty()) {
@@ -389,6 +465,14 @@ public class AgregarExclusionController extends BaseController {
     
     public void aprobarExclusion() {
         movimientoExclusion(Constantes.ESTADO_EXCLUSION_APROBADA, Constantes.ESTADO_INTERNO_BIEN_EXCLUSION_APROBADO);
+        
+        Estado estadoInformeTecnicoNuevo = this.estadoPorDominioValor(Constantes.DOMINIO_INFORME_TECNICO, Constantes.ESTADO_INFORME_TECNICO_NUEVO);
+        Tipo tipoInformeTecnico = this.tipoPorDominioValor(Constantes.DOMINIO_INFORME_TECNICO, Constantes.TIPO_INFORME_TECNICO_DESECHAR);
+        List<Bien> listBienes = new ArrayList<Bien>(command.getBienes().values());
+        for (Bien bien : listBienes) {
+            DocumentoInformeTecnico dit = new DocumentoInformeTecnico(estadoInformeTecnicoNuevo, tipoInformeTecnico, bien, "Creacion Automatica de Informe", unidadEjecutora);
+            documentoModel.agregar(dit);
+        }
     }
 
     public void revisarExclusion() {
@@ -434,36 +518,6 @@ public class AgregarExclusionController extends BaseController {
             mensaje = err.getMessage();
         } catch (Exception ex) {
             Logger.getLogger(AgregarExclusionController.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-    
-    private void almacenarObservacion(Tipo tipo) {
-        if (!command.getObservacionConfirmacion().isEmpty()) {
-            Integer telefono = lVistaUsuario.getgUsuarioActual().getTelefono1() != null ? Integer.parseInt(lVistaUsuario.getgUsuarioActual().getTelefono1()) : 0;
-
-            RegistroMovimientoSolicitud registroMovimientoSolicitud = new RegistroMovimientoSolicitud(
-                this.tipoPorDominioValor(Constantes.DOMINIO_REGISTRO_MOVIMIENTO, Constantes.TIPO_REGISTRO_MOVIMIENTO_CAMBIO_ESTADO_SOLICITUD), 
-                command.getObservacionConfirmacion(), 
-                telefono, 
-                new Date(), 
-                usuarioSIGEBI, 
-                command.getEstado(),
-                command.getExclusion(tipo));
-            registroMovimientoModel.agregar(registroMovimientoSolicitud);
-        }
-        
-        if (!command.getObservacion().isEmpty()) {
-            Integer telefono = lVistaUsuario.getgUsuarioActual().getTelefono1() != null ? Integer.parseInt(lVistaUsuario.getgUsuarioActual().getTelefono1()) : 0;
-
-            RegistroMovimientoSolicitud registroMovimientoSolicitud = new RegistroMovimientoSolicitud(
-                this.tipoPorDominioValor(Constantes.DOMINIO_REGISTRO_MOVIMIENTO, Constantes.TIPO_REGISTRO_MOVIMIENTO_CAMBIO_ESTADO_SOLICITUD), 
-                command.getObservacionConfirmacion(), 
-                telefono, 
-                new Date(), 
-                usuarioSIGEBI, 
-                command.getEstado(),
-                command.getExclusion(tipo));
-            registroMovimientoModel.agregar(registroMovimientoSolicitud);
         }
     }
     //</editor-fold>
@@ -592,6 +646,14 @@ public class AgregarExclusionController extends BaseController {
     public void setExclusionRegistrada(boolean exclusionRegistrada) {
         this.exclusionRegistrada = exclusionRegistrada;
     }
+
+    public boolean isAutorizadoAprobar() {
+        return autorizadoAprobar;
+    }
+
+    public void setAutorizadoAprobar(boolean autorizadoAprobar) {
+        this.autorizadoAprobar = autorizadoAprobar;
+    }
     
     public int getAccion() {
         return accion;
@@ -621,7 +683,7 @@ public class AgregarExclusionController extends BaseController {
 
     public boolean isVisibleBotonRechazar() {
         this.visibleBotonRechazar = false;
-        if (Constantes.ESTADO_EXCLUSION_SOLICITADA.equals(this.command.getEstado().getValor())) {
+        if (Constantes.ESTADO_EXCLUSION_SOLICITADA.equals(this.command.getEstado().getValor()) && this.autorizadoAprobar) {
             this.visibleBotonRechazar = true;
         }
         return visibleBotonRechazar;
@@ -629,7 +691,7 @@ public class AgregarExclusionController extends BaseController {
 
     public boolean isVisibleBotonAprobar() {
         this.visibleBotonAprobar = false;
-        if (Constantes.ESTADO_EXCLUSION_SOLICITADA.equals(this.command.getEstado().getValor())) {
+        if (Constantes.ESTADO_EXCLUSION_SOLICITADA.equals(this.command.getEstado().getValor()) && this.autorizadoAprobar) {
             this.visibleBotonAprobar = true;
         }
         return visibleBotonAprobar;
@@ -637,7 +699,7 @@ public class AgregarExclusionController extends BaseController {
    
     public boolean isVisibleBotonRevisar() {
         this.visibleBotonRevisar = false;
-        if (Constantes.ESTADO_EXCLUSION_SOLICITADA.equals(this.command.getEstado().getValor())) {
+        if (Constantes.ESTADO_EXCLUSION_SOLICITADA.equals(this.command.getEstado().getValor()) && this.autorizadoAprobar) {
             this.visibleBotonRevisar = true;
         }        
         return visibleBotonRevisar;
@@ -645,7 +707,7 @@ public class AgregarExclusionController extends BaseController {
 
     public boolean isVisibleBotonGuardar() {
         this.visibleBotonGuardar = false;
-        if (Constantes.ESTADO_EXCLUSION_CREADA.equals(this.command.getEstado().getValor())) {
+        if (Constantes.ESTADO_EXCLUSION_CREADA.equals(this.command.getEstado().getValor()) && !this.autorizadoAprobar) {
             this.visibleBotonGuardar = true;
         }
         return visibleBotonGuardar;
@@ -653,7 +715,7 @@ public class AgregarExclusionController extends BaseController {
 
     public boolean isVisibleBotonAgregarBienes() {
         this.visibleBotonAgregarBienes = false;
-        if (Constantes.ESTADO_EXCLUSION_CREADA.equals(this.command.getEstado().getValor())) {
+        if (Constantes.ESTADO_EXCLUSION_CREADA.equals(this.command.getEstado().getValor()) && !this.autorizadoAprobar) {
             this.visibleBotonAgregarBienes = true;
         }
         return visibleBotonAgregarBienes;
@@ -661,7 +723,7 @@ public class AgregarExclusionController extends BaseController {
 
     public boolean isVisibleBotonEliminarBien() {
         this.visibleBotonEliminarBien = false;
-        if (Constantes.ESTADO_EXCLUSION_CREADA.equals(this.command.getEstado().getValor())) {
+        if (Constantes.ESTADO_EXCLUSION_CREADA.equals(this.command.getEstado().getValor()) && !this.autorizadoAprobar) {
             this.visibleBotonEliminarBien = true;
         }
         return visibleBotonEliminarBien;
@@ -669,14 +731,16 @@ public class AgregarExclusionController extends BaseController {
 
     public boolean isVisibleBotonSolicitarBien() {
         this.visibleBotonSolicitarBien = false;
-        if (Constantes.ESTADO_EXCLUSION_CREADA.equals(this.command.getEstado().getValor())) {
+        if (Constantes.ESTADO_EXCLUSION_CREADA.equals(this.command.getEstado().getValor()) && this.exclusionRegistrada && !this.autorizadoAprobar) {
             this.visibleBotonSolicitarBien = true;
         }
         return visibleBotonSolicitarBien;
     }
 
     public boolean isVisibleBotonRechazarBien() {
-        this.visibleBotonRechazarBien = true;
+        if (this.autorizadoAprobar) {
+            this.visibleBotonRechazarBien = true;
+        }
         if (Constantes.ESTADO_EXCLUSION_RECHAZADA.equals(this.command.getEstado().getValor())  || 
             Constantes.ESTADO_EXCLUSION_APROBADA.equals(this.command.getEstado().getValor())) {
             this.visibleBotonSolicitarBien = false;

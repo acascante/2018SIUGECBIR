@@ -39,8 +39,7 @@ import org.springframework.stereotype.Controller;
 @Scope("session")
 public class ListarExclusionesController extends BaseController {
 
-    @Resource
-    private ExclusionModel exclusionModel;
+    @Resource private ExclusionModel exclusionModel;
     
     private List<SolicitudExclusion> exclusiones;
     

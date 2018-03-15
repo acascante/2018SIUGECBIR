@@ -58,12 +58,12 @@ public class InterfazeBienController extends BaseController {
         command = new InterfazeBienCommand((InterfazBien) event.getComponent().getAttributes().get("interfazSeleccionada"));
 
         //Se consultan los adjuntos        
-        for (InterfazAdjunto item : interfazBienModel.listarInterfazAdjuntos(command.getInterfazBien().getIdentificacionBien())) {
+        for (InterfazAdjunto item : interfazBienModel.listarInterfazAdjuntos(command.getInterfazBien().getIdentificacionOrigen(), command.getInterfazBien().getIdOrigenTecnico())) {
             command.getAdjuntos().put(item.getId(), item);
         }
         
         //Se consultan los accesorios
-        for (InterfazAccesorio item : interfazBienModel.listarInterfazAccesorios(command.getInterfazBien().getIdentificacionBien())) {
+        for (InterfazAccesorio item : interfazBienModel.listarInterfazAccesorios(command.getInterfazBien().getIdentificacionOrigen(), command.getInterfazBien().getIdOrigenTecnico())) {
             command.getAccesorios().put(item.getId(), item);
         }
         

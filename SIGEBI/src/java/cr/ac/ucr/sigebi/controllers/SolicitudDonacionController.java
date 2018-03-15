@@ -199,6 +199,15 @@ public class SolicitudDonacionController extends BaseController {
 
     }
 
+    public void verDetalle(SolicitudDonacion item, String vistaOrigen) {
+        try{
+            this.prepararModificacionSolicitudDonacion(item);
+            this.vistaOrigen = vistaOrigen;
+            Util.navegar(Constantes.KEY_VISTA_SOLICITUD_DONACION_DETALLE);
+        }catch(Exception err){
+            
+        }
+    }
     public void regresarListado() {
         if (vistaOrigen != null) {
             Util.navegar(vistaOrigen);
@@ -227,6 +236,7 @@ public class SolicitudDonacionController extends BaseController {
 
         command = new SolicitudDonacionCommand(unidadEjecutora);
         command.getSolicitudDonacion().setEstado(this.estadoPorDominioValor(Constantes.DOMINIO_SOLI_DONACION, Constantes.ESTADO_SOLITUD_DONACION_NUEVO));
+        command.setTipoAdjunto(this.tipoPorDominioValor(Constantes.DOMINIO_ADJUNTO, Constantes.TIPO_ADJUNTO_DOCUMENTO));
         rolPermiteModificar = true;
         this.cargaDatosGenerales();
     }
@@ -870,7 +880,7 @@ public class SolicitudDonacionController extends BaseController {
 
     private void buscarUnidadesReceptoras() {
         //Se presentan las primeras 15
-        command.setUnidadEjecutoras(unidadEjecutoraModel.listar(command.getFltIdUnidad(), command.getFltDescripcionUnidad()));
+        command.setUnidadEjecutoras(unidadEjecutoraModel.listar(command.getFltIdUnidad(), command.getFltDescripcionUnidad(), unidadEjecutora.getId()) );
     }
 
     public void filtroUnidadesReceptoras(ValueChangeEvent pEvent) {

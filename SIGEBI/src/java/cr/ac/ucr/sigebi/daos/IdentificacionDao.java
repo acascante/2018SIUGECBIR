@@ -10,7 +10,6 @@ import cr.ac.ucr.framework.daoImpl.GenericDaoImpl;
 import cr.ac.ucr.framework.utils.FWExcepcion;
 import cr.ac.ucr.sigebi.domain.Estado;
 import cr.ac.ucr.sigebi.domain.Identificacion;
-import cr.ac.ucr.sigebi.domain.Moneda;
 import cr.ac.ucr.sigebi.domain.UnidadEjecutora;
 import java.util.List;
 import org.hibernate.HibernateException;
@@ -31,16 +30,7 @@ public class IdentificacionDao extends GenericDaoImpl {
     
     @Autowired
     private DaoHelper dao;
-    
-    @Transactional(readOnly = true)
-    public List<Identificacion> listar() throws FWExcepcion {
-        try {
-            return dao.getHibernateTemplate().find("from Identificacion"); 
-        } catch (DataAccessException e) {
-            throw new FWExcepcion("sigebi.error.identificacionDao.listar", "Error obtener los registros de tipo " + this.getClass(), e.getCause());
-        }
-    }
-    
+        
     @Transactional(readOnly = true)
     public Identificacion siguienteDisponible(Estado estado
                                         , UnidadEjecutora unidadEjecutora
@@ -56,9 +46,37 @@ public class IdentificacionDao extends GenericDaoImpl {
             query.setMaxResults(1); 
             return (Identificacion) query.uniqueResult();
         } catch (HibernateException e) {
-            throw new FWExcepcion("sigebi.error.identificacionDao.listar", "Error obtener los registros de tipo " + this.getClass(), e.getCause());
+            throw new FWExcepcion("sigebi.error.identificacionDao.siguienteDisponible", "Error obtener los registros de tipo " + this.getClass(), e.getCause());
         } finally {
             session.close();
+        }
+    }
+    
+    @Transactional(readOnly = true)
+    public List<Identificacion> listar(Estado estado, UnidadEjecutora unidadEjecutora, String identificacion) {
+        Session session = dao.getSessionFactory().openSession();
+        try {
+            StringBuilder sql = new StringBuilder("SELECT obj FROM Identificacion obj ");
+            sql.append(" WHERE obj.estado = :estado ");
+            sql.append(" and obj.unidadEjecutora = :unidadEjecutora ");            
+            if(identificacion != null && identificacion.length() > 0){
+                sql.append(" and UPPER(obj.identificacion) LIKE UPPER(:identificacion) ");
+            }
+            sql.append(" ORDER BY obj.identificacion desc");
+        
+            Query query = session.createQuery(sql.toString());
+            query.setParameter("estado", estado);
+            query.setParameter("unidadEjecutora", unidadEjecutora);
+            if(identificacion != null && identificacion.length() > 0){
+                query.setParameter("identificacion", '%' + identificacion + '%');
+            }
+            query.setFirstResult(0);
+            query.setMaxResults(15);                
+            return (List<Identificacion>) query.list();
+        } catch (HibernateException e) {
+            throw new FWExcepcion("sigebi.error.identificacionDao.listar", "Error obtener los registros de tipo " + this.getClass(), e.getCause());
+        }finally{
+            session.close();        
         }
     }
 

@@ -166,12 +166,14 @@ public class BaseController extends PaginacionOracle {
     }
 
     public Estado estadoPorDominioValor(final String dominio, final Integer valor) {
-        return this.estadosFilter(estadosGenerales, new PredicateFilter() {
+        List<Estado> resultado = this.estadosFilter(estadosGenerales, new PredicateFilter() {
             @Override
             public boolean verifica(Object t) {
                 return dominio.equals(((Estado) t).getDominio()) && valor.equals(((Estado) t).getValor());
             }
-        }).get(0);
+        });
+        
+        return resultado != null && resultado.size() > 0 ?  resultado.get(0) : null;
     }
     
     public Estado estadoPorId(final Long id) {
@@ -197,12 +199,14 @@ public class BaseController extends PaginacionOracle {
     }
 
     public Tipo tipoPorDominioValor(final String dominio, final Integer valor) {
-        return this.tiposFilter(tiposGenerales, new PredicateFilter() {
+        List<Tipo> resultado = this.tiposFilter(tiposGenerales, new PredicateFilter() {
             @Override
             public boolean verifica(Object t) {
                 return dominio.equals(((Tipo) t).getDominio()) && valor.equals(((Tipo) t).getValor());
             }
-        }).get(0);
+        });
+        
+        return resultado != null && resultado.size() > 0 ?  resultado.get(0) : null;
     }
     
     public Tipo tipoPorId(final Long id) {

@@ -10,7 +10,6 @@ import cr.ac.ucr.framework.vista.util.Mensaje;
 import cr.ac.ucr.framework.vista.util.Util;
 import cr.ac.ucr.sigebi.domain.DocumentoActa;
 import cr.ac.ucr.sigebi.domain.DocumentoDetalle;
-import cr.ac.ucr.sigebi.domain.AutorizacionRolPersona;
 import cr.ac.ucr.sigebi.domain.Estado;
 import cr.ac.ucr.sigebi.domain.Tipo;
 import cr.ac.ucr.sigebi.domain.Usuario;
@@ -440,13 +439,17 @@ public class ActaController extends ListadoBienesGeneralController {
     
     public void listarActas(){
         try{
+            
+            int primerReg = this.getPrimerRegistro()-1;
+            int ultimoReg = this.getUltimoRegistro();
+            
                 actasRegistradas = actaModel.listarActas(unidadEjecutora.getId()
                         , fltIdActa
                         , fltAutorizacion
                         , fltEstados.equals("-1") ? "" : fltEstados
                         , fltFecha
-                        , this.getPrimerRegistro()-1
-                        , this.getUltimoRegistro()
+                        , primerReg
+                        , ultimoReg
                          );
         } catch (Exception err) {
             Mensaje.agregarErrorAdvertencia(err.getCause().getMessage());
@@ -499,18 +502,19 @@ public class ActaController extends ListadoBienesGeneralController {
     }
     
     
+    
     /**
-     * Pasa al siguiente sub-set de estudiantes
+     * Pasa al primero sub-set de estudiantes
      *
      * @param pEvent
      */
-    public void actaSiguiente(ActionEvent pEvent) {
+    public void actaPrimero(ActionEvent pEvent) {
         if (!pEvent.getPhaseId().equals(PhaseId.INVOKE_APPLICATION)) {
             pEvent.setPhaseId(PhaseId.INVOKE_APPLICATION);
             pEvent.queue();
             return;
         }
-        this.getSiguientePagina();
+        this.setPrimerRegistro(1);
         this.listarActas();
     }
 
@@ -528,19 +532,19 @@ public class ActaController extends ListadoBienesGeneralController {
         this.getPaginaAnterior();
         this.listarActas();
     }
-
+    
     /**
-     * Pasa al primero sub-set de estudiantes
+     * Pasa al siguiente sub-set de estudiantes
      *
      * @param pEvent
      */
-    public void actaPrimero(ActionEvent pEvent) {
+    public void actaSiguiente(ActionEvent pEvent) {
         if (!pEvent.getPhaseId().equals(PhaseId.INVOKE_APPLICATION)) {
             pEvent.setPhaseId(PhaseId.INVOKE_APPLICATION);
             pEvent.queue();
             return;
         }
-        this.setPrimerRegistro(1);
+        this.getSiguientePagina();
         this.listarActas();
     }
 
@@ -570,7 +574,8 @@ public class ActaController extends ListadoBienesGeneralController {
             pEvent.queue();
             return;
         }
-        this.setCantRegistroPorPagina(Integer.parseInt(pEvent.getNewValue().toString()));        
+        int cantReg = Integer.parseInt(pEvent.getNewValue().toString());
+        this.setCantRegistroPorPagina(cantReg);        
         this.setPrimerRegistro(1);
         this.listarActas();
 

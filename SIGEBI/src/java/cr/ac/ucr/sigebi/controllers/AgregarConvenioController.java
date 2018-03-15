@@ -12,12 +12,15 @@ import cr.ac.ucr.framework.utils.FWExcepcion;
 import cr.ac.ucr.framework.vista.util.Mensaje;
 import cr.ac.ucr.framework.vista.util.Util;
 import cr.ac.ucr.sigebi.commands.ConvenioCommand;
+import cr.ac.ucr.sigebi.commands.ListarConveniosCommand;
 import cr.ac.ucr.sigebi.domain.Adjunto;
 import cr.ac.ucr.sigebi.domain.Convenio;
 import cr.ac.ucr.sigebi.domain.Estado;
+import cr.ac.ucr.sigebi.domain.RegistroMovimientoConvenio;
 import cr.ac.ucr.sigebi.domain.Tipo;
 import cr.ac.ucr.sigebi.models.AdjuntoModel;
 import cr.ac.ucr.sigebi.models.ConvenioModel;
+import cr.ac.ucr.sigebi.models.RegistroMovimientoModel;
 import java.util.Calendar;
 import java.util.Date;
 import javax.annotation.Resource;
@@ -39,22 +42,34 @@ import org.springframework.stereotype.Controller;
 @Scope("session")
 public class AgregarConvenioController extends BaseController {
 
-    @Resource private ConvenioModel convenioModel;
     @Resource private AdjuntoModel adjuntoModel;
+    @Resource private ConvenioModel convenioModel;
+    @Resource private RegistroMovimientoModel registroMovimientoModel;
     
     private ConvenioCommand command;
     
     private String mensajeExito;
     private String mensaje;
-  
+    private boolean convenioRegistrado;
+    
     public AgregarConvenioController() {
         super();
     }
   
-    private void inicializar() {
+    private void inicializarNuevo() {
+        this.command = new ConvenioCommand(this.unidadEjecutora);
+        this.convenioRegistrado = false;
+    }
+        
+    private void inicializarDetalle(Convenio convenio) {
+        this.command = new ConvenioCommand(convenio);
+        this.convenioRegistrado = true;
+        inicializarDatos();
+    }
+    
+    private void inicializarDatos() {
         this.mensajeExito = "";
-        this.mensaje = "";
-        this.command = new ConvenioCommand();
+        this.mensaje = "";    
     }
     
     public void guardarDatos() {
@@ -64,20 +79,22 @@ public class AgregarConvenioController extends BaseController {
             String messageValidacion = validarForm(root);
             if (Constantes.OK.equals(messageValidacion)) {
                 Estado estadoActivo = this.estadoPorDominioValor(Constantes.DOMINIO_CONVENIO, Constantes.ESTADO_CONVENIO_ACTIVO);
-                command.setEstado(estadoActivo);
-                Convenio convenio = command.getConvenio();
-                convenioModel.salvar(convenio);
-                if (command.getId() == null || command.getId() == 0) {
-                    mensajeExito = "Los datos se salvaron con éxito.";
+                this.command.setEstado(estadoActivo);
+                Convenio convenio = this.command.getConvenio();
+                this.convenioModel.salvar(convenio);
+                if (!convenioRegistrado) {
+                    this.mensajeExito = "Los datos se salvaron con éxito.";
+                    this.convenioRegistrado = true;
+                    this.command.setId(convenio.getId());
                 } else {
-                    mensajeExito = "Los datos se actualizaron con éxito.";
+                    almacenarObservacion();
+                    this.mensajeExito = "Los datos se actualizaron con éxito.";
                 }
-                command.setId(convenio.getId());
             } else {
                 Mensaje.agregarErrorAdvertencia(messageValidacion);
             }
         } catch (Exception err) {
-            mensaje = err.getMessage();
+            this.mensaje = err.getMessage();
         }
     }
     
@@ -88,7 +105,25 @@ public class AgregarConvenioController extends BaseController {
                 event.queue();
                 return;
             }
-            inicializar();
+            inicializarNuevo();
+            this.vistaOrigen = event.getComponent().getAttributes().get(Constantes.KEY_VISTA_ORIGEN).toString();
+            Util.navegar(Constantes.VISTA_CONVENIO_NUEVO);
+        } catch (FWExcepcion err) {
+            this.mensaje = err.getMessage();
+        }
+    }
+    
+    public void detalleRegistro(ActionEvent event) {
+        try{
+            if (!event.getPhaseId().equals(PhaseId.INVOKE_APPLICATION)) {
+                event.setPhaseId(PhaseId.INVOKE_APPLICATION);
+                event.queue();
+                return;
+            }
+            
+            Long id = (Long)event.getComponent().getAttributes().get(ListarConveniosCommand.KEY_CONVENIO);
+            Convenio convenio = convenioModel.buscarPorId(id);
+            inicializarDetalle(convenio);
             this.vistaOrigen = event.getComponent().getAttributes().get(Constantes.KEY_VISTA_ORIGEN).toString();
             Util.navegar(Constantes.VISTA_CONVENIO_NUEVO);
         } catch (FWExcepcion err) {
@@ -96,10 +131,27 @@ public class AgregarConvenioController extends BaseController {
         }
     }
     
+    private void almacenarObservacion() {
+        if (!command.getObservacion().isEmpty()) {
+            Integer telefono = lVistaUsuario.getgUsuarioActual().getTelefono1() != null ? Integer.parseInt(lVistaUsuario.getgUsuarioActual().getTelefono1()) : 0;
+
+            RegistroMovimientoConvenio registroMovimiento = new RegistroMovimientoConvenio(
+                this.tipoPorDominioValor(Constantes.DOMINIO_REGISTRO_MOVIMIENTO, Constantes.TIPO_REGISTRO_MOVIMIENTO_CAMBIO_CONVENIO), 
+                command.getObservacion(), 
+                telefono,
+                new Date(), 
+                usuarioSIGEBI, 
+                command.getEstado(),
+                command.getConvenio());
+            registroMovimientoModel.agregar(registroMovimiento);
+        }
+    }
+    //</editor-fold>
+    
     //<editor-fold defaultstate="collapsed" desc="Adjuntar Archivo">  
-    public void agregarAdjunto(ActionEvent pEvent) {
+    public void agregarAdjunto(ActionEvent event) {
         try {
-            InputFile inputFile = (InputFile) pEvent.getSource();
+            InputFile inputFile = (InputFile) event.getSource();
             FileInfo fileInfo = inputFile.getFileInfo();
             if (fileInfo.getFileName() != null) {
                 // TODO Buscar tipo correcto
@@ -110,13 +162,13 @@ public class AgregarConvenioController extends BaseController {
                 adjunto.setEstado(this.estadoPorDominioValor(Constantes.DOMINIO_GENERAL, Constantes.ESTADO_GENERAL_ACTIVO));
                 adjunto.setTipo(tipoAdjunto);
 //                adjunto.setIdReferencia(informe.getId());
-                adjunto.setUrl("upload/informesTecnicos/" + fileInfo.getFileName());
+                adjunto.setUrl("upload/convenios/" + fileInfo.getFileName());
                 if (detalleAdjunto != null && detalleAdjunto.length() > 0) {
                     adjunto.setDetalle(detalleAdjunto);
                 } else {
                     adjunto.setDetalle(fileInfo.getFileName());
                 }
-                adjuntoModel.agregar(adjunto);
+                this.adjuntoModel.agregar(adjunto);
 
                 Mensaje.agregarInfo(Util.getEtiquetas("sigebi.error.informeTecnicoController.adjunto.agregar.exitosamente"));
             }
@@ -126,18 +178,19 @@ public class AgregarConvenioController extends BaseController {
             Mensaje.agregarErrorAdvertencia(e, Util.getEtiquetas("sigebi.error.informeTecnicoController.agregarAdjunto"));
         }
     }
+    //</editor-fold>
     
     //<editor-fold defaultstate="collapsed" desc="Validaciones">  
     public String validarForm(UIViewRoot root) {
-        if (!command.getPrestar() && !command.getRecibirPrestamo()) {
+        if (!this.command.getPrestar() && !this.command.getRecibirPrestamo()) {
             return Util.getEtiquetas("sigebi.error.controllerAgregarConvenios.error.prestar.recibir");
         }
         
-        if (command.getInstitucion().isEmpty()) {
+        if (this.command.getInstitucion().isEmpty()) {
             return Util.getEtiquetas("sigebi.error.controllerAgregarConvenios.error.institucion");
         }        
 
-        if (command.getFechaFin().before(command.getFechaInicio())) {
+        if (this.command.getFechaFin().before(this.command.getFechaInicio())) {
             return Util.getEtiquetas("sigebi.error.controllerAgregarConvenios.error.fechas");
         } 
         return Constantes.OK;
@@ -170,6 +223,14 @@ public class AgregarConvenioController extends BaseController {
 
     public void setCommand(ConvenioCommand convenioCommand) {
         this.command = convenioCommand;
+    }
+
+    public boolean isConvenioRegistrado() {
+        return convenioRegistrado;
+    }
+
+    public void setConvenioRegistrado(boolean convenioRegistrado) {
+        this.convenioRegistrado = convenioRegistrado;
     }
 
     public String getMensajeExito() {

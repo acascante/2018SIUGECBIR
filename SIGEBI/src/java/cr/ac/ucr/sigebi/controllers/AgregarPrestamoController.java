@@ -242,7 +242,6 @@ public class AgregarPrestamoController extends BaseController {
     private List<SelectItem> itemsEntidad;
     private Map<Long, String> entidades;
     
-    
     private String mensajeExito;
     private String mensaje;
     
@@ -320,21 +319,28 @@ public class AgregarPrestamoController extends BaseController {
                 // Almaceno o actualizo Solicitud
                 SolicitudPrestamo solicitud = command.getPrestamo(tipo);
                 this.prestamoModel.salvar(solicitud);
-                this.prestamoModel.eliminarDetalles(command.getDetallesEliminar());
+                if (!command.getDetallesEliminar().isEmpty()) {
+                    this.prestamoModel.eliminarDetalles(command.getDetallesEliminar());
+                }
                 
                 List<Bien> listBienes = new ArrayList<Bien>(command.getBienes().values());
+                if (!listBienes.isEmpty()) {
+                    this.bienModel.actualizar(listBienes);
+                }
+                
                 List<Bien> listBienesEliminar = new ArrayList<Bien>(command.getBienesEliminar());
-                this.bienModel.actualizar(listBienes);
-                this.bienModel.actualizar(listBienesEliminar);
+                if (!listBienesEliminar.isEmpty()) {
+                    this.bienModel.actualizar(listBienesEliminar);
+                }
                 
                 if (!this.solicitudRegistrada) {
                     this.solicitudRegistrada = true;
+                    command.setId(solicitud.getId());
                     mensajeExito = "Los datos se salvaron con éxito.";
                 } else {
                     almacenarObservacion(tipo);
                     mensajeExito = "Los datos se actualizaron con éxito.";
                 }
-                command.setId(solicitud.getId());
             } else {
                 Mensaje.agregarErrorAdvertencia(messageValidacion);
             }
@@ -484,7 +490,7 @@ public class AgregarPrestamoController extends BaseController {
 
             RegistroMovimientoSolicitud registroMovimientoSolicitud = new RegistroMovimientoSolicitud(
                 this.tipoPorDominioValor(Constantes.DOMINIO_REGISTRO_MOVIMIENTO, Constantes.TIPO_REGISTRO_MOVIMIENTO_CAMBIO_ESTADO_SOLICITUD), 
-                command.getObservacionConfirmacion(), 
+                command.getObservacion(), 
                 telefono, 
                 new Date(), 
                 usuarioSIGEBI, 
@@ -598,7 +604,7 @@ public class AgregarPrestamoController extends BaseController {
                 case 2: // UNIDAD EJECUTORA
                     List<UnidadEjecutora> unidades = unidadEjecutoraModel.listar();
                     for (UnidadEjecutora unidad : unidades) {
-                        if(this.command.getEntidad().equals(unidad.getDescripcion())) {
+                        if(unidad.getDescripcion().equals(this.command.getEntidad())) {
                             this.command.setIdEntidad(unidad.getId());
                         }
                         this.itemsEntidad.add(new SelectItem(unidad.getId(), unidad.getDescripcion()));

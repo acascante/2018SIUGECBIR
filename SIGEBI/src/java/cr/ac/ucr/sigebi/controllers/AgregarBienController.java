@@ -14,6 +14,7 @@ import cr.ac.ucr.sigebi.commands.BienCommand;
 import cr.ac.ucr.sigebi.commands.BienCommand.NotaCommand;
 import cr.ac.ucr.sigebi.domain.Accesorio;
 import cr.ac.ucr.sigebi.domain.Adjunto;
+import cr.ac.ucr.sigebi.domain.AutorizacionRolPersona;
 import cr.ac.ucr.sigebi.domain.Bien;
 import cr.ac.ucr.sigebi.domain.BienCaracteristica;
 import cr.ac.ucr.sigebi.domain.Lote;
@@ -31,16 +32,18 @@ import cr.ac.ucr.sigebi.domain.InterfazAdjunto;
 import cr.ac.ucr.sigebi.domain.InterfazBien;
 import cr.ac.ucr.sigebi.domain.Nota;
 import cr.ac.ucr.sigebi.domain.Proveedor;
-import cr.ac.ucr.sigebi.domain.RegistroMovimiento;
 import cr.ac.ucr.sigebi.domain.Solicitud;
 import cr.ac.ucr.sigebi.domain.SolicitudDetalle;
 import cr.ac.ucr.sigebi.domain.SolicitudDonacion;
+import cr.ac.ucr.sigebi.domain.SolicitudExclusion;
+import cr.ac.ucr.sigebi.domain.SolicitudTraslado;
 import cr.ac.ucr.sigebi.domain.SubCategoria;
 import cr.ac.ucr.sigebi.domain.SubClasificacion;
 import cr.ac.ucr.sigebi.domain.Ubicacion;
 import cr.ac.ucr.sigebi.domain.UnidadEjecutora;
 import cr.ac.ucr.sigebi.models.AccesorioModel;
 import cr.ac.ucr.sigebi.models.AdjuntoModel;
+import cr.ac.ucr.sigebi.models.AutorizacionRolPersonaModel;
 import cr.ac.ucr.sigebi.models.BienCaracteristicaModel;
 import cr.ac.ucr.sigebi.models.BienModel;
 import cr.ac.ucr.sigebi.models.IdentificacionModel;
@@ -73,6 +76,7 @@ import javax.faces.event.PhaseId;
 import javax.faces.event.ValueChangeEvent;
 import javax.faces.model.SelectItem;
 import javax.servlet.http.HttpServletResponse;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
@@ -133,8 +137,11 @@ public class AgregarBienController extends BaseController {
     private UnidadEjecutoraModel unidadEjecutoraModel;
     @Resource
     private InterfazBienModel interfazBienModel;
-
+    @Resource 
+    private AutorizacionRolPersonaModel autorizacionRolPersonaModel; 
+            
     private List<Proveedor> proveedores;
+    private List<Identificacion> identificaciones;
     private List<Accesorio> accesorios;
     private List<BienCaracteristica> caracteristicas;
     private List<Tipo> tiposCaracteristica;
@@ -154,9 +161,11 @@ public class AgregarBienController extends BaseController {
     private boolean disableSubClasificaciones;
 
     private boolean visiblePanelUbicaciones;
+    private boolean visiblePanelIdentificador;
     private boolean visiblePanelProveedores;
     private boolean visibleBotonSincronizar;
     private boolean visibleBotonRechazar;
+    private boolean visibleBotonActualizarIdentificacion;
     private boolean visiblePanelObservaciones;
     private boolean visiblePanelModificarCaracteristica;
     private boolean visiblePanelEliminarNota;
@@ -172,6 +181,7 @@ public class AgregarBienController extends BaseController {
     private InterfazBien interfazBien;
 
     //</editor-fold>
+    
     //<editor-fold defaultstate="collapsed" desc="Inicializa Datos y Modificacion del bien">
     public AgregarBienController() {
         super();
@@ -200,6 +210,10 @@ public class AgregarBienController extends BaseController {
         } else {
             this.setVisibleBotonRechazar(false);
         }
+        
+        //Verifica si puede cambiar la identificacion del bien
+        AutorizacionRolPersona autorizado = autorizacionRolPersonaModel.buscar(Constantes.CODIGO_AUTORIZACION_CAMBIAR_IDENTIFICACION_BIEN, Constantes.CODIGO_ROL_ADMINISTRADOR, usuarioSIGEBI, unidadEjecutora);
+        this.setVisibleBotonActualizarIdentificacion(autorizado != null && !(command.getIdentificacion().getId() != null && command.getIdentificacion().getId() > 0));
     }
 
     private void inicializarDetalle(Bien bien) {
@@ -232,7 +246,6 @@ public class AgregarBienController extends BaseController {
 
         List<Solicitud> movs = modelMovimientos.movimientosPorBien(bien);
         command.setMovimientos(movs);
-
     }
 
     private void inicializarDatos() {
@@ -244,10 +257,12 @@ public class AgregarBienController extends BaseController {
         this.disableSubClasificaciones = true;
 
         this.visiblePanelObservaciones = false;
-        this.visiblePanelProveedores = false;
+        this.visiblePanelIdentificador = false;
+        this.visiblePanelProveedores = false;        
         this.visiblePanelUbicaciones = false;
         this.visibleBotonSincronizar = false;
         this.visibleBotonRechazar = false;
+        this.visibleBotonActualizarIdentificacion = false;
         this.visiblePanelModificarCaracteristica = false;
         this.visiblePanelEliminarNota = false;
         this.visiblePanelAdjunto = false;
@@ -381,12 +396,17 @@ public class AgregarBienController extends BaseController {
 
     private void procesarBien() throws Exception {
         ReentrantLock reentrantLock = new ReentrantLock();
+        Boolean actualizacionSinIdentificacion = false;
+        Identificacion identificacion = null; 
+        
         try {
+            
             reentrantLock.lock();
-            //Se busca la identificacion del bien
+         
             if (!bienRegistrado) {
+                //Se busca la identificacion del bien
                 Estado estadoDisponible = this.estadoPorDominioValor(Constantes.DOMINIO_IDENTIFICACION, Constantes.IDENTIFICACION_ESTADO_DISPONIBLE);
-                Identificacion identificacion = modelIdentificacion.siguienteDisponible(estadoDisponible, unidadEjecutora);
+                identificacion = modelIdentificacion.siguienteDisponible(estadoDisponible, unidadEjecutora);
                 if (identificacion == null) {
                     Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.error.agregarBienController.identificacion.requerido"));
                 } else {
@@ -410,16 +430,54 @@ public class AgregarBienController extends BaseController {
                     }
                 }
             } else {
-                modelBien.actualizar(command.getBien(bien));
-                inicializarDetalle(bien);
-                Mensaje.agregarInfo(Util.getEtiquetas("sigebi.error.agregarBienController.mensaje.exito"));
+                identificacion = command.getIdentificacion();
+                if (identificacion.getIdentificacion() == null) {
+                    Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.error.agregarBienController.identificacion.requerido"));
+                }else{
+                    
+                    //Si la identificacion se encuentra disponible se debe cambiar su estado
+                    if(command.getIdentificacion().getEstado().getValor().equals(Constantes.IDENTIFICACION_ESTADO_DISPONIBLE)){
+                        
+                        //Se maca para rollback
+                        actualizacionSinIdentificacion = true;
+                                
+                        //Se asigna al bien
+                        bien.setIdentificacion(command.getIdentificacion());
+
+                        //Se cambia el estado
+                        Estado estadoOcupado = this.estadoPorDominioValor(Constantes.DOMINIO_IDENTIFICACION, Constantes.IDENTIFICACION_ESTADO_OCUPADA);
+                        bien.getIdentificacion().setEstado(estadoOcupado);
+
+                        //Se actualiza el bien
+                        modelBien.actualizar(command.getBien(bien));
+
+                        //Se cambia el estado a la identificacion
+                        modelIdentificacion.actualizar(bien.getIdentificacion());                    
+                    }else{
+                        
+                        //Solo se actualiza el bien
+                        modelBien.actualizar(command.getBien(bien));
+                    }
+
+                    //Se inicializan los datos de la pantalla
+                    inicializarDetalle(bien);
+                } 
             }
         } catch (Exception exception) {
+            
             //Se retorna la identificacion
             if (!bienRegistrado && command.getIdentificacion() != null && command.getIdentificacion().getId() != null && command.getIdentificacion().getId() > 0) {
                 Estado estadoDispo = this.estadoPorDominioValor(Constantes.DOMINIO_IDENTIFICACION, Constantes.IDENTIFICACION_ESTADO_DISPONIBLE);
                 bien.getIdentificacion().setEstado(estadoDispo);
                 modelIdentificacion.actualizar(bien.getIdentificacion());
+                bien.setIdentificacion(null);                
+            }
+
+            if (bienRegistrado && actualizacionSinIdentificacion && command.getIdentificacion() != null && command.getIdentificacion().getId() != null && command.getIdentificacion().getId() > 0) {
+                Estado estadoDispo = this.estadoPorDominioValor(Constantes.DOMINIO_IDENTIFICACION, Constantes.IDENTIFICACION_ESTADO_DISPONIBLE);
+                bien.getIdentificacion().setEstado(estadoDispo);
+                modelIdentificacion.actualizar(bien.getIdentificacion());
+                bien.setIdentificacion(null);                
             }
             throw exception;
         } finally {
@@ -437,6 +495,7 @@ public class AgregarBienController extends BaseController {
     }
 
     //</editor-fold>
+    
     //<editor-fold defaultstate="collapsed" desc="Funciones Lote">
     public void cambioLote(ValueChangeEvent event) {
         if (!event.getPhaseId().equals(PhaseId.INVOKE_APPLICATION)) {
@@ -454,6 +513,7 @@ public class AgregarBienController extends BaseController {
     }
 
     //</editor-fold>
+    
     //<editor-fold defaultstate="collapsed" desc="Navegación del MENÚ">
     public void nuevoRegistro(ActionEvent event) {
         if (!event.getPhaseId().equals(PhaseId.INVOKE_APPLICATION)) {
@@ -478,7 +538,6 @@ public class AgregarBienController extends BaseController {
         this.interfaz = false;
         Bien bienSecc = (Bien) event.getComponent().getAttributes().get("bienSeleccionado");
         bien = modelBien.buscarPorId(bienSecc.getId());
-
         inicializarDetalle(bien);
         this.vistaOrigen = event.getComponent().getAttributes().get(Constantes.KEY_VISTA_ORIGEN).toString();
         Util.navegar(Constantes.KEY_VISTA_DETALLE_BIEN);
@@ -493,6 +552,7 @@ public class AgregarBienController extends BaseController {
     }
 
     //</editor-fold>
+    
     //<editor-fold defaultstate="collapsed" desc="Donacion">
     public void guardarBienDonacion() {
         FacesContext context = FacesContext.getCurrentInstance();
@@ -566,52 +626,28 @@ public class AgregarBienController extends BaseController {
 
         //Se obtiene la interfaz        
         interfazBien = (InterfazBien) event.getComponent().getAttributes().get("interfazBien");
-        String messageValidacion = this.validarBienInterfaz();
-        if (Constantes.OK.equals(messageValidacion)) {
-            try {
-                this.donacion = false;
-                this.interfaz = true;
+        try {
+            this.donacion = false;
+            this.interfaz = true;
 
-                //Se carga la pantalla de acuerdo a los datos en la interfaz
-                inicializarBienInterfaz();
+            //Se carga la pantalla de acuerdo a los datos en la interfaz
+            inicializarBienInterfaz();
 
-                this.vistaOrigen = event.getComponent().getAttributes().get(Constantes.KEY_VISTA_ORIGEN).toString();
-                Util.navegar(Constantes.KEY_VISTA_DETALLE_BIEN_INTERFAZ);
+            this.vistaOrigen = event.getComponent().getAttributes().get(Constantes.KEY_VISTA_ORIGEN).toString();
+            Util.navegar(Constantes.KEY_VISTA_DETALLE_BIEN_INTERFAZ);
 
-            } catch (Exception exception) {
-                if (exception instanceof FWExcepcion) {
-                    Mensaje.agregarErrorAdvertencia(((FWExcepcion) exception).getError_para_usuario());
-                } else {
-                    Mensaje.agregarErrorAdvertencia(exception, Util.getEtiquetas("sigebi.error.agregarBienController.actualizar"));
-                }
+        } catch (Exception exception) {
+            if (exception instanceof FWExcepcion) {
+                Mensaje.agregarErrorAdvertencia(((FWExcepcion) exception).getError_para_usuario());
+            } else {
+                Mensaje.agregarErrorAdvertencia(exception, Util.getEtiquetas("sigebi.error.agregarBienController.actualizar"));
             }
-        } else {
-
-            //Se debe modificar la interfaz            
-            interfazBien.setEstado(this.estadoPorDominioValor(Constantes.DOMINIO_INTERFAZ_BIEN, Constantes.ESTADO_INTERFAZ_BIEN_ERRONEO));
-            interfazBienModel.modificar(interfazBien);
-
-            //Se presenta un mensaje con el error
-            Mensaje.agregarErrorAdvertencia(messageValidacion);
-        }
-    }
-
-    public String validarBienInterfaz() {
-        //Se validan los datos requeridos 
-        String mensajeUsuario = Constantes.OK;
-        Identificacion identificacion = modelIdentificacion.buscarPorIdentificacion(interfazBien.getIdentificacionBien());
-        Estado estadoDispo = this.estadoPorDominioValor(Constantes.DOMINIO_IDENTIFICACION, Constantes.IDENTIFICACION_ESTADO_DISPONIBLE);
-        if (identificacion == null) {
-            mensajeUsuario = Util.getEtiquetas("sigebi.error.agregarBienController.nuevoRegistroInterfaz.identificacion.requerido");
-        } else if (!identificacion.getEstado().getValor().equals(estadoDispo.getValor())) {
-            mensajeUsuario = Util.getEtiquetas("sigebi.error.agregarBienController.nuevoRegistroInterfaz.identificacion.no.disponible");
-        }
-        return mensajeUsuario;
+        }        
     }
 
     private void inicializarBienInterfaz() {
 
-        Moneda moneda = modelMoneda.buscarPorId(Long.parseLong(interfazBien.getMoneda()));
+        Moneda moneda = modelMoneda.buscarPorCodigoISO(interfazBien.getMoneda());
         moneda = moneda == null ? new Moneda() : moneda;
 
         Tipo tipoBien = this.tipoPorDominioValor(Constantes.DOMINIO_BIEN, interfazBien.getTipo());
@@ -620,14 +656,25 @@ public class AgregarBienController extends BaseController {
         Tipo tipoOrigen = this.tipoPorDominioValor(Constantes.DOMINIO_ORIGEN, interfazBien.getOrigen());
         tipoOrigen = tipoOrigen == null ? new Tipo() : tipoOrigen;
 
-        Proveedor proveedor = modelProveedor.buscarPorId(Long.parseLong(interfazBien.getProveedor()));
+        Proveedor proveedor = modelProveedor.buscarPorCedula(interfazBien.getProveedor());
         proveedor = proveedor == null ? new Proveedor() : proveedor;
 
         //Estado del bien
         Estado estado = estadoPorDominioValor(Constantes.DOMINIO_BIEN, Constantes.ESTADO_BIEN_PENDIENTE);
 
         //Se busca la identificacion del bien en el sistema
-        Identificacion identificacion = modelIdentificacion.buscarPorIdentificacion(interfazBien.getIdentificacionBien());
+        Identificacion identificacion = null;
+        if (interfazBien.getIdentificacionBien() != null && interfazBien.getIdentificacionBien().length() > 0) {
+            
+            //Se busca la identificacion
+            identificacion = modelIdentificacion.buscarPorIdentificacion(interfazBien.getIdentificacionBien());
+            Estado estadoDispo = this.estadoPorDominioValor(Constantes.DOMINIO_IDENTIFICACION, Constantes.IDENTIFICACION_ESTADO_DISPONIBLE);
+            
+            //Si no se encuentra disponible se coloca en null
+            if (identificacion != null && !identificacion.getEstado().getValor().equals(estadoDispo.getValor())) {
+                identificacion = null;
+            }            
+        }
 
         //Se busca la unidad ejecutora enviada y si no se debe solicitar por pantalla
         UnidadEjecutora unidadBien = null;
@@ -641,7 +688,6 @@ public class AgregarBienController extends BaseController {
         inicializarDatos();
         this.bienRegistrado = false;
         cargarCombos();
-        
 
         //Se buscan las unidades
         List<UnidadEjecutora> unidades = unidadEjecutoraModel.listar();
@@ -682,7 +728,7 @@ public class AgregarBienController extends BaseController {
         this.accesorios = new ArrayList<Accesorio>();
 
         Accesorio accesorio;
-        List<InterfazAccesorio> accesoriosInterfaz = interfazBienModel.listarInterfazAccesorios(interfazBien.getIdentificacionBien());
+        List<InterfazAccesorio> accesoriosInterfaz = interfazBienModel.listarInterfazAccesorios(interfazBien.getIdentificacionOrigen(), interfazBien.getIdOrigenTecnico());
         for (InterfazAccesorio interfazAccesorio : accesoriosInterfaz) {
             accesorio = new Accesorio();
             accesorio.setDetalle(interfazAccesorio.getDescripcion());
@@ -693,7 +739,7 @@ public class AgregarBienController extends BaseController {
         //Se cargan los adjuntos
         Adjunto adjunto;
         Tipo tipoAdjunto = this.tipoPorDominioValor(Constantes.DOMINIO_ADJUNTO, Constantes.TIPO_ADJUNTO_BIEN);
-        List<InterfazAdjunto> adjuntosInterfaz = interfazBienModel.listarInterfazAdjuntos(interfazBien.getIdentificacionBien());
+        List<InterfazAdjunto> adjuntosInterfaz = interfazBienModel.listarInterfazAdjuntos(interfazBien.getIdentificacionOrigen(), interfazBien.getIdOrigenTecnico());
         for (InterfazAdjunto interfazAdjunto : adjuntosInterfaz) {
             adjunto = new Adjunto();
             adjunto.setNombre(interfazAdjunto.getDescripcion());
@@ -710,7 +756,7 @@ public class AgregarBienController extends BaseController {
         FacesContext context = FacesContext.getCurrentInstance();
         UIViewRoot root = context.getViewRoot();
         UIInput component = new UIInput();
-
+        Identificacion identificacion = null;
         String messageValidacion = validarForm(root, component);
         if (Constantes.OK.equals(messageValidacion)) {
             try {
@@ -720,59 +766,88 @@ public class AgregarBienController extends BaseController {
 
                     reentrantLock.lock();
 
-                    Identificacion identificacion = command.getIdentificacion();
-                    if (identificacion == null) {
-                        Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.error.agregarBienController.identificacion.requerido"));
-                    } else {
-                        bien = command.getBien(null);
+                    //Se forma el bien
+                    bien = command.getBien(null);
 
-                        Estado estadoOcupado = this.estadoPorDominioValor(Constantes.DOMINIO_IDENTIFICACION, Constantes.IDENTIFICACION_ESTADO_OCUPADA);
-                        bien.getIdentificacion().setEstado(estadoOcupado);
+                    //Se determina la identificacion
+                    identificacion = command.getIdentificacion();   
+                    Boolean validaIdentificacion = true;
+                    if (identificacion == null && interfazBien.getIdentificacionBien() != null && interfazBien.getIdentificacionBien().length() > 0) {
+                        //Caso 1: Se envia la identificacion pero no se encuentraba disponible o no existe
+                        //El bien se deja en estado de pre-ingreso para que el administrador le asigne la identificacion
+                        bien.setEstado(this.estadoPorDominioValor(Constantes.DOMINIO_BIEN, Constantes.ESTADO_BIEN_PRE_INGRESO));
+                        validaIdentificacion = false;
 
-                        modelBien.almacenar(bien);
+                    }else if (identificacion == null && interfazBien.getIdentificacionBien().isEmpty()) {
+                        //Caso 2: No se envia la identificacion, Se busca la siguiente identificacion disponible
+                        Estado estadoDispo = this.estadoPorDominioValor(Constantes.DOMINIO_IDENTIFICACION, Constantes.IDENTIFICACION_ESTADO_DISPONIBLE);
+                        identificacion = modelIdentificacion.siguienteDisponible(estadoDispo, unidadEjecutora);
+                        
+                        if (identificacion == null) {
+                            //El bien se deja en estado de pre-ingreso para que el administrador le asigne la identificacion
+                            bien.setEstado(this.estadoPorDominioValor(Constantes.DOMINIO_BIEN, Constantes.ESTADO_BIEN_PRE_INGRESO));
+                            validaIdentificacion = false;
+                        }else{
+                            bien.setIdentificacion(identificacion);
+                            Estado estadoOcupado = this.estadoPorDominioValor(Constantes.DOMINIO_IDENTIFICACION, Constantes.IDENTIFICACION_ESTADO_OCUPADA);
+                            bien.getIdentificacion().setEstado(estadoOcupado);
+                        }
+                    }
+                    
+                    //Se crea el bien
+                    bien = command.getBien(null);
+                    bien.setInterfazBien(interfazBien);
+                    modelBien.almacenar(bien);
+                    bienRegistrado = true;
 
+                    //Se actualiza la identificacion
+                    if(identificacion != null){
                         modelIdentificacion.actualizar(bien.getIdentificacion());
+                    }
 
-                        bienRegistrado = true;
+                    //Se crea actualiza la interfaz
+                    interfazBien.setEstado(this.estadoPorDominioValor(Constantes.DOMINIO_INTERFAZ_BIEN, Constantes.ESTADO_INTERFAZ_BIEN_PROCESADO));
+                    interfazBienModel.modificar(interfazBien);
 
-                        //Se crea actualiza la interfaz
-                        interfazBien.setEstado(this.estadoPorDominioValor(Constantes.DOMINIO_INTERFAZ_BIEN, Constantes.ESTADO_INTERFAZ_BIEN_PROCESADO));
-                        interfazBienModel.modificar(interfazBien);
-
-                        //Se crean las caracteristicas
-                        if (command.getCaracteristicas() != null) {
-                            for (BienCaracteristica caracteristica : command.getCaracteristicas()) {
-                                caracteristica.setBien(bien);
-                                modelBienCaracteristica.almacenar(caracteristica);
-                            }
+                    //Se crean las caracteristicas
+                    if (command.getCaracteristicas() != null) {
+                        for (BienCaracteristica caracteristica : command.getCaracteristicas()) {
+                            caracteristica.setBien(bien);
+                            modelBienCaracteristica.almacenar(caracteristica);
                         }
+                    }
 
-                        //Se crean los accesorios
-                        if (this.getAccesorios() != null) {
-                            for (Accesorio accesorio : this.getAccesorios()) {
-                                accesorio.setBien(bien);
-                                modelAccesorio.almacenar(accesorio);
-                            }
+                    //Se crean los accesorios
+                    if (this.getAccesorios() != null) {
+                        for (Accesorio accesorio : this.getAccesorios()) {
+                            accesorio.setBien(bien);
+                            modelAccesorio.almacenar(accesorio);
                         }
+                    }
 
-                        //Se crean los adjuntos
-                        if (command.getAdjuntos() != null) {
-                            for (Adjunto adjunto : command.getAdjuntos()) {
-                                adjunto.setIdReferencia(bien.getId());
-                                modelAdjunto.agregar(adjunto);
-                            }
+                    //Se crean los adjuntos
+                    if (command.getAdjuntos() != null) {
+                        for (Adjunto adjunto : command.getAdjuntos()) {
+                            adjunto.setIdReferencia(bien.getId());
+                            modelAdjunto.agregar(adjunto);
                         }
+                    }
 
-                        //Se retorna al listado
-                        //context.getExternalContext().getSessionMap().remove("controllerListarInterfazBien");
-                        Util.navegar(vistaOrigen);
-                        Mensaje.agregarInfo(Util.getEtiquetas("sigebi.error.agregarBienController.mensaje.exito"));
-
+                    //Se retorna al listado
+                    Util.navegar(vistaOrigen);
+                    if (!validaIdentificacion) {
+                        Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.error.agregarBienController.mensaje.exito.sin.identificacion"));
+                    }else{
+                        Mensaje.agregarInfo(Util.getEtiquetas("sigebi.error.agregarBienController.mensaje.exito"));                        
                     }
                 } catch (Exception exception) {
-                    Estado estadoDispo = this.estadoPorDominioValor(Constantes.DOMINIO_IDENTIFICACION, Constantes.IDENTIFICACION_ESTADO_DISPONIBLE);
-                    bien.getIdentificacion().setEstado(estadoDispo);
-                    modelIdentificacion.actualizar(bien.getIdentificacion());
+                    if(identificacion != null){
+                        //Se retorna la identificacion
+                        Estado estadoDispo = this.estadoPorDominioValor(Constantes.DOMINIO_IDENTIFICACION, Constantes.IDENTIFICACION_ESTADO_DISPONIBLE);
+                        identificacion.setEstado(estadoDispo);
+                        modelIdentificacion.actualizar(identificacion);                        
+                        bien.setIdentificacion(null);
+                    }
                     throw exception;
                 } finally {
                     reentrantLock.unlock();
@@ -1020,13 +1095,13 @@ public class AgregarBienController extends BaseController {
         this.setVisiblePanelProveedores(false);
     }
 
-    public void filtroProveedor(ValueChangeEvent event) {
-        if (!event.getPhaseId().equals(PhaseId.INVOKE_APPLICATION)) {
-            event.setPhaseId(PhaseId.INVOKE_APPLICATION);
-            event.queue();
-            return;
-        }
+    public void filtroProveedor(ValueChangeEvent pEvent) {
         try {
+            if (!pEvent.getPhaseId().equals(PhaseId.INVOKE_APPLICATION)) {
+                 pEvent.setPhaseId(PhaseId.INVOKE_APPLICATION);
+                 pEvent.queue();
+                 return;
+            }
             this.proveedores = modelProveedor.listar(command.getProveedorCommand().getFiltroIdentificacion(), command.getProveedorCommand().getFiltroNombre());
         } catch (FWExcepcion e) {
             Mensaje.agregarErrorAdvertencia(e.getError_para_usuario());
@@ -1034,8 +1109,54 @@ public class AgregarBienController extends BaseController {
             Mensaje.agregarErrorAdvertencia(e, Util.getEtiquetas("sigebi.error.agregarBienController.filtroProveedor"));
         }
     }
+     
     //</editor-fold>    
 
+    //<editor-fold defaultstate="collapsed" desc="Identificacion">
+    public void selecionarIdentificacion(ActionEvent event) {
+        try {
+            if (!event.getPhaseId().equals(PhaseId.INVOKE_APPLICATION)) {
+                event.setPhaseId(PhaseId.INVOKE_APPLICATION);
+                event.queue();
+                return;
+            }
+            Identificacion identificacion = (Identificacion) event.getComponent().getAttributes().get("identificacionSeleccionado");
+            command.setIdentificacion(identificacion);
+            this.setVisiblePanelIdentificador(false);
+        } catch (FWExcepcion e) {
+            Mensaje.agregarErrorAdvertencia(e.getError_para_usuario());
+        } catch (Exception e) {
+            Mensaje.agregarErrorAdvertencia(e, Util.getEtiquetas("sigebi.error.agregarBienController.selecionarProveedor"));
+        }
+
+    }
+
+    public void mostrarPanelIdentificacion() {
+        this.identificaciones = modelIdentificacion.listar(this.estadoPorDominioValor(Constantes.DOMINIO_IDENTIFICACION, Constantes.IDENTIFICACION_ESTADO_DISPONIBLE), unidadEjecutora, command.getIdentificacionCommand().getFiltroIdentificacion());
+        this.setVisiblePanelIdentificador(true);
+    }
+
+    public void cerrarPanelIdentificacion() {
+        this.setVisiblePanelIdentificador(false);
+    }
+
+    public void filtroIdentificacion(ValueChangeEvent pEvent) {
+        try {
+            if (!pEvent.getPhaseId().equals(PhaseId.INVOKE_APPLICATION)) {
+                pEvent.setPhaseId(PhaseId.INVOKE_APPLICATION);
+                pEvent.queue();
+                return;
+            }
+            this.identificaciones = modelIdentificacion.listar(this.estadoPorDominioValor(Constantes.DOMINIO_IDENTIFICACION, Constantes.IDENTIFICACION_ESTADO_DISPONIBLE), unidadEjecutora, command.getIdentificacionCommand().getFiltroIdentificacion());
+        } catch (FWExcepcion e) {
+            Mensaje.agregarErrorAdvertencia(e.getError_para_usuario());
+        } catch (Exception e) {
+            Mensaje.agregarErrorAdvertencia(e, Util.getEtiquetas("sigebi.error.agregarBienController.filtroProveedor"));
+        }
+    }
+     
+    //</editor-fold>   
+    
     //<editor-fold defaultstate="collapsed" desc="Panel Observacion Sincronizar o Rechazar">
     public void rechazarBien() {
         try {
@@ -1097,6 +1218,9 @@ public class AgregarBienController extends BaseController {
             modelNota.guardar(nota);
             command.setNotas(modelNota.listar(nota.getBien()));
             notaDetalle = "";
+            
+            command.inicializarComplementos();
+            
             Mensaje.agregarInfo(Util.getEtiquetas("sigebi.Bien.Registro.Exito"));
         } catch (Exception err) {
             Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.Bien.Error.Registro"));
@@ -1174,6 +1298,7 @@ public class AgregarBienController extends BaseController {
     }
 
     //</editor-fold>
+    
     //<editor-fold defaultstate="collapsed" desc="Tab Garantías">
     public boolean validarGarantia() {
         return command.getInicioGarantia().compareTo(command.getFinGarantia()) < 0;
@@ -1240,6 +1365,8 @@ public class AgregarBienController extends BaseController {
             command.setAdjuntos(modelAdjunto.buscarPorReferencia(tipoAdjuntoDoc, bien.getId()));
             command.setAdjunto(new Adjunto());
             cargarAdjuntos();
+            
+            command.inicializarComplementos();
         } catch (Exception err) {
             Mensaje.agregarErrorAdvertencia(err, Util.getEtiquetas("sigebi.Bien.Error.Registro"));
         }
@@ -1409,6 +1536,7 @@ public class AgregarBienController extends BaseController {
     }
 
     //</editor-fold>
+    
     //<editor-fold defaultstate="collapsed" desc="Tab Accesorios">
     public void guardarAccesorio() {
         try {
@@ -1420,6 +1548,8 @@ public class AgregarBienController extends BaseController {
                 Accesorio accesorio = command.getAccesorioCommand().getAccesorio();
                 modelAccesorio.almacenar(accesorio);
                 this.accesorios.add(accesorio);
+                
+                command.inicializarComplementos();
             }
         } catch (FWExcepcion e) {
             Mensaje.agregarErrorAdvertencia(e.getError_para_usuario());
@@ -1508,6 +1638,8 @@ public class AgregarBienController extends BaseController {
                 modelBienCaracteristica.almacenar(caracteristica);
 
                 listarCaracteristicas();
+                
+                command.inicializarComplementos();
 
             } else {
                 Mensaje.agregarErrorAdvertencia(mensajeError);
@@ -1637,6 +1769,7 @@ public class AgregarBienController extends BaseController {
     }
 
     //</editor-fold>
+    
     //<editor-fold defaultstate="collapsed" desc="Get's y Set's">
     public void setSolicitudDonacion(SolicitudDonacion solicitudDonacion) {
         this.solicitudDonacion = solicitudDonacion;
@@ -1736,6 +1869,14 @@ public class AgregarBienController extends BaseController {
 
     public void setProveedores(List<Proveedor> proveedores) {
         this.proveedores = proveedores;
+    }
+
+    public List<Identificacion> getIdentificaciones() {
+        return identificaciones;
+    }
+
+    public void setIdentificaciones(List<Identificacion> identificaciones) {
+        this.identificaciones = identificaciones;
     }
 
     public List<Tipo> getTiposCaracteristica() {
@@ -1850,6 +1991,14 @@ public class AgregarBienController extends BaseController {
         this.visiblePanelProveedores = visiblePanelProveedores;
     }
 
+    public boolean isVisiblePanelIdentificador() {
+        return visiblePanelIdentificador;
+    }
+
+    public void setVisiblePanelIdentificador(boolean visiblePanelIdentificador) {
+        this.visiblePanelIdentificador = visiblePanelIdentificador;
+    }
+
     public boolean isVisibleBotonSincronizar() {
         return visibleBotonSincronizar;
     }
@@ -1864,6 +2013,14 @@ public class AgregarBienController extends BaseController {
 
     public void setVisibleBotonRechazar(boolean visibleBotonRechazar) {
         this.visibleBotonRechazar = visibleBotonRechazar;
+    }
+
+    public boolean isVisibleBotonActualizarIdentificacion() {
+        return visibleBotonActualizarIdentificacion;
+    }
+
+    public void setVisibleBotonActualizarIdentificacion(boolean visibleBotonActualizarIdentificacion) {
+        this.visibleBotonActualizarIdentificacion = visibleBotonActualizarIdentificacion;
     }
 
     public boolean isVisiblePanelObservaciones() {
@@ -1948,6 +2105,14 @@ public class AgregarBienController extends BaseController {
     //</editor-fold>
 
     //<editor-fold defaultstate="collapsed" desc="Tab Movimientos">
+    
+    @Autowired
+    AgregarExclusionController exc;
+    @Autowired
+    SolicitudDonacionController don;
+    @Autowired
+    TrasladoController tra;
+    
     public void consultarMovimiento(ActionEvent event) {
         try {
             if (!event.getPhaseId().equals(PhaseId.INVOKE_APPLICATION)) {
@@ -1955,18 +2120,26 @@ public class AgregarBienController extends BaseController {
                 event.queue();
                 return;
             }
-            Solicitud verMovimiento = (Solicitud) event.getComponent().getAttributes().get("movimientoSelccionado");
 
-                Mensaje.agregarInfo("el bien se debe consultar.");
-//            //Se asigna la caracteristica consultada
-//            this.command.getCaracteristicaCommand().setCaracteristica((BienCaracteristica) event.getComponent().getAttributes().get("caracteristicaSelccionada"));
-//            this.command.getCaracteristicaCommand().setDetalleModificar(command.getCaracteristicaCommand().getCaracteristica().getDetalle());
-//
-//            //Se presenta el panel
-//            this.setVisiblePanelModificarCaracteristica(true);
+            FacesContext context = FacesContext.getCurrentInstance();
+            UIViewRoot root = context.getViewRoot();
+            
+            Solicitud verMovimiento = (Solicitud) event.getComponent().getAttributes().get("movimientoSelccionado");
+            switch (verMovimiento.getDiscriminator()){
+                case 1:
+                    exc.verDetalle( (SolicitudExclusion) verMovimiento, Constantes.KEY_VISTA_DETALLE_BIEN );
+                    break;
+                case 2:
+                    don.verDetalle( (SolicitudDonacion) verMovimiento, Constantes.KEY_VISTA_DETALLE_BIEN );
+                    break;
+                case 3:
+                    tra.verDetalle( (SolicitudTraslado) verMovimiento, Constantes.KEY_VISTA_DETALLE_BIEN );
+                    break;                    
+            }
+            
         } catch (Exception err) {
 
-                Mensaje.agregarErrorAdvertencia(err.getCause().getMessage());
+            Mensaje.agregarErrorAdvertencia(err.getCause().getMessage());
         }
     }
 

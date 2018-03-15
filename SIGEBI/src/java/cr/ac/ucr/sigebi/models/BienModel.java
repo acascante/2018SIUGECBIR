@@ -138,11 +138,23 @@ public class BienModel {
         this.actualizar(bien);
     }
 
-    public void sincronizarBien(Collection<Bien> bienes, String observacion, Integer telefono, Usuario usuario, Estado estado) throws FWExcepcion, Exception {
+    public void sincronizarBien(Collection<Bien> bienes
+                                , String observacion
+                                , Integer telefono
+                                , Usuario usuario
+                                , Estado estado
+                                ) throws FWExcepcion, Exception {
 
         for (Bien bien : bienes) {
-            //Se almacena la sincronizacion
-            Sincronizar bienSinc = new Sincronizar(bien);
+            Sincronizar bienSinc;
+            String tipoMovimiento = Constantes.TIPO_MOVIMIENTO_SINCRONIZAR_MODIFICAR;
+            //Se almacena el tipo de la sincronizacion
+            if( bien.getEstado().getId().intValue() == Constantes.ESTADO_BIEN_PENDIENTE_SINCRONIZAR )
+                tipoMovimiento = Constantes.TIPO_MOVIMIENTO_SINCRONIZAR_AGREGAR;
+            if(bien.getEstado().getId().intValue() == Constantes.ESTADO_BIEN_TRASLADO)
+                tipoMovimiento = Constantes.TIPO_MOVIMIENTO_SINCRONIZAR_AGREGAR;
+            
+            bienSinc = new Sincronizar(bien, tipoMovimiento);
             Date today = new Date();
             bienSinc.setFechaAdicion(today);
             bienSinc.setAdicionadoPor(usuario.getId());

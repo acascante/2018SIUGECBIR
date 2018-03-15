@@ -26,6 +26,10 @@ public class ConvenioModel {
         return convenioDao.listar();
     }
 
+    public Convenio buscarPorId(Long id) throws FWExcepcion {
+        return convenioDao.buscarPorId(id);
+    }
+    
     public List<Convenio> listar(Integer primerRegistro, Integer ultimoRegistro, Long id, String institucion, String responsable, String oficio, Integer estado) throws FWExcepcion {
         return convenioDao.listar(primerRegistro, ultimoRegistro, id, institucion, responsable, oficio, estado);
     }

@@ -42,8 +42,8 @@ public class InterfazBienModel {
             String unidadEjecutora,
             Estado estado,
             Integer pPrimerRegistro,
-            Integer pUltimoRegistro) throws FWExcepcion {
-        return interfazBienDao.listar(id, marca, modelo, serie, descripcion, unidadEjecutora, estado, pPrimerRegistro, pUltimoRegistro);
+            Integer pUltimoRegistro, String fltIdentificacionBien) throws FWExcepcion {
+        return interfazBienDao.listar(id, marca, modelo, serie, descripcion, unidadEjecutora, estado, pPrimerRegistro, pUltimoRegistro, fltIdentificacionBien);
     }
     
     public Long contar(String id,
@@ -52,17 +52,17 @@ public class InterfazBienModel {
             String serie,
             String descripcion,
             String unidadEjecutora,
-            Estado estado) throws FWExcepcion {
+            Estado estado, String fltIdentificacionBien) throws FWExcepcion {
         
-        return interfazBienDao.contar(id, marca, modelo, serie, descripcion, unidadEjecutora, estado);
+        return interfazBienDao.contar(id, marca, modelo, serie, descripcion, unidadEjecutora, estado, fltIdentificacionBien);
     }
     
-    public List<InterfazAdjunto> listarInterfazAdjuntos(String identificacionBien) throws FWExcepcion {
-        return interfazBienDao.listarInterfazAdjuntos(identificacionBien);
+    public List<InterfazAdjunto> listarInterfazAdjuntos(String identificacionOrigen, Integer idOrigenTecnico) throws FWExcepcion {
+        return interfazBienDao.listarInterfazAdjuntos(identificacionOrigen, idOrigenTecnico);
     }
     
-    public List<InterfazAccesorio> listarInterfazAccesorios(String identificacionBien) throws FWExcepcion {
-        return interfazBienDao.listarInterfazAccesorios(identificacionBien);
+    public List<InterfazAccesorio> listarInterfazAccesorios(String identificacionOrigen, Integer idOrigenTecnico) throws FWExcepcion {
+        return interfazBienDao.listarInterfazAccesorios(identificacionOrigen, idOrigenTecnico);
     }
     
 }

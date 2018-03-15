@@ -35,6 +35,11 @@
                         <ice:inputText id="txtId" value="#{controllerAgregarConvenios.command.id}" partialSubmit="false" styleClass="form-control" readonly="true"/>
                     </div>                                             
                 </div>
+                <div class="col-md-4" />
+                <div class="col-md-3">
+                    <ice:outputText value="#{label['sigebi.label.convenios.prestar']}" />
+                    <ice:selectBooleanCheckbox id="chkPrestar" value="#{controllerAgregarConvenios.command.prestar}" style="float:right" />
+                </div>
             </div>
             
             <!-- Institucion -->
@@ -49,7 +54,14 @@
                                        value="#{controllerAgregarConvenios.command.institucion}" />
                     </div>                                             
                 </div>
+
+                <div class="col-md-3">
+                    <ice:outputText value="#{label['sigebi.label.convenios.recibir']}" />
+                    <ice:selectBooleanCheckbox id="chkRecibirPrestamo" value="#{controllerAgregarConvenios.command.recibirPrestamo}" style="float:right"/>
+                </div>
+
             </div>
+            
             <!-- Responsable -->
             <div class="row">
                 <div class="col-md-6">
@@ -61,6 +73,11 @@
                         <ice:inputText id="txtResponsable" partialSubmit="false" styleClass="form-control"
                                        value="#{controllerAgregarConvenios.command.responsable}" />
                     </div>                                             
+                </div>
+                
+                <div class="col-md-3">
+                    <ice:outputText value="#{label['sigebi.label.convenios.soloUnidad']}" />
+                    <ice:selectBooleanCheckbox id="chkSoloEstaUnidad" value="#{controllerAgregarConvenios.command.soloEstaUnidad}" style="float:right" />
                 </div>
             </div>
             
@@ -110,79 +127,46 @@
                 </div>
             </div>
             
-            <!-- Observacion -->
+            <!-- Oficio -->
             <div class="row">
-                <div class="col-md-12">
-                    <div class="form-group"> 
-                        <label class="control-label" for="txtObservacion">
-                            <ice:outputText value="#{label['sigebi.label.convenios.observacion']}" />
-                            <ice:outputText value="#{label['label.requerido']}" />
-                        </label>
-                        <ice:inputText id="txtObservacion" partialSubmit="false" styleClass="form-control"
-                                           value="#{controllerAgregarConvenios.command.observacion}" />
-                    </div>                                             
-                </div>
-            </div>
-            
-            <!-- Adjuntar Archivo & Oficio -->
-            <div class="row">
-                <div class="col-md-6">
-                    <ice:inputFile id="inputFileComponent2"
-                                    uploadDirectory="upload/informesTecnicos/"
-                                    styleClass="boton input_loadFile"
-                                    actionListener="#{controllerAgregarConvenios.agregarAdjunto}"
-                                    submitOnUpload="preAndPostUpload">
-                    </ice:inputFile>
-                </div>
                 <div class="col-md-6">
                     <div class="form-group"> 
                         <label class="control-label" for="txtOficio">
                             <ice:outputText value="#{label['sigebi.label.convenios.oficio']}" />
-                            <ice:outputText value="#{label['label.requerido']}" />
                         </label>
-                        <ice:inputText id="txtOficio" 
-                                       partialSubmit="false"
-                                       styleClass="form-control"
+                        <ice:inputText id="txtOficio" partialSubmit="false" styleClass="form-control"
                                        value="#{controllerAgregarConvenios.command.oficio}" />
                     </div>
                 </div>
             </div>
             
-            <!-- Checkboxs -->
-            <div class="row">
-                <div class="col-md-4">
-                    <div class="form-group"> 
-                        <label class="control-label" for="chkPrestar">
-                            <ice:outputText value="#{label['sigebi.label.convenios.prestar']}" />
-                        </label>
-                        <ice:selectBooleanCheckbox id="chkPrestar" value="#{controllerAgregarConvenios.command.prestar}" styleClass="form-control"/>
-                    </div>                                             
+            <!-- Observacion -->
+            <ice:panelGroup rendered="#{controllerAgregarConvenios.convenioRegistrado}">
+                <div class="row" >
+                    <div class="col-md-12">
+                        <div class="form-group"> 
+                            <label class="control-label" for="txtObservacion">
+                                <ice:outputText value="#{label['sigebi.label.convenios.observacion']}" />
+                                <ice:outputText value="#{label['label.requerido']}" />
+                            </label>
+                            <ice:inputText id="txtObservacion" partialSubmit="false" styleClass="form-control"
+                                               value="#{controllerAgregarConvenios.command.observacion}" />
+                        </div>                                             
+                    </div>
                 </div>
-                <div class="col-md-4">
-                    <div class="form-group"> 
-                        <label class="control-label" for="chkRecibirPrestamo">
-                            <ice:outputText value="#{label['sigebi.label.convenios.recibir']}" />
-                        </label>
-                        <ice:selectBooleanCheckbox id="chkRecibirPrestamo" value="#{controllerAgregarConvenios.command.recibirPrestamo}" styleClass="form-control"/>
-                    </div>                                             
+                
+                <div class="row">
+                    <div class="col-md-12">
+                        <ice:inputFile id="inputFileComponent" uploadDirectory="upload/convenios/" styleClass="boton input_loadFile" submitOnUpload="preAndPostUpload"
+                                        actionListener="#{controllerAgregarConvenios.agregarAdjunto}">
+                        </ice:inputFile>
+                    </div>
                 </div>
-                <div class="col-md-4">
-                    <div class="form-group"> 
-                        <label class="control-label" for="chkSoloEstaUnidad">
-                            <ice:outputText value="#{label['sigebi.label.convenios.soloUnidad']}" />
-                        </label>
-                        <ice:selectBooleanCheckbox id="chkSoloEstaUnidad" value="#{controllerAgregarConvenios.command.soloEstaUnidad}" styleClass="form-control"/>
-                    </div>                                             
-                </div>
-            </div>
+            </ice:panelGroup>
             
             <div class="row">
                 <div class="col-md-4">
-                    <ice:commandButton id="botonGuardar" 
-                                       value="Guardar" 
-                                       partialSubmit="true" 
-                                       styleClass="boton" 
-                                       action="#{controllerAgregarConvenios.guardarDatos}"/>
+                    <ice:commandButton id="botonGuardar"  value="#{label['label.guardar']}" action="#{controllerAgregarConvenios.guardarDatos}" partialSubmit="true" styleClass="boton" />
                 </div>
             </div>
         </div>

@@ -116,7 +116,9 @@
                                         <!-- Entidad -->
                                         <ice:column id="entidad" rowspan="2" style="vertical-align:top;">                                 
                                             <ice:outputText value="#{label['sigebi.label.prestamos.entidad']} "/>
-                                            <ice:inputText id="filtroEntidad"  value="#{controllerListarPrestamos.command.fltEntidad}" partialSubmit="true" valueChangeListener="#{controllerListarNotificaciones.cambioFiltro}"/>
+                                            <ice:inputText id="filtroEntidad"
+                                                           value="#{controllerListarPrestamos.command.fltEntidad}" 
+                                                           valueChangeListener="#{controllerListarNotificaciones.cambioFiltro}"/>
                                         </ice:column>
                                         
                                         <ice:column id="opciones" >

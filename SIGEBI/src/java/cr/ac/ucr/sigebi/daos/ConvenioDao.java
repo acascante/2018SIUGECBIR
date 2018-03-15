@@ -38,6 +38,22 @@ public class ConvenioDao extends GenericDaoImpl {
         }
     }
     
+    @Transactional(readOnly = true)
+    public Convenio buscarPorId(Long id) throws FWExcepcion {
+        Session session = dao.getSessionFactory().openSession();
+        try {
+            String sql = "SELECT c FROM Convenio c WHERE c.id = :id";
+            Query query = session.createQuery(sql);
+            query.setParameter("id", id);
+
+            return (Convenio) query.uniqueResult();
+        } catch (HibernateException e) {
+            throw new FWExcepcion("sigebi.error.tipo.dao.buscarPorId", "Error obtener los registros de tipo " + this.getClass(), e.getCause());
+        } finally {
+            session.close();
+        }
+    }
+
     @Transactional
     public void salvar(Convenio convenio) throws FWExcepcion {
         try {

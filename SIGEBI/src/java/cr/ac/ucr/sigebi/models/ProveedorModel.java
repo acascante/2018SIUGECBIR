@@ -11,7 +11,6 @@ import cr.ac.ucr.sigebi.domain.Proveedor;
 import java.util.List;
 
 import javax.annotation.Resource;
-import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
 /**
@@ -36,4 +35,9 @@ public class ProveedorModel {
     public Proveedor buscarPorId(Long id) throws FWExcepcion {
         return proveedorDao.buscarPorId(id);
     }
+
+    public Proveedor buscarPorCedula(String cedula) throws FWExcepcion {
+        return proveedorDao.buscarPorCedula(cedula);
+    }
+
 }

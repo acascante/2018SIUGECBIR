@@ -11,11 +11,12 @@ import cr.ac.ucr.sigebi.daos.ReporteDao;
 import cr.ac.ucr.sigebi.domain.Autorizacion;
 import cr.ac.ucr.sigebi.domain.AutorizacionRolPersona;
 import cr.ac.ucr.sigebi.domain.Bien;
-import cr.ac.ucr.sigebi.domain.TrasladoDetalle;
+import cr.ac.ucr.sigebi.domain.SolicitudDetalleTraslado;
 import cr.ac.ucr.sigebi.domain.Estado;
 import cr.ac.ucr.sigebi.domain.Tipo;
 import cr.ac.ucr.sigebi.domain.Justificacion;
 import cr.ac.ucr.sigebi.domain.Notificacion;
+import cr.ac.ucr.sigebi.domain.Solicitud;
 import cr.ac.ucr.sigebi.domain.UnidadEjecutora;
 import cr.ac.ucr.sigebi.domain.Usuario;
 import cr.ac.ucr.sigebi.domain.Ubicacion;
@@ -71,9 +72,9 @@ public class TrasladoController extends ListadoBienesGeneralController {
     SolicitudTraslado traslado;
     
     //Variables Traslado Detalle
-    List<TrasladoDetalle> trasladoDetalle;
-    List<TrasladoDetalle> trasladoDetalleEliminar;
-    Map<Long, TrasladoDetalle> bienesAsociadosTraslado;
+    List<SolicitudDetalleTraslado> trasladoDetalle;
+    List<SolicitudDetalleTraslado> trasladoDetalleEliminar;
+    Map<Long, SolicitudDetalleTraslado> bienesAsociadosTraslado;
 
     UnidadEjecutora unidadOrigen;
     UnidadEjecutora unidadDestino;
@@ -197,11 +198,11 @@ public class TrasladoController extends ListadoBienesGeneralController {
         this.unidadDestino = unidadDestino;
     }
 
-    public List<TrasladoDetalle> getTrasladoDetalle() {
+    public List<SolicitudDetalleTraslado> getTrasladoDetalle() {
         return trasladoDetalle;
     }
 
-    public void setTrasladoDetalle(List<TrasladoDetalle> trasladoDetalle) {
+    public void setTrasladoDetalle(List<SolicitudDetalleTraslado> trasladoDetalle) {
         this.trasladoDetalle = trasladoDetalle;
     }
 
@@ -309,12 +310,12 @@ public class TrasladoController extends ListadoBienesGeneralController {
     private void inicializaTraslado() {
         try {
             traslado = new SolicitudTraslado(estadoGeneralPendiente, unidadEjecutora);
-            trasladoDetalle = new ArrayList<TrasladoDetalle>();
-            trasladoDetalleEliminar = new ArrayList<TrasladoDetalle>();
+            trasladoDetalle = new ArrayList<SolicitudDetalleTraslado>();
+            trasladoDetalleEliminar = new ArrayList<SolicitudDetalleTraslado>();
             
-            trasladoDetalle = new ArrayList<TrasladoDetalle>(  );
+            trasladoDetalle = new ArrayList<SolicitudDetalleTraslado>(  );
             bienesAsociados = new ArrayList<Bien>();
-            bienesAsociadosTraslado =  new HashMap<Long, TrasladoDetalle>();
+            bienesAsociadosTraslado =  new HashMap<Long, SolicitudDetalleTraslado>();
             bienesSeleccionados = new HashMap<Long, Bien>();
             
             permiteEdicion = true;
@@ -373,6 +374,17 @@ public class TrasladoController extends ListadoBienesGeneralController {
         }
     }
     
+    public void verDetalle(SolicitudTraslado item, String vistaOrigen) {
+        try {
+            inicializaTraslado();
+            this.vistaOrigen = vistaOrigen;
+            cargarDatosTraslado(item);
+            Util.navegar(Constantes.KEY_VISTA_TRASLADO_DETALLE);
+        } catch (Exception err) {
+            Mensaje.agregarErrorAdvertencia(err.getCause().getMessage());
+        }
+    }
+    
     private void cargarDatosTraslado(SolicitudTraslado item){
         if (item.getId() > 0) {
             traslado = item;
@@ -384,8 +396,8 @@ public class TrasladoController extends ListadoBienesGeneralController {
             permiteAnular = permitirAnular();
 
             trasladoDetalle = trasladoModel.traerBienesTraslado(traslado);
-            bienesAsociadosTraslado = new HashMap<Long, TrasladoDetalle>();
-            for (TrasladoDetalle valor : trasladoDetalle) {
+            bienesAsociadosTraslado = new HashMap<Long, SolicitudDetalleTraslado>();
+            for (SolicitudDetalleTraslado valor : trasladoDetalle) {
                 if (valor.getEstado().getId().equals(estadoGeneralPendiente.getId())) {
                     valor.setMarcado(permiteRecibir);
                 }
@@ -393,7 +405,7 @@ public class TrasladoController extends ListadoBienesGeneralController {
                 bienesSeleccionados.put(valor.getBien().getId(), valor.getBien());
                 bienesAsociadosTraslado.put(valor.getBien().getId(), valor);
             }
-            trasladoDetalle = new ArrayList<TrasladoDetalle>(bienesAsociadosTraslado.values());
+            trasladoDetalle = new ArrayList<SolicitudDetalleTraslado>(bienesAsociadosTraslado.values());
             this.listarBienes();
         }
     }
@@ -628,7 +640,7 @@ public class TrasladoController extends ListadoBienesGeneralController {
                 //Actualizo el estado de lso Bienes que se eliminan
                 Integer telefono = lVistaUsuario.getgUsuarioActual().getTelefono1() != null ? Integer.parseInt(lVistaUsuario.getgUsuarioActual().getTelefono1()) : 0;
                 Tipo tipoMovimientoTraslado = this.tipoPorDominioValor(Constantes.DOMINIO_REGISTRO_MOVIMIENTO, Constantes.TIPO_REGISTRO_MOVIMIENTO_CAMBIO_ESTADO_BIEN);                
-                for(TrasladoDetalle item : trasladoDetalleEliminar){
+                for(SolicitudDetalleTraslado item : trasladoDetalleEliminar){
                     //Se registra el movimiento y se actualiza el bien
                     item.getBien().setEstado(estadoBienActivo);
                     bienModel.cambiaEstadoBien(item.getBien(), item.getBien().getEstado(), Util.getEtiquetas("sigebi.Traslado.Mns.Movimiento"), telefono, usuarioRegistradoClass, tipoMovimientoTraslado);
@@ -636,7 +648,7 @@ public class TrasladoController extends ListadoBienesGeneralController {
                 }
                 
                 //Actualizo el estado de los Bienes que se agregan
-                for(TrasladoDetalle item : trasladoDetalle){
+                for(SolicitudDetalleTraslado item : trasladoDetalle){
                     if(item.getBien().getEstado().getId() != estadoBienTraslado.getId()){
                         //Se registra el movimiento y se actualiza el bien
                         item.getBien().setEstado(estadoBienTraslado);
@@ -816,9 +828,9 @@ public class TrasladoController extends ListadoBienesGeneralController {
             }
 
             accion = constAccionAceptarBien;
-            bienDetalle = new TrasladoDetalle();
+            bienDetalle = new SolicitudDetalleTraslado();
             //Se obtiene el bien que se va a aprobar 
-            bienDetalle = (TrasladoDetalle) pEvent.getComponent().getAttributes().get("bienSeleccionado");
+            bienDetalle = (SolicitudDetalleTraslado) pEvent.getComponent().getAttributes().get("bienSeleccionado");
 
             mostrarConfirmacion();
 
@@ -863,7 +875,7 @@ public class TrasladoController extends ListadoBienesGeneralController {
     }
     
     private boolean estaAprobada() {
-        for (TrasladoDetalle item : trasladoDetalle) {
+        for (SolicitudDetalleTraslado item : trasladoDetalle) {
             if (!item.getEstado().getId().equals(estadoGeneralAprobado.getId())) {
                 return false;
             }
@@ -892,9 +904,9 @@ public class TrasladoController extends ListadoBienesGeneralController {
             }
 
             accion = constAccionRechazarBien;
-            bienDetalle = new TrasladoDetalle();
+            bienDetalle = new SolicitudDetalleTraslado();
             //Se obtiene el bien que se va a aprobar 
-            bienDetalle = (TrasladoDetalle) pEvent.getComponent().getAttributes().get("bienSeleccionado");
+            bienDetalle = (SolicitudDetalleTraslado) pEvent.getComponent().getAttributes().get("bienSeleccionado");
 
             justificacion = new Justificacion();
             iniciarJustificacion();
@@ -967,7 +979,7 @@ public class TrasladoController extends ListadoBienesGeneralController {
     private void buscarUnidades() {
         try {
             unidadesEjecutoras = new ArrayList<UnidadEjecutora>();
-            unidadesEjecutoras = unidadModel.listar(fltIdUnidad.toUpperCase(), fltNombreUnidad.toUpperCase());
+            unidadesEjecutoras = unidadModel.listar(fltIdUnidad.toUpperCase(), fltNombreUnidad.toUpperCase(), unidadEjecutora.getId());
             //Mensaje.agregarInfo(unidadesEjecutoras.size()+ " unidades encontradas ");
         } catch (Exception err) {
             Mensaje.agregarErrorFatal(err.getMessage());
@@ -1236,13 +1248,13 @@ public class TrasladoController extends ListadoBienesGeneralController {
     public void cancelarJustificacion() {
 
         justificacion = new Justificacion();
-        bienDetalle = new TrasladoDetalle();
+        bienDetalle = new SolicitudDetalleTraslado();
         panelNotificacionVisible = false;
     }
 
     public void mostrarJustificacionGeneral() {
         justificacion = new Justificacion();
-        bienDetalle = new TrasladoDetalle();
+        bienDetalle = new SolicitudDetalleTraslado();
 
         iniciarJustificacion();
 
@@ -1257,9 +1269,9 @@ public class TrasladoController extends ListadoBienesGeneralController {
                 return;
             }
             accion = constAccionRechazarBien;
-            bienDetalle = new TrasladoDetalle();
+            bienDetalle = new SolicitudDetalleTraslado();
             //Se obtiene el bien que se va a aprobar 
-            bienDetalle = (TrasladoDetalle) pEvent.getComponent().getAttributes().get("bienSeleccionado");
+            bienDetalle = (SolicitudDetalleTraslado) pEvent.getComponent().getAttributes().get("bienSeleccionado");
 
             justificacion = new Justificacion();
 
@@ -1419,7 +1431,7 @@ public class TrasladoController extends ListadoBienesGeneralController {
     private boolean panelConfirmacionVisible = false;
     private Justificacion justificacion;
     private List<Justificacion> justificaciones;
-    private TrasladoDetalle bienDetalle;
+    private SolicitudDetalleTraslado bienDetalle;
 
     public boolean isPanelConfirmacionVisible() {
         return panelConfirmacionVisible;
@@ -1437,11 +1449,11 @@ public class TrasladoController extends ListadoBienesGeneralController {
         this.mensajeConfirmacion = mensajeConfirmacion;
     }
 
-    public TrasladoDetalle getBienDetalle() {
+    public SolicitudDetalleTraslado getBienDetalle() {
         return bienDetalle;
     }
 
-    public void setBienDetalle(TrasladoDetalle bienDetalle) {
+    public void setBienDetalle(SolicitudDetalleTraslado bienDetalle) {
         this.bienDetalle = bienDetalle;
     }
 
@@ -1503,7 +1515,7 @@ public class TrasladoController extends ListadoBienesGeneralController {
                 bienesSeleccionados.put(bien.getId(), bien);
                 bienesAsociadosTraslado.put(bien.getId(), getTrasladoDetalleDefault(bien));
             }
-            trasladoDetalle = new ArrayList<TrasladoDetalle>( bienesAsociadosTraslado.values() );
+            trasladoDetalle = new ArrayList<SolicitudDetalleTraslado>( bienesAsociadosTraslado.values() );
             bienesAsociados = new ArrayList<Bien>( bienesSeleccionados.values() );
         } catch (Exception err) {
             Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.error.controllerListarBienSincronizar.checkBienPorSincronizar"));
@@ -1535,16 +1547,16 @@ public class TrasladoController extends ListadoBienesGeneralController {
                 bienesSeleccionados.put(bien.getId(), bien);
                 bienesAsociadosTraslado.put(bien.getId(), getTrasladoDetalleDefault(bien));
             }
-            trasladoDetalle = new ArrayList<TrasladoDetalle>( bienesAsociadosTraslado.values() );
+            trasladoDetalle = new ArrayList<SolicitudDetalleTraslado>( bienesAsociadosTraslado.values() );
             bienesAsociados = new ArrayList<Bien>( bienesSeleccionados.values() );
         } catch (Exception err) {
             Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.error.controllerListarBienSincronizar.checkBienPorSincronizar"));
         }
     }
     
-    private TrasladoDetalle getTrasladoDetalleDefault(Bien bien){
+    private SolicitudDetalleTraslado getTrasladoDetalleDefault(Bien bien){
         try{
-            TrasladoDetalle det = new TrasladoDetalle(traslado, bien, estadoGeneralPendiente);
+            SolicitudDetalleTraslado det = new SolicitudDetalleTraslado(traslado, bien, estadoGeneralPendiente);
             //det.setEstado(estadoGeneralPendiente);
             return det;
         }catch(Exception e){

@@ -7,7 +7,7 @@ package cr.ac.ucr.sigebi.models;
 
 import cr.ac.ucr.sigebi.daos.TrasladosDao;
 import cr.ac.ucr.sigebi.domain.UnidadEjecutora;
-import cr.ac.ucr.sigebi.domain.TrasladoDetalle;
+import cr.ac.ucr.sigebi.domain.SolicitudDetalleTraslado;
 import cr.ac.ucr.sigebi.domain.SolicitudTraslado;
 import java.util.List;
 import javax.annotation.Resource;
@@ -29,15 +29,15 @@ public class TrasladoModel {
         trasladoDao.guardar(obj);
     }
     
-    public void guardarBienes(List<TrasladoDetalle> bienes){
+    public void guardarBienes(List<SolicitudDetalleTraslado> bienes){
         trasladoDao.guardarBienes(bienes);
     }
     
-    public void eliminarBienes(List<TrasladoDetalle> bienes){
+    public void eliminarBienes(List<SolicitudDetalleTraslado> bienes){
         trasladoDao.eliminarBienes(bienes);
     }
     
-    public   void guardarBien(TrasladoDetalle bien){
+    public   void guardarBien(SolicitudDetalleTraslado bien){
         trasladoDao.guardarBien(bien);
     }
     
@@ -49,7 +49,7 @@ public class TrasladoModel {
         return trasladoDao.traerTodo(unidadEjecutora);
     }
     
-    public List<TrasladoDetalle> traerBienesTraslado(SolicitudTraslado traslado) {
+    public List<SolicitudDetalleTraslado> traerBienesTraslado(SolicitudTraslado traslado) {
         return trasladoDao.traerBienesTraslado(traslado);
     }
     

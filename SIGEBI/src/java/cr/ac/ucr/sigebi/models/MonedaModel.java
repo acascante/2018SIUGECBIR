@@ -32,4 +32,8 @@ public class MonedaModel {
         return monedaDao.buscarPorId(id);
     }
 
+    public Moneda buscarPorCodigoISO(String codigoISO) throws FWExcepcion {
+        return monedaDao.buscarPorCodigoISO(codigoISO);
+    }
+
 }

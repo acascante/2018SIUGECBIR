@@ -11,7 +11,10 @@ import java.util.Date;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 
@@ -21,12 +24,20 @@ import javax.persistence.Temporal;
  */
 @Entity(name = "Sincronizar")
 @Table(name = "SF_INTERFAZ_SIGEBI")
+@SequenceGenerator(name = "SGB_SQ_SINCRONIZAR",  sequenceName = "SIGEBI_OAF.SGB_SQ_SINCRONIZAR", initialValue = 100, allocationSize = 1)
 public class Sincronizar implements Serializable {
 
     private static final long serialVersionUID = 1L;
     
     //<editor-fold defaultstate="collapsed" desc="Atributos">
     @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SGB_SQ_SINCRONIZAR")
+    @Column(name = "NUM_LINEA") // NUMBER (10) 
+    private int id;
+    
+    @Column(name = "TIPO_MOVIMIENTO") // String (20) 
+    private String tipoMovimiento;
+    
     @Column(name = "ID_ACTIVO") // NUMBER (10) 
     private int  idActivo;
     @Column(name = "NUM_EMPRESA") // NUMBER (3) 
@@ -155,6 +166,25 @@ public class Sincronizar implements Serializable {
     
     //<editor-fold defaultstate="collapsed" desc="SET's y GET's ">
 
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getTipoMovimiento() {
+        return tipoMovimiento;
+    }
+
+    public void setTipoMovimiento(String tipoMovimiento) {
+        this.tipoMovimiento = tipoMovimiento;
+    }
+
+    
+    
+    
     public int getNumEmpresa() {
         return numEmpresa;
     }
@@ -641,7 +671,9 @@ public class Sincronizar implements Serializable {
     public Sincronizar() {
     }
     
-    public Sincronizar(Bien bien) {
+    public Sincronizar(Bien bien, String tipoMovim) {
+        
+        tipoMovimiento = tipoMovim;
         numEmpresa = 1;
         idActivo = Integer.parseInt(bien.getId().toString());
         descripcion = bien.getSubClasificacion().getNombre();
@@ -682,7 +714,7 @@ public class Sincronizar implements Serializable {
             return false;
         }
         Sincronizar other = (Sincronizar) object;
-        if (this.placa != other.placa) {
+        if (this.id != other.id) {
             return false;
         }
         return true;
@@ -690,7 +722,7 @@ public class Sincronizar implements Serializable {
 
     @Override
     public String toString() {
-        return "cr.ac.ucr.sigebi.entities.SincronizarEntity[ id=" + placa + " ]";
+        return "cr.ac.ucr.sigebi.entities.SincronizarEntity[ id=" + id + " ]";
     }
     
     //</editor-fold>

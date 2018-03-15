@@ -14,7 +14,6 @@ import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,24 +32,30 @@ public class UnidadEjecutoraDao extends GenericDaoImpl {
     @Transactional(readOnly = true)
     public List<UnidadEjecutora> listar() throws FWExcepcion {
         try {
-            return dao.getHibernateTemplate().find("from UnidadEjecutora"); 
+            return dao.getHibernateTemplate().find("from UnidadEjecutora where idTipoUnidad = 'UCO'"); 
         } catch (DataAccessException e) {
             throw new FWExcepcion("sigebi.error.notificacionDao.listar", "Error obtener los registros de tipo " + this.getClass(), e.getCause());
         }
     }
     
     @Transactional(readOnly = true)
-    public List<UnidadEjecutora> listar(String idUnidad, String nombreUnidad) throws FWExcepcion {
+    public List<UnidadEjecutora> listar(String idUnidad, String nombreUnidad, Long unidadActual) throws FWExcepcion {
         Session session = dao.getSessionFactory().openSession();
         try {
-            StringBuilder sql = new StringBuilder ("select obj from UnidadEjecutora obj where 1 = 1  ");
+            //StringBuilder sql = new StringBuilder ("select obj from UnidadEjecutora obj where idTipoUnidad = 'UCO'  ");
+            StringBuilder sql = new StringBuilder ("select obj from UnidadEjecutora obj where idTipoUnidad = 'PR'  ");
+            
             if(idUnidad != null && idUnidad.length() > 0){
                 sql.append(" and to_char(obj.id) like :idUnidad");
             }
             if(nombreUnidad != null && nombreUnidad.length() > 0){
                 sql.append(" and UPPER(obj.descripcion) LIKE upper(:nombreUnidad)");
             }
+            sql.append(" and UPPER(obj.id) != upper(:unidadActual)");
+            
             Query query = session.createQuery(sql.toString());
+            
+            query.setParameter("unidadActual", unidadActual );
             if(idUnidad != null && idUnidad.length() > 0){
                 query.setParameter("idUnidad", '%'+ idUnidad +'%');
             }

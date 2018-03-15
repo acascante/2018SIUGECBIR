@@ -8,6 +8,7 @@ package cr.ac.ucr.sigebi.domain;
 import java.io.Serializable;
 import java.util.Date;
 import javax.persistence.Column;
+import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -22,7 +23,8 @@ import javax.persistence.Temporal;
 @Entity(name = "TrasladoDetalle")
 @Table(name = "SIGEBI_OAF.SIGB_TRASLADO_DETALLE")
 @PrimaryKeyJoinColumn(name = "ID_SOLICITUD_DETALLE", referencedColumnName = "ID_SOLICITUD_DETALLE")
-public class TrasladoDetalle  extends SolicitudDetalle implements Serializable  {
+@DiscriminatorValue("2")
+public class SolicitudDetalleTraslado  extends SolicitudDetalle implements Serializable  {
     
     private static final long serialVersionUID = 1L;
     
@@ -42,13 +44,13 @@ public class TrasladoDetalle  extends SolicitudDetalle implements Serializable  
     
     //</editor-fold>
 
-    public TrasladoDetalle() {
-    }
-    
     
     //<editor-fold defaultstate="collapsed" desc="Constructor">
 
-    public TrasladoDetalle(Solicitud solicitud, Bien bien, Estado estado) {
+    public SolicitudDetalleTraslado() {
+    }
+    
+    public SolicitudDetalleTraslado(Solicitud solicitud, Bien bien, Estado estado) {
         super(solicitud, bien, estado);
         this.estado = estado;
     }
@@ -105,7 +107,7 @@ public class TrasladoDetalle  extends SolicitudDetalle implements Serializable  
         if (getClass() != obj.getClass()) {
             return false;
         }
-        final TrasladoDetalle other = (TrasladoDetalle) obj;
+        final SolicitudDetalleTraslado other = (SolicitudDetalleTraslado) obj;
         if ((this.usuarioRecibe.getId() == null) ? (other.usuarioRecibe.getId() != null) : !this.usuarioRecibe.getId().equals(other.usuarioRecibe.getId())) {
             return false;
         }

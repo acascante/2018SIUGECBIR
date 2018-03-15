@@ -83,6 +83,7 @@ public class InformeTecnicoController extends BaseController {
     Tipo tipoAdjunto;
 
     //</editor-fold>
+    
     //<editor-fold defaultstate="collapsed" desc="Get's & Set's">
     public void setUsuario(Usuario usuario) {
         this.usuario = usuario;
@@ -197,6 +198,7 @@ public class InformeTecnicoController extends BaseController {
     }
 
     //</editor-fold>
+    
     //<editor-fold defaultstate="collapsed" desc="Constructor">
     public InformeTecnicoController() {
         super();
@@ -224,6 +226,7 @@ public class InformeTecnicoController extends BaseController {
     }
 
     //</editor-fold>
+    
     //<editor-fold defaultstate="collapsed" desc="Metodos Informe Tecnico">
     public Collection<DocumentoAutorizacion> getListaDocumentosAutorizacionesPorRol() {
         return documentosAutorizacionesPorRol != null ? new ArrayList(documentosAutorizacionesPorRol.values()) : new ArrayList();
@@ -395,6 +398,7 @@ public class InformeTecnicoController extends BaseController {
     }
 
     //</editor-fold> 
+    
     //<editor-fold defaultstate="collapsed" desc="Aprobaciones y rechazos">
     /**
      * Aprueba el informe
@@ -533,6 +537,7 @@ public class InformeTecnicoController extends BaseController {
     }
 
     //</editor-fold>
+    
     //<editor-fold defaultstate="collapsed" desc="Adjuntos del documento">
     /**
      * Agrega un adjunto al documento

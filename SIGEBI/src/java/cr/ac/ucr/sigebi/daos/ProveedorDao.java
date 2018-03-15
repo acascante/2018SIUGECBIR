@@ -58,12 +58,12 @@ public class ProveedorDao extends GenericDaoImpl {
     private Query creaQuery(Session session, Boolean contar, String identificacion, String nombre) {
         StringBuilder sql = new StringBuilder("SELECT ");
         if (contar) {
-            sql.append("COUNT(obj) FROM Proveedor obj ");
+            sql.append("COUNT(obj) FROM Persona obj ");
         } else {
-            sql.append("obj FROM Proveedor obj ");
+            sql.append("obj FROM Persona obj ");
         }
         
-        sql.append(" WHERE 1 = 1 ");
+        sql.append(" WHERE UPPER(obj.esProveedor) = 'S' ");
         if(identificacion != null && identificacion.length() > 0){
             sql.append(" AND UPPER(obj.identificacion) LIKE UPPER(:identificacion) ");
         }
@@ -89,6 +89,21 @@ public class ProveedorDao extends GenericDaoImpl {
             String sql = "SELECT obj FROM Proveedor obj WHERE obj.id = :id";
             Query query = session.createQuery(sql);
             query.setParameter("id", id);
+            return (Proveedor) query.uniqueResult();
+        } catch (HibernateException e) {
+            throw new FWExcepcion("sigebi.error.proveedor.dao.buscarPorId", "Error obtener los registros de tipo " + this.getClass(), e.getCause());
+        } finally {
+            session.close();
+        }
+    }
+    
+    @Transactional(readOnly = true)
+    public Proveedor buscarPorCedula(String cedula) throws FWExcepcion {
+        Session session = dao.getSessionFactory().openSession();
+        try {
+            String sql = "SELECT obj FROM Proveedor obj WHERE obj.identificacion = :cedula";
+            Query query = session.createQuery(sql);
+            query.setParameter("cedula", cedula);
             return (Proveedor) query.uniqueResult();
         } catch (HibernateException e) {
             throw new FWExcepcion("sigebi.error.proveedor.dao.buscarPorId", "Error obtener los registros de tipo " + this.getClass(), e.getCause());

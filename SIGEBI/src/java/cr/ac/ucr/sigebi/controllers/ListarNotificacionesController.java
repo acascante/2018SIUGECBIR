@@ -42,10 +42,8 @@ import org.springframework.stereotype.Controller;
 public class ListarNotificacionesController extends BaseController {
     
     @Resource private NotificacionModel notificacionModel;
-    @Resource private EstadoModel estadoModel;
     
     private List<Notificacion> notificaciones;
-    private Map<Integer, Estado> estados;
     private List<SelectItem> itemsEstado;
     private ListarNotificacionesCommand command;
    
@@ -54,17 +52,14 @@ public class ListarNotificacionesController extends BaseController {
         this.inicializarDatos();
     }
     
-    
     @PostConstruct
     public final void inicializar() {
         this.inicializarListado();
-        List<Estado> listEstados = estadoModel.listarPorDominio(Constantes.DOMINIO_NOTIFICACION);
+        List<Estado> listEstados = this.estadosPorDominio(Constantes.DOMINIO_NOTIFICACION);
         if (!listEstados.isEmpty()) {
-            estados = new HashMap<Integer, Estado>();
-            itemsEstado = new ArrayList<SelectItem>();
+            this.itemsEstado = new ArrayList<SelectItem>();
             for (Estado item : listEstados) {
-                itemsEstado.add(new SelectItem(item.getId(), item.getNombre()));  // ID + Nombre -- Usado para combo de filtro para enviar el ID al Dao para la consulta
-                estados.put(item.getValor(), item); // Valor + Objeto Estado -- Usado para obtener un estado al enviar una notificacion y modificar el estado de la misma
+                this.itemsEstado.add(new SelectItem(item.getId(), item.getNombre()));  // ID + Nombre -- Usado para combo de filtro para enviar el ID al Dao para la consulta
             }
         }
     }
@@ -110,23 +105,23 @@ public class ListarNotificacionesController extends BaseController {
     public void enviarNotificacion(ActionEvent event) {
         Notificacion notificacion = (Notificacion) event.getComponent().getAttributes().get(ListarNotificacionesCommand.KEY_NOTIFICACION);
         try {
-            notificacionModel.enviarCorreo(notificacion);
-            notificacion.setEstado(estados.get(Constantes.ESTADO_NOTIFICACION_ENVIADA));
+            this.notificacionModel.enviarCorreo(notificacion);
+            notificacion.setEstado(this.estadoPorDominioValor(Constantes.DOMINIO_NOTIFICACION, Constantes.ESTADO_NOTIFICACION_ENVIADA));
             notificacion.setPrioridad(Constantes.PRIORIDAD_NOTIFICACION_URGENTE);
-            Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.ok.controllerListarNotificaciones.enviarNotificacion"));
+            Mensaje.agregarInfo(Util.getEtiquetas("sigebi.ok.controllerListarNotificaciones.enviarNotificacion"));
         } catch (FWExcepcion err) {
             Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.error.controllerListarNotificaciones.enviarNotificacion"));
-            notificacion.setEstado(estados.get(Constantes.ESTADO_NOTIFICACION_ENVIO_FALLIDO));
+            notificacion.setEstado(this.estadoPorDominioValor(Constantes.DOMINIO_NOTIFICACION, Constantes.ESTADO_NOTIFICACION_ENVIO_FALLIDO));
         } finally {
             notificacionModel.salvar(notificacion);
         }
     }
     
-    public void cambioFiltro(ValueChangeEvent pEvent) {
+    public void cambioFiltro(ValueChangeEvent event) {
         try {
-            if (!pEvent.getPhaseId().equals(PhaseId.INVOKE_APPLICATION)) {
-                pEvent.setPhaseId(PhaseId.INVOKE_APPLICATION);
-                pEvent.queue();
+            if (!event.getPhaseId().equals(PhaseId.INVOKE_APPLICATION)) {
+                event.setPhaseId(PhaseId.INVOKE_APPLICATION);
+                event.queue();
                 return;
             }
             this.inicializarListado();
