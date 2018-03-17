@@ -41,7 +41,7 @@ public class PrestamoDao extends GenericDaoImpl {
             Query query = session.createQuery(sql);
             return (List<SolicitudPrestamo>) query.list();
         } catch (DataAccessException e) {
-            throw new FWExcepcion("sigebi.error.prestamoDao.listar", "Error obtener los registros de tipo " + this.getClass(), e.getCause());
+            throw new FWExcepcion("sigebi.label.prestamos.error.listar", "Error obtener los registros de tipo " + this.getClass(), e.getCause());
         } finally {
             session.close();
         }
@@ -56,7 +56,7 @@ public class PrestamoDao extends GenericDaoImpl {
             query.setParameter("unidadEjecutora", unidadEjecutora);
             return (List<SolicitudPrestamo>) query.list();
         } catch (DataAccessException e) {
-            throw new FWExcepcion("sigebi.error.prestamoDao.listar", "Error obtener los registros de tipo " + this.getClass(), e.getCause());
+            throw new FWExcepcion("sigebi.label.prestamos.error.listar", "Error obtener los registros de tipo " + this.getClass(), e.getCause());
         } finally {
             session.close();
         }
@@ -72,7 +72,7 @@ public class PrestamoDao extends GenericDaoImpl {
 
             return (SolicitudPrestamo) query.uniqueResult();
         } catch (HibernateException e) {
-            throw new FWExcepcion("sigebi.error.tipo.dao.buscarPorId", "Error obtener los registros de tipo " + this.getClass(), e.getCause());
+            throw new FWExcepcion("sigebi.label.prestamos.error.listar", "Error obtener los registros de tipo " + this.getClass(), e.getCause());
         } finally {
             session.close();
         }
@@ -83,7 +83,7 @@ public class PrestamoDao extends GenericDaoImpl {
         try {
             persist(prestamo);
         } catch (DataAccessException e) {
-            throw new FWExcepcion("sigebi.error.prestamoDao.salvar", "Error guardando registro de tipo " + this.getClass(), e.getCause());
+            throw new FWExcepcion("sigebi.label.prestamos.error.salvar", "Error guardando registro de tipo " + this.getClass(), e.getCause());
         }
     }
     
@@ -95,7 +95,7 @@ public class PrestamoDao extends GenericDaoImpl {
             return (Long)query.uniqueResult();
 
         } catch (HibernateException e) {
-            throw new FWExcepcion("sigebi.error.prestamoDao.contarsPrestamoes", "Error contando los registros de tipo " + this.getClass(), e.getCause());
+            throw new FWExcepcion("sigebi.label.prestamos.error.listar", "Error contando los registros de tipo " + this.getClass(), e.getCause());
         }finally{
             session.close();        
         }        
@@ -111,8 +111,8 @@ public class PrestamoDao extends GenericDaoImpl {
                 query.setMaxResults(ultimoRegistro - primerRegistro);
             }
             return (List<SolicitudPrestamo>) query.list();
-        } catch (Exception e) {
-            throw new FWExcepcion("sigebi.error.prestamoDao.listar", "Error obtener los registros de tipo " + this.getClass(), e.getCause());
+        } catch (HibernateException e) {
+            throw new FWExcepcion("sigebi.label.prestamos.error.listar", "Error obtener los registros de tipo " + this.getClass(), e.getCause());
         }finally{
             session.close();        
         }        
@@ -166,7 +166,7 @@ public class PrestamoDao extends GenericDaoImpl {
         try {
             persist(detalles.toArray());
         } catch (DataAccessException e) {
-            throw new FWExcepcion("sigebi.error.prestamoDao.salvar", "Error guardando registro de tipo " + this.getClass(), e.getCause());
+            throw new FWExcepcion("sigebi.label.prestamos.error.salvar", "Error guardando registro de tipo " + this.getClass(), e.getCause());
         }
     }
     
@@ -175,7 +175,7 @@ public class PrestamoDao extends GenericDaoImpl {
         try {
             delete(detalles.toArray());
         } catch (DataAccessException e) {
-            throw new FWExcepcion("sigebi.error.exclusionDao.salvar", "Error guardando registro de tipo " + this.getClass(), e.getCause());
+            throw new FWExcepcion("sigebi.label.prestamos.error.eliminar", "Error guardando registro de tipo " + this.getClass(), e.getCause());
         }
     }
     
@@ -187,7 +187,7 @@ public class PrestamoDao extends GenericDaoImpl {
             return (Long)query.uniqueResult();
 
         } catch (HibernateException e) {
-            throw new FWExcepcion("sigebi.error.prestamoDao.contarPrestamoes", "Error contando los registros de tipo " + this.getClass(), e.getCause());
+            throw new FWExcepcion("sigebi.label.prestamos.error.listar", "Error contando los registros de tipo " + this.getClass(), e.getCause());
         }finally{
             session.close();        
         }        
@@ -199,8 +199,8 @@ public class PrestamoDao extends GenericDaoImpl {
         try {
             Query query = this.queryListarDetalles(session, false, prestamo);
             return (List<SolicitudDetalle>) query.list();
-        } catch (Exception e) {
-            throw new FWExcepcion("sigebi.error.prestamoDao.listar", "Error obtener los registros de tipo " + this.getClass(), e.getCause());
+        } catch (HibernateException e) {
+            throw new FWExcepcion("sigebi.label.prestamos.error.listar", "Error obtener los registros de tipo " + this.getClass(), e.getCause());
         }finally{
             session.close();        
         }        

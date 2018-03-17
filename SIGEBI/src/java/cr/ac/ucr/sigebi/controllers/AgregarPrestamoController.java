@@ -14,12 +14,15 @@ import cr.ac.ucr.sigebi.models.PrestamoModel;
 import cr.ac.ucr.sigebi.commands.PrestamoCommand;
 import cr.ac.ucr.sigebi.commands.ListarPrestamosCommand;
 import cr.ac.ucr.sigebi.domain.Bien;
+import cr.ac.ucr.sigebi.domain.Convenio;
 import cr.ac.ucr.sigebi.domain.Estado;
 import cr.ac.ucr.sigebi.domain.RegistroMovimientoSolicitud;
 import cr.ac.ucr.sigebi.domain.SolicitudPrestamo;
 import cr.ac.ucr.sigebi.domain.Tipo;
 import cr.ac.ucr.sigebi.domain.UnidadEjecutora;
+import cr.ac.ucr.sigebi.models.AutorizacionRolPersonaModel;
 import cr.ac.ucr.sigebi.models.BienModel;
+import cr.ac.ucr.sigebi.models.ConvenioModel;
 import cr.ac.ucr.sigebi.models.RegistroMovimientoModel;
 import cr.ac.ucr.sigebi.models.UnidadEjecutoraModel;
 import java.util.ArrayList;
@@ -92,7 +95,7 @@ public class AgregarPrestamoController extends BaseController {
 
         private void listarBienes() {
             try {
-                List<Bien> itemsBienes = bienModel.listar(this.getPrimerRegistro() - 1, this.getUltimoRegistro(), this.command.getFltIdCodigo(), this.unidadEjecutora , command.getFltIdentificacion(), command.getFltDescripcion(), command.getFltMarca(), command.getFltModelo(), command.getFltSerie(), this.estadoInternoNormal, this.estadoInternoRechazado);
+                List<Bien> itemsBienes = bienModel.listar(this.getPrimerRegistro() - 1, this.getUltimoRegistro(), this.command.getFltIdCodigo(), this.unidadEjecutora , this.command.getFltIdentificacion(), this.command.getFltDescripcion(), this.command.getFltMarca(), this.command.getFltModelo(), this.command.getFltSerie(), this.estadoInternoNormal, this.estadoInternoRechazado);
                 this.bienes.clear();
                 for (Bien item : itemsBienes) {
                     this.bienes.put(item.getId(), item);
@@ -104,17 +107,13 @@ public class AgregarPrestamoController extends BaseController {
            } 
         }
 
-        public void cambioFiltro(ValueChangeEvent pEvent) {
-            try {
-                if (!pEvent.getPhaseId().equals(PhaseId.INVOKE_APPLICATION)) {
-                    pEvent.setPhaseId(PhaseId.INVOKE_APPLICATION);
-                    pEvent.queue();
-                    return;
-                }
-                this.inicializarListado();
-            } catch (Exception err) {
-                Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.error.controllerListarNotificaciones.cambioFiltro"));
+        public void cambioFiltro(ValueChangeEvent event) {
+            if (!event.getPhaseId().equals(PhaseId.INVOKE_APPLICATION)) {
+                event.setPhaseId(PhaseId.INVOKE_APPLICATION);
+                event.queue();
+                return;
             }
+            this.inicializarListado();
         }
 
         // <editor-fold defaultstate="collapsed" desc="Get's Set's">
@@ -231,7 +230,9 @@ public class AgregarPrestamoController extends BaseController {
     
     ListadoBienes listadoBienes;
     
+    @Resource private AutorizacionRolPersonaModel autorizacionRolPersonaModel;
     @Resource private BienModel bienModel;
+    @Resource private ConvenioModel convenioModel;
     @Resource private PrestamoModel prestamoModel;
     @Resource private RegistroMovimientoModel registroMovimientoModel;
     @Resource private UnidadEjecutoraModel unidadEjecutoraModel;
@@ -268,6 +269,8 @@ public class AgregarPrestamoController extends BaseController {
     
     private boolean solicitudRegistrada;
     private boolean disableEntidades;
+    private boolean autorizadoAprobar;
+    
     private int accion;
 
     public AgregarPrestamoController() {
@@ -279,6 +282,7 @@ public class AgregarPrestamoController extends BaseController {
         this.command = new PrestamoCommand(this.unidadEjecutora, estado);
         this.solicitudRegistrada = false;
         this.disableEntidades = true;
+        this.autorizadoAprobar = false;
         this.entidades = new HashMap<Long, String>();
         inicializarDatos();
     }
@@ -288,8 +292,9 @@ public class AgregarPrestamoController extends BaseController {
         this.command = new PrestamoCommand(prestamo);
         this.solicitudRegistrada = true;
         this.disableEntidades = false;
+        this.autorizadoAprobar = inicializarAutorizaciones();
         this.entidades = new HashMap<Long, String>();
-        cargarEntidades(this.tipoPorId(command.getIdTipoEntidad()));
+        cargarEntidades(this.tipoPorId(this.command.getIdTipoEntidad()));
         inicializarDatos();
     }
 
@@ -301,11 +306,16 @@ public class AgregarPrestamoController extends BaseController {
         this.mensaje = new String();
         List<Tipo> tipos = this.tiposPorDominio(Constantes.DOMINIO_PRESTAMO_ENTIDAD);
         if (!tipos.isEmpty()) {
-            itemsTipo = new ArrayList<SelectItem>();
+            this.itemsTipo = new ArrayList<SelectItem>();
             for (Tipo item : tipos) {
                 this.itemsTipo.add(new SelectItem(item.getId(), item.getNombre()));
             }
         }
+    }
+    
+    private boolean inicializarAutorizaciones() {
+        int codigoAutorizacion = Constantes.CODIGO_AUTORIZACION_PRESTAMO;
+        return autorizacionRolPersonaModel.buscarAutorizacion(codigoAutorizacion, this.unidadEjecutora, this.usuarioSIGEBI);
     }
     
     public void guardarDatos() {
@@ -314,38 +324,38 @@ public class AgregarPrestamoController extends BaseController {
             UIViewRoot root = context.getViewRoot();
             String messageValidacion = validarForm(root);
             if (Constantes.OK.equals(messageValidacion)) {
-                Tipo tipo = this.tipoPorId(command.getIdTipoEntidad());
+                Tipo tipo = this.tipoPorId(this.command.getIdTipoEntidad());
                 
                 // Almaceno o actualizo Solicitud
-                SolicitudPrestamo solicitud = command.getPrestamo(tipo);
+                SolicitudPrestamo solicitud = this.command.getPrestamo(tipo);
                 this.prestamoModel.salvar(solicitud);
-                if (!command.getDetallesEliminar().isEmpty()) {
-                    this.prestamoModel.eliminarDetalles(command.getDetallesEliminar());
+                if (!this.command.getDetallesEliminar().isEmpty()) {
+                    this.prestamoModel.eliminarDetalles(this.command.getDetallesEliminar());
                 }
                 
-                List<Bien> listBienes = new ArrayList<Bien>(command.getBienes().values());
+                List<Bien> listBienes = new ArrayList<Bien>(this.command.getBienes().values());
                 if (!listBienes.isEmpty()) {
                     this.bienModel.actualizar(listBienes);
                 }
                 
-                List<Bien> listBienesEliminar = new ArrayList<Bien>(command.getBienesEliminar());
+                List<Bien> listBienesEliminar = new ArrayList<Bien>(this.command.getBienesEliminar());
                 if (!listBienesEliminar.isEmpty()) {
                     this.bienModel.actualizar(listBienesEliminar);
                 }
                 
                 if (!this.solicitudRegistrada) {
                     this.solicitudRegistrada = true;
-                    command.setId(solicitud.getId());
-                    mensajeExito = "Los datos se salvaron con éxito.";
+                    this.command.setId(solicitud.getId());
+                    this.mensajeExito = "Los datos se salvaron con éxito.";
                 } else {
                     almacenarObservacion(tipo);
-                    mensajeExito = "Los datos se actualizaron con éxito.";
+                    this.mensajeExito = "Los datos se actualizaron con éxito.";
                 }
             } else {
                 Mensaje.agregarErrorAdvertencia(messageValidacion);
             }
         } catch (FWExcepcion err) {
-            mensaje = err.getMessage();
+            this.mensaje = err.getMessage();
         } catch (Exception ex) {
             Logger.getLogger(AgregarPrestamoController.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -362,7 +372,7 @@ public class AgregarPrestamoController extends BaseController {
             this.vistaOrigen = event.getComponent().getAttributes().get(Constantes.KEY_VISTA_ORIGEN).toString();
             Util.navegar(Constantes.VISTA_PRESTAMO_NUEVO);
         } catch (FWExcepcion err) {
-            mensaje = err.getMessage();
+            this.mensaje = err.getMessage();
         }
     }
     
@@ -380,10 +390,46 @@ public class AgregarPrestamoController extends BaseController {
             this.vistaOrigen = event.getComponent().getAttributes().get(Constantes.KEY_VISTA_ORIGEN).toString();
             Util.navegar(Constantes.VISTA_PRESTAMO_NUEVO);
         } catch (FWExcepcion err) {
-            mensaje = err.getMessage();
+            this.mensaje = err.getMessage();
         }
     }
 
+    private void almacenarObservacion(Tipo tipo) {
+        if (!command.getObservacionConfirmacion().isEmpty()) {
+            Integer telefono = lVistaUsuario.getgUsuarioActual().getTelefono1() != null ? Integer.parseInt(lVistaUsuario.getgUsuarioActual().getTelefono1()) : 0;
+
+            RegistroMovimientoSolicitud registroMovimientoSolicitud = new RegistroMovimientoSolicitud(
+                this.tipoPorDominioValor(Constantes.DOMINIO_REGISTRO_MOVIMIENTO, Constantes.TIPO_REGISTRO_MOVIMIENTO_CAMBIO_ESTADO_SOLICITUD), 
+                this.command.getObservacionConfirmacion(), 
+                telefono, 
+                new Date(), 
+                usuarioSIGEBI, 
+                this.command.getEstado(),
+                this.command.getPrestamo(tipo));
+            this.registroMovimientoModel.agregar(registroMovimientoSolicitud);
+        }
+        
+        if (!this.command.getObservacion().isEmpty()) {
+            Integer telefono = lVistaUsuario.getgUsuarioActual().getTelefono1() != null ? Integer.parseInt(lVistaUsuario.getgUsuarioActual().getTelefono1()) : 0;
+
+            RegistroMovimientoSolicitud registroMovimientoSolicitud = new RegistroMovimientoSolicitud(
+                this.tipoPorDominioValor(Constantes.DOMINIO_REGISTRO_MOVIMIENTO, Constantes.TIPO_REGISTRO_MOVIMIENTO_CAMBIO_ESTADO_SOLICITUD), 
+                this.command.getObservacion(), 
+                telefono, 
+                new Date(), 
+                usuarioSIGEBI, 
+                this.command.getEstado(),
+                this.command.getPrestamo(tipo));
+            this.registroMovimientoModel.agregar(registroMovimientoSolicitud);
+        }
+    }
+    
+    public void verDetalle(SolicitudPrestamo prestamo, String vistaOrigen) {
+        inicializarDetalle(prestamo);
+        this.vistaOrigen = vistaOrigen;
+        Util.navegar(Constantes.VISTA_PRESTAMO_NUEVO);
+    }
+    
     //<editor-fold defaultstate="collapsed" desc="Validaciones">
     public String validarForm(UIViewRoot root) {
         if (command.getBienes().isEmpty()) {
@@ -467,36 +513,6 @@ public class AgregarPrestamoController extends BaseController {
             mensaje = err.getMessage();
         } catch (Exception ex) {
             Logger.getLogger(AgregarExclusionController.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-    
-    private void almacenarObservacion(Tipo tipo) {
-        if (!command.getObservacionConfirmacion().isEmpty()) {
-            Integer telefono = lVistaUsuario.getgUsuarioActual().getTelefono1() != null ? Integer.parseInt(lVistaUsuario.getgUsuarioActual().getTelefono1()) : 0;
-
-            RegistroMovimientoSolicitud registroMovimientoSolicitud = new RegistroMovimientoSolicitud(
-                this.tipoPorDominioValor(Constantes.DOMINIO_REGISTRO_MOVIMIENTO, Constantes.TIPO_REGISTRO_MOVIMIENTO_CAMBIO_ESTADO_SOLICITUD), 
-                command.getObservacionConfirmacion(), 
-                telefono, 
-                new Date(), 
-                usuarioSIGEBI, 
-                command.getEstado(),
-                command.getPrestamo(tipo));
-            registroMovimientoModel.agregar(registroMovimientoSolicitud);
-        }
-        
-        if (!command.getObservacion().isEmpty()) {
-            Integer telefono = lVistaUsuario.getgUsuarioActual().getTelefono1() != null ? Integer.parseInt(lVistaUsuario.getgUsuarioActual().getTelefono1()) : 0;
-
-            RegistroMovimientoSolicitud registroMovimientoSolicitud = new RegistroMovimientoSolicitud(
-                this.tipoPorDominioValor(Constantes.DOMINIO_REGISTRO_MOVIMIENTO, Constantes.TIPO_REGISTRO_MOVIMIENTO_CAMBIO_ESTADO_SOLICITUD), 
-                command.getObservacion(), 
-                telefono, 
-                new Date(), 
-                usuarioSIGEBI, 
-                command.getEstado(),
-                command.getPrestamo(tipo));
-            registroMovimientoModel.agregar(registroMovimientoSolicitud);
         }
     }
     //</editor-fold>
@@ -586,8 +602,8 @@ public class AgregarPrestamoController extends BaseController {
         }
         
         if (Constantes.DEFAULT_ID.equals(command.getIdTipoEntidad())) {
-            itemsEntidad.clear();
-            this.setDisableEntidades(true);
+            this.itemsEntidad.clear();
+            this.disableEntidades = true;
         } else {
             cargarEntidades(this.tipoPorId(command.getIdTipoEntidad()));
         }
@@ -596,9 +612,9 @@ public class AgregarPrestamoController extends BaseController {
     private void cargarEntidades(Tipo tipo) {
         try {
             this.disableEntidades = false;
-            itemsEntidad = new ArrayList<SelectItem>();
+            this.itemsEntidad = new ArrayList<SelectItem>();
             switch(tipo.getValor()) {
-                case 1: //
+                case 1: // 
                 break;
 
                 case 2: // UNIDAD EJECUTORA
@@ -616,7 +632,22 @@ public class AgregarPrestamoController extends BaseController {
                 break;
 
                 case 4: //
-                break;                        
+                break;
+                
+                case 5: // ENTIDAD EXTERNA (CONVENIOS)
+                    List<Convenio> convenios = this.convenioModel.listar();
+                    if  (convenios.isEmpty()) {
+                        Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.error.agregarBienController.cargarSubCategorias"));
+                    } else {
+                        for (Convenio convenio : convenios) {
+                            if(convenio.getInstitucion().equals(this.command.getEntidad())) {
+                                this.command.setIdEntidad(convenio.getId());
+                            }
+                            this.itemsEntidad.add(new SelectItem(convenio.getId(), convenio.getInstitucion()));
+                            this.entidades.put(convenio.getId(), convenio.getInstitucion());
+                        }
+                    }
+                break;
             }
 
         } catch (FWExcepcion e) {
@@ -702,6 +733,14 @@ public class AgregarPrestamoController extends BaseController {
     public void setDisableEntidades(boolean disableEntidades) {
         this.disableEntidades = disableEntidades;
     }
+
+    public boolean isAutorizadoAprobar() {
+        return autorizadoAprobar;
+    }
+
+    public void setAutorizadoAprobar(boolean autorizadoAprobar) {
+        this.autorizadoAprobar = autorizadoAprobar;
+    }
     
     public int getAccion() {
         return accion;
@@ -731,7 +770,7 @@ public class AgregarPrestamoController extends BaseController {
 
     public boolean isVisibleBotonRechazar() {
         this.visibleBotonRechazar = false;
-        if (Constantes.ESTADO_PRESTAMO_RECHAZADO.equals(this.command.getEstado().getValor())) {
+        if (Constantes.ESTADO_PRESTAMO_RECHAZADO.equals(this.command.getEstado().getValor()) && this.autorizadoAprobar) {
             this.visibleBotonRechazar = true;
         }
         return visibleBotonRechazar;
@@ -739,7 +778,7 @@ public class AgregarPrestamoController extends BaseController {
 
     public boolean isVisibleBotonAprobar() {
         this.visibleBotonAprobar = false;
-        if (Constantes.ESTADO_PRESTAMO_APROBADO.equals(this.command.getEstado().getValor())) {
+        if (Constantes.ESTADO_PRESTAMO_APROBADO.equals(this.command.getEstado().getValor()) && this.autorizadoAprobar) {
             this.visibleBotonAprobar = true;
         }
         return visibleBotonAprobar;
@@ -747,7 +786,7 @@ public class AgregarPrestamoController extends BaseController {
     
     public boolean isVisibleBotonAnular() {
         this.visibleBotonAnular = false;
-        if (Constantes.ESTADO_PRESTAMO_ANULADO.equals(this.command.getEstado().getValor())) {
+        if (Constantes.ESTADO_PRESTAMO_ANULADO.equals(this.command.getEstado().getValor()) && this.autorizadoAprobar) {
             this.visibleBotonAnular = true;
         }
         return visibleBotonAnular;
@@ -755,7 +794,7 @@ public class AgregarPrestamoController extends BaseController {
    
     public boolean isVisibleBotonRevisar() {
         this.visibleBotonRevisar = false;
-        if (Constantes.ESTADO_PRESTAMO_SOLICITADO.equals(this.command.getEstado().getValor())) {
+        if (Constantes.ESTADO_PRESTAMO_SOLICITADO.equals(this.command.getEstado().getValor()) && this.autorizadoAprobar) {
             this.visibleBotonRevisar = true;
         }        
         return visibleBotonRevisar;
@@ -763,7 +802,7 @@ public class AgregarPrestamoController extends BaseController {
 
     public boolean isVisibleBotonGuardar() {
         this.visibleBotonGuardar = false;
-        if (Constantes.ESTADO_PRESTAMO_CREADO.equals(this.command.getEstado().getValor())) {
+        if (Constantes.ESTADO_PRESTAMO_CREADO.equals(this.command.getEstado().getValor()) && !this.autorizadoAprobar) {
             this.visibleBotonGuardar = true;
         }
         return visibleBotonGuardar;
@@ -771,7 +810,7 @@ public class AgregarPrestamoController extends BaseController {
 
     public boolean isVisibleBotonAgregarBienes() {
         this.visibleBotonAgregarBienes = false;
-        if (Constantes.ESTADO_PRESTAMO_CREADO.equals(this.command.getEstado().getValor())) {
+        if (Constantes.ESTADO_PRESTAMO_CREADO.equals(this.command.getEstado().getValor()) && !this.autorizadoAprobar) {
             this.visibleBotonAgregarBienes = true;
         }
         return visibleBotonAgregarBienes;
@@ -779,7 +818,7 @@ public class AgregarPrestamoController extends BaseController {
 
     public boolean isVisibleBotonEliminarBien() {
         this.visibleBotonEliminarBien = false;
-        if (Constantes.ESTADO_PRESTAMO_CREADO.equals(this.command.getEstado().getValor())) {
+        if (Constantes.ESTADO_PRESTAMO_CREADO.equals(this.command.getEstado().getValor()) && !this.autorizadoAprobar) {
             this.visibleBotonEliminarBien = true;
         }
         return visibleBotonEliminarBien;
@@ -787,14 +826,17 @@ public class AgregarPrestamoController extends BaseController {
 
     public boolean isVisibleBotonSolicitarBien() {
         this.visibleBotonSolicitarBien = false;
-        if (Constantes.ESTADO_PRESTAMO_CREADO.equals(this.command.getEstado().getValor())) {
+        if (Constantes.ESTADO_PRESTAMO_CREADO.equals(this.command.getEstado().getValor()) && !this.autorizadoAprobar) {
             this.visibleBotonSolicitarBien = true;
         }
         return visibleBotonSolicitarBien;
     }
 
     public boolean isVisibleBotonRechazarBien() {
-        this.visibleBotonRechazarBien = true;
+        this.visibleBotonRechazarBien = false;
+        if (this.autorizadoAprobar) {
+            this.visibleBotonRechazarBien = true;
+        }
         if (Constantes.ESTADO_PRESTAMO_RECHAZADO.equals(this.command.getEstado().getValor())  || 
             Constantes.ESTADO_PRESTAMO_ANULADO.equals(this.command.getEstado().getValor())  || 
             Constantes.ESTADO_PRESTAMO_APROBADO.equals(this.command.getEstado().getValor())) {

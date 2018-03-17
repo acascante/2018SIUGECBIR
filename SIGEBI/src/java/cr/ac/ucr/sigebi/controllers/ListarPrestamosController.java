@@ -59,7 +59,7 @@ public class ListarPrestamosController extends BaseController {
         this.inicializarListado();
         List<Estado> estados = this.estadosPorDominio(Constantes.DOMINIO_PRESTAMO);
         if (!estados.isEmpty()) {
-            itemsEstado = new ArrayList<SelectItem>();
+            this.itemsEstado = new ArrayList<SelectItem>();
             for (Estado item : estados) {
                 this.itemsEstado.add(new SelectItem(item.getId(), item.getNombre()));
             }
@@ -67,7 +67,7 @@ public class ListarPrestamosController extends BaseController {
         
         List<Tipo> tipos = this.tiposPorDominio(Constantes.DOMINIO_PRESTAMO_ENTIDAD);
         if (!tipos.isEmpty()) {
-            itemsTipo = new ArrayList<SelectItem>();
+            this.itemsTipo = new ArrayList<SelectItem>();
             for (Tipo item : tipos) {
                 this.itemsTipo.add(new SelectItem(item.getId(), item.getNombre()));
             }
@@ -97,8 +97,6 @@ public class ListarPrestamosController extends BaseController {
             this.setCantidadRegistros(contador.intValue());
         } catch (FWExcepcion e) {
             Mensaje.agregarErrorAdvertencia(e.getError_para_usuario());
-        } catch (Exception e) {
-            Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.error.controllerListarPrestamos.contarNotificaciones"));
         }
     }
     
@@ -107,10 +105,6 @@ public class ListarPrestamosController extends BaseController {
             this.prestamos = prestamoModel.listar(this.getPrimerRegistro()-1, this.getUltimoRegistro(), unidadEjecutora, command.getFltIdCodigo(), command.getFltFecha(), command.getFltEstado(), command.getFltEntidad());
         } catch (FWExcepcion e) {
             Mensaje.agregarErrorAdvertencia(e.getError_para_usuario());
-        } catch (NumberFormatException e) {
-            Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.error.controllerListarPrestamos.contarNotificaciones"));
-        } catch (Exception e) {
-            Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.error.controllerListarPrestamos.contarNotificaciones"));
         }
     }
     
@@ -127,7 +121,7 @@ public class ListarPrestamosController extends BaseController {
         try {
             Integer.parseInt(value.toString());
         } catch (NumberFormatException e){
-            Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.error.controllerListarPrestamos.cambioFiltro.id"));
+            Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.label.prestamos.error.cambioFiltro.id"));
             ((UIInput) component).setValid(false);
         }
     }
@@ -138,7 +132,7 @@ public class ListarPrestamosController extends BaseController {
             calendar.setTime((Date) value);
             calendar.getTime();
         } catch (Exception e){
-            Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.error.controllerListarPrestamos.cambioFiltro.fecha"));
+            Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.label.prestamos.error.cambioFiltro.fecha"));
             ((UIInput) component).setValid(false);
         }
     }

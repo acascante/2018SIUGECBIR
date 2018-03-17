@@ -12,14 +12,11 @@ import cr.ac.ucr.sigebi.utils.Constantes;
 import cr.ac.ucr.sigebi.commands.ListarNotificacionesCommand;
 import cr.ac.ucr.sigebi.domain.Estado;
 import cr.ac.ucr.sigebi.domain.Notificacion;
-import cr.ac.ucr.sigebi.models.EstadoModel;
 import cr.ac.ucr.sigebi.models.NotificacionModel;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import javax.faces.component.UIComponent;
@@ -83,22 +80,18 @@ public class ListarNotificacionesController extends BaseController {
     
     private void contarNotificaciones() {
         try {
-            Long contador = notificacionModel.contar(command.getFltIdCodigo(), command.getFltAsunto(), command.getFltDestinatario(), command.getFltMensaje(), command.getFltFecha(), command.getFltEstado());
+            Long contador = this.notificacionModel.contar(command.getFltIdCodigo(), command.getFltAsunto(), command.getFltDestinatario(), command.getFltMensaje(), command.getFltFecha(), command.getFltEstado());
             this.setCantidadRegistros(contador.intValue());
         } catch (FWExcepcion e) {
             Mensaje.agregarErrorAdvertencia(e.getError_para_usuario());
-        } catch (NumberFormatException e) {
-            Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.error.controllerListarNotificaciones.contarNotificaciones"));
         }
     }
     
     private void listarNotificaciones() {
         try {
-            this.notificaciones = notificacionModel.listar(this.getPrimerRegistro()-1, this.getUltimoRegistro(), command.getFltIdCodigo(), command.getFltAsunto(), command.getFltDestinatario(), command.getFltMensaje(), command.getFltFecha(), command.getFltEstado());
+            this.notificaciones = this.notificacionModel.listar(this.getPrimerRegistro()-1, this.getUltimoRegistro(), command.getFltIdCodigo(), command.getFltAsunto(), command.getFltDestinatario(), command.getFltMensaje(), command.getFltFecha(), command.getFltEstado());
         } catch (FWExcepcion e) {
             Mensaje.agregarErrorAdvertencia(e.getError_para_usuario());
-        } catch (NumberFormatException e) {
-            Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.error.controllerListarNotificaciones.listarNotificaciones"));
         }
     }
     
@@ -108,33 +101,29 @@ public class ListarNotificacionesController extends BaseController {
             this.notificacionModel.enviarCorreo(notificacion);
             notificacion.setEstado(this.estadoPorDominioValor(Constantes.DOMINIO_NOTIFICACION, Constantes.ESTADO_NOTIFICACION_ENVIADA));
             notificacion.setPrioridad(Constantes.PRIORIDAD_NOTIFICACION_URGENTE);
-            Mensaje.agregarInfo(Util.getEtiquetas("sigebi.ok.controllerListarNotificaciones.enviarNotificacion"));
+            Mensaje.agregarInfo(Util.getEtiquetas("sigebi.label.notificaciones.enviarNotificacion.ok"));
         } catch (FWExcepcion err) {
-            Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.error.controllerListarNotificaciones.enviarNotificacion"));
+            Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.label.notificaciones.error.envia"));
             notificacion.setEstado(this.estadoPorDominioValor(Constantes.DOMINIO_NOTIFICACION, Constantes.ESTADO_NOTIFICACION_ENVIO_FALLIDO));
         } finally {
-            notificacionModel.salvar(notificacion);
+            this.notificacionModel.salvar(notificacion);
         }
     }
     
     public void cambioFiltro(ValueChangeEvent event) {
-        try {
-            if (!event.getPhaseId().equals(PhaseId.INVOKE_APPLICATION)) {
-                event.setPhaseId(PhaseId.INVOKE_APPLICATION);
-                event.queue();
-                return;
-            }
-            this.inicializarListado();
-        } catch (Exception err) {
-            Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.error.controllerListarNotificaciones.cambioFiltro"));
+        if (!event.getPhaseId().equals(PhaseId.INVOKE_APPLICATION)) {
+            event.setPhaseId(PhaseId.INVOKE_APPLICATION);
+            event.queue();
+            return;
         }
+        this.inicializarListado();
     }
 
     public void validarFiltroId(FacesContext context, UIComponent component, Object value) throws ValidatorException {
         try {
             Integer.parseInt(value.toString());
         } catch (NumberFormatException e){
-            Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.error.controllerListarNotificaciones.cambioFiltro.id"));
+            Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.label.notificaciones.error.cambioFiltro.id"));
             ((UIInput) component).setValid(false);
         }
     }
@@ -145,13 +134,12 @@ public class ListarNotificacionesController extends BaseController {
             calendar.setTime((Date) value);
             calendar.getTime();
         } catch (Exception e){
-            Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.error.controllerListarNotificaciones.cambioFiltro.fecha"));
+            Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.label.notificaciones.error.cambioFiltro.fecha"));
             ((UIInput) component).setValid(false);
         }
     }
 
     // <editor-fold defaultstate="collapsed" desc="Get's y Set's">
-        
     public ListarNotificacionesCommand getCommand() {
         return command;
     }

@@ -62,8 +62,8 @@ public class AgregarNotificaionController extends BaseController {
             String messageValidacion = validarForm(root);
             if (Constantes.OK.equals(messageValidacion)) {
                 this.command.setEstado(this.estadoPorDominioValor(Constantes.DOMINIO_NOTIFICACION, Constantes.ESTADO_NOTIFICACION_CREADA));
-                Notificacion notificacion = command.getNotificacion();
-                if (!notificacionRegistrada) {
+                Notificacion notificacion = this.command.getNotificacion();
+                if (!this.notificacionRegistrada) {
                     this.notificacionModel.salvar(notificacion);
                     this.notificacionRegistrada = true;
                     this.mensajeExito = "Los datos se salvaron con éxito.";
@@ -91,7 +91,7 @@ public class AgregarNotificaionController extends BaseController {
             this.vistaOrigen = event.getComponent().getAttributes().get(Constantes.KEY_VISTA_ORIGEN).toString();
             Util.navegar(Constantes.VISTA_NOTIFICACION_NUEVA);
         } catch (FWExcepcion err) {
-            mensaje = err.getMessage();
+            this.mensaje = err.getMessage();
         }
     }
     
@@ -109,7 +109,7 @@ public class AgregarNotificaionController extends BaseController {
             String[] correos = destinatario.split(",");
             for (String correo : correos) {
                 if (!validarCorreo(correo.trim())) {
-                    Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.error.controllerAgregarNotificaciones.error.correo.formato"));
+                    Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.label.notificaciones.error.correo.formato"));
                     ((UIInput) component).setValid(false);
                     break;
                 }
@@ -133,30 +133,30 @@ public class AgregarNotificaionController extends BaseController {
             calendar.add(Calendar.DATE, -1);
 
             if (fecha.before(calendar.getTime())) {
-                Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.error.controllerAgregarNotificaciones.error.fecha.anterior"));
+                Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.label.notificaciones.error.fecha.anterior"));
                 ((UIInput) component).setValid(false); 
             } 
         } catch (Exception e ) {
-            Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.error.controllerAgregarNotificaciones.error.fecha.formato"));
+            Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.label.notificaciones.error.fecha.formato"));
             ((UIInput) component).setValid(false);
         }
     }
     
     public String validarForm(UIViewRoot root) {
         if (command.getAsunto().isEmpty()) {
-            return Util.getEtiquetas("sigebi.error.controllerAgregarNotificaciones.error.asunto.nulo");
+            return Util.getEtiquetas("sigebi.label.notificaciones.error.asunto.nulo");
         }
         
         if (command.getDestinatario().isEmpty()) {
-            return Util.getEtiquetas("sigebi.error.controllerAgregarNotificaciones.error.correo.nulo");
+            return Util.getEtiquetas("sigebi.label.notificaciones.error.correo.nulo");
         }
         
         if (command.getMensajeCorreo().isEmpty()) {
-            return Util.getEtiquetas("sigebi.error.controllerAgregarNotificaciones.error.mensaje.nulo");
+            return Util.getEtiquetas("sigebi.label.notificaciones.error.mensaje.nulo");
         }
         
         if (command.getFecha() == null) {
-            return Util.getEtiquetas("sigebi.error.controllerAgregarNotificaciones.error.fecha.nulo");
+            return Util.getEtiquetas("sigebi.label.notificaciones.error.fecha.nulo");
         }
         return Constantes.OK;
     }

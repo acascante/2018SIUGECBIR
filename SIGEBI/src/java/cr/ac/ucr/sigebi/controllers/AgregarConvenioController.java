@@ -93,7 +93,7 @@ public class AgregarConvenioController extends BaseController {
             } else {
                 Mensaje.agregarErrorAdvertencia(messageValidacion);
             }
-        } catch (Exception err) {
+        } catch (FWExcepcion err) {
             this.mensaje = err.getMessage();
         }
     }
@@ -183,15 +183,15 @@ public class AgregarConvenioController extends BaseController {
     //<editor-fold defaultstate="collapsed" desc="Validaciones">  
     public String validarForm(UIViewRoot root) {
         if (!this.command.getPrestar() && !this.command.getRecibirPrestamo()) {
-            return Util.getEtiquetas("sigebi.error.controllerAgregarConvenios.error.prestar.recibir");
+            return Util.getEtiquetas("sigebi.label.convenios.error.prestar.recibir");
         }
         
         if (this.command.getInstitucion().isEmpty()) {
-            return Util.getEtiquetas("sigebi.error.controllerAgregarConvenios.error.institucion");
+            return Util.getEtiquetas("Campo Institucion es requerido");
         }        
 
         if (this.command.getFechaFin().before(this.command.getFechaInicio())) {
-            return Util.getEtiquetas("sigebi.error.controllerAgregarConvenios.error.fechas");
+            return Util.getEtiquetas("sigebi.label.convenios.error.fechas");
         } 
         return Constantes.OK;
     }
@@ -206,11 +206,11 @@ public class AgregarConvenioController extends BaseController {
             calendar.add(Calendar.DATE, -1);
 
             if (fecha.before(calendar.getTime())) {
-                Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.error.controllerAgregarConvenios.error.fecha.menor.hoy"));
+                Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.label.convenios.error.fecha.menor.hoy"));
                 ((UIInput) component).setValid(false); 
             } 
         } catch (Exception e ) {
-            Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.error.controllerAgregarConvenios.error.fecha.invalida"));
+            Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.label.convenios.error.fecha.invalida"));
             ((UIInput) component).setValid(false);
         }
     }

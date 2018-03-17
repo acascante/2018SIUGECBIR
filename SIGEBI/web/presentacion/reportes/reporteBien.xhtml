@@ -1,0 +1,129 @@
+<ice:form id="frmReporteBien" 
+          xmlns:ice="http://www.icesoft.com/icefaces/component" 
+          xmlns:h="http://java.sun.com/jsf/html" 
+          xmlns:f="http://java.sun.com/jsf/core" 
+          xmlns:ui="http://java.sun.com/jsf/facelets">
+    
+    <div class="contenido-pagina">
+        <div class="container">
+            <!--Encabezado-->
+            <div class="row">
+                <div class='col-sm-10'>
+                    <h1 style="margin: 0;">
+                        <ice:outputFormat value="#{label['sigebi.label.reporteBien.titulo']} "/>
+                    </h1>
+                </div>
+            </div>
+            
+            <!--Mensaje Exito-->
+            <div class="row">
+                <div class="col-sm-12">
+                    <ice:outputText style="color: red;" value="#{controllerReporteBien.mensaje} "/>
+                    <h:messages style="color:red;"/>
+                </div>
+            </div>
+        
+            <!--Combo Reportes-->
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group"> 
+                        <ice:outputText value="#{label['sigebi.label.reporteBien.reportes']}" />
+                        <ice:selectOneMenu id="cmbReportes" partialSubmit="true" styleClass="form-control"
+                                           valueChangeListener="#{controllerReporteBien.seleccionarReporte}"
+                                           value="#{controllerReporteBien.command.idReporte}">
+                            <f:selectItem itemLabel="N/A" itemValue="-1"/>
+                            <f:selectItems id="slcTipoItem" value="#{controllerReporteBien.itemsReporte}"/>
+                        </ice:selectOneMenu>
+                    </div>
+                </div>
+            </div>
+            
+            <!--ID-->
+            <div class="row">
+                <div class="col-sm-2">
+                    <div class="form-group"> 
+                        <ice:outputText value="#{label['sigebi.label.reporteBien.id']}" />
+                        <ice:inputText id="txtId" value="#{controllerReporteBien.command.id}" styleClass="form-control" readonly="true" partialSubmit="false" />
+                    </div>
+                </div>
+                
+                <div class="col-md-6">
+                    <div class="form-group"> 
+                        <ice:outputText value="#{label['sigebi.label.reporteBien.tipoReporte']}" />
+                        <ice:selectOneMenu id="cmbTipoReporte" partialSubmit="true" styleClass="form-control"
+                                           value="#{controllerReporteBien.command.idTipoReporte}">
+                            <f:selectItem itemLabel="N/A" itemValue="-1"/>
+                            <f:selectItems id="slcTipoItem" value="#{controllerReporteBien.itemsTipoReporte}"/>
+                        </ice:selectOneMenu>
+                    </div>
+                </div>
+            </div>
+            
+            <!--Tabla Bienes-->
+            <div class="row">
+                <div class="col-sm-12">
+                    <ice:panelGroup visible="true" style="padding-top: 1rem">
+                        <div class="container" style="overflow: auto; padding-bottom: 20px;">
+                            <div class="row">
+                                <div class="col-sm-10">
+                                    <h4>
+                                        <ice:outputFormat value="#{label['sigebi.label.reporteBien.campos']}" />
+                                    </h4>
+                                </div>
+                            </div>
+                            <div class="row" >
+                                <div class="col-md-12">
+                                    <div class="form-group"> 
+                                        <ice:dataTable id="listadoBienes" value="#{controllerReporteBien.command.camposReporte}" var="campo" paginator="true" paginatorPosition="bottom" rows="10">
+                                            <f:facet name="header">
+                                                <ice:columnGroup>
+                                                    <ice:headerRow>
+                                                        <ice:column id="id" rowspan="2" style="vertical-align:top;">
+                                                            <ice:outputText value="#{label['sigebi.label.reporteBien.campo.seleccionado']} "/>
+                                                        </ice:column>
+                                                        
+                                                        <ice:column id="nombre" rowspan="2" style="vertical-align:top;">
+                                                            <ice:outputText value="#{label['sigebi.label.reporteBien.campo.nombre']} "/>
+                                                        </ice:column>
+
+                                                        <ice:column id="descripcion" rowspan="2" style="vertical-align:top;">
+                                                            <ice:outputText value="#{label['sigebi.label.reporteBien.campo.valor']} "/>
+                                                        </ice:column>
+                                                    </ice:headerRow>
+                                                </ice:columnGroup>
+                                            </f:facet>
+                                            <ice:column>
+                                                <h:selectBooleanCheckbox id="seleccionar" value="#{controllerReporteBien.command.camposSeleccionados[campo.id]}" />
+                                            </ice:column>   
+                                            <ice:column>
+                                                <h:outputText id="nombreCell" value="#{campo.nombre}"/>
+                                            </ice:column>
+                                            <ice:column>
+                                                <h:outputText id="valor" value="#{campo.valor}"/>
+                                            </ice:column>
+                                        </ice:dataTable>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </ice:panelGroup>
+                </div>
+            </div>
+            
+            <!--Botones -->
+            <div class="row">
+                <div class="col-md-12">
+                    <ice:commandButton id="botonGuardar" value="#{label['label.guardar']}" action="#{controllerReporteBien.abrirPanelNombreReporte}" partialSubmit="true" style="float: right" styleClass="boton"/>
+                    <ice:commandButton id="botonCopiar" value="#{label['label.copiar']}" action="#{controllerReporteBien.abrirPanelNombreReporteCopiar}" rendered="#{controllerReporteBien.visibleBotonCopiar}" partialSubmit="true" style="float: right" styleClass="boton"/>
+                    <ice:commandButton id="botonEliminar" value="#{label['label.eliminar']}" action="#{controllerReporteBien.eliminarReporte}" rendered="#{controllerReporteBien.visibleBotonEliminar}" partialSubmit="true" style="float: right" styleClass="boton"/>
+                    <ice:commandButton id="botonReporte" value="#{label['label.reporte']}" action="#{controllerReporteBien.generarReporte}" partialSubmit="true" style="float: right" styleClass="boton"/>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Panel de confirmacion --> 
+        <ui:insert name="modalConfirmacion">
+            <ui:include src="../reportes/panelNombreReporte.xhtml" />
+        </ui:insert>        
+    </div>
+</ice:form>

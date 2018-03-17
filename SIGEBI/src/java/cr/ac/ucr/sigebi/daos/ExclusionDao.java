@@ -41,7 +41,7 @@ public class ExclusionDao extends GenericDaoImpl {
             Query query = session.createQuery(sql);
             return (List<SolicitudExclusion>) query.list();
         } catch (DataAccessException e) {
-            throw new FWExcepcion("sigebi.error.exclusionDao.listar", "Error obtener los registros de tipo " + this.getClass(), e.getCause());
+            throw new FWExcepcion("sigebi.label.exclusiones.error.listar", "Error obtener los registros de tipo " + this.getClass(), e.getCause());
         } finally {
             session.close();
         }
@@ -56,7 +56,7 @@ public class ExclusionDao extends GenericDaoImpl {
             query.setParameter("unidadEjecutora", unidadEjecutora);
             return (List<SolicitudExclusion>) query.list();
         } catch (DataAccessException e) {
-            throw new FWExcepcion("sigebi.error.exclusionDao.listar", "Error obtener los registros de tipo " + this.getClass(), e.getCause());
+            throw new FWExcepcion("sigebi.label.exclusiones.error.listar", "Error obtener los registros de tipo " + this.getClass(), e.getCause());
         } finally {
             session.close();
         }
@@ -72,7 +72,7 @@ public class ExclusionDao extends GenericDaoImpl {
 
             return (SolicitudExclusion) query.uniqueResult();
         } catch (HibernateException e) {
-            throw new FWExcepcion("sigebi.error.tipo.dao.buscarPorId", "Error obtener los registros de tipo " + this.getClass(), e.getCause());
+            throw new FWExcepcion("sigebi.label.exclusiones.error.listar", "Error obtener los registros de tipo " + this.getClass(), e.getCause());
         } finally {
             session.close();
         }
@@ -83,7 +83,7 @@ public class ExclusionDao extends GenericDaoImpl {
         try {
             persist(exclusion);
         } catch (DataAccessException e) {
-            throw new FWExcepcion("sigebi.error.exclusionDao.salvar", "Error guardando registro de tipo " + this.getClass(), e.getCause());
+            throw new FWExcepcion("sigebi.label.exclusiones.error.salvar", "Error guardando registro de tipo " + this.getClass(), e.getCause());
         }
     }
     
@@ -95,7 +95,7 @@ public class ExclusionDao extends GenericDaoImpl {
             return (Long)query.uniqueResult();
 
         } catch (FWExcepcion e) {
-            throw new FWExcepcion("sigebi.error.exclusionDao.contarsExclusiones", "Error contando los registros de tipo " + this.getClass(), e.getCause());
+            throw new FWExcepcion("sigebi.label.exclusiones.error.listar", "Error contando los registros de tipo " + this.getClass(), e.getCause());
         }finally{
             session.close();        
         }        
@@ -111,8 +111,8 @@ public class ExclusionDao extends GenericDaoImpl {
                 query.setMaxResults(ultimoRegistro - primerRegistro);
             }
             return (List<SolicitudExclusion>) query.list();
-        } catch (Exception e) {
-            throw new FWExcepcion("sigebi.error.exclusionDao.listar", "Error obtener los registros de tipo " + this.getClass(), e.getCause());
+        } catch (HibernateException e) {
+            throw new FWExcepcion("sigebi.label.exclusiones.error.listar", "Error obtener los registros de tipo " + this.getClass(), e.getCause());
         }finally{
             session.close();        
         }        
@@ -165,7 +165,7 @@ public class ExclusionDao extends GenericDaoImpl {
         try {
             persist(detalles.toArray());
         } catch (DataAccessException e) {
-            throw new FWExcepcion("sigebi.error.exclusionDao.salvar", "Error guardando registro de tipo " + this.getClass(), e.getCause());
+            throw new FWExcepcion("sigebi.label.exclusiones.error.salvar", "Error guardando registro de tipo " + this.getClass(), e.getCause());
         }
     }
     
@@ -174,7 +174,7 @@ public class ExclusionDao extends GenericDaoImpl {
         try {
             delete(detalles.toArray());
         } catch (DataAccessException e) {
-            throw new FWExcepcion("sigebi.error.exclusionDao.salvar", "Error guardando registro de tipo " + this.getClass(), e.getCause());
+            throw new FWExcepcion("sigebi.label.exclusiones.error.eliminar", "Error guardando registro de tipo " + this.getClass(), e.getCause());
         }
     }
     
@@ -186,7 +186,7 @@ public class ExclusionDao extends GenericDaoImpl {
             return (Long)query.uniqueResult();
 
         } catch (HibernateException e) {
-            throw new FWExcepcion("sigebi.error.exclusionDao.contarExclusiones", "Error contando los registros de tipo " + this.getClass(), e.getCause());
+            throw new FWExcepcion("sigebi.label.exclusiones.error.listar", "Error contando los registros de tipo " + this.getClass(), e.getCause());
         }finally{
             session.close();        
         }        
@@ -198,8 +198,8 @@ public class ExclusionDao extends GenericDaoImpl {
         try {
             Query query = this.queryListarDetalles(session, false, exclusion);
             return (List<SolicitudDetalle>) query.list();
-        } catch (Exception e) {
-            throw new FWExcepcion("sigebi.error.exclusionDao.listar", "Error obtener los registros de tipo " + this.getClass(), e.getCause());
+        } catch (HibernateException e) {
+            throw new FWExcepcion("sigebi.label.exclusiones.error.listar", "Error obtener los registros de tipo " + this.getClass(), e.getCause());
         }finally{
             session.close();        
         }        
