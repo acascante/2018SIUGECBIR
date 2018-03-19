@@ -90,7 +90,6 @@ public class NotificacionModel {
 
     public void enviarCorreo(Notificacion notificacion) throws FWExcepcion {
         try {
-            LOG.info("-- ID: " + notificacion.getId() + " -- Correo: " + notificacion.getDestinatario());
             String to = notificacion.getDestinatario();
 
             Properties properties = new Properties();
@@ -118,7 +117,7 @@ public class NotificacionModel {
             Transport.send(message);
         } catch (Exception e) {
             System.err.print(e.getCause());
-            throw new FWExcepcion("sigebi.error.controllerListarNotificaciones.enviarNotificacion", "Error al enviar notificacion" + this.getClass(), e.getCause());
+            throw new FWExcepcion("sigebi.label.notificaciones.error.enviar", "Error al enviar notificacion" + this.getClass(), e.getCause());
         }
     }
 

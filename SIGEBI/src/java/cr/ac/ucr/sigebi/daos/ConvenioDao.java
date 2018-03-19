@@ -9,6 +9,8 @@ import cr.ac.ucr.framework.daoHibernate.DaoHelper;
 import cr.ac.ucr.framework.daoImpl.GenericDaoImpl;
 import cr.ac.ucr.framework.utils.FWExcepcion;
 import cr.ac.ucr.sigebi.domain.Convenio;
+import cr.ac.ucr.sigebi.domain.UnidadEjecutora;
+import java.util.Date;
 import java.util.List;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
@@ -34,7 +36,7 @@ public class ConvenioDao extends GenericDaoImpl {
         try {
             return dao.getHibernateTemplate().find("from Convenio"); 
         } catch (DataAccessException e) {
-            throw new FWExcepcion("sigebi.error.convenioDao.listar", "Error obtener los registros de tipo " + this.getClass(), e.getCause());
+            throw new FWExcepcion("sigebi.label.convenios.error.listar", "Error obtener los registros de tipo " + this.getClass(), e.getCause());
         }
     }
     
@@ -48,18 +50,38 @@ public class ConvenioDao extends GenericDaoImpl {
 
             return (Convenio) query.uniqueResult();
         } catch (HibernateException e) {
-            throw new FWExcepcion("sigebi.error.tipo.dao.buscarPorId", "Error obtener los registros de tipo " + this.getClass(), e.getCause());
+            throw new FWExcepcion("sigebi.label.convenios.error.listar", "Error obtener los registros de tipo " + this.getClass(), e.getCause());
         } finally {
             session.close();
         }
     }
-
+    
+    @Transactional(readOnly = true)
+    public List<Convenio> listarActivos(UnidadEjecutora unidadEjecutora, Date fecha) throws FWExcepcion {
+        Session session = dao.getSessionFactory().openSession();
+        try {
+            StringBuilder sql = new StringBuilder("SELECT c FROM Convenio c WHERE ");
+            sql.append(":fecha BETWEEN c.fechaInicio AND c.fechaFin AND ");
+            sql.append("(c.unidadEjecutora = :unidadEjecutora OR c.soloEstaUnidad = 0) AND ");
+            sql.append("c.prestar = 1 ");
+            Query query = session.createQuery(sql.toString());
+            query.setParameter("fecha", fecha);
+            query.setParameter("unidadEjecutora", unidadEjecutora);
+            
+            return (List<Convenio>) query.list();
+        } catch (HibernateException e) {
+            throw new FWExcepcion("sigebi.label.convenios.error.listar", "Error obtener los registros de tipo " + this.getClass(), e.getCause());
+        }finally{
+            session.close();        
+        }
+    }
+    
     @Transactional
     public void salvar(Convenio convenio) throws FWExcepcion {
         try {
             persist(convenio);
         } catch (DataAccessException e) {
-            throw new FWExcepcion("sigebi.error.convenioDao.salvar", "Error guardando registro de tipo " + this.getClass(), e.getCause());
+            throw new FWExcepcion("sigebi.label.convenios.error.salvar", "Error guardando registro de tipo " + this.getClass(), e.getCause());
         }
     }
     
@@ -71,7 +93,7 @@ public class ConvenioDao extends GenericDaoImpl {
             return (Long)query.uniqueResult();
 
         } catch (HibernateException e) {
-            throw new FWExcepcion("sigebi.error.convenioDao.contarConvenioes", "Error contando los registros de tipo " + this.getClass(), e.getCause());
+            throw new FWExcepcion("sigebi.label.convenios.error.listar", "Error contando los registros de tipo " + this.getClass(), e.getCause());
         }finally{
             session.close();        
         }        
@@ -91,7 +113,7 @@ public class ConvenioDao extends GenericDaoImpl {
             return (List<Convenio>) query.list();
 
         } catch (HibernateException e) {
-            throw new FWExcepcion("sigebi.error.convenioDao.listar", "Error obtener los registros de tipo " + this.getClass(), e.getCause());
+            throw new FWExcepcion("sigebi.label.convenios.error.listar", "Error obtener los registros de tipo " + this.getClass(), e.getCause());
         }finally{
             session.close();        
         }

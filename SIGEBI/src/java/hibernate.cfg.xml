@@ -22,6 +22,8 @@
     <mapping class="cr.ac.ucr.sigebi.domain.AutorizacionRolPersona"/>
     <mapping class="cr.ac.ucr.sigebi.domain.Bien"/>
     <mapping class="cr.ac.ucr.sigebi.domain.BienCaracteristica"/>
+    <mapping class="cr.ac.ucr.sigebi.domain.CampoBien"/>
+    <mapping class="cr.ac.ucr.sigebi.domain.CampoReporteBien"/>
     <mapping class="cr.ac.ucr.sigebi.domain.Categoria"/>
     <mapping class="cr.ac.ucr.sigebi.domain.Clasificacion"/>
     <mapping class="cr.ac.ucr.sigebi.domain.Convenio"/>
@@ -43,6 +45,7 @@
     <mapping class="cr.ac.ucr.sigebi.domain.RegistroMovimientoConvenio"/>
     <mapping class="cr.ac.ucr.sigebi.domain.RegistroMovimientoSolicitud"/>
     <mapping class="cr.ac.ucr.sigebi.domain.RegistroMovimientoDocumento"/>
+    <mapping class="cr.ac.ucr.sigebi.domain.RegistroBien"/>
     <mapping class="cr.ac.ucr.sigebi.domain.Rol"/>
     <mapping class="cr.ac.ucr.sigebi.domain.Solicitud"/>
     <mapping class="cr.ac.ucr.sigebi.domain.SolicitudDetalle"/>

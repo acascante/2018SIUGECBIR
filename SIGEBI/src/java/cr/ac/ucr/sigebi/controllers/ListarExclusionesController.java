@@ -97,8 +97,6 @@ public class ListarExclusionesController extends BaseController {
             this.setCantidadRegistros(contador.intValue());
         } catch (FWExcepcion e) {
             Mensaje.agregarErrorAdvertencia(e.getError_para_usuario());
-        } catch (Exception e) {
-            Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.error.controllerListarExclusiones.contarNotificaciones"));
         }
     }
     
@@ -107,10 +105,6 @@ public class ListarExclusionesController extends BaseController {
             this.exclusiones = exclusionModel.listar(this.getPrimerRegistro()-1, this.getUltimoRegistro(), unidadEjecutora, command.getFltIdCodigo(), command.getFltFecha(), command.getFltEstado().longValue(), command.getFltTipo().longValue());
         } catch (FWExcepcion e) {
             Mensaje.agregarErrorAdvertencia(e.getError_para_usuario());
-        } catch (NumberFormatException e) {
-            Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.error.controllerListarExclusiones.contarNotificaciones"));
-        } catch (Exception e) {
-            Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.error.controllerListarExclusiones.contarNotificaciones"));
         }
     }
     
@@ -127,7 +121,7 @@ public class ListarExclusionesController extends BaseController {
         try {
             Integer.parseInt(value.toString());
         } catch (NumberFormatException e){
-            Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.error.controllerListarExclusiones.cambioFiltro.id"));
+            Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.label.exclusiones.error.cambioFiltro.id"));
             ((UIInput) component).setValid(false);
         }
     }
@@ -138,7 +132,7 @@ public class ListarExclusionesController extends BaseController {
             calendar.setTime((Date) value);
             calendar.getTime();
         } catch (Exception e){
-            Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.error.controllerListarExclusiones.cambioFiltro.fecha"));
+            Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("ssigebi.label.exclusiones.error.cambioFiltro.fecha"));
             ((UIInput) component).setValid(false);
         }
     }

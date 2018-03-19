@@ -94,6 +94,7 @@ public final class Constantes {
     public static final Integer ESTADO_INFORME_TECNICO_ANULADO = 5;
     
     public static final Integer TIPO_INFORME_TECNICO_REUBICAR = 1;
+    
     public static final Integer TIPO_INFORME_TECNICO_DESECHAR = 4;
     public static final Integer TIPO_INFORME_TECNICO_REPARAR = 6;
     public static final Integer TIPO_INFORME_TECNICO_DONAR = 2;
@@ -129,21 +130,22 @@ public final class Constantes {
     public static final String DOMINIO_BIEN_INTERNO = "BIEN_INTERNO";
     public static final String DOMINIO_CARACTERISTICA = "CARACTERISTICA";
     public static final String DOMINIO_CONVENIO = "CONVENIO";
+    public static final String DOMINIO_DOCUMENTO = "DOCUMENTO";
     public static final String DOMINIO_EXCLUSION = "EXCLUSION";
     public static final String DOMINIO_GENERAL = "GENERAL";
     public static final String DOMINIO_IDENTIFICACION = "IDENTIFICACION";
     public static final String DOMINIO_INFORME_TECNICO = "INFORME_TECNICO";
+    public static final String DOMINIO_INTERFAZ_BIEN = "INTERFAZ_BIEN";
     public static final String DOMINIO_NOTA = "NOTA";
     public static final String DOMINIO_NOTIFICACION = "NOTIFICACION";
     public static final String DOMINIO_ORIGEN = "ORIGEN";
     public static final String DOMINIO_PRESTAMO = "PRESTAMO";
     public static final String DOMINIO_PRESTAMO_ENTIDAD = "PRESTAMO_ENTIDAD";
     public static final String DOMINIO_PROCESO = "PROCESO";
-    public static final String DOMINIO_DOCUMENTO = "DOCUMENTO";
-    public static final String DOMINIO_SOLI_DONACION = "SOL_DONACION";
     public static final String DOMINIO_REGISTRO_MOVIMIENTO = "REGISTRO_MOVIMIENTO";
-    public static final String DOMINIO_INTERFAZ_BIEN = "INTERFAZ_BIEN";
-
+    public static final String DOMINIO_REPORTE = "REPORTE";
+    public static final String DOMINIO_SOLI_DONACION = "SOL_DONACION";
+    
     //TIPO ADJUNTO
     public static final Integer TIPO_ADJUNTO_BIEN = 1;
     public static final Integer TIPO_ADJUNTO_DOCUMENTO = 2;
@@ -185,6 +187,7 @@ public final class Constantes {
     public static final Integer CODIGO_AUTORIZACION_CAMBIAR_IDENTIFICACION_BIEN = 8;
     public static final Integer CODIGO_AUTORIZACION_EXCLUSION_DESECHO = 9;
     public static final Integer CODIGO_AUTORIZACION_EXCLUSION_DONACION = 10;
+    public static final Integer CODIGO_AUTORIZACION_PRESTAMO = 11;
 
     public static final String ACTA_ID_TIPO_DONACION = "26";
     public static final String ACTA_ID_TIPO_DESECHO = "27";
@@ -203,6 +206,7 @@ public final class Constantes {
     public static final String VISTA_PRESTAMO_LISTADO_PAGINA = "../prestamos/listarPrestamos.xhtml";
     public static final String VISTA_PRESTAMO_NUEVO = "prestamo_nuevo";
     public static final String VISTA_PRESTAMO_NUEVO_PAGINA = "../prestamos/prestamoDetalle.xhtml";
+    public static final String VISTA_REPORTE_BIEN = "reporte_bien";
     public static final String VISTA_SINCRONIZACION_BIEN = "sincronizar";
     public static final String VISTA_SINCRONIZACION_BIEN_LISTADO = "../bienes/listarBienSincronizar.xhtml";
 

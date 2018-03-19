@@ -23,7 +23,6 @@ import org.springframework.transaction.annotation.Transactional;
  *
  * @author alvaro.cascante
  */
-
 @Repository(value = "notificacionDao")
 public class NotificacionDao extends GenericDaoImpl {
     
@@ -35,7 +34,7 @@ public class NotificacionDao extends GenericDaoImpl {
         try {
             return dao.getHibernateTemplate().find("from Notificacion"); 
         } catch (DataAccessException e) {
-            throw new FWExcepcion("sigebi.error.notificacionDao.listar", "Error obtener los registros de tipo " + this.getClass(), e.getCause());
+            throw new FWExcepcion("sigebi.label.notificaciones.error.listar", "Error obtener los registros de tipo " + this.getClass(), e.getCause());
         }
     }
     
@@ -44,7 +43,7 @@ public class NotificacionDao extends GenericDaoImpl {
         try {
             persist(notificacion);
         } catch (DataAccessException e) {
-            throw new FWExcepcion("sigebi.error.notificacionDao.salvar", "Error guardando registro de tipo " + this.getClass(), e.getCause());
+            throw new FWExcepcion("sigebi.label.notificaciones.error.salvar", "Error guardando registro de tipo " + this.getClass(), e.getCause());
         }
     }
     
@@ -56,8 +55,8 @@ public class NotificacionDao extends GenericDaoImpl {
             return (Long)query.uniqueResult();
 
         } catch (HibernateException e) {
-            throw new FWExcepcion("sigebi.error.notificacionDao.contarNotificaciones", "Error contando los registros de tipo " + this.getClass(), e.getCause());
-        }finally{
+            throw new FWExcepcion("sigebi.label.notificaciones.error.listar", "Error contando los registros de tipo " + this.getClass(), e.getCause());
+        } finally {
             session.close();        
         }        
     }
@@ -76,8 +75,8 @@ public class NotificacionDao extends GenericDaoImpl {
             return (List<Notificacion>) query.list();
 
         } catch (HibernateException e) {
-            throw new FWExcepcion("sigebi.error.notificacionDao.listar", "Error obtener los registros de tipo " + this.getClass(), e.getCause());
-        }finally{
+            throw new FWExcepcion("sigebi.label.notificaciones.error.listar", "Error obtener los registros de tipo " + this.getClass(), e.getCause());
+        } finally {
             session.close();        
         }
     }
@@ -94,8 +93,8 @@ public class NotificacionDao extends GenericDaoImpl {
             
             return (List<Notificacion>) query.list();
         } catch (HibernateException e) {
-            throw new FWExcepcion("sigebi.error.notificacionDao.listar", "Error obtener los registros de tipo " + this.getClass(), e.getCause());
-        }finally{
+            throw new FWExcepcion("sigebi.label.notificaciones.error.enviar", "Error obtener los registros de tipo " + this.getClass(), e.getCause());
+        } finally {
             session.close();        
         }
     }

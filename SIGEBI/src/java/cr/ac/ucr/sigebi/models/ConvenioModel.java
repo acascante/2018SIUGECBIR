@@ -8,6 +8,8 @@ package cr.ac.ucr.sigebi.models;
 import cr.ac.ucr.framework.utils.FWExcepcion;
 import cr.ac.ucr.sigebi.daos.ConvenioDao;
 import cr.ac.ucr.sigebi.domain.Convenio;
+import cr.ac.ucr.sigebi.domain.UnidadEjecutora;
+import java.util.Date;
 import java.util.List;
 import javax.annotation.Resource;
 import org.springframework.stereotype.Service;
@@ -32,6 +34,10 @@ public class ConvenioModel {
     
     public List<Convenio> listar(Integer primerRegistro, Integer ultimoRegistro, Long id, String institucion, String responsable, String oficio, Integer estado) throws FWExcepcion {
         return convenioDao.listar(primerRegistro, ultimoRegistro, id, institucion, responsable, oficio, estado);
+    }
+    
+    public List<Convenio> listarActivos(UnidadEjecutora unidadEjecutora, Date fecha) throws FWExcepcion {
+        return convenioDao.listarActivos(unidadEjecutora, fecha);
     }
     
     public void salvar(Convenio convenio) throws FWExcepcion {

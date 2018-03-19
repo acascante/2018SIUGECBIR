@@ -55,9 +55,9 @@ public class ListarConveniosController extends BaseController {
         
         List<Estado> listEstados = this.estadosPorDominio(Constantes.DOMINIO_CONVENIO);
         if (!listEstados.isEmpty()) {
-            itemsEstado = new ArrayList<SelectItem>();
+            this.itemsEstado = new ArrayList<SelectItem>();
             for (Estado item : listEstados) {
-                itemsEstado.add(new SelectItem(item.getId(), item.getNombre()));  // ID + Nombre -- Usado para combo de filtro para enviar el ID al Dao para la consulta
+                this.itemsEstado.add(new SelectItem(item.getId(), item.getNombre()));  // ID + Nombre -- Usado para combo de filtro para enviar el ID al Dao para la consulta
             }
         }
     }
@@ -85,8 +85,6 @@ public class ListarConveniosController extends BaseController {
             this.setCantidadRegistros(contador.intValue());
         } catch (FWExcepcion e) {
             Mensaje.agregarErrorAdvertencia(e.getError_para_usuario());
-        } catch (NumberFormatException e) {
-            Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.error.controllerListarConvenios.contarConvenios"));
         }
     }
     
@@ -95,29 +93,23 @@ public class ListarConveniosController extends BaseController {
             this.convenios = convenioModel.listar(this.getPrimerRegistro()-1, this.getUltimoRegistro(), command.getFltIdCodigo(), command.getFltInstitucion(), command.getFltResponsable(), command.getFltOficio(), command.getFltEstado());
         } catch (FWExcepcion e) {
             Mensaje.agregarErrorAdvertencia(e.getError_para_usuario());
-        } catch (NumberFormatException e) {
-            Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.error.controllerListarConvenios.listarConvenios"));
         }
     }
     
     public void cambioFiltro(ValueChangeEvent pEvent) {
-        try {
-            if (!pEvent.getPhaseId().equals(PhaseId.INVOKE_APPLICATION)) {
-                pEvent.setPhaseId(PhaseId.INVOKE_APPLICATION);
-                pEvent.queue();
-                return;
-            }
-            this.inicializarListado();
-        } catch (Exception err) {
-            Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.error.controllerListarConvenios.cambioFiltro"));
+        if (!pEvent.getPhaseId().equals(PhaseId.INVOKE_APPLICATION)) {
+            pEvent.setPhaseId(PhaseId.INVOKE_APPLICATION);
+            pEvent.queue();
+            return;
         }
+        this.inicializarListado();
     }
 
     public void validarFiltroId(FacesContext context, UIComponent component, Object value) throws ValidatorException {
         try {
             Integer.parseInt(value.toString());
         } catch (NumberFormatException e){
-            Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.error.controllerListarConvenios.cambioFiltro.id"));
+            Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.label.convenios.error.cambioFiltro.id"));
             ((UIInput) component).setValid(false);
         }
     }
