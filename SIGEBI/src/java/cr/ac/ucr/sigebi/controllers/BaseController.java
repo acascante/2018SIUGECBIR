@@ -10,18 +10,13 @@ import cr.ac.ucr.sigebi.utils.Constantes;
 import cr.ac.ucr.framework.vista.VistaUsuario;
 import cr.ac.ucr.framework.vista.util.PaginacionOracle;
 import cr.ac.ucr.framework.vista.util.Util;
-import cr.ac.ucr.sigebi.domain.Bien;
 import cr.ac.ucr.sigebi.domain.Estado;
-import cr.ac.ucr.sigebi.domain.RegistroMovimiento;
 import cr.ac.ucr.sigebi.domain.Tipo;
 import cr.ac.ucr.sigebi.domain.UnidadEjecutora;
 import cr.ac.ucr.sigebi.domain.Usuario;
-import cr.ac.ucr.sigebi.models.RegistroMovimientoModel;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
-import javax.annotation.Resource;
 import javax.faces.model.SelectItem;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
@@ -37,6 +32,7 @@ public class BaseController extends PaginacionOracle {
     //<editor-fold defaultstate="collapsed" desc="Constantes">
     Integer estadoPendiente;// = Constantes.ESTADO_BIEN_PENDIENTE;
     Integer estadoPendienteSincronizar;// = Constantes.ESTADO_BIEN_PENDIENTE_SINCRONIZAR;
+    Integer estadoInactivo;// = Constantes.ESTADO_BIEN_PENDIENTE;
     //</editor-fold>
 
     //<editor-fold defaultstate="collapsed" desc="Variables Locales">
@@ -72,6 +68,12 @@ public class BaseController extends PaginacionOracle {
     public Integer getEstadoPendienteSincronizar() {
         return estadoPendienteSincronizar;
     }
+
+    public Integer getEstadoInactivo() {
+        return estadoInactivo;
+    }
+    
+    
 
     public VistaUsuario getlVistaUsuario() {
         return lVistaUsuario;
@@ -126,6 +128,7 @@ public class BaseController extends PaginacionOracle {
     public BaseController() {
         estadoPendiente = Constantes.ESTADO_BIEN_PENDIENTE;
         estadoPendienteSincronizar = Constantes.ESTADO_BIEN_PENDIENTE_SINCRONIZAR;
+        estadoInactivo = Constantes.ESTADO_BIEN_INACTIVO;
         incializaBienes();
     }
     //</editor-fold>

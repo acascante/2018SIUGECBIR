@@ -212,6 +212,9 @@ public class ReporteController extends BaseController {
             String ubicReporte = dir + "\\reportes\\movimientosReporte.jasper"; 
             String exportReporte = "traslados";
             
+            commandMovimiento.setDirectorioRaiz(dir);
+            commandMovimiento.setRutaReporte("\\reportes\\movimientosReporte.jasper");
+            
             Map parameter = new HashMap();
             
             parameter.put("nomUnidadCustodio", unidadEjecutora.getDescripcion());

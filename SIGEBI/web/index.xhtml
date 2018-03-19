@@ -19,7 +19,7 @@
                             <tr>
                                 <td align="left">
                                     <ice:inputText styleClass="inputLogin" id="usuario" value="#{vistaUsuario.gUsuarioActual.idUsuario}" 
-                                                   required="true" partialSubmit="false">
+                                                    partialSubmit="false">
                                     </ice:inputText>
                                     <h:message showDetail="false" showSummary="true" for="usuario" style="color:red" />
                                     <br/>
@@ -32,7 +32,7 @@
                             <tr>
                                 <td align="left" >
                                     <ice:inputSecret styleClass="inputLogin" id="clave" value="#{vistaUsuario.gUsuarioActual.codClave}" 
-                                                     required="true" partialSubmit="false" 
+                                                      partialSubmit="false" 
                                                      action="#{vistaUsuario.ingresar}"/><br/>
                                     <br/>
                                 </td></tr>

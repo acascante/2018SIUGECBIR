@@ -139,7 +139,7 @@ public class InterfazBienDao extends GenericDaoImpl {
         } else {
 
             if (fltIdentificacionBien != null && fltIdentificacionBien.length() > 0) {
-                sql.append(" and upper(obj.fltIdentificacionBien) like upper(:fltIdentificacionBien)");
+                sql.append(" and upper(obj.identificacionBien) like upper(:fltIdentificacionBien)");
             }
 
             if (marca != null && marca.length() > 0) {

@@ -30,6 +30,9 @@ public final class Constantes {
     public static final Integer ESTADO_BIEN_PENDIENTE_INACTIVACION = 6;
     public static final Integer ESTADO_BIEN_INACTIVO = 7;
     public static final Integer ESTADO_BIEN_TRASLADO = 8;
+    public static final Integer TRANSITO_POR_EXCLUSION = 9;
+    public static final Integer EXCLUSION_APROBADA = 10;
+    public static final Integer EXCLUIDO = 11;
 
     // Estado Interno de un bien
     public static final Integer ESTADO_INTERNO_BIEN_NORMAL = 1;

@@ -768,6 +768,7 @@ public class AgregarBienController extends BaseController {
 
                     //Se forma el bien
                     bien = command.getBien(null);
+                    bien.setInterfazBien(interfazBien);
 
                     //Se determina la identificacion
                     identificacion = command.getIdentificacion();   
@@ -794,9 +795,6 @@ public class AgregarBienController extends BaseController {
                         }
                     }
                     
-                    //Se crea el bien
-                    bien = command.getBien(null);
-                    bien.setInterfazBien(interfazBien);
                     modelBien.almacenar(bien);
                     bienRegistrado = true;
 

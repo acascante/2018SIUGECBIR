@@ -21,7 +21,7 @@
 
             <div class="col-md-7">
                 <ice:outputText value="#{label['sigebi.Bien.Label.Descripcion']}" />
-                <ice:inputText id="txtDescripcion" styleClass="form-control" required="true" partialSubmit="false"
+                <ice:inputText id="txtDescripcion" styleClass="form-control"  partialSubmit="false"
                                value="#{controllerAgregarBienes.command.descripcion}" >
                 </ice:inputText>
             </div>
@@ -90,7 +90,6 @@
                 <div class="form-group"> 
                     <ice:outputText value="#{label['sigebi.Bien.Label.Cantidad']}" /> 
                     <ice:inputText id="txtBiencantidad" styleClass="form-control" 
-                                   required="true" 
                                    partialSubmit="true"
                                    readonly="#{controllerAgregarBienes.command.cantidadActivo}"
                                    value="#{controllerAgregarBienes.command.cantidad}" >
@@ -160,7 +159,7 @@
             <div class="col-sm-8"> 
                 <div class="form-group">
                     <ice:outputText value="#{label['sigebi.Bien.Label.Ubicacion']}" /> 
-                    <ice:inputText id="txtUbicacionDescr" styleClass="form-control" required="true" readonly="true" partialSubmit="true"
+                    <ice:inputText id="txtUbicacionDescr" styleClass="form-control"  readonly="true" partialSubmit="true"
                                    value="#{controllerAgregarBienes.command.ubicacionCommand.descripcion}" >
                     </ice:inputText>
                 </div>
@@ -182,7 +181,7 @@
             <div class="col-sm-8"> 
                 <div class="form-group">
                     <ice:outputText value="#{label['sigebi.Bien.Label.Proveedor']}" /> 
-                    <ice:inputText id="txtProvedor" styleClass="form-control" value="#{controllerAgregarBienes.command.proveedorCommand.descripcion}" required="true" readonly="true" partialSubmit="true"/>
+                    <ice:inputText id="txtProvedor" styleClass="form-control" value="#{controllerAgregarBienes.command.proveedorCommand.descripcion}"  readonly="true" partialSubmit="true"/>
                 </div>
             </div>
             <div class="col-sm-2">
@@ -219,12 +218,17 @@
 
             <div class="col-md-4">
                 <ice:outputText value="#{label['sigebi.Bien.Label.Monto']}"/>
-                <ice:inputText id="txtMonto" styleClass="form-control" required="true" partialSubmit="true"
+                <ice:inputText id="txtMonto" 
+                               styleClass="form-control" 
+                               style="text-align: right"
+                               partialSubmit="true"
                                valueChangeListener="#{controllerAgregarBienes.verificaCapitalizable}"
                                value="#{controllerAgregarBienes.command.costo}" >
+                    <f:convertNumber type="number" locale="en_US"  pattern="#,##0.00" />
                 </ice:inputText>
             </div>
         </div>
+
 
         <!-- Panel de Ubicaciones --> 
         <ui:insert name="modalUbicaciones">

@@ -50,7 +50,6 @@ public class ReporteMovimientoCommand {
     int orden1;
     int orden2;
     
-    
     private Map<Integer, SelectItem> itemsColumnas;
     
     List<SelectItem> itemsOrdenColumnas1;
@@ -58,6 +57,8 @@ public class ReporteMovimientoCommand {
     
     private Map<Integer, SelectItem> itemsColumnas2;
     
+    String directorioRaiz;
+    String rutaReporte;
     //</editor-fold>
 
     public ReporteMovimientoCommand() {
@@ -113,6 +114,25 @@ public class ReporteMovimientoCommand {
     
     //<editor-fold defaultstate="collapsed" desc="Gets y Sets">    
 
+    public String getDirectorioRaiz() {
+        return directorioRaiz;
+    }
+
+    public void setDirectorioRaiz(String directorioRaiz) {
+        this.directorioRaiz = directorioRaiz;
+    }
+
+    public String getRutaReporte() {
+        return rutaReporte;
+    }
+
+    public void setRutaReporte(String rutaReporte) {
+        this.rutaReporte = rutaReporte;
+    }
+
+    
+    
+    
     private Date getDefaultDate() {
         Date today = new Date();
         Calendar calendar = Calendar.getInstance(Constantes.DEFAULT_TIME_ZONE);

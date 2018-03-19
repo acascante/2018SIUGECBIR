@@ -252,6 +252,8 @@ public class ListarBienSincronizarController extends BaseController {
         estadosFiltros = new ArrayList<Estado>();
         estadosFiltros.add(this.estadoPorDominioValor(Constantes.DOMINIO_BIEN, Constantes.ESTADO_BIEN_PENDIENTE));
         estadosFiltros.add(this.estadoPorDominioValor(Constantes.DOMINIO_BIEN, Constantes.ESTADO_BIEN_PENDIENTE_SINCRONIZAR));
+        estadosFiltros.add(this.estadoPorDominioValor(Constantes.DOMINIO_BIEN, Constantes.ESTADO_BIEN_INACTIVO));
+        
 
         estadosOptions = new ArrayList<SelectItem>();
         for (Estado item : estadosFiltros) {
@@ -612,7 +614,6 @@ public class ListarBienSincronizarController extends BaseController {
                 pEvent.queue();
                 return;
             }
-
             if (bienesEnviarSincronizar.isEmpty()) {
                 Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.sincronizarBien.Lista.ListaVacia"));
                 return;

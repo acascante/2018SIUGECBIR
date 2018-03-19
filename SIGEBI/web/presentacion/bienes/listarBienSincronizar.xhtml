@@ -216,7 +216,8 @@
                                     </ice:columnGroup>
                                 </f:facet>
                                 <ice:selectBooleanCheckbox id="checkRechazar"
-                                                   rendered="#{bien.estado.id == controllerListarBienSincronizar.estadoPendienteSincronizar}" 
+                                                   rendered="#{bien.estado.valor eq controllerListarBienSincronizar.estadoPendienteSincronizar
+                                                               or bien.estado.valor eq controllerListarBienSincronizar.estadoInactivo}" 
                                                    partialSubmit="true" 
                                                    valueChangeListener="#{controllerListarBienSincronizar.checkBienEnviarSincronizar}"
                                                    value="#{bien.seleccionado}">
