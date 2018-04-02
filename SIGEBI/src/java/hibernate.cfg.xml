@@ -45,7 +45,7 @@
     <mapping class="cr.ac.ucr.sigebi.domain.RegistroMovimientoConvenio"/>
     <mapping class="cr.ac.ucr.sigebi.domain.RegistroMovimientoSolicitud"/>
     <mapping class="cr.ac.ucr.sigebi.domain.RegistroMovimientoDocumento"/>
-    <mapping class="cr.ac.ucr.sigebi.domain.RegistroBien"/>
+    <mapping class="cr.ac.ucr.sigebi.domain.ReporteBien"/>
     <mapping class="cr.ac.ucr.sigebi.domain.Rol"/>
     <mapping class="cr.ac.ucr.sigebi.domain.Solicitud"/>
     <mapping class="cr.ac.ucr.sigebi.domain.SolicitudDetalle"/>

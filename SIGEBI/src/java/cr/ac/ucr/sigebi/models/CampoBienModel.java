@@ -24,4 +24,8 @@ public class CampoBienModel {
     public List<CampoBien> listar() throws FWExcepcion {
         return campoBienDao.listar();
     }
+    
+    public CampoBien buscarPorId(Long id) throws FWExcepcion {
+        return campoBienDao.buscarPorId(id);
+    }
 }

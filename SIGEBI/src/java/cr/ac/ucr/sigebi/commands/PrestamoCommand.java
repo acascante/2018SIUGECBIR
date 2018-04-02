@@ -11,6 +11,7 @@ import cr.ac.ucr.sigebi.domain.SolicitudPrestamo;
 import cr.ac.ucr.sigebi.domain.SolicitudDetalle;
 import cr.ac.ucr.sigebi.domain.Tipo;
 import cr.ac.ucr.sigebi.domain.UnidadEjecutora;
+import cr.ac.ucr.sigebi.domain.Usuario;
 import cr.ac.ucr.sigebi.utils.Constantes;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -39,6 +40,7 @@ public class PrestamoCommand {
     private String entidad;
     private Date fecha;
     private String observacion;
+    private Usuario usuario;
     private List<Bien> bienesEliminar;  // Bienes a eliminar
     private List<Bien> bienesAgregar;   // Bienes a agregar
     private List<SolicitudDetalle> detallesEliminar;
@@ -56,11 +58,12 @@ public class PrestamoCommand {
         this.detalles = new HashMap<Long, SolicitudDetalle>();
     }
 
-    public PrestamoCommand(UnidadEjecutora unidadEjecutora, Estado estado) {
+    public PrestamoCommand(UnidadEjecutora unidadEjecutora, Estado estado, Usuario usuario) {
         super();
         this.unidadEjecutora = unidadEjecutora;
         this.estado = estado;
         this.fecha = getDefaultDate();
+        this.usuario = usuario;
         this.bienes = new HashMap<Long, Bien>();
         this.detalles = new HashMap<Long, SolicitudDetalle>();
     }
@@ -73,6 +76,7 @@ public class PrestamoCommand {
         this.fecha = prestamo.getFecha();
         this.idTipoEntidad = prestamo.getTipo().getId();
         this.entidad = prestamo.getEntidad();
+        this.usuario = prestamo.getUsuario();
         this.bienes = new HashMap<Long, Bien>();
         this.detalles = new HashMap<Long, SolicitudDetalle>();
         for (SolicitudDetalle detalle : prestamo.getDetalles()) {
@@ -92,6 +96,7 @@ public class PrestamoCommand {
         prestamo.setTipo(tipo);
         prestamo.setEntidad(this.entidad);
         prestamo.setObservacion(this.observacion);
+        prestamo.setUsuario(this.usuario);
         prestamo.setDiscriminator(Constantes.DISCRIMINATOR_SOLICITUD_PRESTAMO);
         
         List<SolicitudDetalle> listDetalles = new ArrayList<SolicitudDetalle>(this.detalles.values());
@@ -183,6 +188,14 @@ public class PrestamoCommand {
 
     public void setObservacion(String observacion) {
         this.observacion = observacion;
+    }
+
+    public Usuario getUsuario() {
+        return usuario;
+    }
+
+    public void setUsuario(Usuario usuario) {
+        this.usuario = usuario;
     }
 
     public List<Bien> getBienesEliminar() {

@@ -217,7 +217,7 @@
                                 </f:facet>
                                 <ice:selectBooleanCheckbox id="checkRechazar"
                                                    rendered="#{bien.estado.valor eq controllerListarBienSincronizar.estadoPendienteSincronizar
-                                                               or bien.estado.valor eq controllerListarBienSincronizar.estadoInactivo}" 
+                                                               or bien.estado.id eq controllerListarBienSincronizar.estadoExclusionAprobada.id}" 
                                                    partialSubmit="true" 
                                                    valueChangeListener="#{controllerListarBienSincronizar.checkBienEnviarSincronizar}"
                                                    value="#{bien.seleccionado}">
@@ -255,7 +255,7 @@
                                         partialSubmit="true"
                                         disabled="#{controllerListarBienSincronizar.sincronizar}"
                                         value="#{label['sigebi.label.vista.listarBienSincronizar.sincronizacion']}"  >                             
-                                     </ice:commandButton>            
+                    </ice:commandButton>            
 
                     <ice:commandButton id="botonRechazar"
                                        style="float:right" 

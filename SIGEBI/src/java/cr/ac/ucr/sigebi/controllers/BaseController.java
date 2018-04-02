@@ -50,6 +50,8 @@ public class BaseController extends PaginacionOracle {
 
     Map<Integer, Estado> tiposBienes;
     
+    Estado estadoExclusionAprobada;
+    
     //</editor-fold>
     
     //<editor-fold defaultstate="collapsed" desc="Get's & Set's">
@@ -72,9 +74,12 @@ public class BaseController extends PaginacionOracle {
     public Integer getEstadoInactivo() {
         return estadoInactivo;
     }
-    
-    
 
+    public Estado getEstadoExclusionAprobada() {
+        return estadoExclusionAprobada;
+    }
+    
+    
     public VistaUsuario getlVistaUsuario() {
         return lVistaUsuario;
     }
@@ -129,6 +134,7 @@ public class BaseController extends PaginacionOracle {
         estadoPendiente = Constantes.ESTADO_BIEN_PENDIENTE;
         estadoPendienteSincronizar = Constantes.ESTADO_BIEN_PENDIENTE_SINCRONIZAR;
         estadoInactivo = Constantes.ESTADO_BIEN_INACTIVO;
+        
         incializaBienes();
     }
     //</editor-fold>
@@ -157,6 +163,9 @@ public class BaseController extends PaginacionOracle {
         //Se asigna la lista de estados y tipos
         estadosGenerales = lVistaUsuario.getEstadosSIGEBI();
         tiposGenerales = lVistaUsuario.getTiposSIGEBI();
+        
+        estadoExclusionAprobada = this.estadoPorDominioValor( Constantes.DOMINIO_BIEN, Constantes.ESTADO_BIEN_EXCLUSION_APROBADA);
+        
     }
 
     public List<Estado> estadosPorDominio(final String dominio) {

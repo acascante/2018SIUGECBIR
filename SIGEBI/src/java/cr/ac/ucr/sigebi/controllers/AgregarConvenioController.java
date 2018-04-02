@@ -114,36 +114,28 @@ public class AgregarConvenioController extends BaseController {
     }
     
     public void detalleRegistro(ActionEvent event) {
-        try{
-            if (!event.getPhaseId().equals(PhaseId.INVOKE_APPLICATION)) {
-                event.setPhaseId(PhaseId.INVOKE_APPLICATION);
-                event.queue();
-                return;
-            }
-            
-            Long id = (Long)event.getComponent().getAttributes().get(ListarConveniosCommand.KEY_CONVENIO);
-            Convenio convenio = convenioModel.buscarPorId(id);
-            inicializarDetalle(convenio);
-            this.vistaOrigen = event.getComponent().getAttributes().get(Constantes.KEY_VISTA_ORIGEN).toString();
-            Util.navegar(Constantes.VISTA_CONVENIO_NUEVO);
-        } catch (FWExcepcion err) {
-            mensaje = err.getMessage();
+        if (!event.getPhaseId().equals(PhaseId.INVOKE_APPLICATION)) {
+            event.setPhaseId(PhaseId.INVOKE_APPLICATION);
+            event.queue();
+            return;
         }
+
+        Long id = (Long)event.getComponent().getAttributes().get(ListarConveniosCommand.KEY_CONVENIO);
+        Convenio convenio = this.convenioModel.buscarPorId(id);
+        inicializarDetalle(convenio);
+        this.vistaOrigen = event.getComponent().getAttributes().get(Constantes.KEY_VISTA_ORIGEN).toString();
+        Util.navegar(Constantes.VISTA_CONVENIO_NUEVO);
     }
     
+    //<editor-fold defaultstate="collapsed" desc="Almacenar Observacion">  
     private void almacenarObservacion() {
-        if (!command.getObservacion().isEmpty()) {
+        if (!this.command.getObservacion().isEmpty()) {
             Integer telefono = lVistaUsuario.getgUsuarioActual().getTelefono1() != null ? Integer.parseInt(lVistaUsuario.getgUsuarioActual().getTelefono1()) : 0;
 
             RegistroMovimientoConvenio registroMovimiento = new RegistroMovimientoConvenio(
                 this.tipoPorDominioValor(Constantes.DOMINIO_REGISTRO_MOVIMIENTO, Constantes.TIPO_REGISTRO_MOVIMIENTO_CAMBIO_CONVENIO), 
-                command.getObservacion(), 
-                telefono,
-                new Date(), 
-                usuarioSIGEBI, 
-                command.getEstado(),
-                command.getConvenio());
-            registroMovimientoModel.agregar(registroMovimiento);
+                this.command.getObservacion(),  telefono, new Date(), usuarioSIGEBI, this.command.getEstado(), this.command.getConvenio());
+                this.registroMovimientoModel.agregar(registroMovimiento);
         }
     }
     //</editor-fold>
@@ -155,27 +147,18 @@ public class AgregarConvenioController extends BaseController {
             FileInfo fileInfo = inputFile.getFileInfo();
             if (fileInfo.getFileName() != null) {
                 // TODO Buscar tipo correcto
-                Tipo tipoAdjunto = this.tipoPorDominioValor(Constantes.DOMINIO_ADJUNTO, Constantes.TIPO_ADJUNTO_DOCUMENTO);
-                String detalleAdjunto = new String();
-
+                Tipo tipoAdjunto = this.tipoPorDominioValor(Constantes.DOMINIO_ADJUNTO, Constantes.TIPO_ADJUNTO_CONVENIO);
                 Adjunto adjunto = new Adjunto();
                 adjunto.setEstado(this.estadoPorDominioValor(Constantes.DOMINIO_GENERAL, Constantes.ESTADO_GENERAL_ACTIVO));
                 adjunto.setTipo(tipoAdjunto);
-//                adjunto.setIdReferencia(informe.getId());
+                adjunto.setIdReferencia(this.command.getId());
                 adjunto.setUrl("upload/convenios/" + fileInfo.getFileName());
-                if (detalleAdjunto != null && detalleAdjunto.length() > 0) {
-                    adjunto.setDetalle(detalleAdjunto);
-                } else {
-                    adjunto.setDetalle(fileInfo.getFileName());
-                }
+                adjunto.setDetalle(fileInfo.getFileName());
                 this.adjuntoModel.agregar(adjunto);
-
-                Mensaje.agregarInfo(Util.getEtiquetas("sigebi.error.informeTecnicoController.adjunto.agregar.exitosamente"));
+                this.mensajeExito = "Los archivo se adjunto con exito.";
             }
         } catch (FWExcepcion e) {
             Mensaje.agregarErrorAdvertencia(e.getError_para_usuario());
-        } catch (Exception e) {
-            Mensaje.agregarErrorAdvertencia(e, Util.getEtiquetas("sigebi.error.informeTecnicoController.agregarAdjunto"));
         }
     }
     //</editor-fold>
@@ -205,7 +188,7 @@ public class AgregarConvenioController extends BaseController {
             calendar.setTime(today);
             calendar.add(Calendar.DATE, -1);
 
-            if (fecha.before(calendar.getTime())) {
+            if (fecha.before(calendar.getTime()) && !this.convenioRegistrado) {
                 Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.label.convenios.error.fecha.menor.hoy"));
                 ((UIInput) component).setValid(false); 
             } 

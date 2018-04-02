@@ -5,14 +5,11 @@
  */
 package cr.ac.ucr.sigebi.commands;
 
-import cr.ac.ucr.sigebi.domain.CampoBien;
 import cr.ac.ucr.sigebi.domain.CampoReporteBien;
 import cr.ac.ucr.sigebi.domain.ReporteBien;
+import cr.ac.ucr.sigebi.domain.Tipo;
 import cr.ac.ucr.sigebi.domain.Usuario;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  *
@@ -22,52 +19,34 @@ public class ReporteBienCommand {
         
     //<editor-fold defaultstate="collapsed" desc="Atributos">
     private String nombre;
+    private String descripcion;
     private Long idTipoReporte;
     private Long idReporte;
     private Usuario usuario;
-    private List<CampoReporteBien> camposReporte;
-    private Map<Long, Boolean> camposSeleccionados;
     //</editor-fold>
     
     //<editor-fold defaultstate="collapsed" desc="Constructores">
     public ReporteBienCommand() { 
         super();
+        this.idReporte = -1L;
         this.idTipoReporte = -1L;
-        this.usuario = new Usuario();
-        this.camposSeleccionados = new HashMap<Long, Boolean>();
     }
     
-    public ReporteBienCommand(Usuario usuario, List<CampoBien> camposBien) {
+    public ReporteBienCommand(Usuario usuario) {
         this();
         this.usuario = usuario;
-        this.camposReporte = new ArrayList<CampoReporteBien>();
-        for (CampoBien campoBien : camposBien) {
-            CampoReporteBien campoReporteBien = new CampoReporteBien(campoBien);
-            this.camposReporte.add(campoReporteBien);
-        }        
-    }
-    
-    public ReporteBienCommand(Long idReporte, Usuario usuario, List<CampoReporteBien> camposReporte) {
-        this();
-        this.idReporte = idReporte;
-        this.usuario = usuario;
-        this.camposReporte = camposReporte;
-        
-        for (CampoReporteBien campoReporteBien : this.camposReporte) {
-            if (campoReporteBien.getMostrar()) {
-                this.camposSeleccionados.put(campoReporteBien.getId(), Boolean.TRUE);
-            }
-        }  
-    }
+    }    
     //</editor-fold>
  
     //<editor-fold defaultstate="collapsed" desc="Metodos">
-    public ReporteBien getReporteBien() { 
+    public ReporteBien getReporteBien(Tipo tipoReporte, List<CampoReporteBien> campos) { 
         ReporteBien reporteBien = new ReporteBien();
+        reporteBien.setId(this.idReporte);
+        reporteBien.setDescripcion(this.descripcion);
         reporteBien.setNombre(this.nombre);
-        //reporteBien.setTipoReporte(tipoReporte);
+        reporteBien.setTipoReporte(tipoReporte);
         reporteBien.setUsuario(this.usuario);
-        reporteBien.setCamposReporte(this.camposReporte);
+        reporteBien.setCamposReporte(campos);
         return reporteBien;
     }
     //</editor-fold>
@@ -97,28 +76,20 @@ public class ReporteBienCommand {
         this.nombre = nombre;
     }
 
+    public String getDescripcion() {
+        return descripcion;
+    }
+
+    public void setDescripcion(String descripcion) {
+        this.descripcion = descripcion;
+    }
+
     public Usuario getUsuario() {
         return usuario;
     }
 
     public void setUsuario(Usuario usuario) {
         this.usuario = usuario;
-    }
-
-    public Map<Long, Boolean> getCamposSeleccionados() {
-        return camposSeleccionados;
-    }
-
-    public void setCamposSeleccionados(Map<Long, Boolean> camposSeleccionados) {
-        this.camposSeleccionados = camposSeleccionados;
-    }
-
-    public List<CampoReporteBien> getCamposReporte() {
-        return camposReporte;
-    }
-
-    public void setCamposReporte(List<CampoReporteBien> camposReporte) {
-        this.camposReporte = camposReporte;
     }
     //</editor-fold>
 }

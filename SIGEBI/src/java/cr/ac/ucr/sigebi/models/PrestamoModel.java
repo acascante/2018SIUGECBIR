@@ -43,12 +43,12 @@ public class PrestamoModel {
         return prestamoDao.buscarPorId(id);
     }
             
-    public Long contar(UnidadEjecutora unidadEjecutora, Long id, Date fecha, Integer idEstado, String entidad) throws FWExcepcion {
-        return prestamoDao.contar(unidadEjecutora, id, fecha, idEstado, entidad);
+    public Long contar(UnidadEjecutora unidadEjecutora, Long id, Date fecha, Long idEstado, Long idTipoEntidad, String entidad) throws FWExcepcion {
+        return prestamoDao.contar(unidadEjecutora, id, fecha, idEstado, idTipoEntidad, entidad);
     }
     
-    public List<SolicitudPrestamo> listar(Integer primerRegistro, Integer ultimoRegistro, UnidadEjecutora unidadEjecutora, Long id, Date fecha, Integer idEstado, String entidad) throws FWExcepcion {
-        return prestamoDao.listar(primerRegistro, ultimoRegistro, unidadEjecutora, id, fecha, idEstado, entidad);
+    public List<SolicitudPrestamo> listar(Integer primerRegistro, Integer ultimoRegistro, UnidadEjecutora unidadEjecutora, Long id, Date fecha, Long idEstado, Long idTipoEntidad, String entidad) throws FWExcepcion {
+        return prestamoDao.listar(primerRegistro, ultimoRegistro, unidadEjecutora, id, fecha, idEstado, idTipoEntidad, entidad);
     }
     
     public Long contarDetalles(SolicitudPrestamo prestamo) throws FWExcepcion {

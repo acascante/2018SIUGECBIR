@@ -56,7 +56,7 @@ public class AgregarExclusionController extends BaseController {
         
         private ListarBienesCommand command;
         private Estado estadoInternoNormal;
-        private Estado estadoInternoRechazado;
+        private Estado estadoActivo;
         private Map<Long, Bien> bienes;
         private Map<Long, Boolean> bienesSeleccionados;
 
@@ -67,10 +67,10 @@ public class AgregarExclusionController extends BaseController {
             this.bienesSeleccionados = new HashMap<Long, Boolean>();
         }
 
-        public ListadoBienes(Estado estadoNormal, Estado estadoRechazado) {
+        public ListadoBienes(Estado estadoNormal, Estado estadoActivo) {
             this();
             this.estadoInternoNormal = estadoNormal;
-            this.estadoInternoRechazado = estadoRechazado;
+            this.estadoActivo = estadoActivo;
         }
         
         private void inicializarListado() {
@@ -81,7 +81,7 @@ public class AgregarExclusionController extends BaseController {
         
         private void contarBienes() {
             try {
-                Long contador = bienModel.contar(this.command.getFltIdCodigo(), this.unidadEjecutora, this.command.getFltIdentificacion(), this.command.getFltDescripcion(), this.command.getFltMarca(), this.command.getFltModelo(), this.command.getFltSerie(), this.estadoInternoNormal, this.estadoInternoRechazado);
+                Long contador = bienModel.contar(this.command.getFltIdCodigo(), this.unidadEjecutora, this.command.getFltIdentificacion(), this.command.getFltDescripcion(), this.command.getFltMarca(), this.command.getFltModelo(), this.command.getFltSerie(), this.estadoActivo, this.estadoInternoNormal);
                 this.setCantidadRegistros(contador.intValue());
             } catch (FWExcepcion e) {
                 Mensaje.agregarErrorAdvertencia(e.getError_para_usuario());
@@ -90,7 +90,7 @@ public class AgregarExclusionController extends BaseController {
 
         private void listarBienes() {
             try {
-                List<Bien> itemsBienes = bienModel.listar(this.getPrimerRegistro() - 1, this.getUltimoRegistro(), this.command.getFltIdCodigo(), this.unidadEjecutora , command.getFltIdentificacion(), command.getFltDescripcion(), command.getFltMarca(), command.getFltModelo(), command.getFltSerie(), this.estadoInternoNormal, this.estadoInternoRechazado);
+                List<Bien> itemsBienes = bienModel.listar(this.getPrimerRegistro() - 1, this.getUltimoRegistro(), this.command.getFltIdCodigo(), this.unidadEjecutora , command.getFltIdentificacion(), command.getFltDescripcion(), command.getFltMarca(), command.getFltModelo(), command.getFltSerie(), this.estadoActivo, this.estadoInternoNormal);
                 this.bienes.clear();
                 for (Bien item : itemsBienes) {
                     this.bienes.put(item.getId(), item);
@@ -131,12 +131,12 @@ public class AgregarExclusionController extends BaseController {
             this.estadoInternoNormal = estadoInternoNormal;
         }
 
-        public Estado getEstadoInternoRechazado() {
-            return estadoInternoRechazado;
+        public Estado getEstadoActivo() {
+            return estadoActivo;
         }
 
-        public void setEstadoInternoRechazado(Estado estadoInternoRechazado) {
-            this.estadoInternoRechazado = estadoInternoRechazado;
+        public void setEstadoActivo(Estado estadoActivo) {
+            this.estadoActivo = estadoActivo;
         }
 
         public Map<Long, Bien> getBienes() {
@@ -238,6 +238,7 @@ public class AgregarExclusionController extends BaseController {
     
     private boolean visiblePanelBienes;
     private boolean visiblePanelObservacion;
+    private boolean visiblePanelConfirmacion;
     
     private boolean visibleBotonGuardar;
     private boolean visibleBotonAgregarBienes;
@@ -267,7 +268,7 @@ public class AgregarExclusionController extends BaseController {
     
     private void inicializarNuevo() {
         Estado estado = this.estadoPorDominioValor(Constantes.DOMINIO_EXCLUSION, Constantes.ESTADO_EXCLUSION_CREADA);
-        this.command = new ExclusionCommand(this.unidadEjecutora, estado);
+        this.command = new ExclusionCommand(this.unidadEjecutora, estado, this.usuarioSIGEBI);
         this.exclusionRegistrada = false;
         this.autorizadoAprobar = false;
         inicializarDatos();
@@ -302,11 +303,15 @@ public class AgregarExclusionController extends BaseController {
 
     private void inicializarDatos() {
         Estado estadoInternoNormal = this.estadoPorDominioValor(Constantes.DOMINIO_BIEN_INTERNO, Constantes.ESTADO_INTERNO_BIEN_NORMAL);
-        Estado estadoInternoRechazado = this.estadoPorDominioValor(Constantes.DOMINIO_BIEN_INTERNO, Constantes.ESTADO_INTERNO_BIEN_EXCLUSION_RECHAZADO);
-        this.listadoBienes = new ListadoBienes(estadoInternoNormal, estadoInternoRechazado);
+        Estado estadoActivo = this.estadoPorDominioValor(Constantes.DOMINIO_BIEN, Constantes.ESTADO_BIEN_ACTIVO);
+        this.listadoBienes = new ListadoBienes(estadoInternoNormal, estadoActivo);
         this.mensajeExito = new String();
         this.mensaje = new String();
-
+        
+        this.visiblePanelConfirmacion = false;
+        this.visiblePanelObservacion = false;
+        this.visiblePanelBienes = false;
+        
         List<Tipo> tipos = this.tiposPorDominio(Constantes.DOMINIO_EXCLUSION);
         if (!tipos.isEmpty()) {
             this.itemsTipo = new ArrayList<SelectItem>();
@@ -316,8 +321,17 @@ public class AgregarExclusionController extends BaseController {
         }
     }
     
+    public void confirmarSolicitud() {
+        this.visiblePanelConfirmacion = true;
+    }
+    
+    public void cancelarSolicitud() {
+        this.visiblePanelConfirmacion = false;
+    }
+    
     public void guardarDatos() {
         try {
+            this.visiblePanelConfirmacion = false;
             FacesContext context = FacesContext.getCurrentInstance();
             UIViewRoot root = context.getViewRoot();
             String messageValidacion = validarForm(root);
@@ -443,7 +457,7 @@ public class AgregarExclusionController extends BaseController {
 
     //<editor-fold defaultstate="collapsed" desc="Movimientos sobre la Solicitud">
     public void solicitarExclusion() {
-        movimientoExclusion(Constantes.ESTADO_EXCLUSION_SOLICITADA, Constantes.ESTADO_INTERNO_BIEN_EXCLUSION_SOLICITADO);
+        movimientoExclusion(Constantes.ESTADO_EXCLUSION_SOLICITADA, Constantes.ESTADO_INTERNO_BIEN_EXCLUSION_SOLICITADO, false);
     }
     
     public void rechazarExclusion() {
@@ -453,14 +467,18 @@ public class AgregarExclusionController extends BaseController {
     }
     
     public void aprobarExclusion() {
-        movimientoExclusion(Constantes.ESTADO_EXCLUSION_APROBADA, Constantes.ESTADO_INTERNO_BIEN_EXCLUSION_APROBADO);
-        
-        Estado estadoInformeTecnicoNuevo = this.estadoPorDominioValor(Constantes.DOMINIO_INFORME_TECNICO, Constantes.ESTADO_INFORME_TECNICO_NUEVO);
-        Tipo tipoInformeTecnico = this.tipoPorDominioValor(Constantes.DOMINIO_INFORME_TECNICO, Constantes.TIPO_INFORME_TECNICO_DESECHAR);
-        List<Bien> listBienes = new ArrayList<Bien>(command.getBienes().values());
-        for (Bien bien : listBienes) {
-            DocumentoInformeTecnico dit = new DocumentoInformeTecnico(estadoInformeTecnicoNuevo, tipoInformeTecnico, bien, "Creacion Automatica de Informe", unidadEjecutora);
-            this.documentoModel.agregar(dit);
+        Tipo tipo = this.tipoPorId(this.command.getIdTipo());
+        if (tipo.getValor().equals(Constantes.TIPO_EXCLUSION_DESECHO) || tipo.getValor().equals(Constantes.TIPO_EXCLUSION_DONACION)) {
+            // Exclusiones por desecho o donacion generan Informes Tecnicos
+            Estado estadoInformeTecnicoNuevo = this.estadoPorDominioValor(Constantes.DOMINIO_INFORME_TECNICO, Constantes.ESTADO_INFORME_TECNICO_NUEVO);
+            List<Bien> listBienes = new ArrayList<Bien>(command.getBienes().values());
+            for (Bien bien : listBienes) {
+                DocumentoInformeTecnico dit = new DocumentoInformeTecnico(estadoInformeTecnicoNuevo, null, bien, "Creacion Automatica de Informe", unidadEjecutora);
+                this.documentoModel.agregar(dit);
+            }
+            movimientoExclusion(Constantes.ESTADO_EXCLUSION_APROBADA, Constantes.ESTADO_INTERNO_BIEN_INFORME_TECNICO, false);
+        } else {
+            movimientoExclusion(Constantes.ESTADO_EXCLUSION_APROBADA, Constantes.ESTADO_INTERNO_BIEN_EXCLUSION_APROBADO, true);
         }
     }
 
@@ -476,15 +494,15 @@ public class AgregarExclusionController extends BaseController {
     
     public void rechazarExclusionObservacion() {
         this.visiblePanelObservacion = false;
-        movimientoExclusion(Constantes.ESTADO_EXCLUSION_RECHAZADA, Constantes.ESTADO_INTERNO_BIEN_EXCLUSION_RECHAZADO);
+        movimientoExclusion(Constantes.ESTADO_EXCLUSION_RECHAZADA, Constantes.ESTADO_INTERNO_BIEN_NORMAL, false);
     }
     
     public void revisarExclusionObservacion() {
         this.visiblePanelObservacion = false;
-        movimientoExclusion(Constantes.ESTADO_EXCLUSION_CREADA, Constantes.ESTADO_INTERNO_BIEN_EXCLUSION);
+        movimientoExclusion(Constantes.ESTADO_EXCLUSION_CREADA, Constantes.ESTADO_INTERNO_BIEN_EXCLUSION, false);
     }
     
-    private void movimientoExclusion(int solicitud, int bienInterno) {
+    private void movimientoExclusion(int solicitud, int bienInterno, boolean actualizarEstadoBien) {
         try {
             Tipo tipo = this.tipoPorId(this.command.getIdTipo());
             Estado estadoSolicitud = this.estadoPorDominioValor(Constantes.DOMINIO_EXCLUSION, solicitud);
@@ -493,11 +511,27 @@ public class AgregarExclusionController extends BaseController {
             
             // Actualiza todos los bienes con el estado segun el movimiento que se hizo a la solicitud
             Estado estadoInternoBien = this.estadoPorDominioValor(Constantes.DOMINIO_BIEN_INTERNO, bienInterno);
+            Estado estadoBienInactivo = this.estadoPorDominioValor(Constantes.DOMINIO_BIEN, Constantes.ESTADO_BIEN_INACTIVO);
+            Estado estadoBienPendiente = this.estadoPorDominioValor(Constantes.DOMINIO_BIEN, Constantes.ESTADO_BIEN_PENDIENTE_SINCRONIZAR);
             List<Bien> listBienes = new ArrayList<Bien>(this.command.getBienes().values());
+            
+            boolean modificar;
             for (Bien bien : listBienes) {
+                modificar = false;
+                if (actualizarEstadoBien) {
+                    if (bien.getCapitalizable()) {
+                        bien.setEstado(estadoBienPendiente);                        
+                    } else {
+                        bien.setEstado(estadoBienInactivo);
+                    }
+                    modificar = true;
+                }
                 if (!estadoInternoBien.equals(bien.getEstadoInterno()) &&                                               // Si el bien tiene un estado diferente se actualiza
                     !Constantes.ESTADO_INTERNO_BIEN_EXCLUSION_APROBADO.equals(bien.getEstadoInterno().getValor())) {    // Si esta aprobado no se modifica
                     bien.setEstadoInterno(estadoInternoBien);
+                    modificar = true;
+                }
+                if (modificar) {
                     bienModel.actualizar(bien);
                 }
             }
@@ -514,19 +548,21 @@ public class AgregarExclusionController extends BaseController {
     //<editor-fold defaultstate="collapsed" desc="Movimientos sobre Bienes">
     public void mostarPanelAgregarBienes() {
         this.listadoBienes.inicializarListado();
-        this.setVisiblePanelBienes(true);
+        this.visiblePanelBienes = true;
     }
 
     public void cerrarPanelAgregarBienes() {
-        this.setVisiblePanelBienes(false);
+        this.visiblePanelBienes = false;
         Estado estadoEnSolicitud = this.estadoPorDominioValor(Constantes.DOMINIO_BIEN_INTERNO, Constantes.ESTADO_INTERNO_BIEN_EXCLUSION);
         
-        for (Map.Entry<Long, Boolean> entry : this.listadoBienes.bienesSeleccionados.entrySet()) {
-            if (entry.getValue()) {
-                Bien bien = this.listadoBienes.bienes.get(entry.getKey());
-                bien.setEstadoInterno(estadoEnSolicitud);
-                this.command.getBienes().put(bien.getId(), bien);
-                this.command.getBienesAgregar().add(bien);
+        if (!this.listadoBienes.bienesSeleccionados.isEmpty()) {
+            for (Map.Entry<Long, Boolean> entry : this.listadoBienes.bienesSeleccionados.entrySet()) {
+                if (entry.getValue()) {
+                    Bien bien = this.listadoBienes.bienes.get(entry.getKey());
+                    bien.setEstadoInterno(estadoEnSolicitud);
+                    this.command.getBienes().put(bien.getId(), bien);
+                    this.command.getBienesAgregar().add(bien);
+                }
             }
         }
     }
@@ -558,7 +594,7 @@ public class AgregarExclusionController extends BaseController {
 
     public void rechazarBienObservacion(ActionEvent event) {
         Long idBien = (Long) event.getComponent().getAttributes().get("bienSeleccionado");
-        movimientoBien(idBien, Constantes.ESTADO_EXCLUSION_RECHAZADA, Constantes.ESTADO_INTERNO_BIEN_EXCLUSION_RECHAZADO);        
+        movimientoBien(idBien, Constantes.ESTADO_EXCLUSION_RECHAZADA, Constantes.ESTADO_INTERNO_BIEN_NORMAL);        
     }
     
     private void movimientoBien(Long idBien, int solicitud, int bienInterno) {
@@ -660,6 +696,10 @@ public class AgregarExclusionController extends BaseController {
 
     public boolean isVisiblePanelObservacion() {
         return visiblePanelObservacion;
+    }
+
+    public boolean isVisiblePanelConfirmacion() {
+        return visiblePanelConfirmacion;
     }
 
     public boolean isVisibleBotonSolicitar() {
@@ -768,6 +808,10 @@ public class AgregarExclusionController extends BaseController {
 
     public void setVisiblePanelObservacion(boolean visiblePanelObservacion) {
         this.visiblePanelObservacion = visiblePanelObservacion;
+    }
+
+    public void setVisiblePanelConfirmacion(boolean visiblePanelConfirmacion) {
+        this.visiblePanelConfirmacion = visiblePanelConfirmacion;
     }
 
     public void setVisibleBotonSolicitar(boolean visibleBotonSolicitar) {

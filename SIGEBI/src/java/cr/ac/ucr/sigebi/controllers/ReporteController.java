@@ -11,6 +11,9 @@ import cr.ac.ucr.sigebi.commands.ReporteMovimientoCommand;
 import cr.ac.ucr.sigebi.commands.ReporteTrasladoCommand;
 import cr.ac.ucr.sigebi.daos.ReporteDao;
 import cr.ac.ucr.sigebi.domain.DocumentoTraslado;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -19,7 +22,9 @@ import java.util.List;
 import java.util.Map;
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
+import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
+import javax.servlet.ServletContext;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
@@ -157,6 +162,10 @@ public class ReporteController extends BaseController {
     
     public void mostrarReporteTraslados() {
         try{
+            ServletContext context = (ServletContext) FacesContext.getCurrentInstance().getExternalContext().getContext();
+            
+            String directorioRaiz7 = context.getRealPath("/reportes/trasladosReporte.jasper");
+            String directorioRaiz = "reportes/trasladosReporte.jasper";
             
             
             String[] directorioWeB = path.split("&");
@@ -166,7 +175,7 @@ public class ReporteController extends BaseController {
                     + directorioWeB[3].concat("\\") 
                     + directorioWeB[4];
             
-            String ubicReporteTrans = dir + "\\reportes\\trasladosReporte.jasper"; 
+            String ubicReporteTrans = directorioRaiz; //dir + "\\reportes\\trasladosReporte.jasper"; 
             
             //ubicReporteTrans = "../../reportes/trasladosReporte.jasper";
             String exportReporte = "traslados";
@@ -201,19 +210,14 @@ public class ReporteController extends BaseController {
     
     public void mostrarReporteMovimientos(){
         try{
+            ServletContext context = (ServletContext) FacesContext.getCurrentInstance().getExternalContext().getContext();
+           
+            String directorioRaiz7 = context.getRealPath("/reportes/movimientosReporte.jasper");
+            String directorioRaiz = "reportes/trasladosReporte.jasper";
             
-            String[] directorioWeB = path.split("&");
+            String ubicReporte = directorioRaiz;// directorioRaiz + rutaRelativa; 
             
-            String dir = directorioWeB[1].concat("\\") 
-                    + directorioWeB[2].concat("\\") 
-                    + directorioWeB[3].concat("\\") 
-                    + directorioWeB[4];
-            
-            String ubicReporte = dir + "\\reportes\\movimientosReporte.jasper"; 
-            String exportReporte = "traslados";
-            
-            commandMovimiento.setDirectorioRaiz(dir);
-            commandMovimiento.setRutaReporte("\\reportes\\movimientosReporte.jasper");
+            String exportReporte = "movimientos";
             
             Map parameter = new HashMap();
             

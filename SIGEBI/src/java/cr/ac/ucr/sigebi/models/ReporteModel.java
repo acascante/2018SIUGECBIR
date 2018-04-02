@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
  *
  * @author alvaro.cascante
  */
-@Service("notificacionModel")
+@Service("reporteModel")
 public class ReporteModel {
     
     @Resource private ReporteDao reporteDao;

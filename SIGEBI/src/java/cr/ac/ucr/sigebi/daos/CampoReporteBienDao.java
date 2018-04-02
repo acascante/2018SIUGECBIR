@@ -10,8 +10,6 @@ import cr.ac.ucr.framework.daoImpl.GenericDaoImpl;
 import cr.ac.ucr.framework.utils.FWExcepcion;
 import cr.ac.ucr.sigebi.domain.CampoReporteBien;
 import cr.ac.ucr.sigebi.domain.ReporteBien;
-import cr.ac.ucr.sigebi.domain.SolicitudDetalle;
-import cr.ac.ucr.sigebi.domain.Usuario;
 import java.util.List;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
@@ -58,16 +56,13 @@ public class CampoReporteBienDao extends GenericDaoImpl {
     }
     
     @Transactional(readOnly = true)
-    public List<CampoReporteBien> listarPorUsuario(Usuario usuario, ReporteBien reporteBien) throws FWExcepcion {
+    public List<CampoReporteBien> listarPorReporte(ReporteBien reporteBien) throws FWExcepcion {
         Session session = dao.getSessionFactory().openSession();
         try {
             StringBuilder sql = new StringBuilder("SELECT entity FROM CampoReporteBien entity WHERE ");
-            sql.append("entity.reporteBien = :reporteBien AND" );
-            sql.append("entity.reporteBien.usuario = :usuario");
+            sql.append("entity.reporteBien = :reporteBien " );
             Query query = session.createQuery(sql.toString());
             query.setParameter("reporteBien", reporteBien);
-            query.setParameter("usuario", usuario);
-            
             return (List<CampoReporteBien>) query.list();
         } catch (HibernateException e) {
             throw new FWExcepcion("sigebi.label.campoReporteBien.error.listar", "Error obtener los registros de tipo " + this.getClass(), e.getCause());
@@ -85,9 +80,8 @@ public class CampoReporteBienDao extends GenericDaoImpl {
         }
     }
     
-    
     @Transactional
-    public void salvarCampos(List<CampoReporteBien> campos) throws FWExcepcion {
+    public void salvar(List<CampoReporteBien> campos) throws FWExcepcion {
         try {
             persist(campos.toArray());
         } catch (DataAccessException e) {

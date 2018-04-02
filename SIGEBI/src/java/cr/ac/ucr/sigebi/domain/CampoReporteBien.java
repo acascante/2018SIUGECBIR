@@ -28,29 +28,28 @@ public class CampoReporteBien implements Serializable {
     //<editor-fold defaultstate="collapsed" desc="Atributos">
     @Id
     @GeneratedValue(strategy=GenerationType.SEQUENCE, generator = "sqCampoReporteBien")
-    @Column(name = "ID_CAMPO_REPORTE_BIEN")
+    @Column(name = "ID")
     private Long id;
     
-    @Column(name = "ID_REPORTE_BIEN")
     @ManyToOne
-    @JoinColumn(name = "REPORTE_BIEN", referencedColumnName = "ID_REPORTE_BIEN")
+    @JoinColumn(name = "ID_REPORTE_BIEN", referencedColumnName = "ID_REPORTE_BIEN")
     private ReporteBien reporteBien;
     
     @ManyToOne
-    @JoinColumn(name = "CAMPO_BIEN", referencedColumnName = "ID_CAMPO_BIEN")
+    @JoinColumn(name = "ID_CAMPO_BIEN", referencedColumnName = "ID_CAMPO_BIEN")
     private CampoBien campoBien;
     
     @Column(name = "MOSTRAR")
     private Boolean mostrar;
     
     @Column(name = "VALOR")
-    private Object valor;
+    private String valor;
     //</editor-fold>
     
     //<editor-fold defaultstate="collapsed" desc="Constructores">
     public CampoReporteBien() {}
     
-    public CampoReporteBien(Long id, ReporteBien reporteBien, CampoBien campoBien, Boolean mostrar, Object valor) {
+    public CampoReporteBien(Long id, ReporteBien reporteBien, CampoBien campoBien, Boolean mostrar, String valor) {
         this.id = id;
         this.reporteBien = reporteBien;
         this.campoBien = campoBien;
@@ -58,8 +57,8 @@ public class CampoReporteBien implements Serializable {
         this.valor = valor;
     }
     
-    public CampoReporteBien(CampoBien campobien) {
-        this.campoBien = campobien;
+    public CampoReporteBien(CampoBien campoBien) {
+        this.campoBien = campoBien;
         this.mostrar = false;
         this.valor = null;
     }
@@ -98,11 +97,11 @@ public class CampoReporteBien implements Serializable {
         this.mostrar = mostrar;
     }
 
-    public Object getValor() {
+    public String getValor() {
         return valor;
     }
 
-    public void setValor(Object valor) {
+    public void setValor(String valor) {
         this.valor = valor;
     }
     //</editor-fold>

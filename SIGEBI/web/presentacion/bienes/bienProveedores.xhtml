@@ -1,68 +1,132 @@
 <ice:outputHtml id="frmProveedores" xmlns:ice="http://www.icesoft.com/icefaces/component" xmlns:icecore="http://www.icefaces.org/icefaces/core" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:c="http://java.sun.com/jstl/core">
 
-    <ice:panelPopup modal="true" visible="#{controllerAgregarBienes.visiblePanelProveedores}" rendered="#{controllerAgregarBienes.visiblePanelProveedores}" styleClass="popup">
+    <ice:panelPopup modal="true" 
+                    visible="#{controllerAgregarBienes.visiblePanelProveedores}" 
+                    rendered="#{controllerAgregarBienes.visiblePanelProveedores}" 
+                    styleClass="popup">
 
         <f:facet name="header">
             <ice:outputText styleClass="flotar_izquierda titulo_popup" value="Listado de Proveedores"/>
         </f:facet>
         <br/>
-        
+
         <f:facet name="body">
             <fieldset class="panel_Container" >
                 <br></br>
                 <!-- LISTAR PROVEEDORES -->
-                <ice:dataTable id="provedoresTabla" 
-                               value="#{controllerAgregarBienes.proveedores}" 
-                               var="proveedor" 
-                               paginator="true" 
-                               paginatorPosition="bottom"                                
-                               rows="10">
-                    
-                    <ice:column id="colIdentificacionProveedor">
-                        <f:facet name="header">
-                            <ice:columnGroup>
-                                <ice:headerRow>
-                                    <ice:outputText value="#{label['sigebi.Modal.General.Label.Identificacion']}"/>
-                                </ice:headerRow>
-                                <ice:headerRow>
-                                    <ice:inputText id="filtrIdentificacionPro" 
-                                                   value="#{controllerAgregarBienes.command.proveedorCommand.filtroIdentificacion}" 
-                                                   partialSubmit="true"                                                    
-                                                   valueChangeListener="#{controllerAgregarBienes.filtroProveedor}"/>
-                                </ice:headerRow>
-                            </ice:columnGroup>
-                        </f:facet>                                
-                         <h:outputText value="#{proveedor.identificacion}"/>
-                    </ice:column>
-                    
-                    <ice:column id="colNombrePro">
-                        <f:facet name="header">
-                            <ice:columnGroup>
-                                <ice:headerRow>
-                                    <ice:outputText value="#{label['sigebi.Modal.General.Label.Nombre']}"/>
-                                </ice:headerRow>
-                                <ice:headerRow>
-                                    <ice:inputText id="filtroNombrePro" 
-                                                   value="#{controllerAgregarBienes.command.proveedorCommand.filtroNombre}"     
-                                                   partialSubmit="true"  
-                                                   valueChangeListener="#{controllerAgregarBienes.filtroProveedor}"/>
-                                </ice:headerRow>
-                            </ice:columnGroup>
-                        </f:facet>                                
-                         <ice:outputText  value="#{proveedor.nombreCompleto}"/>
-                    </ice:column>
-                    
-                    <ice:column style="text-align: center;">
-                        <ice:commandButton id="botonSeleccionarProveedor" 
-                                           style="float:right;margin-top:2%"  
-                                           styleClass="boton"  
-                                           partialSubmit="true" 
-                                           value="Seleccionar"  
-                                           actionListener="#{controllerAgregarBienes.selecionarProveedor}">
-                            <f:attribute id="provSeleccionado" name="proveedorSeleccionado" value="#{proveedor}"/>
-                        </ice:commandButton>
-                    </ice:column>
-                </ice:dataTable>
+
+                <div class="row">
+                    <div class="col-sm-12">
+                        <ice:outputFormat value="#{label['label.generico.paginacion.encabezado']}">
+                            <f:param value="#{controllerAgregarBienes.command.proveedorCommand.cantidadRegistros}"/>
+                            <f:param value="#{controllerAgregarBienes.command.proveedorCommand.cantidadRegistrosMostrados}"/>
+                            <f:param value="#{controllerAgregarBienes.command.proveedorCommand.primerRegistro}"/>
+                            <f:param value="#{controllerAgregarBienes.command.proveedorCommand.ultimoRegistro}"/>
+                            <f:param value="#{controllerAgregarBienes.command.proveedorCommand.paginaActual}"/>
+                            <f:param value="#{controllerAgregarBienes.command.proveedorCommand.cantidadPaginas}"/>
+                        </ice:outputFormat>
+                        <div>
+                            <table>
+                                <tr>
+                                    <td style="padding-right: 5px;">
+                                        <ice:outputText value="#{label['label.paginacion.cantidad.pagina']} "/>
+                                    </td>
+                                    <td>
+
+                                        <ice:selectOneMenu id="cantRegistroPorPagina"
+                                                           value="#{controllerAgregarBienes.command.proveedorCommand.cantRegistroPorPagina}" 
+                                                           valueChangeListener="#{controllerAgregarBienes.cambioRegistrosPorPaginaProvedores}"
+                                                           partialSubmit="true">
+                                            <f:selectItems id="item_pa" value="#{controllerAgregarBienes.command.proveedorCommand.listaRegistrosPagina}"/>
+                                        </ice:selectOneMenu>    
+
+                                    </td>
+                                </tr>
+                            </table>                        
+                        </div>                    
+                        <div>
+                            <ice:commandButton image="./imagenes/botones/first.png" 
+                                               partialSubmit="true" 
+                                               actionListener="#{controllerAgregarBienes.primeroProvedores}" 
+                                               rendered="#{controllerAgregarBienes.command.proveedorCommand.cantidadPaginas > 1}"/>
+                            <ice:commandButton image="./imagenes/botones/previos.png" 
+                                               partialSubmit="true" 
+                                               actionListener="#{controllerAgregarBienes.anteriorProvedores}" 
+                                               rendered="#{controllerAgregarBienes.command.proveedorCommand.cantidadPaginas > 1}"/>
+                            <ui:repeat value="#{controllerAgregarBienes.command.proveedorCommand.arregloPaginas}" var="pagina">
+                                <ice:commandLink value="#{pagina}" 
+                                                 partialSubmit="true" 
+                                                 actionListener="#{controllerAgregarBienes.irPaginaProvedores}">
+                                    <f:param name="numPag" value="#{pagina}"/>
+                                </ice:commandLink>
+                            </ui:repeat>            
+                            <ice:commandButton image="./imagenes/botones/next.png" 
+                                               partialSubmit="true" 
+                                               actionListener="#{controllerAgregarBienes.siguienteProvedores}" 
+                                               rendered="#{controllerAgregarBienes.command.proveedorCommand.cantidadPaginas > 1}"/>
+                            <ice:commandButton image="./imagenes/botones/last.png" 
+                                               partialSubmit="true" 
+                                               actionListener="#{controllerAgregarBienes.ultimoProvedores}" 
+                                               rendered="#{controllerAgregarBienes.command.proveedorCommand.cantidadPaginas > 1}"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <ice:dataTable id="provedoresTabla" 
+                                       value="#{controllerAgregarBienes.proveedores}" 
+                                       var="proveedor" 
+                                       paginator="true" 
+                                       paginatorPosition="bottom"                                
+                                       rows="10">
+
+                            <ice:column id="colIdentificacionProveedor">
+                                <f:facet name="header">
+                                    <ice:columnGroup>
+                                        <ice:headerRow>
+                                            <ice:outputText value="#{label['sigebi.Modal.General.Label.Identificacion']}"/>
+                                        </ice:headerRow>
+                                        <ice:headerRow>
+                                            <ice:inputText id="filtrIdentificacionPro" 
+                                                           value="#{controllerAgregarBienes.command.proveedorCommand.filtroIdentificacion}" 
+                                                           partialSubmit="true"                                                    
+                                                           valueChangeListener="#{controllerAgregarBienes.filtroProveedor}"/>
+                                        </ice:headerRow>
+                                    </ice:columnGroup>
+                                </f:facet>                                
+                                <h:outputText value="#{proveedor.identificacion}"/>
+                            </ice:column>
+
+                            <ice:column id="colNombrePro">
+                                <f:facet name="header">
+                                    <ice:columnGroup>
+                                        <ice:headerRow>
+                                            <ice:outputText value="#{label['sigebi.Modal.General.Label.Nombre']}"/>
+                                        </ice:headerRow>
+                                        <ice:headerRow>
+                                            <ice:inputText id="filtroNombrePro" 
+                                                           value="#{controllerAgregarBienes.command.proveedorCommand.filtroNombre}"     
+                                                           partialSubmit="true"  
+                                                           valueChangeListener="#{controllerAgregarBienes.filtroProveedor}"/>
+                                        </ice:headerRow>
+                                    </ice:columnGroup>
+                                </f:facet>                                
+                                <ice:outputText  value="#{proveedor.nombreCompleto}"/>
+                            </ice:column>
+
+                            <ice:column style="text-align: center;">
+                                <ice:commandButton id="botonSeleccionarProveedor" 
+                                                   style="float:right;margin-top:2%"  
+                                                   styleClass="boton"  
+                                                   partialSubmit="true" 
+                                                   value="Seleccionar"  
+                                                   actionListener="#{controllerAgregarBienes.selecionarProveedor}">
+                                    <f:attribute id="provSeleccionado" name="proveedorSeleccionado" value="#{proveedor}"/>
+                                </ice:commandButton>
+                            </ice:column>
+                        </ice:dataTable>
+                    </div>
+                </div>
                 <br/>
                 <br/>
                 <span class="alineado_derecha">

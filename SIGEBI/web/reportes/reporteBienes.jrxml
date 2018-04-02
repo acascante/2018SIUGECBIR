@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="reporteBienes" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="e830b0f3-2a4b-4adf-bf43-2d591502dbc2">
+	<property name="ireport.zoom" value="1.4641000000000006"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="descripcion" class="java.lang.String"/>
+	<parameter name="cantidad" class="java.lang.String"/>
+	<parameter name="subCategoria" class="java.lang.String"/>
+	<parameter name="subClasificacion" class="java.lang.String"/>
+	<parameter name="tipo" class="java.lang.String"/>
+	<parameter name="origen" class="java.lang.String"/>
+	<parameter name="unidadEjecutora" class="java.lang.String"/>
+	<parameter name="moneda" class="java.lang.String"/>
+	<parameter name="costo" class="java.lang.String"/>
+	<parameter name="fechaAdquisicion" class="java.lang.String"/>
+	<parameter name="estado" class="java.lang.String"/>
+	<parameter name="lote" class="java.lang.String"/>
+	<parameter name="capitalizable" class="java.lang.String"/>
+	<parameter name="ubicacion" class="java.lang.String"/>
+	<parameter name="fechaIngreso" class="java.lang.String"/>
+	<parameter name="marca" class="java.lang.String"/>
+	<parameter name="modelo" class="java.lang.String"/>
+	<parameter name="serie" class="java.lang.String"/>
+	<parameter name="identificacion" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="79" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="555" height="18" uuid="ef69fc1f-c5fe-4716-8369-b7f1fde90ef4"/>
+				<textElement textAlignment="Center">
+					<font size="12"/>
+				</textElement>
+				<text><![CDATA[UNIVERSIDAD DE COSTA RICA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="18" width="555" height="20" uuid="e63b0b29-9e6b-430a-8430-cbcc515ef4c8"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[SIAF / ACTIVOS FIJOS]]></text>
+			</staticText>
+			<textField pattern="dd/MM/yyyy">
+				<reportElement x="437" y="18" width="118" height="20" uuid="6cced7aa-5adb-42ed-a5e2-a21731cdd3aa"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="38" width="555" height="18" uuid="1d27bf15-02e6-4e0d-a61d-db8c5c86a692"/>
+				<textElement textAlignment="Center">
+					<font size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[ACTIVOS FIJOS MUEBLES]]></text>
+			</staticText>
+			<textField pattern="HH.mm.ss">
+				<reportElement x="437" y="38" width="118" height="18" uuid="aaa14b56-aab0-424c-9bdc-fca52f8c57c1"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="0" y="56" width="555" height="1" uuid="e4cfa8a5-66fe-428f-84e2-cfd7e9d5c386"/>
+			</line>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="35" splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="61" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="0" width="75" height="20" uuid="f8a7246e-fe14-42b1-8430-fe22cda78c35"/>
+				<textElement textAlignment="Left"/>
+				<textFieldExpression><![CDATA[$P{identificacion}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="75" y="0" width="125" height="20" uuid="ea3545ed-8522-435d-822c-657224443e1b"/>
+				<textFieldExpression><![CDATA[$P{descripcion}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="200" y="0" width="75" height="20" uuid="f2cb05d1-0e39-4332-99dc-5ea1e518b86f"/>
+				<textElement textAlignment="Left"/>
+				<textFieldExpression><![CDATA[$P{unidadEjecutora}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="275" y="0" width="75" height="20" uuid="ad9bc46b-a7d4-45bb-a1c7-e2a559f4f7b6"/>
+				<textFieldExpression><![CDATA[$P{marca}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="350" y="0" width="75" height="20" uuid="2bd01b19-06f4-4986-b132-626ae43dc600"/>
+				<textFieldExpression><![CDATA[$P{modelo}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="425" y="0" width="75" height="20" uuid="4a0a68b4-8b6d-4e6a-bd0d-64a71005aaff"/>
+				<textFieldExpression><![CDATA[$P{serie}]]></textFieldExpression>
+			</textField>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="125" splitType="Stretch"/>
+	</detail>
+	<columnFooter>
+		<band height="45" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="54" splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="42" splitType="Stretch"/>
+	</summary>
+</jasperReport>

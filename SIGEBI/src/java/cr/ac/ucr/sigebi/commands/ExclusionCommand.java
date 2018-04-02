@@ -11,6 +11,7 @@ import cr.ac.ucr.sigebi.domain.SolicitudExclusion;
 import cr.ac.ucr.sigebi.domain.SolicitudDetalle;
 import cr.ac.ucr.sigebi.domain.Tipo;
 import cr.ac.ucr.sigebi.domain.UnidadEjecutora;
+import cr.ac.ucr.sigebi.domain.Usuario;
 import cr.ac.ucr.sigebi.utils.Constantes;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -37,6 +38,7 @@ public class ExclusionCommand {
     private Long idTipo;
     private Date fecha;
     private String observacion;
+    private Usuario usuario;
     private List<Bien> bienesEliminar;  // Bienes a eliminar
     private List<Bien> bienesAgregar;   // Bienes a agregar
     private List<SolicitudDetalle> detallesEliminar;
@@ -53,11 +55,12 @@ public class ExclusionCommand {
         this.detalles = new HashMap<Long, SolicitudDetalle>();
     }
 
-    public ExclusionCommand(UnidadEjecutora unidadEjecutora, Estado estado) {
+    public ExclusionCommand(UnidadEjecutora unidadEjecutora, Estado estado, Usuario usuario) {
         super();
         this.unidadEjecutora = unidadEjecutora;
         this.estado = estado;
         this.fecha = getDefaultDate();
+        this.usuario = usuario;
         this.bienes = new HashMap<Long, Bien>();
         this.detalles = new HashMap<Long, SolicitudDetalle>();
     }
@@ -70,6 +73,7 @@ public class ExclusionCommand {
         this.fecha = exclusion.getFecha();
         this.idTipo = exclusion.getTipoExclusion().getId();
         this.bienes = new HashMap<Long, Bien>();
+        this.usuario = exclusion.getUsuario();
         this.detalles = new HashMap<Long, SolicitudDetalle>();
         for (SolicitudDetalle detalle : exclusion.getDetalles()) {
             this.bienes.put(detalle.getBien().getId(), detalle.getBien());
@@ -85,6 +89,7 @@ public class ExclusionCommand {
         exclusion.setUnidadEjecutora(this.unidadEjecutora);
         exclusion.setEstado(this.estado);
         exclusion.setFecha(this.fecha);
+        exclusion.setUsuario(this.usuario);
         exclusion.setTipoExclusion(tipo);
         exclusion.setDiscriminator(Constantes.DISCRIMINATOR_SOLICITUD_EXCLUSION);
         
@@ -144,6 +149,14 @@ public class ExclusionCommand {
 
     public void setFecha(Date fecha) {
         this.fecha = fecha;
+    }
+
+    public Usuario getUsuario() {
+        return usuario;
+    }
+
+    public void setUsuario(Usuario usuario) {
+        this.usuario = usuario;
     }
 
     public Map<Long, Bien> getBienes() {

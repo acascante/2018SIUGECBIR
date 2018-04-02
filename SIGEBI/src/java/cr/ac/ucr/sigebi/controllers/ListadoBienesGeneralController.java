@@ -11,6 +11,7 @@ import cr.ac.ucr.framework.vista.util.Util;
 import cr.ac.ucr.sigebi.commands.ListarBienesCommand;
 import cr.ac.ucr.sigebi.domain.Bien;
 import cr.ac.ucr.sigebi.domain.Estado;
+import cr.ac.ucr.sigebi.domain.Tipo;
 import cr.ac.ucr.sigebi.models.BienModel;
 import cr.ac.ucr.sigebi.models.EstadoModel;
 import cr.ac.ucr.sigebi.utils.Constantes;
@@ -61,12 +62,29 @@ public class ListadoBienesGeneralController extends BaseController{
     String fltMarca;
     String fltModelo;
     String fltSerie;
+    Tipo fltTipo;
     
+    Estado estadoIntInfTecAprobado;
+    Tipo tipoInfTecDonacion;
+    Tipo tipoInfTecDesecho;
     
     //</editor-fold>
     
     //<editor-fold defaultstate="collapsed" desc="Get's & Set's">
 
+    public void setFltTipo(Tipo fltTipo) {
+        this.fltTipo = fltTipo;
+    }
+
+    public Tipo getTipoInfTecDonacion() {
+        return tipoInfTecDonacion;
+    }
+
+    public Tipo getTipoInfTecDesecho() {
+        return tipoInfTecDesecho;
+    }
+
+    
     public String getFltIdBien() {
         return fltIdBien;
     }
@@ -192,6 +210,11 @@ public class ListadoBienesGeneralController extends BaseController{
         }
         mostrarDialogBienes = false;
         
+        
+        estadoIntInfTecAprobado = this.estadoPorDominioValor(Constantes.DOMINIO_BIEN_INTERNO, Constantes.ESTADO_INTERNO_BIEN_EXCLUSION_APROBADO);
+        tipoInfTecDonacion = this.tipoPorDominioValor(Constantes.DOMINIO_INFORME_TECNICO, Constantes.TIPO_INFORME_TECNICO_DONAR);
+        tipoInfTecDesecho = this.tipoPorDominioValor(Constantes.DOMINIO_INFORME_TECNICO, Constantes.TIPO_INFORME_TECNICO_DESECHAR);
+        
         iniciaListadoBienes();
     }
     //</editor-fold>
@@ -221,7 +244,8 @@ public class ListadoBienesGeneralController extends BaseController{
         try {
             Long contador = 0l;
             
-            contador = bienModel.contar(unidadEjecutora
+            switch(consultaBienes){  
+                case 1: contador = bienModel.contar(unidadEjecutora
                     , 0l
                     , fltIdBien
                     , fltDescripcion
@@ -231,6 +255,19 @@ public class ListadoBienesGeneralController extends BaseController{
                     , null
                     , null
                     , (Estado[]) null);
+                break;  
+                case 2: contador = bienModel.contarListadoActas(unidadEjecutora
+                    , 0l
+                    , fltIdBien
+                    , fltDescripcion
+                    , fltMarca
+                    , fltModelo
+                    , fltSerie
+                    , fltTipo
+                    , estadoIntInfTecAprobado);
+                ;break; 
+            }  
+            
             
             //Se actualiza la cantidad de registros segun los filtros
             this.setCantidadRegistros(contador.intValue());
@@ -259,7 +296,10 @@ public class ListadoBienesGeneralController extends BaseController{
     //Listado para Sincronización
     private void listadoActas(){
         bienes.clear();
-        List<Bien> resp  = bienModel.listar(
+        
+        
+        
+        List<Bien> resp  = bienModel.listadoActas(
                 this.getPrimerRegistro()-1
                 , getUltimoRegistro()
                 , this.unidadEjecutora
@@ -269,9 +309,8 @@ public class ListadoBienesGeneralController extends BaseController{
                 , fltMarca
                 , fltModelo
                 , fltSerie
-                , null
-                , null
-                , (Estado[]) null
+                , fltTipo
+                , estadoIntInfTecAprobado
             );
 
         for(Bien valor : resp) {     // foreach grade in grades

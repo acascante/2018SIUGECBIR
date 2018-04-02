@@ -252,7 +252,7 @@ public class ListarBienSincronizarController extends BaseController {
         estadosFiltros = new ArrayList<Estado>();
         estadosFiltros.add(this.estadoPorDominioValor(Constantes.DOMINIO_BIEN, Constantes.ESTADO_BIEN_PENDIENTE));
         estadosFiltros.add(this.estadoPorDominioValor(Constantes.DOMINIO_BIEN, Constantes.ESTADO_BIEN_PENDIENTE_SINCRONIZAR));
-        estadosFiltros.add(this.estadoPorDominioValor(Constantes.DOMINIO_BIEN, Constantes.ESTADO_BIEN_INACTIVO));
+        estadosFiltros.add(this.estadoExclusionAprobada);
         
 
         estadosOptions = new ArrayList<SelectItem>();
@@ -556,11 +556,19 @@ public class ListarBienSincronizarController extends BaseController {
             Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.error.controllerListarBienSincronizar.solicitarSincronizacion.sin.bienes.sincronizar"));
         } else {
             Integer telefono = lVistaUsuario.getgUsuarioActual().getTelefono1() != null ? Integer.parseInt(lVistaUsuario.getgUsuarioActual().getTelefono1()) : 0;
-            bienMod.cambiaEstadoBien(this.bienesPorSincronizar.values(), this.estadoPorDominioValor(Constantes.DOMINIO_BIEN, Constantes.ESTADO_BIEN_PENDIENTE_SINCRONIZAR), 
-                    observacionCliente, telefono, usuarioSIGEBI, this.tipoPorDominioValor(Constantes.DOMINIO_REGISTRO_MOVIMIENTO, Constantes.TIPO_REGISTRO_MOVIMIENTO_CAMBIO_ESTADO_BIEN));
+            
+            
+            bienMod.cambiaEstadoBien(this.bienesPorSincronizar.values()
+                                    , this.estadoPorDominioValor(Constantes.DOMINIO_BIEN, Constantes.ESTADO_BIEN_PENDIENTE_SINCRONIZAR)
+                                    , observacionCliente
+                                    , telefono
+                                    , usuarioSIGEBI
+                                    , this.tipoPorDominioValor(Constantes.DOMINIO_REGISTRO_MOVIMIENTO, Constantes.TIPO_REGISTRO_MOVIMIENTO_CAMBIO_ESTADO_BIEN));
+            
             this.bienesPorSincronizar.clear();
 
             //Se consulta la vista nuevamente
+            this.contarBienes();
             this.listarBienes();
         }
     }
@@ -619,18 +627,40 @@ public class ListarBienSincronizarController extends BaseController {
                 return;
             }
             
+            
+            //Debo apartar los bienes de Eclusiones y Hacer los registros por aparte Exlusiones o Inclusiones
+            List<Bien> bienesNuevos = new ArrayList<Bien>();
+            List<Bien> bienesExclusion = new ArrayList<Bien>();
+            for(Bien item : this.bienesEnviarSincronizar.values()){
+                if(item.getEstado().getValor().equals(this.estadoPendienteSincronizar))
+                    bienesNuevos.add(item);
+                if(item.getEstado().getId().equals(this.estadoExclusionAprobada.getId()))
+                    bienesExclusion.add(item);
+            }
+            
+            
             Integer telefono = lVistaUsuario.getgUsuarioActual().getTelefono1() != null ? Integer.parseInt(lVistaUsuario.getgUsuarioActual().getTelefono1()) : 0;
-            bienMod.sincronizarBien(this.bienesEnviarSincronizar.values()
-                                    , "Solicitud de sincronizacion"
+            bienMod.sincronizarBien(bienesNuevos
+                                 , Util.getEtiquetas("sigebi.sincronizarBien.Observacion.NuevoBien")
                                     , telefono
                                     , this.usuarioSIGEBI
                                     , this.estadoPorDominioValor(Constantes.DOMINIO_BIEN, Constantes.ESTADO_BIEN_PENDIENTE_ACTIVACION)
                                     );
+            
+            bienMod.sincronizarBien(bienesExclusion
+                                 , Util.getEtiquetas("sigebi.sincronizarBien.Observacion.Exclusion")
+                                    , telefono
+                                    , this.usuarioSIGEBI
+                                    , this.estadoPorDominioValor(Constantes.DOMINIO_BIEN, Constantes.ESTADO_BIEN_TRANSITO_POR_EXCLUSION)
+                                    );
+            
+            
             this.bienesEnviarSincronizar.clear();
             this.bienesPorSincronizar.clear();
             this.bienesPorRechazar.clear();
 
             //Actualiza la lista
+            this.contarBienes();
             this.listarBienes();
 
             Mensaje.agregarInfo(Util.getEtiquetas("sigebi.sincronizarBienes.Exito"));

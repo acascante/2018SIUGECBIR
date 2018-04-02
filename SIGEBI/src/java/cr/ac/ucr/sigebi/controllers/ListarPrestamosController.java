@@ -93,7 +93,7 @@ public class ListarPrestamosController extends BaseController {
     
     private void contarPrestamos() {
         try {
-            Long contador = prestamoModel.contar(unidadEjecutora, command.getFltIdCodigo(), command.getFltFecha(), command.getFltEstado(), command.getFltEntidad());
+            Long contador = prestamoModel.contar(unidadEjecutora, command.getFltIdCodigo(), command.getFltFecha(), command.getFltEstado(), command.getFltTipoEntidad(), command.getFltEntidad());
             this.setCantidadRegistros(contador.intValue());
         } catch (FWExcepcion e) {
             Mensaje.agregarErrorAdvertencia(e.getError_para_usuario());
@@ -102,7 +102,7 @@ public class ListarPrestamosController extends BaseController {
     
     private void listarPrestamos() {
         try {
-            this.prestamos = prestamoModel.listar(this.getPrimerRegistro()-1, this.getUltimoRegistro(), unidadEjecutora, command.getFltIdCodigo(), command.getFltFecha(), command.getFltEstado(), command.getFltEntidad());
+            this.prestamos = prestamoModel.listar(this.getPrimerRegistro()-1, this.getUltimoRegistro(), unidadEjecutora, command.getFltIdCodigo(), command.getFltFecha(), command.getFltEstado(), command.getFltTipoEntidad(), command.getFltEntidad());
         } catch (FWExcepcion e) {
             Mensaje.agregarErrorAdvertencia(e.getError_para_usuario());
         }

@@ -92,7 +92,7 @@ public class Bien extends ObjetoBase implements Serializable {
     @Column(name = "FIN_GARANTIA")
     @Temporal(javax.persistence.TemporalType.DATE)
     private Date finGarantia;
-
+    
     @Column(name = "DESCRIPCION_GARANTIA", nullable=true)
     private String descripcionGarantia;
     
@@ -128,6 +128,20 @@ public class Bien extends ObjetoBase implements Serializable {
     @ManyToOne
     @JoinColumn(name = "ID_INTERFAZ", referencedColumnName = "ID_INTERFAZ_BIEN")
     private InterfazBien interfazBien;    
+    
+    @Column(name = "FECHA_INGRESO")
+    @Temporal(javax.persistence.TemporalType.DATE)
+    private Date fechaIngreso;
+    
+    
+    @ManyToOne
+    @JoinColumn(name = "ID_USUARIO_REGISTRA", referencedColumnName = "ID_USUARIO")
+    private Usuario usuarioRegistra;
+    
+//    @ManyToOne
+//    @JoinColumn(name = "ID_USUARIO", referencedColumnName = "ID_USUARIO")
+//    private Usuario persona;
+    
     
     @Transient
     private List<Accesorio> accesorios;
@@ -362,6 +376,26 @@ public class Bien extends ObjetoBase implements Serializable {
     public void setCaracteristicas(List<BienCaracteristica> caracteristicas) {
         this.caracteristicas = caracteristicas;
     }
+
+    public Date getFechaIngreso() {
+        return fechaIngreso;
+    }
+
+    public void setFechaIngreso(Date fechaIngreso) {
+        this.fechaIngreso = fechaIngreso;
+    }
+
+    public Usuario getUsuarioRegistra() {
+        return usuarioRegistra;
+    }
+
+    public void setUsuarioRegistra(Usuario usuarioRegistra) {
+        this.usuarioRegistra = usuarioRegistra;
+    }
+    
+    
+    
+    
     //</editor-fold>
 
     //<editor-fold defaultstate="collapsed" desc="Metodos para visibilidad de opciones en los listados">

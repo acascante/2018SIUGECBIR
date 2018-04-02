@@ -34,12 +34,15 @@ public class ReporteBien implements Serializable {
     private String nombre;
     
     @ManyToOne
-    @JoinColumn(name = "USUARIO", referencedColumnName = "ID_USUARIO")
+    @JoinColumn(name = "ID_USUARIO", referencedColumnName = "ID_USUARIO")
     private Usuario usuario;
     
     @ManyToOne
-    @JoinColumn(name = "TIPO", referencedColumnName = "ID_TIPO")
+    @JoinColumn(name = "ID_TIPO", referencedColumnName = "ID_TIPO")
     private Tipo tipoReporte;
+    
+    @Column(name = "DESCRIPCION")
+    private String descripcion;
     
     @Transient
     private List<CampoReporteBien> camposReporte;
@@ -48,12 +51,13 @@ public class ReporteBien implements Serializable {
     //<editor-fold defaultstate="collapsed" desc="Constructores">
     public ReporteBien() {}
     
-    public ReporteBien(Long id, String nombre, Usuario usuario, List<CampoReporteBien> camposReporte, Tipo tipoReporte) {
+    public ReporteBien(Long id, String nombre, Usuario usuario, List<CampoReporteBien> camposReporte, Tipo tipoReporte, String descripcion) {
         this.id = id;
         this.nombre = nombre;
         this.usuario = usuario;
         this.camposReporte = camposReporte;
         this.tipoReporte = tipoReporte;
+        this.descripcion = descripcion;
     }
     //</editor-fold>
 
@@ -88,6 +92,14 @@ public class ReporteBien implements Serializable {
 
     public void setTipoReporte(Tipo tipoReporte) {
         this.tipoReporte = tipoReporte;
+    }
+
+    public String getDescripcion() {
+        return descripcion;
+    }
+
+    public void setDescripcion(String descripcion) {
+        this.descripcion = descripcion;
     }
     
     public List<CampoReporteBien> getCamposReporte() {

@@ -14,7 +14,6 @@ import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -39,13 +38,14 @@ public class ProveedorDao extends GenericDaoImpl {
         }
     }
     
-    public List<Proveedor> listar(String identificacion, String nombre) {
+    @Transactional(readOnly = true)
+    public List<Proveedor> listar(String identificacion, String nombre,int primerRegistro, int cantRegistroPorPagina ) {
         Session session = dao.getSessionFactory().openSession();
         try {
             Query query = this.creaQuery(session, false, identificacion, nombre);
             
-            query.setFirstResult(0);
-            query.setMaxResults(15);
+            query.setFirstResult(primerRegistro);
+            query.setMaxResults( cantRegistroPorPagina );
                 
             return (List<Proveedor>) query.list();
         } catch (HibernateException e) {
@@ -55,8 +55,24 @@ public class ProveedorDao extends GenericDaoImpl {
         }
     }
     
+    
+    @Transactional(readOnly = true)
+    public Long contar(String identificacion, String nombre){
+        Session session = dao.getSessionFactory().openSession();
+        try {
+            Query query = this.creaQuery(session, true, identificacion, nombre);
+            return (Long)query.uniqueResult();
+
+        } catch (HibernateException e) {
+            throw new FWExcepcion("sigebi.label.prestamos.error.listar", "Error contando los registros de tipo " + this.getClass(), e.getCause());
+        }finally{
+            session.close();        
+        }  
+    }
+    
     private Query creaQuery(Session session, Boolean contar, String identificacion, String nombre) {
         StringBuilder sql = new StringBuilder("SELECT ");
+        
         if (contar) {
             sql.append("COUNT(obj) FROM Persona obj ");
         } else {
@@ -68,7 +84,9 @@ public class ProveedorDao extends GenericDaoImpl {
             sql.append(" AND UPPER(obj.identificacion) LIKE UPPER(:identificacion) ");
         }
         if(nombre != null && nombre.length() > 0){
-            sql.append(" AND UPPER(obj.nombre) LIKE UPPER(:nombre) ");
+            sql.append(" AND concat(UPPER(obj.nombre), ' '"
+                                + ", UPPER(obj.primerApellido), ' '"
+                                + ", UPPER(obj.segundoApellido) ) LIKE UPPER(:nombre) ");
         }
         sql.append(" ORDER BY obj.nombre desc");
         
@@ -77,7 +95,8 @@ public class ProveedorDao extends GenericDaoImpl {
             query.setParameter("identificacion", '%' + identificacion + '%');
         }
         if(nombre != null && nombre.length() > 0){
-            query.setParameter("nombre", '%' + nombre.replace(' ', '%') + '%');
+            String nomb = nombre.replace(' ', '%');
+            query.setParameter("nombre", '%' + nomb + '%');
         }
         return query;
     }

@@ -5,6 +5,7 @@
  */
 package cr.ac.ucr.sigebi.commands;
 
+import cr.ac.ucr.framework.vista.util.PaginacionOracle;
 import cr.ac.ucr.sigebi.domain.Accesorio;
 import cr.ac.ucr.sigebi.domain.Adjunto;
 import cr.ac.ucr.sigebi.domain.Bien;
@@ -24,6 +25,7 @@ import cr.ac.ucr.sigebi.domain.SubClasificacion;
 import cr.ac.ucr.sigebi.domain.Tipo;
 import cr.ac.ucr.sigebi.domain.Ubicacion;
 import cr.ac.ucr.sigebi.domain.UnidadEjecutora;
+import cr.ac.ucr.sigebi.domain.Usuario;
 import cr.ac.ucr.sigebi.domain.ViewResumenBien;
 import cr.ac.ucr.sigebi.utils.Constantes;
 import java.util.ArrayList;
@@ -31,6 +33,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import javax.faces.model.SelectItem;
 
 /**
  *
@@ -500,6 +503,10 @@ public class BienCommand {
             return nota;
         }
 
+//        public void resetNota(){
+//            Nota = new Nota();
+//        }
+        
         //<editor-fold defaultstate="collapsed" desc="GET's y SET's">
         public Long getId() {
             return id;
@@ -535,7 +542,7 @@ public class BienCommand {
         //</editor-fold>
     }
 
-    public class ProveedorCommand {
+    public class ProveedorCommand extends PaginacionOracle{
 
         private String filtroIdentificacion;
         private String filtroNombre;
@@ -543,8 +550,15 @@ public class BienCommand {
 
         private Proveedor proveedor;
 
+        
         private ProveedorCommand() {
-            //this.proveedor = new Proveedor();
+            super();
+            this.proveedor = new Proveedor();
+            
+            ArrayList<SelectItem> cantPorPaginas = new ArrayList<SelectItem>();
+            cantPorPaginas.add(new SelectItem(5, "5"));
+            cantPorPaginas.add(new SelectItem(10, "10"));
+            this.setListaRegistrosPagina(cantPorPaginas);
         }
 
         private ProveedorCommand(Proveedor proveedor) {
@@ -670,6 +684,8 @@ public class BienCommand {
     private String detalleNota;
     private String descripcionAdjunto;
     private String capitalizableStr; 
+    private Date fechaIngreso;
+    private Usuario usuarioRegistra; 
     
     private Long idCategoria;
     private Long idClasificacion;
@@ -719,7 +735,9 @@ public class BienCommand {
         this.proveedorCommand = new ProveedorCommand();
         this.identificacionCommand = new IdentificacionCommand();
         this.ubicacionCommand = new UbicacionCommand();
-
+        
+        this.fechaIngreso = new Date();
+        
         adjunto = new Adjunto();
         
         cantidadActivo = true;
@@ -777,6 +795,9 @@ public class BienCommand {
         this.ubicacionCommand = new UbicacionCommand(bien.getUbicacion());
         this.identificacionCommand = new IdentificacionCommand();
 
+        this.fechaIngreso = bien.getFechaIngreso();
+        this.usuarioRegistra = bien.getUsuarioRegistra();
+        
         movimientos = new ArrayList<Solicitud>();
         
         adjunto = new Adjunto();
@@ -860,7 +881,9 @@ public class BienCommand {
         bien.setEstado(this.estado);
         bien.setCaracteristicas(this.caracteristicas);
         bien.setCapitalizable(this.esCapitalizable());
-
+        
+        bien.setFechaIngreso(this.fechaIngreso);
+        bien.setUsuarioRegistra(this.usuarioRegistra);
         
         return bien;
     }
@@ -877,6 +900,22 @@ public class BienCommand {
 
     //<editor-fold defaultstate="collapsed" desc="GET's y SET's">
 
+    public Usuario getUsuarioRegistra() {
+        return usuarioRegistra;
+    }
+
+    public void setUsuarioRegistra(Usuario usuarioRegistra) {
+        this.usuarioRegistra = usuarioRegistra;
+    }
+
+    public Date getFechaIngreso() {
+        return fechaIngreso;
+    }
+
+    public void setFechaIngreso(Date fechaIngreso) {
+        this.fechaIngreso = fechaIngreso;
+    }
+    
     public List<Solicitud> getMovimientos() {
         return movimientos;
     }

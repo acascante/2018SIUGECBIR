@@ -1,0 +1,133 @@
+<ice:outputHtml id="frmPersonas"  
+    xmlns:ice="http://www.icesoft.com/icefaces/component" 
+    xmlns:h="http://java.sun.com/jsf/html" 
+    xmlns:f="http://java.sun.com/jsf/core" 
+    xmlns:ui="http://java.sun.com/jsf/facelets" >
+
+    <ice:panelPopup modal="true" visible="#{controllerAgregarPrestamos.visiblePanelBuscarPersonas}" rendered="true" styleClass="popup">
+        <f:facet name="header">
+            <ice:outputFormat  value="#{label['sigebi.label.prestamos.personas.titulo']}"/>            
+        </f:facet>
+        
+        <f:facet name="body">
+            <fieldset class="panel_Container" >
+                <div class="row">
+                    <div class="col-md-12">
+                        <h4><ice:outputFormat value="#{label['sigebi.label.prestamos.personas.seleccionar']}" /> </h4>
+                    </div>
+                </div>
+                
+                <!-- PARAMETROS PAGINACIÓN -->
+                <div class="row">
+                    <div class="col-sm-12">
+                        <ice:outputFormat value="#{label['label.generico.paginacion.encabezado']}">
+                            <f:param value="#{controllerAgregarPrestamos.listadoPersonas.cantidadRegistros}"/>
+                            <f:param value="#{controllerAgregarPrestamos.listadoPersonas.cantidadRegistrosMostrados}"/>
+                            <f:param value="#{controllerAgregarPrestamos.listadoPersonas.primerRegistro}"/>
+                            <f:param value="#{controllerAgregarPrestamos.listadoPersonas.ultimoRegistro}"/>
+                            <f:param value="#{controllerAgregarPrestamos.listadoPersonas.paginaActual}"/>
+                            <f:param value="#{controllerAgregarPrestamos.listadoPersonas.cantidadPaginas}"/>
+                        </ice:outputFormat>
+                        <div>
+                            <table>
+                                <tr>
+                                    <td style="padding-right: 5px;">
+                                        <ice:outputText value="#{label['label.paginacion.cantidad.pagina']} "/>
+                                    </td>
+                                    <td>
+                                        <ice:selectOneMenu id="cantRegistroPorPagina"
+                                               value="#{controllerAgregarPrestamos.listadoPersonas.cantRegistroPorPagina}" 
+                                               valueChangeListener="#{controllerAgregarPrestamos.listadoPersonas.cambioRegistrosPorPagina}"
+                                               partialSubmit="true">
+                                                <f:selectItems id="item_pa" value="#{controllerAgregarPrestamos.listadoPersonas.listaRegistrosPagina}"/>
+                                        </ice:selectOneMenu>
+                                    </td>
+                                </tr>
+                            </table>                        
+                        </div>                    
+                        <div>
+                            <ice:commandButton image="./imagenes/botones/first.png" partialSubmit="true" actionListener="#{controllerAgregarPrestamos.listadoPersonas.primero}" rendered="#{controllerAgregarPrestamos.listadoPersonas.cantidadPaginas > 1}"/>
+                            <ice:commandButton image="./imagenes/botones/previos.png" partialSubmit="true" actionListener="#{controllerAgregarPrestamos.listadoPersonas.anterior}" rendered="#{controllerAgregarPrestamos.listadoPersonas.cantidadPaginas > 1}"/>
+                            <ui:repeat value="#{controllerAgregarPrestamos.listadoPersonas.arregloPaginas}" var="pagina">
+                                <ice:commandLink value="#{pagina}" partialSubmit="true" actionListener="#{controllerAgregarPrestamos.listadoPersonas.irPagina}">
+                                    <f:param name="numPag" value="#{pagina}"/>
+                                </ice:commandLink>
+                            </ui:repeat>            
+                            <ice:commandButton image="./imagenes/botones/next.png" partialSubmit="true" actionListener="#{controllerAgregarPrestamos.listadoPersonas.siguiente}" rendered="#{controllerAgregarPrestamos.listadoPersonas.cantidadPaginas > 1}"/>
+                            <ice:commandButton image="./imagenes/botones/last.png" partialSubmit="true" actionListener="#{controllerAgregarPrestamos.listadoPersonas.ultimo}" rendered="#{controllerAgregarPrestamos.listadoPersonas.cantidadPaginas > 1}"/>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- LISTAR PERSONAS -->
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div>
+                            <ice:dataTable id="tablaPersonas" value="#{controllerAgregarPrestamos.listadoPersonas.personas}" var="persona" paginator="true" paginatorPosition="bottom" rows="10">
+                                <f:facet name="header">
+                                    <ice:columnGroup>
+                                        <ice:headerRow>
+                                            <ice:column id="personaId" rowspan="2" style="vertical-align:top;">
+                                                <ice:outputText value="#{label['sigebi.label.prestamos.personas.id']}"/>
+                                                <ice:inputText id="filtroPersonaId" partialSubmit="true"
+                                                           value="#{controllerAgregarPrestamos.listadoPersonas.command.fltId}" 
+                                                           valueChangeListener="#{controllerAgregarPrestamos.listadoPersonas.cambioFiltro}"/>
+                                            </ice:column>
+                                            <ice:column id="personaNombre" rowspan="2" style="vertical-align:top;">
+                                                <ice:outputText value="#{label['sigebi.label.prestamos.personas.nombre']}"/>
+                                                <ice:inputText id="filtroPersonaNombre" partialSubmit="true"
+                                                           value="#{controllerAgregarPrestamos.listadoPersonas.command.fltNombre}" 
+                                                           valueChangeListener="#{controllerAgregarPrestamos.listadoPersonas.cambioFiltro}"/>
+                                            </ice:column>
+                                            <ice:column id="personaPrimerApellido" rowspan="2" style="vertical-align:top;">
+                                                <ice:outputText value="#{label['sigebi.label.prestamos.personas.primerApellido']}"/>
+                                                <ice:inputText id="filtroPersonaPrimerApellido" partialSubmit="true"
+                                                           value="#{controllerAgregarPrestamos.listadoPersonas.command.fltPrimerApellido}" 
+                                                           valueChangeListener="#{controllerAgregarPrestamos.listadoPersonas.cambioFiltro}"/>
+                                            </ice:column>
+                                            <ice:column id="personaSegundoApellido" rowspan="2" style="vertical-align:top;">
+                                                <ice:outputText value="#{label['sigebi.label.prestamos.personas.segundoApellido']}"/>
+                                                <ice:inputText id="filtroPersonaSegundoApellido" partialSubmit="true"
+                                                           value="#{controllerAgregarPrestamos.listadoPersonas.command.fltSegundoApellido}" 
+                                                           valueChangeListener="#{controllerAgregarPrestamos.listadoPersonas.cambioFiltro}"/>
+                                            </ice:column>
+                                            <ice:column id="seleccionarPersona" rowspan="2" style="vertical-align:top;">
+                                                <ice:outputText value="#{label['label.seleccionar']}"/>                                                
+                                            </ice:column>
+                                        </ice:headerRow>
+                                    </ice:columnGroup>
+                                </f:facet>
+                                
+                                <ice:column>
+                                    <h:outputText id="personaIdCell" value="#{persona.identificacion}"/>
+                                </ice:column>
+                                <ice:column>
+                                    <h:outputText id="personaNombreCell" value="#{persona.nombre}"/>
+                                </ice:column>
+                                <ice:column>
+                                    <h:outputText id="personaPrimerApellidoCell" value="#{persona.primerApellido}"/>
+                                </ice:column>
+                                <ice:column>
+                                    <h:outputText id="personaSegundoApellidoCell" value="#{persona.segundoApellido}"/>
+                                </ice:column>
+
+
+                                <ice:column style="text-align: center;">
+                                    <ice:commandButton id="botonSeleccionarPersona" style="float:right;margin-top:2%" styleClass="boton" partialSubmit="true" value="#{label['label.seleccionar']}"  
+                                                       actionListener="#{controllerAgregarPrestamos.selecionarPersona}">
+                                        <f:attribute id="provSeleccionado" name="personaSeleccionada" value="#{persona}"/>
+                                    </ice:commandButton>
+                                </ice:column>
+                            </ice:dataTable>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-11 align-self-md-end">
+                        <ice:commandButton id="btnCerrarPersonas" action="#{controllerAgregarPrestamos.cerrarPanelPersonas}" styleClass="boton" style="margin-bottom: 1rem;" value="#{label['label.regresar']}" />
+                    </div>
+                </div>
+            </fieldset>       
+        </f:facet>
+    </ice:panelPopup>
+</ice:outputHtml>

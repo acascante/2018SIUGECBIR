@@ -28,7 +28,6 @@ import net.sf.jasperreports.engine.export.JRXmlExporter;
 import net.sf.jasperreports.engine.util.JRLoader;
 import net.sf.jasperreports.engine.util.JRProperties;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -37,7 +36,6 @@ import org.springframework.transaction.annotation.Transactional;
  * @author jorge.serrano
  */
 @Repository(value = "reporteDao")
-@Scope("request")
 public class ReporteDao extends GenericDaoImpl {
     // <editor-fold defaultstate="collapsed" desc="Atributos">
     @Autowired

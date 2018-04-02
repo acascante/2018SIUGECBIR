@@ -9,7 +9,6 @@ import cr.ac.ucr.framework.utils.FWExcepcion;
 import cr.ac.ucr.sigebi.daos.CampoReporteBienDao;
 import cr.ac.ucr.sigebi.domain.CampoReporteBien;
 import cr.ac.ucr.sigebi.domain.ReporteBien;
-import cr.ac.ucr.sigebi.domain.Usuario;
 import java.util.List;
 import javax.annotation.Resource;
 import org.springframework.stereotype.Service;
@@ -31,20 +30,16 @@ public class CampoReporteBienModel {
         return campoReporteBienDao.buscarPorId(id);
     }
     
-    public List<CampoReporteBien> listarPorUsuario(Usuario usuario, ReporteBien reporteBien) throws FWExcepcion {
-        return campoReporteBienDao.listarPorUsuario(usuario, reporteBien);
+    public List<CampoReporteBien> listarPorReporte(ReporteBien reporteBien) throws FWExcepcion {
+        return campoReporteBienDao.listarPorReporte(reporteBien);
     }
     
     public void salvar(CampoReporteBien campoReporteBien) throws FWExcepcion {
         campoReporteBienDao.salvar(campoReporteBien);
     }
 
-    public void salvarCampos(List<CampoReporteBien> campos) throws FWExcepcion {
-        campoReporteBienDao.salvarCampos(campos);
-    }
-    
-    public void eliminar(CampoReporteBien campoReporteBien) throws FWExcepcion {
-        campoReporteBienDao.eliminar(campoReporteBien);
+    public void salvar(List<CampoReporteBien> campos) throws FWExcepcion {
+        campoReporteBienDao.salvar(campos);
     }
     
     public void eliminar(List<CampoReporteBien> campos) throws FWExcepcion {

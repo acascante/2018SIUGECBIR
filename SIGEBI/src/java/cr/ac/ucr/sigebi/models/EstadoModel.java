@@ -10,7 +10,6 @@ import cr.ac.ucr.sigebi.daos.EstadoDao;
 import cr.ac.ucr.sigebi.domain.Estado;
 import java.util.List;
 import javax.annotation.Resource;
-import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
 /**
@@ -18,7 +17,6 @@ import org.springframework.stereotype.Service;
  * @author jorge.serrano
  */
 @Service(value = "estadoModel")
-
 public class EstadoModel {
     
     @Resource

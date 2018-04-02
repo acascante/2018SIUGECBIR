@@ -185,7 +185,7 @@
             <!--Botones -->
             <div class="row">
                 <div class="col-md-12">
-                    <ice:commandButton id="botonGuardar" value="#{label['label.guardar']}" action="#{controllerAgregarExclusiones.guardarDatos}" rendered="#{controllerAgregarExclusiones.visibleBotonGuardar}" partialSubmit="true" style="float: right" styleClass="boton"/>
+                    <ice:commandButton id="botonGuardar" value="#{label['label.guardar']}" action="#{controllerAgregarExclusiones.confirmarSolicitud}" rendered="#{controllerAgregarExclusiones.visibleBotonGuardar}" partialSubmit="true" style="float: right" styleClass="boton"/>
                     <ice:commandButton id="botonSolicitar" value="#{label['label.solicitar']}" action="#{controllerAgregarExclusiones.solicitarExclusion}" rendered="#{controllerAgregarExclusiones.visibleBotonSolicitar}" partialSubmit="true" style="float: right" styleClass="boton"/>
                     <ice:commandButton id="botonRechazar" value="#{label['label.rechazar']}" action="#{controllerAgregarExclusiones.rechazarExclusion}" rendered="#{controllerAgregarExclusiones.visibleBotonRechazar}" partialSubmit="true" style="float: right" styleClass="boton"/>
                     <ice:commandButton id="botonAprobar" value="#{label['label.aprobar']}" action="#{controllerAgregarExclusiones.aprobarExclusion}" rendered="#{controllerAgregarExclusiones.visibleBotonAprobar}" partialSubmit="true" style="float: right" styleClass="boton"/>
@@ -197,6 +197,11 @@
         <!-- Panel de confirmacion --> 
         <ui:insert name="modalConfirmacion">
             <ui:include src="../exclusiones/panelConfirmacion.xhtml" />
+        </ui:insert>
+        
+        <!-- Panel de confirmacion de Solicitud--> 
+        <ui:insert name="modalConfirmarSolicitud">
+            <ui:include src="../exclusiones/panelConfirmacionSolicitud.xhtml" />
         </ui:insert>
         
         <!-- Panel Agregar Bienes -->

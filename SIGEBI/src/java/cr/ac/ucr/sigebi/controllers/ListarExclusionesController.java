@@ -59,7 +59,7 @@ public class ListarExclusionesController extends BaseController {
         this.inicializarListado();
         List<Estado> estados = this.estadosPorDominio(Constantes.DOMINIO_EXCLUSION);
         if (!estados.isEmpty()) {
-            itemsEstado = new ArrayList<SelectItem>();
+            this.itemsEstado = new ArrayList<SelectItem>();
             for (Estado item : estados) {
                 this.itemsEstado.add(new SelectItem(item.getId(), item.getNombre()));
             }
@@ -67,7 +67,7 @@ public class ListarExclusionesController extends BaseController {
         
         List<Tipo> tipos = this.tiposPorDominio(Constantes.DOMINIO_EXCLUSION);
         if (!tipos.isEmpty()) {
-            itemsTipo = new ArrayList<SelectItem>();
+            this.itemsTipo = new ArrayList<SelectItem>();
             for (Tipo item : tipos) {
                 this.itemsTipo.add(new SelectItem(item.getId(), item.getNombre()));
             }
@@ -93,7 +93,7 @@ public class ListarExclusionesController extends BaseController {
     
     private void contarExclusiones() {
         try {
-            Long contador = exclusionModel.contar(unidadEjecutora, command.getFltIdCodigo(), command.getFltFecha(), command.getFltEstado().longValue(), command.getFltTipo().longValue());
+            Long contador = exclusionModel.contar(unidadEjecutora, command.getFltIdCodigo(), command.getFltFecha(), command.getFltEstado(), command.getFltTipo());
             this.setCantidadRegistros(contador.intValue());
         } catch (FWExcepcion e) {
             Mensaje.agregarErrorAdvertencia(e.getError_para_usuario());
@@ -102,7 +102,7 @@ public class ListarExclusionesController extends BaseController {
     
     private void listarExclusiones() {
         try {
-            this.exclusiones = exclusionModel.listar(this.getPrimerRegistro()-1, this.getUltimoRegistro(), unidadEjecutora, command.getFltIdCodigo(), command.getFltFecha(), command.getFltEstado().longValue(), command.getFltTipo().longValue());
+            this.exclusiones = exclusionModel.listar(this.getPrimerRegistro()-1, this.getUltimoRegistro(), unidadEjecutora, command.getFltIdCodigo(), command.getFltFecha(), command.getFltEstado(), command.getFltTipo());
         } catch (FWExcepcion e) {
             Mensaje.agregarErrorAdvertencia(e.getError_para_usuario());
         }

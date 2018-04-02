@@ -41,6 +41,7 @@ import cr.ac.ucr.sigebi.domain.SubCategoria;
 import cr.ac.ucr.sigebi.domain.SubClasificacion;
 import cr.ac.ucr.sigebi.domain.Ubicacion;
 import cr.ac.ucr.sigebi.domain.UnidadEjecutora;
+import cr.ac.ucr.sigebi.domain.Usuario;
 import cr.ac.ucr.sigebi.models.AccesorioModel;
 import cr.ac.ucr.sigebi.models.AdjuntoModel;
 import cr.ac.ucr.sigebi.models.AutorizacionRolPersonaModel;
@@ -64,6 +65,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.regex.Pattern;
@@ -243,8 +245,18 @@ public class AgregarBienController extends BaseController {
         if (command.getIdSubClasificacion() != null) {
             cargarSubClasificaciones(command.getItemCommand().getItemsClasificacion().get(command.getIdClasificacion()));
         }
-
-        List<Solicitud> movs = modelMovimientos.movimientosPorBien(bien);
+        
+        List<Solicitud> movs = new ArrayList<Solicitud>();
+        
+        Solicitud ingreso;
+        ingreso = new Solicitud(){};
+        ingreso.setEstado(estadoGeneralActivo);
+        ingreso.setUsuario(usuarioSIGEBI);
+        ingreso.setFecha(command.getFechaIngreso());
+        ingreso.setDiscriminator(0);
+        movs.add(ingreso);
+        
+        movs.addAll( modelMovimientos.movimientosPorBien(bien) );
         command.setMovimientos(movs);
     }
 
@@ -332,24 +344,24 @@ public class AgregarBienController extends BaseController {
     }
 
     public String validarForm(UIViewRoot root, UIInput component) {
-
+        try{
         //Se validan los datos requeridos 
         String mensajeUsuario = Constantes.OK;
         if (command.getDescripcion().isEmpty()) {
             mensajeUsuario = Util.getEtiquetas("sigebi.error.agregarBienController.descripcion.requerido");
-        } else if (command.getIdTipo() <= 0) {
+        } else if (command.getIdTipo() == null || command.getIdTipo() <= 0) {
             mensajeUsuario = Util.getEtiquetas("sigebi.error.agregarBienController.tipo.requerido");
-        } else if (command.getIdOrigen() <= 0) {
+        } else if (command.getIdOrigen() == null || command.getIdOrigen() <= 0) {
             mensajeUsuario = Util.getEtiquetas("sigebi.error.agregarBienController.origen.requerido");
         } else if (command.getCantidad() == null || command.getCantidad() <= 0) {
             mensajeUsuario = Util.getEtiquetas("sigebi.error.agregarBienController.cantidad.requerido");
-        } else if (command.getIdCategoria() <= 0) {
+        } else if (command.getIdCategoria() == null || command.getIdCategoria() <= 0) {
             mensajeUsuario = Util.getEtiquetas("sigebi.error.agregarBienController.categoria.requerido");
-        } else if (command.getIdSubCategoria() <= 0) {
+        } else if (command.getIdSubCategoria() == null || command.getIdSubCategoria() <= 0) {
             mensajeUsuario = Util.getEtiquetas("sigebi.error.agregarBienController.subcategoria.requerido");
-        } else if (command.getIdClasificacion() <= 0) {
+        } else if (command.getIdClasificacion() == null || command.getIdClasificacion() <= 0) {
             mensajeUsuario = Util.getEtiquetas("sigebi.error.agregarBienController.clasificacion.requerido");
-        } else if (command.getIdSubClasificacion() <= 0) {
+        } else if (command.getIdSubClasificacion() == null || command.getIdSubClasificacion() <= 0) {
             mensajeUsuario = Util.getEtiquetas("sigebi.error.agregarBienController.subclasificacion.requerido");
         } else if (command.getUbicacionCommand().getIdUbicacion() == null || (command.getUbicacionCommand().getIdUbicacion() != null && command.getUbicacionCommand().getIdUbicacion() <= 0)) {
             mensajeUsuario = Util.getEtiquetas("sigebi.error.agregarBienController.ubicacion.requerido");
@@ -357,7 +369,7 @@ public class AgregarBienController extends BaseController {
             mensajeUsuario = Util.getEtiquetas("sigebi.error.agregarBienController.proveedor.requerido");
         } else if (command.getFechaAdquisicion() == null) {
             mensajeUsuario = Util.getEtiquetas("sigebi.error.agregarBienController.fechaAdquisicion.requerido");
-        } else if (command.getIdMoneda() <= 0) {
+        } else if (command.getIdMoneda() == null || command.getIdMoneda() <= 0) {
             mensajeUsuario = Util.getEtiquetas("sigebi.error.agregarBienController.moneda.requerido");
         } else if (command.getCosto() == null || command.getCosto() < 0) {
             mensajeUsuario = Util.getEtiquetas("sigebi.error.agregarBienController.costo.requerido");
@@ -366,6 +378,10 @@ public class AgregarBienController extends BaseController {
 
         }
         return mensajeUsuario;
+        }catch(Exception err){
+            return Util.getEtiquetas("sigebi.error.agregarBienController.Error.Validacion");
+            
+        }
     }
 
     public void agregarBien() {
@@ -379,7 +395,6 @@ public class AgregarBienController extends BaseController {
                 //Se crea el bien
                 this.procesarBien();
 
-                Mensaje.agregarInfo(Util.getEtiquetas("sigebi.error.agregarBienController.mensaje.exito"));
 
             } catch (Exception exception) {
                 if (exception instanceof FWExcepcion) {
@@ -409,13 +424,16 @@ public class AgregarBienController extends BaseController {
                 identificacion = modelIdentificacion.siguienteDisponible(estadoDisponible, unidadEjecutora);
                 if (identificacion == null) {
                     Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.error.agregarBienController.identificacion.requerido"));
+                    return;
                 } else {
                     command.setIdentificacion(identificacion);
+                    command.setUsuarioRegistra(this.usuarioSIGEBI);
+                    command.setFechaIngreso(new Date());
                     bien = command.getBien(null);
 
                     Estado estadoOcupado = this.estadoPorDominioValor(Constantes.DOMINIO_IDENTIFICACION, Constantes.IDENTIFICACION_ESTADO_OCUPADA);
                     bien.getIdentificacion().setEstado(estadoOcupado);
-
+                    
                     modelBien.almacenar(bien);
 
                     modelIdentificacion.actualizar(bien.getIdentificacion());
@@ -433,6 +451,7 @@ public class AgregarBienController extends BaseController {
                 identificacion = command.getIdentificacion();
                 if (identificacion.getIdentificacion() == null) {
                     Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.error.agregarBienController.identificacion.requerido"));
+                    return;
                 }else{
                     
                     //Si la identificacion se encuentra disponible se debe cambiar su estado
@@ -463,6 +482,12 @@ public class AgregarBienController extends BaseController {
                     inicializarDetalle(bien);
                 } 
             }
+            
+            
+            
+            // Mensaje Éxito
+            Mensaje.agregarInfo(Util.getEtiquetas("sigebi.error.agregarBienController.mensaje.exito"));
+            
         } catch (Exception exception) {
             
             //Se retorna la identificacion
@@ -1080,7 +1105,8 @@ public class AgregarBienController extends BaseController {
     }
 
     public void mostrarPanelProveedores() {
-        this.proveedores = modelProveedor.listar(command.getProveedorCommand().getFiltroIdentificacion(), command.getProveedorCommand().getFiltroNombre());
+        inicialListadoProveedores();
+        //this.proveedores = modelProveedor.listar(command.getProveedorCommand().getFiltroIdentificacion(), command.getProveedorCommand().getFiltroNombre());
         this.setVisiblePanelProveedores(true);
     }
 
@@ -1093,6 +1119,21 @@ public class AgregarBienController extends BaseController {
         this.setVisiblePanelProveedores(false);
     }
 
+    private void inicialListadoProveedores(){
+        command.getProveedorCommand().setPrimerRegistro(1);
+        Long cantReg = modelProveedor.contar(command.getProveedorCommand().getFiltroIdentificacion()
+                                           , command.getProveedorCommand().getFiltroNombre());
+        command.getProveedorCommand().setCantidadRegistros(cantReg.intValue());
+        listarProveedores();
+    }
+    
+    private void listarProveedores(){
+        this.proveedores = modelProveedor.listar( command.getProveedorCommand().getFiltroIdentificacion()
+                                                , command.getProveedorCommand().getFiltroNombre()
+                                                , command.getProveedorCommand().getPrimerRegistro()
+                                                , command.getProveedorCommand().getCantRegistroPorPagina());
+    }
+    
     public void filtroProveedor(ValueChangeEvent pEvent) {
         try {
             if (!pEvent.getPhaseId().equals(PhaseId.INVOKE_APPLICATION)) {
@@ -1100,7 +1141,7 @@ public class AgregarBienController extends BaseController {
                  pEvent.queue();
                  return;
             }
-            this.proveedores = modelProveedor.listar(command.getProveedorCommand().getFiltroIdentificacion(), command.getProveedorCommand().getFiltroNombre());
+            inicialListadoProveedores();
         } catch (FWExcepcion e) {
             Mensaje.agregarErrorAdvertencia(e.getError_para_usuario());
         } catch (Exception e) {
@@ -1108,6 +1149,76 @@ public class AgregarBienController extends BaseController {
         }
     }
      
+    /**
+     * Cambia la cantidad de registros por página
+     *
+     * @param pEvent
+     */
+    public void cambioRegistrosPorPaginaProvedores(ValueChangeEvent pEvent) {
+        if (!pEvent.getPhaseId().equals(PhaseId.INVOKE_APPLICATION)) {
+            pEvent.setPhaseId(PhaseId.INVOKE_APPLICATION);
+            pEvent.queue();
+            return;
+        }
+        int cantReg = Integer.parseInt(pEvent.getNewValue().toString());
+        command.getProveedorCommand().setCantRegistroPorPagina(cantReg);        
+        command.getProveedorCommand().setPrimerRegistro(1);
+        this.inicialListadoProveedores();
+
+    }
+    
+    public void irPaginaProvedores(ActionEvent pEvent)  {
+            if (!pEvent.getPhaseId().equals(PhaseId.INVOKE_APPLICATION)) {
+                pEvent.setPhaseId(PhaseId.INVOKE_APPLICATION);
+                pEvent.queue();
+                return;
+            }
+            int numeroPagina = Integer.parseInt(Util.getRequestParameter("numPag"));
+            command.getProveedorCommand().getPrimerRegistroPagina(numeroPagina);
+            this.listarProveedores();
+        }
+
+        public void siguienteProvedores(ActionEvent pEvent) {
+            if (!pEvent.getPhaseId().equals(PhaseId.INVOKE_APPLICATION)) {
+                pEvent.setPhaseId(PhaseId.INVOKE_APPLICATION);
+                pEvent.queue();
+                return;
+            }
+            command.getProveedorCommand().getSiguientePagina();
+            this.listarProveedores();
+        }
+
+        public void anteriorProvedores(ActionEvent pEvent) {
+            if (!pEvent.getPhaseId().equals(PhaseId.INVOKE_APPLICATION)) {
+                pEvent.setPhaseId(PhaseId.INVOKE_APPLICATION);
+                pEvent.queue();
+                return;
+            }
+            command.getProveedorCommand().getPaginaAnterior();
+            this.listarProveedores();
+        }
+
+        public void primeroProvedores(ActionEvent pEvent) {
+            if (!pEvent.getPhaseId().equals(PhaseId.INVOKE_APPLICATION)) {
+                pEvent.setPhaseId(PhaseId.INVOKE_APPLICATION);
+                pEvent.queue();
+                return;
+            }
+            command.getProveedorCommand().setPrimerRegistro(1);
+            this.listarProveedores();
+        }
+
+        public void ultimoProvedores(ActionEvent pEvent) {
+            if (!pEvent.getPhaseId().equals(PhaseId.INVOKE_APPLICATION)) {
+                pEvent.setPhaseId(PhaseId.INVOKE_APPLICATION);
+                pEvent.queue();
+                return;
+            }
+            command.getProveedorCommand().getPrimerRegistroUltimaPagina();
+            this.listarProveedores();
+        }
+
+    
     //</editor-fold>    
 
     //<editor-fold defaultstate="collapsed" desc="Identificacion">
@@ -1210,9 +1321,10 @@ public class AgregarBienController extends BaseController {
     //<editor-fold defaultstate="collapsed" desc="Tab Notas del Activo">
     public void guardarNota() {
         try {
-            Nota nota = command.getNotaCommand().getNota();
+            Nota nota = new Nota();
             nota.setDetalle(notaDetalle);
             nota.setEstado(estadoGeneralActivo);
+            nota.setBien(command.getBien(bien));
             modelNota.guardar(nota);
             command.setNotas(modelNota.listar(nota.getBien()));
             notaDetalle = "";
@@ -1225,7 +1337,8 @@ public class AgregarBienController extends BaseController {
         }
     }
 
-    public void eliminarNota(ActionEvent pEvent) {
+    public void eliminarNota(ActionEvent pEvent) 
+    {
         try {
             if (!pEvent.getPhaseId().equals(PhaseId.INVOKE_APPLICATION)) {
                 pEvent.setPhaseId(PhaseId.INVOKE_APPLICATION);
@@ -2141,5 +2254,8 @@ public class AgregarBienController extends BaseController {
         }
     }
 
+    
     //</editor-fold>
+    
+    
 }

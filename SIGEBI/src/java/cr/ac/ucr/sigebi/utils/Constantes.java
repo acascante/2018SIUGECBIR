@@ -30,23 +30,22 @@ public final class Constantes {
     public static final Integer ESTADO_BIEN_PENDIENTE_INACTIVACION = 6;
     public static final Integer ESTADO_BIEN_INACTIVO = 7;
     public static final Integer ESTADO_BIEN_TRASLADO = 8;
-    public static final Integer TRANSITO_POR_EXCLUSION = 9;
-    public static final Integer EXCLUSION_APROBADA = 10;
-    public static final Integer EXCLUIDO = 11;
+    public static final Integer ESTADO_BIEN_TRANSITO_POR_EXCLUSION = 9;
+    public static final Integer ESTADO_BIEN_EXCLUSION_APROBADA = 10;
+    public static final Integer ESTADO_BIEN_EXCLUIDO = 11;
 
     // Estado Interno de un bien
     public static final Integer ESTADO_INTERNO_BIEN_NORMAL = 1;
     public static final Integer ESTADO_INTERNO_BIEN_EXCLUSION = 2;
     public static final Integer ESTADO_INTERNO_BIEN_EXCLUSION_SOLICITADO = 21;
-    public static final Integer ESTADO_INTERNO_BIEN_EXCLUSION_RECHAZADO = 22;
-    public static final Integer ESTADO_INTERNO_BIEN_EXCLUSION_APROBADO = 23;
+    public static final Integer ESTADO_INTERNO_BIEN_EXCLUSION_APROBADO = 22;
     public static final Integer ESTADO_INTERNO_BIEN_PRESTAMO = 3;
     public static final Integer ESTADO_INTERNO_BIEN_PRESTAMO_SOLICITADO = 31;
-    public static final Integer ESTADO_INTERNO_BIEN_PRESTAMO_RECHAZADO = 32;
     public static final Integer ESTADO_INTERNO_BIEN_PRESTAMO_APROBADO = 33;
     public static final Integer ESTADO_INTERNO_BIEN_PRESTAMO_ANULADO = 34;
     public static final Integer ESTADO_INTERNO_BIEN_TRASLADO = 4;
     public static final Integer ESTADO_INTERNO_BIEN_ACTA = 5;
+    public static final Integer ESTADO_INTERNO_BIEN_INFORME_TECNICO = 6;
 
     // Estados de una nota
     public static final int ESTADO_NOTA_CREADA = 1;
@@ -68,6 +67,13 @@ public final class Constantes {
     public static final int ESTADO_CONVENIO_ACTIVO = 1;
     public static final int ESTADO_CONVENIO_INACTIVO = 2;
 
+    // Acta
+    public static final Integer ESTADO_ACTA_PENDIENTE = 1;
+    public static final Integer ESTADO_ACTA_PROCESO = 2;
+    public static final Integer ESTADO_ACTA_APLICADA = 3;
+    public static final Integer ESTADO_ACTA_RECHAZADA = 4;
+    
+    
     // Exclusiones
     public static final Integer ESTADO_EXCLUSION_CREADA = 1;
     public static final Integer ESTADO_EXCLUSION_SOLICITADA = 2;
@@ -82,8 +88,8 @@ public final class Constantes {
     // PRESTAMOS
     public static final Integer ESTADO_PRESTAMO_CREADO = 1;
     public static final Integer ESTADO_PRESTAMO_SOLICITADO = 2;
-    public static final Integer ESTADO_PRESTAMO_RECHAZADO = 3;
-    public static final Integer ESTADO_PRESTAMO_APROBADO = 4;
+    public static final Integer ESTADO_PRESTAMO_APROBADO = 3;
+    public static final Integer ESTADO_PRESTAMO_RECHAZADO = 4;
     public static final Integer ESTADO_PRESTAMO_ANULADO = 5;
 
     // Estados de un informe
@@ -150,6 +156,7 @@ public final class Constantes {
     public static final Integer TIPO_ADJUNTO_BIEN = 1;
     public static final Integer TIPO_ADJUNTO_DOCUMENTO = 2;
     public static final Integer TIPO_ADJUNTO_DONACION = 3;
+    public static final Integer TIPO_ADJUNTO_CONVENIO = 4;
 
     //TIPOS ORIGENES
     public static final Integer TIPO_ORIGEN_EXTERNA = 7;
@@ -206,7 +213,6 @@ public final class Constantes {
     public static final String VISTA_PRESTAMO_LISTADO_PAGINA = "../prestamos/listarPrestamos.xhtml";
     public static final String VISTA_PRESTAMO_NUEVO = "prestamo_nuevo";
     public static final String VISTA_PRESTAMO_NUEVO_PAGINA = "../prestamos/prestamoDetalle.xhtml";
-    public static final String VISTA_REPORTE_BIEN = "reporte_bien";
     public static final String VISTA_SINCRONIZACION_BIEN = "sincronizar";
     public static final String VISTA_SINCRONIZACION_BIEN_LISTADO = "../bienes/listarBienSincronizar.xhtml";
 
@@ -259,6 +265,8 @@ public final class Constantes {
     public static final String VISTA_REPORTE_TRASLADO = "../reportes/reporteTraslados.xhtml";
     public static final String KEY_VISTA_REPORTE_MOVIMIENTOS = "rep_movimientos";
     public static final String VISTA_REPORTE_MOVIMIENTOS = "../reportes/reporteMovimientos.xhtml";
+    public static final String KEY_VISTA_REPORTE_BIENES = "rep_bienes";
+    public static final String VISTA_REPORTE_BIENES = "../reportes/reporteBien.xhtml";
 
     //PERMISOS TRASLADOS
     public static final String KEY_VISTA_TRASLADO_PERMISOS = "permisosMovimientos";

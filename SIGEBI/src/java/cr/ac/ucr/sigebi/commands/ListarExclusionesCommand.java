@@ -21,8 +21,8 @@ public class ListarExclusionesCommand {
     
     //<editor-fold defaultstate="collapsed" desc="Atributos">
     private String fltId;
-    private Integer fltEstado;
-    private Integer fltTipo;
+    private Long fltEstado;
+    private Long fltTipo;
     private Date fltFecha;
     //</editor-fold>
     
@@ -30,8 +30,8 @@ public class ListarExclusionesCommand {
     public ListarExclusionesCommand() { 
         super();
         this.fltId = new String();
-        this.fltEstado = -1;
-        this.fltTipo = -1;
+        this.fltEstado = -1L;
+        this.fltTipo = -1L;
         this.fltFecha = null;
     }
     //</editor-fold>
@@ -68,19 +68,19 @@ public class ListarExclusionesCommand {
         this.fltId = fltId;
     }
     
-    public Integer getFltEstado() {
+    public Long getFltEstado() {
         return fltEstado;
     }
 
-    public void setFltEstado(Integer fltEstado) {
+    public void setFltEstado(Long fltEstado) {
         this.fltEstado = fltEstado;
     }
 
-    public Integer getFltTipo() {
+    public Long getFltTipo() {
         return fltTipo;
     }
 
-    public void setFltTipo(Integer fltTipo) {
+    public void setFltTipo(Long fltTipo) {
         this.fltTipo = fltTipo;
     }
 

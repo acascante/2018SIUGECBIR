@@ -21,8 +21,8 @@ public class ListarPrestamosCommand {
     
     //<editor-fold defaultstate="collapsed" desc="Atributos">
     private String fltId;
-    private Integer fltEstado;
-    private Integer fltTipoEntidad;
+    private Long fltEstado;
+    private Long fltTipoEntidad;
     private String fltEntidad;
     private Date fltFecha;
     //</editor-fold>
@@ -31,8 +31,8 @@ public class ListarPrestamosCommand {
     public ListarPrestamosCommand() { 
         super();
         this.fltId = new String();
-        this.fltEstado = -1;
-        this.fltTipoEntidad = -1;
+        this.fltEstado = -1L;
+        this.fltTipoEntidad = -1L;
         this.fltFecha = null;
         this.fltEntidad = new String();
     }
@@ -70,11 +70,11 @@ public class ListarPrestamosCommand {
         this.fltId = fltId;
     }
     
-    public Integer getFltEstado() {
+    public Long getFltEstado() {
         return fltEstado;
     }
 
-    public void setFltEstado(Integer fltEstado) {
+    public void setFltEstado(Long fltEstado) {
         this.fltEstado = fltEstado;
     }
 
@@ -86,11 +86,11 @@ public class ListarPrestamosCommand {
         this.fltFecha = fltFecha;
     }
     
-    public Integer getFltTipoEntidad() {
+    public Long getFltTipoEntidad() {
         return fltTipoEntidad;
     }
 
-    public void setFltTipoEntidad(Integer fltTipoEntidad) {
+    public void setFltTipoEntidad(Long fltTipoEntidad) {
         this.fltTipoEntidad = fltTipoEntidad;
     }
 

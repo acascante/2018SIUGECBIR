@@ -14,7 +14,7 @@
                     </h1>
                 </div>                
                 <div class="col-sm-2">
-                    <ice:commandButton id="boton_regresar" value="Regresar" style="float:right" partialSubmit="false" styleClass="boton" 
+                    <ice:commandButton id="boton_regresar" value="#{label['label.regresar']}" style="float:right" partialSubmit="false" styleClass="boton" 
                         action="#{controllerListarPrestamos.regresarListado}" >
                     </ice:commandButton>
                 </div>
@@ -75,20 +75,42 @@
             </div>
             
             <!--Entidad-->
-            <div class="row">
-                <div class="col-md-8">
-                    <div class="form-group"> 
-                        <ice:outputText value="#{label['sigebi.label.prestamos.entidad']}" />
-                        <ice:selectOneMenu id="selEntidad" styleClass="form-control" partialSubmit="true"
-                                           readonly="#{controllerAgregarPrestamos.disableEntidades}"
-                                           value="#{controllerAgregarPrestamos.command.idEntidad}"
-                                           valueChangeListener="#{controllerAgregarPrestamos.cargarEntidad}">
-                            <f:selectItem itemLabel="Seleccionar Entidad" itemValue="-1"/>
-                            <f:selectItems id="optEntidades" value="#{controllerAgregarPrestamos.itemsEntidad}"/>
-                        </ice:selectOneMenu>
-                    </div>                                             
+            <ice:panelGroup rendered="#{controllerAgregarPrestamos.visibleCampoEntidad}" >
+               <div class="row">
+                    <!-- Buscar Entidad -->
+                    <div class="col-sm-8"> 
+                        <div class="form-group">
+                            <ice:outputText value="#{label['sigebi.label.prestamos.entidad']}" /> 
+                            <ice:inputText id="txtEntidad" styleClass="form-control"  readonly="true" partialSubmit="true"
+                                           value="#{controllerAgregarPrestamos.command.entidad}" >
+                            </ice:inputText>
+                        </div>
+                    </div>
+                    <div class="col-sm-2" >
+                        <br/> 
+                        <ice:commandButton id="botonBuscarPersonas" value="#{label['label.buscar']}" partialSubmit="false" styleClass="boton" 
+                            action="#{controllerAgregarPrestamos.abrirPanelPersonas}" >
+                        </ice:commandButton>
+                    </div>
                 </div>
-            </div>
+            </ice:panelGroup>
+            
+            <ice:panelGroup rendered="#{!controllerAgregarPrestamos.visibleCampoEntidad}" >
+                <div class="row">
+                    <div class="col-md-8">
+                        <div class="form-group"> 
+                            <ice:outputText value="#{label['sigebi.label.prestamos.entidad']}" />
+                            <ice:selectOneMenu id="selEntidad" styleClass="form-control" partialSubmit="true"
+                                               readonly="#{controllerAgregarPrestamos.disableEntidades}"
+                                               value="#{controllerAgregarPrestamos.command.idEntidad}"
+                                               valueChangeListener="#{controllerAgregarPrestamos.cargarEntidad}">
+                                <f:selectItem itemLabel="Seleccionar Entidad" itemValue="-1"/>
+                                <f:selectItems id="optEntidades" value="#{controllerAgregarPrestamos.itemsEntidad}"/>
+                            </ice:selectOneMenu>
+                        </div>                                             
+                    </div>                
+                </div>
+            </ice:panelGroup>
              
             <!--Tabla Bienes-->
             <div class="row">
@@ -165,7 +187,7 @@
                                                 <h:outputText id="serieCell" escape="false" value="#{bien.resumenBien.serie}"/>
                                             </ice:column>
                                             <ice:column>
-                                                <h:outputText id="estadoCell" value="#{bien.estado.nombre}"/>
+                                                <h:outputText id="estadoCell" value="#{bien.estadoInterno.nombre}"/>
                                             </ice:column>
                                             
                                             <ice:column>
@@ -215,12 +237,12 @@
             <!--Botones-->
             <div class="row">
                 <div class="col-md-12">
-                    <ice:commandButton id="botonGuardar" value="#{label['label.guardar']}" partialSubmit="true"  styleClass="boton" action="#{controllerAgregarPrestamos.guardarDatos}" rendered="#{controllerAgregarPrestamos.visibleBotonGuardar}"/>
-                    <ice:commandButton id="botonAplicar" value="#{label['label.aplicar']}"  partialSubmit="true"  styleClass="boton" action="#{controllerAgregarPrestamos.solicitarPrestamo}" rendered="#{controllerAgregarPrestamos.visibleBotonSolicitar}"/>
-                    <ice:commandButton id="botonRechazar" value="#{label['label.rechazar']}" partialSubmit="true"  styleClass="boton" action="#{controllerAgregarPrestamos.rechazarPrestamo}" rendered="#{controllerAgregarPrestamos.visibleBotonRechazar}"/>
-                    <ice:commandButton id="botonAceptar" value="#{label['label.aceptar']}"  partialSubmit="true"  styleClass="boton" action="#{controllerAgregarPrestamos.aprobarPrestamo}" rendered="#{controllerAgregarPrestamos.visibleBotonAprobar}"/>
-                    <ice:commandButton id="botonRevisar" value="#{label['label.revisar']}"  partialSubmit="true"  styleClass="boton" action="#{controllerAgregarPrestamos.revisarPrestamo}" rendered="#{controllerAgregarPrestamos.visibleBotonRevisar}"/>
-                    <ice:commandButton id="botonAnular" value="#{label['label.anular']}"  partialSubmit="true"  styleClass="boton" action="#{controllerAgregarPrestamos.anularPrestamo}" rendered="#{controllerAgregarPrestamos.visibleBotonAnular}"/>
+                    <ice:commandButton id="botonGuardar" value="#{label['label.guardar']}" action="#{controllerAgregarPrestamos.confirmarSolicitud}" rendered="#{controllerAgregarPrestamos.visibleBotonGuardar}" partialSubmit="true" style="float: right" styleClass="boton"/>
+                    <ice:commandButton id="botonAplicar" value="#{label['label.solicitar']}"  action="#{controllerAgregarPrestamos.solicitarPrestamo}" rendered="#{controllerAgregarPrestamos.visibleBotonSolicitar}" partialSubmit="true" style="float: right" styleClass="boton"/>
+                    <ice:commandButton id="botonRechazar" value="#{label['label.rechazar']}" action="#{controllerAgregarPrestamos.rechazarPrestamo}" rendered="#{controllerAgregarPrestamos.visibleBotonRechazar}" partialSubmit="true" style="float: right" styleClass="boton"/>
+                    <ice:commandButton id="botonAceptar" value="#{label['label.aceptar']}" action="#{controllerAgregarPrestamos.aprobarPrestamo}" rendered="#{controllerAgregarPrestamos.visibleBotonAprobar}" partialSubmit="true" style="float: right" styleClass="boton"/>
+                    <ice:commandButton id="botonRevisar" value="#{label['label.revisar']}" action="#{controllerAgregarPrestamos.revisarPrestamo}" rendered="#{controllerAgregarPrestamos.visibleBotonRevisar}" partialSubmit="true" style="float: right" styleClass="boton"/>
+                    <ice:commandButton id="botonAnular" value="#{label['label.anular']}" action="#{controllerAgregarPrestamos.anularPrestamo}" rendered="#{controllerAgregarPrestamos.visibleBotonAnular}" partialSubmit="true" style="float: right" styleClass="boton"/>
                 </div>
             </div>
         </div>
@@ -230,9 +252,19 @@
             <ui:include src="../prestamos/panelConfirmacion.xhtml" />
         </ui:insert>
         
+        <!-- Panel de confirmacion de Solicitud--> 
+        <ui:insert name="modalConfirmarSolicitud">
+            <ui:include src="../prestamos/panelConfirmacionSolicitud.xhtml" />
+        </ui:insert>
+        
         <!-- Panel Agregar Bienes -->
         <ui:insert name="panelAgregarBienes">
             <ui:include src="../prestamos/listadoBienes.xhtml" />
+        </ui:insert>
+        
+        <!-- Panel Buscar Personas-->
+        <ui:insert name="panelAgregarBienes">
+            <ui:include src="../prestamos/panelPersonas.xhtml" />
         </ui:insert>
     </div>
 </ice:form>

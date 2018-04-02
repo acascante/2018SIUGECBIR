@@ -685,7 +685,7 @@ public class TrasladoController extends ListadoBienesGeneralController {
             }
             
             //FIXME Jairo verificar el usuario se esta asignando
-            traslado.setPersona(usuarioRegistradoClass);
+            traslado.setUsuario(usuarioRegistradoClass);
 
             if (!mensaje.equals("")) {
                 Mensaje.agregarErrorAdvertencia(mensaje);

@@ -28,8 +28,12 @@ public class ProveedorModel {
         return proveedorDao.listar();
     }
     
-    public List<Proveedor> listar(String identificacion, String nombre) throws FWExcepcion {
-        return proveedorDao.listar(identificacion, nombre);
+    public List<Proveedor> listar(String identificacion, String nombre, int primerRegistro, int cantRegistroPorPagina ) throws FWExcepcion {
+        return proveedorDao.listar(identificacion, nombre, primerRegistro, cantRegistroPorPagina);
+    }
+    
+    public Long contar(String identificacion, String nombre){
+        return proveedorDao.contar(identificacion, nombre);
     }
     
     public Proveedor buscarPorId(Long id) throws FWExcepcion {

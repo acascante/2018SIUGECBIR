@@ -27,15 +27,15 @@ public class CampoBien implements Serializable {
 
     //<editor-fold defaultstate="collapsed" desc="Atributos">
     @Id
-    @GeneratedValue(strategy=GenerationType.SEQUENCE, generator = "sqReporteBien")
+    @GeneratedValue(strategy=GenerationType.SEQUENCE, generator = "sqCampoBien")
     @Column(name = "ID_CAMPO_BIEN")
     private Long id;
     
     @Column(name = "NOMBRE")
     private String nombre;
     
-    @Column(name = "DESCRIPCION")
-    private String descripcion;
+    @Column(name = "NOMBRE_COLUMNA")
+    private String nombreColumna;
     
     @Column(name = "NOMBRE_HQL")
     private String nombreHQL;
@@ -44,9 +44,10 @@ public class CampoBien implements Serializable {
     //<editor-fold defaultstate="collapsed" desc="Constructores">
     public CampoBien() {}
     
-    public CampoBien(Long id, String nombre, String descripcion, String nombreHQL) {
+    public CampoBien(Long id, String nombre, String nombreColumna, String nombreHQL) {
         this.id = id;
-        this.descripcion = descripcion;
+        this.nombre = nombre;
+        this.nombreColumna = nombreColumna;
         this.nombreHQL = nombreHQL;
     }
     //</editor-fold>  
@@ -68,12 +69,12 @@ public class CampoBien implements Serializable {
         this.nombre = nombre;
     }
 
-    public String getDescripcion() {
-        return descripcion;
+    public String getNombreColumna() {
+        return nombreColumna;
     }
 
-    public void setDescripcion(String descripcion) {
-        this.descripcion = descripcion;
+    public void setNombreColumna(String nombreColumna) {
+        this.nombreColumna = nombreColumna;
     }
 
     public String getNombreHQL() {

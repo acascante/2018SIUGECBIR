@@ -88,10 +88,10 @@ public class PrestamoDao extends GenericDaoImpl {
     }
     
     @Transactional(readOnly = true)
-    public Long contar(UnidadEjecutora unidadEjecutora, Long id, Date fecha, Integer estado, String entidad) throws FWExcepcion {
+    public Long contar(UnidadEjecutora unidadEjecutora, Long id, Date fecha, Long estado, Long idTipoEntidad, String entidad) throws FWExcepcion {
         Session session = dao.getSessionFactory().openSession();
         try {
-            Query query = this.queryListar(session, true, unidadEjecutora, id, fecha, estado, entidad);
+            Query query = this.queryListar(session, true, unidadEjecutora, id, fecha, estado, idTipoEntidad, entidad);
             return (Long)query.uniqueResult();
 
         } catch (HibernateException e) {
@@ -102,10 +102,10 @@ public class PrestamoDao extends GenericDaoImpl {
     }
     
     @Transactional(readOnly = true)
-    public List<SolicitudPrestamo> listar(Integer primerRegistro, Integer ultimoRegistro, UnidadEjecutora unidadEjecutora, Long id, Date fecha, Integer estado, String entidad) throws FWExcepcion {
+    public List<SolicitudPrestamo> listar(Integer primerRegistro, Integer ultimoRegistro, UnidadEjecutora unidadEjecutora, Long id, Date fecha, Long estado, Long idTipoEntidad, String entidad) throws FWExcepcion {
         Session session = dao.getSessionFactory().openSession();
         try {
-            Query query = this.queryListar(session, false, unidadEjecutora, id, fecha, estado, entidad);
+            Query query = this.queryListar(session, false, unidadEjecutora, id, fecha, estado, idTipoEntidad, entidad);
             if(!(primerRegistro.equals(1) && ultimoRegistro.equals(1))) {
                 query.setFirstResult(primerRegistro);
                 query.setMaxResults(ultimoRegistro - primerRegistro);
@@ -118,7 +118,7 @@ public class PrestamoDao extends GenericDaoImpl {
         }        
     }
     
-    private Query queryListar(Session session, Boolean contar, UnidadEjecutora unidadEjecutora, Long id, Date fecha, Integer idEstado, String entidad) {
+    private Query queryListar(Session session, Boolean contar, UnidadEjecutora unidadEjecutora, Long id, Date fecha, Long idEstado, Long idTipoEntidad, String entidad) {
         StringBuilder sql = new StringBuilder("SELECT ");
         if (contar) {
             sql.append("COUNT(entity) FROM SolicitudPrestamo entity ");
@@ -135,6 +135,9 @@ public class PrestamoDao extends GenericDaoImpl {
             }
             if(idEstado != null && idEstado > 0){
                 sql.append(" AND entity.estado.id = :idEstado ");
+            }
+            if(idTipoEntidad != null && idTipoEntidad > 0){
+                sql.append(" AND entity.tipo.id = :idTipoEntidad ");
             }
             if(entidad != null && entidad.length() > 0){
                 sql.append(" AND UPPER(entity.entidad) LIKE UPPER(:entidad) ");
@@ -153,6 +156,9 @@ public class PrestamoDao extends GenericDaoImpl {
             }
             if(idEstado != null && idEstado > 0){
                 query.setParameter("idEstado", idEstado);
+            }
+            if(idTipoEntidad != null && idTipoEntidad > 0){
+                query.setParameter("idTipoEntidad", idTipoEntidad);
             }
             if(entidad != null && entidad.length() > 0){
                 query.setParameter("entidad", entidad);

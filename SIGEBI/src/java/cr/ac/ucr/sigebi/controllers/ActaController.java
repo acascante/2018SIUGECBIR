@@ -14,11 +14,10 @@ import cr.ac.ucr.sigebi.domain.Estado;
 import cr.ac.ucr.sigebi.domain.Tipo;
 import cr.ac.ucr.sigebi.domain.Usuario;
 import cr.ac.ucr.sigebi.models.ActaModel;
-import cr.ac.ucr.sigebi.models.EstadoModel;
 import cr.ac.ucr.sigebi.domain.Bien;
 import cr.ac.ucr.sigebi.domain.DocumentoAutorizacion;
 import cr.ac.ucr.sigebi.models.TipoModel;
-import cr.ac.ucr.sigebi.models.AutorizacionRolPersonaModel;
+import cr.ac.ucr.sigebi.models.BienModel;
 import cr.ac.ucr.sigebi.models.DocumentoAutorizacionModel;
 import cr.ac.ucr.sigebi.models.DocumentoModel;
 import cr.ac.ucr.sigebi.models.UsuarioModel;
@@ -61,6 +60,14 @@ public class ActaController extends ListadoBienesGeneralController {
     List<Estado> estadosActa;
     List<SelectItem> estadosActaOptions;
     
+    // Variables de estado Interno
+    Estado estadoInternoActaPendiente;
+    Estado estadoInternoActaProceso;
+    Estado estadoInternoActaAplicada;
+    Estado estadoInternoActaRechazada;
+    
+    
+    
     List<DocumentoActa> actasRegistradas;
     List<DocumentoDetalle> bienesActa;
     List<DocumentoDetalle> bienesActaEliminar;
@@ -92,12 +99,11 @@ public class ActaController extends ListadoBienesGeneralController {
     @Resource
     private TipoModel tipoModel;
 
-    @Resource
-    private EstadoModel estadoModel;
 
     @Resource private ActaModel actaModel;
-    @Resource private AutorizacionRolPersonaModel autorizacionRolPersonaModel;
     @Resource private UsuarioModel usuarioModel;
+    @Resource private BienModel bienModel;
+    
     
     Usuario usuario;
     String valorDonacion;
@@ -114,16 +120,24 @@ public class ActaController extends ListadoBienesGeneralController {
     private void incializaDatos() {
         try{
             // TODO manejar los estados en un List por dominio
-            estadoGeneralActivo = estadoModel.buscarPorDominioEstado( Constantes.DOMINIO_GENERAL, Constantes.ESTADO_GENERAL_ACTIVO);
-            estadoGeneralPendiente = estadoModel.buscarPorDominioEstado( Constantes.DOMINIO_GENERAL, Constantes.ESTADO_GENERAL_PENDIENTE);
-            estadoGeneralAprobado = estadoModel.buscarPorDominioEstado( Constantes.DOMINIO_GENERAL, Constantes.ESTADO_GENERAL_APROBADO);
-            estadoGeneralRechazado = estadoModel.buscarPorDominioEstado( Constantes.DOMINIO_GENERAL, Constantes.ESTADO_GENERAL_RECHAZADO);
+            estadoGeneralActivo = this.estadoPorDominioValor( Constantes.DOMINIO_GENERAL, Constantes.ESTADO_GENERAL_ACTIVO );
+            estadoGeneralPendiente = this.estadoPorDominioValor( Constantes.DOMINIO_GENERAL, Constantes.ESTADO_GENERAL_PENDIENTE );
+            estadoGeneralAprobado = this.estadoPorDominioValor( Constantes.DOMINIO_GENERAL, Constantes.ESTADO_GENERAL_APROBADO );
+            estadoGeneralRechazado = this.estadoPorDominioValor( Constantes.DOMINIO_GENERAL, Constantes.ESTADO_GENERAL_RECHAZADO );
             
             estadosActa = new ArrayList<Estado>();
             estadosActa.add(estadoGeneralActivo);
             estadosActa.add(estadoGeneralPendiente);
             estadosActa.add(estadoGeneralAprobado);
             estadosActa.add(estadoGeneralRechazado);
+            
+            
+            //Estados Internos del Acta
+            estadoInternoActaPendiente = this.estadoPorDominioValor( Constantes.DOMINIO_ACTA, Constantes.ESTADO_ACTA_PENDIENTE) ;
+            estadoInternoActaProceso = this.estadoPorDominioValor( Constantes.DOMINIO_ACTA, Constantes.ESTADO_ACTA_PROCESO);
+            estadoInternoActaAplicada = this.estadoPorDominioValor( Constantes.DOMINIO_ACTA, Constantes.ESTADO_ACTA_APLICADA);
+            estadoInternoActaRechazada = this.estadoPorDominioValor( Constantes.DOMINIO_ACTA, Constantes.ESTADO_ACTA_RECHAZADA);
+            
             
             usuario = usuarioModel.buscarPorId(codPersonaReg);
 
@@ -212,16 +226,22 @@ public class ActaController extends ListadoBienesGeneralController {
             tiposActaOptions = new ArrayList<SelectItem>();
             //Aqui traemos los tipos de bienes para los Select
             List<Tipo> tipoEntity = tipoModel.listarPorDominio(Constantes.DOMINIO_ACTA);
+            Tipo donacion = new Tipo();
+            Tipo desecho = new Tipo();
             for (Tipo item : tipoEntity) {
                 if (item.getNombre().toUpperCase().contains("DONAC")) {
                     valorDonacion = item.getId().toString();
+                    donacion = item;
                 }
-                tiposActaOptions.add(new SelectItem("" + item.getId(), item.getNombre()));
+                else
+                    desecho = item;
             }
+            tiposActaOptions.add(new SelectItem("" + desecho.getId(), desecho.getNombre()));
+            tiposActaOptions.add(new SelectItem("" + donacion.getId(), donacion.getNombre()));
             estadosActaOptions = new ArrayList<SelectItem>();
-            for (Estado item : estadosActa) 
-                estadosActaOptions.add(new SelectItem("" + item.getId(), item.getNombre()));
-            
+            for (Estado item : estadosActa) {
+                estadosActaOptions.add( new SelectItem("" + item.getId(), item.getNombre()) );
+            }
         } catch (Exception err) {
             Mensaje.agregarErrorAdvertencia(err.getMessage());
         }
@@ -697,6 +717,18 @@ public class ActaController extends ListadoBienesGeneralController {
         }
 
         esDonacion = valor.equals(Constantes.ACTA_ID_TIPO_DONACION);
+        
+        if(esDonacion)
+            this.setFltTipo(this.tipoInfTecDonacion);
+        else
+            this.setFltTipo(this.tipoInfTecDesecho);
+            
+        // Limpiar los bienes seleccionados
+        //Mensaje.agregarInfo("Se debe limpiar la lista de los bienes seleccionados");
+        List<Bien> bienes = new ArrayList<Bien>( bienesSeleccionados.values() );
+        for(Bien bien : bienes){
+            agregarQuitarBien(bien);
+        }
     }
 
     public void activarActa(){
@@ -709,6 +741,15 @@ public class ActaController extends ListadoBienesGeneralController {
             acta.setEstado(estadoGeneralActivo);
             guardarActa();
         
+            
+                //Actualizo los bienes para que queden excluidos
+                for(DocumentoDetalle detalle : bienesActa){
+                    Bien bien = detalle.getBien();
+                    bien.setEstadoInterno(estadoInternoActaProceso);
+                    bienModel.actualizar(bien);
+                }
+                
+            
             listadoInicializaDatos();
             //inicializaDatos();
             Util.navegar(Constantes.KEY_VISTA_LISTAR_ACTAS);
@@ -722,8 +763,29 @@ public class ActaController extends ListadoBienesGeneralController {
             actaModel.guardar(acta);
             //GUARDAR LOS BIENES ASOCIADOS
             
+            // Eliminamos los bienes del detalle documento
             actaModel.eliminarBienes(bienesActaEliminar);
+            
+            //actualizamos los bienes que se eliminan con el estado Interno
+            for(DocumentoDetalle detalle : bienesActaEliminar){
+                Bien bien = detalle.getBien();
+                bien.setEstadoInterno(this.estadoIntInfTecAprobado);
+                
+                bienModel.actualizar(bien);
+            }
+            
+            
             actaModel.guardarBienes(bienesActa);
+            
+            //Actualizo los bienes que se eliminan con el estado Interno
+            for(DocumentoDetalle detalle : bienesActa){
+                Bien bien = detalle.getBien();
+                bien.setEstadoInterno(estadoInternoActaPendiente);
+                
+                bienModel.actualizar(bien);
+            }
+            
+            
             Mensaje.agregarInfo(Util.getEtiquetas("sigebi.Acta.MsnError.ActaGuardada"));
             mostrarActivarBtn = true;
         }
@@ -784,6 +846,8 @@ public class ActaController extends ListadoBienesGeneralController {
 
     public void abrirListaBienes() {
         try {
+            // Realiza la consulta de Actas (Solo bienes con Informe técnico Aprobado) 
+            // Según tipo de Informe y Acta (Desecho / Docación)
             consultaBienes = 2;
 
             mostrarBienes();
@@ -812,6 +876,16 @@ public class ActaController extends ListadoBienesGeneralController {
             
             //bienesAsociados = new ArrayList<Bien>();
             Bien bien = (Bien) pEvent.getComponent().getAttributes().get("bienSeleccionado");
+            
+            agregarQuitarBien(bien);
+            
+        } catch (Exception err) {
+            Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.error.controllerListarBienSincronizar.checkBienPorSincronizar"));
+        }
+    }
+    
+    private void agregarQuitarBien(Bien bien){
+        try{
             if(bienesSeleccionados.containsKey(bien.getId())){
                 
                 //Si el bien ya estaba registrado lo agrego a una lista para ser eliminado
@@ -827,11 +901,11 @@ public class ActaController extends ListadoBienesGeneralController {
             }
             bienesActa = new ArrayList<DocumentoDetalle>( actaDetalleMap.values() );
             bienesAsociados = new ArrayList<Bien>( bienesSeleccionados.values() );
-        } catch (Exception err) {
-            Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.error.controllerListarBienSincronizar.checkBienPorSincronizar"));
+        }
+        catch(Exception err){
+            
         }
     }
-    
     
     public void quitarBienSeleccionado(ActionEvent pEvent) {
         try {
@@ -992,8 +1066,17 @@ public class ActaController extends ListadoBienesGeneralController {
                 documentoAutorizacionModel.agregar(documento);
             }
 
+            
+            //Actualizo los bienes para que queden excluidos
+            for(DocumentoDetalle detalle : bienesActa){
+                Bien bien = detalle.getBien();
+                bien.setEstadoInterno(estadoIntInfTecAprobado);
+                
+                bienModel.actualizar(bien);
+            }
+            
             //Se modifica en el acta en los casos que aplique
-            cambiaEstadoDocumento();
+            //cambiaEstadoDocumento();
         } catch (FWExcepcion e) {
             Mensaje.agregarErrorAdvertencia(e.getError_para_usuario());
         } catch (Exception e) {
@@ -1033,6 +1116,19 @@ public class ActaController extends ListadoBienesGeneralController {
                 //Si todos estan aprobados se aprueba todo el acta
                 acta.setEstado(estadoGeneralAprobado);
                 documentoModel.modificar(acta);
+                
+                
+                //Actualizo los bienes para que queden excluidos
+                for(DocumentoDetalle detalle : bienesActa){
+                    Bien bien = detalle.getBien();
+                    bien.setEstadoInterno(estadoInternoActaAplicada);
+                    if(bien.getCapitalizable())
+                        bien.setEstado(estadoExclusionAprobada);
+                    else
+                        bien.setEstado(this.estadoPorDominioValor(Constantes.DOMINIO_BIEN, Constantes.ESTADO_BIEN_INACTIVO));
+                        
+                    bienModel.actualizar(bien);
+                }
                 
             }
         } catch (FWExcepcion e) {

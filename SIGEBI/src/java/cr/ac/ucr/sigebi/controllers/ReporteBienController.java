@@ -10,9 +10,12 @@ import cr.ac.ucr.framework.vista.util.Mensaje;
 import cr.ac.ucr.framework.vista.util.Util;
 import cr.ac.ucr.sigebi.utils.Constantes;
 import cr.ac.ucr.sigebi.commands.ReporteBienCommand;
+import cr.ac.ucr.sigebi.domain.Bien;
+import cr.ac.ucr.sigebi.domain.CampoBien;
 import cr.ac.ucr.sigebi.domain.CampoReporteBien;
 import cr.ac.ucr.sigebi.domain.ReporteBien;
 import cr.ac.ucr.sigebi.domain.Tipo;
+import cr.ac.ucr.sigebi.models.BienModel;
 import cr.ac.ucr.sigebi.models.CampoBienModel;
 import cr.ac.ucr.sigebi.models.CampoReporteBienModel;
 import cr.ac.ucr.sigebi.models.ReporteBienModel;
@@ -20,12 +23,19 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import javax.faces.component.UIViewRoot;
 import javax.faces.context.FacesContext;
-import javax.faces.event.ActionEvent;
 import javax.faces.event.PhaseId;
+import javax.faces.event.ValueChangeEvent;
 import javax.faces.model.SelectItem;
+import net.sf.jasperreports.engine.JasperCompileManager;
+import net.sf.jasperreports.engine.JasperExportManager;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.JasperReport;
+import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
@@ -37,57 +47,66 @@ import org.springframework.stereotype.Controller;
 @Scope("session")
 public class ReporteBienController extends BaseController {
     
+    @Resource private BienModel bienModel;
     @Resource private CampoBienModel campoBienModel;
     @Resource private CampoReporteBienModel campoReporteBienModel;
-    @Resource private ReporteBienModel reporteBienModel;
+    @Resource private ReporteBienModel reporteBienModel;    
     
     private Map<Long, ReporteBien> reportes;
-    private List<SelectItem> itemsTipoReporte;
     private List<SelectItem> itemsReporte;
+    
+    private Map<Long, Tipo> tiposReporte;
+    private List<SelectItem> itemsTipoReporte;
+    
+    private Map<Long, CampoReporteBien> camposReporte;
+    private Map<Long, Boolean> camposSeleccionados;
+    
     private ReporteBienCommand command;
     
     private String mensaje;
 
     private Boolean reporteRegistrado;
     private Boolean visiblePanelNombreReporte;
-    private Boolean visibleBotonCopiar;
     private Boolean visibleBotonEliminar;
   
     public ReporteBienController() {
         super();
+        this.inicializarDatos();
     }
 
-    private void inicializarNuevo() {
-        this.command = new ReporteBienCommand(this.usuarioSIGEBI, this.campoBienModel.listar());
-        this.reporteRegistrado = false;
-        this.visiblePanelNombreReporte = false;
-        this.visibleBotonCopiar = false;
-        this.visibleBotonEliminar = false;
-        inicializarDatos();
-    }
-    
-    private void inicializarReporte() {
-        ReporteBien reporteBien = reportes.get(this.command.getIdReporte());
-        this.command = new ReporteBienCommand(this.command.getIdReporte(), usuarioSIGEBI, campoReporteBienModel.listarPorUsuario(this.usuarioSIGEBI, reporteBien));
-        this.reporteRegistrado = true;
-    }
-      
-    private void inicializarDatos() {
-        this.mensaje = new String();
-
+    @PostConstruct
+    public final void inicializar() {
+        //Cargar Tipos de Reporte
         List<Tipo> tipos = this.tiposPorDominio(Constantes.DOMINIO_REPORTE);
         if (!tipos.isEmpty()) {
             this.itemsTipoReporte = new ArrayList<SelectItem>();
-
-            for (Tipo item : tipos) {
-                this.itemsTipoReporte.add(new SelectItem(item.getId(), item.getNombre()));
+            this.tiposReporte = new HashMap<Long, Tipo>();
+            for (Tipo tipo : tipos) {
+                this.tiposReporte.put(tipo.getId(), tipo);
+                this.itemsTipoReporte.add(new SelectItem(tipo.getId(), tipo.getNombre()));
             }
         }
+        
+        cargarReportes();
+        
+        List<CampoBien> campos = this.campoBienModel.listar();
+        if (!campos.isEmpty()) {
+            this.camposReporte = new HashMap<Long, CampoReporteBien>();
+            for (CampoBien campo : campos) {
+                this.camposReporte.put(campo.getId(), new CampoReporteBien(campo));
+            }
+        }
+    }
+    
+    private void cargarReportes() {
+        //Cargar Reportes del Usuario
         
         List<ReporteBien> reportesBien = this.reporteBienModel.listarPorUsuario(usuarioSIGEBI);
         if (!reportesBien.isEmpty()) {
             this.itemsReporte = new ArrayList<SelectItem>();
             this.reportes = new HashMap<Long, ReporteBien>();
+            this.itemsReporte.clear();
+            this.reportes.clear();
             for (ReporteBien reporteBien : reportesBien) {
                 this.itemsReporte.add(new SelectItem(reporteBien.getId(), reporteBien.getNombre()));
                 this.reportes.put(reporteBien.getId(), reporteBien);
@@ -95,17 +114,53 @@ public class ReporteBienController extends BaseController {
         }
     }
     
+    private void inicializarDatos() {
+        this.reporteRegistrado = false;
+        this.visiblePanelNombreReporte = false;
+        this.visibleBotonEliminar = false;
+        this.mensaje = new String();
+        this.command = new ReporteBienCommand(usuarioSIGEBI);
+        this.camposSeleccionados = new HashMap<Long, Boolean>();
+    }
+    
+    private void inicializarReporte() {
+        ReporteBien reporteBien = reportes.get(this.command.getIdReporte());
+        this.command.setNombre(reporteBien.getNombre());
+        this.command.setIdReporte(reporteBien.getId());
+        this.command.setIdTipoReporte(reporteBien.getTipoReporte().getId());
+        this.command.setDescripcion(reporteBien.getDescripcion());
+        
+        List<CampoReporteBien> campos = this.campoReporteBienModel.listarPorReporte(reporteBien);
+        if (!campos.isEmpty()) {
+            this.camposReporte.clear();
+            for (CampoReporteBien campo : campos) {
+                this.camposReporte.put(campo.getCampoBien().getId(), campo);
+                this.camposSeleccionados.put(campo.getCampoBien().getId(), campo.getMostrar());
+            }
+        }
+        
+        this.reporteRegistrado = true;
+        this.visibleBotonEliminar = true;
+    }      
+    
     public void guardarReporte() {
         try {
             FacesContext context = FacesContext.getCurrentInstance();
             UIViewRoot root = context.getViewRoot();
             String messageValidacion = validarForm(root);
             if (Constantes.OK.equals(messageValidacion)) {
-                ReporteBien reporteBien = this.command.getReporteBien();
+                Tipo tipo = this.tipoPorId(this.command.getIdTipoReporte());
+                ReporteBien reporteBien = this.command.getReporteBien(tipo, null);
                 this.reporteBienModel.salvar(reporteBien);
-                this.campoReporteBienModel.salvarCampos(reporteBien.getCamposReporte());
-                this.visibleBotonCopiar = true;
+                
+                List<CampoReporteBien> campos = getCamposReporteBien(reporteBien);
+                this.campoReporteBienModel.salvar(campos);
+                
                 this.visibleBotonEliminar = true;
+                this.visiblePanelNombreReporte = false;
+                
+                cargarReportes();
+                this.command.setIdReporte(reporteBien.getId());
                 Mensaje.agregarInfo("Reporte guardado exitosamente");
             } else {
                 Mensaje.agregarErrorAdvertencia(messageValidacion);
@@ -115,57 +170,54 @@ public class ReporteBienController extends BaseController {
         }
     }
     
+    private List<CampoReporteBien> getCamposReporteBien(ReporteBien reporte) {
+        List<CampoReporteBien> campos = new ArrayList<CampoReporteBien>();
+        for (CampoReporteBien campo : this.camposReporte.values()) {
+            if (this.camposSeleccionados.get(campo.getCampoBien().getId())) {
+                campo.setMostrar(true);
+            } else {
+                campo.setMostrar(false);
+            }
+            campo.setReporteBien(reporte);
+            campos.add(campo);
+        }
+        return campos;
+    }
+    
     public String validarForm(UIViewRoot root) {
         if (this.command.getNombre().isEmpty()) {
-            return Util.getEtiquetas("sigebi.label.notificaciones.error.asunto.nulo");
+            return Util.getEtiquetas("sigebi.label.reporteBien.error.nombre");
         }
         
         if (this.command.getIdTipoReporte().equals(Constantes.DEFAULT_ID)) {
-            return Util.getEtiquetas("sigebi.label.notificaciones.error.correo.nulo");
+            return Util.getEtiquetas("sigebi.label.reporteBien.error.tipo");
         }
         
         if(!validarCampos()) {
-            return Util.getEtiquetas("sigebi.label.notificaciones.error.correo.nulo");
+            return Util.getEtiquetas("sigebi.label.reporteBien.error.campos");
         }
         
         return Constantes.OK;
     }
     
     public boolean validarCampos() {
-        for (CampoReporteBien campoReporteBien : this.command.getCamposReporte()) {
-            if (campoReporteBien.getMostrar()) {
-                return true;
+        if (!this.camposSeleccionados.isEmpty()) {
+            for (Map.Entry<Long, Boolean> entry : this.camposSeleccionados.entrySet()) {
+                if (entry.getValue()) {
+                    return true;
+                }
             }
         }
         return false;
     }
     
-    public void nuevoRegistro(ActionEvent event) {
-        try{
-            if (!event.getPhaseId().equals(PhaseId.INVOKE_APPLICATION)) {
-                event.setPhaseId(PhaseId.INVOKE_APPLICATION);
-                event.queue();
-                return;
-            }
-            inicializarNuevo();
-            this.vistaOrigen = event.getComponent().getAttributes().get(Constantes.KEY_VISTA_ORIGEN).toString();
-            Util.navegar(Constantes.VISTA_REPORTE_BIEN);
-        } catch (FWExcepcion err) {
-            this.mensaje = err.getMessage();
+    public void seleccionarReporte(ValueChangeEvent event) {
+        if (!event.getPhaseId().equals(PhaseId.INVOKE_APPLICATION)) {
+            event.setPhaseId(PhaseId.INVOKE_APPLICATION);
+            event.queue();
+            return;
         }
-    }
-  
-    public void seleccionarReporte(ActionEvent event) {
-        try{
-            if (!event.getPhaseId().equals(PhaseId.INVOKE_APPLICATION)) {
-                event.setPhaseId(PhaseId.INVOKE_APPLICATION);
-                event.queue();
-                return;
-            }
-            inicializarReporte();
-        } catch (FWExcepcion err) {
-            this.mensaje = err.getMessage();
-        }
+        inicializarReporte();
     }
   
     public void abrirPanelNombreReporte() {
@@ -183,10 +235,15 @@ public class ReporteBienController extends BaseController {
     
     public void eliminarReporte() {
         try {
-            ReporteBien reporteBien = this.command.getReporteBien();
-            this.campoReporteBienModel.eliminar(reporteBien.getCamposReporte());
+            Tipo tipo = this.tipoPorId(this.command.getIdTipoReporte());
+            ReporteBien reporteBien = this.command.getReporteBien(tipo, null);            
+            List<CampoReporteBien> campos = this.campoReporteBienModel.listarPorReporte(reporteBien);
+            this.campoReporteBienModel.eliminar(campos);
             this.reporteBienModel.eliminar(reporteBien);
-            Mensaje.agregarInfo("Reporte guardado exitosamente");
+            
+            cargarReportes();
+            inicializarDatos();
+            Mensaje.agregarInfo("Reporte eliminado exitosamente");
         } catch (FWExcepcion err) {
             Mensaje.agregarErrorAdvertencia(err.getMessage());
             this.mensaje = err.getMessage();
@@ -195,10 +252,31 @@ public class ReporteBienController extends BaseController {
     
     public void generarReporte() {
         try {
-            ReporteBien reporteBien = this.command.getReporteBien();
-            
+            //reportes/reporteBienes.jrxml
+            List<Bien> bienes = this.bienModel.listar();
+            if (!bienes.isEmpty()) {
+                String template = cr.ac.ucr.framework.reporte.componente.utilitario.Util.ConvertirRutas("/reportes/reporteBienes.jrxml");
+                String jasperFile = cr.ac.ucr.framework.reporte.componente.utilitario.Util.ConvertirRutas("/reportes/reporteBienes.jasper");
+                String outputFile = cr.ac.ucr.framework.reporte.componente.utilitario.Util.ConvertirRutas("/reportes/reporteBienes.pdf");
+                
+                JasperReport jasperReport = JasperCompileManager.compileReport(template);
+                JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(bienes);
+                JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, null, dataSource);
+                JasperExportManager.exportReportToPdfFile(jasperPrint, outputFile);
+                //String outputFile = "C://reportes/reporteBienes.pdf";
+//                JasperReport reporte = (JasperReport) JRLoader.loadObjectFromFile(jasperFile);
+//                if (reporte == null) {
+//                    String templateFile = JRLoader.loadObjectFromFile(template).toString();
+//                    JasperCompileManager.compileReport(templateFile);                    
+//                    jasperFile = cr.ac.ucr.framework.reporte.componente.utilitario.Util.ConvertirRutas("/reportes/reporteBienes.jasper");
+//                }
+//                Map parameters = new HashMap();
+//                JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(bienes);
+//                String jasperPrint = JasperFillManager.fillReportToFile(jasperFile, parameters, dataSource);
+                
+            }
             Mensaje.agregarInfo("Reporte generado exitosamente");
-        } catch (FWExcepcion err) {
+        } catch (Exception err) {
             Mensaje.agregarErrorAdvertencia(err.getMessage());
             this.mensaje = err.getMessage();
         }
@@ -245,20 +323,41 @@ public class ReporteBienController extends BaseController {
         this.mensaje = mensaje;
     }
 
+    public Map<Long, Tipo> getTiposReporte() {
+        return tiposReporte;
+    }
+
+    public void setTiposReporte(Map<Long, Tipo> tiposReporte) {
+        this.tiposReporte = tiposReporte;
+    }
+
+    public Map<Long, CampoReporteBien> getCamposReporte() {
+        return camposReporte;
+    }
+    
+    public List<CampoReporteBien> getListCamposReporte() {
+        List<CampoReporteBien> list = new ArrayList<CampoReporteBien>(camposReporte.values());
+        return list;
+    }
+
+    public void setCamposReporte(Map<Long, CampoReporteBien> camposReporte) {
+        this.camposReporte = camposReporte;
+    }
+
+    public Map<Long, Boolean> getCamposSeleccionados() {
+        return camposSeleccionados;
+    }
+
+    public void setCamposSeleccionados(Map<Long, Boolean> camposSeleccionados) {
+        this.camposSeleccionados = camposSeleccionados;
+    }
+
     public Boolean getVisiblePanelNombreReporte() {
         return visiblePanelNombreReporte;
     }
 
     public void setVisiblePanelNombreReporte(Boolean visiblePanelNombreReporte) {
         this.visiblePanelNombreReporte = visiblePanelNombreReporte;
-    }
-
-    public Boolean getVisibleBotonCopiar() {
-        return visibleBotonCopiar;
-    }
-
-    public void setVisibleBotonCopiar(Boolean visibleBotonCopiar) {
-        this.visibleBotonCopiar = visibleBotonCopiar;
     }
 
     public Boolean getReporteRegistrado() {

@@ -46,12 +46,16 @@ public class Persona extends ObjetoBase implements Serializable {
 
     @Column(name = "ES_PROVEEDOR")
     private String esProveedor;
+    
+    @Column(name = "ES_ESTUDIANTE")
+    private String esEstudiante;
+    
+    @Column(name = "ES_FUNCIONARIO")
+    private String esFuncionario;
     //</editor-fold>
     
     //<editor-fold defaultstate="collapsed" desc="Constructores">
-    public Persona() {
-    }
-
+    public Persona() {}
     //</editor-fold>
     
     //<editor-fold defaultstate="collapsed" desc="SET's y GET's ">
@@ -101,6 +105,22 @@ public class Persona extends ObjetoBase implements Serializable {
 
     public void setEsProveedor(String esProveedor) {
         this.esProveedor = esProveedor;
+    }
+
+    public String getEsEstudiante() {
+        return esEstudiante;
+    }
+
+    public void setEsEstudiante(String esEstudiante) {
+        this.esEstudiante = esEstudiante;
+    }
+
+    public String getEsFuncionario() {
+        return esFuncionario;
+    }
+
+    public void setEsFuncionario(String esFuncionario) {
+        this.esFuncionario = esFuncionario;
     }
 
     public String getNombreCompleto() {

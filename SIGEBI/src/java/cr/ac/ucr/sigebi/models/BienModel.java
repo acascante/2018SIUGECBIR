@@ -108,6 +108,56 @@ public class BienModel {
                  estados);
     }
 
+    
+    
+    
+    public List<Bien> listadoActas(Integer primerRegistro,
+             Integer ultimoRegistro,
+             UnidadEjecutora unidadejecutora,
+             Long id,
+             String identificacion,
+             String descripcion,
+             String marca,
+             String modelo,
+             String serie,
+             Tipo tipo,
+             Estado... estados) throws FWExcepcion {
+        return bienDao.listadoActas(primerRegistro,
+                 ultimoRegistro,
+                 unidadejecutora,
+                 id,
+                 identificacion,
+                 descripcion,
+                 marca,
+                 modelo,
+                 serie,
+                 tipo, 
+                 estados);
+    }
+
+    public Long contarListadoActas(UnidadEjecutora unidadejecutora,
+             Long id,
+             String identificacion,
+             String descripcion,
+             String marca,
+             String modelo,
+             String serie,
+             Tipo tipo,
+             Estado... estados) throws FWExcepcion {
+        return bienDao.contarListadoActas(unidadejecutora,
+                 id,
+                 identificacion,
+                 descripcion,
+                 marca,
+                 modelo,
+                 serie,
+                 tipo,
+                 estados);
+    }
+
+    
+    
+    
     public void almacenar(Bien bien) throws FWExcepcion {
         bienDao.almacenar(bien);
     }
@@ -152,7 +202,9 @@ public class BienModel {
             if( bien.getEstado().getId().intValue() == Constantes.ESTADO_BIEN_PENDIENTE_SINCRONIZAR )
                 tipoMovimiento = Constantes.TIPO_MOVIMIENTO_SINCRONIZAR_AGREGAR;
             if(bien.getEstado().getId().intValue() == Constantes.ESTADO_BIEN_TRASLADO)
-                tipoMovimiento = Constantes.TIPO_MOVIMIENTO_SINCRONIZAR_AGREGAR;
+                tipoMovimiento = Constantes.TIPO_MOVIMIENTO_SINCRONIZAR_TRASLADAR;
+            if(bien.getEstado().getId().intValue() == Constantes.ESTADO_BIEN_EXCLUSION_APROBADA)
+                tipoMovimiento = Constantes.TIPO_MOVIMIENTO_SINCRONIZAR_EXCLUIR;
             
             bienSinc = new Sincronizar(bien, tipoMovimiento);
             Date today = new Date();
@@ -170,11 +222,11 @@ public class BienModel {
         bienDao.actualizar(bienes);
     }
  
-    public List<Bien> listar(Integer primerRegistro, Integer ultimoRegistro, Long id, UnidadEjecutora unidadejecutora, String identificacion, String descripcion, String marca, String modelo, String serie, Estado... estadoInterno) throws FWExcepcion {
-        return bienDao.listar(primerRegistro, ultimoRegistro, id, unidadejecutora, identificacion, descripcion, marca, modelo, serie, estadoInterno);
+    public List<Bien> listar(Integer primerRegistro, Integer ultimoRegistro, Long id, UnidadEjecutora unidadejecutora, String identificacion, String descripcion, String marca, String modelo, String serie, Estado estado, Estado estadoInterno) throws FWExcepcion {
+        return bienDao.listar(primerRegistro, ultimoRegistro, id, unidadejecutora, identificacion, descripcion, marca, modelo, serie, estado, estadoInterno);
     }
     
-    public Long contar(Long id, UnidadEjecutora unidadejecutora, String identificacion, String descripcion, String marca, String modelo, String serie, Estado... estadoInterno) throws FWExcepcion {
-        return bienDao.contar(id, unidadejecutora, identificacion, descripcion, marca, modelo, serie, estadoInterno);
+    public Long contar(Long id, UnidadEjecutora unidadejecutora, String identificacion, String descripcion, String marca, String modelo, String serie, Estado estado, Estado estadoInterno) throws FWExcepcion {
+        return bienDao.contar(id, unidadejecutora, identificacion, descripcion, marca, modelo, serie, estado, estadoInterno);
     }
 }

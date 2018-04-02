@@ -14,7 +14,7 @@
                         <f:facet name="header">
                             <ice:outputText  value="#{label['sigebi.Bien.Col.TipoMov']}" />
                         </f:facet>
-                        <h:outputText id="estadoCelMovim" value="#{movimiento.estado.nombre}"/>
+                        <h:outputText id="estadoCelMovim" value="#{movimiento.tipoMovimiento}"/>
                     </ice:column>
 
                     <ice:column id="colFechaMovim"  >
@@ -28,7 +28,7 @@
                         <f:facet name="header">
                             <ice:outputText  value="#{label['sigebi.Bien.Col.Usuario']}" />
                         </f:facet>
-                        <h:outputText id="personaCelMovim" value="#{movimiento.persona.nombreCompleto}"/>
+                        <h:outputText id="personaCelMovim" value="#{movimiento.usuario.nombreCompleto}"/>
                     </ice:column>
 
                     <ice:column style="text-align: center;">
@@ -40,6 +40,7 @@
                                            style="float:right;margin-top:2%" 
                                            styleClass="boton" 
                                            partialSubmit="true" 
+                                           rendered="#{movimiento.discriminator > 0}"
                                            actionListener="#{controllerAgregarBienes.consultarMovimiento}"
                                            value="#{label['sigebi.Bien.Btn.Ver']}"  >
                             <f:attribute id="movimiento" name="movimientoSelccionado"  value="#{movimiento}"/>

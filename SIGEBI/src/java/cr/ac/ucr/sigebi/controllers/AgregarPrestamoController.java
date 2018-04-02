@@ -1,4 +1,5 @@
 /*
+
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
@@ -10,12 +11,14 @@ import cr.ac.ucr.framework.utils.FWExcepcion;
 import cr.ac.ucr.framework.vista.util.Mensaje;
 import cr.ac.ucr.framework.vista.util.Util;
 import cr.ac.ucr.sigebi.commands.ListarBienesCommand;
+import cr.ac.ucr.sigebi.commands.ListarPersonasCommand;
 import cr.ac.ucr.sigebi.models.PrestamoModel;
 import cr.ac.ucr.sigebi.commands.PrestamoCommand;
 import cr.ac.ucr.sigebi.commands.ListarPrestamosCommand;
 import cr.ac.ucr.sigebi.domain.Bien;
 import cr.ac.ucr.sigebi.domain.Convenio;
 import cr.ac.ucr.sigebi.domain.Estado;
+import cr.ac.ucr.sigebi.domain.Persona;
 import cr.ac.ucr.sigebi.domain.RegistroMovimientoSolicitud;
 import cr.ac.ucr.sigebi.domain.SolicitudPrestamo;
 import cr.ac.ucr.sigebi.domain.Tipo;
@@ -23,6 +26,7 @@ import cr.ac.ucr.sigebi.domain.UnidadEjecutora;
 import cr.ac.ucr.sigebi.models.AutorizacionRolPersonaModel;
 import cr.ac.ucr.sigebi.models.BienModel;
 import cr.ac.ucr.sigebi.models.ConvenioModel;
+import cr.ac.ucr.sigebi.models.PersonaModel;
 import cr.ac.ucr.sigebi.models.RegistroMovimientoModel;
 import cr.ac.ucr.sigebi.models.UnidadEjecutoraModel;
 import java.util.ArrayList;
@@ -59,7 +63,7 @@ public class AgregarPrestamoController extends BaseController {
         
         private ListarBienesCommand command;
         private Estado estadoInternoNormal;
-        private Estado estadoInternoRechazado;
+        private Estado estadoActivo;
         private Map<Long, Bien> bienes;
         private Map<Long, Boolean> bienesSeleccionados;
 
@@ -70,10 +74,10 @@ public class AgregarPrestamoController extends BaseController {
             this.bienesSeleccionados = new HashMap<Long, Boolean>();            
         }
 
-        public ListadoBienes(Estado estadoNormal, Estado estadoRechazado) {
+        public ListadoBienes(Estado estadoNormal, Estado estadoActivo) {
             this();
             this.estadoInternoNormal = estadoNormal;
-            this.estadoInternoRechazado = estadoRechazado;
+            this.estadoActivo = estadoActivo;
         }
         
         private void inicializarListado() {
@@ -84,27 +88,23 @@ public class AgregarPrestamoController extends BaseController {
         
         private void contarBienes() {
             try {
-                Long contador = bienModel.contar(this.command.getFltIdCodigo(), this.unidadEjecutora, this.command.getFltIdentificacion(), this.command.getFltDescripcion(), this.command.getFltMarca(), this.command.getFltModelo(), this.command.getFltSerie(), this.estadoInternoNormal, this.estadoInternoRechazado);
+                Long contador = bienModel.contar(this.command.getFltIdCodigo(), this.unidadEjecutora, this.command.getFltIdentificacion(), this.command.getFltDescripcion(), this.command.getFltMarca(), this.command.getFltModelo(), this.command.getFltSerie(), this.estadoActivo, this.estadoInternoNormal);
                 this.setCantidadRegistros(contador.intValue());
             } catch (FWExcepcion e) {
                 Mensaje.agregarErrorAdvertencia(e.getError_para_usuario());
-            } catch (NumberFormatException e) {
-                Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.error.controllerListarNotificaciones.contarNotificaciones"));
             }
         }
 
         private void listarBienes() {
             try {
-                List<Bien> itemsBienes = bienModel.listar(this.getPrimerRegistro() - 1, this.getUltimoRegistro(), this.command.getFltIdCodigo(), this.unidadEjecutora , this.command.getFltIdentificacion(), this.command.getFltDescripcion(), this.command.getFltMarca(), this.command.getFltModelo(), this.command.getFltSerie(), this.estadoInternoNormal, this.estadoInternoRechazado);
+                List<Bien> itemsBienes = bienModel.listar(this.getPrimerRegistro() - 1, this.getUltimoRegistro(), this.command.getFltIdCodigo(), this.unidadEjecutora , this.command.getFltIdentificacion(), this.command.getFltDescripcion(), this.command.getFltMarca(), this.command.getFltModelo(), this.command.getFltSerie(), this.estadoActivo, this.estadoInternoNormal);
                 this.bienes.clear();
                 for (Bien item : itemsBienes) {
                     this.bienes.put(item.getId(), item);
                 }
            } catch (FWExcepcion e) {
                Mensaje.agregarErrorAdvertencia(e.getError_para_usuario());
-           } catch (NumberFormatException e) {
-               Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.error.controllerListarNotificaciones.listarNotificaciones"));
-           } 
+           }
         }
 
         public void cambioFiltro(ValueChangeEvent event) {
@@ -138,14 +138,14 @@ public class AgregarPrestamoController extends BaseController {
             this.estadoInternoNormal = estadoInternoNormal;
         }
 
-        public Estado getEstadoInternoRechazado() {
-            return estadoInternoRechazado;
+        public Estado getEstadoActivo() {
+            return estadoActivo;
         }
 
-        public void setEstadoInternoRechazado(Estado estadoInternoRechazado) {
-            this.estadoInternoRechazado = estadoInternoRechazado;
+        public void setEstadoActivo(Estado estadoActivo) {
+            this.estadoActivo = estadoActivo;
         }
-        
+
         public Map<Long, Bien> getBienes() {
             return bienes;
         }
@@ -228,11 +228,164 @@ public class AgregarPrestamoController extends BaseController {
         // </editor-fold>
     }
     
+    public class ListadoPersonas extends BaseController {
+        
+        private ListarPersonasCommand command;
+        private Boolean estudiante;
+        private Boolean funcionario;
+        private List<Persona> personas;
+        
+        public ListadoPersonas() {
+            super();
+            this.command = new ListarPersonasCommand();
+            this.personas = new ArrayList<Persona>();
+        }
+        
+        public ListadoPersonas(Boolean estudiante, Boolean funcionario) {
+            this();
+            this.funcionario = funcionario;
+            this.estudiante = estudiante;
+        }
+        
+        private void inicializarListado() {
+            this.setPrimerRegistro(1);
+            this.contarEntidades();
+            this.listarEntidades();
+        }
+        
+        private void contarEntidades() {
+            try {
+                Long contador = personaModel.contar(this.estudiante, this.funcionario, this.command.getFltIdCodigo(), this.command.getFltNombre(), this.command.getFltPrimerApellido(), this.command.getFltSegundoApellido());
+                this.setCantidadRegistros(contador.intValue());
+            } catch (FWExcepcion e) {
+                Mensaje.agregarErrorAdvertencia(e.getError_para_usuario());
+            }
+        }
+
+        private void listarEntidades() {
+            try {
+                this.personas.clear();
+                this.personas = personaModel.listar(this.getPrimerRegistro() - 1, this.getUltimoRegistro(), this.estudiante, this.funcionario, this.command.getFltIdCodigo(), this.command.getFltNombre(), this.command.getFltPrimerApellido(), this.command.getFltSegundoApellido());                
+           } catch (FWExcepcion e) {
+               Mensaje.agregarErrorAdvertencia(e.getError_para_usuario());
+           }
+        }
+
+        public void cambioFiltro(ValueChangeEvent event) {
+            if (!event.getPhaseId().equals(PhaseId.INVOKE_APPLICATION)) {
+                event.setPhaseId(PhaseId.INVOKE_APPLICATION);
+                event.queue();
+                return;
+            }
+            this.inicializarListado();
+        }
+
+        // <editor-fold defaultstate="collapsed" desc="Get's Set's">
+        public ListarPersonasCommand getCommand() {
+            return command;
+        }
+
+        public void setCommand(ListarPersonasCommand command) {
+            this.command = command;
+        }
+
+        public List<Persona> getPersonas() {
+            return personas;
+        }
+
+        public void setPersonas(List<Persona> personas) {
+            this.personas = personas;
+        }
+
+        public Boolean getEstudiante() {
+            return estudiante;
+        }
+
+        public void setEstudiante(Boolean estudiante) {
+            this.estudiante = estudiante;
+        }
+
+        public Boolean getFuncionario() {
+            return funcionario;
+        }
+
+        public void setFuncionario(Boolean funcionario) {
+            this.funcionario = funcionario;
+        }
+        // </editor-fold>
+        
+        // <editor-fold defaultstate="collapsed" desc="Paginacion">
+        public void irPagina(ActionEvent pEvent) {
+            if (!pEvent.getPhaseId().equals(PhaseId.INVOKE_APPLICATION)) {
+                pEvent.setPhaseId(PhaseId.INVOKE_APPLICATION);
+                pEvent.queue();
+                return;
+            }
+            int numeroPagina = Integer.parseInt(Util.getRequestParameter("numPag"));
+            this.getPrimerRegistroPagina(numeroPagina);
+            this.listarEntidades();
+        }
+
+        public void siguiente(ActionEvent pEvent) {
+            if (!pEvent.getPhaseId().equals(PhaseId.INVOKE_APPLICATION)) {
+                pEvent.setPhaseId(PhaseId.INVOKE_APPLICATION);
+                pEvent.queue();
+                return;
+            }
+            this.getSiguientePagina();
+            this.listarEntidades();
+        }
+
+        public void anterior(ActionEvent pEvent) {
+            if (!pEvent.getPhaseId().equals(PhaseId.INVOKE_APPLICATION)) {
+                pEvent.setPhaseId(PhaseId.INVOKE_APPLICATION);
+                pEvent.queue();
+                return;
+            }
+            this.getPaginaAnterior();
+            this.listarEntidades();
+        }
+
+        public void primero(ActionEvent pEvent) {
+            if (!pEvent.getPhaseId().equals(PhaseId.INVOKE_APPLICATION)) {
+                pEvent.setPhaseId(PhaseId.INVOKE_APPLICATION);
+                pEvent.queue();
+                return;
+            }
+            this.setPrimerRegistro(1);
+            this.listarEntidades();
+        }
+
+        public void ultimo(ActionEvent pEvent) {
+            if (!pEvent.getPhaseId().equals(PhaseId.INVOKE_APPLICATION)) {
+                pEvent.setPhaseId(PhaseId.INVOKE_APPLICATION);
+                pEvent.queue();
+                return;
+            }
+            this.getPrimerRegistroUltimaPagina();
+            this.listarEntidades();
+        }
+
+        public void cambioRegistrosPorPagina(ValueChangeEvent pEvent) {
+            if (!pEvent.getPhaseId().equals(PhaseId.INVOKE_APPLICATION)) {
+                pEvent.setPhaseId(PhaseId.INVOKE_APPLICATION);
+                pEvent.queue();
+                return;
+            }
+            this.setCantRegistroPorPagina(Integer.parseInt(pEvent.getNewValue().toString()));          
+            this.setPrimerRegistro(1);
+            this.listarEntidades();
+        }
+        // </editor-fold>
+    }
+    
     ListadoBienes listadoBienes;
+    ListadoPersonas listadoPersonas;
     
     @Resource private AutorizacionRolPersonaModel autorizacionRolPersonaModel;
     @Resource private BienModel bienModel;
     @Resource private ConvenioModel convenioModel;
+    @Resource private PersonaModel personaModel;
     @Resource private PrestamoModel prestamoModel;
     @Resource private RegistroMovimientoModel registroMovimientoModel;
     @Resource private UnidadEjecutoraModel unidadEjecutoraModel;
@@ -248,6 +401,9 @@ public class AgregarPrestamoController extends BaseController {
     
     private boolean visiblePanelBienes;
     private boolean visiblePanelObservacion;
+    private boolean visiblePanelConfirmacion;
+    private boolean visiblePanelBuscarPersonas;
+    private boolean visibleCampoEntidad;
     
     private boolean visibleBotonGuardar;
     private boolean visibleBotonAgregarBienes;
@@ -279,10 +435,11 @@ public class AgregarPrestamoController extends BaseController {
     
     private void inicializarNuevo() {
         Estado estado = this.estadoPorDominioValor(Constantes.DOMINIO_PRESTAMO, Constantes.ESTADO_PRESTAMO_CREADO);
-        this.command = new PrestamoCommand(this.unidadEjecutora, estado);
+        this.command = new PrestamoCommand(this.unidadEjecutora, estado, this.usuarioSIGEBI);
         this.solicitudRegistrada = false;
-        this.disableEntidades = true;
         this.autorizadoAprobar = false;
+        this.disableEntidades = true;
+        this.visibleCampoEntidad = false;
         this.entidades = new HashMap<Long, String>();
         inicializarDatos();
     }
@@ -291,19 +448,31 @@ public class AgregarPrestamoController extends BaseController {
         prestamo.setDetalles(prestamoModel.listarDetalles(prestamo));
         this.command = new PrestamoCommand(prestamo);
         this.solicitudRegistrada = true;
-        this.disableEntidades = false;
         this.autorizadoAprobar = inicializarAutorizaciones();
+        this.disableEntidades = false;
         this.entidades = new HashMap<Long, String>();
-        cargarEntidades(this.tipoPorId(this.command.getIdTipoEntidad()));
+        cargarEntidadDetalle(this.tipoPorId(this.command.getIdTipoEntidad()));
         inicializarDatos();
     }
 
+    private boolean inicializarAutorizaciones() {
+        int codigoAutorizacion = Constantes.CODIGO_AUTORIZACION_PRESTAMO;
+        return autorizacionRolPersonaModel.buscarAutorizacion(codigoAutorizacion, this.unidadEjecutora, this.usuarioSIGEBI);
+    }
+    
     private void inicializarDatos() {
         Estado estadoInternoNormal = estadoPorDominioValor(Constantes.DOMINIO_BIEN_INTERNO, Constantes.ESTADO_INTERNO_BIEN_NORMAL);
-        Estado estadoInternoRechazado = this.estadoPorDominioValor(Constantes.DOMINIO_BIEN_INTERNO, Constantes.ESTADO_INTERNO_BIEN_EXCLUSION_RECHAZADO);
-        this.listadoBienes = new ListadoBienes(estadoInternoNormal, estadoInternoRechazado);        
+        Estado estadoActivo = this.estadoPorDominioValor(Constantes.DOMINIO_BIEN, Constantes.ESTADO_BIEN_ACTIVO);
+        this.listadoBienes = new ListadoBienes(estadoInternoNormal, estadoActivo);
+        this.listadoPersonas = new ListadoPersonas();
         this.mensajeExito = new String();
         this.mensaje = new String();
+        
+        this.visiblePanelConfirmacion = false;
+        this.visiblePanelObservacion = false;
+        this.visiblePanelBienes = false;
+        this.visiblePanelBuscarPersonas = false;
+        
         List<Tipo> tipos = this.tiposPorDominio(Constantes.DOMINIO_PRESTAMO_ENTIDAD);
         if (!tipos.isEmpty()) {
             this.itemsTipo = new ArrayList<SelectItem>();
@@ -313,13 +482,17 @@ public class AgregarPrestamoController extends BaseController {
         }
     }
     
-    private boolean inicializarAutorizaciones() {
-        int codigoAutorizacion = Constantes.CODIGO_AUTORIZACION_PRESTAMO;
-        return autorizacionRolPersonaModel.buscarAutorizacion(codigoAutorizacion, this.unidadEjecutora, this.usuarioSIGEBI);
+    public void confirmarSolicitud() {
+        this.visiblePanelConfirmacion = true;
     }
     
+    public void cancelarSolicitud() {
+        this.visiblePanelConfirmacion = false;
+    }
+
     public void guardarDatos() {
         try {
+            this.visiblePanelConfirmacion = false;
             FacesContext context = FacesContext.getCurrentInstance();
             UIViewRoot root = context.getViewRoot();
             String messageValidacion = validarForm(root);
@@ -478,13 +651,14 @@ public class AgregarPrestamoController extends BaseController {
     
     public void rechazarPrestamoObservacion() {
         this.visiblePanelObservacion = false;
-        movimientoPrestamo(Constantes.ESTADO_PRESTAMO_RECHAZADO, Constantes.ESTADO_INTERNO_BIEN_PRESTAMO_RECHAZADO);
+        movimientoPrestamo(Constantes.ESTADO_PRESTAMO_RECHAZADO, Constantes.ESTADO_INTERNO_BIEN_NORMAL);
     }
     
     public void revisarPrestamoObservacion() {
         this.visiblePanelObservacion = false;
         movimientoPrestamo(Constantes.ESTADO_PRESTAMO_CREADO, Constantes.ESTADO_INTERNO_BIEN_PRESTAMO);
     }
+    
     public void anularPrestamoObservacion() {
         this.visiblePanelObservacion = false;
         movimientoPrestamo(Constantes.ESTADO_PRESTAMO_ANULADO, Constantes.ESTADO_INTERNO_BIEN_PRESTAMO_ANULADO);
@@ -520,19 +694,21 @@ public class AgregarPrestamoController extends BaseController {
     //<editor-fold defaultstate="collapsed" desc="Movimientos sobre Bienes">
     public void mostarPanelAgregarBienes() {
         this.listadoBienes.inicializarListado();
-        this.setVisiblePanelBienes(true);
+        this.visiblePanelBienes = true;
     }
 
     public void cerrarPanelAgregarBienes() {
-        this.setVisiblePanelBienes(false);
+        this.visiblePanelBienes = false;
         Estado estadoEnSolicitud = this.estadoPorDominioValor(Constantes.DOMINIO_BIEN_INTERNO, Constantes.ESTADO_INTERNO_BIEN_PRESTAMO);
         
-        for (Map.Entry<Long, Boolean> entry : this.listadoBienes.bienesSeleccionados.entrySet()) {
-            if (entry.getValue()) {
-                Bien bien = this.listadoBienes.bienes.get(entry.getKey());
-                bien.setEstadoInterno(estadoEnSolicitud);
-                this.command.getBienes().put(bien.getId(), bien);
-                this.command.getBienesAgregar().add(bien);
+        if (!this.listadoBienes.bienesSeleccionados.isEmpty()) {
+            for (Map.Entry<Long, Boolean> entry : this.listadoBienes.bienesSeleccionados.entrySet()) {
+                if (entry.getValue()) {
+                    Bien bien = this.listadoBienes.bienes.get(entry.getKey());
+                    bien.setEstadoInterno(estadoEnSolicitud);
+                    this.command.getBienes().put(bien.getId(), bien);
+                    this.command.getBienesAgregar().add(bien);
+                }
             }
         }
     }
@@ -564,7 +740,7 @@ public class AgregarPrestamoController extends BaseController {
 
     public void rechazarBienObservacion(ActionEvent event) {
         Long idBien = (Long) event.getComponent().getAttributes().get("bienSeleccionado");
-        movimientoBien(idBien, Constantes.ESTADO_PRESTAMO_RECHAZADO, Constantes.ESTADO_INTERNO_BIEN_PRESTAMO_RECHAZADO);        
+        movimientoBien(idBien, Constantes.ESTADO_PRESTAMO_RECHAZADO, Constantes.ESTADO_INTERNO_BIEN_NORMAL);        
     }
     
     private void movimientoBien(Long idBien, int solicitud, int bienInterno) {
@@ -604,9 +780,35 @@ public class AgregarPrestamoController extends BaseController {
         if (Constantes.DEFAULT_ID.equals(command.getIdTipoEntidad())) {
             this.itemsEntidad.clear();
             this.disableEntidades = true;
+            this.visiblePanelBuscarPersonas = false;
         } else {
             cargarEntidades(this.tipoPorId(command.getIdTipoEntidad()));
         }
+    }
+    
+    private void cargarEntidadDetalle(Tipo tipo) {
+        switch(tipo.getValor()) {
+            case 1: // ESTUDIANTES
+                cargaEntidadPersona();
+            break;
+            
+            case 2: 
+                cargarEntidades(tipo);
+            break;
+            
+            case 3: // FUNDACION UCR
+            case 4: // EMPLEADO
+                cargaEntidadPersona();
+            break;
+            
+            case 5: 
+                cargarEntidades(tipo);
+            break;            
+        }
+    }
+    
+    private void cargaEntidadPersona() {
+        this.visibleCampoEntidad = true;
     }
     
     private void cargarEntidades(Tipo tipo) {
@@ -614,10 +816,16 @@ public class AgregarPrestamoController extends BaseController {
             this.disableEntidades = false;
             this.itemsEntidad = new ArrayList<SelectItem>();
             switch(tipo.getValor()) {
-                case 1: // 
+                case 1: // ESTUDIANTES
+                    this.listadoPersonas.estudiante = true;
+                    this.listadoPersonas.funcionario = false;
+                    this.listadoPersonas.inicializarListado();
+                    this.visiblePanelBuscarPersonas = true;
+                    this.visibleCampoEntidad = true;
                 break;
 
                 case 2: // UNIDAD EJECUTORA
+                    this.visibleCampoEntidad = false;
                     List<UnidadEjecutora> unidades = unidadEjecutoraModel.listar();
                     for (UnidadEjecutora unidad : unidades) {
                         if(unidad.getDescripcion().equals(this.command.getEntidad())) {
@@ -628,13 +836,17 @@ public class AgregarPrestamoController extends BaseController {
                     }
                 break;
 
-                case 3: //
-                break;
-
-                case 4: //
+                case 3: // FUNDACION UCR
+                case 4: // EMPLEADO
+                    this.listadoPersonas.estudiante = false;
+                    this.listadoPersonas.funcionario = true;
+                    this.listadoPersonas.inicializarListado();
+                    this.visiblePanelBuscarPersonas = true;
+                    this.visibleCampoEntidad = true;
                 break;
                 
                 case 5: // ENTIDAD EXTERNA (CONVENIOS)
+                    this.visibleCampoEntidad = false;
                     List<Convenio> convenios = this.convenioModel.listar();
                     if  (convenios.isEmpty()) {
                         Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.error.agregarBienController.cargarSubCategorias"));
@@ -663,10 +875,49 @@ public class AgregarPrestamoController extends BaseController {
             event.queue();
             return;
         }
-        Long idEntidad = command.getIdEntidad();
-        String entidad = entidades.get(idEntidad);
+        Long idEntidad = this.command.getIdEntidad();
+        String entidad = this.entidades.get(idEntidad);
         this.command.setEntidad(entidad);
-    }    
+    }
+    
+    public void abrirPanelPersonas() {
+        Tipo tipo = this.tipoPorId(command.getIdTipoEntidad());
+    
+        switch(tipo.getValor()) {
+                case 1: // ESTUDIANTES
+                    this.listadoPersonas.estudiante = true;
+                    this.listadoPersonas.funcionario = false;
+                    this.listadoPersonas.inicializarListado();
+                    this.visiblePanelBuscarPersonas = true;
+                    this.visibleCampoEntidad = true;
+                break;
+                
+                case 3: // FUNDACION UCR
+                case 4: // EMPLEADO
+                    this.listadoPersonas.estudiante = false;
+                    this.listadoPersonas.funcionario = true;
+                    this.listadoPersonas.inicializarListado();
+                    this.visiblePanelBuscarPersonas = true;
+                    this.visibleCampoEntidad = true;
+                break;
+        }
+    }
+    
+    public void cerrarPanelPersonas() {
+        this.visiblePanelBuscarPersonas = false;
+    }
+    
+    public void selecionarPersona(ActionEvent event) {
+        if (!event.getPhaseId().equals(PhaseId.INVOKE_APPLICATION)) {
+            event.setPhaseId(PhaseId.INVOKE_APPLICATION);
+            event.queue();
+            return;
+        }
+        Persona persona = (Persona) event.getComponent().getAttributes().get("personaSeleccionada");
+        this.command.setEntidad(persona.getNombreCompleto());
+        this.visiblePanelBuscarPersonas = false;
+    }
+
     //</editor-fold>
     
     //<editor-fold defaultstate="collapsed" desc="Gets y Sets">
@@ -709,6 +960,14 @@ public class AgregarPrestamoController extends BaseController {
     public void setListadoBienes(ListadoBienes listadoBienes) {
         this.listadoBienes = listadoBienes;
     }
+
+    public ListadoPersonas getListadoPersonas() {
+        return listadoPersonas;
+    }
+
+    public void setListadoPersonas(ListadoPersonas listadoPersonas) {
+        this.listadoPersonas = listadoPersonas;
+    }
     
     public boolean isSolicitudRegistrada() {
         return solicitudRegistrada;
@@ -717,6 +976,31 @@ public class AgregarPrestamoController extends BaseController {
     public void setSolicitudRegistrada(boolean solicitudRegistrada) {
         this.solicitudRegistrada = solicitudRegistrada;
     }
+
+    public Map<Long, String> getEntidades() {
+        return entidades;
+    }
+
+    public void setEntidades(Map<Long, String> entidades) {
+        this.entidades = entidades;
+    }
+
+    public boolean isVisibleCampoEntidad() {
+        return visibleCampoEntidad;
+    }
+
+    public void setVisibleCampoEntidad(boolean visibleCampoEntidad) {
+        this.visibleCampoEntidad = visibleCampoEntidad;
+    }
+
+    public boolean isVisiblePanelBuscarPersonas() {
+        return visiblePanelBuscarPersonas;
+    }
+
+    public void setVisiblePanelBuscarPersonas(boolean visiblePanelBuscarPersonas) {
+        this.visiblePanelBuscarPersonas = visiblePanelBuscarPersonas;
+    }
+    
     
     public List<SelectItem> getItemsEntidad() {
         return itemsEntidad;
@@ -758,6 +1042,10 @@ public class AgregarPrestamoController extends BaseController {
 
     public boolean isVisiblePanelObservacion() {
         return visiblePanelObservacion;
+    }
+
+    public boolean isVisiblePanelConfirmacion() {
+        return visiblePanelConfirmacion;
     }
 
     public boolean isVisibleBotonSolicitar() {
@@ -826,10 +1114,10 @@ public class AgregarPrestamoController extends BaseController {
 
     public boolean isVisibleBotonSolicitarBien() {
         this.visibleBotonSolicitarBien = false;
-        if (Constantes.ESTADO_PRESTAMO_CREADO.equals(this.command.getEstado().getValor()) && !this.autorizadoAprobar) {
+        if (Constantes.ESTADO_PRESTAMO_CREADO.equals(this.command.getEstado().getValor()) && this.solicitudRegistrada && !this.autorizadoAprobar) {
             this.visibleBotonSolicitarBien = true;
         }
-        return visibleBotonSolicitarBien;
+        return visibleBotonSolicitarBien;        
     }
 
     public boolean isVisibleBotonRechazarBien() {
@@ -883,6 +1171,10 @@ public class AgregarPrestamoController extends BaseController {
 
     public void setVisiblePanelObservacion(boolean visiblePanelObservacion) {
         this.visiblePanelObservacion = visiblePanelObservacion;
+    }
+
+    public void setVisiblePanelConfirmacion(boolean visiblePanelConfirmacion) {
+        this.visiblePanelConfirmacion = visiblePanelConfirmacion;
     }
 
     public void setVisibleBotonSolicitar(boolean visibleBotonSolicitar) {

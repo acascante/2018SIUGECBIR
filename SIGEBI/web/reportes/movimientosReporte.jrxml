@@ -12,7 +12,7 @@
 	<parameter name="identificacion" class="java.lang.String"/>
 	<parameter name="estado" class="java.lang.String"/>
 	<parameter name="sql" class="java.lang.String">
-		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+		<defaultValueExpression><![CDATA["reportes/movimientosReporte.jasper"]]></defaultValueExpression>
 	</parameter>
 	<queryString>
 		<![CDATA[$P!{sql}]]>

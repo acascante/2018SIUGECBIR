@@ -10,6 +10,9 @@ import cr.ac.ucr.framework.daoImpl.GenericDaoImpl;
 import cr.ac.ucr.framework.utils.FWExcepcion;
 import cr.ac.ucr.sigebi.domain.CampoBien;
 import java.util.List;
+import org.hibernate.HibernateException;
+import org.hibernate.Query;
+import org.hibernate.Session;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Repository;
@@ -32,6 +35,22 @@ public class CampoBienDao extends GenericDaoImpl {
             return dao.getHibernateTemplate().find("from CampoBien"); 
         } catch (DataAccessException e) {
             throw new FWExcepcion("sigebi.label.campoBien.error.listar", "Error obtener los registros de tipo " + this.getClass(), e.getCause());
+        }
+    }
+    
+    @Transactional(readOnly = true)
+    public CampoBien buscarPorId(Long id) throws FWExcepcion {
+        Session session = dao.getSessionFactory().openSession();
+        try {
+            String sql = "SELECT entity FROM CampoBien entity WHERE entity.id = :id";
+            Query query = session.createQuery(sql);
+            query.setParameter("id", id);
+
+            return (CampoBien) query.uniqueResult();
+        } catch (HibernateException e) {
+            throw new FWExcepcion("sigebi.label.campoBien.error.listar", "Error obtener los registros de tipo " + this.getClass(), e.getCause());
+        } finally {
+            session.close();
         }
     }
 }

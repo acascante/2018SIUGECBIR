@@ -6,6 +6,7 @@
 package cr.ac.ucr.sigebi.domain;
 
 import cr.ac.ucr.framework.seguridad.ObjetoBase;
+import cr.ac.ucr.framework.vista.util.Util;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
@@ -60,10 +61,14 @@ public abstract class Solicitud extends ObjetoBase implements Serializable {
 
     @ManyToOne
     @JoinColumn(name = "ID_USUARIO", referencedColumnName = "ID_USUARIO")
-    private Usuario persona;
+    private Usuario usuario;
     
     @Transient
     private List<SolicitudDetalle> detalles;
+    
+    @Transient
+    private String tipoMovimiento;
+    
     //</editor-fold>
 
     //<editor-fold defaultstate="collapsed" desc="Constructor">
@@ -137,14 +142,27 @@ public abstract class Solicitud extends ObjetoBase implements Serializable {
         this.detalles = detalles;
     }
     
-    public Usuario getPersona() {
-        return persona;
+    public Usuario getUsuario() {
+        return usuario;
     }
 
-    public void setPersona(Usuario persona) {
-        this.persona = persona;
+    public void setUsuario(Usuario usuario) {
+        this.usuario = usuario;
     }
 
+    public String getTipoMovimiento() {
+        switch (discriminator){
+            case 0:
+                return Util.getEtiquetas("sigebi.TipoMovimiento.Ingreso");
+            case 1:
+                return Util.getEtiquetas("sigebi.TipoMovimiento.Exclusion");
+            case 2:
+                return Util.getEtiquetas("sigebi.TipoMovimiento.SolicitudDonacion");
+            case 3:
+                return Util.getEtiquetas("sigebi.TipoMovimiento.Traslado");
+        }
+        return "";
+    }
     
     //</editor-fold>
     
