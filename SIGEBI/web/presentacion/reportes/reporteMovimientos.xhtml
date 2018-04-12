@@ -41,7 +41,7 @@
 
                                      <div class='col-sm-3 align-middle'>
                                          <h4 class="align-middle" style="margin-top: 15px">
-                                            <ice:outputFormat value="#{label['sigebi.Reporte.Label.tipoReporte']}"/>
+                                            <ice:outputFormat value="#{label['sigebi.Reporte.Label.FechasReporte']}"/>
                                         </h4>
                                      </div>
                                     <div class='col-sm-4'>
@@ -204,10 +204,26 @@
             
             <!-- Botones para generar -->
             <div class="row">
-                 <div class='col-sm-10'>
+                 <div class='col-sm-2'>
+                    <ice:commandButton id="btnReporteInvFaltantes"
+                                       style="float: left" 
+                                       styleClass="boton" 
+                                       partialSubmit="true" 
+                                       action="#{controllerReporte.reporteFaltantes}"
+                                       value="Reporte Faltantes">
+                    </ice:commandButton>
+                </div>
+                <div class='col-sm-2'>
+                    <ice:commandButton id="btnReporteSobrantes" style="float: left" styleClass="boton" partialSubmit="true" 
+                                       action="#{controllerReporte.reporteSobrantes}"
+                                       value="Reporte Sobrantes">
+                    </ice:commandButton>
+                </div>
+                <div class='col-sm-6'>
+                     
+                     <ice:outputText style="color: red"
+                                     value="#{controllerReporte.commandMovimiento.error}" />
                      <!--
-                     <ice:outputText value="Directorio raíz: " />
-                     (<ice:outputText value="#{controllerReporte.commandMovimiento.directorioRaiz}" />)
                      <ice:outputText value="Ruta reporte: " />
                      (<ice:outputText value="#{controllerReporte.commandMovimiento.rutaReporte}" />)
                      -->
@@ -218,7 +234,7 @@
                                        styleClass="boton" 
                                        partialSubmit="true" 
                                        action="#{controllerReporte.mostrarReporteMovimientos}"
-                                       value="Reporte Movimientos">
+                                       value="#{label['sigebi.Reporte.Btn.Generar']}">
                     </ice:commandButton>
                 </div>  
             </div>

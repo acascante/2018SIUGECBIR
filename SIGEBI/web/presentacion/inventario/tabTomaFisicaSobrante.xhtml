@@ -1,0 +1,315 @@
+
+<ice:outputHtml id="frmTabTomaFisicaSobrante" xmlns:ice="http://www.icesoft.com/icefaces/component" xmlns:icecore="http://www.icefaces.org/icefaces/core" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:c="http://java.sun.com/jstl/core">
+
+    <div class="container">
+        <div class="row">
+           <div class="col-md-6">
+                <div class="form-group"> 
+                    <label class="control-label" for="txtIdentificacionSobrante">
+                        <ice:outputText value="#{label['sigebi.label.vista.detalleTomaFisica.identificacion']}" />                            
+                    </label>
+                    <ice:inputText id="txtIdentificacionSobrante" 
+                                   partialSubmit="false"
+                                   styleClass="form-control"
+                                   value="#{controllerTomaFisica.tomaFisicaCommand.tomaFisicaSobranteCommand.tomaFisicaSobrante.identificacion}" />
+                </div>                                             
+           </div>
+           <div class="col-md-6">
+                <div class="form-group"> 
+                    <label class="control-label" for="txtDescripcionSobrante">
+                        <ice:outputText value="#{label['sigebi.label.vista.detalleTomaFisica.sobrante.descripcion']}" />                            
+                        <ice:outputText value="#{label['label.requerido']}" />
+                    </label>
+                    <ice:inputText id="txtDescripcionSobrante" 
+                                   partialSubmit="false"
+                                   styleClass="form-control"
+                                   value="#{controllerTomaFisica.tomaFisicaCommand.tomaFisicaSobranteCommand.tomaFisicaSobrante.descripcion}" />
+                </div>                                             
+           </div>
+           <div class="col-md-6">
+                <div class="form-group"> 
+                    <label class="control-label" for="txtCategoriaSobrante">
+                        <ice:outputText value="#{label['sigebi.label.vista.detalleTomaFisica.sobrante.categoria']}" />
+                    </label>                                               
+
+                    <ice:selectOneMenu id="txtCategoriaSobrante"                                           
+                                       styleClass="form-control"
+                                       partialSubmit="true"
+                                       value="#{controllerTomaFisica.tomaFisicaCommand.tomaFisicaSobranteCommand.categoria.idTemporal}"
+                                       valueChangeListener="#{controllerTomaFisica.cambiarCategoria}">
+                                       <f:selectItem itemLabel="N/A" itemValue="-1"/>
+                                       <f:selectItems id="slcCategoriaItem" value="#{controllerTomaFisica.tomaFisicaCommand.categoriaOptions}"/>
+                    </ice:selectOneMenu>
+                </div>                                             
+           </div>
+           <div class="col-md-6">
+                <div class="form-group"> 
+                    <label class="control-label" for="txtSubCategoriaSobrante">
+                        <ice:outputText value="#{label['sigebi.label.vista.detalleTomaFisica.sobrante.subCategoria']}" />
+                    </label>                                               
+
+                    <ice:selectOneMenu id="txtSubCategoriaSobrante"                                           
+                                       styleClass="form-control"
+                                       readonly="#{!(controllerTomaFisica.tomaFisicaCommand.tomaFisicaSobranteCommand.categoria.idTemporal > 0)}"
+                                       partialSubmit="true"
+                                       value="#{controllerTomaFisica.tomaFisicaCommand.tomaFisicaSobranteCommand.subCategoria.idTemporal}"
+                                       valueChangeListener="#{controllerTomaFisica.cambiarSubCategoria}">
+                                       <f:selectItem itemLabel="N/A" itemValue="-1"/>
+                                       <f:selectItems id="slcSubCategoriaItem" value="#{controllerTomaFisica.tomaFisicaCommand.subCategoriaOptions}"/>
+                    </ice:selectOneMenu>
+                </div>                                             
+           </div> 
+           <div class="col-md-6">
+                <div class="form-group"> 
+                    <label class="control-label" for="txtClasificacionSobrante">
+                        <ice:outputText value="#{label['sigebi.label.vista.detalleTomaFisica.sobrante.clasificacion']}" />
+                    </label>                                               
+
+                    <ice:selectOneMenu id="txtClasificacionSobrante"                                           
+                                       styleClass="form-control"
+                                       readonly="#{!(controllerTomaFisica.tomaFisicaCommand.tomaFisicaSobranteCommand.subCategoria.idTemporal > 0)}"
+                                       partialSubmit="true"
+                                       value="#{controllerTomaFisica.tomaFisicaCommand.tomaFisicaSobranteCommand.clasificacion.idTemporal}"
+                                       valueChangeListener="#{controllerTomaFisica.cambiarClasificacion}">
+                                       <f:selectItem itemLabel="N/A" itemValue="-1"/>
+                                       <f:selectItems id="slcClasificacionItem" value="#{controllerTomaFisica.tomaFisicaCommand.clasificacionOptions}"/>
+                    </ice:selectOneMenu>
+                </div>                                             
+           </div> 
+           <div class="col-md-6">
+                <div class="form-group"> 
+                    <label class="control-label" for="txtSubClasificacionSobrante">
+                        <ice:outputText value="#{label['sigebi.label.vista.detalleTomaFisica.sobrante.subClasificacion']}" />
+                    </label>                                               
+
+                    <ice:selectOneMenu id="txtSubClasificacionSobrante"                                           
+                                       styleClass="form-control"
+                                       readonly="#{!(controllerTomaFisica.tomaFisicaCommand.tomaFisicaSobranteCommand.clasificacion.idTemporal > 0)}"
+                                       partialSubmit="true"
+                                       value="#{controllerTomaFisica.tomaFisicaCommand.tomaFisicaSobranteCommand.subClasificacion.idTemporal}"
+                                       valueChangeListener="#{controllerTomaFisica.cambiarSubClasificacion}">
+                                       <f:selectItem itemLabel="N/A" itemValue="-1"/>
+                                       <f:selectItems id="slcSubClasificacionItem" value="#{controllerTomaFisica.tomaFisicaCommand.subClasificacionOptions}"/>
+                    </ice:selectOneMenu>
+                </div>                                             
+           </div> 
+           <div class="col-md-6">
+                <div class="form-group"> 
+                    <label class="control-label" for="txtUbicacionSobrante">
+                        <ice:outputText value="#{label['sigebi.label.vista.detalleTomaFisica.sobrante.ubicacion']}" />
+                    </label>                                               
+
+                    <ice:selectOneMenu id="txtUbicacionSobrante"                                           
+                                       styleClass="form-control"
+                                       partialSubmit="true"
+                                       value="#{controllerTomaFisica.tomaFisicaCommand.tomaFisicaSobranteCommand.ubicacion.idTemporal}"
+                                       valueChangeListener="#{controllerTomaFisica.cambiarUbicacionTomaFisicaSobrante}">
+                                       <f:selectItem itemLabel="N/A" itemValue="-1"/>
+                                       <f:selectItems id="slcUbicacionSobranteItem" value="#{controllerTomaFisica.tomaFisicaCommand.ubicacionOptions}"/>
+                    </ice:selectOneMenu>
+                </div>                                             
+           </div> 
+           <div class="col-md-6">
+                <div class="form-group"> 
+                    <label class="control-label" for="txtMarcaSobrante">
+                        <ice:outputText value="#{label['sigebi.label.vista.detalleTomaFisica.sobrante.marca']}" />                            
+                    </label>
+                    <ice:inputText id="txtMarcaSobrante" 
+                                   partialSubmit="false"
+                                   styleClass="form-control"
+                                   value="#{controllerTomaFisica.tomaFisicaCommand.tomaFisicaSobranteCommand.tomaFisicaSobrante.marca}" />
+                </div>                                             
+           </div>            
+           <div class="col-md-6">
+                <div class="form-group"> 
+                    <label class="control-label" for="txtModeloSobrante">
+                        <ice:outputText value="#{label['sigebi.label.vista.detalleTomaFisica.sobrante.modelo']}" />                            
+                    </label>
+                    <ice:inputText id="txtModeloSobrante" 
+                                   partialSubmit="false"
+                                   styleClass="form-control"
+                                   value="#{controllerTomaFisica.tomaFisicaCommand.tomaFisicaSobranteCommand.tomaFisicaSobrante.modelo}" />
+                </div>                                             
+           </div>            
+           <div class="col-md-6">
+                <div class="form-group"> 
+                    <label class="control-label" for="txtSerieSobrante">
+                        <ice:outputText value="#{label['sigebi.label.vista.detalleTomaFisica.sobrante.serie']}" />                            
+                    </label>
+                    <ice:inputText id="txtSerieSobrante" 
+                                   partialSubmit="false"
+                                   styleClass="form-control"
+                                   value="#{controllerTomaFisica.tomaFisicaCommand.tomaFisicaSobranteCommand.tomaFisicaSobrante.serie}" />
+                </div>                                             
+           </div>            
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <ice:commandButton id="botonGuardar" 
+                                   value="Guardar" 
+                                   partialSubmit="true" 
+                                   styleClass="boton" action="#{controllerTomaFisica.agregarTomaFisicaSobrante}"/>
+            </div>
+        </div>                     
+        <!-- Paginacion y Listado de Tomas Sobrantes -->
+        <div class="row">
+            <div class="col-sm-12">
+                <ice:outputFormat value="#{label['label.generico.paginacion.encabezado']}">
+                    <f:param value="#{controllerTomaFisica.tomaFisicaCommand.tomaFisicaSobranteCommand.cantidadRegistros}"/>
+                    <f:param value="#{controllerTomaFisica.tomaFisicaCommand.tomaFisicaSobranteCommand.cantidadRegistrosMostrados}"/>
+                    <f:param value="#{controllerTomaFisica.tomaFisicaCommand.tomaFisicaSobranteCommand.primerRegistro}"/>
+                    <f:param value="#{controllerTomaFisica.tomaFisicaCommand.tomaFisicaSobranteCommand.ultimoRegistro}"/>
+                    <f:param value="#{controllerTomaFisica.tomaFisicaCommand.tomaFisicaSobranteCommand.paginaActual}"/>
+                    <f:param value="#{controllerTomaFisica.tomaFisicaCommand.tomaFisicaSobranteCommand.cantidadPaginas}"/>
+                </ice:outputFormat>
+                <div>
+                    <table>
+                        <tr>
+                            <td style="padding-right: 5px;">
+                                <ice:outputText value="#{label['label.paginacion.cantidad.pagina']} "/>
+                            </td>
+                            <td>
+
+                                <ice:selectOneMenu id="cantRegistroPorPagina"
+                                       value="#{controllerTomaFisica.tomaFisicaCommand.tomaFisicaSobranteCommand.cantRegistroPorPagina}" 
+                                       valueChangeListener="#{controllerTomaFisica.cambioRegistrosPorPaginaTomaFisicaSobrante}"
+                                       partialSubmit="true">
+                                        <f:selectItems id="item_pa" value="#{controllerTomaFisica.tomaFisicaCommand.tomaFisicaSobranteCommand.listaRegistrosPagina}"/>
+                                </ice:selectOneMenu>    
+
+                            </td>
+                        </tr>
+                    </table>                        
+                </div>                    
+                <div>
+                    <ice:commandButton image="./imagenes/botones/first.png" partialSubmit="true" actionListener="#{controllerTomaFisica.primeroTomaFisicaSobrante}" rendered="#{controllerTomaFisica.tomaFisicaCommand.tomaFisicaSobranteCommand.cantidadPaginas > 1}"/>
+                    <ice:commandButton image="./imagenes/botones/previos.png" partialSubmit="true" actionListener="#{controllerTomaFisica.anteriorTomaFisicaSobrante}" rendered="#{controllerTomaFisica.tomaFisicaCommand.tomaFisicaSobranteCommand.cantidadPaginas > 1}"/>
+                    <ui:repeat value="#{controllerTomaFisica.tomaFisicaCommand.tomaFisicaSobranteCommand.arregloPaginas}" var="pagina">
+                        <ice:commandLink value="#{pagina}" partialSubmit="true" actionListener="#{controllerTomaFisica.irPaginaTomaFisicaSobrante}">
+                            <f:param name="numPagTomaFisicaSobrante" value="#{pagina}"/>
+                        </ice:commandLink>
+                    </ui:repeat>            
+                    <ice:commandButton image="./imagenes/botones/next.png" partialSubmit="true" actionListener="#{controllerTomaFisica.siguienteTomaFisicaSobrante}" rendered="#{controllerTomaFisica.tomaFisicaCommand.tomaFisicaSobranteCommand.cantidadPaginas > 1}"/>
+                    <ice:commandButton image="./imagenes/botones/last.png" partialSubmit="true" actionListener="#{controllerTomaFisica.ultimoTomaFisicaSobrante}" rendered="#{controllerTomaFisica.tomaFisicaCommand.tomaFisicaSobranteCommand.cantidadPaginas > 1}"/>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="form-group"> 
+                    <label class="control-label" for="txtTomasFisicasSobrantes">
+                        <ice:outputText value="#{label['sigebi.label.vista.detalleTomaFisica.tomasFisicasSobrantes']}" />
+                    </label>  
+                    <div>
+                        <ice:dataTable id="tomasFisicasSobrantes"
+                                       value="#{controllerTomaFisica.tomaFisicaCommand.tomasFisicasSobrantes}"
+                                       var="tomaFisicaSobrante"
+                                       paginator="true"
+                                       paginatorPosition="bottom">
+
+                            <ice:column id="colIdentificacionSobrante">
+                                <f:facet name="header">
+                                    <ice:columnGroup>
+                                        <ice:headerRow>
+                                           <ice:outputText value="#{label['sigebi.label.vista.detalleTomaFisica.identificacion']}"/>
+                                        </ice:headerRow>
+                                        <ice:headerRow>
+                                            <ice:inputText id="fltIdentificacionTomaFisicaSobrante"
+                                                           style="width: 130px;"
+                                                           value="#{controllerTomaFisica.tomaFisicaCommand.tomaFisicaSobranteCommand.fltIdentificacion}"                                   
+                                                           partialSubmit="true"
+                                                           valueChangeListener="#{controllerTomaFisica.cambioFiltroTomasFisicaSobrante}"/>
+                                        </ice:headerRow>
+                                    </ice:columnGroup>
+                                </f:facet>                                
+                                <h:outputText id="colIdentificacionSobranteTxt" value="#{tomaFisicaSobrante.identificacion}"/>
+                            </ice:column>
+                            
+                            <ice:column id="colDescripcionSobrante">
+                                <f:facet name="header">
+                                    <ice:columnGroup>
+                                        <ice:headerRow>
+                                           <ice:outputText value="#{label['sigebi.label.vista.detalleTomaFisica.sobrante.descripcion']}"/>
+                                        </ice:headerRow>
+                                        <ice:headerRow>
+                                            <ice:inputText id="fltDescripcionTomaFisicaSobrante"
+                                                           style="width: 130px;"
+                                                           value="#{controllerTomaFisica.tomaFisicaCommand.tomaFisicaSobranteCommand.fltDescripcion}"                                   
+                                                           partialSubmit="true"
+                                                           valueChangeListener="#{controllerTomaFisica.cambioFiltroTomasFisicaSobrante}"/>
+                                        </ice:headerRow>
+                                    </ice:columnGroup>
+                                </f:facet>                                
+                                <h:outputText id="colDescripcionSobranteTxt" value="#{tomaFisicaSobrante.descripcion}"/>
+                            </ice:column>
+
+                            <ice:column id="colMarcaSobrante">
+                                <f:facet name="header">
+                                    <ice:columnGroup>
+                                        <ice:headerRow>
+                                           <ice:outputText value="#{label['sigebi.label.vista.detalleTomaFisica.sobrante.marca']}"/>
+                                        </ice:headerRow>
+                                        <ice:headerRow>
+                                            <ice:inputText id="fltMarcaTomaFisicaSobrante"
+                                                           style="width: 130px;"
+                                                           value="#{controllerTomaFisica.tomaFisicaCommand.tomaFisicaSobranteCommand.fltMarca}"                                   
+                                                           partialSubmit="true"
+                                                           valueChangeListener="#{controllerTomaFisica.cambioFiltroTomasFisicaSobrante}"/>
+                                        </ice:headerRow>
+                                    </ice:columnGroup>
+                                </f:facet>                                
+                                <h:outputText id="colMarcaSobranteTxt" value="#{tomaFisicaSobrante.marca}"/>
+                            </ice:column>
+                            
+                            <ice:column id="colModeloSobrante">
+                                <f:facet name="header">
+                                    <ice:columnGroup>
+                                        <ice:headerRow>
+                                           <ice:outputText value="#{label['sigebi.label.vista.detalleTomaFisica.sobrante.modelo']}"/>
+                                        </ice:headerRow>
+                                        <ice:headerRow>
+                                            <ice:inputText id="fltModeloTomaFisicaSobrante"
+                                                           style="width: 130px;"
+                                                           value="#{controllerTomaFisica.tomaFisicaCommand.tomaFisicaSobranteCommand.fltModelo}"                                   
+                                                           partialSubmit="true"
+                                                           valueChangeListener="#{controllerTomaFisica.cambioFiltroTomasFisicaSobrante}"/>
+                                        </ice:headerRow>
+                                    </ice:columnGroup>
+                                </f:facet>                                
+                                <h:outputText id="colModeloSobranteTxt" value="#{tomaFisicaSobrante.modelo}"/>
+                            </ice:column>
+                            
+                            <ice:column id="colSerieSobrante">
+                                <f:facet name="header">
+                                    <ice:columnGroup>
+                                        <ice:headerRow>
+                                           <ice:outputText value="#{label['sigebi.label.vista.detalleTomaFisica.sobrante.serie']}"/>
+                                        </ice:headerRow>
+                                        <ice:headerRow>
+                                            <ice:inputText id="fltSerieTomaFisicaSobrante"
+                                                           style="width: 130px;"
+                                                           value="#{controllerTomaFisica.tomaFisicaCommand.tomaFisicaSobranteCommand.fltSerie}"                                   
+                                                           partialSubmit="true"
+                                                           valueChangeListener="#{controllerTomaFisica.cambioFiltroTomasFisicaSobrante}"/>
+                                        </ice:headerRow>
+                                    </ice:columnGroup>
+                                </f:facet>                                
+                                <h:outputText id="colSerieSobranteTxt" value="#{tomaFisicaSobrante.serie}"/>
+                            </ice:column>
+                            
+                            <ice:column style="text-align: center;">
+                                <ice:commandButton id="botonEliminarBien"
+                                                   style="margin-top:2%" 
+                                                   styleClass="btnEliminar_tomaFisica" 
+                                                   partialSubmit="true"
+                                                   actionListener="#{controllerTomaFisica.eliminarTomaFisicaSobrante}">
+                                    <f:attribute id="tomaFisicaEliminarSel" name="tomaFisicaSobranteEliminarSel"  value="#{tomaFisicaSobrante}"/>                                
+                                </ice:commandButton>
+                            </ice:column>
+                        </ice:dataTable>
+                    </div>
+                </div>
+            </div>                
+        </div>
+    </div>    
+</ice:outputHtml>

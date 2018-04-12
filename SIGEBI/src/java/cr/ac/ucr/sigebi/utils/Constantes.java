@@ -37,14 +37,19 @@ public final class Constantes {
     // Estado Interno de un bien
     public static final Integer ESTADO_INTERNO_BIEN_NORMAL = 1;
     public static final Integer ESTADO_INTERNO_BIEN_EXCLUSION = 2;
-    public static final Integer ESTADO_INTERNO_BIEN_EXCLUSION_SOLICITADO = 21;
-    public static final Integer ESTADO_INTERNO_BIEN_EXCLUSION_APROBADO = 22;
     public static final Integer ESTADO_INTERNO_BIEN_PRESTAMO = 3;
+    public static final Integer ESTADO_INTERNO_BIEN_TRASLADO = 4;
+    public static final Integer ESTADO_INTERNO_BIEN_ACTA_CREADA = 5;
+    public static final Integer ESTADO_INTERNO_BIEN_ACTA_APROBADA = 6;
+    public static final Integer ESTADO_INTERNO_BIEN_INFORME_TECNICO_CREADO = 7;
+    public static final Integer ESTADO_INTERNO_BIEN_INFORME_TECNICO_APROBADO = 8;
+    public static final Integer ESTADO_INTERNO_BIEN_EXCLUSION_SOLICITADO = 21;
+    public static final Integer ESTADO_INTERNO_BIEN_EXCLUSION_RECHAZADO = 22;
+    public static final Integer ESTADO_INTERNO_BIEN_EXCLUSION_APROBADO = 23;
+        
     public static final Integer ESTADO_INTERNO_BIEN_PRESTAMO_SOLICITADO = 31;
     public static final Integer ESTADO_INTERNO_BIEN_PRESTAMO_APROBADO = 33;
     public static final Integer ESTADO_INTERNO_BIEN_PRESTAMO_ANULADO = 34;
-    public static final Integer ESTADO_INTERNO_BIEN_TRASLADO = 4;
-    public static final Integer ESTADO_INTERNO_BIEN_ACTA = 5;
     public static final Integer ESTADO_INTERNO_BIEN_INFORME_TECNICO = 6;
 
     // Estados de una nota
@@ -91,6 +96,7 @@ public final class Constantes {
     public static final Integer ESTADO_PRESTAMO_APROBADO = 3;
     public static final Integer ESTADO_PRESTAMO_RECHAZADO = 4;
     public static final Integer ESTADO_PRESTAMO_ANULADO = 5;
+    public static final Integer ESTADO_PRESTAMO_DEVUELTO = 6;
 
     // Estados de un informe
     public static final Integer ESTADO_INFORME_TECNICO_NUEVO = 1;
@@ -129,12 +135,17 @@ public final class Constantes {
     public static final Integer ESTADO_INTERFAZ_BIEN_PROCESADO = 3;
     public static final Integer ESTADO_INTERFAZ_BIEN_ANULADO = 4;
 
+    // Toma Fisica
+    public static final Integer ESTADO_TOMA_FISICA_PENDIENTE = 1;
+    public static final Integer ESTADO_TOMA_FISICA_CERRADO = 2;
+
     //Dominios
     public static final String DOMINIO_ACTA = "ACTA";
     public static final String DOMINIO_ADJUNTO = "ADJUNTO";
     public static final String DOMINIO_BIEN = "BIEN";
     public static final String DOMINIO_BIEN_INTERNO = "BIEN_INTERNO";
     public static final String DOMINIO_CARACTERISTICA = "CARACTERISTICA";
+    public static final String DOMINIO_COLUMNAS_REPORTE_SOBRANTES = "ORDEN_COLUMNA_SOBRANTES";
     public static final String DOMINIO_CONVENIO = "CONVENIO";
     public static final String DOMINIO_DOCUMENTO = "DOCUMENTO";
     public static final String DOMINIO_EXCLUSION = "EXCLUSION";
@@ -144,6 +155,7 @@ public final class Constantes {
     public static final String DOMINIO_INTERFAZ_BIEN = "INTERFAZ_BIEN";
     public static final String DOMINIO_NOTA = "NOTA";
     public static final String DOMINIO_NOTIFICACION = "NOTIFICACION";
+    public static final String DOMINIO_ORDEN_REPORTE = "ORDEN_REPORTE";
     public static final String DOMINIO_ORIGEN = "ORIGEN";
     public static final String DOMINIO_PRESTAMO = "PRESTAMO";
     public static final String DOMINIO_PRESTAMO_ENTIDAD = "PRESTAMO_ENTIDAD";
@@ -151,7 +163,9 @@ public final class Constantes {
     public static final String DOMINIO_REGISTRO_MOVIMIENTO = "REGISTRO_MOVIMIENTO";
     public static final String DOMINIO_REPORTE = "REPORTE";
     public static final String DOMINIO_SOLI_DONACION = "SOL_DONACION";
-    
+    public static final String DOMINIO_TOMA_FISICA = "TOMA_FISICA";
+    public static final String DOMINIO_TOMA_FISICA_MOTIVO = "TOMA_FISICA_MOTIVO";
+
     //TIPO ADJUNTO
     public static final Integer TIPO_ADJUNTO_BIEN = 1;
     public static final Integer TIPO_ADJUNTO_DOCUMENTO = 2;
@@ -171,13 +185,15 @@ public final class Constantes {
     public static final String TIPO_MOVIMIENTO_SINCRONIZAR_AGREGAR = "AGREGAR";
     public static final String TIPO_MOVIMIENTO_SINCRONIZAR_EXCLUIR = "EXCLUIR";
     public static final String TIPO_MOVIMIENTO_SINCRONIZAR_MODIFICAR = "MODIFICAR";
-    public static final String TIPO_MOVIMIENTO_SINCRONIZAR_TRASLADAR = "TRASLADAR";
-    
+    public static final String TIPO_MOVIMIENTO_SINCRONIZAR_TRASLADAR = "TRASLADAR";    
     
     //TIPO CARACTERISTICA BIEN
     public static final Integer TIPO_CARACTERISTICA_SERIE = 1;
     public static final Integer TIPO_CARACTERISTICA_MODELO = 2;
     public static final Integer TIPO_CARACTERISTICA_MARCA = 3;
+
+    //TIPO TOMAS FISICAS
+    public static final Integer TIPO_TOMA_FISICA_COMPLETO = 3;
 
     //Identificaciones
     public static final Integer IDENTIFICACION_ESTADO_DISPONIBLE = 1;
@@ -191,7 +207,7 @@ public final class Constantes {
     public static final Integer CODIGO_AUTORIZACION_TRASLADO_ENVIAR = 5;
     public static final Integer CODIGO_AUTORIZACION_TRASLADO_RECIBIR = 6;
     public static final Integer CODIGO_AUTORIZACION_DONACION = 7;
-    public static final Integer CODIGO_AUTORIZACION_CAMBIAR_IDENTIFICACION_BIEN = 8;
+    public static final Integer CODIGO_AUTORIZACION_ADMINISTRADOR = 8;
     public static final Integer CODIGO_AUTORIZACION_EXCLUSION_DESECHO = 9;
     public static final Integer CODIGO_AUTORIZACION_EXCLUSION_DONACION = 10;
     public static final Integer CODIGO_AUTORIZACION_PRESTAMO = 11;
@@ -215,7 +231,7 @@ public final class Constantes {
     public static final String VISTA_PRESTAMO_NUEVO_PAGINA = "../prestamos/prestamoDetalle.xhtml";
     public static final String VISTA_SINCRONIZACION_BIEN = "sincronizar";
     public static final String VISTA_SINCRONIZACION_BIEN_LISTADO = "../bienes/listarBienSincronizar.xhtml";
-
+    
     public static final String KEY_VISTA_SOLICITUD_DONACION_LISTADO = "donacion";
     public static final String VISTA_SOLICITUD_DONACION_LISTADO = "../inclusiones/listarDonaciones.xhtml";
     public static final String KEY_VISTA_SOLICITUD_DONACION_DETALLE = "donacion_deta";
@@ -267,11 +283,23 @@ public final class Constantes {
     public static final String VISTA_REPORTE_MOVIMIENTOS = "../reportes/reporteMovimientos.xhtml";
     public static final String KEY_VISTA_REPORTE_BIENES = "rep_bienes";
     public static final String VISTA_REPORTE_BIENES = "../reportes/reporteBien.xhtml";
+    public static final String KEY_REPORTE_INVENT_FALTANTES = "rep_invent_faltantes";
+    public static final String VISTA_REPORTE_INVENT_FALTANTES = "../reportes/reporteInvertFaltantes.xhtml";
+    public static final String KEY_REPORTE_SOBRANTES = "rep_invent_faltantes";
+    public static final String VISTA_REPORTE_SOBRANTES = "../reportes/reporteSobrantes.xhtml";
+    
 
     //PERMISOS TRASLADOS
     public static final String KEY_VISTA_TRASLADO_PERMISOS = "permisosMovimientos";
     public static final String VISTA_TRASLADO_PERMISOS = "../movimientos/permisosMovimientos.xhtml";
+    
+    //Toma Fisica
+    public static final String KEY_VISTA_TOMA_FISICA_DETALLE = "inventario_detalle";
+    public static final String VISTA_TOMA_FISICA_DETALLE = "../inventario/detalleInventario.xhtml";
+    public static final String VISTA_LISTAR_TOMA_FISICA = "../inventario/listarInventarios.xhtml";
+    public static final String KEY_VISTA_LISTAR_TOMA_FISICA = "inventario";
 
+    
     //ACCIONES TRASLADOS
     public static final String DOCUMENTO_TRASLADO = "TRASLADO";
     public static final String DOCUMENTO_ENVIAR = "ENVIAR";
@@ -296,10 +324,8 @@ public final class Constantes {
     public static final char SINCRONIZAR_ESTADO_TRANSITO_INATIVACION = '4';
 
     // Codigos de rol
-    public static final Integer CODIGO_ROL_DIRECTOR = 1;
-    public static final Integer CODIGO_ROL_TECNICO = 2;
-    public static final Integer CODIGO_ROL_RESPONSABLE = 3;
-    public static final Integer CODIGO_ROL_ADMINISTRADOR = 4;
+    public static final Integer CODIGO_ROL_TECNICO_AUTORIZACION_INFORME_TECNICO = 1;
+    public static final Integer CODIGO_ROL_ADMINISTRADOR_AUTORIZACION_ADMINISTRADOR = 2;
 
     //Discriminator Adjunto
     public static final Integer DISCRIMINATOR_ADJUNTO_BIEN = 1;
@@ -335,5 +361,8 @@ public final class Constantes {
 
     //COnsultas en listados de bienes
     public static final Integer BIENES_LISTADO_ACTAS = 2;
-
+    
+    //Reporte de Sobrantes
+    public static final String REPORTE_SOBRANTES_PARAMETRO_INSTITUCION = "UNIVERSIDAD DE COSTA RICA";
+    public static final String REPORTE_SOBRANTES_PARAMETRO_NOMBRE = "Reporte de Bienes Sobrantes";
 }

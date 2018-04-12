@@ -19,7 +19,11 @@ public class ReporteModel {
     
     @Resource private ReporteDao reporteDao;
 
-    public void ejecutarReporte(String idReporte, String direccionReporte, Map parametros, String formatoReporte) {
-        reporteDao.ejecutarReporte(idReporte, direccionReporte, parametros, formatoReporte);
+    public void ejecutarReporte(String idReporte, String direccionReporte, Map parametros, String formatoReporte){
+        try{
+            reporteDao.ejecutarReporte(idReporte, direccionReporte, parametros, formatoReporte);
+        }catch(Exception err){
+            
+        }
     }
 }

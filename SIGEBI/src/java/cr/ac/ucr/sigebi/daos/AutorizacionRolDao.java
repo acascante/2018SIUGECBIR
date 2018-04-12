@@ -59,6 +59,28 @@ public class AutorizacionRolDao extends GenericDaoImpl {
     }
 
     @Transactional(readOnly = true)
+    public AutorizacionRol buscarPorId(Long id) throws FWExcepcion {
+        Session session = this.dao.getSessionFactory().openSession();
+        try {
+            String sql = "select obj from AutorizacionRol obj ";
+            sql = sql + " where obj.id = :id";
+            Query query = session.createQuery(sql);
+            query.setParameter("id", id);
+            List<AutorizacionRol> results = query.list();
+            if (!results.isEmpty()) {
+                return (AutorizacionRol) results.get(0);
+            } else {
+                return null;
+            }
+        } catch (HibernateException e) {
+            throw new FWExcepcion("sigebi.error.dao.autorizacionRol.buscarPorRolAutorizacion",
+                    "Error obtener los registros de tipo " + this.getClass(), e.getCause());
+        } finally {
+            session.close();
+        }
+    }
+    
+    @Transactional(readOnly = true)
     public List<AutorizacionRol> buscarPorAutorizacion(Long idAutorizacion) throws FWExcepcion {
         Session session = this.dao.getSessionFactory().openSession();
         try {

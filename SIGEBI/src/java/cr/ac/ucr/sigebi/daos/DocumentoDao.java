@@ -18,7 +18,6 @@ import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -57,6 +56,24 @@ public class DocumentoDao extends GenericDaoImpl {
             this.persist(documento);
         } catch (HibernateException e) {
             throw new FWExcepcion("sigebi.error.documentoDao.salvar", "Error guardando registro de tipo " + this.getClass(), e.getCause());
+        }
+    }
+
+    @Transactional(readOnly = true)
+    public List<DocumentoDetalle> listarDetalles(Documento documento) throws FWExcepcion {
+        Session session = dao.getSessionFactory().openSession();
+        try {
+
+            StringBuilder sql = new StringBuilder("select obj from DocumentoDetalle obj ");
+            sql.append(" where obj.documento = :documento");
+
+            Query query = session.createQuery(sql.toString());
+            query.setParameter("documento", documento);
+            return (List<DocumentoDetalle>) query.list();
+        } catch (HibernateException e) {
+            throw new FWExcepcion("sigebi.error.documentoDao.listarDetalles", "Error obtener los registros de tipo " + this.getClass(), e.getCause());
+        } finally {
+            session.close();
         }
     }
 
@@ -142,7 +159,7 @@ public class DocumentoDao extends GenericDaoImpl {
 
         //Select
         sql.append(" WHERE docu.discriminator = :tipoDocumento ");
-        
+
         //docu.bien.unidadEjecutora.id = :idUnidadEjecutora 
         if (tipoInforme != null) {
             sql.append(" AND docu.tipoInforme = :tipoInforme ");
@@ -198,12 +215,10 @@ public class DocumentoDao extends GenericDaoImpl {
         if (modeloBien != null && modeloBien.length() > 0) {
             q.setParameter("modeloBien", '%' + modeloBien + '%');
         }
-        if (estado != null ) {
+        if (estado != null) {
             q.setParameter("estado", estado);
         }
         return q;
     }
-
-
 
 }

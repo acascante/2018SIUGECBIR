@@ -20,6 +20,7 @@ import cr.ac.ucr.sigebi.domain.Convenio;
 import cr.ac.ucr.sigebi.domain.Estado;
 import cr.ac.ucr.sigebi.domain.Persona;
 import cr.ac.ucr.sigebi.domain.RegistroMovimientoSolicitud;
+import cr.ac.ucr.sigebi.domain.SolicitudDetallePrestamo;
 import cr.ac.ucr.sigebi.domain.SolicitudPrestamo;
 import cr.ac.ucr.sigebi.domain.Tipo;
 import cr.ac.ucr.sigebi.domain.UnidadEjecutora;
@@ -30,6 +31,7 @@ import cr.ac.ucr.sigebi.models.PersonaModel;
 import cr.ac.ucr.sigebi.models.RegistroMovimientoModel;
 import cr.ac.ucr.sigebi.models.UnidadEjecutoraModel;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -37,12 +39,15 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.Resource;
+import javax.faces.component.UIComponent;
+import javax.faces.component.UIInput;
 import javax.faces.component.UIViewRoot;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 import javax.faces.event.PhaseId;
 import javax.faces.event.ValueChangeEvent;
 import javax.faces.model.SelectItem;
+import javax.faces.validator.ValidatorException;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
@@ -117,8 +122,8 @@ public class AgregarPrestamoController extends BaseController {
         }
 
         // <editor-fold defaultstate="collapsed" desc="Get's Set's">
-        public List<Bien> getItemsBienes() {
-            List<Bien> list = new ArrayList<Bien>(bienes.values());
+        public List<Bien> getItemsBien() {
+            List<Bien> list = new ArrayList<Bien>(this.bienes.values());
             return list;
         }
 
@@ -411,12 +416,14 @@ public class AgregarPrestamoController extends BaseController {
     private boolean visibleBotonEliminarBien;
     private boolean visibleBotonSolicitarBien;
     private boolean visibleBotonRechazarBien;
+    private boolean visibleBotonDevolverBien;
     
     private boolean visibleBotonSolicitar;
     private boolean visibleBotonRechazar;
     private boolean visibleBotonRevisar;
     private boolean visibleBotonAprobar;
     private boolean visibleBotonAnular;
+    private boolean visibleBotonDevolver;
     
     private boolean visibleBotonRechazarObservacion;
     private boolean visibleBotonRechazarBienObservacion;
@@ -445,7 +452,7 @@ public class AgregarPrestamoController extends BaseController {
     }
     
     private void inicializarDetalle(SolicitudPrestamo prestamo) {
-        prestamo.setDetalles(prestamoModel.listarDetalles(prestamo));
+        prestamo.setDetallesPrestamo(prestamoModel.listarDetalles(prestamo));
         this.command = new PrestamoCommand(prestamo);
         this.solicitudRegistrada = true;
         this.autorizadoAprobar = inicializarAutorizaciones();
@@ -506,7 +513,7 @@ public class AgregarPrestamoController extends BaseController {
                     this.prestamoModel.eliminarDetalles(this.command.getDetallesEliminar());
                 }
                 
-                List<Bien> listBienes = new ArrayList<Bien>(this.command.getBienes().values());
+                List<Bien> listBienes = new ArrayList<Bien>(this.command.getListBienes());
                 if (!listBienes.isEmpty()) {
                     this.bienModel.actualizar(listBienes);
                 }
@@ -614,32 +621,67 @@ public class AgregarPrestamoController extends BaseController {
         if (command.getEntidad().isEmpty()) {
             return Util.getEtiquetas("sigebi.label.prestamos.error.entidad");
         }
+        
+        List<PrestamoCommand.BienDetalle> bienDetalles = this.command.getListBienesDetalle();
+        for (PrestamoCommand.BienDetalle bienDetalle : bienDetalles) {
+            if (bienDetalle.getFechaInicio() == null) {
+                return Util.getEtiquetas("sigebi.label.prestamos.error.fecha.invalida");
+            }
+            else if (bienDetalle.getFechaFin() == null) {
+                return Util.getEtiquetas("sigebi.label.prestamos.error.fecha.invalida");
+            }
+            else if (bienDetalle.getFechaFin().before(bienDetalle.getFechaInicio())) {                
+                return Util.getEtiquetas("sigebi.label.prestamos.error.fechas");
+            }
+        }
         return Constantes.OK;
+    }
+    
+    public void validarFecha(FacesContext context, UIComponent component, Object value) throws ValidatorException {
+        try {
+            Date fecha = (Date)value;
+            
+            Date today = new Date();
+            Calendar calendar = Calendar.getInstance(Constantes.DEFAULT_TIME_ZONE);
+            calendar.setTime(today);
+            calendar.add(Calendar.DATE, -1);
+            if (fecha.before(calendar.getTime())) {
+                Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.label.prestamos.error.fecha.menor.hoy"));
+                ((UIInput) component).setValid(false); 
+            } 
+        } catch (Exception e ) {
+            Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.label.prestamos.error.fecha.invalida"));
+            ((UIInput) component).setValid(false);
+        }
     }
     //</editor-fold>
     
     //<editor-fold defaultstate="collapsed" desc="Movimientos sobre la Solicitud">
-    public void solicitarPrestamo() {
+    public void solicitarPrestamo() {   // Cambia bienes a estado solicitado
         movimientoPrestamo(Constantes.ESTADO_PRESTAMO_SOLICITADO, Constantes.ESTADO_INTERNO_BIEN_PRESTAMO_SOLICITADO);
     }
     
-    public void rechazarPrestamo() {
+    public void devolverPrestamo() {   // Cambia bienes a estado normal
+        movimientoPrestamo(Constantes.ESTADO_PRESTAMO_DEVUELTO, Constantes.ESTADO_INTERNO_BIEN_NORMAL);
+    }
+    
+    public void rechazarPrestamo() {  // Abre ventana de confirmacion
         this.command.setObservacionConfirmacion(new String());
         this.visiblePanelObservacion = true;
         this.accion = ACCION_RECHAZAR;
     }
     
-    public void aprobarPrestamo() {
+    public void aprobarPrestamo() {  // Cambia bienes a estado aprobado
         movimientoPrestamo(Constantes.ESTADO_PRESTAMO_APROBADO, Constantes.ESTADO_INTERNO_BIEN_PRESTAMO_APROBADO);
     }
 
-    public void revisarPrestamo() {
+    public void revisarPrestamo() { // Abre ventana de confirmacion
         this.command.setObservacionConfirmacion(new String());
         this.visiblePanelObservacion = true;
         this.accion = ACCION_REVISAR;
     }
     
-    public void anularPrestamo() {
+    public void anularPrestamo() { // Abre ventana de confirmacion
         this.command.setObservacionConfirmacion(new String());
         this.visiblePanelObservacion = true;
         this.accion = ACCION_ANULAR;
@@ -649,19 +691,19 @@ public class AgregarPrestamoController extends BaseController {
         this.visiblePanelObservacion = false;
     }
     
-    public void rechazarPrestamoObservacion() {
+    public void rechazarPrestamoObservacion() { // Cambia bienes a estado normal
         this.visiblePanelObservacion = false;
         movimientoPrestamo(Constantes.ESTADO_PRESTAMO_RECHAZADO, Constantes.ESTADO_INTERNO_BIEN_NORMAL);
     }
     
-    public void revisarPrestamoObservacion() {
+    public void revisarPrestamoObservacion() { // Cambia bienes a estado en prestamo
         this.visiblePanelObservacion = false;
         movimientoPrestamo(Constantes.ESTADO_PRESTAMO_CREADO, Constantes.ESTADO_INTERNO_BIEN_PRESTAMO);
     }
     
-    public void anularPrestamoObservacion() {
+    public void anularPrestamoObservacion() { // Cambia bienes a estado normal
         this.visiblePanelObservacion = false;
-        movimientoPrestamo(Constantes.ESTADO_PRESTAMO_ANULADO, Constantes.ESTADO_INTERNO_BIEN_PRESTAMO_ANULADO);
+        movimientoPrestamo(Constantes.ESTADO_PRESTAMO_ANULADO, Constantes.ESTADO_INTERNO_BIEN_NORMAL);
     }
     
     private void movimientoPrestamo(int solicitud, int bienInterno) {
@@ -673,7 +715,7 @@ public class AgregarPrestamoController extends BaseController {
             
             // Actualiza todos los bienes con el estado segun el movimiento que se hizo a la solicitud
             Estado estadoInternoBien = this.estadoPorDominioValor(Constantes.DOMINIO_BIEN_INTERNO, bienInterno);
-            List<Bien> listBienes = new ArrayList<Bien>(command.getBienes().values());
+            List<Bien> listBienes = new ArrayList<Bien>(command.getListBienes());
             for (Bien bien : listBienes) {
                 if (!estadoInternoBien.equals(bien.getEstadoInterno()) &&                                               // Si el bien tiene un estado diferente se actualiza
                     !Constantes.ESTADO_INTERNO_BIEN_PRESTAMO_APROBADO.equals(bien.getEstadoInterno().getValor())) {    // Si esta aprobado no se modifica
@@ -706,7 +748,8 @@ public class AgregarPrestamoController extends BaseController {
                 if (entry.getValue()) {
                     Bien bien = this.listadoBienes.bienes.get(entry.getKey());
                     bien.setEstadoInterno(estadoEnSolicitud);
-                    this.command.getBienes().put(bien.getId(), bien);
+                    //TODO revisar fechas
+                    this.command.addBien(bien, null, null);
                     this.command.getBienesAgregar().add(bien);
                 }
             }
@@ -716,7 +759,7 @@ public class AgregarPrestamoController extends BaseController {
     public void eliminarBien(ActionEvent event) {
         Estado estadoInternoNormal = this.estadoPorDominioValor(Constantes.DOMINIO_BIEN_INTERNO, Constantes.ESTADO_INTERNO_BIEN_NORMAL);
         Long idBien = (Long) event.getComponent().getAttributes().get("bienSeleccionado");
-        Bien bien = this.command.getBienes().get(idBien);
+        Bien bien = this.command.getBien(idBien);
         
         bien.setEstadoInterno(estadoInternoNormal);
         this.command.getBienesEliminar().add(bien); // Lo agrego a la lista de bienes a eliminar
@@ -732,6 +775,11 @@ public class AgregarPrestamoController extends BaseController {
         movimientoBien(idBien, Constantes.ESTADO_PRESTAMO_SOLICITADO, Constantes.ESTADO_INTERNO_BIEN_PRESTAMO_SOLICITADO);
     }
     
+    public void devolverBien(ActionEvent event) {
+        Long idBien = (Long) event.getComponent().getAttributes().get("bienSeleccionado");
+        movimientoBien(idBien, Constantes.ESTADO_PRESTAMO_DEVUELTO, Constantes.ESTADO_INTERNO_BIEN_NORMAL);
+    }
+    
     public void rechazarBien(ActionEvent event) {
         this.command.setObservacionConfirmacion(new String());
         this.visiblePanelObservacion = true;
@@ -744,7 +792,7 @@ public class AgregarPrestamoController extends BaseController {
     }
     
     private void movimientoBien(Long idBien, int solicitud, int bienInterno) {
-        Bien bien = this.command.getBienes().get(idBien);
+        Bien bien = this.command.getBien(idBien);
         Estado estadoBienInterno = this.estadoPorDominioValor(Constantes.DOMINIO_BIEN_INTERNO, bienInterno);
         Estado estadoSolicitud = this.estadoPorDominioValor(Constantes.DOMINIO_PRESTAMO, solicitud);
         
@@ -760,7 +808,7 @@ public class AgregarPrestamoController extends BaseController {
     }
     
     private boolean verificarSolicitud(Estado estado) {
-         for (Bien bien : this.command.getBienes().values()) {
+         for (Bien bien : this.command.getListBienes()) {
             if (!bien.getEstadoInterno().equals(estado)) {
                 return false;
             }
@@ -1000,8 +1048,7 @@ public class AgregarPrestamoController extends BaseController {
     public void setVisiblePanelBuscarPersonas(boolean visiblePanelBuscarPersonas) {
         this.visiblePanelBuscarPersonas = visiblePanelBuscarPersonas;
     }
-    
-    
+        
     public List<SelectItem> getItemsEntidad() {
         return itemsEntidad;
     }
@@ -1033,6 +1080,7 @@ public class AgregarPrestamoController extends BaseController {
     public void setAccion(int accion) {
         this.accion = accion;
     }
+    
     //</editor-fold>
     
     //<editor-fold defaultstate="collapsed" desc="Visibilidad de Objetos">
@@ -1055,10 +1103,18 @@ public class AgregarPrestamoController extends BaseController {
         }
         return visibleBotonSolicitar;
     }
+    
+    public boolean isVisibleBotonDevolver() {
+        this.visibleBotonDevolver = false;
+        if (Constantes.ESTADO_PRESTAMO_APROBADO.equals(this.command.getEstado().getValor()) && this.solicitudRegistrada) {
+            this.visibleBotonDevolver = true;
+        }
+        return visibleBotonDevolver;
+    }    
 
     public boolean isVisibleBotonRechazar() {
         this.visibleBotonRechazar = false;
-        if (Constantes.ESTADO_PRESTAMO_RECHAZADO.equals(this.command.getEstado().getValor()) && this.autorizadoAprobar) {
+        if (Constantes.ESTADO_PRESTAMO_SOLICITADO.equals(this.command.getEstado().getValor()) && this.autorizadoAprobar) {
             this.visibleBotonRechazar = true;
         }
         return visibleBotonRechazar;
@@ -1066,7 +1122,7 @@ public class AgregarPrestamoController extends BaseController {
 
     public boolean isVisibleBotonAprobar() {
         this.visibleBotonAprobar = false;
-        if (Constantes.ESTADO_PRESTAMO_APROBADO.equals(this.command.getEstado().getValor()) && this.autorizadoAprobar) {
+        if (Constantes.ESTADO_PRESTAMO_SOLICITADO.equals(this.command.getEstado().getValor()) && this.autorizadoAprobar) {
             this.visibleBotonAprobar = true;
         }
         return visibleBotonAprobar;
@@ -1074,7 +1130,7 @@ public class AgregarPrestamoController extends BaseController {
     
     public boolean isVisibleBotonAnular() {
         this.visibleBotonAnular = false;
-        if (Constantes.ESTADO_PRESTAMO_ANULADO.equals(this.command.getEstado().getValor()) && this.autorizadoAprobar) {
+        if (Constantes.ESTADO_PRESTAMO_SOLICITADO.equals(this.command.getEstado().getValor())) {
             this.visibleBotonAnular = true;
         }
         return visibleBotonAnular;
@@ -1082,7 +1138,7 @@ public class AgregarPrestamoController extends BaseController {
    
     public boolean isVisibleBotonRevisar() {
         this.visibleBotonRevisar = false;
-        if (Constantes.ESTADO_PRESTAMO_SOLICITADO.equals(this.command.getEstado().getValor()) && this.autorizadoAprobar) {
+        if (Constantes.ESTADO_PRESTAMO_SOLICITADO.equals(this.command.getEstado().getValor())) {
             this.visibleBotonRevisar = true;
         }        
         return visibleBotonRevisar;
@@ -1090,7 +1146,7 @@ public class AgregarPrestamoController extends BaseController {
 
     public boolean isVisibleBotonGuardar() {
         this.visibleBotonGuardar = false;
-        if (Constantes.ESTADO_PRESTAMO_CREADO.equals(this.command.getEstado().getValor()) && !this.autorizadoAprobar) {
+        if (Constantes.ESTADO_PRESTAMO_CREADO.equals(this.command.getEstado().getValor())) {
             this.visibleBotonGuardar = true;
         }
         return visibleBotonGuardar;
@@ -1098,7 +1154,7 @@ public class AgregarPrestamoController extends BaseController {
 
     public boolean isVisibleBotonAgregarBienes() {
         this.visibleBotonAgregarBienes = false;
-        if (Constantes.ESTADO_PRESTAMO_CREADO.equals(this.command.getEstado().getValor()) && !this.autorizadoAprobar) {
+        if (Constantes.ESTADO_PRESTAMO_CREADO.equals(this.command.getEstado().getValor())) {
             this.visibleBotonAgregarBienes = true;
         }
         return visibleBotonAgregarBienes;
@@ -1106,7 +1162,7 @@ public class AgregarPrestamoController extends BaseController {
 
     public boolean isVisibleBotonEliminarBien() {
         this.visibleBotonEliminarBien = false;
-        if (Constantes.ESTADO_PRESTAMO_CREADO.equals(this.command.getEstado().getValor()) && !this.autorizadoAprobar) {
+        if (Constantes.ESTADO_PRESTAMO_CREADO.equals(this.command.getEstado().getValor())) {
             this.visibleBotonEliminarBien = true;
         }
         return visibleBotonEliminarBien;
@@ -1114,12 +1170,20 @@ public class AgregarPrestamoController extends BaseController {
 
     public boolean isVisibleBotonSolicitarBien() {
         this.visibleBotonSolicitarBien = false;
-        if (Constantes.ESTADO_PRESTAMO_CREADO.equals(this.command.getEstado().getValor()) && this.solicitudRegistrada && !this.autorizadoAprobar) {
+        if (Constantes.ESTADO_PRESTAMO_CREADO.equals(this.command.getEstado().getValor()) && this.solicitudRegistrada) {
             this.visibleBotonSolicitarBien = true;
         }
         return visibleBotonSolicitarBien;        
     }
 
+    public boolean isVisibleBotonDevolverBien() {
+        this.visibleBotonDevolverBien = false;
+        if (Constantes.ESTADO_PRESTAMO_APROBADO.equals(this.command.getEstado().getValor()) && this.solicitudRegistrada) {
+            this.visibleBotonDevolverBien = true;
+        }
+        return visibleBotonDevolverBien;
+    }
+    
     public boolean isVisibleBotonRechazarBien() {
         this.visibleBotonRechazarBien = false;
         if (this.autorizadoAprobar) {

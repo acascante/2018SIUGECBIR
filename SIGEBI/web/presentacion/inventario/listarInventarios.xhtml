@@ -1,0 +1,220 @@
+<ice:form id="frm_listarInventarios" 
+          xmlns:ice="http://www.icesoft.com/icefaces/component"
+          xmlns:h="http://java.sun.com/jsf/html"
+          xmlns:f="http://java.sun.com/jsf/core"
+          xmlns:ui="http://java.sun.com/jsf/facelets">
+    <div class="contenido-pagina">
+
+        <div class="container"> 
+            <!-- Titulo -->
+            <div class="row">
+                <div class='col-sm-12'>
+                    <h1 style="margin: 0;">
+                    </h1>
+                </div>                
+            </div>
+            <div class="row">
+                <div class='col-sm-6'>
+                    <h1 style="margin: 0;">                       
+                        <ice:outputFormat value="#{label['sigebi.label.vista.listarTomasFisicas.titulo']}"/>
+                    </h1>
+                </div>
+                <div class="col-sm-6">
+                    <ice:commandButton id="botonNuevo"
+                                       style="float:right" 
+                                       styleClass="boton" 
+                                       partialSubmit="true" 
+                                       actionListener="#{controllerTomaFisica.nuevoRegistro}"
+                                       value="#{label['sigebi.label.vista.listarTomasFisicas.nuevo']}"  >
+                        <f:attribute id="vistaOrigenParam" name="keyVistaOrigen"  value="inventario"/>
+                    </ice:commandButton>                    
+                </div>              
+            </div>            
+            
+            <!-- Paginacion -->
+            <div class="row">
+                <div class="col-sm-12">
+                    <ice:outputFormat value="#{label['label.generico.paginacion.encabezado']}">
+                        <f:param value="#{controllerListarTomasFisicas.cantidadRegistros}"/>
+                        <f:param value="#{controllerListarTomasFisicas.cantidadRegistrosMostrados}"/>
+                        <f:param value="#{controllerListarTomasFisicas.primerRegistro}"/>
+                        <f:param value="#{controllerListarTomasFisicas.ultimoRegistro}"/>
+                        <f:param value="#{controllerListarTomasFisicas.paginaActual}"/>
+                        <f:param value="#{controllerListarTomasFisicas.cantidadPaginas}"/>
+                    </ice:outputFormat>
+                    <div>
+                        <table>
+                            <tr>
+                                <td style="padding-right: 5px;">
+                                    <ice:outputText value="#{label['label.paginacion.cantidad.pagina']} "/>
+                                </td>
+                                <td>
+                                    
+                                    <ice:selectOneMenu id="cantRegistroPorPagina"
+                                           value="#{controllerListarTomasFisicas.cantRegistroPorPagina}" 
+                                           valueChangeListener="#{controllerListarTomasFisicas.cambioRegistrosPorPagina}"
+                                           partialSubmit="true">
+                                            <f:selectItems id="item_pa" value="#{controllerListarTomasFisicas.listaRegistrosPagina}"/>
+                                    </ice:selectOneMenu>    
+                                    
+                                </td>
+                            </tr>
+                        </table>                        
+                    </div>                    
+                    <div>
+                        <ice:commandButton image="./imagenes/botones/first.png" partialSubmit="true" actionListener="#{controllerListarTomasFisicas.primero}" rendered="#{controllerListarTomasFisicas.cantidadPaginas > 1}"/>
+                        <ice:commandButton image="./imagenes/botones/previos.png" partialSubmit="true" actionListener="#{controllerListarTomasFisicas.anterior}" rendered="#{controllerListarTomasFisicas.cantidadPaginas > 1}"/>
+                        <ui:repeat value="#{controllerListarTomasFisicas.arregloPaginas}" var="pagina">
+                            <ice:commandLink value="#{pagina}" partialSubmit="true" actionListener="#{controllerListarTomasFisicas.irPagina}">
+                                <f:param name="numPag" value="#{pagina}"/>
+                            </ice:commandLink>
+                        </ui:repeat>            
+                        <ice:commandButton image="./imagenes/botones/next.png" partialSubmit="true" actionListener="#{controllerListarTomasFisicas.siguiente}" rendered="#{controllerListarTomasFisicas.cantidadPaginas > 1}"/>
+                        <ice:commandButton image="./imagenes/botones/last.png" partialSubmit="true" actionListener="#{controllerListarTomasFisicas.ultimo}" rendered="#{controllerListarTomasFisicas.cantidadPaginas > 1}"/>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Data Table -->
+            <div class="row">
+                <div class="col-sm-12">
+                    <div>
+                        <ice:dataTable id="solicitudsTecnicos"
+                                       value="#{controllerListarTomasFisicas.tomasFisicas}"
+                                   var="tomaFisica"
+                                   paginator="true"
+                                   paginatorPosition="bottom">
+                            
+                            <ice:column id="colId">
+                                <f:facet name="header">
+                                    <ice:columnGroup>
+                                        <ice:headerRow>
+                                            <ice:outputText value="#{label['sigebi.label.vista.listarTomasFisicas.id']}"/>
+                                        </ice:headerRow>
+                                        <ice:headerRow>
+                                            <ice:inputText id="fltId"
+                                                           style="width: 130px;"
+                                                           value="#{controllerListarTomasFisicas.fltId}"                                   
+                                                           partialSubmit="true"
+                                                           valueChangeListener="#{controllerListarTomasFisicas.cambioFiltro}"/>
+                                        </ice:headerRow>
+                                    </ice:columnGroup>
+                                </f:facet>                                
+                                <h:outputText id="idCell" value="#{tomaFisica.id}"/>
+                            </ice:column>
+                            
+                            <ice:column id="colTipo">
+                                <f:facet name="header">
+                                    <ice:columnGroup>
+                                        <ice:headerRow>
+                                            <ice:outputText value="#{label['sigebi.label.vista.listarTomasFisicas.tipo']}"/>
+                                        </ice:headerRow>
+                                        <ice:headerRow>
+                                           <ice:selectOneMenu id="filtroTipo"
+                                                       valueChangeListener="#{controllerListarTomasFisicas.cambioFiltro}"
+                                                       value="#{controllerListarTomasFisicas.fltTipo}"
+                                                       partialSubmit="true">
+                                                <f:selectItem itemLabel="N/A" itemValue="-1"/>
+                                                <f:selectItems id="slcTipoItem" value="#{controllerListarTomasFisicas.tiposOptions}"/>
+                                            </ice:selectOneMenu>
+                                        </ice:headerRow>
+                                    </ice:columnGroup>
+                                </f:facet>                                
+                                <h:outputText id="tipoCell" value="#{tomaFisica.tipo.nombre}"/>
+                            </ice:column>                            
+                            
+                            <ice:column id="colUbicacion">
+                                <f:facet name="header">
+                                    <ice:columnGroup>
+                                        <ice:headerRow>
+                                            <ice:outputText value="#{label['sigebi.label.vista.listarTomasFisicas.ubicacion']}"/>
+                                        </ice:headerRow>
+                                        <ice:headerRow>
+                                            <ice:inputText id="fltUbicacion"
+                                                           style="width: 130px;"
+                                                           value="#{controllerListarTomasFisicas.fltUbicacion}"                                   
+                                                           partialSubmit="true"
+                                                           valueChangeListener="#{controllerListarTomasFisicas.cambioFiltro}"/>
+                                        </ice:headerRow>
+                                    </ice:columnGroup>
+                                </f:facet>                                
+                                <h:outputText id="ubicacionCell" value="#{tomaFisica.ubicacion.detalle}"/>
+                            </ice:column>                               
+                            
+                            <ice:column id="colDescripcion">
+                                <f:facet name="header">
+                                    <ice:columnGroup>
+                                        <ice:headerRow>
+                                            <ice:outputText value="#{label['sigebi.label.vista.listarTomasFisicas.descripcion']}"/>
+                                        </ice:headerRow>
+                                        <ice:headerRow>
+                                            <ice:inputText id="fltDescripcion"
+                                                           style="width: 130px;"
+                                                           value="#{controllerListarTomasFisicas.fltDescripcion}"                                   
+                                                           partialSubmit="true"
+                                                           valueChangeListener="#{controllerListarTomasFisicas.cambioFiltro}"/>
+                                        </ice:headerRow>
+                                    </ice:columnGroup>
+                                </f:facet>                                
+                                <h:outputText id="descripcionCell" value="#{tomaFisica.descripcion}"/>
+                            </ice:column>                            
+                            
+                             <ice:column id="colMotivo">
+                                <f:facet name="header">
+                                    <ice:columnGroup>
+                                        <ice:headerRow>
+                                            <ice:outputText value="#{label['sigebi.label.vista.listarTomasFisicas.motivo']}"/>
+                                        </ice:headerRow>
+                                        <ice:headerRow>
+                                           <ice:selectOneMenu id="filtroTipoMotivo"
+                                                       valueChangeListener="#{controllerListarTomasFisicas.cambioFiltro}"
+                                                       value="#{controllerListarTomasFisicas.fltTipoMotivo}"
+                                                       partialSubmit="true">
+                                                <f:selectItem itemLabel="N/A" itemValue="-1"/>
+                                                <f:selectItems id="slcTipoMotivoItem" value="#{controllerListarTomasFisicas.tiposMotivoOptions}"/>
+                                            </ice:selectOneMenu>
+                                        </ice:headerRow>
+                                    </ice:columnGroup>
+                                </f:facet>                                
+                                 <h:outputText id="tipoMotivoCell" value="#{tomaFisica.motivo.nombre}"/>
+                            </ice:column>     
+
+                            <ice:column id="colEstado">
+                                <f:facet name="header">
+                                    <ice:columnGroup>
+                                        <ice:headerRow>
+                                            <ice:outputText value="#{label['sigebi.label.vista.listarTomasFisicas.estado']}"/>
+                                        </ice:headerRow>
+                                        <ice:headerRow>
+                                           <ice:selectOneMenu id="filtroEstado"
+                                                       valueChangeListener="#{controllerListarTomasFisicas.cambioFiltro}"
+                                                       value="#{controllerListarTomasFisicas.fltEstado}"
+                                                       partialSubmit="true">
+                                                <f:selectItem itemLabel="N/A" itemValue="-1"/>
+                                                <f:selectItems id="slcEstadoItem" value="#{controllerListarTomasFisicas.estadosOptions}"/>
+                                            </ice:selectOneMenu>
+                                        </ice:headerRow>
+                                    </ice:columnGroup>
+                                </f:facet>                                
+                                <h:outputText id="estadoCell" value="#{tomaFisica.estado.nombre}"/>
+                            </ice:column>
+
+                            <ice:column style="text-align: center;">
+
+                                 <ice:commandButton id="botonDetalle"
+                                                   style="float:right;margin-top:2%" 
+                                                   styleClass="boton" 
+                                                   partialSubmit="true" 
+                                                   actionListener="#{controllerTomaFisica.modificarRegistro}"
+                                                   value="#{label['sigebi.label.vista.listarTomasFisicas.detalle']}"  >
+                                    <f:attribute id="tomaFisicaSeleccionada" name="tomaFisicaSeleccionada"  value="#{tomaFisica}"/>
+                                    <f:attribute id="vistaOrigenParam" name="keyVistaOrigen"  value="inventario"/>
+                                </ice:commandButton>                                
+                            </ice:column>
+                        </ice:dataTable>
+                    </div>
+                </div>
+            </div>
+        </div>    
+    </div>
+</ice:form>

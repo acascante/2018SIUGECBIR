@@ -78,7 +78,7 @@ public class ListarBienesController extends BaseController {
         usuario = usuarioModel.buscarPorId(lVistaUsuario.getgUsuarioActual().getIdUsuario());
 
         //Se verifica si el usuario es administrador
-        AutorizacionRolPersona autorizado = autorizacionRolPersonaModel.buscar(Constantes.CODIGO_ROL_ADMINISTRADOR, usuario);
+        AutorizacionRolPersona autorizado = autorizacionRolPersonaModel.buscar(Constantes.CODIGO_AUTORIZACION_ADMINISTRADOR, Constantes.CODIGO_ROL_ADMINISTRADOR_AUTORIZACION_ADMINISTRADOR, usuario, unidadEjecutora);
         command.setUsuarioAdmnistrador(autorizado != null);
 
         List<Estado> listEstados = estadoModel.listarPorDominio(Constantes.DOMINIO_BIEN);

@@ -88,12 +88,17 @@ public class VistaNavegacion {
         //REPORTES
         gPaginas.put(Constantes.KEY_VISTA_REPORTE_TRASLADO, Constantes.VISTA_REPORTE_TRASLADO);
         gPaginas.put(Constantes.KEY_VISTA_REPORTE_MOVIMIENTOS, Constantes.VISTA_REPORTE_MOVIMIENTOS);
-        gPaginas.put(Constantes.KEY_VISTA_REPORTE_BIENES, Constantes.VISTA_REPORTE_BIENES);
+        //gPaginas.put(Constantes.KEY_VISTA_REPORTE_BIENES, Constantes.VISTA_REPORTE_BIENES);
+        gPaginas.put(Constantes.KEY_REPORTE_INVENT_FALTANTES, Constantes.VISTA_REPORTE_INVENT_FALTANTES);
+        gPaginas.put(Constantes.KEY_REPORTE_SOBRANTES, Constantes.VISTA_REPORTE_SOBRANTES);
         
         //Interfaz Bien
         gPaginas.put(Constantes.KEY_VISTA_INTERFAZ_BIEN_LISTADO, Constantes.VISTA_INTERFAZ_BIEN_LISTADO);
         gPaginas.put(Constantes.KEY_VISTA_INTERFAZ_BIEN_DETALLE, Constantes.VISTA_INTERFAZ_BIEN_DETALLE);
         
+        //Inventarios
+        gPaginas.put(Constantes.KEY_VISTA_LISTAR_TOMA_FISICA, Constantes.VISTA_LISTAR_TOMA_FISICA);
+        gPaginas.put(Constantes.KEY_VISTA_TOMA_FISICA_DETALLE, Constantes.VISTA_TOMA_FISICA_DETALLE);
         
     }//fin del método inicializar
 

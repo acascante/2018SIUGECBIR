@@ -1,0 +1,280 @@
+<ice:form id="frm_listarInformeTecnico" 
+          xmlns:ice="http://www.icesoft.com/icefaces/component"
+          xmlns:h="http://java.sun.com/jsf/html"
+          xmlns:f="http://java.sun.com/jsf/core"
+          xmlns:ui="http://java.sun.com/jsf/facelets"
+          >
+    <div class="contenido-pagina">
+
+        <div class="container"> 
+            <!-- Titulo -->
+            <div class="row">
+                <div class='col-sm-7 align-middle'>
+                    <h1 class="align-middle">
+                        <ice:outputFormat value="#{label['sigebi.Reporte.faltantes.Titulo']}"/>
+                    </h1>
+                </div>    
+                <div class='col-sm-2' style="text-align: right">
+                    <h4 style="margin: 0; text-align: right">
+                        <ice:outputFormat value="#{label['sigebi.Reporte.Traslados.tipoReporte']}"/>
+                    </h4>
+                </div>
+                <div class='col-sm-3'>
+                    <ice:selectOneMenu id="selTipoReporte" styleClass="form-control"
+                                        value="#{controllerReporte.tipoReporteSelec}" >
+                         <f:selectItems id="optSelTipoBien" value="#{controllerReporte.itemsTiposReporte}"/>
+                     </ice:selectOneMenu>
+                </div>
+                
+                        
+                
+            </div>
+
+            <div class="row justify-content-md-center">
+                
+                 <div class='col-sm-11'>
+                     <ice:panelGroup style="margin: 20px 0px">
+                         <ice:panelTabSet>
+                             
+                             <ice:panelTab id="tabFiltros" label="#{label['sigebi.Reporte.Label.Configuracion']}">
+                             
+                                 <div class="row">
+
+                                     <div class='col-sm-3 align-middle'>
+                                         <h4 class="align-middle" style="margin-top: 15px">
+                                            <ice:outputFormat value="#{label['sigebi.Reporte.Inventario.Ubicacion']}"/>
+                                        </h4>
+                                     </div>
+                                    <div class='col-sm-9'>
+                                       
+                                        <ice:selectOneMenu id="selUbicaciónToma" 
+                                                           styleClass="form-control"
+                                                           value="#{controllerReporte.tipoReporteSelec}" >
+                                             <f:selectItems id="optSelTipoBien" value="#{controllerReporte.itemsTiposReporte}"/>
+                                         </ice:selectOneMenu>
+                                        
+                                   </div>  
+                                     
+                                </div>
+                                 
+                                 <div class="row">
+
+                                     <div class='col-sm-3 align-middle'>
+                                         <h4 class="align-middle" style="margin-top: 15px">
+                                            <ice:outputFormat value="#{label['sigebi.Reporte.Inventario.TomaFisica']}"/>
+                                        </h4>
+                                     </div>
+                                    <div class='col-sm-9'>
+                                       
+                                        <ice:selectOneMenu id="selTomaFisica" 
+                                                           styleClass="form-control"
+                                                           value="#{controllerReporte.tipoReporteSelec}" >
+                                             <f:selectItems id="optSelTipoBien" value="#{controllerReporte.itemsTiposReporte}"/>
+                                         </ice:selectOneMenu>
+                                        
+                                   </div>  
+                                     
+                                </div>
+                                 
+                                 <div class="row">
+                                     <div class='col-sm-3 align-middle'>
+                                         <h4 class="align-middle" style="margin-top: 15px">
+                                            <ice:outputFormat value="#{label['sigebi.Reporte.Label.FiltrosReporte']}"/>
+                                        </h4>
+                                     </div>
+                                    <div class='col-sm-3'>
+                                       <ice:outputText  value="#{label['sigebi.Reporte.Label.Identificacion']}" />
+                                        <ice:inputText id="txtIdentificacion" 
+                                                       styleClass="form-control" 
+                                                       maxlength="10"
+                                                       partialSubmit="false"
+                                                       value="#{controllerReporte.commandInventarioFaltantes.identificacion}" >
+                                        </ice:inputText>
+                                       
+                                   </div>  
+                                   <div class="col-md-3">
+                                       <div class="form-group ">
+                                           <ice:outputText value="#{label['sigebi.Reporte.Label.Descripcion']}" />
+                                            <ice:inputText id="txtDescripcion" 
+                                                           styleClass="form-control" 
+                                                           maxlength="50"
+                                                           partialSubmit="false"
+                                                           value="#{controllerReporte.commandInventarioFaltantes.descripcion}" >
+                                            </ice:inputText>
+                                       </div>
+                                   </div>
+                                </div>
+                                 
+                                 
+                                 <div class="row">
+                                     <div class='col-sm-3 align-middle'>
+                                     </div>
+                                    <div class='col-sm-3'>
+                                       <ice:outputText  value="#{label['sigebi.Reporte.Label.Marca']}" />
+                                        <ice:inputText id="txtMarca" 
+                                                       styleClass="form-control" 
+                                                       maxlength="40"
+                                                       partialSubmit="false"
+                                                       value="#{controllerReporte.commandInventarioFaltantes.marca}" >
+                                        </ice:inputText>
+                                       
+                                   </div>  
+                                   <div class="col-md-3">
+                                       <div class="form-group ">
+                                           <ice:outputText value="#{label['sigebi.Reporte.Label.Modelo']}" />
+                                            <ice:inputText id="txtModelo" 
+                                                           styleClass="form-control" 
+                                                           maxlength="30"
+                                                           partialSubmit="false"
+                                                           value="#{controllerReporte.commandInventarioFaltantes.modelo}" >
+                                            </ice:inputText>
+                                       </div>
+                                   </div>
+                                   <div class="col-md-3">
+                                       <div class="form-group ">
+                                           <ice:outputText value="#{label['sigebi.Reporte.Label.Serie']}" />
+                                            <ice:inputText id="txtSerie" 
+                                                           styleClass="form-control" 
+                                                           maxlength="30"
+                                                           partialSubmit="false"
+                                                           value="#{controllerReporte.commandInventarioFaltantes.serie}" >
+                                            </ice:inputText>
+                                       </div>
+                                   </div>
+                                </div>
+                                 
+                                 
+                                 
+                                 <div class="row">
+                                     <div class='col-sm-3 align-middle'>
+                                     </div>
+                                     <div class='col-sm-3 align-middle'>
+                                           <ice:outputText value="#{label['sigebi.Reporte.Inventario.UsuarioAsignado']}" />
+                                            <ice:inputText id="txtFuncionarioAsignado" 
+                                                           styleClass="form-control" 
+                                                           maxlength="40"
+                                                           partialSubmit="false"
+                                                           value="#{controllerReporte.commandInventarioFaltantes.oficialAsignado}" >
+                                            </ice:inputText>
+                                     </div>
+                                     <div class='col-sm-3 align-middle'>
+                                           <ice:outputText value="#{label['sigebi.Reporte.Label.Estado']}" />
+                                            <ice:inputText id="txtEstado" 
+                                                           styleClass="form-control" 
+                                                           maxlength="40"
+                                                           partialSubmit="false"
+                                                           value="#{controllerReporte.commandInventarioFaltantes.estado}" >
+                                            </ice:inputText>
+                                     </div>
+                                 </div>
+                                 
+                                 
+                                 
+                                 
+                                 
+                                 
+                                 <div class="row">
+                                     <div class='col-sm-3 align-middle'>
+                                         <h4 class="align-middle" style="margin-top: 15px">
+                                            <ice:outputFormat value="#{label['sigebi.Reporte.Label.OrdenReporte']}"/>
+                                        </h4>
+                                     </div>
+                                    <div class='col-sm-3'>
+                                        <div class="form-group ">
+                                            <ice:outputText  value="#{label['sigebi.Reporte.Label.TipoOrden']}" />
+                                            <ice:selectOneMenu id="selTipoOrden" 
+                                                               styleClass="form-control"
+                                                               value="#{controllerReporte.commandInventarioFaltantes.tipoOrden}" >
+                                                 <f:selectItems id="optSelTipoBien" value="#{controllerReporte.itemsTipoOrden}"/>
+                                             </ice:selectOneMenu>
+                                        </div>
+                                   </div>  
+                                 </div>
+                             
+                                 
+                                 <div class="row">
+                                     <div class='col-sm-3 align-middle'>
+                                     </div>
+                                    <div class='col-sm-3'>
+                                        <div class="form-group ">
+                                            <ice:outputText  value="#{label['sigebi.Reporte.Label.Orden1']}" />
+                                            <ice:selectOneMenu id="selOrden1" 
+                                                               styleClass="form-control"
+                                                               partialSubmit="true"
+                                                               valueChangeListener="#{controllerReporte.commandInventarioFaltantes.cambioOrden1}"
+                                                               value="#{controllerReporte.commandInventarioFaltantes.orden1}" >
+                                                 <f:selectItems id="optSelTipoBien" value="#{controllerReporte.commandInventarioFaltantes.itemsOrdenColumnas1}"/>
+                                             </ice:selectOneMenu>
+                                        </div>
+                                   </div>  
+                                   <div class="col-md-3">
+                                       <div class="form-group ">
+                                           <ice:outputText value="#{label['sigebi.Reporte.Label.Orden2']}" />
+                                            <ice:selectOneMenu id="selOrden2" 
+                                                               styleClass="form-control"
+                                                               partialSubmit="true"
+                                                               valueChangeListener="#{controllerReporte.commandInventarioFaltantes.cambioOrden2}"
+                                                               value="#{controllerReporte.commandInventarioFaltantes.orden2}" >
+                                                 <f:selectItems id="optSelTipoBien" value="#{controllerReporte.commandInventarioFaltantes.itemsOrdenColumnas2}"/>
+                                             </ice:selectOneMenu>
+                                       </div>
+                                   </div>
+                                   <div class="col-md-3">
+                                       <div class="form-group ">
+                                           <ice:outputText value="#{label['sigebi.Reporte.Label.Orden3']}" />
+                                            <ice:selectOneMenu id="selOrden3" 
+                                                               styleClass="form-control" 
+                                                               partialSubmit="true"
+                                                               value="#{controllerReporte.commandInventarioFaltantes.orden3}" >
+                                                 <f:selectItems id="optSelTipoBien" value="#{controllerReporte.commandInventarioFaltantes.itemsOrdenColumnas3}"/>
+                                             </ice:selectOneMenu>
+                                       </div>
+                                   </div>
+                                </div>
+                                 
+                                 
+                                 
+                             </ice:panelTab>
+                            
+                             
+                         </ice:panelTabSet>
+                             
+                     </ice:panelGroup>
+                </div>  
+                
+                 
+
+            </div>
+            
+            
+            
+            <div class="row">
+                 <div class='col-sm-10'>
+                </div>  
+                 <div class='col-sm-2'>
+                </div>  
+            </div>
+            
+            <!-- Botones para generar -->
+            <div class="row">
+                 <div class='col-sm-2'>
+                </div>  
+                 <div class='col-sm-8'>
+                </div>  
+                 <div class='col-sm-2'>
+                    <ice:commandButton id="btnReporte"
+                                       style="float: right" 
+                                       styleClass="boton" 
+                                       partialSubmit="true" 
+                                       action="#{controllerReporte.mostrarInventarioFaltantes}"
+                                       value="Reporte Traslados">
+                    </ice:commandButton>
+                </div>  
+            </div>
+            
+
+        </div>    
+    </div>
+
+
+</ice:form>

@@ -111,7 +111,7 @@
                     </div>                
                 </div>
             </ice:panelGroup>
-             
+            
             <!--Tabla Bienes-->
             <div class="row">
                 <div class="col-sm-12">
@@ -130,7 +130,7 @@
                             <div class="row" >
                                 <div class="col-md-12">
                                     <div class="form-group"> 
-                                        <ice:dataTable id="listadoBienes" value="#{controllerAgregarPrestamos.command.listBienes}" var="bien" paginator="true" paginatorPosition="bottom" rows="10">
+                                        <ice:dataTable id="listadoBienes" value="#{controllerAgregarPrestamos.command.listBienesDetalle}" var="detalle" paginator="true" paginatorPosition="bottom" rows="10">
                                             <f:facet name="header">
                                                 <ice:columnGroup>
                                                     <ice:headerRow>
@@ -140,10 +140,6 @@
                                                         
                                                         <ice:column id="identificacion" rowspan="2" style="vertical-align:top;">
                                                             <ice:outputText value="#{label['sigebi.label.solicitud.bienes.identificacion']} "/>
-                                                        </ice:column>
-
-                                                        <ice:column id="descripcion" rowspan="2" style="vertical-align:top;">
-                                                            <ice:outputText value="#{label['sigebi.label.solicitud.bienes.descripcion']} "/>
                                                         </ice:column>
 
                                                         <ice:column id="marca" rowspan="2" style="vertical-align:top;">
@@ -162,53 +158,82 @@
                                                             <ice:outputText value="#{label['sigebi.label.solicitud.bienes.estado']} "/>
                                                         </ice:column>
 
-                                                        <ice:column id="opciones" colspan="3">
+                                                        <ice:column id="fechaInicio" rowspan="2" style="vertical-align:top;">
+                                                            <ice:outputText value="#{label['sigebi.label.prestamos.fechaInicio']}" />
+                                                        </ice:column>
+                                                        
+                                                        <ice:column id="fechaFin" rowspan="2" style="vertical-align:top;">
+                                                            <ice:outputText value="#{label['sigebi.label.prestamos.fechaFin']}" />
+                                                        </ice:column>
+                                                        
+                                                        <ice:column id="opciones" colspan="4">
                                                             <ice:outputText value="#{label['sigebi.label.solicitud.bienes.opciones']} "/>
                                                         </ice:column>
                                                     </ice:headerRow>
                                                 </ice:columnGroup>
                                             </f:facet>
                                             <ice:column>
-                                                <h:outputText id="idCell" value="#{bien.id}"/>
+                                                <h:outputText id="idCell" value="#{detalle.bien.id}"/>
                                             </ice:column>
                                             <ice:column>
-                                                <h:outputText id="identificacionCell" value="#{bien.identificacion.identificacion}"/>
+                                                <h:outputText id="identificacionCell" value="#{detalle.bien.identificacion.identificacion}"/>
                                             </ice:column>
                                             <ice:column>
-                                                <h:outputText id="descripcionCell" value="#{bien.descripcion}"/>
+                                                <h:outputText id="marcaCell" value="#{detalle.bien.resumenBien.marca}"/>
                                             </ice:column>
                                             <ice:column>
-                                                <h:outputText id="marcaCell" value="#{bien.resumenBien.marca}"/>
+                                                <h:outputText id="modeloCell" escape="false" value="#{detalle.bien.resumenBien.modelo}"/>
                                             </ice:column>
                                             <ice:column>
-                                                <h:outputText id="modeloCell" escape="false" value="#{bien.resumenBien.modelo}"/>
+                                                <h:outputText id="serieCell" escape="false" value="#{detalle.bien.resumenBien.serie}"/>
                                             </ice:column>
                                             <ice:column>
-                                                <h:outputText id="serieCell" escape="false" value="#{bien.resumenBien.serie}"/>
+                                                <h:outputText id="estadoCell" value="#{detalle.bien.estadoInterno.nombre}"/>
                                             </ice:column>
+
                                             <ice:column>
-                                                <h:outputText id="estadoCell" value="#{bien.estadoInterno.nombre}"/>
+                                                <ice:selectInputDate id="fechaInicio" partialSubmit="false" styleClass="form-control" renderAsPopup="true" renderMonthAsDropdown="true" 
+                                                 validator="#{controllerAgregarPrestamos.validarFecha}"
+                                                 value="#{detalle.fechaInicio}" >
+                                                    <f:convertDateTime pattern="#{controllerAgregarPrestamos.command.datePattern}"  timeZone="#{controllerAgregarPrestamos.command.timeZone}" />
+                                                </ice:selectInputDate>
+                                            </ice:column>
+                                            
+                                            <ice:column>
+                                                <ice:selectInputDate id="fechaFin" highlightClass="dateHighlightGray" highlightUnit="DAY_OF_WEEK" highlightValue="1" 
+                                                 renderAsPopup="true" renderMonthAsDropdown="true" renderYearAsDropdown="true" partialSubmit="false"
+                                                 validator="#{controllerAgregarPrestamos.validarFecha}"
+                                                 value="#{detalle.fechaFin}" >
+                                                    <f:convertDateTime pattern="#{controllerAgregarPrestamos.command.datePattern}"  timeZone="#{controllerAgregarPrestamos.command.timeZone}" />
+                                                </ice:selectInputDate>
                                             </ice:column>
                                             
                                             <ice:column>
                                                 <ice:commandButton id="btnEliminarBien" partialSubmit="true" value="Eliminar" style="float: right" styleClass="boton"
                                                                     actionListener="#{controllerAgregarPrestamos.eliminarBien}" 
-                                                                    rendered="#{bien.eliminar and controllerAgregarPrestamos.visibleBotonEliminarBien}">
-                                                    <f:attribute id="bienSeleccionado" name="bienSeleccionado"  value="#{bien.id}"/> 
+                                                                    rendered="#{detalle.bien.eliminar and controllerAgregarPrestamos.visibleBotonEliminarBien}">
+                                                    <f:attribute id="bienSeleccionado" name="bienSeleccionado"  value="#{detalle.bien.id}"/> 
                                                 </ice:commandButton>
                                             </ice:column>
                                             <ice:column>
                                                 <ice:commandButton id="btnSolicitarBien" partialSubmit="true" value="Solicitar" style="float: right" styleClass="boton"
                                                                     actionListener="#{controllerAgregarPrestamos.solicitarBien}" 
-                                                                    rendered="#{bien.solicitar and controllerAgregarPrestamos.visibleBotonSolicitarBien}">
-                                                    <f:attribute id="bienSeleccionado" name="bienSeleccionado"  value="#{bien.id}"/> 
+                                                                    rendered="#{detalle.bien.solicitar and controllerAgregarPrestamos.visibleBotonSolicitarBien}">
+                                                    <f:attribute id="bienSeleccionado" name="bienSeleccionado"  value="#{detalle.bien.id}"/> 
                                                 </ice:commandButton>
                                             </ice:column>
                                             <ice:column >
                                                 <ice:commandButton id="btnRechazarBien" partialSubmit="true" value="Rechazar" style="float: right" styleClass="boton"
                                                                     actionListener="#{controllerAgregarPrestamos.rechazarBien}"
-                                                                    rendered="#{bien.rechazar and controllerAgregarPrestamos.visibleBotonRechazarBien}">
-                                                    <f:attribute id="bienSeleccionado" name="bienSeleccionado"  value="#{bien.id}"/> 
+                                                                    rendered="#{detalle.bien.rechazar and controllerAgregarPrestamos.visibleBotonRechazarBien}">
+                                                    <f:attribute id="bienSeleccionado" name="bienSeleccionado"  value="#{detalle.bien.id}"/> 
+                                                </ice:commandButton>
+                                            </ice:column>
+                                            <ice:column >
+                                                <ice:commandButton id="btnDevolverBien" partialSubmit="true" value="Devolver" style="float: right" styleClass="boton"
+                                                                    actionListener="#{controllerAgregarPrestamos.devolverBien}"
+                                                                    rendered="#{detalle.bien.devolver and controllerAgregarPrestamos.visibleBotonDevolverBien}">
+                                                    <f:attribute id="bienSeleccionado" name="bienSeleccionado"  value="#{detalle.bien.id}"/> 
                                                 </ice:commandButton>
                                             </ice:column>
                                         </ice:dataTable>
@@ -243,6 +268,7 @@
                     <ice:commandButton id="botonAceptar" value="#{label['label.aceptar']}" action="#{controllerAgregarPrestamos.aprobarPrestamo}" rendered="#{controllerAgregarPrestamos.visibleBotonAprobar}" partialSubmit="true" style="float: right" styleClass="boton"/>
                     <ice:commandButton id="botonRevisar" value="#{label['label.revisar']}" action="#{controllerAgregarPrestamos.revisarPrestamo}" rendered="#{controllerAgregarPrestamos.visibleBotonRevisar}" partialSubmit="true" style="float: right" styleClass="boton"/>
                     <ice:commandButton id="botonAnular" value="#{label['label.anular']}" action="#{controllerAgregarPrestamos.anularPrestamo}" rendered="#{controllerAgregarPrestamos.visibleBotonAnular}" partialSubmit="true" style="float: right" styleClass="boton"/>
+                    <ice:commandButton id="botonDevolver" value="#{label['label.devolver']}" action="#{controllerAgregarPrestamos.devolverPrestamo}" rendered="#{controllerAgregarPrestamos.visibleBotonDevolver}" partialSubmit="true" style="float: right" styleClass="boton"/>
                 </div>
             </div>
         </div>

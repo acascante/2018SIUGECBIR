@@ -554,6 +554,8 @@ public class BienCommand {
         private ProveedorCommand() {
             super();
             this.proveedor = new Proveedor();
+            this.filtroIdentificacion = "";
+            this.filtroNombre = "";
             
             ArrayList<SelectItem> cantPorPaginas = new ArrayList<SelectItem>();
             cantPorPaginas.add(new SelectItem(5, "5"));
@@ -564,6 +566,12 @@ public class BienCommand {
         private ProveedorCommand(Proveedor proveedor) {
             this.proveedor = proveedor;
             this.descripcion = proveedor.getNombreCompleto();
+
+            ArrayList<SelectItem> cantPorPaginas = new ArrayList<SelectItem>();
+            cantPorPaginas.add(new SelectItem(5, "5"));
+            cantPorPaginas.add(new SelectItem(10, "10"));
+            this.setListaRegistrosPagina(cantPorPaginas);
+
         }
 
         //<editor-fold defaultstate="collapsed" desc="GET's y SET's">

@@ -8,7 +8,6 @@ package cr.ac.ucr.sigebi.controllers;
 import cr.ac.ucr.framework.utils.FWExcepcion;
 import cr.ac.ucr.framework.vista.util.Mensaje;
 import cr.ac.ucr.framework.vista.util.Util;
-import cr.ac.ucr.sigebi.commands.ListarBienesCommand;
 import cr.ac.ucr.sigebi.domain.Bien;
 import cr.ac.ucr.sigebi.domain.Estado;
 import cr.ac.ucr.sigebi.domain.Tipo;
@@ -37,13 +36,12 @@ import org.springframework.stereotype.Controller;
 public class ListadoBienesGeneralController extends BaseController{
     
     //<editor-fold defaultstate="collapsed" desc="Variables Locales">
+    
     @Resource
     private BienModel bienModel;
 
     @Resource
     private EstadoModel estadoModel;
-
-    private ListarBienesCommand command;
     
     List<Bien> bienes;
     Map<Long, Bien> bienesSeleccionados;
@@ -68,6 +66,7 @@ public class ListadoBienesGeneralController extends BaseController{
     Tipo tipoInfTecDonacion;
     Tipo tipoInfTecDesecho;
     
+    Estado estadoBienActivo;
     //</editor-fold>
     
     //<editor-fold defaultstate="collapsed" desc="Get's & Set's">
@@ -210,8 +209,9 @@ public class ListadoBienesGeneralController extends BaseController{
         }
         mostrarDialogBienes = false;
         
-        
-        estadoIntInfTecAprobado = this.estadoPorDominioValor(Constantes.DOMINIO_BIEN_INTERNO, Constantes.ESTADO_INTERNO_BIEN_EXCLUSION_APROBADO);
+        estadoBienActivo = estadoModel.buscarPorDominioEstado(Constantes.DOMINIO_BIEN, Constantes.ESTADO_BIEN_ACTIVO);
+            
+        estadoIntInfTecAprobado = this.estadoPorDominioValor(Constantes.DOMINIO_INFORME_TECNICO, Constantes.ESTADO_INFORME_TECNICO_APROBADO);
         tipoInfTecDonacion = this.tipoPorDominioValor(Constantes.DOMINIO_INFORME_TECNICO, Constantes.TIPO_INFORME_TECNICO_DONAR);
         tipoInfTecDesecho = this.tipoPorDominioValor(Constantes.DOMINIO_INFORME_TECNICO, Constantes.TIPO_INFORME_TECNICO_DESECHAR);
         
@@ -254,7 +254,8 @@ public class ListadoBienesGeneralController extends BaseController{
                     , fltSerie
                     , null
                     , null
-                    , (Estado[]) null);
+                    , estadoBienActivo);
+                    //, (Estado[]) null);
                 break;  
                 case 2: contador = bienModel.contarListadoActas(unidadEjecutora
                     , 0l
@@ -336,8 +337,9 @@ public class ListadoBienesGeneralController extends BaseController{
                 , fltSerie
                 , null
                 , null
-                , (Estado[]) null
-            );
+                , estadoBienActivo);
+                //, (Estado[]) null);
+           
         
         for(Bien valor : resp) {     // foreach grade in grades
             //revisa que el bien este seleccionado

@@ -9,7 +9,6 @@ import cr.ac.ucr.framework.utils.FWExcepcion;
 import cr.ac.ucr.sigebi.daos.BienDao;
 import cr.ac.ucr.sigebi.domain.Bien;
 import cr.ac.ucr.sigebi.domain.Estado;
-import cr.ac.ucr.sigebi.domain.RegistroMovimiento;
 import cr.ac.ucr.sigebi.domain.RegistroMovimientoBien;
 import cr.ac.ucr.sigebi.domain.Sincronizar;
 import cr.ac.ucr.sigebi.domain.Tipo;
@@ -58,6 +57,10 @@ public class BienModel {
 
     public Bien buscarPorId(Long id) throws FWExcepcion {
         return bienDao.buscarPorId(id);
+    }
+    
+    public Bien buscarPorIdentificacion(String identificacion) throws FWExcepcion {
+        return bienDao.buscarPorIdentificacion(identificacion);
     }
 
     public List<Bien> listar(Integer primerRegistro,

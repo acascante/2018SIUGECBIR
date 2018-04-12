@@ -60,7 +60,7 @@ public class GestionProcesosController extends BaseController {
     //Listas para agregas
     List<SelectItem> tiposProceso;
     List<SelectItem> autorizacionesTipoProceso;
-    List<SelectItem> roles;
+    List<SelectItem> autorizacionesRol;
     List<Usuario> usuarios;
 
     GestionProcesoCommand command;
@@ -124,12 +124,12 @@ public class GestionProcesosController extends BaseController {
         this.autorizacionesTipoProceso = autorizacionesTipoProceso;
     }
 
-    public List<SelectItem> getRoles() {
-        return roles;
+    public List<SelectItem> getAutorizacionesRol() {
+        return autorizacionesRol;
     }
 
-    public void setRoles(List<SelectItem> roles) {
-        this.roles = roles;
+    public void setAutorizacionesRol(List<SelectItem> autorizacionesRol) {
+        this.autorizacionesRol = autorizacionesRol;
     }
 
     public List<Usuario> getUsuarios() {
@@ -165,14 +165,6 @@ public class GestionProcesosController extends BaseController {
             for (Tipo item : lista) {
                 tiposProceso.add(new SelectItem(item.getId().toString(), item.getNombre()));
             }
-
-            //Se consultan los roles de la aplicacion
-            List<Rol> listaRoles = rolModel.listarTodos();
-            roles = new ArrayList<SelectItem>();
-            for (Rol item : listaRoles) {
-                roles.add(new SelectItem(item.getId().toString(), item.getNombre()));
-            }
-
             command = new GestionProcesoCommand();
         } catch (FWExcepcion e) {
             Mensaje.agregarErrorAdvertencia(e.getError_para_usuario());
@@ -200,6 +192,7 @@ public class GestionProcesosController extends BaseController {
         try {
             //Se inicializa la lista de autorizaciones
             autorizacionesTipoProceso = null;
+            autorizacionesRol = null;
 
             // Se obtiene el id del proceso
             Long valor = command.getTipoProceso().getIdTemporal();
@@ -219,8 +212,6 @@ public class GestionProcesosController extends BaseController {
                 }
             }
 
-            //Se actualiza la lista de usuarios 
-            buscaUsuariosAutorizacionRol();
         } catch (FWExcepcion e) {
             Mensaje.agregarErrorAdvertencia(e.getError_para_usuario());
         } catch (Exception e) {
@@ -241,6 +232,10 @@ public class GestionProcesosController extends BaseController {
             return;
         }
         try {
+            
+            //Se inicializa la lista de roles por autorizacion
+            autorizacionesRol = null;
+
             // Se obtiene el id del autorizacion
             Long valor = command.getAutorizacion().getIdTemporal();
             if (valor > 0) {
@@ -248,10 +243,15 @@ public class GestionProcesosController extends BaseController {
                 //Se actualiza la autorizacion
                 command.setAutorizacion(autorizacionModel.buscarPorId(valor));
                 command.getAutorizacion().setIdTemporal(valor);
+
+                //Se cargan las autorizaciones rol, asociadas a la autorizacion
+                List<AutorizacionRol> listaRoles = autorizacionRolModel.buscarPorAutorizacion(valor);
+                autorizacionesRol = new ArrayList<SelectItem>();
+                for (AutorizacionRol item : listaRoles) {
+                    autorizacionesRol.add(new SelectItem(item.getId().toString(), item.getRol().getNombre()));
+                }
             }
 
-            //Se busca a los usuarios asociados al autorizacion y al rol
-            this.buscaUsuariosAutorizacionRol();
         } catch (FWExcepcion e) {
             Mensaje.agregarErrorAdvertencia(e.getError_para_usuario());
         } catch (Exception e) {
@@ -264,7 +264,7 @@ public class GestionProcesosController extends BaseController {
      *
      * @param event
      */
-    public void seleccionRol(ValueChangeEvent event) {
+    public void seleccionRolAutorizacion(ValueChangeEvent event) {
 
         if (!event.getPhaseId().equals(PhaseId.INVOKE_APPLICATION)) {
             event.setPhaseId(PhaseId.INVOKE_APPLICATION);
@@ -273,15 +273,16 @@ public class GestionProcesosController extends BaseController {
         }
         try {
             // Se obtiene el id del rol
-            Long valor = command.getRol().getIdTemporal();
+            Long valor = command.getAutorizacionRol().getIdTemporal();
             if (valor > 0) {
                 //Se actualiza el rol  
-                command.setRol(rolModel.buscarPorId(valor));
-                command.getRol().setIdTemporal(valor);
+                command.setAutorizacionRol(autorizacionRolModel.buscarPorId(valor));
+                command.getAutorizacionRol().setIdTemporal(valor);
             }
 
             //Se busca a los usuarios asociados al autorizacion y al rol
             this.buscaUsuariosAutorizacionRol();
+            
         } catch (FWExcepcion e) {
             Mensaje.agregarErrorAdvertencia(e.getError_para_usuario());
         } catch (Exception e) {
@@ -295,11 +296,7 @@ public class GestionProcesosController extends BaseController {
             usuarios = null;
             this.setCantidadRegistros(0);
 
-            if (command.getRol().getIdTemporal() > 0 && command.getAutorizacion().getIdTemporal() > 0) {
-
-                //Se busca la autorizacion rol
-                command.setAutorizacionRol(autorizacionRolModel.buscarPorRolAutorizacion(command.getRol().getIdTemporal(), command.getAutorizacion().getIdTemporal()));
-
+            if (command.getAutorizacionRol() != null && command.getAutorizacionRol().getIdTemporal() > 0) {
                 //Se buscan los usuarios       
                 this.contarUsuarios();
                 this.listarUsuarios();
@@ -362,15 +359,6 @@ public class GestionProcesosController extends BaseController {
 
             //Se busca el rol autorizacion, si no existe se crea
             AutorizacionRol autorizacionRol = command.getAutorizacionRol();
-            if (autorizacionRol == null) {
-                autorizacionRol = new AutorizacionRol();
-                autorizacionRol.setRol(command.getRol());
-                autorizacionRol.setAutorizacion(command.getAutorizacion());
-                autorizacionRolModel.agregar(autorizacionRol);
-
-                //Se actualiza el command
-                command.setAutorizacionRol(autorizacionRol);
-            }
 
             //Se busca el usuario
             Usuario usuario = (Usuario) pEvent.getComponent().getAttributes().get("usuarioSelApro");
@@ -411,12 +399,6 @@ public class GestionProcesosController extends BaseController {
 
             autorizacionRolPersonaModel.eliminar(autorizacionRolPersona);
             usuario.setMarcado(false);
-
-            //Se verifica si la autorizacion rol tiene usuarios asociados para eliminarla
-            if (autorizacionRolPersonaModel.contar(command.getAutorizacionRol()).equals(0L)) {
-                autorizacionRolModel.eliminar(command.getAutorizacionRol());
-                command.setAutorizacionRol(null);
-            }
 
         } catch (FWExcepcion e) {
             Mensaje.agregarErrorAdvertencia(e.getError_para_usuario());
@@ -493,9 +475,10 @@ public class GestionProcesosController extends BaseController {
             } else if (command.getPresentarPanelModificarAutorizacion()) {
                 command.setAutorizacionNew(command.getAutorizacion());
             } else if (command.getPresentarPanelAgregarRol()) {
-                command.setRolNew(new Rol());
+                command.setAutorizacionRolNew(new AutorizacionRol());
+                command.getAutorizacionRolNew().setRol(new Rol());
             } else if (command.getPresentarPanelModificarRol()) {
-                command.setRolNew(command.getRol());
+                command.setAutorizacionRolNew(command.getAutorizacionRol());
             }
         } catch (FWExcepcion e) {
             Mensaje.agregarErrorAdvertencia(e.getError_para_usuario());
@@ -763,21 +746,30 @@ public class GestionProcesosController extends BaseController {
 
     //</editor-fold>
     
-    // <editor-fold defaultstate="collapsed" desc="Panel Popup Rol">
+    // <editor-fold defaultstate="collapsed" desc="Panel Popup Autorizacion Rol">
     /**
      * Agregar el rol a la base de datos
      */
     public void agregarRol() {
-
         try {
-            Rol rol = command.getRolNew();
-            rol.setEstado(this.estadoPorDominioValor(Constantes.DOMINIO_GENERAL, Constantes.ESTADO_GENERAL_ACTIVO));
+            
+            AutorizacionRol autorizacionRol = command.getAutorizacionRolNew();
             if (validarFormRol()) {
-                rolModel.agregar(rol);
-                roles.add(new SelectItem(rol.getId(), rol.getNombre()));
-                command.setPresentarPanel(Boolean.FALSE);
-                command.setRol(rol);
-            }
+                
+                //Se agrega el rol
+                autorizacionRol.getRol().setEstado(this.estadoPorDominioValor(Constantes.DOMINIO_GENERAL, Constantes.ESTADO_GENERAL_ACTIVO));            
+                rolModel.agregar(autorizacionRol.getRol());
+
+                //Se agrega la autorizacion rol
+                autorizacionRol.setAutorizacion(command.getAutorizacion());
+                autorizacionRolModel.agregar(autorizacionRol);
+
+                //Se agrega a la lista
+                autorizacionesRol.add(new SelectItem(autorizacionRol.getId(), autorizacionRol.getRol().getNombre()));
+
+                //Se oculta el panel
+                command.setPresentarPanel(Boolean.FALSE);                
+            }            
         } catch (FWExcepcion e) {
             Mensaje.agregarErrorAdvertencia(e.getError_para_usuario());
         } catch (Exception e) {
@@ -791,9 +783,9 @@ public class GestionProcesosController extends BaseController {
     public void modificarRol() {
         try {
             if (validarFormRol()) {
-                Rol rol = command.getRolNew();
-                rolModel.modificar(rol);
-                JsfUtil.modificarItem(roles, rol.getId().toString(), rol.getNombre(), null);
+                AutorizacionRol autorizacionRol = command.getAutorizacionRolNew();
+                rolModel.modificar(autorizacionRol.getRol());
+                JsfUtil.modificarItem(autorizacionesRol, autorizacionRol.getId().toString(), autorizacionRol.getRol().getNombre(), null);
                 command.setPresentarPanel(Boolean.FALSE);
             }
         } catch (FWExcepcion e) {
@@ -807,11 +799,11 @@ public class GestionProcesosController extends BaseController {
     
     public boolean validarFormRol() {
         //Validaciones de campos
-        if (command.getRolNew().getCodigo() == null || command.getRolNew().getCodigo() < 0) {
+        if (command.getAutorizacionRolNew().getRol().getCodigo() == null || command.getAutorizacionRolNew().getRol().getCodigo() < 0) {
             Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.error.controllerGestionProcesos.autorizacion.rol.codigo.requerido"));
             return false;
         }
-        if (command.getRolNew().getNombre().isEmpty()) {
+        if (command.getAutorizacionRolNew().getRol().getNombre().isEmpty()) {
             Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.error.controllerGestionProcesos.autorizacion.rol.nombre.requerido"));
             return false;
         }
@@ -819,25 +811,25 @@ public class GestionProcesosController extends BaseController {
         if (command.getPresentarPanelAgregarRol()) {
 
             //Se verifica si ya existe un rol con el nombre indicado
-            if (rolModel.contarRolesValidator(null, null, command.getRolNew().getNombre()) > 0) {
+            if (rolModel.contarRolesValidator(null, null, command.getAutorizacionRolNew().getRol().getNombre()) > 0) {
                 Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.error.controllerGestionProcesos.rol.nombre.ya.existe"));
                 return false;
             }
 
             //Se verifica si ya existe un autorizacion con el codigo indicado
-            if (rolModel.contarRolesValidator(null, command.getRolNew().getCodigo(), null) > 0) {
+            if (rolModel.contarRolesValidator(null, command.getAutorizacionRolNew().getRol().getCodigo(), null) > 0) {
                 Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.error.controllerGestionProcesos.rol.codigo.ya.existe"));
                 return false;
             }
         } else if (command.getPresentarPanelModificarRol()) {
             //Se verifica si ya existe un rol con el nombre indicado
-            if (rolModel.contarRolesValidator(command.getRolNew().getId(), null, command.getRolNew().getNombre()) > 0) {
+            if (rolModel.contarRolesValidator(command.getAutorizacionRolNew().getRol().getId(), null, command.getAutorizacionRolNew().getRol().getNombre()) > 0) {
                 Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.error.controllerGestionProcesos.rol.nombre.ya.existe"));
                 return false;
             }
 
             //Se verifica si ya existe un rol con el codigo indicado
-            if (rolModel.contarRolesValidator(command.getRolNew().getId(), command.getRolNew().getCodigo(), null) > 0) {
+            if (rolModel.contarRolesValidator(command.getAutorizacionRolNew().getRol().getId(), command.getAutorizacionRolNew().getRol().getCodigo(), null) > 0) {
                 Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.error.controllerGestionProcesos.rol.codigo.ya.existe"));
                 return false;
             }
@@ -852,13 +844,23 @@ public class GestionProcesosController extends BaseController {
 
         try {
             if (validarFormEliminarRol()) {
-                Rol rol = command.getRolNew();
-                roles = JsfUtil.eliminarItem(roles, rol.getId().toString());
+                
+                AutorizacionRol autorizacionRol = command.getAutorizacionRolNew();
+                autorizacionesRol = JsfUtil.eliminarItem(autorizacionesRol, autorizacionRol.getId().toString());
+                
+                Rol rol = autorizacionRol.getRol();
+                
+                //Se elimina la autorizacion rol
+                autorizacionRolModel.eliminar(autorizacionRol);
+                
+                //Se elimina el rol asociado a la autorizacion rol
                 rolModel.eliminar(rol);
 
+                //Se oculta
                 command.setPresentarPanel(Boolean.FALSE);
-                command.setRol(new Rol());
-
+                command.setAutorizacionRolNew(new AutorizacionRol());
+                command.getAutorizacionRolNew().setRol(new Rol());
+                
                 //Se busca los usuarios por rol y autorizacion
                 this.buscaUsuariosAutorizacionRol();
 
@@ -872,7 +874,7 @@ public class GestionProcesosController extends BaseController {
 
     public boolean validarFormEliminarRol() {
 
-        if (rolModel.verificaRolUso(command.getRolNew().getId()) > 0) {
+        if (rolModel.verificaRolUso(command.getAutorizacionRolNew().getRol().getId()) > 0) {
             Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.error.controllerGestionProcesos.rol.asociado"));
             return false;
         }

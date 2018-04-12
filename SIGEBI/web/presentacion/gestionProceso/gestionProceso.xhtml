@@ -78,10 +78,10 @@
                         <ice:selectOneMenu id="rolSelec"                                           
                                            styleClass="form-control"
                                            partialSubmit="true"
-                                           value="#{controllerGestionProceso.command.rol.idTemporal}"
-                                           valueChangeListener="#{controllerGestionProceso.seleccionRol}">
+                                           value="#{controllerGestionProceso.command.autorizacionRol.idTemporal}"
+                                           valueChangeListener="#{controllerGestionProceso.seleccionRolAutorizacion}">
                                            <f:selectItem itemLabel="N/A" itemValue="-1"/>
-                                           <f:selectItems id="rolSelecItem" value="#{controllerGestionProceso.roles}"/>
+                                           <f:selectItems id="rolSelecItem" value="#{controllerGestionProceso.autorizacionesRol}"/>
                         </ice:selectOneMenu>
                         
                         <ice:commandButton id="botonAgregarRol"
@@ -95,7 +95,7 @@
                                                    style="margin-top:2%" 
                                                    styleClass="btnModificar_Proceso" 
                                                    partialSubmit="true"
-                                                   rendered="#{controllerGestionProceso.command.rol.idTemporal > 0}"
+                                                   rendered="#{controllerGestionProceso.command.autorizacionRol.idTemporal > 0}"
                                                    actionListener="#{controllerGestionProceso.mostrarPanel}">
                             <f:attribute id="accion" name="accion"  value="4"/>
                         </ice:commandButton>

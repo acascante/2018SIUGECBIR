@@ -30,16 +30,15 @@
                             </div>
                         </div>    
                     </div>
-                    <div class="row"  style="margin-top: 20px; margin-bottom: 20px;">
+                    <div class="row" style="margin-top: 20px; margin-bottom: 20px;">
                         <div class='col-md-6'>
-                            <span class="alineado_derecha">
-                                <ice:commandButton id="btnCancelar" value="#{label['label.regresar']}" action="#{controllerAgregarPrestamos.cerrarPanelObservaciones}" partialSubmit="true" styleClass="boton"  />
-                            </span>
+                            <ice:commandButton id="btnCerrarPanel" value="#{label['label.regresar']}" action="#{controllerAgregarPrestamos.cerrarPanelObservaciones}" partialSubmit="true" rendered="true" style="float: left" styleClass="boton" />
                         </div>
-                        <div class="col-md-6 align-content-center">
+                        <div class="col-md-6">
                             <ice:commandButton id="botonRechazarBienObservacion" value="#{label['label.rechazar']}" action="#{controllerAgregarPrestamos.rechazarBienObservacion}" rendered="#{controllerAgregarPrestamos.visibleBotonRechazarBienObservacion}" partialSubmit="true" style="float: right" styleClass="boton"/>
                             <ice:commandButton id="botonRechazarObservacion" value="#{label['label.rechazar']}" action="#{controllerAgregarPrestamos.rechazarPrestamoObservacion}" rendered="#{controllerAgregarPrestamos.visibleBotonRechazarObservacion}" partialSubmit="true" style="float: right" styleClass="boton"/>
                             <ice:commandButton id="botonRevisarObservacion" value="#{label['label.revisar']}" action="#{controllerAgregarPrestamos.revisarPrestamoObservacion}" rendered="#{controllerAgregarPrestamos.visibleBotonRevisarObservacion}" partialSubmit="true" style="float: right" styleClass="boton"/>
+                            <ice:commandButton id="botonAnularObservacion" value="#{label['label.anular']}" action="#{controllerAgregarPrestamos.anularPrestamoObservacion}" rendered="#{controllerAgregarPrestamos.visibleBotonAnularObservacion}" partialSubmit="true" style="float: right" styleClass="boton"/>
                         </div>
                     </div>
                 </div>                

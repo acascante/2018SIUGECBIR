@@ -507,21 +507,49 @@ public class InformeTecnicoController extends BaseController {
 
                 //Si todos estan aprobados se aprueba todo el informe
                 if (aprobar) {
+
+                    //Se modifica el informe
                     informe.setEstado(this.estadoPorDominioValor(Constantes.DOMINIO_INFORME_TECNICO, Constantes.ESTADO_INFORME_TECNICO_APROBADO));
                     documentoModel.modificar(informe);
+
+                    //Se cambia el estado del bien asociado al informe
+                    Estado estadoBien = null;
+                    Estado estadoBienInterno = this.estadoPorDominioValor(Constantes.DOMINIO_BIEN_INTERNO, Constantes.ESTADO_INTERNO_BIEN_INFORME_TECNICO_APROBADO);                    
+                    if(informe.getTipoInforme().getValor().equals(Constantes.TIPO_INFORME_TECNICO_DONAR) 
+                            || informe.getTipoInforme().getValor().equals(Constantes.TIPO_INFORME_TECNICO_DESECHAR)){
+                        
+                        //Si es por desecho o donacion, se deja activo se cambia al aprobar el acta
+                        estadoBien = null;
+                    }else{
+                        if(informe.getBien().getCapitalizable()){
+                            //Para el caso de los bienes capitalizables
+                            estadoBien = this.estadoPorDominioValor(Constantes.DOMINIO_BIEN, Constantes.ESTADO_BIEN_PENDIENTE_SINCRONIZAR);
+                        }else{
+                            estadoBien = this.estadoPorDominioValor(Constantes.DOMINIO_BIEN, Constantes.ESTADO_BIEN_EXCLUIDO);
+                        }                    
+                    }
+                    documentoModel.modificarEstadoBienDetalle(informe, estadoBien, estadoBienInterno);
+                    
+                    //Se consultan los datos 
                     this.consultaAutorizaciones();
 
                 } else {
+                    
                     //Si todos estan rechazadas se rechaza todo el informes
                     if (rechazar) {
                         informe.setEstado(this.estadoPorDominioValor(Constantes.DOMINIO_INFORME_TECNICO, Constantes.ESTADO_INFORME_TECNICO_RECHAZADO));
                         documentoModel.modificar(informe);
+
+                        //Se cambia el estado del bien asociado al informe
+                        Estado estadoBien = this.estadoPorDominioValor(Constantes.DOMINIO_BIEN, Constantes.ESTADO_BIEN_ACTIVO);
+                        Estado estadoBienInterno = this.estadoPorDominioValor(Constantes.DOMINIO_BIEN_INTERNO, Constantes.ESTADO_INTERNO_BIEN_NORMAL);
+                        documentoModel.modificarEstadoBienDetalle(informe, estadoBien, estadoBienInterno);
                     }
 
                     //Se marca bandera para permitir modificar el informes, solo para los usuarios que tienen un rol de tecnico, asociado al documento. 
                     //Solo aplica si el documento tiene al menos una aprobacion 
                     if (aprobacionRealizada) {
-                        AutorizacionRolPersona autorizado = autorizacionRolPersonaModel.buscar(Constantes.CODIGO_AUTORIZACION_INFORME_TECNICO, Constantes.CODIGO_ROL_TECNICO, usuario, unidadEjecutora);
+                        AutorizacionRolPersona autorizado = autorizacionRolPersonaModel.buscar(Constantes.CODIGO_AUTORIZACION_INFORME_TECNICO, Constantes.CODIGO_ROL_TECNICO_AUTORIZACION_INFORME_TECNICO, usuario, unidadEjecutora);
                         rolPermiteModificar = autorizado != null;
                     } else {
                         //Cualquiera puede modificar no existe ninguna aprobacion

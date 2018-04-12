@@ -10,6 +10,7 @@ import cr.ac.ucr.framework.daoImpl.GenericDaoImpl;
 import cr.ac.ucr.framework.utils.FWExcepcion;
 import cr.ac.ucr.sigebi.domain.SolicitudPrestamo;
 import cr.ac.ucr.sigebi.domain.SolicitudDetalle;
+import cr.ac.ucr.sigebi.domain.SolicitudDetallePrestamo;
 import cr.ac.ucr.sigebi.domain.UnidadEjecutora;
 import java.util.Date;
 import java.util.List;
@@ -168,7 +169,7 @@ public class PrestamoDao extends GenericDaoImpl {
     }
     
     @Transactional
-    public void salvarDetalles(List<SolicitudDetalle> detalles) throws FWExcepcion {
+    public void salvarDetalles(List<SolicitudDetallePrestamo> detalles) throws FWExcepcion {
         try {
             persist(detalles.toArray());
         } catch (DataAccessException e) {
@@ -177,7 +178,7 @@ public class PrestamoDao extends GenericDaoImpl {
     }
     
     @Transactional
-    public void eliminarDetalles(List<SolicitudDetalle> detalles) throws FWExcepcion {
+    public void eliminarDetalles(List<SolicitudDetallePrestamo> detalles) throws FWExcepcion {
         try {
             delete(detalles.toArray());
         } catch (DataAccessException e) {
@@ -200,14 +201,14 @@ public class PrestamoDao extends GenericDaoImpl {
     }
     
     @Transactional(readOnly = true)
-    public List<SolicitudDetalle> listarDetalles(SolicitudPrestamo prestamo) throws FWExcepcion {
+    public List<SolicitudDetallePrestamo> listarDetalles(SolicitudPrestamo prestamo) throws FWExcepcion {
         Session session = dao.getSessionFactory().openSession();
         try {
             Query query = this.queryListarDetalles(session, false, prestamo);
-            return (List<SolicitudDetalle>) query.list();
+            return (List<SolicitudDetallePrestamo>) query.list();
         } catch (HibernateException e) {
             throw new FWExcepcion("sigebi.label.prestamos.error.listar", "Error obtener los registros de tipo " + this.getClass(), e.getCause());
-        }finally{
+        } finally {
             session.close();        
         }        
     }
@@ -215,9 +216,9 @@ public class PrestamoDao extends GenericDaoImpl {
     private Query queryListarDetalles(Session session, Boolean contar, SolicitudPrestamo solicitud) throws FWExcepcion {
         StringBuilder sql = new StringBuilder("SELECT ");
         if (contar) {
-            sql.append("COUNT(entity) FROM SolicitudDetalle entity ");
+            sql.append("COUNT(entity) FROM SolicitudDetallePrestamo entity ");
         } else {
-            sql.append("entity FROM SolicitudDetalle entity ");
+            sql.append("entity FROM SolicitudDetallePrestamo entity ");
         }
         //Select
         sql.append("where entity.solicitud = :solicitud");

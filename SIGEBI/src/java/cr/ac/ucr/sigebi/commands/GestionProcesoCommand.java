@@ -25,11 +25,10 @@ public class GestionProcesoCommand {
     //Valores de formulario
     AutorizacionRol autorizacionRol;
     Autorizacion autorizacion;
-    Rol rol;
     Tipo tipoProceso;
 
     Autorizacion autorizacionNew;
-    Rol rolNew;
+    AutorizacionRol autorizacionRolNew;
 
     //Filtros para el usuario
     String idUsuario;
@@ -37,16 +36,17 @@ public class GestionProcesoCommand {
     String correo;
 
     //</editor-fold>
+    
     //<editor-fold defaultstate="collapsed" desc="Constructores">
     public GestionProcesoCommand() {
         super();
         autorizacion = new Autorizacion();
-        rol = new Rol();
         tipoProceso = new Tipo();
         autorizacionRol = new AutorizacionRol();
         
         autorizacionNew = new Autorizacion();
-        rolNew = new Rol();
+        autorizacionRolNew = new AutorizacionRol();
+        autorizacionRolNew.setRol(new Rol());
         
         idUsuario = null;
         nombreCompleto = null;
@@ -54,6 +54,7 @@ public class GestionProcesoCommand {
     }
 
     //</editor-fold>
+    
     //<editor-fold defaultstate="collapsed" desc="Get's & Set's">
     public Integer getAccion() {
         return accion;
@@ -77,14 +78,6 @@ public class GestionProcesoCommand {
 
     public void setAutorizacion(Autorizacion autorizacion) {
         this.autorizacion = autorizacion;
-    }
-
-    public Rol getRol() {
-        return rol;
-    }
-
-    public void setRol(Rol rol) {
-        this.rol = rol;
     }
 
     public Tipo getTipoProceso() {
@@ -135,15 +128,17 @@ public class GestionProcesoCommand {
         this.autorizacionNew = autorizacionNew;
     }
 
-    public Rol getRolNew() {
-        return rolNew;
+    public AutorizacionRol getAutorizacionRolNew() {
+        return autorizacionRolNew;
     }
 
-    public void setRolNew(Rol rolNew) {
-        this.rolNew = rolNew;
+    public void setAutorizacionRolNew(AutorizacionRol autorizacionRolNew) {
+        this.autorizacionRolNew = autorizacionRolNew;
     }
+
 
     //</editor-fold>
+    
     //<editor-fold defaultstate="collapsed" desc="Metodos">
     public Boolean getPresentarPanelAgregarAutorizacion() {
         return this.presentarPanel && this.accion.equals(Constantes.ACCION_PROCESO_AGREGA_DOCUMENTO);
@@ -160,6 +155,5 @@ public class GestionProcesoCommand {
     public Boolean getPresentarPanelModificarRol() {
         return this.presentarPanel && this.accion.equals(Constantes.ACCION_PROCESO_MODIFICAR_ROL);
     }
-
     //</editor-fold>
 }

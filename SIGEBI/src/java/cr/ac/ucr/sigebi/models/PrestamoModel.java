@@ -7,7 +7,7 @@ package cr.ac.ucr.sigebi.models;
 
 import cr.ac.ucr.framework.utils.FWExcepcion;
 import cr.ac.ucr.sigebi.daos.PrestamoDao;
-import cr.ac.ucr.sigebi.domain.SolicitudDetalle;
+import cr.ac.ucr.sigebi.domain.SolicitudDetallePrestamo;
 import cr.ac.ucr.sigebi.domain.SolicitudPrestamo;
 import cr.ac.ucr.sigebi.domain.UnidadEjecutora;
 import java.util.Date;
@@ -32,10 +32,10 @@ public class PrestamoModel {
     
     public void salvar(SolicitudPrestamo prestamo) throws FWExcepcion {
         prestamoDao.salvar(prestamo);
-        prestamoDao.salvarDetalles(prestamo.getDetalles());
+        prestamoDao.salvarDetalles(prestamo.getDetallesPrestamo());
     }
     
-    public void eliminarDetalles(List<SolicitudDetalle> detalles) throws FWExcepcion {
+    public void eliminarDetalles(List<SolicitudDetallePrestamo> detalles) throws FWExcepcion {
         prestamoDao.eliminarDetalles(detalles);
     }
     
@@ -55,7 +55,7 @@ public class PrestamoModel {
         return prestamoDao.contarDetalles(prestamo);
     }
     
-    public List<SolicitudDetalle> listarDetalles(SolicitudPrestamo prestamo) throws FWExcepcion {
+    public List<SolicitudDetallePrestamo> listarDetalles(SolicitudPrestamo prestamo) throws FWExcepcion {
         return prestamoDao.listarDetalles(prestamo);
     }
 }

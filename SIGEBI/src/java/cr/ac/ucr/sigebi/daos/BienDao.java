@@ -88,6 +88,23 @@ public class BienDao extends GenericDaoImpl {
             session.close();
         }
     }
+    
+    @Transactional(readOnly = true)
+    public Bien buscarPorIdentificacion(String identificacion) throws FWExcepcion {
+        Session session = dao.getSessionFactory().openSession();
+        try {
+            String sql = "SELECT b FROM Bien b WHERE UPPER(b.identificacion.identificacion) = UPPER(:identificacion)";
+            Query query = session.createQuery(sql);
+            query.setParameter("identificacion", identificacion);
+
+            return (Bien) query.uniqueResult();
+        } catch (HibernateException e) {
+            throw new FWExcepcion("sigebi.error.notificacionDao.listar", "Error obtener los registros de tipo " + this.getClass(), e.getCause());
+        } finally {
+            session.close();
+        }
+    }
+
 
     @Transactional(readOnly = true)
     public List<Bien> listar(Integer primerRegistro,
@@ -160,11 +177,6 @@ public class BienDao extends GenericDaoImpl {
             session.close();
         }
     }
-
-    
-    
-    
-    
 
     @Transactional(readOnly = true)
     public List<Bien> listadoActas(Integer primerRegistro,

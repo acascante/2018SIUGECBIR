@@ -5,6 +5,7 @@
  */
 package cr.ac.ucr.sigebi.domain;
 
+import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
@@ -13,6 +14,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 /**
  *
@@ -34,6 +36,9 @@ public class SolicitudPrestamo extends Solicitud {
     @JoinColumn(name = "ID_TIPO_ENTIDAD", referencedColumnName = "ID_TIPO")
     @ManyToOne(fetch = FetchType.EAGER)
     private Tipo tipo;
+    
+    @Transient
+    private List<SolicitudDetallePrestamo> detalles;
     //</editor-fold>
     
     //<editor-fold defaultstate="collapsed" desc="Get's y Set's">
@@ -59,6 +64,14 @@ public class SolicitudPrestamo extends Solicitud {
 
     public void setTipo(Tipo tipo) {
         this.tipo = tipo;
+    }
+    
+    public List<SolicitudDetallePrestamo> getDetallesPrestamo() {
+        return detalles;
+    }
+
+    public void setDetallesPrestamo(List<SolicitudDetallePrestamo> detalles) {
+        this.detalles = detalles;
     }
     //</editor-fold>
 }

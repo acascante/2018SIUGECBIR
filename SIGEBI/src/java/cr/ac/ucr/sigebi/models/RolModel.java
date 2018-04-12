@@ -10,7 +10,6 @@ import cr.ac.ucr.sigebi.daos.RolDao;
 import cr.ac.ucr.sigebi.domain.Rol;
 import java.util.List;
 import javax.annotation.Resource;
-import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
 /**

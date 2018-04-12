@@ -1,0 +1,99 @@
+
+<ice:outputHtml id="frmTabTomaFisica" xmlns:ice="http://www.icesoft.com/icefaces/component" xmlns:icecore="http://www.icefaces.org/icefaces/core" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:c="http://java.sun.com/jstl/core">
+
+    <div class="container">
+        <div class="row">
+           <div class="col-md-6">
+                <div class="form-group"> 
+                    <label class="control-label" for="txtConsecutivo">
+                        <ice:outputText value="#{label['sigebi.label.vista.detalleTomaFisica.consecutivo']}" />                            
+                    </label>
+                    <ice:inputText id="txtConsecutivo" 
+                                   partialSubmit="false"
+                                   styleClass="form-control"
+                                   readonly="true"
+                                   value="#{controllerTomaFisica.tomaFisicaCommand.tomaFisica.id}" />
+                </div>                                             
+           </div>
+           <div class="col-md-6">
+                <div class="form-group"> 
+                    <label class="control-label" for="txtTipo">
+                        <ice:outputText value="#{label['sigebi.label.vista.detalleTomaFisica.tipo']}" />
+                        <ice:outputText value="#{label['label.requerido']}" />
+                    </label>                                               
+
+                    <ice:selectOneMenu id="txtTipo"                                           
+                                       styleClass="form-control"
+                                       partialSubmit="true"
+                                       value="#{controllerTomaFisica.tomaFisicaCommand.tomaFisica.tipo.idTemporal}"
+                                       valueChangeListener="#{controllerTomaFisica.cambiarTipo}">
+                                       <f:selectItem itemLabel="N/A" itemValue="-1"/>
+                                       <f:selectItems id="slcTipoItem" value="#{controllerTomaFisica.tomaFisicaCommand.tiposOptions}"/>
+                    </ice:selectOneMenu>
+                </div>                                             
+            </div>               
+        </div>
+        
+        <div class="row">
+           <div class="col-md-6">
+                <div class="form-group"> 
+                    <label class="control-label" for="txtUbicacion">
+                        <ice:outputText value="#{label['sigebi.label.vista.detalleTomaFisica.ubicacion']}" />
+                        <ice:outputText value="#{label['label.requerido']}" />
+                    </label>                                               
+
+                    <ice:selectOneMenu id="txtUbicacion"                                           
+                                       styleClass="form-control"
+                                       partialSubmit="true"
+                                       readonly="#{!controllerTomaFisica.habilitaUbicacion}"
+                                       value="#{controllerTomaFisica.tomaFisicaCommand.ubicacion.idTemporal}"
+                                       valueChangeListener="#{controllerTomaFisica.cambiarUbicacion}">
+                                       <f:selectItem itemLabel="N/A" itemValue="-1"/>
+                                       <f:selectItems id="slcTipoItem" value="#{controllerTomaFisica.tomaFisicaCommand.ubicacionOptions}"/>
+                    </ice:selectOneMenu>
+                </div>                                             
+           </div>               
+           <div class="col-md-6">
+                <div class="form-group"> 
+                    <label class="control-label" for="txtMotivo">
+                        <ice:outputText value="#{label['sigebi.label.vista.detalleTomaFisica.motivo']}" />
+                        <ice:outputText value="#{label['label.requerido']}" />
+                    </label>                                               
+
+                    <ice:selectOneMenu id="txtMotivo"                                           
+                                       styleClass="form-control"
+                                       partialSubmit="true"
+                                       value="#{controllerTomaFisica.tomaFisicaCommand.tomaFisica.motivo.idTemporal}"
+                                       valueChangeListener="#{controllerTomaFisica.cambiarTipoMotivo}">
+                                       <f:selectItem itemLabel="N/A" itemValue="-1"/>
+                                       <f:selectItems id="slcTipoItem" value="#{controllerTomaFisica.tomaFisicaCommand.tiposMotivoOptions}"/>
+                    </ice:selectOneMenu>
+                </div>                                             
+            </div>               
+        </div>  
+        
+        <div class="row">
+            <div class="col-md-12" style="margin-top: 20px;">
+                <div class="form-group">
+                    <label class="control-label" for="txtDescripcion">
+                        <ice:outputText value="#{label['sigebi.label.vista.detalleTomaFisica.descripcion']}"/> 
+                        <ice:outputText value="#{label['label.requerido']}" />
+                    </label>
+                    <ice:inputTextarea  id="txtDescripcion" 
+                                        styleClass="form-control"
+                                        cols="2" 
+                                        value="#{controllerTomaFisica.tomaFisicaCommand.tomaFisica.descripcion}"/>
+                </div>
+            </div>    
+        </div>
+
+        <div class="row">
+            <div class="col-md-6">
+                <ice:commandButton id="botonGuardar" 
+                                   value="Guardar" 
+                                   partialSubmit="true" 
+                                   styleClass="boton" action="#{controllerTomaFisica.guardaTomaFisica}"/>
+            </div>
+        </div>        
+    </div>
+</ice:outputHtml>

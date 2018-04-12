@@ -425,6 +425,13 @@ public class Bien extends ObjetoBase implements Serializable {
         return false;
     }
     
+    public boolean getDevolver() {
+        if (Constantes.ESTADO_INTERNO_BIEN_PRESTAMO_APROBADO.equals(this.getEstadoInterno().getValor())) {
+            return true;
+        }
+        return false;
+    }
+    
     public boolean getEliminar() {
         if (Constantes.ESTADO_INTERNO_BIEN_EXCLUSION_SOLICITADO.equals(this.getEstadoInterno().getValor()) ||
             Constantes.ESTADO_INTERNO_BIEN_EXCLUSION_APROBADO.equals(this.getEstadoInterno().getValor()) ||

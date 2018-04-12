@@ -257,7 +257,6 @@ public class RolDao extends GenericDaoImpl {
             String sql = "SELECT COUNT(*) FROM Rol obj";
             sql = sql + " WHERE obj.id = :idRol and ";
             sql = sql + "((SELECT COUNT(obj1.id) from DocumentoAutorizacion obj1 where obj1.autorizacionRol.rol.id = :idRol) > 0 ";
-            sql = sql + " or (SELECT COUNT(obj1.id) from AutorizacionRol obj1 where obj1.rol.id = :idRol) > 0 ";
             sql = sql + " or (SELECT COUNT(obj1.id) from AutorizacionRolPersona obj1 where obj1.autorizacionRol.rol.id = :idRol) > 0) ";
             Query query = session.createQuery(sql);
             query.setParameter("idRol", idRol);

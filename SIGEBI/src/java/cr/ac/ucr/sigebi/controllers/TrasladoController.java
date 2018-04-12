@@ -16,7 +16,6 @@ import cr.ac.ucr.sigebi.domain.Estado;
 import cr.ac.ucr.sigebi.domain.Tipo;
 import cr.ac.ucr.sigebi.domain.Justificacion;
 import cr.ac.ucr.sigebi.domain.Notificacion;
-import cr.ac.ucr.sigebi.domain.Solicitud;
 import cr.ac.ucr.sigebi.domain.UnidadEjecutora;
 import cr.ac.ucr.sigebi.domain.Usuario;
 import cr.ac.ucr.sigebi.domain.Ubicacion;
@@ -667,10 +666,6 @@ public class TrasladoController extends ListadoBienesGeneralController {
     }
     
     
-    private void actualizarbienes(List<Bien>bienes, Estado estado){
-        
-    }
-    
     private boolean validarRegistro() {
         try {
             String mensaje = "";
@@ -712,6 +707,18 @@ public class TrasladoController extends ListadoBienesGeneralController {
                 enviarNotificacion();
                 listarTraslados();
                 Util.navegar(Constantes.KEY_VISTA_TRASLADOS_LISTAR);
+                
+                //CAMBIO EL ESTADO DE LOS BIENES QUE VAN EN EL DETALLE
+                for(SolicitudDetalleTraslado detalle : trasladoDetalle){
+                    Bien bien = bienModel.buscarPorId(detalle.getBien().getId());
+                    bien.setUnidadEjecutora(traslado.getUnidadEjecutoraDestino());
+                    if( bien.getUnidadEjecutora().getId().equals(this.unidadEjecutora.getId()) ){
+                        bien.setEstadoInterno(this.estadoPorDominioValor(Constantes.DOMINIO_BIEN_INTERNO, Constantes.ESTADO_INTERNO_BIEN_TRASLADO));
+                        bienModel.actualizar(bien);
+                    }
+                }
+                
+                
             }else{
                 if(!trasladoDetalle.isEmpty())
                     Mensaje.agregarErrorFatal(Util.getEtiquetas("sigebi.Acta.MsnError.BienesSeleccionados"));
@@ -737,6 +744,17 @@ public class TrasladoController extends ListadoBienesGeneralController {
         traslado.setEstado(estadoGeneralPendiente);
         trasladoModel.guardar(traslado);
 
+        
+        //CAMBIO EL ESTADO INTERNO DE LOS BIENES QUE VAN EN EL DETALLE
+        for(SolicitudDetalleTraslado detalle : trasladoDetalle){
+            Bien bien = bienModel.buscarPorId(detalle.getBien().getId());
+            bien.setUnidadEjecutora(traslado.getUnidadEjecutoraDestino());
+            //if( bien.getUnidadEjecutora().getId().equals(this.unidadEjecutora.getId()) ){
+            bien.setEstadoInterno(this.estadoPorDominioValor(Constantes.DOMINIO_BIEN_INTERNO, Constantes.ESTADO_INTERNO_BIEN_NORMAL));
+            bienModel.actualizar(bien);
+           // }
+        }
+        
         listadoInicializaDatos();
         Util.navegar(Constantes.KEY_VISTA_TRASLADOS_LISTAR);
 
@@ -772,6 +790,16 @@ public class TrasladoController extends ListadoBienesGeneralController {
         traslado.setEstado(estadoGeneralAnulado);
         trasladoModel.guardar(traslado);
 
+        //CAMBIO EL ESTADO INTERNO DE LOS BIENES QUE VAN EN EL DETALLE
+        for(SolicitudDetalleTraslado detalle : trasladoDetalle){
+            Bien bien = bienModel.buscarPorId(detalle.getBien().getId());
+            bien.setUnidadEjecutora(traslado.getUnidadEjecutoraDestino());
+            //if( bien.getUnidadEjecutora().getId().equals(this.unidadEjecutora.getId()) ){
+            bien.setEstadoInterno(this.estadoPorDominioValor(Constantes.DOMINIO_BIEN_INTERNO, Constantes.ESTADO_INTERNO_BIEN_NORMAL));
+            bienModel.actualizar(bien);
+           // }
+        }
+        
         listadoInicializaDatos();
         Util.navegar(Constantes.KEY_VISTA_TRASLADOS_LISTAR);
 
@@ -854,6 +882,7 @@ public class TrasladoController extends ListadoBienesGeneralController {
             Bien bien = bienModel.buscarPorId(bienDetalle.getBien().getId());
             bien.setUnidadEjecutora(traslado.getUnidadEjecutoraDestino());
             bien.setEstado(estadoBienActivo);
+            bien.setEstadoInterno(this.estadoPorDominioValor(Constantes.DOMINIO_BIEN_INTERNO, Constantes.ESTADO_INTERNO_BIEN_NORMAL));
             
             //Se registra el movimiento y se actualiza el bien
             Integer telefono = lVistaUsuario.getgUsuarioActual().getTelefono1() != null ? Integer.parseInt(lVistaUsuario.getgUsuarioActual().getTelefono1()) : 0;
@@ -1290,12 +1319,12 @@ public class TrasladoController extends ListadoBienesGeneralController {
             String mensaje = getMensajeEmail();
 
             Notificacion correo = new Notificacion();
-            correo.setAsunto(Util.getEtiquetas("sigebi.Traslado.Email.Asunto"));
-            correo.setDestinatario("jorse_9@yahoo.com");
-            correo.setFecha(new Date());
-            correo.setMensaje(mensaje);
-
-            notificacionModel.enviarCorreo(correo);
+//            correo.setAsunto(Util.getEtiquetas("sigebi.Traslado.Email.Asunto"));
+//            correo.setDestinatario("jorse_9@yahoo.com");
+//            correo.setFecha(new Date());
+//            correo.setMensaje(mensaje);
+//
+//            notificacionModel.enviarCorreo(correo);
 
 
             List<AutorizacionRolPersona> usrsNotificar = new ArrayList<AutorizacionRolPersona>();

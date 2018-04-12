@@ -1,0 +1,174 @@
+<ice:form id="frm_listarInformeTecnico" 
+          xmlns:ice="http://www.icesoft.com/icefaces/component"
+          xmlns:h="http://java.sun.com/jsf/html"
+          xmlns:f="http://java.sun.com/jsf/core"
+          xmlns:ui="http://java.sun.com/jsf/facelets" >
+    <div class="contenido-pagina">
+        <div class="container"> 
+            
+            <!-- Titulo -->
+            <div class="row">
+                <div class='col-sm-7 align-middle'>
+                    <h1 class="align-middle">
+                        <ice:outputFormat value="#{label['sigebi.reporte.sobrantes.titulo']}"/>
+                    </h1>
+                </div>    
+            </div>
+
+            <div class="row justify-content-md-center">
+                 <div class='col-sm-11'>
+                     <ice:panelGroup style="margin: 20px 0px">
+                         <ice:panelTabSet>
+                             <ice:panelTab id="tabFiltros" label="#{label['sigebi.reporte.sobrantes.tab.configuracion']}">
+                                <div class="row">
+                                    <div class='col-sm-3 align-middle'>
+                                        <h4 class="align-middle" style="margin-top: 15px">
+                                            <ice:outputFormat value="#{label['sigebi.reporte.sobrantes.tipoReporte']}"/>
+                                        </h4>
+                                    </div>
+                                    <div class='col-sm-9'>
+                                        <ice:selectOneMenu id="tipoReporte" styleClass="form-control"
+                                                           value="#{controllerReporteSobrantes.command.idTipo}" >
+                                            <f:selectItem itemLabel="N/A" itemValue="-1"/>
+                                            <f:selectItems id="optSelTipoBien" value="#{controllerReporteSobrantes.itemsTipoReporte}"/>
+                                         </ice:selectOneMenu>                                        
+                                   </div>
+                                </div>
+                                 
+                                <div class="row">
+                                    <div class='col-sm-3 align-middle'>
+                                        <h4 class="align-middle" style="margin-top: 15px">
+                                            <ice:outputFormat value="#{label['sigebi.reporte.sobrantes.filtros']}"/>
+                                        </h4>
+                                    </div>
+                                    <div class='col-sm-3'>
+                                        <ice:outputText  value="#{label['sigebi.reporte.sobrantes.filtros.identificacion']}" />
+                                        <ice:inputText id="txtIdentificacion" styleClass="form-control" maxlength="10" partialSubmit="false"
+                                                       value="#{controllerReporteSobrantes.command.identificacion}" >
+                                        </ice:inputText>                                       
+                                    </div>
+                                    
+                                    <div class="col-md-3">
+                                        <ice:outputText value="#{label['sigebi.reporte.sobrantes.filtros.descripcion']}" />
+                                        <ice:inputText id="txtDescripcion" styleClass="form-control" maxlength="50" partialSubmit="false"
+                                                        value="#{controllerReporteSobrantes.command.descripcion}" >
+                                        </ice:inputText>
+                                    </div>
+                                </div>
+                                 
+                                <div class="row">
+                                    <div class='col-sm-3 align-middle'/>
+                                    <div class='col-sm-3'>
+                                        <ice:outputText  value="#{label['sigebi.reporte.sobrantes.filtros.marca']}" />
+                                        <ice:inputText id="txtMarca" styleClass="form-control" maxlength="40" partialSubmit="false"
+                                                       value="#{controllerReporteSobrantes.command.marca}" >
+                                        </ice:inputText>
+                                    </div>  
+                                    
+                                    <div class="col-md-3">
+                                       <div class="form-group ">
+                                            <ice:outputText value="#{label['sigebi.reporte.sobrantes.filtros.modelo']}" />
+                                            <ice:inputText id="txtModelo" styleClass="form-control" maxlength="30" partialSubmit="false"
+                                                           value="#{controllerReporteSobrantes.command.modelo}" >
+                                            </ice:inputText>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="col-md-3">
+                                        <div class="form-group ">
+                                            <ice:outputText value="#{label['sigebi.reporte.sobrantes.filtros.serie']}" />
+                                            <ice:inputText id="txtSerie" styleClass="form-control" maxlength="30" partialSubmit="false"
+                                                           value="#{controllerReporteSobrantes.command.serie}" >
+                                            </ice:inputText>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="row">
+                                    <div class='col-sm-3 align-middle' />
+                                    <div class='col-sm-3 align-middle'>
+                                        <ice:outputText value="#{label['sigebi.reporte.sobrantes.filtros.usuario']}" />
+                                        <ice:inputText id="txtFuncionarioAsignado" styleClass="form-control" maxlength="40" partialSubmit="false"
+                                                        value="#{controllerReporteSobrantes.command.usuario}"> 
+                                        </ice:inputText>
+                                    </div>
+                                    
+                                    <div class='col-sm-3 align-middle'>
+                                        <ice:outputText value="#{label['sigebi.reporte.sobrantes.filtros.estado']}" />
+                                        <ice:selectOneMenu id="estadoBien" styleClass="form-control"
+                                                           value="#{controllerReporteSobrantes.command.idEstado}" >
+                                            <f:selectItem itemLabel="N/A" itemValue="-1"/>
+                                            <f:selectItems id="optSelTipoBien" value="#{controllerReporteSobrantes.itemsEstadoBien}"/>
+                                         </ice:selectOneMenu>   
+                                    </div>
+                                </div>
+                                 
+                                <div class="row">
+                                    <div class='col-sm-3 align-middle'>
+                                        <h4 class="align-middle" style="margin-top: 15px">
+                                            <ice:outputFormat value="#{label['sigebi.reporte.sobrantes.orden']}"/>
+                                        </h4>
+                                    </div>
+                                
+                                    <div class='col-sm-3'>
+                                        <div class="form-group ">
+                                            <ice:outputText  value="#{label['sigebi.reporte.sobrantes.orden.tipo']}" />
+                                            <ice:selectOneMenu id="selTipoOrden" styleClass="form-control"
+                                                               value="#{controllerReporteSobrantes.command.idOrden}" >
+                                                <f:selectItem itemLabel="N/A" itemValue="-1"/>
+                                                <f:selectItems id="optSelTipoBien" value="#{controllerReporteSobrantes.itemsOrdenReporte}"/>
+                                             </ice:selectOneMenu>
+                                        </div>
+                                    </div>
+                                </div>
+                             
+                                <div class="row">
+                                    <div class='col-sm-3 align-middle' />
+                                    <div class='col-sm-3'>
+                                        <div class="form-group ">
+                                            <ice:outputText  value="#{label['sigebi.reporte.sobrantes.orden.tipo1']}" />
+                                            <ice:selectOneMenu id="selOrden1" styleClass="form-control" partialSubmit="true"
+                                                               value="#{controllerReporteSobrantes.command.idOrden1}" >
+                                                <f:selectItem itemLabel="N/A" itemValue="-1"/>
+                                                <f:selectItems id="optSelTipoBien" value="#{controllerReporteSobrantes.itemsColumnasOrdenReporte}"/>
+                                            </ice:selectOneMenu>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="col-md-3">
+                                        <div class="form-group ">
+                                            <ice:outputText value="#{label['sigebi.reporte.sobrantes.orden.tipo2']}" />
+                                            <ice:selectOneMenu id="selOrden2" styleClass="form-control" partialSubmit="true"
+                                                               value="#{controllerReporteSobrantes.command.idOrden2}" >
+                                                <f:selectItem itemLabel="N/A" itemValue="-1"/>
+                                                <f:selectItems id="optSelTipoBien" value="#{controllerReporteSobrantes.itemsColumnasOrdenReporte}"/>
+                                            </ice:selectOneMenu>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="col-md-3">
+                                        <div class="form-group ">
+                                            <ice:outputText value="#{label['sigebi.reporte.sobrantes.orden.tipo3']}" />
+                                            <ice:selectOneMenu id="selOrden3" styleClass="form-control" partialSubmit="true"
+                                                               value="#{controllerReporteSobrantes.command.idOrden3}" >
+                                                <f:selectItem itemLabel="N/A" itemValue="-1"/>
+                                                <f:selectItems id="optSelTipoBien" value="#{controllerReporteSobrantes.itemsColumnasOrdenReporte}"/>
+                                            </ice:selectOneMenu>
+                                        </div>
+                                    </div>
+                                </div>
+                            </ice:panelTab> 
+                        </ice:panelTabSet>     
+                    </ice:panelGroup>
+                </div>
+            </div>
+            
+            <!-- Botones para generar -->
+            <div class="row">
+                <ice:commandButton id="btnReporte" style="float: right" styleClass="boton" partialSubmit="true" value="Reporte Traslados"
+                                   action="#{controllerReporteSobrantes.generarReporte}">
+                </ice:commandButton>
+            </div>  
+        </div>    
+    </div>
+</ice:form>

@@ -41,7 +41,6 @@ import cr.ac.ucr.sigebi.domain.SubCategoria;
 import cr.ac.ucr.sigebi.domain.SubClasificacion;
 import cr.ac.ucr.sigebi.domain.Ubicacion;
 import cr.ac.ucr.sigebi.domain.UnidadEjecutora;
-import cr.ac.ucr.sigebi.domain.Usuario;
 import cr.ac.ucr.sigebi.models.AccesorioModel;
 import cr.ac.ucr.sigebi.models.AdjuntoModel;
 import cr.ac.ucr.sigebi.models.AutorizacionRolPersonaModel;
@@ -214,7 +213,7 @@ public class AgregarBienController extends BaseController {
         }
         
         //Verifica si puede cambiar la identificacion del bien
-        AutorizacionRolPersona autorizado = autorizacionRolPersonaModel.buscar(Constantes.CODIGO_AUTORIZACION_CAMBIAR_IDENTIFICACION_BIEN, Constantes.CODIGO_ROL_ADMINISTRADOR, usuarioSIGEBI, unidadEjecutora);
+        AutorizacionRolPersona autorizado = autorizacionRolPersonaModel.buscar(Constantes.CODIGO_AUTORIZACION_ADMINISTRADOR, Constantes.CODIGO_ROL_ADMINISTRADOR_AUTORIZACION_ADMINISTRADOR, usuarioSIGEBI, unidadEjecutora);
         this.setVisibleBotonActualizarIdentificacion(autorizado != null && !(command.getIdentificacion().getId() != null && command.getIdentificacion().getId() > 0));
     }
 
@@ -1114,11 +1113,9 @@ public class AgregarBienController extends BaseController {
         command.getProveedorCommand().setProveedor(new Proveedor());
         command.getProveedorCommand().setDescripcion(new String());
     }
-
     public void cerrarPanelProveedores() {
         this.setVisiblePanelProveedores(false);
-    }
-
+    }    
     private void inicialListadoProveedores(){
         command.getProveedorCommand().setPrimerRegistro(1);
         Long cantReg = modelProveedor.contar(command.getProveedorCommand().getFiltroIdentificacion()
@@ -1130,7 +1127,7 @@ public class AgregarBienController extends BaseController {
     private void listarProveedores(){
         this.proveedores = modelProveedor.listar( command.getProveedorCommand().getFiltroIdentificacion()
                                                 , command.getProveedorCommand().getFiltroNombre()
-                                                , command.getProveedorCommand().getPrimerRegistro()
+                                                , command.getProveedorCommand().getPrimerRegistro()-1
                                                 , command.getProveedorCommand().getCantRegistroPorPagina());
     }
     
@@ -1178,35 +1175,36 @@ public class AgregarBienController extends BaseController {
             this.listarProveedores();
         }
 
-        public void siguienteProvedores(ActionEvent pEvent) {
-            if (!pEvent.getPhaseId().equals(PhaseId.INVOKE_APPLICATION)) {
-                pEvent.setPhaseId(PhaseId.INVOKE_APPLICATION);
-                pEvent.queue();
-                return;
-            }
-            command.getProveedorCommand().getSiguientePagina();
-            this.listarProveedores();
+    public void siguienteProvedores(ActionEvent pEvent) {
+        if (!pEvent.getPhaseId().equals(PhaseId.INVOKE_APPLICATION)) {
+            pEvent.setPhaseId(PhaseId.INVOKE_APPLICATION);
+            pEvent.queue();
+            return;
         }
+        //command.getProveedorCommand().getSiguientePagina();
+        command.getProveedorCommand().getSiguientePagina();
+        this.listarProveedores();
+    }
 
-        public void anteriorProvedores(ActionEvent pEvent) {
-            if (!pEvent.getPhaseId().equals(PhaseId.INVOKE_APPLICATION)) {
-                pEvent.setPhaseId(PhaseId.INVOKE_APPLICATION);
-                pEvent.queue();
-                return;
-            }
-            command.getProveedorCommand().getPaginaAnterior();
-            this.listarProveedores();
+    public void anteriorProvedores(ActionEvent pEvent) {
+        if (!pEvent.getPhaseId().equals(PhaseId.INVOKE_APPLICATION)) {
+            pEvent.setPhaseId(PhaseId.INVOKE_APPLICATION);
+            pEvent.queue();
+            return;
         }
+        command.getProveedorCommand().getPaginaAnterior();
+        this.listarProveedores();
+    }
 
-        public void primeroProvedores(ActionEvent pEvent) {
-            if (!pEvent.getPhaseId().equals(PhaseId.INVOKE_APPLICATION)) {
-                pEvent.setPhaseId(PhaseId.INVOKE_APPLICATION);
-                pEvent.queue();
-                return;
-            }
-            command.getProveedorCommand().setPrimerRegistro(1);
-            this.listarProveedores();
+    public void primeroProvedores(ActionEvent pEvent) {
+        if (!pEvent.getPhaseId().equals(PhaseId.INVOKE_APPLICATION)) {
+            pEvent.setPhaseId(PhaseId.INVOKE_APPLICATION);
+            pEvent.queue();
+            return;
         }
+        command.getProveedorCommand().setPrimerRegistro(1);
+        this.listarProveedores();
+    }
 
         public void ultimoProvedores(ActionEvent pEvent) {
             if (!pEvent.getPhaseId().equals(PhaseId.INVOKE_APPLICATION)) {

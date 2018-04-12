@@ -1,0 +1,128 @@
+
+<ice:outputHtml id="frmTabTomaFisicaLote" xmlns:ice="http://www.icesoft.com/icefaces/component" xmlns:icecore="http://www.icefaces.org/icefaces/core" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:c="http://java.sun.com/jstl/core">
+
+    <div class="container">
+        <div class="row">
+           <div class="col-md-6">
+                <div class="form-group"> 
+                    <label class="control-label" for="txtLote">
+                        <ice:outputText value="#{label['sigebi.label.vista.detalleTomaFisica.lote']}" />
+                        <ice:outputText value="#{label['label.requerido']}" />
+                    </label>                                               
+
+                    <ice:selectOneMenu id="txtLote"                                           
+                                       styleClass="form-control"
+                                       partialSubmit="true"
+                                       value="#{controllerTomaFisica.tomaFisicaCommand.tomaFisicaLoteCommand.lote.idTemporal}"
+                                       valueChangeListener="#{controllerTomaFisica.cambiarLote}">
+                                       <f:selectItem itemLabel="N/A" itemValue="-1"/>
+                                       <f:selectItems id="slcLoteItem" value="#{controllerTomaFisica.tomaFisicaCommand.loteOptions}"/>
+                    </ice:selectOneMenu>
+                </div>                                             
+           </div>                
+           <div class="col-md-6">
+                <div class="form-group"> 
+                    <label class="control-label" for="txtCantidad">
+                        <ice:outputText value="#{label['sigebi.label.vista.detalleTomaFisica.cantidad']}" />                            
+                    </label>
+                    <ice:inputText id="txtCantidad" 
+                                   partialSubmit="true"
+                                   valueChangeListener="#{controllerTomaFisica.cambiarCantidadLote}"
+                                   styleClass="form-control"
+                                   value="#{controllerTomaFisica.tomaFisicaCommand.tomaFisicaLoteCommand.cantidad}" />
+                    <ice:outputFormat value="#{label['sigebi.label.vista.detalleTomaFisica.cantidad.nota']}"></ice:outputFormat>
+                </div>                                             
+           </div>
+        </div>
+                
+        <!-- Paginacion y Listado de Tomas Unitarias -->
+        <div class="row">
+            <div class="col-sm-12">
+                <ice:outputFormat value="#{label['label.generico.paginacion.encabezado']}">
+                    <f:param value="#{controllerTomaFisica.tomaFisicaCommand.tomaFisicaLoteCommand.cantidadRegistros}"/>
+                    <f:param value="#{controllerTomaFisica.tomaFisicaCommand.tomaFisicaLoteCommand.cantidadRegistrosMostrados}"/>
+                    <f:param value="#{controllerTomaFisica.tomaFisicaCommand.tomaFisicaLoteCommand.primerRegistro}"/>
+                    <f:param value="#{controllerTomaFisica.tomaFisicaCommand.tomaFisicaLoteCommand.ultimoRegistro}"/>
+                    <f:param value="#{controllerTomaFisica.tomaFisicaCommand.tomaFisicaLoteCommand.paginaActual}"/>
+                    <f:param value="#{controllerTomaFisica.tomaFisicaCommand.tomaFisicaLoteCommand.cantidadPaginas}"/>
+                </ice:outputFormat>
+                <div>
+                    <table>
+                        <tr>
+                            <td style="padding-right: 5px;">
+                                <ice:outputText value="#{label['label.paginacion.cantidad.pagina']} "/>
+                            </td>
+                            <td>
+
+                                <ice:selectOneMenu id="cantRegistroPorPagina"
+                                       value="#{controllerTomaFisica.tomaFisicaCommand.tomaFisicaLoteCommand.cantRegistroPorPagina}" 
+                                       valueChangeListener="#{controllerTomaFisica.cambioRegistrosPorPaginaTomaFisicaLote}"
+                                       partialSubmit="true">
+                                        <f:selectItems id="item_pa" value="#{controllerTomaFisica.tomaFisicaCommand.tomaFisicaLoteCommand.listaRegistrosPagina}"/>
+                                </ice:selectOneMenu>    
+
+                            </td>
+                        </tr>
+                    </table>                        
+                </div>                    
+                <div>
+                    <ice:commandButton image="./imagenes/botones/first.png" partialSubmit="true" actionListener="#{controllerTomaFisica.primeroTomaFisicaLote}" rendered="#{controllerTomaFisica.tomaFisicaCommand.tomaFisicaLoteCommand.cantidadPaginas > 1}"/>
+                    <ice:commandButton image="./imagenes/botones/previos.png" partialSubmit="true" actionListener="#{controllerTomaFisica.anteriorTomaFisicaLote}" rendered="#{controllerTomaFisica.tomaFisicaCommand.tomaFisicaLoteCommand.cantidadPaginas > 1}"/>
+                    <ui:repeat value="#{controllerTomaFisica.tomaFisicaCommand.tomaFisicaLoteCommand.arregloPaginas}" var="pagina">
+                        <ice:commandLink value="#{pagina}" partialSubmit="true" actionListener="#{controllerTomaFisica.irPaginaTomaFisicaLote}">
+                            <f:param name="numPagTomaFisicaLote" value="#{pagina}"/>
+                        </ice:commandLink>
+                    </ui:repeat>            
+                    <ice:commandButton image="./imagenes/botones/next.png" partialSubmit="true" actionListener="#{controllerTomaFisica.siguienteTomaFisicaLote}" rendered="#{controllerTomaFisica.tomaFisicaCommand.tomaFisicaLoteCommand.cantidadPaginas > 1}"/>
+                    <ice:commandButton image="./imagenes/botones/last.png" partialSubmit="true" actionListener="#{controllerTomaFisica.ultimoTomaFisicaLote}" rendered="#{controllerTomaFisica.tomaFisicaCommand.tomaFisicaLoteCommand.cantidadPaginas > 1}"/>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="form-group"> 
+                    <label class="control-label" for="txtTomasFisicasLotes">
+                        <ice:outputText value="#{label['sigebi.label.vista.detalleTomaFisica.tomasFisicasLotes']}" />
+                    </label>  
+                    <div>
+                        <ice:dataTable id="tomasFisicasLotes"
+                                       value="#{controllerTomaFisica.tomaFisicaCommand.tomasFisicasLotes}"
+                                       var="tomaFisicaLote"
+                                       paginator="true"
+                                       paginatorPosition="bottom">
+
+                            <ice:column id="colLote">
+                                <f:facet name="header">
+                                    <ice:columnGroup>
+                                        <ice:headerRow>
+                                           <ice:outputText value="#{label['sigebi.label.vista.detalleTomaFisica.lote']}"/>
+                                        </ice:headerRow>
+                                        <ice:headerRow>
+                                            <ice:inputText id="fltLote"
+                                                           style="width: 130px;"
+                                                           value="#{controllerTomaFisica.tomaFisicaCommand.tomaFisicaLoteCommand.fltLote}"                                   
+                                                           partialSubmit="true"
+                                                           valueChangeListener="#{controllerTomaFisica.cambioFiltroTomasFisicaLote}"/>
+                                        </ice:headerRow>
+                                    </ice:columnGroup>
+                                </f:facet>                                
+                                <h:outputText id="colLoteTxt" value="#{tomaFisicaLote.lote.descripcion}"/>
+                            </ice:column>
+                            
+                            <ice:column id="colCantidad">
+                                <f:facet name="header">
+                                    <ice:columnGroup>
+                                        <ice:headerRow>
+                                           <ice:outputText value="#{label['sigebi.label.vista.detalleTomaFisica.cantidad']}"/>
+                                        </ice:headerRow>
+                                    </ice:columnGroup>
+                                </f:facet>                                
+                                <h:outputText id="colCantidadTxt" value="#{tomaFisicaLote.cantidad}"/>
+                            </ice:column>
+                        </ice:dataTable>
+                    </div>
+                </div>
+            </div>                
+        </div>
+    </div>    
+</ice:outputHtml>

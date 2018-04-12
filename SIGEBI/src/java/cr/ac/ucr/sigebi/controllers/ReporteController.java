@@ -6,14 +6,13 @@
 package cr.ac.ucr.sigebi.controllers;
 
 import cr.ac.ucr.framework.vista.util.Mensaje;
+import cr.ac.ucr.framework.vista.util.Reporte;
 import cr.ac.ucr.framework.vista.util.Util;
+import cr.ac.ucr.sigebi.commands.ReporteInventFaltantesCommand;
 import cr.ac.ucr.sigebi.commands.ReporteMovimientoCommand;
 import cr.ac.ucr.sigebi.commands.ReporteTrasladoCommand;
 import cr.ac.ucr.sigebi.daos.ReporteDao;
-import cr.ac.ucr.sigebi.domain.DocumentoTraslado;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStream;
+import cr.ac.ucr.sigebi.utils.Constantes;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -22,9 +21,7 @@ import java.util.List;
 import java.util.Map;
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
-import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
-import javax.servlet.ServletContext;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
@@ -40,13 +37,13 @@ public class ReporteController extends BaseController {
     
     @Resource private ReporteDao reporteDao;
     
-    List<DocumentoTraslado> detalle;
     
     String tipoReporteSelec;
     List<SelectItem> itemsTiposReporte;
     
     ReporteTrasladoCommand commandTraslado;
     ReporteMovimientoCommand commandMovimiento;
+    ReporteInventFaltantesCommand commandInventarioFaltantes;
     
     List<SelectItem> itemsTipoOrden;
     
@@ -55,7 +52,6 @@ public class ReporteController extends BaseController {
     
     //</editor-fold>
 
-    
 
     //<editor-fold defaultstate="collapsed" desc="Gets & Sets">
     
@@ -85,6 +81,28 @@ public class ReporteController extends BaseController {
     }
     
     
+    public List<SelectItem> getItemsTipoOrden() {
+        return itemsTipoOrden;
+    }
+
+    public void setItemsTipoOrden(List<SelectItem> itemsTipoOrden) {
+        this.itemsTipoOrden = itemsTipoOrden;
+    }
+    
+    
+    
+    public ReporteTrasladoCommand getCommandTraslado(){
+        return commandTraslado;
+    }
+
+    public void setCommandTraslado(ReporteTrasladoCommand commandTraslado) {
+        this.commandTraslado = commandTraslado;
+    }
+
+    public ReporteInventFaltantesCommand getCommandInventarioFaltantes() {
+        return commandInventarioFaltantes;
+    }
+    
     //</editor-fold>
     
     
@@ -111,7 +129,7 @@ public class ReporteController extends BaseController {
             
             commandTraslado = new ReporteTrasladoCommand();
             commandMovimiento = new ReporteMovimientoCommand();
-
+            commandInventarioFaltantes = new ReporteInventFaltantesCommand();
             
         }catch(Exception err){
             Mensaje.agregarErrorAdvertencia(err.getMessage());
@@ -121,7 +139,6 @@ public class ReporteController extends BaseController {
     
 
     // </editor-fold>
-    
     
     
     //<editor-fold defaultstate="collapsed" desc="Metodos">
@@ -134,26 +151,23 @@ public class ReporteController extends BaseController {
     
     //</editor-fold>
 
-    //<editor-fold defaultstate="collapsed" desc="Sets & Gets">
-
-    public List<SelectItem> getItemsTipoOrden() {
-        return itemsTipoOrden;
-    }
-
-    public void setItemsTipoOrden(List<SelectItem> itemsTipoOrden) {
-        this.itemsTipoOrden = itemsTipoOrden;
-    }
     
+    //<editor-fold defaultstate="collapsed" desc="Navegar Reportes">
+
     
-    
-    public ReporteTrasladoCommand getCommandTraslado(){
-        return commandTraslado;
+    public void reporteFaltantes() {
+        try {
+            //inicializaDatos();
+            Util.navegar(Constantes.KEY_REPORTE_INVENT_FALTANTES);
+
+        } catch (Exception err) {
+            Mensaje.agregarErrorAdvertencia(err.getCause().getMessage());
+        }
     }
 
-    public void setCommandTraslado(ReporteTrasladoCommand commandTraslado) {
-        this.commandTraslado = commandTraslado;
+    public void reporteSobrantes() {
+        Util.navegar(Constantes.KEY_REPORTE_SOBRANTES);
     }
-
     // </editor-fold>
     
     
@@ -162,20 +176,12 @@ public class ReporteController extends BaseController {
     
     public void mostrarReporteTraslados() {
         try{
-            ServletContext context = (ServletContext) FacesContext.getCurrentInstance().getExternalContext().getContext();
+            Reporte reporte = new Reporte();
+            String directorioRelativa = "reportes/trasladosReporte.jasper";
+            //Dentro de reporteDao.ejecutarReporte busca la ruta absoluta.
             
-            String directorioRaiz7 = context.getRealPath("/reportes/trasladosReporte.jasper");
-            String directorioRaiz = "reportes/trasladosReporte.jasper";
-            
-            
-            String[] directorioWeB = path.split("&");
-            
-            String dir = directorioWeB[1].concat("\\") 
-                    + directorioWeB[2].concat("\\") 
-                    + directorioWeB[3].concat("\\") 
-                    + directorioWeB[4];
-            
-            String ubicReporteTrans = directorioRaiz; //dir + "\\reportes\\trasladosReporte.jasper"; 
+            String ubicReporte = reporte.ConvertirRutas(directorioRelativa);
+            //String ubicReporteTrans = directorioRelativa; //dir + "\\reportes\\trasladosReporte.jasper"; 
             
             //ubicReporteTrans = "../../reportes/trasladosReporte.jasper";
             String exportReporte = "traslados";
@@ -201,21 +207,21 @@ public class ReporteController extends BaseController {
             parametetros.put("usuarioGenera", usuarioSIGEBI.getNombreCompleto());
             parametetros.put("nomUnidadCustodio", unidadEjecutora.getDescripcion());
             
-            reporteDao.ejecutarReporte( exportReporte, ubicReporteTrans, parametetros, tipoReporteSelec);
+            reporteDao.ejecutarReporte( exportReporte, ubicReporte, parametetros, tipoReporteSelec);
             
         }catch(Exception e){
-            Mensaje.agregarErrorAdvertencia( e, Util.getEtiquetas("sigebi.Traslado.Err.Reporte"));
+            //Mensaje.agregarErrorAdvertencia( e, Util.getEtiquetas("sigebi.Traslado.Err.Reporte"));
+            Mensaje.agregarErrorAdvertencia( e.getCause().getMessage() );
         }
     }
     
     public void mostrarReporteMovimientos(){
         try{
-            ServletContext context = (ServletContext) FacesContext.getCurrentInstance().getExternalContext().getContext();
-           
-            String directorioRaiz7 = context.getRealPath("/reportes/movimientosReporte.jasper");
-            String directorioRaiz = "reportes/trasladosReporte.jasper";
-            
-            String ubicReporte = directorioRaiz;// directorioRaiz + rutaRelativa; 
+            Reporte reporte = new Reporte();
+            String directorioRelativa = "reportes/movimientosReporte.jasper";
+            //Dentro de reporteDao.ejecutarReporte busca la ruta absoluta.
+            String ubicReporte = reporte.ConvertirRutas(directorioRelativa);
+            //String ubicReporte = directorioRelativa;// directorioRaiz + rutaRelativa; 
             
             String exportReporte = "movimientos";
             
@@ -237,6 +243,55 @@ public class ReporteController extends BaseController {
             reporteDao.ejecutarReporte( exportReporte, ubicReporte, parameter, tipoReporteSelec);
         }catch(Exception e){
             Mensaje.agregarErrorAdvertencia( e, Util.getEtiquetas("sigebi.Traslado.Err.Reporte"));
+            commandMovimiento.setError(e.getCause().getMessage());
+        }
+    }
+    
+    
+    public void mostrarInventarioFaltantes(){
+        try{
+            Reporte reporte = new Reporte();
+            
+            
+            commandInventarioFaltantes.setTomaFisica(1l);
+            commandInventarioFaltantes.setUbicacion(1l);
+            
+            
+            
+            
+            String directorioRelativa = "reportes/fatlInventReporte.jasper";
+            //Dentro de reporteDao.ejecutarReporte busca la ruta absoluta.
+            String ubicReporte = reporte.ConvertirRutas(directorioRelativa);// directorioRaiz + rutaRelativa; 
+            
+            String exportReporte = "inventFaltantesReporte";
+            
+            Map parametros = new HashMap();
+            
+            
+            parametros.put("numTomaFisica", commandInventarioFaltantes.getTomaFisica());
+            parametros.put("ubicacion", commandInventarioFaltantes.getUbicacion());
+            
+            parametros.put("unidadEjecutora", unidadEjecutora.getId());
+            parametros.put("identificacion", commandInventarioFaltantes.getIdentificacion());
+            parametros.put("descripcion", commandInventarioFaltantes.getDescripcion());
+            
+            parametros.put("marca", commandInventarioFaltantes.getMarca());
+            parametros.put("modelo", commandInventarioFaltantes.getModelo());
+            parametros.put("serie", commandInventarioFaltantes.getSerie());
+            
+            parametros.put("nomEstado", commandInventarioFaltantes.getEstado());
+           
+            String consulta = commandInventarioFaltantes.getSQL(unidadEjecutora.getId(), 1L, 1L);
+            parametros.put("consulta", consulta);
+            
+            parametros.put("usuarioGenera", usuarioSIGEBI.getNombreCompleto());
+            parametros.put("nomUnidadCustodio", unidadEjecutora.getDescripcion());
+            
+            
+            reporteDao.ejecutarReporte( exportReporte, ubicReporte, parametros, tipoReporteSelec);
+        }catch(Exception e){
+            Mensaje.agregarErrorAdvertencia( e, Util.getEtiquetas("sigebi.Traslado.Err.Reporte"));
+            commandMovimiento.setError(e.getCause().getMessage());
         }
     }
     

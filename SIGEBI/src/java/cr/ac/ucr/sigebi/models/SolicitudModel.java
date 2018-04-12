@@ -56,10 +56,10 @@ public class SolicitudModel {
         solicitudDao.agregar(solicitud);
     }
 
-    public Solicitud buscarPorId(Long id) throws FWExcepcion{
+    public Solicitud buscarPorId(Long id) throws FWExcepcion {
         return solicitudDao.buscarPorId(id);
     }
-            
+
     public void agregarDetallesSolicitud(ArrayList<SolicitudDetalle> detalles) throws FWExcepcion {
         for (Iterator iterator = detalles.iterator(); iterator.hasNext();) {
             this.agregarDetalleSolicitud((SolicitudDetalle) iterator.next());
@@ -89,22 +89,18 @@ public class SolicitudModel {
 
         for (AutorizacionRol autorizacionRol : rolesSolicitud) {
 
-            //Solo se contemplan los roles distintos al administrador
-            if (!autorizacionRol.getRol().getCodigo().equals(Constantes.CODIGO_ROL_ADMINISTRADOR)) {
+            //Para cada rol se verifica si el usuario tiene permisos para aplicar o rechazar la autorizacion
+            AutorizacionRolPersona autorizacionRolPersona = autorizacionRolPersonaModel.buscar(autorizacionRol, usuario, unidadEjecutora);
+            Boolean permiteModificar = autorizacionRolPersona != null;
 
-                //Para cada rol se verifica si el usuario tiene permisos para aplicar o rechazar la autorizacion
-                AutorizacionRolPersona autorizacionRolPersona = autorizacionRolPersonaModel.buscar(autorizacionRol, usuario, unidadEjecutora);
-                Boolean permiteModificar = autorizacionRolPersona != null;
-
-                //Para cada rol se verifica si el solicitud ya tiene alguna otra aprobacion
-                SolicitudAutorizacion solicitudAutorizacion = solicitudAutorizacionModel.buscar(autorizacionRol, solicitud);
-                if (solicitudAutorizacion == null) {
-                    solicitudAutorizacion = new SolicitudAutorizacion(solicitud, autorizacionRol, null, estadoAutorizacionProceso);
-                }
-                solicitudAutorizacion.setMarcado(permiteModificar);
-                solicitudAutorizaciones.put(autorizacionRol.getRol().getNombre(), solicitudAutorizacion);
-
+            //Para cada rol se verifica si el solicitud ya tiene alguna otra aprobacion
+            SolicitudAutorizacion solicitudAutorizacion = solicitudAutorizacionModel.buscar(autorizacionRol, solicitud);
+            if (solicitudAutorizacion == null) {
+                solicitudAutorizacion = new SolicitudAutorizacion(solicitud, autorizacionRol, null, estadoAutorizacionProceso);
             }
+            solicitudAutorizacion.setMarcado(permiteModificar);
+            solicitudAutorizaciones.put(autorizacionRol.getRol().getNombre(), solicitudAutorizacion);
+
         }
 
         return solicitudAutorizaciones;
@@ -113,14 +109,13 @@ public class SolicitudModel {
     public List<SolicitudDetalle> listarDetallesSolicitud(Solicitud solicitud) throws FWExcepcion {
         return solicitudDao.listarDetallesSolicitud(solicitud);
     }
-    
+
     public void eliminarDetalleSolicitud(SolicitudDetalle solicitud) throws FWExcepcion {
         solicitudDao.eliminarDetalleSolicitud(solicitud);
     }
-    
-    public List<Solicitud> movimientosPorBien(Bien bien){
+
+    public List<Solicitud> movimientosPorBien(Bien bien) {
         return solicitudDao.movimientosPorBien(bien);
     }
-    
-    
+
 }

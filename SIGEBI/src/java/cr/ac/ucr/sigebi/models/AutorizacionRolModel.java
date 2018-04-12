@@ -51,4 +51,7 @@ public class AutorizacionRolModel {
         return autorizacionRolDao.buscarPorRolAutorizacion(idRol, idAutorizacion);
     }
 
+    public AutorizacionRol buscarPorId(Long id) throws FWExcepcion {
+        return autorizacionRolDao.buscarPorId(id);
+    }
 }

@@ -58,7 +58,6 @@
     <mapping class="cr.ac.ucr.sigebi.domain.SubCategoria"/>
     <mapping class="cr.ac.ucr.sigebi.domain.SubClasificacion"/>
     <mapping class="cr.ac.ucr.sigebi.domain.Tipo"/>
-    <mapping class="cr.ac.ucr.sigebi.domain.DocumentoTraslado"/>
     <mapping class="cr.ac.ucr.sigebi.domain.Ubicacion"/>
     <mapping class="cr.ac.ucr.sigebi.domain.UnidadEjecutora"/>
     <mapping class="cr.ac.ucr.sigebi.domain.Usuario"/>
@@ -72,6 +71,10 @@
     <mapping class="cr.ac.ucr.sigebi.domain.InterfazAdjunto"/>
     <mapping class="cr.ac.ucr.sigebi.domain.InterfazAccesorio"/>
     
+    <mapping class="cr.ac.ucr.sigebi.domain.TomaFisica"/>
+    <mapping class="cr.ac.ucr.sigebi.domain.TomaFisicaLote"/>
+    <mapping class="cr.ac.ucr.sigebi.domain.TomaFisicaUnitaria"/>
+    <mapping class="cr.ac.ucr.sigebi.domain.TomaFisicaSobrante"/>
     
     <!--<mapping class="cr.ac.ucr.sigebi.entities.AccesoriosEntity"/>
     <mapping class="cr.ac.ucr.sigebi.entities.ActaDetalleEntity"/>

@@ -35,6 +35,12 @@ public class SolicitudDetallePrestamo extends SolicitudDetalle {
 
     //<editor-fold defaultstate="collapsed" desc="Constructores">
     public SolicitudDetallePrestamo() {}
+    
+    public SolicitudDetallePrestamo(Solicitud solicitud, Bien bien, Estado estado, Date fechaInicio, Date fechaFin) {
+        super(solicitud, bien, estado);
+        this.fechaInicio = fechaInicio;
+        this.fechaFin = fechaFin;        
+    }
     //</editor-fold>
 
     //<editor-fold defaultstate="collapsed" desc="Get's y Set's">

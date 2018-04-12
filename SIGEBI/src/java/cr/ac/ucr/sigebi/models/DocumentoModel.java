@@ -49,6 +49,9 @@ public class DocumentoModel {
     @Resource
     private DocumentoAutorizacionModel documentoAutorizacionModel;
 
+    @Resource
+    private BienModel bienModel;
+
     public void agregar(Documento documento) throws FWExcepcion {
         documentoDao.agregar(documento);
     }
@@ -59,8 +62,22 @@ public class DocumentoModel {
         }
     }
 
+    public List<DocumentoDetalle> listarDetalles(Documento documento) throws FWExcepcion {
+        return documentoDao.listarDetalles(documento);
+    }
+
     public void modificar(Documento documento) throws FWExcepcion {
         documentoDao.agregar(documento);
+    }
+
+    public void modificarEstadoBienDetalle(DocumentoInformeTecnico documento, Estado estadoBien, Estado estadoInterno) throws FWExcepcion {
+        if (estadoBien != null) {
+            documento.getBien().setEstado(estadoBien);
+        }
+        if (estadoInterno != null) {
+            documento.getBien().setEstadoInterno(estadoInterno);
+        }
+        bienModel.actualizar(documento.getBien());
     }
 
     public void agregarAprobacionSolicitudExclusion(ArrayList<Bien> bienes) {
@@ -71,6 +88,7 @@ public class DocumentoModel {
 
         //Se busca el estado informe tecnico    
         Estado estadoInfome = estadoModel.buscarPorDominioEstado(Constantes.DOMINIO_INFORME_TECNICO, Constantes.ESTADO_INFORME_TECNICO_NUEVO);
+        Estado estadoInternoBien = estadoModel.buscarPorDominioEstado(Constantes.DOMINIO_BIEN_INTERNO, Constantes.ESTADO_INTERNO_BIEN_INFORME_TECNICO_CREADO);
 
         for (Bien bien : bienes) {
 
@@ -87,6 +105,10 @@ public class DocumentoModel {
 
             //Se agregan los detalles por problema de JPA1
             this.agregarDetallesDocumento(detalles);
+
+            //Se modifica el estado interno del bien
+            bien.setEstadoInterno(estadoInternoBien);
+            bienModel.actualizar(bien);
         }
     }
 
@@ -94,8 +116,8 @@ public class DocumentoModel {
         return documentoDao.contar(unidadEjecutora, tipoInforme, identificacionBien, descripcionBien, marcaBien, modeloBien, estado, tipoDocumento);
     }
 
-    public List<Documento> listarInformes(UnidadEjecutora unidadEjecutora
-            , Tipo tipoInforme,
+    public List<Documento> listarInformes(UnidadEjecutora unidadEjecutora,
+            Tipo tipoInforme,
             String identificacionBien,
             String descripcionBien,
             String marcaBien,
@@ -105,7 +127,6 @@ public class DocumentoModel {
             Integer pUltimoRegistro, Integer tipoDocumento) throws FWExcepcion {
         return documentoDao.listar(unidadEjecutora, tipoInforme, identificacionBien, descripcionBien, marcaBien, modeloBien, estado, pPrimerRegistro, pUltimoRegistro, tipoDocumento);
     }
-
 
     public HashMap<String, DocumentoAutorizacion> obtenerDocumentosAutorizacionPorRolGeneral(Integer codigoAutorizacion, Documento documento, Usuario usuario, UnidadEjecutora unidadEjecutora) {
 
@@ -117,21 +138,18 @@ public class DocumentoModel {
 
         for (AutorizacionRol autorizacionRol : rolesDocumento) {
 
-            //Solo se contemplan los roles distintos al administrador
-            if (!autorizacionRol.getRol().getCodigo().equals(Constantes.CODIGO_ROL_ADMINISTRADOR)) {
-                //Para cada rol se verifica si el usuario tiene permisos para aplicar o rechazar la autorizacion
-                AutorizacionRolPersona autorizacionRolPersona = autorizacionRolPersonaModel.buscar(autorizacionRol, usuario, unidadEjecutora);
-                Boolean permiteModificar = autorizacionRolPersona != null;
+            //Para cada rol se verifica si el usuario tiene permisos para aplicar o rechazar la autorizacion
+            AutorizacionRolPersona autorizacionRolPersona = autorizacionRolPersonaModel.buscar(autorizacionRol, usuario, unidadEjecutora);
+            Boolean permiteModificar = autorizacionRolPersona != null;
 
-                //Para cada rol se verifica si el documento ya tiene alguna otra aprobacion
-                DocumentoAutorizacion documentoAutorizacion = documentoAutorizacionModel.buscar(autorizacionRol, documento);
-                if (documentoAutorizacion == null) {
-                    documentoAutorizacion = new DocumentoAutorizacion(documento, autorizacionRol, null, estadoAutorizacionProceso);
-                }
-                documentoAutorizacion.setMarcado(permiteModificar);
-                documentoAutorizaciones.put(autorizacionRol.getRol().getNombre(), documentoAutorizacion);
-
+            //Para cada rol se verifica si el documento ya tiene alguna otra aprobacion
+            DocumentoAutorizacion documentoAutorizacion = documentoAutorizacionModel.buscar(autorizacionRol, documento);
+            if (documentoAutorizacion == null) {
+                documentoAutorizacion = new DocumentoAutorizacion(documento, autorizacionRol, null, estadoAutorizacionProceso);
             }
+            documentoAutorizacion.setMarcado(permiteModificar);
+            documentoAutorizaciones.put(autorizacionRol.getRol().getNombre(), documentoAutorizacion);
+
         }
 
         return documentoAutorizaciones;

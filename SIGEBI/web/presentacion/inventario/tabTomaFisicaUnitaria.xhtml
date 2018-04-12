@@ -1,0 +1,150 @@
+
+<ice:outputHtml id="frmTabTomaFisicaUnitaria" xmlns:ice="http://www.icesoft.com/icefaces/component" xmlns:icecore="http://www.icefaces.org/icefaces/core" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:c="http://java.sun.com/jstl/core">
+
+    <div class="container">
+        <div class="row">
+           <div class="col-md-6">
+                <div class="form-group"> 
+                    <label class="control-label" for="txtIdentificacion">
+                        <ice:outputText value="#{label['sigebi.label.vista.detalleTomaFisica.identificacionBusqueda']}" />                            
+                    </label>
+                    <ice:inputText id="txtIdentificacion" 
+                                   partialSubmit="true"
+                                   valueChangeListener="#{controllerTomaFisica.agregarBienPorIdentificacionTomasFisicaUnitaria}"
+                                   styleClass="form-control"
+                                   value="#{controllerTomaFisica.tomaFisicaCommand.tomaFisicaUnitariaCommand.identificacionBusqueda}" />
+                </div>                                             
+           </div>
+           <div class="col-md-6">
+                <div class="form-group"> 
+                    <label class="control-label" for="txtDescripcionBien">
+                        <ice:outputText value="#{label['sigebi.label.vista.detalleTomaFisica.bien.descripcion']}" />                            
+                    </label>
+                    <ice:inputText id="txtDescripcionBien" 
+                                   partialSubmit="false"
+                                   styleClass="form-control"
+                                   readonly="true"
+                                   value="#{controllerTomaFisica.tomaFisicaCommand.tomaFisicaUnitariaCommand.bien.descripcion}" />
+                </div>                                             
+           </div>
+           <div class="col-md-6">
+                <div class="form-group"> 
+                    <label class="control-label" for="txtEstadoBien">
+                        <ice:outputText value="#{label['sigebi.label.vista.detalleTomaFisica.bien.estado']}" />                            
+                    </label>
+                    <ice:inputText id="txtEstadoBien" 
+                                   partialSubmit="false"
+                                   styleClass="form-control"
+                                   readonly="true"
+                                   value="#{controllerTomaFisica.tomaFisicaCommand.tomaFisicaUnitariaCommand.bien.estado.nombre}" />
+                </div>                                             
+           </div>
+        </div>
+                
+        <!-- Paginacion y Listado de Tomas Unitarias -->
+        <div class="row">
+            <div class="col-sm-12">
+                <ice:outputFormat value="#{label['label.generico.paginacion.encabezado']}">
+                    <f:param value="#{controllerTomaFisica.tomaFisicaCommand.tomaFisicaUnitariaCommand.cantidadRegistros}"/>
+                    <f:param value="#{controllerTomaFisica.tomaFisicaCommand.tomaFisicaUnitariaCommand.cantidadRegistrosMostrados}"/>
+                    <f:param value="#{controllerTomaFisica.tomaFisicaCommand.tomaFisicaUnitariaCommand.primerRegistro}"/>
+                    <f:param value="#{controllerTomaFisica.tomaFisicaCommand.tomaFisicaUnitariaCommand.ultimoRegistro}"/>
+                    <f:param value="#{controllerTomaFisica.tomaFisicaCommand.tomaFisicaUnitariaCommand.paginaActual}"/>
+                    <f:param value="#{controllerTomaFisica.tomaFisicaCommand.tomaFisicaUnitariaCommand.cantidadPaginas}"/>
+                </ice:outputFormat>
+                <div>
+                    <table>
+                        <tr>
+                            <td style="padding-right: 5px;">
+                                <ice:outputText value="#{label['label.paginacion.cantidad.pagina']} "/>
+                            </td>
+                            <td>
+
+                                <ice:selectOneMenu id="cantRegistroPorPagina"
+                                       value="#{controllerTomaFisica.tomaFisicaCommand.tomaFisicaUnitariaCommand.cantRegistroPorPagina}" 
+                                       valueChangeListener="#{controllerTomaFisica.cambioRegistrosPorPaginaTomaFisicaUnitaras}"
+                                       partialSubmit="true">
+                                        <f:selectItems id="item_pa" value="#{controllerTomaFisica.tomaFisicaCommand.tomaFisicaUnitariaCommand.listaRegistrosPagina}"/>
+                                </ice:selectOneMenu>    
+
+                            </td>
+                        </tr>
+                    </table>                        
+                </div>                    
+                <div>
+                    <ice:commandButton image="./imagenes/botones/first.png" partialSubmit="true" actionListener="#{controllerTomaFisica.primeroTomaFisicaUnitaras}" rendered="#{controllerTomaFisica.tomaFisicaCommand.tomaFisicaUnitariaCommand.cantidadPaginas > 1}"/>
+                    <ice:commandButton image="./imagenes/botones/previos.png" partialSubmit="true" actionListener="#{controllerTomaFisica.anteriorTomaFisicaUnitaras}" rendered="#{controllerTomaFisica.tomaFisicaCommand.tomaFisicaUnitariaCommand.cantidadPaginas > 1}"/>
+                    <ui:repeat value="#{controllerTomaFisica.tomaFisicaCommand.tomaFisicaUnitariaCommand.arregloPaginas}" var="pagina">
+                        <ice:commandLink value="#{pagina}" partialSubmit="true" actionListener="#{controllerTomaFisica.irPaginaTomaFisicaUnitaras}">
+                            <f:param name="numPagTomaFisicaUnitaria" value="#{pagina}"/>
+                        </ice:commandLink>
+                    </ui:repeat>            
+                    <ice:commandButton image="./imagenes/botones/next.png" partialSubmit="true" actionListener="#{controllerTomaFisica.siguienteTomaFisicaUnitaras}" rendered="#{controllerTomaFisica.tomaFisicaCommand.tomaFisicaUnitariaCommand.cantidadPaginas > 1}"/>
+                    <ice:commandButton image="./imagenes/botones/last.png" partialSubmit="true" actionListener="#{controllerTomaFisica.ultimoTomaFisicaUnitaras}" rendered="#{controllerTomaFisica.tomaFisicaCommand.tomaFisicaUnitariaCommand.cantidadPaginas > 1}"/>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="form-group"> 
+                    <label class="control-label" for="txtTomasFisicasUnitarias">
+                        <ice:outputText value="#{label['sigebi.label.vista.detalleTomaFisica.tomasFisicasUnitarias']}" />
+                    </label>  
+                    <div>
+                        <ice:dataTable id="tomasFisicasUnitarias"
+                                       value="#{controllerTomaFisica.tomaFisicaCommand.tomasFisicasUnitarias}"
+                                       var="tomaFisicaUnitaria"
+                                       paginator="true"
+                                       paginatorPosition="bottom">
+
+                            <ice:column id="colIdentificacion">
+                                <f:facet name="header">
+                                    <ice:columnGroup>
+                                        <ice:headerRow>
+                                           <ice:outputText value="#{label['sigebi.label.vista.detalleTomaFisica.bien.identificacion']}"/>
+                                        </ice:headerRow>
+                                        <ice:headerRow>
+                                            <ice:inputText id="fltIdentificacionTomaFisicaUnidad"
+                                                           style="width: 130px;"
+                                                           value="#{controllerTomaFisica.tomaFisicaCommand.tomaFisicaUnitariaCommand.fltIdentificacion}"                                   
+                                                           partialSubmit="true"
+                                                           valueChangeListener="#{controllerTomaFisica.cambioFiltroTomasFisicaUnitaria}"/>
+                                        </ice:headerRow>
+                                    </ice:columnGroup>
+                                </f:facet>                                
+                                <h:outputText id="colIdentificacionTxt" value="#{tomaFisicaUnitaria.bien.identificacion.identificacion}"/>
+                            </ice:column>
+                            
+                            <ice:column id="colDescripcion">
+                                <f:facet name="header">
+                                    <ice:columnGroup>
+                                        <ice:headerRow>
+                                           <ice:outputText value="#{label['sigebi.label.vista.detalleTomaFisica.bien.descripcion']}"/>
+                                        </ice:headerRow>
+                                        <ice:headerRow>
+                                            <ice:inputText id="fltDescripcionTomaFisicaUnidad"
+                                                           style="width: 130px;"
+                                                           value="#{controllerTomaFisica.tomaFisicaCommand.tomaFisicaUnitariaCommand.fltDescripcion}"                                   
+                                                           partialSubmit="true"
+                                                           valueChangeListener="#{controllerTomaFisica.cambioFiltroTomasFisicaUnitaria}"/>
+                                        </ice:headerRow>
+                                    </ice:columnGroup>
+                                </f:facet>                                
+                                <h:outputText id="colDescripcionTxt" value="#{tomaFisicaUnitaria.bien.descripcion}"/>
+                            </ice:column>
+                            <ice:column style="text-align: center;">
+                                <ice:commandButton id="botonEliminarBien"
+                                                   style="margin-top:2%" 
+                                                   styleClass="btnEliminar_tomaFisica" 
+                                                   partialSubmit="true"
+                                                   actionListener="#{controllerTomaFisica.eliminarTomaFisicaUnitaria}">
+                                    <f:attribute id="tomaFisicaEliminarSel" name="tomaFisicaEliminarSel"  value="#{tomaFisicaUnitaria}"/>                                
+                                </ice:commandButton>
+                            </ice:column>
+                        </ice:dataTable>
+                    </div>
+                </div>
+            </div>                
+        </div>
+    </div>    
+</ice:outputHtml>

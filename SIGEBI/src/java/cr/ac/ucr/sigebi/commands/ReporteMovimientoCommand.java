@@ -59,6 +59,9 @@ public class ReporteMovimientoCommand {
     
     String directorioRaiz;
     String rutaReporte;
+    
+    String error;
+    
     //</editor-fold>
 
     public ReporteMovimientoCommand() {
@@ -114,6 +117,15 @@ public class ReporteMovimientoCommand {
     
     //<editor-fold defaultstate="collapsed" desc="Gets y Sets">    
 
+    public String getError() {
+        return error;
+    }
+
+    public void setError(String error) {
+        this.error = error;
+    }
+
+    
     public String getDirectorioRaiz() {
         return directorioRaiz;
     }
