@@ -11,6 +11,7 @@ import cr.ac.ucr.sigebi.commands.GenerarReporteSobrantesCommand;
 import cr.ac.ucr.sigebi.utils.Constantes;
 import cr.ac.ucr.sigebi.domain.Bien;
 import cr.ac.ucr.sigebi.domain.Estado;
+import cr.ac.ucr.sigebi.domain.ReporteSobrantes;
 import cr.ac.ucr.sigebi.domain.Tipo;
 import cr.ac.ucr.sigebi.models.BienModel;
 import java.util.ArrayList;
@@ -127,7 +128,13 @@ public class GenerarReporteSobrantesController extends BaseController {
                 String outputFile = cr.ac.ucr.framework.reporte.componente.utilitario.Util.ConvertirRutas("/reportes/reporteSobrantes.pdf");
                 
                 //JasperCompileManager.compileReportToFile(template, jasperFile);
-                JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(bienes);
+                ArrayList<ReporteSobrantes> datosReporte = new ArrayList<ReporteSobrantes>();
+                for (Bien bien : bienes) {
+                    ReporteSobrantes dato = new ReporteSobrantes(bien);
+                    datosReporte.add(dato);
+                }
+                
+                JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(datosReporte);
                 JasperPrint jasperPrint = JasperFillManager.fillReport(jasperFile, generarParametros(), dataSource);
                 JasperExportManager.exportReportToPdfFile(jasperPrint, outputFile);
             }
