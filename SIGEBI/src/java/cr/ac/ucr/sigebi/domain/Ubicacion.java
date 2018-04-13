@@ -26,10 +26,6 @@ import javax.persistence.Table;
 @SequenceGenerator(name = "SGB_SQ_UBICACION", sequenceName = "SIGEBI_OAF.SGB_SQ_UBICACION", initialValue = 1, allocationSize = 1)
 public class Ubicacion extends ObjetoBase implements Serializable {
 
-    /**
-     * TODO -- Verificar si la ubicacion debe tener un objeto UbicacionPadre que es de tipo Ubicacion
-     * 
-     */
     //<editor-fold defaultstate="collapsed" desc="Atributos">
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SGB_SQ_UBICACION")
@@ -39,11 +35,12 @@ public class Ubicacion extends ObjetoBase implements Serializable {
     @Column(name = "DETALLE")
     private String detalle;
 
-    @Column(name = "PERTENECE")
-    private Integer pertenece;
+    @ManyToOne
+    @JoinColumn(name = "PERTENECE", referencedColumnName = "ID_UBICACION")
+    private Ubicacion pertenece;
 
-    @Column(name = "ID_PERSONA")//FIXME VERIFICAR
-    private Integer idPersona;
+    @Column(name = "RESPONSABLE")
+    private String responsable;
 
     @ManyToOne
     @JoinColumn(name = "ID_UNIDAD_EJECUTORA", referencedColumnName = "ID")
@@ -52,6 +49,7 @@ public class Ubicacion extends ObjetoBase implements Serializable {
     @ManyToOne
     @JoinColumn(name = "ID_ESTADO", referencedColumnName = "ID_ESTADO")
     private Estado estado;
+
     //</editor-fold>
 
     //<editor-fold defaultstate="collapsed" desc="Get's y Set's">
@@ -63,6 +61,14 @@ public class Ubicacion extends ObjetoBase implements Serializable {
         this.id = id;
     }
 
+    public String getResponsable() {
+        return responsable;
+    }
+
+    public void setResponsable(String responsable) {
+        this.responsable = responsable;
+    }
+
     public String getDetalle() {
         return detalle;
     }
@@ -71,20 +77,12 @@ public class Ubicacion extends ObjetoBase implements Serializable {
         this.detalle = detalle;
     }
 
-    public Integer getPertenece() {
+    public Ubicacion getPertenece() {
         return pertenece;
     }
 
-    public void setPertenece(Integer pertenece) {
+    public void setPertenece(Ubicacion pertenece) {
         this.pertenece = pertenece;
-    }
-
-    public Integer getIdPersona() {
-        return idPersona;
-    }
-
-    public void setIdPersona(Integer idPersona) {
-        this.idPersona = idPersona;
     }
 
     public UnidadEjecutora getUnidadEjecutora() {
@@ -111,7 +109,6 @@ public class Ubicacion extends ObjetoBase implements Serializable {
         hash = 59 * hash + (this.id != null ? this.id.hashCode() : 0);
         hash = 59 * hash + (this.detalle != null ? this.detalle.hashCode() : 0);
         hash = 59 * hash + (this.pertenece != null ? this.pertenece.hashCode() : 0);
-        hash = 59 * hash + (this.idPersona != null ? this.idPersona.hashCode() : 0);
         hash = 59 * hash + (this.unidadEjecutora != null ? this.unidadEjecutora.hashCode() : 0);
         hash = 59 * hash + (this.estado != null ? this.estado.hashCode() : 0);
         return hash;
@@ -136,9 +133,6 @@ public class Ubicacion extends ObjetoBase implements Serializable {
             return false;
         }
         if (this.pertenece != other.pertenece && (this.pertenece == null || !this.pertenece.equals(other.pertenece))) {
-            return false;
-        }
-        if (this.idPersona != other.idPersona && (this.idPersona == null || !this.idPersona.equals(other.idPersona))) {
             return false;
         }
         if (this.unidadEjecutora != other.unidadEjecutora && (this.unidadEjecutora == null || !this.unidadEjecutora.equals(other.unidadEjecutora))) {

@@ -254,6 +254,9 @@ public final class Constantes {
     public static final String VISTA_PROCESOS = "proceso";
     public static final String VISTA_PROCESO_DIRECCION = "../gestionProceso/gestionProceso.xhtml";
 
+    public static final String KEY_VISTA_UBICACION = "ubicaciones";
+    public static final String VISTA_UBICACION = "../ubicacion/ubicacion.xhtml";
+
     //BIENES
     public static final String VISTA_LISTAR_BIENES = "../bienes/listarBienes.xhtml";
     public static final String KEY_VISTA_LISTAR_BIENES = "reg_manual";
@@ -285,7 +288,7 @@ public final class Constantes {
     public static final String VISTA_REPORTE_BIENES = "../reportes/reporteBien.xhtml";
     public static final String KEY_REPORTE_INVENT_FALTANTES = "rep_invent_faltantes";
     public static final String VISTA_REPORTE_INVENT_FALTANTES = "../reportes/reporteInvertFaltantes.xhtml";
-    public static final String KEY_REPORTE_SOBRANTES = "rep_invent_faltantes";
+    public static final String KEY_REPORTE_SOBRANTES = "rep_sobrantes"; 
     public static final String VISTA_REPORTE_SOBRANTES = "../reportes/reporteSobrantes.xhtml";
     
 

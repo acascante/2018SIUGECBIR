@@ -245,11 +245,6 @@ public class BienDao extends GenericDaoImpl {
             session.close();
         }
     }
-
-    
-    
-    
-    
     
     @Transactional
     public void almacenar(Bien bien) throws FWExcepcion {

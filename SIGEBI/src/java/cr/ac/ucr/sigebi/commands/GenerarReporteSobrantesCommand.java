@@ -5,12 +5,6 @@
  */
 package cr.ac.ucr.sigebi.commands;
 
-import cr.ac.ucr.sigebi.domain.CampoReporteBien;
-import cr.ac.ucr.sigebi.domain.ReporteBien;
-import cr.ac.ucr.sigebi.domain.Tipo;
-import cr.ac.ucr.sigebi.domain.Usuario;
-import java.util.List;
-
 /**
  *
  * @author alvaro.cascante

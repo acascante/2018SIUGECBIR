@@ -138,11 +138,6 @@ public class Bien extends ObjetoBase implements Serializable {
     @JoinColumn(name = "ID_USUARIO_REGISTRA", referencedColumnName = "ID_USUARIO")
     private Usuario usuarioRegistra;
     
-//    @ManyToOne
-//    @JoinColumn(name = "ID_USUARIO", referencedColumnName = "ID_USUARIO")
-//    private Usuario persona;
-    
-    
     @Transient
     private List<Accesorio> accesorios;
     
@@ -392,12 +387,32 @@ public class Bien extends ObjetoBase implements Serializable {
     public void setUsuarioRegistra(Usuario usuarioRegistra) {
         this.usuarioRegistra = usuarioRegistra;
     }
-    
-    
-    
-    
     //</editor-fold>
 
+    //<editor-fold defaultstate="collapsed" desc="Metodos para obtener datos de reportes">
+    public String getDescripcionIdentificacion() {
+        return this.identificacion.getIdentificacion();
+    }
+    public String getDescripcionEstado() {
+        return this.estado.getNombre();
+    }
+    public String getDescripcionUnidadEjecutora() {
+        return this.unidadEjecutora.getDescripcion();
+    }
+    public String getMarca() {
+        return this.resumenBien.getMarca();
+    }
+    public String getModelo() {
+        return this.resumenBien.getModelo();
+    }
+    public String getSerie() {
+        return this.resumenBien.getSerie();
+    }
+    public String getFuncionario() {
+        return "Pendiente Definir";
+    }
+    //</editor-fold>
+    
     //<editor-fold defaultstate="collapsed" desc="Metodos para visibilidad de opciones en los listados">
     public boolean getRechazar() {
         if (Constantes.ESTADO_INTERNO_BIEN_EXCLUSION_SOLICITADO.equals(this.getEstadoInterno().getValor()) ||

@@ -69,9 +69,9 @@ public class VistaNavegacion {
         gPaginas.put(Constantes.VISTA_INFORME_TECNICO, Constantes.VISTA_INFORME_TECNICO_LISTADO);
         gPaginas.put(Constantes.VISTA_INFORME_TECNICO_DET, Constantes.VISTA_INFORME_TECNICO_DETALLE);
 
-        //Gestion de procesos
+        //Gestion de procesos 
         gPaginas.put(Constantes.VISTA_PROCESOS, Constantes.VISTA_PROCESO_DIRECCION);
-        
+
         //ACTAS
         gPaginas.put(Constantes.KEY_VISTA_ACTA, Constantes.VISTA_ACTA);
         gPaginas.put(Constantes.KEY_VISTA_LISTAR_ACTAS, Constantes.VISTA_LISTAR_ACTAS);
@@ -99,7 +99,10 @@ public class VistaNavegacion {
         //Inventarios
         gPaginas.put(Constantes.KEY_VISTA_LISTAR_TOMA_FISICA, Constantes.VISTA_LISTAR_TOMA_FISICA);
         gPaginas.put(Constantes.KEY_VISTA_TOMA_FISICA_DETALLE, Constantes.VISTA_TOMA_FISICA_DETALLE);
-        
+
+        //Ubicaciones
+        gPaginas.put(Constantes.KEY_VISTA_UBICACION, Constantes.VISTA_UBICACION);
+
     }//fin del método inicializar
 
     /**

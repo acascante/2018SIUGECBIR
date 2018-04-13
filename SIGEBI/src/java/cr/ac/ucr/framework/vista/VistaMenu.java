@@ -40,6 +40,7 @@ import org.springframework.stereotype.Controller;
 @Controller(value = "vistaMenu")
 @Scope("session")
 public class VistaMenu {
+    
     // <editor-fold defaultstate="collapsed" desc="Atributos">
     //Permite conectarme con el manager de seguridad
 
@@ -88,6 +89,7 @@ public class VistaMenu {
 //MODULO_SIGECU_GENERAL	2034
 
     // </editor-fold>
+    
     // <editor-fold defaultstate="collapsed" desc="Métodos"> 
     /**
      * inicializa las variables de la vista
@@ -484,6 +486,7 @@ public class VistaMenu {
         return gEtiquetaSeleccionMenu.equalsIgnoreCase(Util.getEtiquetas("label.menu.mostrarMenuPrincipal"));
     }//fin del método isMenuFormulacion
     // </editor-fold>
+    
     // <editor-fold defaultstate="collapsed" desc="Sets y Gets"> 
 
     public boolean isgMenuSeleccionado() {
@@ -574,4 +577,5 @@ public class VistaMenu {
         }
     }
     // </editor-fold>
+    
 }//fin de la clase

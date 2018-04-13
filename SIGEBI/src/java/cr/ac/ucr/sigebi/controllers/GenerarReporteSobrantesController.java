@@ -6,7 +6,6 @@
 package cr.ac.ucr.sigebi.controllers;
 
 import cr.ac.ucr.framework.vista.util.Mensaje;
-import cr.ac.ucr.framework.vista.util.Reporte;
 import cr.ac.ucr.framework.vista.util.Util;
 import cr.ac.ucr.sigebi.commands.GenerarReporteSobrantesCommand;
 import cr.ac.ucr.sigebi.utils.Constantes;
@@ -26,7 +25,6 @@ import net.sf.jasperreports.engine.JasperCompileManager;
 import net.sf.jasperreports.engine.JasperExportManager;
 import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
-import net.sf.jasperreports.engine.JasperReport;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
@@ -106,18 +104,6 @@ public class GenerarReporteSobrantesController extends BaseController {
         }
     }
     
-    private void cargarTipos(String dominio, List<SelectItem> itemsList, Map<Long, Tipo> mapTipos) {
-        List<Tipo> tipos = this.tiposPorDominio(dominio);
-        if (!tipos.isEmpty()) {
-            itemsList = new ArrayList<SelectItem>();
-            mapTipos = new HashMap<Long, Tipo>();
-            for (Tipo tipo : tipos) {
-                mapTipos.put(tipo.getId(), tipo);
-                itemsList.add(new SelectItem(tipo.getId(), tipo.getNombre()));
-            }
-        }
-    }
-    
     private void inicializarDatos() {
         this.mensaje = new String();
         this.command = new GenerarReporteSobrantesCommand();    
@@ -132,22 +118,51 @@ public class GenerarReporteSobrantesController extends BaseController {
     }
     
     public void generarReporte() {
-        try{
-            Map parametros = new HashMap();
-            parametros.put("institucion", Constantes.REPORTE_SOBRANTES_PARAMETRO_INSTITUCION);
-            parametros.put("nombreReporte", Constantes.REPORTE_SOBRANTES_PARAMETRO_NOMBRE);
-            parametros.put("unidadEjecutora", this.unidadEjecutora.getDescripcion());
-            parametros.put("identificacion", this.command.getIdentificacion());
-            parametros.put("descripcion", this.command.getDescripcion());
-            parametros.put("marca", this.command.getMarca());
-            parametros.put("modelo", this.command.getModelo());
-            parametros.put("serie", this.command.getSerie());
-            parametros.put("nomEstado", this.estadosBien.get(this.command.getIdEstado()).getNombre());
-            parametros.put("usuarioGenera", this.usuarioSIGEBI.getNombreCompleto());
-            parametros.put("unidadCustodio", unidadEjecutora.getDescripcion());
-        } catch(Exception e) {
-            Mensaje.agregarErrorAdvertencia( e, Util.getEtiquetas("sigebi.reporte.sobrantes.error"));
+        try {
+            //reportes/reporteSobrantes.jrxml
+            List<Bien> bienes = this.bienModel.listar();
+            if (!bienes.isEmpty()) {
+                String template = cr.ac.ucr.framework.reporte.componente.utilitario.Util.ConvertirRutas("/reportes/reporteSobrantes.jrxml");
+                String jasperFile = cr.ac.ucr.framework.reporte.componente.utilitario.Util.ConvertirRutas("/reportes/reporteSobrantes.jasper");
+                String outputFile = cr.ac.ucr.framework.reporte.componente.utilitario.Util.ConvertirRutas("/reportes/reporteSobrantes.pdf");
+                
+                //JasperCompileManager.compileReportToFile(template, jasperFile);
+                JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(bienes);
+                JasperPrint jasperPrint = JasperFillManager.fillReport(jasperFile, generarParametros(), dataSource);
+                JasperExportManager.exportReportToPdfFile(jasperPrint, outputFile);
+            }
+            Mensaje.agregarInfo("Reporte generado exitosamente");
+        } catch (Exception err) {
+            Mensaje.agregarErrorAdvertencia(err.getMessage());
+            this.mensaje = err.getMessage();
         }
+    }
+    
+    public Map generarParametros() {
+        Map parametros = new HashMap();
+        parametros.put("institucion", Constantes.REPORTE_SOBRANTES_PARAMETRO_INSTITUCION);
+        parametros.put("nombreReporte", Constantes.REPORTE_SOBRANTES_PARAMETRO_NOMBRE);
+        parametros.put("unidadEjecutora", this.unidadEjecutora.getDescripcion());
+        parametros.put("identificacion", this.command.getIdentificacion());
+        parametros.put("descripcion", this.command.getDescripcion());
+        parametros.put("marca", this.command.getMarca());
+        parametros.put("modelo", this.command.getModelo());
+        parametros.put("serie", this.command.getSerie());
+        
+        if (this.command.getIdEstado().equals(Constantes.DEFAULT_ID)) {
+               parametros.put("nomEstado", null);
+        } else {
+            parametros.put("nomEstado", this.estadosBien.get(this.command.getIdEstado()).getNombre());
+        }
+        parametros.put("usuario", this.usuarioSIGEBI.getNombreCompleto());
+        parametros.put("unidadCustodio", unidadEjecutora.getDescripcion());
+        
+        parametros.put("unidadDestino", null);
+        parametros.put("unidadOrigen", null);
+        parametros.put("tomaFisica", null);
+        parametros.put("ubicacion", null);
+        
+        return parametros;
     }
     
     //<editor-fold defaultstate="collapsed" desc="Gets y Sets">

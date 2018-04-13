@@ -679,7 +679,6 @@ public class TrasladoController extends ListadoBienesGeneralController {
                 mensaje = Util.getEtiquetas("sigebi.Traslado.Mns.SelecUbicacion");
             }
             
-            //FIXME Jairo verificar el usuario se esta asignando
             traslado.setUsuario(usuarioRegistradoClass);
 
             if (!mensaje.equals("")) {
@@ -1404,7 +1403,6 @@ public class TrasladoController extends ListadoBienesGeneralController {
                 break;
         }
         
-        //FIXME Jairo verificar el usuario
         justificacion.setUsuarioRegistra(usuarioRegistradoClass);
         
         justificacion.setDocumentoTipo(Constantes.DOCUMENTO_TRASLADO);
