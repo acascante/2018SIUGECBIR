@@ -232,4 +232,8 @@ public class BienModel {
     public Long contar(Long id, UnidadEjecutora unidadejecutora, String identificacion, String descripcion, String marca, String modelo, String serie, Estado estado, Estado estadoInterno) throws FWExcepcion {
         return bienDao.contar(id, unidadejecutora, identificacion, descripcion, marca, modelo, serie, estado, estadoInterno);
     }
+    
+    public List<Bien> listarReporteSobrantes(String identificacion, String descripcion, String marca, String modelo, String serie, String usuario,  Estado estado) throws FWExcepcion {
+        return bienDao.listarReporteSobrantes(identificacion, descripcion, marca, modelo, serie, usuario, estado);
+    }
 }

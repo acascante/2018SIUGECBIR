@@ -2158,6 +2158,7 @@ body{
   background-color: #e9ecef;
   opacity: 1;
 }
+
 .btnAprobar_informe, .btnAprobar{
     background: transparent url(../../imagenes/botones/aprobar.png) no-repeat;
     width: 79px;
@@ -2227,6 +2228,24 @@ body{
 }
 
 .btnAgregar_usuario{
+    background: transparent url(../../imagenes/botones/agregar.png) no-repeat;
+    width: 79px;
+    height: 22px;
+    border: none;
+    margin-bottom: 10px;
+    cursor:pointer;
+}
+
+.btnConsultar_ubicacion{
+    width: auto;
+    height: 22px;
+    border: none;
+    margin-bottom: 10px;
+    margin-right: 5px;
+    cursor:pointer;
+}
+
+.btnAgregar_ubicacion{
     background: transparent url(../../imagenes/botones/agregar.png) no-repeat;
     width: 79px;
     height: 22px;
