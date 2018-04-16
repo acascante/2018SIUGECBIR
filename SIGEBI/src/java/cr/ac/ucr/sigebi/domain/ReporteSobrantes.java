@@ -31,7 +31,7 @@ public class ReporteSobrantes implements Serializable {
         this.unidadEjecutora = bien.getUnidadEjecutora();
         this.estado = bien.getEstado();
         this.identificacion = bien.getIdentificacion();
-        this.funcionario = bien.getFuncionario(); 
+        this.funcionario = "Pendiente Definir"; 
     }
     //</editor-fold>
     

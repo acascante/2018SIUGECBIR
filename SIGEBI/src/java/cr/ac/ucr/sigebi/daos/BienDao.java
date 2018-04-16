@@ -360,7 +360,6 @@ public class BienDao extends GenericDaoImpl {
         }
         return q;
     }
-
     
     private Query creaQueryBienesActa(Boolean contar,
              Session session,
@@ -546,6 +545,73 @@ public class BienDao extends GenericDaoImpl {
                 q.setParameter("serie", '%' + serie + '%');
             }
         }
+        return q;
+    }
+    
+    @Transactional(readOnly = true)
+    public List<Bien> listarReporteSobrantes(String identificacion, String descripcion, String marca, String modelo, String serie, String usuario,  Estado estado) throws FWExcepcion {
+        Session session = dao.getSessionFactory().openSession();
+        try {
+            Query query = this.queryReporteSobrantes(session, identificacion, descripcion, marca, modelo, serie, usuario, estado);
+            return (List<Bien>) query.list();
+        } catch (HibernateException e) {
+            throw new FWExcepcion("sigebi.error.notificacionDao.listar", "Error obtener los registros de tipo " + this.getClass(), e.getCause());
+        } finally {
+            session.close();
+        }
+    }
+
+    private Query queryReporteSobrantes(Session session, String identificacion, String descripcion, String marca, String modelo, String serie, String usuario,  Estado estado) {
+        StringBuilder sql = new StringBuilder(" ");
+        sql.append("SELECT b FROM Bien b ");
+        sql.append("WHERE 1 = 1 ");
+        if (identificacion != null && identificacion.length() > 0) {
+            sql.append(" AND UPPER(b.identificacion.identificacion) LIKE UPPER(:identificacion) ");
+        }
+        if (descripcion != null && descripcion.length() > 0) {
+            sql.append(" AND UPPER(b.descripcion) LIKE UPPER(:descripcion) ");
+        }
+        if (marca != null && marca.length() > 0) {
+            sql.append(" AND UPPER(b.resumenBien.marca) LIKE UPPER(:marca) ");
+        }
+        if (modelo != null && modelo.length() > 0) {
+            sql.append(" AND UPPER(b.resumenBien.modelo) LIKE UPPER(:modelo) ");
+        }
+        if (serie != null && serie.length() > 0) {
+            sql.append(" AND UPPER(b.resumenBien.serie) LIKE UPPER(:serie) ");
+        }
+        if (estado != null) {
+            sql.append(" AND b.estado IN (:estado) ");
+        }
+        // TODO determinar como buscar usuario asignado
+//        if (usuario != null && usuario.length() > 0) {
+//            sql.append(" AND UPPER(b.unidadEjecutora.descripcion) LIKE UPPER(:nombUnidad) ");
+//        }
+        
+        sql.append(" ORDER BY b.unidadEjecutora.descripcion ASC ");
+        Query q = session.createQuery(sql.toString());
+        if (identificacion != null && identificacion.length() > 0) {
+            q.setParameter("identificacion", '%' + identificacion + '%');
+        }
+        if (descripcion != null && descripcion.length() > 0) {
+            q.setParameter("descripcion", '%' + descripcion + '%');
+        }
+        if (marca != null && marca.length() > 0) {
+            q.setParameter("marca", '%' + marca + '%');
+        }
+        if (modelo != null && modelo.length() > 0) {
+            q.setParameter("modelo", '%' + modelo + '%');
+        }
+        if (serie != null && serie.length() > 0) {
+            q.setParameter("serie", '%' + serie + '%');
+        }
+        if (estado != null) {
+            q.setParameter("estado", estado);
+        }
+//        if (usuario != null && usuario.length() > 0) {
+//            q.setParameter("usuario", '%' + usuario + '%');
+//        }
+    
         return q;
     }
 }

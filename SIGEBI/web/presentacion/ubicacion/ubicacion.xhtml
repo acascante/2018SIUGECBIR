@@ -1,0 +1,174 @@
+<ice:form id="frmUbicacion" 
+          xmlns:ice="http://www.icesoft.com/icefaces/component" 
+          xmlns:icecore="http://www.icefaces.org/icefaces/core" 
+          xmlns:h="http://java.sun.com/jsf/html" 
+          xmlns:f="http://java.sun.com/jsf/core" 
+          xmlns:ui="http://java.sun.com/jsf/facelets"
+          xmlns:c="http://java.sun.com/jstl/core">
+    
+    <div class="contenido-pagina">
+        <div class="container">
+
+            <div class="row">
+                <div class='col-sm-8'>
+                    <h1 style="margin: 0;">
+                        <ice:outputFormat value="#{label['sigebi.label.vista.ubicacion.titulo']}" />
+                    </h1>
+                </div>
+            </div>
+            
+            <!-- Paginacion -->
+            <div class="row">
+                <div class="col-sm-12">
+                    <ice:outputFormat value="#{label['label.generico.paginacion.encabezado']}">
+                        <f:param value="#{controllerUbicacion.cantidadRegistros}"/>
+                        <f:param value="#{controllerUbicacion.cantidadRegistrosMostrados}"/>
+                        <f:param value="#{controllerUbicacion.primerRegistro}"/>
+                        <f:param value="#{controllerUbicacion.ultimoRegistro}"/>
+                        <f:param value="#{controllerUbicacion.paginaActual}"/>
+                        <f:param value="#{controllerUbicacion.cantidadPaginas}"/>
+                    </ice:outputFormat>
+                    <div>
+                        <table>
+                            <tr>
+                                <td style="padding-right: 5px;">
+                                    <ice:outputText value="#{label['label.paginacion.cantidad.pagina']} "/>
+                                </td>
+                                <td>
+
+                                    <ice:selectOneMenu id="cantRegistroPorPagina"
+                                           value="#{controllerUbicacion.cantRegistroPorPagina}" 
+                                           valueChangeListener="#{controllerUbicacion.cambioRegistrosPorPagina}"
+                                           partialSubmit="true">
+                                            <f:selectItems id="item_pa" value="#{controllerUbicacion.listaRegistrosPagina}"/>
+                                    </ice:selectOneMenu>    
+
+                                </td>
+                            </tr>
+                        </table>                        
+                    </div>                    
+                    <div>
+                        <ice:commandButton image="./imagenes/botones/first.png" partialSubmit="true" actionListener="#{controllerUbicacion.primero}" rendered="#{controllerUbicacion.cantidadPaginas > 1}"/>
+                        <ice:commandButton image="./imagenes/botones/previos.png" partialSubmit="true" actionListener="#{controllerUbicacion.anterior}" rendered="#{controllerUbicacion.cantidadPaginas > 1}"/>
+                        <ui:repeat value="#{controllerUbicacion.arregloPaginas}" var="pagina">
+                            <ice:commandLink value="#{pagina}" partialSubmit="true" actionListener="#{controllerUbicacion.irPagina}">
+                                <f:param name="numPag" value="#{pagina}"/>
+                            </ice:commandLink>
+                        </ui:repeat>            
+                        <ice:commandButton image="./imagenes/botones/next.png" partialSubmit="true" actionListener="#{controllerUbicacion.siguiente}" rendered="#{controllerUbicacion.cantidadPaginas > 1}"/>
+                        <ice:commandButton image="./imagenes/botones/last.png" partialSubmit="true" actionListener="#{controllerUbicacion.ultimo}" rendered="#{controllerUbicacion.cantidadPaginas > 1}"/>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class='col-md-6'>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group"> 
+                                <label class="control-label" for="txtDescripcionBusqueda">
+                                    <ice:outputText value="#{label['sigebi.label.vista.ubicacion.descripcionBusqueda']}" />                            
+                                </label>
+                                <ice:inputText id="txtDescripcionBusqueda" 
+                                               partialSubmit="true"
+                                               valueChangeListener="#{controllerUbicacion.cambioFiltro}"
+                                               styleClass="form-control"
+                                               value="#{controllerUbicacion.ubicacionCommand.fltDescripcionUbicacion}" />
+                            </div>                                             
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <ice:panelGroup style="border: 1px solid gray;">                        
+                                <ice:tree id="tree"
+                                          value="#{controllerUbicacion.ubicacionCommand.treeSIGEBI.model}"
+                                          var="item"
+                                          hideRootNode="false"
+                                          hideNavigation="false"
+                                          
+                                          imageDir="./xmlhttp/css/xp/css-images/">
+                                    <ice:treeNode>
+                                        <f:facet name="icon">
+                                            <ice:panelGroup style="display: inline">
+                                                 <h:graphicImage value="#{item.userObject.icon}"/>
+                                            </ice:panelGroup>
+                                        </f:facet>
+                                        <f:facet name="content">
+                                            <ice:panelGroup style="display: inline">
+                                                <ice:commandButton id="botonConsultar"
+                                                                   style="margin-top:2%" 
+                                                                   styleClass="btnConsultar_ubicacion" 
+                                                                   partialSubmit="true"
+                                                                   value="#{item.userObject.text}"
+                                                                   actionListener="#{controllerUbicacion.seleccionarNodo}">
+                                                    <f:attribute id="nodoSeleccionado" name="nodoSeleccionado"  value="#{item.userObject}"/> 
+                                                </ice:commandButton>
+                                                <ice:commandButton id="botonAgregar"
+                                                                   style="margin-top:2%" 
+                                                                   styleClass="btnAgregar_ubicacion" 
+                                                                   partialSubmit="true"
+                                                                   actionListener="#{controllerUbicacion.nuevoRegistro}">
+                                                    <f:attribute id="nodoSeleccionado" name="nodoSeleccionado"  value="#{item.userObject}"/>                                
+                                                </ice:commandButton>
+                                            </ice:panelGroup>
+                                        </f:facet>
+                                    </ice:treeNode>
+                                </ice:tree>
+                            </ice:panelGroup> 
+                        </div>
+                    </div>
+                </div>
+
+                <div class='col-md-6'>
+                    <ice:panelGroup rendered="#{(controllerUbicacion.modificarUbicacion || controllerUbicacion.agregarUbicacion)}"> 
+                        <div class="row">
+                           <div class="col-md-6">
+                                <div class="form-group"> 
+                                    <label class="control-label" for="txtDescripcion">
+                                        <ice:outputText value="#{label['sigebi.label.vista.ubicacion.descripcion']}" />                            
+                                    </label>
+                                    <ice:inputText id="txtDescripcion" 
+                                                   partialSubmit="false"
+                                                   styleClass="form-control"
+                                                   value="#{controllerUbicacion.ubicacionCommand.ubicacion.detalle}" />
+                                </div>                                             
+                           </div>
+                           <div class="col-md-6">
+                                <div class="form-group"> 
+                                    <label class="control-label" for="txtResponsable">
+                                        <ice:outputText value="#{label['sigebi.label.vista.ubicacion.responsable']}" />                            
+                                    </label>
+                                    <ice:inputText id="txtResponsable" 
+                                                   partialSubmit="false"
+                                                   styleClass="form-control"
+                                                   value="#{controllerUbicacion.ubicacionCommand.ubicacion.responsable}" />
+                                </div>                                             
+                           </div>                                       
+                        </div>
+                        <div class="row">
+                           <div class="col-md-6">
+                                <div class="form-group"> 
+                                    <label class="control-label" for="txtPertenece">
+                                        <ice:outputText value="#{label['sigebi.label.vista.ubicacion.pertenece']}" />                            
+                                    </label>
+                                    <ice:inputText id="txtPertenece" 
+                                                   partialSubmit="false"
+                                                   readonly="true"
+                                                   styleClass="form-control"
+                                                   value="#{controllerUbicacion.ubicacionCommand.ubicacionPadre.detalle}" />
+                                </div>                                             
+                           </div>                                                             
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <ice:commandButton id="botonGuardar" 
+                                                   value="Guardar" 
+                                                   partialSubmit="true" 
+                                                   styleClass="boton" action="#{controllerUbicacion.guardar}"/>
+                            </div>
+                        </div>                     
+                    </ice:panelGroup>
+                </div>
+            </div>    
+        </div>
+    </div>    
+</ice:form>

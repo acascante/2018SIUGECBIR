@@ -121,13 +121,14 @@ public class GenerarReporteSobrantesController extends BaseController {
     public void generarReporte() {
         try {
             //reportes/reporteSobrantes.jrxml
-            List<Bien> bienes = this.bienModel.listar();
+            Estado estado = this.estadosBien.get(this.command.getIdEstado());
+            List<Bien> bienes = this.bienModel.listarReporteSobrantes(this.command.getIdentificacion(), this.command.getDescripcion(), this.command.getMarca(), this.command.getModelo(), this.command.getSerie(), this.command.getUsuario(), estado);
             if (!bienes.isEmpty()) {
                 String template = cr.ac.ucr.framework.reporte.componente.utilitario.Util.ConvertirRutas("/reportes/reporteSobrantes.jrxml");
                 String jasperFile = cr.ac.ucr.framework.reporte.componente.utilitario.Util.ConvertirRutas("/reportes/reporteSobrantes.jasper");
                 String outputFile = cr.ac.ucr.framework.reporte.componente.utilitario.Util.ConvertirRutas("/reportes/reporteSobrantes.pdf");
                 
-                //JasperCompileManager.compileReportToFile(template, jasperFile);
+                JasperCompileManager.compileReportToFile(template, jasperFile);
                 ArrayList<ReporteSobrantes> datosReporte = new ArrayList<ReporteSobrantes>();
                 for (Bien bien : bienes) {
                     ReporteSobrantes dato = new ReporteSobrantes(bien);
