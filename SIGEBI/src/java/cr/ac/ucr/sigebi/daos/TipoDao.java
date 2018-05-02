@@ -28,13 +28,31 @@ public class TipoDao extends GenericDaoImpl {
 
     @Autowired
     private DaoHelper dao;
-
+    
+    @Transactional
+    public void salvar(Tipo tipo) throws FWExcepcion {
+        try {
+            persist(tipo);
+        } catch (DataAccessException e) {
+            throw new FWExcepcion("sigebi.label.tipo.error.salvar", "Error guardando registro de tipo " + this.getClass(), e.getCause());
+        }
+    }
+    
+    @Transactional
+    public void eliminar(Tipo tipo) throws FWExcepcion {
+        try {
+            delete(tipo);
+        } catch (DataAccessException e) {
+            throw new FWExcepcion("sigebi.label.tipo.error.eliminar", "Error guardando registro de tipo " + this.getClass(), e.getCause());
+        }
+    }
+    
     @Transactional(readOnly = true)
     public List<Tipo> listar() throws FWExcepcion {
         try {
             return dao.getHibernateTemplate().find("from Tipo");
         } catch (DataAccessException e) {
-            throw new FWExcepcion("sigebi.error.tipo.dao.listar", "Error obtener los registros de estado " + this.getClass(), e.getCause());
+            throw new FWExcepcion("sigebi.label.tipo.error.listar", "Error obtener los registros de estado " + this.getClass(), e.getCause());
         }
     }
 
@@ -48,7 +66,7 @@ public class TipoDao extends GenericDaoImpl {
 
             return (List<Tipo>) query.list();
         } catch (HibernateException e) {
-            throw new FWExcepcion("sigebi.error.tipo.dao.listarPorDominio", "Error obtener los registros de tipo " + this.getClass(), e.getCause());
+            throw new FWExcepcion("sigebi.label.tipo.error.listar", "Error obtener los registros de tipo " + this.getClass(), e.getCause());
         } finally {
             session.close();
         }
@@ -64,7 +82,7 @@ public class TipoDao extends GenericDaoImpl {
 
             return (Tipo) query.uniqueResult();
         } catch (HibernateException e) {
-            throw new FWExcepcion("sigebi.error.tipo.dao.buscarPorId", "Error obtener los registros de tipo " + this.getClass(), e.getCause());
+            throw new FWExcepcion("sigebi.label.tipo.error.listar", "Error obtener los registros de tipo " + this.getClass(), e.getCause());
         } finally {
             session.close();
         }
@@ -81,7 +99,7 @@ public class TipoDao extends GenericDaoImpl {
 
             return (Tipo) query.uniqueResult();
         } catch (HibernateException e) {
-            throw new FWExcepcion("sigebi.error.tipo.dao.buscarPorDominioTipo", "Error obtener los registros de tipo " + this.getClass(), e.getCause());
+            throw new FWExcepcion("sigebi.label.tipo.error.listar", "Error obtener los registros de tipo " + this.getClass(), e.getCause());
         } finally {
             session.close();
         }
@@ -98,7 +116,7 @@ public class TipoDao extends GenericDaoImpl {
 
             return (Tipo) query.uniqueResult();
         } catch (HibernateException e) {
-            throw new FWExcepcion("sigebi.error.tipo.dao.buscarPorDominioNombre", "Error obtener los registros de tipo " + this.getClass(), e.getCause());
+            throw new FWExcepcion("sigebi.label.tipo.error.listar", "Error obtener los registros de tipo " + this.getClass(), e.getCause());
         } finally {
             session.close();
         }

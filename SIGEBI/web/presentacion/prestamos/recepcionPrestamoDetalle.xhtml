@@ -1,0 +1,162 @@
+<ice:form id="frmDetalleRecepcionPrestamo" 
+          xmlns:ice="http://www.icesoft.com/icefaces/component" 
+          xmlns:h="http://java.sun.com/jsf/html" 
+          xmlns:f="http://java.sun.com/jsf/core" 
+          xmlns:ui="http://java.sun.com/jsf/facelets">
+    
+    <div class="contenido-pagina">
+        <div class="container">
+            <!--Encabezado-->
+            <div class="row">
+                <div class='col-sm-10'>
+                    <h1 style="margin: 0;">
+                        <ice:outputFormat value="#{label['sigebi.label.recepcionPrestamo.titulo.mantenimiento']} "/>
+                    </h1>
+                </div>                
+                <div class="col-sm-2">
+                    <ice:commandButton id="boton_regresar" value="#{label['label.regresar']}" style="float:right" partialSubmit="false" styleClass="boton" 
+                        action="#{controllerListarRecepcionPrestamos.regresarListado}" >
+                    </ice:commandButton>
+                </div>
+            </div>
+            
+            <!--Mensaje Exito-->
+            <div class="row">
+                <div class="col-sm-12">
+                    <ice:outputText style="color: green;" value="#{controllerAgregarRecepcionPrestamos.mensajeExito} "/>
+                    <ice:outputText style="color: red;" value="#{controllerAgregarRecepcionPrestamos.mensaje} "/>
+                    <h:messages style="color:red;"/>
+                </div>
+            </div>
+        
+            <!--ID-->
+            <div class="row">
+                <div class="col-sm-4">
+                    <div class="form-group"> 
+                        <ice:outputText value="#{label['sigebi.label.recepcionPrestamo.id']}" />
+                        <ice:inputText id="txtId" value="#{controllerAgregarRecepcionPrestamos.command.id}" styleClass="form-control" readonly="true" partialSubmit="false" />
+                    </div>
+                </div>
+            </div>
+            
+            <!--Fechas Convenio-->
+            <div class="row">
+                <div class="col-sm-4">
+                    <div class="form-group"> 
+                        <ice:outputText value="#{label['sigebi.label.recepcionPrestamo.fechaIngreso']}" />
+                        <ice:inputText id="txtFechaIngreso" styleClass="form-control" readonly="true" partialSubmit="false" 
+                                       value="#{controllerAgregarRecepcionPrestamos.command.fechaIngreso}">
+                            <f:convertDateTime pattern="#{controllerAgregarRecepcionPrestamos.command.datePattern}"  timeZone="#{controllerAgregarRecepcionPrestamos.command.timeZone}" />
+                        </ice:inputText>
+                    </div>
+                </div>
+                
+                <div class="col-sm-4">
+                    <div class="form-group"> 
+                        <ice:outputText value="#{label['sigebi.label.recepcionPrestamo.fechaDevolucion']}" />
+                        <ice:inputText id="txtfechaDevolucion" styleClass="form-control" readonly="true" partialSubmit="false" 
+                                       value="#{controllerAgregarRecepcionPrestamos.command.fechaDevolucion}">
+                            <f:convertDateTime pattern="#{controllerAgregarRecepcionPrestamos.command.datePattern}"  timeZone="#{controllerAgregarRecepcionPrestamos.command.timeZone}" />
+                        </ice:inputText>
+                    </div>
+                </div>
+                
+                <div class="col-md-4">
+                    <div class="form-group"> 
+                        <ice:outputText value="#{label['sigebi.label.recepcionPrestamo.convenio']}" />
+                        <ice:outputText value="#{label['label.requerido']}" />
+                        <ice:selectOneMenu  id="cmbConvenio" partialSubmit="true" styleClass="form-control"
+                                            value="#{controllerAgregarRecepcionPrestamos.command.idConvenio}">
+                            <f:selectItem itemLabel="N/A" itemValue="-1"/>
+                            <f:selectItems id="slcConvenio" value="#{controllerAgregarRecepcionPrestamos.itemsConvenio}"/>
+                        </ice:selectOneMenu>
+                    </div>
+                </div>
+            </div>
+            
+            <!--Identificacion Descripcion-->
+            <div class="row">
+                <div class="col-sm-4">
+                    <div class="form-group"> 
+                        <ice:outputText value="#{label['sigebi.label.recepcionPrestamo.identificacion']}" />
+                        <ice:inputText id="txtIdentificacion" partialSubmit="false" styleClass="form-control"
+                                       value="#{controllerAgregarRecepcionPrestamos.command.identificacion}" />
+                    </div>                                             
+                </div>
+                <div class="col-sm-8">
+                    <div class="form-group"> 
+                        <ice:outputText value="#{label['sigebi.label.recepcionPrestamo.descripcion']}" />
+                        <ice:inputText id="txtDescripcion" partialSubmit="false" styleClass="form-control"
+                                       value="#{controllerAgregarRecepcionPrestamos.command.descripcion}" />
+                    </div>                                             
+                </div>
+            </div>
+            
+            <!--Marca Modelo Serie-->
+            <div class="row">
+                <div class="col-sm-4">
+                    <div class="form-group"> 
+                        <ice:outputText value="#{label['sigebi.label.recepcionPrestamo.marca']}" />
+                        <ice:inputText id="txtMarca" partialSubmit="false" styleClass="form-control"
+                                       value="#{controllerAgregarRecepcionPrestamos.command.marca}" />
+                    </div>                                             
+                </div>
+                <div class="col-sm-4">
+                    <div class="form-group"> 
+                        <ice:outputText value="#{label['sigebi.label.recepcionPrestamo.modelo']}" />
+                        <ice:inputText id="txtModelo" partialSubmit="false" styleClass="form-control"
+                                       value="#{controllerAgregarRecepcionPrestamos.command.modelo}" />
+                    </div>                                             
+                </div>
+                <div class="col-sm-4">
+                    <div class="form-group"> 
+                        <ice:outputText value="#{label['sigebi.label.recepcionPrestamo.serie']}" />
+                        <ice:inputText id="txtSerie" partialSubmit="false" styleClass="form-control"
+                                       value="#{controllerAgregarRecepcionPrestamos.command.serie}" />
+                    </div>                                             
+                </div>
+            </div>
+            
+            <!--Motivo-->
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group"> 
+                        <ice:outputText value="#{label['sigebi.label.recepcionPrestamo.motivo']}" />
+                        <ice:inputTextarea id="txtMotivo" styleClass="form-control" style="resize: none" cols="4" partialSubmit="false"
+                                           value="#{controllerAgregarRecepcionPrestamos.command.motivo}">
+                        </ice:inputTextarea>
+                    </div>                                             
+                </div>
+            </div>
+            
+            <!--Observacion Adjunto-->
+            <ice:panelGroup rendered="#{controllerAgregarRecepcionPrestamos.prestamoRegistrado}" >
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group"> 
+                            <ice:outputText value="#{label['sigebi.label.recepcionPrestamo.observacion']}" />
+                            <ice:inputTextarea id="txtObservacion" styleClass="form-control" style="resize: none" cols="4" partialSubmit="false"
+                                               value="#{controllerAgregarRecepcionPrestamos.command.observacion}">
+                            </ice:inputTextarea>
+                        </div>                                             
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <ice:inputFile id="inputFileComponent" uploadDirectory="upload/recepcionPrestamos/" styleClass="boton input_loadFile" submitOnUpload="preAndPostUpload"
+                                        actionListener="#{controllerAgregarRecepcionPrestamos.agregarAdjunto}">
+                        </controllerAgregarRecepcionPrestamosice:inputFile>
+                    </div>
+                </div>
+            </ice:panelGroup>
+            
+            <!--Botones-->
+            <div class="row">
+                <div class="col-md-12">
+                    <ice:commandButton id="botonGuardar" value="#{label['label.guardar']}" action="#{controllerAgregarRecepcionPrestamos.guardarDatos}" partialSubmit="true" style="float: right" styleClass="boton"/>
+                </div>
+            </div>
+        </div>
+    </div>
+</ice:form>

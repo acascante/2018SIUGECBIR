@@ -895,7 +895,7 @@ public class AgregarPrestamoController extends BaseController {
                 
                 case 5: // ENTIDAD EXTERNA (CONVENIOS)
                     this.visibleCampoEntidad = false;
-                    List<Convenio> convenios = this.convenioModel.listar();
+                    List<Convenio> convenios = this.convenioModel.listarActivos(unidadEjecutora, new Date());
                     if  (convenios.isEmpty()) {
                         Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.error.agregarBienController.cargarSubCategorias"));
                     } else {
