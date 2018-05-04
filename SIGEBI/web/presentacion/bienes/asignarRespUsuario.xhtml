@@ -1,0 +1,151 @@
+<ice:outputHtml id="frmProveedores" 
+                xmlns:ice="http://www.icesoft.com/icefaces/component" 
+                xmlns:icecore="http://www.icefaces.org/icefaces/core" 
+                xmlns:h="http://java.sun.com/jsf/html" 
+                xmlns:f="http://java.sun.com/jsf/core" 
+                xmlns:ui="http://java.sun.com/jsf/facelets" 
+                xmlns:c="http://java.sun.com/jstl/core">
+
+    <ice:panelPopup modal="true" 
+                    visible="#{responsableController.responsableCommand.visiblePanelUsuarios}" 
+                    rendered="#{responsableController.responsableCommand.visiblePanelUsuarios}" 
+                    styleClass="popup">
+
+        <f:facet name="header">
+            <ice:outputText styleClass="flotar_izquierda titulo_popup" 
+                            value="#{label['sigebi.Bien.Proveedores.Titulo']}"/>
+        </f:facet>
+        <br/>
+
+        <f:facet name="body">
+            <fieldset class="panel_Container" >
+                <br></br>
+                <!-- LISTAR PROVEEDORES -->
+
+                <div class="row">
+                    <div class="col-sm-12">
+                        <ice:outputFormat value="#{label['label.generico.paginacion.encabezado']}">
+                            <f:param value="#{responsableController.responsableCommand.usuarioCommand.cantidadRegistros}"/>
+                            <f:param value="#{responsableController.responsableCommand.usuarioCommand.cantidadRegistrosMostrados}"/>
+                            <f:param value="#{responsableController.responsableCommand.usuarioCommand.primerRegistro}"/>
+                            <f:param value="#{responsableController.responsableCommand.usuarioCommand.ultimoRegistro}"/>
+                            <f:param value="#{responsableController.responsableCommand.usuarioCommand.paginaActual}"/>
+                            <f:param value="#{responsableController.responsableCommand.usuarioCommand.cantidadPaginas}"/>
+                        </ice:outputFormat>
+                        <div>
+                            <table>
+                                <tr>
+                                    <td style="padding-right: 5px;">
+                                        <ice:outputText value="#{label['label.paginacion.cantidad.pagina']} "/>
+                                    </td>
+                                    <td>
+
+                                        <ice:selectOneMenu id="cantRegistroPorPagina"
+                                                           value="#{responsableController.responsableCommand.usuarioCommand.cantRegistroPorPagina}" 
+                                                           valueChangeListener="#{responsableController.cambioRegistrosPorPaginaUsuarios}"
+                                                           partialSubmit="true">
+                                            <f:selectItems id="item_pa" value="#{responsableController.responsableCommand.usuarioCommand.listaRegistrosPagina}"/>
+                                        </ice:selectOneMenu>    
+
+                                    </td>
+                                </tr>
+                            </table>                        
+                        </div>                    
+                        <div>
+                            <ice:commandButton image="./imagenes/botones/first.png" 
+                                               partialSubmit="true" 
+                                               actionListener="#{responsableController.primeroUsuarios}" 
+                                               rendered="#{responsableController.responsableCommand.usuarioCommand.cantidadPaginas > 1}"/>
+                            <ice:commandButton image="./imagenes/botones/previos.png" 
+                                               partialSubmit="true" 
+                                               actionListener="#{responsableController.anteriorUsuarios}" 
+                                               rendered="#{responsableController.responsableCommand.usuarioCommand.cantidadPaginas > 1}"/>
+                            <ui:repeat value="#{responsableController.responsableCommand.usuarioCommand.arregloPaginas}" var="pagina">
+                                <ice:commandLink value="#{pagina}" 
+                                                 partialSubmit="true" 
+                                                 actionListener="#{responsableController.irPaginaUsuarios}">
+                                    <f:param name="numPag" value="#{pagina}"/>
+                                </ice:commandLink>
+                            </ui:repeat>            
+                            <ice:commandButton image="./imagenes/botones/next.png" 
+                                               partialSubmit="true" 
+                                               actionListener="#{responsableController.siguienteUsuarios}" 
+                                               rendered="#{responsableController.responsableCommand.usuarioCommand.cantidadPaginas > 1}"/>
+                            <ice:commandButton image="./imagenes/botones/last.png" 
+                                               partialSubmit="true" 
+                                               actionListener="#{responsableController.ultimoUsuarios}" 
+                                               rendered="#{responsableController.responsableCommand.usuarioCommand.cantidadPaginas > 1}"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <ice:dataTable id="provedoresTabla" 
+                                       value="#{responsableController.responsableCommand.usuarioCommand.usuarios}" 
+                                       var="usuario" 
+                                       paginator="true" 
+                                       paginatorPosition="bottom"                                
+                                       rows="10">
+
+                            <ice:column id="colIdentificacionProveedor">
+                                <f:facet name="header">
+                                    <ice:columnGroup>
+                                        <ice:headerRow>
+                                            <ice:outputText value="#{label['sigebi.Modal.General.Label.Identificacion']}"/>
+                                        </ice:headerRow>
+                                        <ice:headerRow>
+                                            <ice:inputText id="filtrIdentificacionPro" 
+                                                           value="#{responsableController.responsableCommand.usuarioCommand.filtroIdUdsuario}" 
+                                                           partialSubmit="true"                                                    
+                                                           valueChangeListener="#{responsableController.filtroUsuario}"/>
+                                        </ice:headerRow>
+                                    </ice:columnGroup>
+                                </f:facet>                                
+                                <h:outputText value="#{usuario.id}"/>
+                            </ice:column>
+
+                            <ice:column id="colNombrePro">
+                                <f:facet name="header">
+                                    <ice:columnGroup>
+                                        <ice:headerRow>
+                                            <ice:outputText value="#{label['sigebi.Modal.General.Label.Nombre']}"/>
+                                        </ice:headerRow>
+                                        <ice:headerRow>
+                                            <ice:inputText id="filtroNombrePro" 
+                                                           value="#{responsableController.responsableCommand.usuarioCommand.filtroNombre}"     
+                                                           partialSubmit="true"  
+                                                           valueChangeListener="#{responsableController.filtroUsuario}"/>
+                                        </ice:headerRow>
+                                    </ice:columnGroup>
+                                </f:facet>                                
+                                <ice:outputText  value="#{usuario.nombreCompleto}"/>
+                            </ice:column>
+
+                            <ice:column style="text-align: center;">
+                                <ice:commandButton id="botonSeleccionarProveedor" 
+                                                   style="float:right;margin-top:2%"  
+                                                   styleClass="boton"  
+                                                   partialSubmit="true" 
+                                                   value="#{label['label.seleccionar']}"  
+                                                   actionListener="#{responsableController.selecionarUsuario}">
+                                    <f:attribute id="provSeleccionado" name="usuarioSeleccionado" value="#{usuario}"/>
+                                </ice:commandButton>
+                            </ice:column>
+                        </ice:dataTable>
+                    </div>
+                </div>
+                <br/>
+                <br/>
+                <span class="alineado_derecha">
+                    <ice:commandButton id="btn_cancelar" 
+                                       partialSubmit="true" 
+                                       action="#{responsableController.cerrarPanelUsuarios}" 
+                                       styleClass="boton" 
+                                       value="#{label['label.cancelar']}"
+                                       />
+                </span>
+                <br/><br/>
+            </fieldset>       
+        </f:facet>
+    </ice:panelPopup>
+</ice:outputHtml>

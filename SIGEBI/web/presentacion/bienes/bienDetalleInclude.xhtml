@@ -159,15 +159,15 @@
             <div class="col-sm-8"> 
                 <div class="form-group">
                     <ice:outputText value="#{label['sigebi.Bien.Label.Ubicacion']}" /> 
-                    <ice:inputText id="txtUbicacionDescr" styleClass="form-control"  readonly="true" partialSubmit="true"
-                                   value="#{controllerAgregarBienes.command.ubicacionCommand.descripcion}" >
-                    </ice:inputText>
+                    <ice:inputTextarea id="txtUbicacionDescr" styleClass="form-control" readonly="true" 
+                                       transient="true" cols="3" partialSubmit="false"
+                                       value="#{controllerAgregarBienes.command.ubicacionCommand.descripcion}"/> 
                 </div>
             </div>
 
             <div class="col-sm-2">
                 <ice:commandButton id="btnBuscarUbicacion" value="#{label['sigebi.Bien.Btn.Buscar']}"  partialSubmit="true" styleClass="boton" style="margin-top: 1.5rem"
-                                   action="#{controllerAgregarBienes.mostrarPanelUbicaciones}"/>
+                                   action="#{controllerAgregarBienes.treeUbicacionSIGEBI.abrirPantalla}"/>
             </div>
 
             <div class="col-sm-2">

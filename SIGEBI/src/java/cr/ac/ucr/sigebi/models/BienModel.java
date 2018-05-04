@@ -64,17 +64,19 @@ public class BienModel {
     }
 
     public List<Bien> listar(Integer primerRegistro,
-             Integer ultimoRegistro,
-             UnidadEjecutora unidadejecutora,
-             Long id,
-             String identificacion,
-             String descripcion,
-             String marca,
-             String modelo,
-             String serie,
-             Tipo tipo,
-             String nombUnidad,
-             Estado... estados) throws FWExcepcion {
+                            Integer ultimoRegistro,
+                            UnidadEjecutora unidadejecutora,
+                            Long id,
+                            String identificacion,
+                            
+                            String descripcion,
+                            String marca,
+                            String modelo,
+                            String serie,
+                            Tipo tipo,
+                            
+                            String nombUnidad,
+                            Estado... estados) throws FWExcepcion {
         return bienDao.listar(primerRegistro,
                  ultimoRegistro,
                  unidadejecutora,
@@ -161,6 +163,8 @@ public class BienModel {
     
     
     
+    
+    
     public void almacenar(Bien bien) throws FWExcepcion {
         bienDao.almacenar(bien);
     }
@@ -225,13 +229,164 @@ public class BienModel {
         bienDao.actualizar(bienes);
     }
  
-    public List<Bien> listar(Integer primerRegistro, Integer ultimoRegistro, Long id, UnidadEjecutora unidadejecutora, String identificacion, String descripcion, String marca, String modelo, String serie, Estado estado, Estado estadoInterno) throws FWExcepcion {
-        return bienDao.listar(primerRegistro, ultimoRegistro, id, unidadejecutora, identificacion, descripcion, marca, modelo, serie, estado, estadoInterno);
+    
+    
+    public List<Bien> listarAsignar(Integer primerRegistro
+                                    , Integer ultimoRegistro
+                                    , Long id
+                                    , UnidadEjecutora unidadejecutora
+                                    , String identificacion
+
+                                    , String descripcion
+                                    , String marca
+                                    , String modelo
+                                    , String serie
+                                    , Estado estado
+
+                                    , Estado estadoInterno
+                                    , Boolean listadoAsignar
+            ) throws FWExcepcion {
+        return bienDao.listar(primerRegistro
+                            , ultimoRegistro
+                            , id
+                            , unidadejecutora
+                            , identificacion
+
+                            , descripcion
+                            , marca
+                            , modelo
+                            , serie
+                            , estado
+
+                            , estadoInterno
+                            , listadoAsignar
+                            );
     }
     
-    public Long contar(Long id, UnidadEjecutora unidadejecutora, String identificacion, String descripcion, String marca, String modelo, String serie, Estado estado, Estado estadoInterno) throws FWExcepcion {
-        return bienDao.contar(id, unidadejecutora, identificacion, descripcion, marca, modelo, serie, estado, estadoInterno);
+    public Long contarAsignar(Long id
+                            , UnidadEjecutora unidadejecutora
+                            , String identificacion
+                            , String descripcion
+                            , String marca
+
+                            , String modelo
+                            , String serie
+                            , Estado estado
+                            , Estado estadoInterno
+                            , Boolean listadoAsignar
+    ) throws FWExcepcion {
+        return bienDao.contar(id
+                            , unidadejecutora
+                            , identificacion
+                            , descripcion
+                            , marca
+
+                            , modelo
+                            , serie
+                            , estado
+                            , estadoInterno
+                            , listadoAsignar
+                            );
     }
+    
+    
+    
+    
+    public List<Bien> listar(Integer primerRegistro
+                            , Integer ultimoRegistro
+                            , Long id
+                            , UnidadEjecutora unidadejecutora
+                            , String identificacion
+
+                            , String descripcion
+                            , String marca
+                            , String modelo
+                            , String serie
+                            , Estado estado
+
+                            , Estado estadoInterno
+            ) throws FWExcepcion {
+        return bienDao.listar(primerRegistro
+                            , ultimoRegistro
+                            , id
+                            , unidadejecutora
+                            , identificacion
+
+                            , descripcion
+                            , marca
+                            , modelo
+                            , serie
+                            , estado
+
+                            , estadoInterno
+                            , false
+                            );
+    }
+    
+    public Long contar(Long id
+                    , UnidadEjecutora unidadejecutora
+                    , String identificacion
+                    , String descripcion
+                    , String marca
+
+                    , String modelo
+                    , String serie
+                    , Estado estado
+                    , Estado estadoInterno
+    ) throws FWExcepcion {
+        return bienDao.contar(id
+                            , unidadejecutora
+                            , identificacion
+                            , descripcion
+                            , marca
+
+                            , modelo
+                            , serie
+                            , estado
+                            , estadoInterno
+                            , false
+                            );
+    }
+    
+    
+    
+        public List<Bien> listarMisBienes(Integer primerRegistro
+                                        , Integer ultimoRegistro
+                                        , UnidadEjecutora unidadejecutora
+                                        , String identificacion
+
+                                        , String descripcion
+                                        , String marca
+                                        , String modelo
+                                        , String serie
+                                        , Estado estado
+
+                                        , Usuario usuario) throws FWExcepcion {
+        return bienDao.listarMisBienes(primerRegistro
+                                    , ultimoRegistro
+                                    , unidadejecutora
+                                    , identificacion
+                                    , descripcion
+                                    , marca
+                                    , modelo
+                                    , serie
+                                    , estado
+                                    , usuario);
+    }
+    
+    public Long contarMisBienes(UnidadEjecutora unidadejecutora
+            , String identificacion
+            , String descripcion
+            , String marca
+            
+            , String modelo
+            , String serie
+            , Estado estado
+            , Usuario usuario) throws FWExcepcion {
+        return bienDao.contarMisBienes( unidadejecutora, identificacion, descripcion, marca, modelo, serie, estado, usuario);
+    }
+    
+    
     
     public List<Bien> listarReporteSobrantes(String identificacion, String descripcion, String marca, String modelo, String serie, String usuario,  Estado estado) throws FWExcepcion {
         return bienDao.listarReporteSobrantes(identificacion, descripcion, marca, modelo, serie, usuario, estado);

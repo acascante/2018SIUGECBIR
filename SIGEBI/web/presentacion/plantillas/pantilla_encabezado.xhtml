@@ -5,7 +5,7 @@
       xmlns:f="http://java.sun.com/jsf/core"
       xmlns:ice="http://www.icesoft.com/icefaces/component">
     <head>
-        
+
         <title>Sistema de Información Institucional de Autoevaluación y Gestión de la Calidad</title>
         <link rel="icon" href="#{facesContext.externalContext.requestContextPath}/imagenes/ucr-favicon.png" type="image/png" />
         <link rel="shortcut icon" type="image/x-icon" href="#{facesContext.externalContext.requestContextPath}/imagenes/ucr-favicon.ico"/>
@@ -13,14 +13,26 @@
         <ice:outputStyle href="././css/clases/clase.css"/>
         <ice:outputStyle href="././css/id/id.css"/>
         <f:loadBundle basename="cr.ac.ucr.framework.vista.util.etiquetas_es" var="label"/>
-        
+
     </head>
     <ice:panelGroup>
         <ice:form>
             <div class="usuario-login">
+                <span id="unidad">
+                    <strong>
+
+                        <!--ice:outputText value=" Unidad :"/-->
+                        
+                        <ice:commandLink styleClass="btnCambioUnid" partialSubmit="true"
+                                         action="#{vistaUsuario.cargarUnidades}">
+                            <!--ice:outputText  id="btnCambiarUni" value="Cambiar"/-->
+                            <ice:outputText style="margin-right: 20px;" id="codUsuario" value="#{vistaUsuario.gUnidadActual.dscUnidadEjecutora}"/>
+                        </ice:commandLink>
+                    </strong>
+                </span>
                 <span id="usuario">
                     <strong>
-                        <ice:outputText value=" Usuario :"/>
+                        <!--ice:outputText value=" Usuario :"/-->
                         <ice:outputText style="margin-right: 20px;" id="codUsuario" value="#{vistaUsuario.gUsuarioActual.idUsuario}"/>
                         <ice:commandLink styleClass="btnLogout" partialSubmit="true"
                                          action="#{vistaUsuario.salir}">
@@ -34,6 +46,60 @@
                     <div><img class="alineado_izquierda_logo" src="././imagenes/firma-ucr.png"/> <img class="alineado_derecha_logo" src="././imagenes/logo.png"/></div>
                 </div>
             </div>
+
+            <!-- <<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>> -->
+            <!-- Modal para elegir la unidad a la que se va a loguear el usuario -->
+            <!-- <<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>> -->
+
+
+            <ice:panelPopup
+                modal="true" visible="#{vistaUsuario.gPopUnidades}"
+                rendered="true" styleClass="popup"
+                >
+                <f:facet name="header">
+                    <ice:outputText styleClass="flotar_izquierda titulo_popup" value="#{label['label.seleccion_unidad']}"/>
+                </f:facet>
+                <br/>
+                <f:facet name="body">
+                    <fieldset class="panel_Container" >
+                        <br></br>
+                        <span class="alineado_izquierda">
+                            <ice:outputText styleClass="etiqueta" value="#{label['label.lista_unidades']}" />
+                        </span>
+                        <br/>
+                        <div>
+                            <br/>
+                            <span class="alineado_izquierda">
+                                <ice:selectOneMenu id="unidades"
+                                                   value="#{vistaUsuario.mostrarIngreso}"
+                                                   valueChangeListener="#{vistaUsuario.asignarUnidadActual}"
+                                                   styleClass="campo_form" style="width: 405px" partialSubmit="true">
+                                    <f:selectItem itemLabel="#{label['label.seleccione_unidad']}" itemValue="-1" />
+                                    <f:selectItems id="item_modulo" value="#{vistaUsuario.gUnidades}"/>
+                                </ice:selectOneMenu>
+
+                            </span>
+                        </div>
+                        <br/>
+                        <br/>
+                        <span class="alineado_izquierda">
+                            <ice:commandButton id="btn_aceptar"
+                                               action="#{vistaMenu.IrInicio}"
+                                               immediate="true"
+                                               actionListener="#{vistaMenu.cargarMenuChg}"
+                                               styleClass="boton" value="Aceptar"/>
+                        </span>
+                        <span class="alineado_derecha">
+                            <ice:commandButton id="btn_cancelar"
+                                               partialSubmit="true"
+                                               action="#{vistaUsuario.cerrarModalUnidad}"
+                                               styleClass="boton"  value="Regresar" />
+                        </span>
+                        <br/><br/>
+                    </fieldset>       
+                </f:facet>
+            </ice:panelPopup>
         </ice:form>
     </ice:panelGroup>
+
 </html>

@@ -67,4 +67,8 @@ public class TomaFisicaSobranteModel {
     ) throws FWExcepcion {
         return tomaFisicaSobranteDao.contar(id, tomaFisica, identificacion, descripcion, serie, marca, modelo);
     }
+    
+    public List<TomaFisicaSobrante> listarReporte(TomaFisica tomaFisica, String identificacion, String ubicacion, String descripcion, String serie, String marca, String modelo, String orden, String orden1, String orden2, String orden3) throws FWExcepcion {
+        return tomaFisicaSobranteDao.listarReporte(tomaFisica, identificacion, ubicacion, descripcion, serie, marca, modelo, orden, orden1, orden2, orden3);
+    }
 }

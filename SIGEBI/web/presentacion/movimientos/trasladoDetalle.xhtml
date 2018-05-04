@@ -1,4 +1,4 @@
-<ice:form id="frm_listarInformeTecnico" 
+<ice:form id="frm_TrasladoDetalle" 
           xmlns:ice="http://www.icesoft.com/icefaces/component"
           xmlns:h="http://java.sun.com/jsf/html"
           xmlns:f="http://java.sun.com/jsf/core"
@@ -18,13 +18,6 @@
                     </h1>
                 </div> 
                 <div class='col-sm-2'>
-                    <ice:commandButton id="botonAbrir"
-                                       style="float: right" 
-                                       styleClass="boton" 
-                                       partialSubmit="true" 
-                                       actionListener="#{trasladoController.regresar}"
-                                       value="#{label['sigebi.Bien.Btn.Regresar']}">
-                    </ice:commandButton>
                 </div>
 
             </div>
@@ -117,12 +110,15 @@
                         <ice:outputText 
                             value="#{label['sigebi.Traslado.Label.Ubicacion']}"
                             />
-                        <ice:inputText id="txtUbicacionNombre" 
+<!--                        <ice:inputText id="txtUbicacionNombre" 
                                        styleClass="form-control" 
                                        value="#{trasladoController.traslado.ubicacion.detalle}"
                                        readonly="true"
                                        partialSubmit="false">
-                        </ice:inputText>
+                        </ice:inputText>-->
+                        <ice:inputTextarea id="txtUbicacionDescr" styleClass="form-control" readonly="true" 
+                                       transient="true" cols="3" partialSubmit="false"
+                                       value="#{trasladoController.traslado.ubicacion.descripcionCompleta}"/> 
 
                     </div>                                             
                 </div>
@@ -639,6 +635,7 @@
                         <h:outputText id="idUnidad" value="#{unidad.id}"/>
                     </ice:column>
 
+                    
                     <ice:column id="colNombre" >
                         <f:facet name="header">
                             <ice:columnGroup>
@@ -699,7 +696,7 @@
 
 
     <!-- Modal Ubicaciones -->
-    <ice:panelPopup
+<!--    <ice:panelPopup
         modal="true" 
         visible="#{trasladoController.ubicacionVisible}"
         rendered="true" 
@@ -771,7 +768,7 @@
             </fieldset>       
         </f:facet>  
 
-    </ice:panelPopup>
+    </ice:panelPopup>-->
 
 
     <!-- Agrega el model para buscar Bienes -->
@@ -779,6 +776,10 @@
         <ui:include src="../plantillas/buscarBienesGeneral.xhtml" />
     </ui:insert>
 
+    <!-- Panel de Ubicaciones --> 
+    <ui:insert name="modalUbicaciones">
+         <ui:include src="../movimientos/trasladoUbicaciones.xhtml" />
+    </ui:insert>
 
 
 </ice:form>

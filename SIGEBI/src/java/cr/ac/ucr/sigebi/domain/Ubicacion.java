@@ -39,8 +39,9 @@ public class Ubicacion extends ObjetoBase implements Serializable {
     @JoinColumn(name = "PERTENECE", referencedColumnName = "ID_UBICACION")
     private Ubicacion pertenece;
 
-    @Column(name = "RESPONSABLE")
-    private String responsable;
+    @ManyToOne
+    @JoinColumn(name = "RESPONSABLE", referencedColumnName = "ID_USUARIO")
+    private Usuario responsable;
 
     @ManyToOne
     @JoinColumn(name = "ID_UNIDAD_EJECUTORA", referencedColumnName = "ID")
@@ -61,11 +62,11 @@ public class Ubicacion extends ObjetoBase implements Serializable {
         this.id = id;
     }
 
-    public String getResponsable() {
+    public Usuario getResponsable() {
         return responsable;
     }
 
-    public void setResponsable(String responsable) {
+    public void setResponsable(Usuario responsable) {
         this.responsable = responsable;
     }
 
@@ -85,6 +86,18 @@ public class Ubicacion extends ObjetoBase implements Serializable {
         this.pertenece = pertenece;
     }
 
+    public String getDetallePertenece(Ubicacion ubicacion) {        
+        if(ubicacion.getPertenece() != null){
+            return ubicacion.getPertenece().getDetallePertenece(ubicacion.getPertenece()) + " --> " + ubicacion.getDetalle();
+        }else{
+            return ubicacion.getDetalle();
+        }
+    }
+
+    public String getDescripcionCompleta() {                
+        return this.getDetallePertenece(this);
+    }
+    
     public UnidadEjecutora getUnidadEjecutora() {
         return unidadEjecutora;
     }

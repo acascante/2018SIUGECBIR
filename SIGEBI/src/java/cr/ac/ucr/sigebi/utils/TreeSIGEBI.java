@@ -11,7 +11,9 @@ public class TreeSIGEBI {
 
     //<editor-fold defaultstate="collapsed" desc="Artibutos>
     private DefaultTreeModel model;
-    private NodoSIGEBI nodoSeleccionado = null;    
+    private NodoSIGEBI nodoSeleccionado = null;  
+    private String campoDescripcion; 
+    
     //</editor-fold>
 
     //<editor-fold defaultstate="collapsed" desc="GET's y SET's">
@@ -30,21 +32,42 @@ public class TreeSIGEBI {
     public void setNodoSeleccionado(NodoSIGEBI nodoSeleccionado) {
         this.nodoSeleccionado = nodoSeleccionado;
     }
+
+    public String getCampoDescripcion() {
+        return campoDescripcion;
+    }
+
+    public void setCampoDescripcion(String campoDescripcion) {
+        this.campoDescripcion = campoDescripcion;
+    }
     
     //</editor-fold>
 
     //<editor-fold defaultstate="collapsed" desc="Constructores y metodos">
-    public TreeSIGEBI(ArrayList<Object> objetos, String nodoPrincipal, String campoDescripcion) {
+    public TreeSIGEBI() {
+    
+    }
+    
+    public void inicializa(ArrayList<Object> objetos, String nombreNodoPrincipal, String campoDescripcion) {
 
         // Crea el nodo principal
         DefaultMutableTreeNode rootTreeNode = new DefaultMutableTreeNode();
         NodoSIGEBI rootObject = new NodoSIGEBI(rootTreeNode, this, null, "");
-        rootObject.setText(nodoPrincipal);
+        rootObject.setText(nombreNodoPrincipal);
         rootTreeNode.setUserObject(rootObject);
+        this.campoDescripcion = campoDescripcion;
 
         // model is accessed by by the ice:tree component
         model = new DefaultTreeModel(rootTreeNode);
+        if(objetos != null){
+            this.asignaObjetos(objetos);        
+        }
+    }
 
+    public void asignaObjetos(ArrayList<Object> objetos) {
+        
+        ((DefaultMutableTreeNode)this.model.getRoot()).removeAllChildren();
+        
         // Se agregan los nodos principales
         for (Object objeto : objetos) {
 
@@ -53,7 +76,7 @@ public class TreeSIGEBI {
                 Class<?> c = objeto.getClass();
                 
                 //Se obtiene la descripcion del objeto
-                Field f = c.getDeclaredField(campoDescripcion);
+                Field f = c.getDeclaredField(this.campoDescripcion);
                 f.setAccessible(true);
                 String descripcion = (String) f.get(objeto);
                 
@@ -62,8 +85,7 @@ public class TreeSIGEBI {
                 NodoSIGEBI branchObject = new NodoSIGEBI(branchNode, this, objeto, descripcion);
                 branchObject.setText(descripcion);
                 branchNode.setUserObject(branchObject);
-                rootTreeNode.add(branchNode);
-
+                ((DefaultMutableTreeNode)this.model.getRoot()).add(branchNode);
             } catch (IllegalAccessException ex) {
                 Logger.getLogger(NodoSIGEBI.class.getName()).log(Level.SEVERE, null, ex);
             } catch (NoSuchFieldException ex) {

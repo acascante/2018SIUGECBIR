@@ -96,19 +96,14 @@
            <div class="col-md-6">
                 <div class="form-group"> 
                     <label class="control-label" for="txtUbicacionSobrante">
-                        <ice:outputText value="#{label['sigebi.label.vista.detalleTomaFisica.sobrante.ubicacion']}" />
-                    </label>                                               
-
-                    <ice:selectOneMenu id="txtUbicacionSobrante"                                           
-                                       styleClass="form-control"
-                                       partialSubmit="true"
-                                       value="#{controllerTomaFisica.tomaFisicaCommand.tomaFisicaSobranteCommand.ubicacion.idTemporal}"
-                                       valueChangeListener="#{controllerTomaFisica.cambiarUbicacionTomaFisicaSobrante}">
-                                       <f:selectItem itemLabel="N/A" itemValue="-1"/>
-                                       <f:selectItems id="slcUbicacionSobranteItem" value="#{controllerTomaFisica.tomaFisicaCommand.ubicacionOptions}"/>
-                    </ice:selectOneMenu>
+                        <ice:outputText value="#{label['sigebi.label.vista.detalleTomaFisica.sobrante.ubicacion']}" />                            
+                    </label>
+                    <ice:inputText id="txtUbicacionSobrante" 
+                                   partialSubmit="false"
+                                   styleClass="form-control"
+                                   value="#{controllerTomaFisica.tomaFisicaCommand.tomaFisicaSobranteCommand.tomaFisicaSobrante.ubicacion}" />
                 </div>                                             
-           </div> 
+           </div>
            <div class="col-md-6">
                 <div class="form-group"> 
                     <label class="control-label" for="txtMarcaSobrante">
@@ -309,7 +304,16 @@
                         </ice:dataTable>
                     </div>
                 </div>
-            </div>                
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <ice:commandButton id="btnReporteSobrantes" style="float: left" styleClass="boton" partialSubmit="true" 
+                                   actionListener="#{controllerReporteSobrantes.detalleReporteSobrantes}"
+                                   value="Reporte Sobrantes">
+                    <f:attribute id="idTomaFisica" name="idTomaFisica" value="#{controllerTomaFisica.tomaFisicaCommand.tomaFisica.id}"/>
+                </ice:commandButton>
+            </div>
         </div>
     </div>    
 </ice:outputHtml>

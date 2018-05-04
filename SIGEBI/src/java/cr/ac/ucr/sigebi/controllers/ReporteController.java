@@ -5,6 +5,7 @@
  */
 package cr.ac.ucr.sigebi.controllers;
 
+import static com.sun.facelets.util.Path.context;
 import cr.ac.ucr.framework.vista.util.Mensaje;
 import cr.ac.ucr.framework.vista.util.Reporte;
 import cr.ac.ucr.framework.vista.util.Util;
@@ -12,6 +13,7 @@ import cr.ac.ucr.sigebi.commands.ReporteInventFaltantesCommand;
 import cr.ac.ucr.sigebi.commands.ReporteMovimientoCommand;
 import cr.ac.ucr.sigebi.commands.ReporteTrasladoCommand;
 import cr.ac.ucr.sigebi.daos.ReporteDao;
+import cr.ac.ucr.sigebi.domain.TomaFisica;
 import cr.ac.ucr.sigebi.utils.Constantes;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -21,7 +23,11 @@ import java.util.List;
 import java.util.Map;
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
+import javax.faces.context.FacesContext;
+import javax.faces.event.ActionEvent;
+import javax.faces.event.PhaseId;
 import javax.faces.model.SelectItem;
+import javax.servlet.ServletContext;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
@@ -165,8 +171,18 @@ public class ReporteController extends BaseController {
         }
     }
 
-    public void reporteSobrantes() {
-        Util.navegar(Constantes.KEY_REPORTE_SOBRANTES);
+    public void reporteFaltantes(ActionEvent event) {
+        if (!event.getPhaseId().equals(PhaseId.INVOKE_APPLICATION)) {
+            event.setPhaseId(PhaseId.INVOKE_APPLICATION);
+            event.queue();
+            return;
+        }
+
+        TomaFisica toma = (TomaFisica) event.getComponent().getAttributes().get("tomaFisicaSeleccionada");
+        commandInventarioFaltantes.setTomaSeleccionada(toma);
+        commandInventarioFaltantes.setTomaFisica(toma.getId());
+        
+        Util.navegar(Constantes.KEY_REPORTE_INVENT_FALTANTES);
     }
     // </editor-fold>
     
@@ -180,9 +196,13 @@ public class ReporteController extends BaseController {
             String directorioRelativa = "reportes/trasladosReporte.jasper";
             //Dentro de reporteDao.ejecutarReporte busca la ruta absoluta.
             
-            String ubicReporte = reporte.ConvertirRutas(directorioRelativa);
-            //String ubicReporteTrans = directorioRelativa; //dir + "\\reportes\\trasladosReporte.jasper"; 
+            cr.ac.ucr.framework.reporte.componente.utilitario.Util ut =  new cr.ac.ucr.framework.reporte.componente.utilitario.Util();
             
+            String ruta = cr.ac.ucr.framework.reporte.componente.utilitario.Util.ConvertirRutas("/reportes/trasladosReporte.jasper");
+            
+//            String directorioRaiz7 = context.getRealPath("/reportes/trasladosReporte.jasper");
+            String directorioRaiz = "reportes/trasladosReporte.jasper";
+
             //ubicReporteTrans = "../../reportes/trasladosReporte.jasper";
             String exportReporte = "traslados";
             
@@ -207,8 +227,8 @@ public class ReporteController extends BaseController {
             parametetros.put("usuarioGenera", usuarioSIGEBI.getNombreCompleto());
             parametetros.put("nomUnidadCustodio", unidadEjecutora.getDescripcion());
             
-            reporteDao.ejecutarReporte( exportReporte, ubicReporte, parametetros, tipoReporteSelec);
-            
+            reporteDao.ejecutarReporte( exportReporte, ruta, parametetros, tipoReporteSelec);
+
         }catch(Exception e){
             //Mensaje.agregarErrorAdvertencia( e, Util.getEtiquetas("sigebi.Traslado.Err.Reporte"));
             Mensaje.agregarErrorAdvertencia( e.getCause().getMessage() );
@@ -217,12 +237,16 @@ public class ReporteController extends BaseController {
     
     public void mostrarReporteMovimientos(){
         try{
-            Reporte reporte = new Reporte();
-            String directorioRelativa = "reportes/movimientosReporte.jasper";
-            //Dentro de reporteDao.ejecutarReporte busca la ruta absoluta.
-            String ubicReporte = reporte.ConvertirRutas(directorioRelativa);
-            //String ubicReporte = directorioRelativa;// directorioRaiz + rutaRelativa; 
+            ServletContext context = (ServletContext) FacesContext.getCurrentInstance().getExternalContext().getContext();
+           
+            String ruta = cr.ac.ucr.framework.reporte.componente.utilitario.Util.ConvertirRutas("/reportes/trasladosReporte.jasper");
             
+            
+            
+            String directorioRaiz7 = context.getRealPath("/reportes/movimientosReporte.jasper");
+            String directorioRaiz = "reportes/trasladosReporte.jasper";
+
+
             String exportReporte = "movimientos";
             
             Map parameter = new HashMap();
@@ -239,8 +263,8 @@ public class ReporteController extends BaseController {
             
             String consulta = commandMovimiento.getSQL(unidadEjecutora.getId());
             parameter.put("sql", consulta);
-            
-            reporteDao.ejecutarReporte( exportReporte, ubicReporte, parameter, tipoReporteSelec);
+
+            reporteDao.ejecutarReporte( exportReporte, ruta, parameter, tipoReporteSelec);
         }catch(Exception e){
             Mensaje.agregarErrorAdvertencia( e, Util.getEtiquetas("sigebi.Traslado.Err.Reporte"));
             commandMovimiento.setError(e.getCause().getMessage());
@@ -253,12 +277,9 @@ public class ReporteController extends BaseController {
             Reporte reporte = new Reporte();
             
             
-            commandInventarioFaltantes.setTomaFisica(1l);
-            commandInventarioFaltantes.setUbicacion(1l);
-            
-            
-            
-            
+            //commandInventarioFaltantes.setTomaFisica(1l);
+            //commandInventarioFaltantes.setUbicacion(1l);
+
             String directorioRelativa = "reportes/fatlInventReporte.jasper";
             //Dentro de reporteDao.ejecutarReporte busca la ruta absoluta.
             String ubicReporte = reporte.ConvertirRutas(directorioRelativa);// directorioRaiz + rutaRelativa; 
@@ -268,8 +289,8 @@ public class ReporteController extends BaseController {
             Map parametros = new HashMap();
             
             
-            parametros.put("numTomaFisica", commandInventarioFaltantes.getTomaFisica());
-            parametros.put("ubicacion", commandInventarioFaltantes.getUbicacion());
+            parametros.put("numTomaFisica", commandInventarioFaltantes.getTomaSeleccionada().getId());
+            parametros.put("ubicacion", commandInventarioFaltantes.getTomaSeleccionada().getUbicacion().getDetalle());
             
             parametros.put("unidadEjecutora", unidadEjecutora.getId());
             parametros.put("identificacion", commandInventarioFaltantes.getIdentificacion());
@@ -281,7 +302,11 @@ public class ReporteController extends BaseController {
             
             parametros.put("nomEstado", commandInventarioFaltantes.getEstado());
            
-            String consulta = commandInventarioFaltantes.getSQL(unidadEjecutora.getId(), 1L, 1L);
+            String consulta = commandInventarioFaltantes.getSQL(unidadEjecutora.getId()
+                                                                        , commandInventarioFaltantes.getTomaSeleccionada().getId() //Toma Física
+                                                                        , commandInventarioFaltantes.getTomaSeleccionada().getUbicacion() == null 
+                                                                                ? 0 :  commandInventarioFaltantes.getTomaSeleccionada().getUbicacion().getId() //Ubicación
+                                                                );
             parametros.put("consulta", consulta);
             
             parametros.put("usuarioGenera", usuarioSIGEBI.getNombreCompleto());

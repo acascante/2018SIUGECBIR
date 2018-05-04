@@ -5,6 +5,7 @@
  */
 package cr.ac.ucr.sigebi.controllers;
 
+import cr.ac.ucr.framework.utils.FWExcepcion;
 import cr.ac.ucr.framework.vista.util.Mensaje;
 import cr.ac.ucr.framework.vista.util.Util;
 import cr.ac.ucr.sigebi.daos.ReporteDao;
@@ -32,6 +33,9 @@ import cr.ac.ucr.sigebi.models.UbicacionModel;
 import cr.ac.ucr.sigebi.models.UnidadEjecutoraModel;
 import cr.ac.ucr.sigebi.models.UsuarioModel;
 import cr.ac.ucr.sigebi.utils.Constantes;
+import cr.ac.ucr.sigebi.utils.NodoSIGEBI;
+import cr.ac.ucr.sigebi.utils.TreeUbicacionSIGEBI;
+import static java.lang.Compiler.command;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -103,9 +107,9 @@ public class TrasladoController extends ListadoBienesGeneralController {
     
     Usuario usuarioRegistradoClass;
 
+    private TreeUbicacionSIGEBI treeUbicacionSIGEBI;
 
     //</editor-fold>
-    
     
     //<editor-fold defaultstate="collapsed" desc="GET's & SET's">
 
@@ -115,6 +119,14 @@ public class TrasladoController extends ListadoBienesGeneralController {
 
     public void setEstadoGeneralActivo(Estado estadoGeneralActivo) {
         this.estadoGeneralActivo = estadoGeneralActivo;
+    }
+
+    public TreeUbicacionSIGEBI getTreeUbicacionSIGEBI() {
+        return treeUbicacionSIGEBI;
+    }
+
+    public void setTreeUbicacionSIGEBI(TreeUbicacionSIGEBI treeUbicacionSIGEBI) {
+        this.treeUbicacionSIGEBI = treeUbicacionSIGEBI;
     }
 
     public Estado getEstadoGeneralPendiente() {
@@ -207,7 +219,6 @@ public class TrasladoController extends ListadoBienesGeneralController {
 
     //</editor-fold>
     
-    
     //<editor-fold defaultstate="collapsed" desc="Navegacion">
     public void listadoTraslados(ActionEvent pEvent) {
         try {
@@ -264,7 +275,8 @@ public class TrasladoController extends ListadoBienesGeneralController {
     
     public TrasladoController() {
         justificacion = new Justificacion();
-    }
+        treeUbicacionSIGEBI = new TreeUbicacionSIGEBI(unidadEjecutora);
+    } 
 
     @PostConstruct
     private void incializaDatos() {
@@ -320,7 +332,6 @@ public class TrasladoController extends ListadoBienesGeneralController {
             permiteEdicion = true;
 
             //traslado.setEstado(estadoGeneralPendiente);
-            ubicacionVisible = false;
             unidadDestino = new UnidadEjecutora();
 
             unidadOrigen = unidadModel.buscarPorId(unidadEjecutora.getId());
@@ -1074,22 +1085,14 @@ public class TrasladoController extends ListadoBienesGeneralController {
     //</editor-fold>
     
     //<editor-fold defaultstate="collapsed" desc="Buscar Ubicaciones">
-    boolean ubicacionVisible;
-
     @Resource
     private UbicacionModel ubicModel;
 
     private void iniciaUbicaciones() {
         try {
-            selectDefault = Constantes.SELECT_DEFAULT;
-
-            ubicacionOptions = new ArrayList<SelectItem>();
-            List<Ubicacion> ubicaciones;
-            ubicaciones = ubicModel.listar(traslado.getUnidadEjecutoraDestino());
-            for (Ubicacion item : ubicaciones) {
-                ubicacionOptions.add(new SelectItem(item.getId() + "#" + item.getDetalle().replace("#", "-"), item.getDetalle().replace("#", "-")));
-            }
-        } catch (Exception err) {
+            treeUbicacionSIGEBI = new TreeUbicacionSIGEBI(traslado.getUnidadEjecutoraDestino());
+            treeUbicacionSIGEBI.setUbicacionModel(ubicModel);
+        } catch (Exception err) { 
             Mensaje.agregarErrorFatal(err.getMessage());
         }
     }
@@ -1104,7 +1107,7 @@ public class TrasladoController extends ListadoBienesGeneralController {
             
             if( (traslado.getUnidadEjecutoraDestino() != null) && (traslado.getUnidadEjecutoraDestino().getId() > 0l) ){
                 iniciaUbicaciones();
-                ubicacionVisible = true;
+                treeUbicacionSIGEBI.abrirPantalla();
             }else
                 Mensaje.agregarInfo(Util.getEtiquetas("sigebi.Traslado.Mns.PendienteUbicacion"));
                 
@@ -1114,22 +1117,8 @@ public class TrasladoController extends ListadoBienesGeneralController {
 
     }
 
-    //
-    public void cerrarUbicacion(ActionEvent pEvent) {
-        try {
-            if (!pEvent.getPhaseId().equals(PhaseId.INVOKE_APPLICATION)) {
-                pEvent.setPhaseId(PhaseId.INVOKE_APPLICATION);
-                pEvent.queue();
-                return;
-            }
-            ubicacionVisible = false;
-        } catch (Exception err) {
-            Mensaje.agregarErrorFatal(err.getMessage());
-        }
-
-    }
-
-    public void ubicacionSelectCambio(ValueChangeEvent event) {
+        
+    public void ubicacionSelectCambio(ActionEvent event) {
         try {
             if (!event.getPhaseId().equals(PhaseId.INVOKE_APPLICATION)) {
                 event.setPhaseId(PhaseId.INVOKE_APPLICATION);
@@ -1137,80 +1126,27 @@ public class TrasladoController extends ListadoBienesGeneralController {
                 return;
             }
 
-            // Obtyengo el valor seleccionado
-            String valor = event.getNewValue().toString();
-            String[] valores = valor.split("#");
-            if (valores.length > 1) {
-                ubicacionId = valores[0];
-                ubicacionNombre = valores[1];
-                Ubicacion ubicacion = ubicModel.buscarPorId(Long.parseLong(ubicacionId));
-                traslado.setUbicacion(ubicacion);
-            } else {
-                ubicacionId = "";
-                ubicacionNombre = "";
+            //Se busca el nodo seleccionado
+            NodoSIGEBI nodoSIGEBI = (NodoSIGEBI) event.getComponent().getAttributes().get("nodoSeleccionado");
+
+            if(nodoSIGEBI != null){
+                //Se asigna la ubicacion 
+                traslado.setUbicacion((Ubicacion) nodoSIGEBI.getObject());
+                if (traslado.getUbicacion() != null) {
+                    traslado.getUbicacion().setIdTemporal(traslado.getUbicacion().getId());
+                }
             }
-            //Object valor2 = event.getSource();
-            //idSelectUbicacion = valor;
-        } catch (Exception err) {
-            Mensaje.agregarErrorFatal(err.getMessage());
+ 
+            //Se cierra el panel
+            treeUbicacionSIGEBI.setPresentaPanelUbicacion(false);            
+
+        } catch (FWExcepcion e) {
+            Mensaje.agregarErrorAdvertencia(e.getError_para_usuario());
+        } catch (Exception e) {
+            Mensaje.agregarErrorAdvertencia(e, Util.getEtiquetas("sigebi.error.controllerTomaFisica.cambiarUbicacion"));
         }
-
     }
-
-    String selectUbicacion;
-    String selectDefault;
-    // comboBox subCategorias
-    List<SelectItem> ubicacionOptions;
-    String ubicacionId;
-    String ubicacionNombre;
-
-    public String getSelectUbicacion() {
-        return selectUbicacion;
-    }
-
-    public void setSelectUbicacion(String selectUbicacion) {
-        this.selectUbicacion = selectUbicacion;
-    }
-
-    public String getSelectDefault() {
-        return selectDefault;
-    }
-
-    public void setSelectDefault(String selectDefault) {
-        this.selectDefault = selectDefault;
-    }
-
-    public List<SelectItem> getUbicacionOptions() {
-        return ubicacionOptions;
-    }
-
-    public void setUbicacionOptions(List<SelectItem> ubicacionOptions) {
-        this.ubicacionOptions = ubicacionOptions;
-    }
-
-    public String getUbicacionId() {
-        return ubicacionId;
-    }
-
-    public void setUbicacionId(String ubicacionId) {
-        this.ubicacionId = ubicacionId;
-    }
-
-    public String getUbicacionNombre() {
-        return ubicacionNombre;
-    }
-
-    public void setUbicacionNombre(String ubicacionNombre) {
-        this.ubicacionNombre = ubicacionNombre;
-    }
-
-    public boolean isUbicacionVisible() {
-        return ubicacionVisible;
-    }
-
-    public void setUbicacionVisible(boolean ubicacionVisible) {
-        this.ubicacionVisible = ubicacionVisible;
-    }
+    
     //</editor-fold>
 
     //<editor-fold defaultstate="collapsed" desc="Metodos Listado Bienes">
@@ -1593,7 +1529,6 @@ public class TrasladoController extends ListadoBienesGeneralController {
     
 
     // </editor-fold>
-    
     
     //<editor-fold defaultstate="collapsed" desc="Mostrar Reporte">
 

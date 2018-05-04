@@ -7,10 +7,10 @@ package cr.ac.ucr.sigebi.models;
 
 import cr.ac.ucr.framework.utils.FWExcepcion;
 import cr.ac.ucr.sigebi.daos.UsuarioDao;
+import cr.ac.ucr.sigebi.domain.UnidadEjecutora;
 import cr.ac.ucr.sigebi.domain.Usuario;
 import java.util.List;
 import javax.annotation.Resource;
-import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
 /**
@@ -35,4 +35,9 @@ public class UsuarioModel {
     public Long contarUsuarios(String idUsuario, String nombreCompleto, String correo) throws FWExcepcion {
         return usuarioDao.contarUsuarios(idUsuario, nombreCompleto, correo);
     }
+    
+    public List<Usuario> listarUsuariosUnidad(UnidadEjecutora unidadEjecutora) throws FWExcepcion{
+        return usuarioDao.listarUsuariosUnidad(unidadEjecutora);
+    }
+            
 }

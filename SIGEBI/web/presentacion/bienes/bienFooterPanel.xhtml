@@ -1,14 +1,27 @@
-  <ice:outputHtml id="frmFooter" xmlns:ice="http://www.icesoft.com/icefaces/component" xmlns:icecore="http://www.icefaces.org/icefaces/core" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:c="http://java.sun.com/jstl/core">
+  <ice:outputHtml id="frmFooter" 
+                  xmlns:ice="http://www.icesoft.com/icefaces/component" 
+                  xmlns:icecore="http://www.icefaces.org/icefaces/core" 
+                  xmlns:h="http://java.sun.com/jsf/html" 
+                  xmlns:f="http://java.sun.com/jsf/core" 
+                  xmlns:ui="http://java.sun.com/jsf/facelets" 
+                  xmlns:c="http://java.sun.com/jstl/core">
       <!-- Seccion de TAB en el FOOTER -->
     <div class="container">
         <div class="row">
             <div class="col-md-12">
                 <ice:panelGroup visible="#{controllerAgregarBienes.bienRegistrado}">
-                    <ice:panelGroup id="tabAdicionales" style="padding-bottom: 60px; padding-top: 10px;" styleClass="tabsContent panelTabSetContainer">
+                    <ice:panelGroup id="tabAdicionales" 
+                                    style="padding-bottom: 60px; padding-top: 10px;" 
+                                    styleClass="tabsContent panelTabSetContainer">
                         <ice:panelTabSet>
+                            
                             <!-- TAB Caracteristicas-->
-                            <ice:panelTab id="tabGarantia"  disabled="#{!controllerAgregarBienes.bienRegistrado}" label="Caracteristicas">
-                                <ice:panelTab id="tabCaracteristicas" label="#{label['sigebi.Bien.Label.Caracteristicas']}" disabled="#{!controllerAgregarBienes.bienRegistrado}">
+                            <ice:panelTab id="tabGarantia"  
+                                          disabled="#{!controllerAgregarBienes.bienRegistrado}" 
+                                          label="Caracteristicas">
+                                <ice:panelTab id="tabCaracteristicas" 
+                                              label="#{label['sigebi.Bien.Label.Caracteristicas']}" 
+                                              disabled="#{!controllerAgregarBienes.bienRegistrado}">
                                     <ui:insert name="addCaracteristicas">
                                         <ui:include src="../bienes/bienCaracteristicas.xhtml" />
                                     </ui:insert>
@@ -16,39 +29,62 @@
                             </ice:panelTab>
 
                             <!-- TAB GARANTIA -->
-                            <ice:panelTab id="tabGarantia"  disabled="#{!controllerAgregarBienes.bienRegistrado}" label="Garantía">
+                            <ice:panelTab id="tabGarantia"  
+                                          disabled="#{!controllerAgregarBienes.bienRegistrado}" 
+                                          label="#{label['sigebi.Bien.Label.Garantia']}">
                                 <ui:insert name="addGarantia">
                                     <ui:include src="../bienes/bienGarantia.xhtml" />
                                 </ui:insert>
                             </ice:panelTab>
 
                             <!-- TAB NOTAS -->
-                            <ice:panelTab id="tabNotas" disabled="#{!controllerAgregarBienes.bienRegistrado}" label="#{label['sigebi.Bien.Label.tabNotas']}">
+                            <ice:panelTab id="tabNotas" 
+                                          disabled="#{!controllerAgregarBienes.bienRegistrado}" 
+                                          label="#{label['sigebi.Bien.Label.tabNotas']}">
                                 <ui:insert name="addNotas">
                                     <ui:include src="../bienes/bienNotas.xhtml" />
                                 </ui:insert>
                             </ice:panelTab>
 
                             <!-- TAB ARCHIVOS -->                                
-                            <ice:panelTab id="tabArchivos" disabled="#{!controllerAgregarBienes.bienRegistrado}" label="Archivos">
+                            <ice:panelTab id="tabArchivos" 
+                                          disabled="#{!controllerAgregarBienes.bienRegistrado}" 
+                                          label="#{label['sigebi.Bien.Label.Archivos']}">
                                 <ui:insert name="addArchivos">
                                     <ui:include src="../bienes/bienArchivos.xhtml" />
                                 </ui:insert>
                             </ice:panelTab>
 
                             <!-- TAB ACCESORIOS -->                                
-                            <ice:panelTab id="tabAccesorios" disabled="#{!controllerAgregarBienes.bienRegistrado}" label="Accesorios">
+                            <ice:panelTab id="tabAccesorios" 
+                                          disabled="#{!controllerAgregarBienes.bienRegistrado}" 
+                                          label="#{label['sigebi.Bien.Label.Accesorios']}">
                                 <ui:insert name="addAccesorios">
                                     <ui:include src="../bienes/bienAccesorios.xhtml" />
                                 </ui:insert>
                             </ice:panelTab>
                             
                             <!-- TAB MOVIMIENTOS -->                                
-                            <ice:panelTab id="TabMovimientos" disabled="#{!controllerAgregarBienes.bienRegistrado}" label="Movimientos">
+                            <ice:panelTab id="TabMovimientos" 
+                                          disabled="#{!controllerAgregarBienes.bienRegistrado}" 
+                                          label="#{label['sigebi.Bien.Label.Movimientos']}">
                                 <ui:insert name="addMovimientos">
                                     <ui:include src="../bienes/bienMovimientos.xhtml" />
                                 </ui:insert>
                             </ice:panelTab>
+                            
+                            
+                            <!-- TAB RESPONSABLE -->                                
+                            <ice:panelTab id="TabMovimientos" 
+                                          disabled="#{!controllerAgregarBienes.bienRegistrado}" 
+                                          label="#{label['sigebi.Bien.Label.Responsale']}">
+                                <ui:insert name="addMovimientos">
+                                    <ui:include src="../bienes/bienTabResponsable.xhtml" />
+                                </ui:insert>
+                            </ice:panelTab>
+                            
+                            
+                            
                         </ice:panelTabSet>
                     </ice:panelGroup>
                 </ice:panelGroup>
@@ -59,7 +95,8 @@
     <!-- Modal Eliminar Nota -->
     <ice:panelPopup modal="true" 
                     visible="#{controllerAgregarBienes.visiblePanelEliminarNota}" 
-                    rendered="#{controllerAgregarBienes.visiblePanelEliminarNota}" styleClass="popup">
+                    rendered="#{controllerAgregarBienes.visiblePanelEliminarNota}" 
+                    styleClass="popup">
 
         <f:facet name="header">
             <ice:outputText styleClass="flotar_izquierda titulo_popup" value="Confirmación"/>
@@ -272,4 +309,67 @@
             </fieldset>       
         </f:facet>  
     </ice:panelPopup>
+    
+    
+    
+    <!-- Modal confirmar Liberar de responsable -->
+    <ice:panelPopup modal="true" visible="#{controllerAgregarBienes.modalLiberar}" styleClass="popup">
+        <f:facet name="body">
+            <fieldset class="panel_Container" >
+                <div class="container" style="margin-top: 20px;">
+                    <!-- Titulo -->
+                    <div class="row">
+                        <div class='col-sm-12'>
+                            <h1 style="margin: 0px;">
+                                <ice:outputFormat value="#{label['sigebi.Responsable.label.ConfirmaLiberar']}"/>
+                            </h1>
+                        </div>                
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12" style="padding: 20px;">
+                            
+                            <div class="form-group">
+                                
+                                <ice:outputText value="#{label['sigebi.Responsable.Tab.ColObservaciones']}" />  
+                                <ice:inputTextarea id="txtUsuarioResponsable" 
+                                               styleClass="form-control" 
+                                               style="resize: none;"
+                                               maxlength="150"
+                                               partialSubmit="false"
+                                               value="#{controllerAgregarBienes.observacion}" >
+                                </ice:inputTextarea>
+                    
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row" style="margin-top: 20px; margin-bottom: 20px;">
+                        <div class='col-md-6'>
+                            <ice:commandButton id="btnCerrarPanel" 
+                                               value="#{label['label.regresar']}" 
+                                               action="#{controllerAgregarBienes.cerrarModalLiberar}" 
+                                               partialSubmit="true" 
+                                               rendered="true" 
+                                               style="float: left; " 
+                                               styleClass="boton" />
+                        </div>
+                        <div class="col-md-6">
+                            <ice:commandButton id="botonAceptarGuardar" 
+                                               value="#{label['label.login.listado.boton.aceptar']}" 
+                                               action="#{controllerAgregarBienes.confirmaLiberar}" 
+                                               partialSubmit="true" 
+                                               style="float: right" 
+                                               styleClass="boton"/>
+                        </div>
+                    </div>
+                </div>                
+            </fieldset>       
+        </f:facet>  
+    </ice:panelPopup>
+    
+    
+    
+    
+    
+    
+    
 </ice:outputHtml>

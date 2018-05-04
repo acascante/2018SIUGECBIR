@@ -5,11 +5,14 @@
  */
 package cr.ac.ucr.sigebi.controllers;
 
+import com.icesoft.faces.component.inputfile.FileInfo;
+import com.icesoft.faces.component.inputfile.InputFile;
 import cr.ac.ucr.framework.utils.FWExcepcion;
 import cr.ac.ucr.framework.vista.util.Mensaje;
 import cr.ac.ucr.sigebi.utils.Constantes;
 import cr.ac.ucr.framework.vista.util.Util;
 import cr.ac.ucr.sigebi.commands.TomaFisicaCommand;
+import cr.ac.ucr.sigebi.commands.TomaFisicaCommand.ObjetoCarga;
 import cr.ac.ucr.sigebi.domain.Bien;
 import cr.ac.ucr.sigebi.domain.Categoria;
 import cr.ac.ucr.sigebi.domain.Clasificacion;
@@ -33,13 +36,22 @@ import cr.ac.ucr.sigebi.models.TomaFisicaModel;
 import cr.ac.ucr.sigebi.models.TomaFisicaSobranteModel;
 import cr.ac.ucr.sigebi.models.TomaFisicaUnitariaModel;
 import cr.ac.ucr.sigebi.models.UbicacionModel;
+import cr.ac.ucr.sigebi.utils.NodoSIGEBI;
+import cr.ac.ucr.sigebi.utils.TreeUbicacionSIGEBI;
+import java.io.File;
+import java.io.FileInputStream;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import javax.annotation.Resource;
 import javax.faces.event.ActionEvent;
 import javax.faces.event.PhaseId;
 import javax.faces.event.ValueChangeEvent;
 import javax.faces.model.SelectItem;
+import org.apache.poi.xssf.usermodel.XSSFCell;
+import org.apache.poi.xssf.usermodel.XSSFRow;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
@@ -54,7 +66,10 @@ public class TomaFisicaController extends BaseController {
     //<editor-fold defaultstate="collapsed" desc="Variables Locales">
     @Resource
     private TomaFisicaModel tomaFisicaModel;
-
+    
+    @Resource
+    private UbicacionModel ubicacionModel;
+    
     @Resource
     private TomaFisicaLoteModel tomaFisicaLoteModel;
     
@@ -71,9 +86,6 @@ public class TomaFisicaController extends BaseController {
     private LoteModel loteModel;
 
     @Resource
-    private UbicacionModel ubicacionModel;
-
-    @Resource
     private CategoriaModel categoriaModel;
 
     @Resource
@@ -85,15 +97,26 @@ public class TomaFisicaController extends BaseController {
     @Resource
     private SubClasificacionModel subClasificacionModel;
     
+    private TreeUbicacionSIGEBI treeUbicacionSIGEBI;
+    
     // Se usan en el jsp
     boolean yaRegistrada = false;
     boolean habilitaUbicacion = false;
 
     TomaFisicaCommand tomaFisicaCommand;
     
+
     //</editor-fold>
-    
+
     //<editor-fold defaultstate="collapsed" desc="Get's & Set's">
+
+    public TreeUbicacionSIGEBI getTreeUbicacionSIGEBI() {
+        return treeUbicacionSIGEBI;
+    }
+
+    public void setTreeUbicacionSIGEBI(TreeUbicacionSIGEBI treeUbicacionSIGEBI) {
+        this.treeUbicacionSIGEBI = treeUbicacionSIGEBI;
+    }
 
     public boolean isYaRegistrada() {
         return yaRegistrada;
@@ -190,11 +213,6 @@ public class TomaFisicaController extends BaseController {
             tomaFisicaCommand.getTiposMotivoOptions().add(new SelectItem(tipo.getId().toString(), tipo.getNombre()));
         }
         
-        //Se consultan las ubicaciones
-        tomaFisicaCommand.setUbicacionOptions(new ArrayList<SelectItem>());
-        for (Ubicacion ubicacion : ubicacionModel.listar(unidadEjecutora)) {
-            tomaFisicaCommand.getUbicacionOptions().add(new SelectItem(ubicacion.getId().toString(), ubicacion.getDetalle()));
-        } 
         
         //Se habilita la ubicacion para la toma fisica
         habilitaUbicacionTomaFisica();
@@ -233,10 +251,10 @@ public class TomaFisicaController extends BaseController {
 
             //Se listan tomas fisicas sobrantes
             buscarTomasFisicasSobrantes();
-                       
-            
         }
-
+        
+        treeUbicacionSIGEBI = new TreeUbicacionSIGEBI();
+        treeUbicacionSIGEBI.setUbicacionModel(ubicacionModel);
     }
 
     //</editor-fold>
@@ -311,7 +329,7 @@ public class TomaFisicaController extends BaseController {
      *
      * @param event
      */
-    public void cambiarUbicacion(ValueChangeEvent event) {
+    public void cambiarUbicacion(ActionEvent event) {
         try {
             if (!event.getPhaseId().equals(PhaseId.INVOKE_APPLICATION)) {
                 event.setPhaseId(PhaseId.INVOKE_APPLICATION);
@@ -319,13 +337,19 @@ public class TomaFisicaController extends BaseController {
                 return;
             }
 
-            // Se obtiene el id del tipoDonacion
-            Long valor = tomaFisicaCommand.getUbicacion().getIdTemporal();
-            if (valor > 0) {
-                tomaFisicaCommand.setUbicacion(ubicacionModel.buscarPorId(valor));
-                tomaFisicaCommand.getUbicacion().setIdTemporal(valor);
-                habilitaUbicacionTomaFisica();
+            //Se busca el nodo seleccionado
+            NodoSIGEBI nodoSIGEBI = (NodoSIGEBI) event.getComponent().getAttributes().get("nodoSeleccionado");
+            
+            //Se asigna la ubicacion 
+            tomaFisicaCommand.setUbicacion((Ubicacion) nodoSIGEBI.getObject());
+            if (tomaFisicaCommand.getUbicacion() != null) {
+                tomaFisicaCommand.getUbicacion().setIdTemporal(tomaFisicaCommand.getUbicacion().getId());
+                habilitaUbicacionTomaFisica(); 
             }
+            
+            //Se cierra el panel
+            treeUbicacionSIGEBI.setPresentaPanelUbicacion(false);
+            
         } catch (FWExcepcion e) {
             Mensaje.agregarErrorAdvertencia(e.getError_para_usuario());
         } catch (Exception e) {
@@ -416,6 +440,7 @@ public class TomaFisicaController extends BaseController {
                 //Se asigna para presentar los datos por pantalla
                 tomaFisicaCommand.getTomaFisicaUnitariaCommand().setBien(bien);
                 
+                //Valida que el no se haya registrado
                 if(tomaFisicaUnitariaModel.buscarPorBien(tomaFisicaCommand.getTomaFisica(), bien) != null){
                     Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.error.controllerTomaFisica.agregarBienPorIdentificacionTomasFisicaUnitaria.ya.existe"));                                
                 }else{
@@ -429,7 +454,7 @@ public class TomaFisicaController extends BaseController {
                     //Se listan los datos
                     this.buscarTomasFisicasUnitarias();
 
-                    Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.controllerTomaFisica.agregarBienPorIdentificacionTomasFisicaUnitaria.exitosamente"));                
+                    Mensaje.agregarInfo(Util.getEtiquetas("sigebi.controllerTomaFisica.agregarBienPorIdentificacionTomasFisicaUnitaria.exitosamente"));                
                 }                
             }            
         } catch (FWExcepcion e) {
@@ -707,7 +732,7 @@ public class TomaFisicaController extends BaseController {
         //Se actualiza la lista
         this.buscarTomasFisicasLotes();
 
-        Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.controllerTomaFisica.agregaTomaFisicaLote.exitosamente"));
+        Mensaje.agregarInfo(Util.getEtiquetas("sigebi.controllerTomaFisica.agregaTomaFisicaLote.exitosamente"));
 
     }
     
@@ -872,32 +897,6 @@ public class TomaFisicaController extends BaseController {
 
     //<editor-fold defaultstate="collapsed" desc="Metodos Toma Fisica Sobrante">
         
-    /**
-     * Metodo que busca y asigna al command la ubicacion seleccionada
-     *
-     * @param event
-     */
-    public void cambiarUbicacionTomaFisicaSobrante(ValueChangeEvent event) {
-        try {
-            if (!event.getPhaseId().equals(PhaseId.INVOKE_APPLICATION)) {
-                event.setPhaseId(PhaseId.INVOKE_APPLICATION);
-                event.queue();
-                return;
-            }
-
-            // Se obtiene el id del tipoDonacion
-            Long valor = tomaFisicaCommand.getTomaFisicaSobranteCommand().getUbicacion().getIdTemporal();
-            if (valor > 0) {
-                tomaFisicaCommand.getTomaFisicaSobranteCommand().setUbicacion(ubicacionModel.buscarPorId(valor));
-                tomaFisicaCommand.getTomaFisicaSobranteCommand().getUbicacion().setIdTemporal(valor);
-            }
-        } catch (FWExcepcion e) {
-            Mensaje.agregarErrorAdvertencia(e.getError_para_usuario());
-        } catch (Exception e) {
-            Mensaje.agregarErrorAdvertencia(e, Util.getEtiquetas("sigebi.error.controllerTomaFisica.cambiarUbicacion"));
-        }
-    }
-    
      public void cambiarCategoria(ValueChangeEvent event) {
         if (!event.getPhaseId().equals(PhaseId.INVOKE_APPLICATION)) {
             event.setPhaseId(PhaseId.INVOKE_APPLICATION);
@@ -1078,12 +1077,11 @@ public class TomaFisicaController extends BaseController {
         tomaFisicaCommand.getTomaFisicaSobranteCommand().getSubCategoria().setIdTemporal(-1L);
         tomaFisicaCommand.getTomaFisicaSobranteCommand().getClasificacion().setIdTemporal(-1L);
         tomaFisicaCommand.getTomaFisicaSobranteCommand().getSubClasificacion().setIdTemporal(-1L);
-        tomaFisicaCommand.getTomaFisicaSobranteCommand().getUbicacion().setIdTemporal(-1L);
 
         //Se actualiza la lista
         this.buscarTomasFisicasSobrantes();
 
-        Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.controllerTomaFisica.agregaTomaFisicaSobrante.exitosamente"));
+        Mensaje.agregarInfo(Util.getEtiquetas("sigebi.controllerTomaFisica.agregaTomaFisicaSobrante.exitosamente"));
 
     }
     
@@ -1160,7 +1158,7 @@ public class TomaFisicaController extends BaseController {
             Mensaje.agregarErrorAdvertencia(e, Util.getEtiquetas("sigebi.error.controllerTomaFisica.contarTomaFisicaSobrante"));
         }
     }
-
+    
     /**
      * Lista las tomas fisicas unitarias
      */
@@ -1272,5 +1270,192 @@ public class TomaFisicaController extends BaseController {
         this.listarTomaFisicaLote();
     }
     
+    //</editor-fold>    
+    
+    //<editor-fold defaultstate="collapsed" desc="Carga Unitaria Excel">
+    //C:\SIGEBI_FINAL\web\Documentos
+    public void leerArchivoTomaUnitaria(FileInputStream file){
+        try{
+            //Agrega el bien a la toma física
+            //agregarBienPorIdentificacionTomasFisicaUnitaria
+            
+            List cellData = new ArrayList();
+//            File fileName = new File("C:/SIGEBI_FINAL/web/Documentos/CargarBienes.xlsx");
+//            
+//            FileInputStream file = new FileInputStream(fileName);
+            
+            XSSFWorkbook workBook = new XSSFWorkbook(file);
+            
+            XSSFSheet hssfSheet = workBook.getSheetAt(0);
+            Iterator rowIterator = hssfSheet.rowIterator();
+            List cellTemp = new ArrayList();
+            
+            
+            List<ObjetoCarga> objetosCarga = new ArrayList<ObjetoCarga>();
+            int i = 0;
+            while(rowIterator.hasNext()){
+                //Obtenemos el valor del row
+                XSSFRow hssfRow = (XSSFRow) rowIterator.next();
+                
+                //Metemos la fila en un Iterador
+                Iterator iterator = hssfRow.cellIterator();
+                
+                //Paso el row del excel al objetoCarga
+                if(i>0)
+                    objetosCarga.add(obtenerLinea(iterator));
+                i++;
+            }
+            
+            tomaFisicaCommand.setObjetosCarga(objetosCarga);
+            //obtenerDatos(cellData);
+                    
+            
+        }
+        catch(Exception err){
+            err.printStackTrace();
+        }
+    }
+    
+    
+    private ObjetoCarga obtenerLinea(Iterator iterator){
+        try{
+            ObjetoCarga lineaCarga;
+            lineaCarga = tomaFisicaCommand.getNewObjetoCarga();
+            int j=0;
+            while(iterator.hasNext()){
+                //Obtengo los datos de cada columna
+                XSSFCell hssfCell = (XSSFCell) iterator.next();
+                if(j==0){
+                    String iden = hssfCell.toString();
+                    lineaCarga.setIdentificacion((String) iden);
+                }
+                if(j==1){
+                    String desc = hssfCell.toString();
+                    lineaCarga.setDescripcion((String) desc);
+                }
+                j++;
+            }
+            validarLineaCargaUnitaria(lineaCarga);
+            return lineaCarga;
+            
+        }catch(Exception err){
+            return tomaFisicaCommand.getNewObjetoCarga();
+        }
+    }
+    
+    
+    public void validarLineaCargaUnitaria(ObjetoCarga lineaCarga){
+        try{
+            if(lineaCarga.getIdentificacion().length() > 0){
+                Bien bien = bienModel.buscarPorIdentificacion(lineaCarga.getIdentificacion());
+                if( (bien != null) && (bien.getId() != null) && (bien.getId() > 0)){
+                    if(bien.getUnidadEjecutora().getId().equals(this.unidadEjecutora.getId())){
+                        if((this.tomaFisicaCommand.getUbicacion() == null) || (this.tomaFisicaCommand.getUbicacion().getId() == null)){
+                            lineaCarga.setBien(bien);
+                        }else{
+                            if(this.tomaFisicaCommand.getUbicacion().getId().equals(bien.getUbicacion().getId())){
+                                lineaCarga.setBien(bien);
+                            }
+                            else{
+                                lineaCarga.setDescripcionError( Util.getEtiquetas("sigebi.CargarInventario.ErrorBienOtraUbicacion") );
+                            }
+                        }
+                            
+                    }
+                    else{
+                        lineaCarga.setDescripcionError( Util.getEtiquetas("sigebi.CargarInventario.ErrorBienOtraUnidad") );
+                    }
+                }else{
+                    lineaCarga.setDescripcionError( Util.getEtiquetas("sigebi.CargarInventario.ErrorBienNoEncontrado") );
+                }
+            }
+            else{
+                lineaCarga.setDescripcionError( Util.getEtiquetas("sigebi.CargarInventario.ErrorSinIdentificacion") );
+            }
+        }catch(Exception err){
+            lineaCarga.setDescripcionError( Util.getEtiquetas("sigebi.CargarInventario.ErrorBienNoEncontrado") );
+        }
+    }
+    
+    
+    public void subirFile(ActionEvent event) {
+        try {
+            InputFile inputFile = (InputFile) event.getSource();
+            FileInfo fileInfo = inputFile.getFileInfo();
+            
+            
+            File fileName = inputFile.getFile();
+            
+            FileInputStream file = new FileInputStream(fileName);
+            
+            leerArchivoTomaUnitaria(file);
+            tomaFisicaCommand.setMostrarErroresCargaUnitaria(false);
+            
+        } catch (Exception err) {
+            Mensaje.agregarErrorAdvertencia(err, Util.getEtiquetas("sigebi.Bien.Error.Registro"));
+        }
+    }
+
+    public void procesarCargaUnitaria(){
+        try{
+            if(tomaFisicaCommand.getObjetosCarga().size() > 0){
+                String respuesta = "";
+                List<String> respErrores = new ArrayList();
+                for(ObjetoCarga carga : tomaFisicaCommand.getObjetosCarga()){
+                    respuesta = "";
+                    if(carga.getDescripcionError() != null && carga.getDescripcionError().length() > 0)
+                        respuesta = " - Bien "+ carga.getIdentificacion()+ ": " + carga.getDescripcionError();
+                    else
+                        respuesta = agregarBien(carga.getBien());
+                    
+                    if(respuesta.length() > 0)
+                        respErrores.add(respuesta);
+                }
+                tomaFisicaCommand.setErroresRegistradosCargaUnitaria(respErrores);
+                if(respErrores.size()> 0)
+                    tomaFisicaCommand.setMostrarErroresCargaUnitaria(true);
+                else
+                    tomaFisicaCommand.setMostrarErroresCargaUnitaria(false);
+                //rendered="#{controllerTomaFisica.tomaFisicaCommand.objetoCarga.mostrarErrores}"
+            }
+            else{
+                Mensaje.agregarErrorAdvertencia( Util.getEtiquetas("sigebi.CargarInventario.ErrorVacio") );
+            }
+        }catch(Exception err){
+            
+        }
+    }
+    
+    private String agregarBien(Bien bien){
+        try{
+            
+            //Se asigna para presentar los datos por pantalla
+            tomaFisicaCommand.getTomaFisicaUnitariaCommand().setBien(bien);
+
+            //Valida que el no se haya registrado
+            if(tomaFisicaUnitariaModel.buscarPorBien(tomaFisicaCommand.getTomaFisica(), bien) != null){
+                return " - Bien "+bien.getIdentificacion().getIdentificacion()+": "+Util.getEtiquetas("sigebi.error.controllerTomaFisica.agregarBienPorIdentificacionTomasFisicaUnitaria.ya.existe"); 
+            }else{
+                //Se agrega la toma fisica unitaria
+                TomaFisicaUnitaria tomaFisicaUnitaria = new TomaFisicaUnitaria(tomaFisicaCommand.getTomaFisica(), bien);
+                tomaFisicaUnitariaModel.agregar(tomaFisicaUnitaria);                    
+
+                //Se limpia la identificacion de la pantalla
+                tomaFisicaCommand.getTomaFisicaUnitariaCommand().setIdentificacionBusqueda("");
+
+                //Se listan los datos
+                this.buscarTomasFisicasUnitarias();
+
+                return "";// Util.getEtiquetas("sigebi.controllerTomaFisica.agregarBienPorIdentificacionTomasFisicaUnitaria.exitosamente");                
+            }
+        }
+        catch(Exception err){
+            return  " - Bien "+bien.getIdentificacion().getIdentificacion()+": "+Util.getEtiquetas("Etiqueta error al cargar el bien a la toma fisica.");
+        }
+    }
+    
+    
     //</editor-fold>
+    
+    
 }

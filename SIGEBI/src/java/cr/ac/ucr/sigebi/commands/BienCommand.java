@@ -644,7 +644,7 @@ public class BienCommand {
         private UbicacionCommand(Ubicacion ubicacion) {
             this.ubicacion = ubicacion;
             this.idUbicacion = ubicacion.getId();
-            this.descripcion = ubicacion.getDetalle();
+            this.descripcion = ubicacion.getDescripcionCompleta();
         }
 
         //<editor-fold defaultstate="collapsed" desc="GET's y SET's">
@@ -670,7 +670,7 @@ public class BienCommand {
 
         public void setUbicacion(Ubicacion ubicacion) {
             this.ubicacion = ubicacion;
-            this.descripcion = ubicacion.getDetalle();
+            this.descripcion = ubicacion.getDescripcionCompleta();
         }
         //</editor-fold>
     }

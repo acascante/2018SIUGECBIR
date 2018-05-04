@@ -1,4 +1,3 @@
-
 <ice:outputHtml id="frmTabTomaFisica" xmlns:ice="http://www.icesoft.com/icefaces/component" xmlns:icecore="http://www.icefaces.org/icefaces/core" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:c="http://java.sun.com/jstl/core">
 
     <div class="container">
@@ -33,26 +32,26 @@
                 </div>                                             
             </div>               
         </div>
-        
+                              
         <div class="row">
-           <div class="col-md-6">
+           <div class="col-md-4">
                 <div class="form-group"> 
                     <label class="control-label" for="txtUbicacion">
                         <ice:outputText value="#{label['sigebi.label.vista.detalleTomaFisica.ubicacion']}" />
                         <ice:outputText value="#{label['label.requerido']}" />
                     </label>                                               
-
-                    <ice:selectOneMenu id="txtUbicacion"                                           
-                                       styleClass="form-control"
-                                       partialSubmit="true"
-                                       readonly="#{!controllerTomaFisica.habilitaUbicacion}"
-                                       value="#{controllerTomaFisica.tomaFisicaCommand.ubicacion.idTemporal}"
-                                       valueChangeListener="#{controllerTomaFisica.cambiarUbicacion}">
-                                       <f:selectItem itemLabel="N/A" itemValue="-1"/>
-                                       <f:selectItems id="slcTipoItem" value="#{controllerTomaFisica.tomaFisicaCommand.ubicacionOptions}"/>
-                    </ice:selectOneMenu>
+                    <ice:inputTextarea id="txtUbicacion" styleClass="form-control" readonly="true" transient="true" cols="3" partialSubmit="false"
+                                       value="#{controllerTomaFisica.tomaFisicaCommand.ubicacion.descripcionCompleta}"/>                    
                 </div>                                             
            </div>               
+           <div class="col-sm-2">
+                <ice:commandButton id="btnBuscarUbicacion" value="#{label['sigebi.Bien.Btn.Buscar']}"  
+                                   partialSubmit="true" 
+                                   styleClass="boton" 
+                                   style="margin-top: 1.5rem"
+                                   disabled="#{!controllerTomaFisica.habilitaUbicacion}"
+                                   action="#{controllerTomaFisica.treeUbicacionSIGEBI.abrirPantalla}"/>
+           </div>
            <div class="col-md-6">
                 <div class="form-group"> 
                     <label class="control-label" for="txtMotivo">
@@ -94,6 +93,21 @@
                                    partialSubmit="true" 
                                    styleClass="boton" action="#{controllerTomaFisica.guardaTomaFisica}"/>
             </div>
+            <div class="col-md-6">
+                
+                <ice:commandButton id="btnReporteFaltantes" 
+                                   value="Reporte Faltantes" 
+                                   style="float:right;margin-top:2%" 
+                                   styleClass="boton" 
+                                   partialSubmit="true" 
+                                   rendered="#{controllerTomaFisica.tomaFisicaCommand.tomaFisica.id > 0}"
+                                   actionListener="#{controllerReporte.reporteFaltantes}"
+                                   >
+                                    <f:attribute id="tomaFisicaSeleccionada" name="tomaFisicaSeleccionada"  value="#{controllerTomaFisica.tomaFisicaCommand.tomaFisica}"/>
+                </ice:commandButton>  
+            </div>
         </div>        
     </div>
+    
 </ice:outputHtml>
+

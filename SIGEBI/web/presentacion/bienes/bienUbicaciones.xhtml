@@ -1,6 +1,6 @@
-<ice:outputHtml id="frmUbicaciones"  xmlns:ice="http://www.icesoft.com/icefaces/component" xmlns:icecore="http://www.icefaces.org/icefaces/core" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:c="http://java.sun.com/jstl/core">
+<ice:outputHtml id="frmUbicacionesPanel"  xmlns:ice="http://www.icesoft.com/icefaces/component" xmlns:icecore="http://www.icefaces.org/icefaces/core" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:c="http://java.sun.com/jstl/core">
 
-    <ice:panelPopup modal="true" visible="#{controllerAgregarBienes.visiblePanelUbicaciones}" rendered="#{controllerAgregarBienes.visiblePanelUbicaciones}" styleClass="popup">
+    <ice:panelPopup modal="true" visible="#{controllerAgregarBienes.treeUbicacionSIGEBI.presentaPanelUbicacion}" rendered="#{controllerAgregarBienes.treeUbicacionSIGEBI.presentaPanelUbicacion}" styleClass="popup">
         <f:facet name="header">
             <ice:outputFormat value="#{label['sigebi.Modal.Ubicaciones.Titulo']}"/>
         </f:facet> 
@@ -14,15 +14,55 @@
                             </h4>
                         </div>
                     </div>
+
                     <div class="row">
-                        <div class="col-md-12">
-                            <div class="form-group">
-                                <label class="control-label" for="selUbicacion">* Ubicación</label>
-                                <ice:selectOneMenu id="selUbicacion" styleClass="form-control" partialSubmit="true"
-                                                   value="#{controllerAgregarBienes.command.ubicacionCommand.idUbicacion}" >
-                                    <f:selectItem itemLabel="Seleccione una Ubicación" itemValue="-1"/>                                        
-                                    <f:selectItems id="optSelUbicacion" value="#{controllerAgregarBienes.itemsUbicacion}"/>                                        
-                                </ice:selectOneMenu>
+                        <div class='col-sm-8'>
+                            <h1 style="margin: 0;">
+                                <ice:outputFormat value="#{label['sigebi.label.vista.ubicacion.titulo']}" />
+                            </h1>
+                        </div>
+                    </div>
+            
+                    <!-- Paginacion -->
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <ice:outputFormat value="#{label['label.generico.paginacion.encabezado']}">
+                                <f:param value="#{controllerAgregarBienes.treeUbicacionSIGEBI.paginacionOracle.cantidadRegistros}"/>
+                                <f:param value="#{controllerAgregarBienes.treeUbicacionSIGEBI.paginacionOracle.cantidadRegistrosMostrados}"/>
+                                <f:param value="#{controllerAgregarBienes.treeUbicacionSIGEBI.paginacionOracle.primerRegistro}"/>
+                                <f:param value="#{controllerAgregarBienes.treeUbicacionSIGEBI.paginacionOracle.ultimoRegistro}"/>
+                                <f:param value="#{controllerAgregarBienes.treeUbicacionSIGEBI.paginacionOracle.paginaActual}"/>
+                                <f:param value="#{controllerAgregarBienes.treeUbicacionSIGEBI.paginacionOracle.cantidadPaginas}"/>
+                            </ice:outputFormat>
+                            <div>
+                                <table>
+                                    <tr>
+                                        <td style="padding-right: 5px;">
+                                            <ice:outputText value="#{label['label.paginacion.cantidad.pagina']} "/>
+                                        </td>
+                                        <td>
+
+                                            <ice:selectOneMenu id="cantRegistroPorPagina"
+                                                   value="#{controllerAgregarBienes.treeUbicacionSIGEBI.paginacionOracle.cantRegistroPorPagina}" 
+                                                   valueChangeListener="#{controllerAgregarBienes.treeUbicacionSIGEBI.cambioRegistrosPorPagina}"
+                                                   partialSubmit="true">
+                                                    <f:selectItems id="item_pa" value="#{controllerAgregarBienes.treeUbicacionSIGEBI.paginacionOracle.listaRegistrosPagina}"/>
+                                            </ice:selectOneMenu>    
+
+                                        </td>
+                                    </tr>
+                                </table>                        
+                            </div>                    
+                            <div>
+                                <ice:commandButton image="./imagenes/botones/first.png" partialSubmit="true" actionListener="#{controllerAgregarBienes.treeUbicacionSIGEBI.primero}" rendered="#{controllerAgregarBienes.treeUbicacionSIGEBI.paginacionOracle.cantidadPaginas > 1}"/>
+                                <ice:commandButton image="./imagenes/botones/previos.png" partialSubmit="true" actionListener="#{controllerAgregarBienes.treeUbicacionSIGEBI.anterior}" rendered="#{controllerAgregarBienes.treeUbicacionSIGEBI.paginacionOracle.cantidadPaginas > 1}"/>
+                                <ui:repeat value="#{controllerAgregarBienes.treeUbicacionSIGEBI.paginacionOracle.arregloPaginas}" var="pagina">
+                                    <ice:commandLink value="#{pagina}" partialSubmit="true" actionListener="#{controllerAgregarBienes.treeUbicacionSIGEBI.irPagina}">
+                                        <f:param name="numPag" value="#{pagina}"/>
+                                    </ice:commandLink>
+                                </ui:repeat>            
+                                <ice:commandButton image="./imagenes/botones/next.png" partialSubmit="true" actionListener="#{controllerAgregarBienes.treeUbicacionSIGEBI.siguiente}" rendered="#{controllerAgregarBienes.treeUbicacionSIGEBI.paginacionOracle.cantidadPaginas > 1}"/>
+                                <ice:commandButton image="./imagenes/botones/last.png" partialSubmit="true" actionListener="#{controllerAgregarBienes.treeUbicacionSIGEBI.ultimo}" rendered="#{controllerAgregarBienes.treeUbicacionSIGEBI.paginacionOracle.cantidadPaginas > 1}"/>
                             </div>
                         </div>
                     </div>
@@ -30,13 +70,74 @@
                     <div class="row">
                         <div class="col-md-12 align-content-center">
                             <ice:commandButton id="btnCerrarUbicacion" partialSubmit="true" styleClass="boton" style="float: right" value="Cerrar"
-                                               action="#{controllerAgregarBienes.cerrarPanelUbicaciones}" />
+                                               action="#{controllerAgregarBienes.treeUbicacionSIGEBI.cerrarPantalla}" />
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class='col-md-12'>
+                            <div class="form-group"> 
+                                <label class="control-label" for="txtDescripcionBusqueda">
+                                    <ice:outputText value="#{label['sigebi.label.vista.ubicacion.descripcionBusqueda']}" />                            
+                                </label>
+                                <ice:inputText id="txtDescripcionBusqueda" 
+                                               partialSubmit="true"
+                                               valueChangeListener="#{controllerAgregarBienes.treeUbicacionSIGEBI.cambioFiltro}"
+                                               styleClass="form-control"
+                                               value="#{controllerAgregarBienes.treeUbicacionSIGEBI.fltDescripcion}" />
+                            </div>                                             
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <ice:panelGroup style="border: 1px solid gray;">                        
+                                <ice:tree id="tree"
+                                          value="#{controllerAgregarBienes.treeUbicacionSIGEBI.model}"
+                                          var="item"
+                                          hideRootNode="false"
+                                          hideNavigation="false"
+                                          
+                                          imageDir="./xmlhttp/css/xp/css-images/">
+                                    <ice:treeNode>
+                                        <f:facet name="icon">
+                                            <ice:panelGroup style="display: inline">
+                                                 <h:graphicImage value="#{item.userObject.icon}"/>
+                                            </ice:panelGroup>
+                                        </f:facet>
+                                        <f:facet name="content">
+                                            <ice:panelGroup style="display: inline">
+                                                <ice:commandButton id="botonConsultar"
+                                                                   style="margin-top:2%" 
+                                                                   styleClass="btnConsultar_ubicacion" 
+                                                                   partialSubmit="true"
+                                                                   value="#{item.userObject.text}"
+                                                                   actionListener="#{controllerAgregarBienes.treeUbicacionSIGEBI.seleccionarNodo}">
+                                                    <f:attribute id="nodoSeleccionado" name="nodoSeleccionado"  value="#{item.userObject}"/> 
+                                                </ice:commandButton>
+                                                <ice:commandButton id="botonSeleccionar"
+                                                                   style="margin-top:2%" 
+                                                                   styleClass="btnSeleccionar_ubicacion" 
+                                                                   partialSubmit="true"
+                                                                   actionListener="#{controllerAgregarBienes.cambiarUbicacion}">
+                                                    <f:attribute id="nodoSeleccionado" name="nodoSeleccionado"  value="#{item.userObject}"/>                                
+                                                </ice:commandButton>
+                                            </ice:panelGroup>
+                                        </f:facet>
+                                    </ice:treeNode>
+                                </ice:tree>
+                            </ice:panelGroup> 
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12 align-content-center">
+                                <ice:commandButton id="btnCerrarUbicacion" partialSubmit="true" styleClass="boton" style="float: right" value="Cerrar"
+                                                   action="#{controllerAgregarBienes.treeUbicacionSIGEBI.cerrarPantalla}" />
                         </div>
                     </div>
                 </div>
                 <br />
                 <br />
             </fieldset>       
-        </f:facet>  
+        </f:facet> 
     </ice:panelPopup>
 </ice:outputHtml>

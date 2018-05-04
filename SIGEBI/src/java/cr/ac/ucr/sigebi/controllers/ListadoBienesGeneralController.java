@@ -246,26 +246,39 @@ public class ListadoBienesGeneralController extends BaseController{
             
             switch(consultaBienes){  
                 case 1: contador = bienModel.contar(unidadEjecutora
-                    , 0l
-                    , fltIdBien
-                    , fltDescripcion
-                    , fltMarca
-                    , fltModelo
-                    , fltSerie
-                    , null
-                    , null
-                    , estadoBienActivo);
+                                                        , 0l
+                                                        , fltIdBien
+                                                        , fltDescripcion
+                                                        , fltMarca
+                                                        , fltModelo
+                                                        , fltSerie
+                                                        , null
+                                                        , null
+                                                        , estadoBienActivo);
                     //, (Estado[]) null);
                 break;  
                 case 2: contador = bienModel.contarListadoActas(unidadEjecutora
-                    , 0l
-                    , fltIdBien
-                    , fltDescripcion
-                    , fltMarca
-                    , fltModelo
-                    , fltSerie
-                    , fltTipo
-                    , estadoIntInfTecAprobado);
+                                                                , 0l
+                                                                , fltIdBien
+                                                                , fltDescripcion
+                                                                , fltMarca
+                                                                , fltModelo
+                                                                , fltSerie
+                                                                , fltTipo
+                                                                , estadoIntInfTecAprobado);
+                ;break; 
+                case 3: contador = bienModel.contarAsignar(null
+                                                        , unidadEjecutora
+                                                        , fltIdBien
+                                                        , fltDescripcion
+                                                        , fltMarca
+                        
+                                                        , fltModelo
+                                                        , fltSerie
+                                                        , null
+                                                        , null
+                                                        , true
+                                                        );
                 ;break; 
             }  
             
@@ -285,6 +298,7 @@ public class ListadoBienesGeneralController extends BaseController{
             switch(consultaBienes){  
                 case 1: listadoTraslados();break;  
                 case 2: listadoActas();break; 
+                case 3: listadoResponsable();break; 
             }  
         } catch (FWExcepcion e) {
             Mensaje.agregarErrorAdvertencia(e.getError_para_usuario());
@@ -297,8 +311,6 @@ public class ListadoBienesGeneralController extends BaseController{
     //Listado para Sincronización
     private void listadoActas(){
         bienes.clear();
-        
-        
         
         List<Bien> resp  = bienModel.listadoActas(
                 this.getPrimerRegistro()-1
@@ -322,21 +334,51 @@ public class ListadoBienesGeneralController extends BaseController{
     }
     
     
+    //Listado para Sincronización
+    private void listadoResponsable(){
+        bienes.clear();
+        
+        List<Bien> resp  = bienModel.listarAsignar(
+                                            this.getPrimerRegistro()-1
+                                            , getUltimoRegistro()
+                                            , null
+                                            , this.unidadEjecutora
+                                            , fltIdBien
+                
+                                            , fltDescripcion
+                                            , fltMarca
+                                            , fltModelo
+                                            , fltSerie
+                                            , estadoBienActivo
+                
+                                            , null
+                                            , true
+                                                );
+
+        for(Bien valor : resp) {     // foreach grade in grades
+            //revisa que el bien este seleccionado
+            valor.setSeleccionado(bienesSeleccionados.containsKey(valor.getId()));
+            bienes.add(valor);
+        }
+    }
+    
+    
+    
     //Listado para El registro
     private void listadoTraslados(){
         bienes.clear();
         List<Bien> resp = bienModel.listar(
-                this.getPrimerRegistro()-1
-                , getUltimoRegistro()
-                , this.unidadEjecutora
-                , 0l
-                , fltIdBien
-                , fltDescripcion
-                , fltMarca
-                , fltModelo
-                , fltSerie
-                , null
-                , null
+                                    this.getPrimerRegistro()-1
+                                    , getUltimoRegistro()
+                                    , this.unidadEjecutora
+                                    , 0l
+                                    , fltIdBien
+                                    , fltDescripcion
+                                    , fltMarca
+                                    , fltModelo
+                                    , fltSerie
+                                    , null
+                                    , null
                 , estadoBienActivo);
                 //, (Estado[]) null);
            
@@ -366,10 +408,10 @@ public class ListadoBienesGeneralController extends BaseController{
             if(bienesSeleccionados.containsKey(bien.getId())){
                 bienesSeleccionados.remove(bien.getId());
             }else{
-           //     bienesSeleccionados.put(bien.getIdBien(), bien);
+                bienesSeleccionados.put(bien.getId(), bien);
             }
             //bienesAsociados = new Array<>(bienesSeleccionados.values());
-           // bienesAsociados = new ArrayList<Bien>( bienesSeleccionados.values() );
+            bienesAsociados = new ArrayList<Bien>( bienesSeleccionados.values() );
         } catch (Exception err) {
             Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.error.controllerListarBienSincronizar.checkBienPorSincronizar"));
         }

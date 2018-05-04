@@ -6,7 +6,10 @@
 package cr.ac.ucr.sigebi.commands;
 
 import cr.ac.ucr.sigebi.domain.Ubicacion;
+import cr.ac.ucr.sigebi.domain.Usuario;
 import cr.ac.ucr.sigebi.utils.TreeSIGEBI;
+import java.util.List;
+import javax.faces.model.SelectItem;
 
 /**
  *
@@ -19,12 +22,15 @@ public class UbicacionCommand {
     private Ubicacion ubicacionPadre;
     private String fltDescripcionUbicacion;
     private TreeSIGEBI treeSIGEBI;
-    
+    private List<SelectItem> responsablesOptions;
+    private Usuario usuarioResponsable;
+
     //</editor-fold>
     
     //<editor-fold defaultstate="collapsed" desc="Constructores">
     public UbicacionCommand() {
         this.ubicacion = new Ubicacion();
+        this.usuarioResponsable = new Usuario();        
         this.fltDescripcionUbicacion = "";
     }
 
@@ -37,6 +43,22 @@ public class UbicacionCommand {
 
     public void setUbicacion(Ubicacion ubicacion) {
         this.ubicacion = ubicacion;
+    }
+
+    public Usuario getUsuarioResponsable() {
+        return usuarioResponsable;
+    }
+
+    public void setUsuarioResponsable(Usuario usuarioResponsable) {
+        this.usuarioResponsable = usuarioResponsable;
+    }
+
+    public List<SelectItem> getResponsablesOptions() {
+        return responsablesOptions;
+    }
+
+    public void setResponsablesOptions(List<SelectItem> responsablesOptions) {
+        this.responsablesOptions = responsablesOptions;
     }
 
     public String getFltDescripcionUbicacion() {

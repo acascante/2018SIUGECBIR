@@ -6,7 +6,7 @@
                     styleClass="popup">
 
         <f:facet name="header">
-            <ice:outputText styleClass="flotar_izquierda titulo_popup" value="Listado de Proveedores"/>
+            <ice:outputText styleClass="flotar_izquierda titulo_popup" value="#{label['sigebi.Bien.Proveedores.Titulo']}"/>
         </f:facet>
         <br/>
 
@@ -119,9 +119,11 @@
                                                    style="float:right;margin-top:2%"  
                                                    styleClass="boton"  
                                                    partialSubmit="true" 
-                                                   value="Seleccionar"  
+                                                   value="#{label['label.seleccionar']}"  
                                                    actionListener="#{controllerAgregarBienes.selecionarProveedor}">
-                                    <f:attribute id="provSeleccionado" name="proveedorSeleccionado" value="#{proveedor}"/>
+                                    <f:attribute id="provSeleccionado" 
+                                                 name="proveedorSeleccionado" 
+                                                 value="#{proveedor}"/>
                                 </ice:commandButton>
                             </ice:column>
                         </ice:dataTable>
@@ -130,7 +132,11 @@
                 <br/>
                 <br/>
                 <span class="alineado_derecha">
-                    <ice:commandButton id="btn_cancelar" partialSubmit="true" action="#{controllerAgregarBienes.cerrarPanelProveedores}" styleClass="boton"  value="Regresar" />
+                    <ice:commandButton id="btn_cancelar" 
+                                       partialSubmit="true" 
+                                       action="#{controllerAgregarBienes.cerrarPanelProveedores}" 
+                                       styleClass="boton"  
+                                       value="#{label['label.cancelar']}" />
                 </span>
                 <br/><br/>
             </fieldset>       

@@ -12,6 +12,7 @@ package cr.ac.ucr.sigebi.commands;
 public class GenerarReporteSobrantesCommand {
         
     //<editor-fold defaultstate="collapsed" desc="Atributos">
+    private Long idTomaFisica;
     private Long idTipo;
     private Long idEstado;
     private Long idOrden;
@@ -24,6 +25,7 @@ public class GenerarReporteSobrantesCommand {
     private String modelo;
     private String serie;
     private String usuario;
+    private String ubicacion;
     //</editor-fold>
     
     //<editor-fold defaultstate="collapsed" desc="Constructores">
@@ -35,10 +37,23 @@ public class GenerarReporteSobrantesCommand {
         this.idOrden1 = -1L;
         this.idOrden2 = -1L;
         this.idOrden3 = -1L;
-    }    
+    }
+    
+    public GenerarReporteSobrantesCommand(Long idTomaFisica) { 
+        this();
+        this.idTomaFisica = idTomaFisica;
+    }
     //</editor-fold>
-     
+    
     //<editor-fold defaultstate="collapsed" desc="Gets y Sets">
+    public Long getIdTomaFisica() {
+        return idTomaFisica;
+    }
+
+    public void setIdTomaFisica(Long idTomaFisica) {
+        this.idTomaFisica = idTomaFisica;
+    }
+
     public Long getIdTipo() {
         return idTipo;
     }
@@ -125,6 +140,14 @@ public class GenerarReporteSobrantesCommand {
 
     public void setIdOrden3(Long idOrden3) {
         this.idOrden3 = idOrden3;
+    }
+
+    public String getUbicacion() {
+        return ubicacion;
+    }
+
+    public void setUbicacion(String ubicacion) {
+        this.ubicacion = ubicacion;
     }
 
     public String getUsuario() {

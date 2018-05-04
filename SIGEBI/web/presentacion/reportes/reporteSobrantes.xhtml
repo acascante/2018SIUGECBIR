@@ -21,6 +21,15 @@
                          <ice:panelTabSet>
                              <ice:panelTab id="tabFiltros" label="#{label['sigebi.reporte.sobrantes.tab.configuracion']}">
                                 <div class="row">
+                                    <div class="col-md-2">
+                                        <div class="form-group"> 
+                                            <ice:outputText value="#{label['sigebi.reporte.sobrantes.idTomaFisica']}" />
+                                            <ice:inputText id="txtId" value="#{controllerReporteSobrantes.command.idTomaFisica}" styleClass="form-control" readonly="true" partialSubmit="false" />
+                                        </div>                                             
+                                    </div>
+                                </div>
+                                
+                                <div class="row">
                                     <div class='col-sm-3 align-middle'>
                                         <h4 class="align-middle" style="margin-top: 15px">
                                             <ice:outputFormat value="#{label['sigebi.reporte.sobrantes.tipoReporte']}"/>
@@ -87,19 +96,10 @@
                                 <div class="row">
                                     <div class='col-sm-3 align-middle' />
                                     <div class='col-sm-3 align-middle'>
-                                        <ice:outputText value="#{label['sigebi.reporte.sobrantes.filtros.usuario']}" />
+                                        <ice:outputText value="#{label['sigebi.reporte.sobrantes.filtros.ubicacion']}" />
                                         <ice:inputText id="txtFuncionarioAsignado" styleClass="form-control" maxlength="40" partialSubmit="false"
-                                                        value="#{controllerReporteSobrantes.command.usuario}"> 
+                                                        value="#{controllerReporteSobrantes.command.ubicacion}"> 
                                         </ice:inputText>
-                                    </div>
-                                    
-                                    <div class='col-sm-3 align-middle'>
-                                        <ice:outputText value="#{label['sigebi.reporte.sobrantes.filtros.estado']}" />
-                                        <ice:selectOneMenu id="estadoBien" styleClass="form-control"
-                                                           value="#{controllerReporteSobrantes.command.idEstado}" >
-                                            <f:selectItem itemLabel="N/A" itemValue="-1"/>
-                                            <f:selectItems id="optSelTipoBien" value="#{controllerReporteSobrantes.itemsEstadoBien}"/>
-                                         </ice:selectOneMenu>   
                                     </div>
                                 </div>
                                  

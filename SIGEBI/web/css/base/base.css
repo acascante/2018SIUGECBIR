@@ -131,10 +131,20 @@ body{
     color: white;
     margin-right: 20px;
 }
+.btnCambioUnid{
+    text-decoration: none;
+    color: white;
+    margin-right: 20px;
+}
 
+.usuario-login #unidad{
+    float: left;
+    margin-left: 10px;
+}
 
-
-
+.usuario-login #usuario{
+    float: right;
+}
 
 /*------------------ INICIO DE ESTILOS PARA MENSAJES DE ERROR ----------------*/
 
@@ -2247,6 +2257,15 @@ body{
 
 .btnAgregar_ubicacion{
     background: transparent url(../../imagenes/botones/agregar.png) no-repeat;
+    width: 79px;
+    height: 22px;
+    border: none;
+    margin-bottom: 10px;
+    cursor:pointer;
+}
+
+.btnSeleccionar_ubicacion{
+    background: transparent url(../../imagenes/botones/asociar.png) no-repeat;
     width: 79px;
     height: 22px;
     border: none;

@@ -4,8 +4,8 @@
  */
 package cr.ac.ucr.framework.vista;
 
+import com.icesoft.faces.context.AbstractAttributeMap;
 import com.icesoft.faces.context.effects.JavascriptContext;
-
 import cr.ac.ucr.framework.seguridad.ObjetoBase;
 import cr.ac.ucr.framework.seguridad.entidades.SegElemento;
 import cr.ac.ucr.framework.seguridad.entidades.SegUnidadEjecutora;
@@ -14,6 +14,7 @@ import cr.ac.ucr.framework.utils.FWExcepcion;
 import cr.ac.ucr.framework.vista.util.Mensaje;
 import cr.ac.ucr.framework.vista.util.MenuItemPrincipal;
 import cr.ac.ucr.framework.vista.util.Util;
+import static cr.ac.ucr.framework.vista.util.Util.obtenerVista;
 import cr.ac.ucr.sigebi.domain.UnidadEjecutora;
 import cr.ac.ucr.sigebi.models.UnidadEjecutoraModel;
 
@@ -21,6 +22,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.TimeZone;
 
 import javax.annotation.PostConstruct;
@@ -32,6 +34,7 @@ import javax.faces.event.ActionListener;
 import javax.faces.event.MethodExpressionActionListener;
 import javax.faces.event.PhaseId;
 import javax.faces.event.ValueChangeEvent;
+import javax.servlet.ServletContext;
 
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
@@ -278,6 +281,65 @@ public class VistaMenu {
         }
     }
 
+    /**
+     * Metodo encargado de cargar el menu_horizontal de opciones si no tiene mas
+     * de un perfil asociado, basandose en Elementos de menu_horizontal, que
+     * tiene asociados el usuario_actual para el sistema que se va a encargar de
+     * administrar.
+     */
+    public void cargarMenuChg(ActionEvent event) {
+        gMenuHorizontal.clear();
+        VistaUsuario lVistaUsuario = (VistaUsuario) Util.obtenerVista("#{vistaUsuario}");
+
+        if (!lVistaUsuario.obtenerPerfilesUsuario()) {//si solo tiene un perfil asignado entra
+            List<SegElemento> lista_elementos = new ArrayList<SegElemento>();
+            try {
+                int[] tipos = {2,2};
+                int[] tipoModulo = {3,3};
+                //Elementos a los cuales puede acceder por parte del sistema elegido el valor 4 es para el menu_horizontal superior
+                lista_elementos = gSeguridadMgr.obtenerElemUsuaUnidadEjecSist(
+                        lVistaUsuario.getgUsuarioActual().getIdUsuario(),
+                        lVistaUsuario.getgUnidadActual(), tipos, tipoModulo);
+                lista_elementos = Util.ordenarElementos(lista_elementos);
+                //lista_elementos=cs.ordenarElementos(elementos_seguridad);
+                //Creo los items del menu_horizontal
+                agregarMenu(lista_elementos, gMenuHorizontal);
+                lVistaUsuario.setgPopUnidades(false);
+                gMostrarPerfiles = false;
+                //cargarBuzon();
+                gNavegarInicio = "principal";
+                
+                VistaNavegacion navegar = (VistaNavegacion) obtenerVista("#{vistaNavegacion}");
+                navegar.navegacionBotones("inicio");
+                
+                FacesContext context = FacesContext.getCurrentInstance();
+                Map<String,Object> sm =  context.getExternalContext().getSessionMap();
+                
+
+                for (Map.Entry<String, Object> s : sm.entrySet())
+                {
+                    String nombre = s.getKey().substring(0,10);
+                    if (s.getKey().substring(0,10).equals("controller")){
+                    context.getExternalContext().getSessionMap().remove(s.getKey());
+                    }
+                }
+
+
+                context.getExternalContext().getSessionMap().remove("ListarBienesController");
+            } catch (FWExcepcion ex) {
+                Mensaje.agregarErrorAdvertencia(ex.getError_para_usuario());
+                gMostrarPerfiles = false;
+                //reviso q el error sea importante para imprimirlo en el log
+                if (ex.getError_para_programador() != null) {
+                    ex.imprimirError(this.getClass());
+                }
+            }//fin catch
+        } else {
+            lVistaUsuario.setgPopUnidades(false);
+            lVistaUsuario.setgPopPerfiles(true);
+        }
+    }
+    
     /*public void cargarMenuPrincipalSegunPerfil(ActionEvent event) {
         gMenuHorizontal.clear();
         VistaUsuario lVistaUsuario = (VistaUsuario) Util.obtenerVista("#{vistaUsuario}");

@@ -13,6 +13,7 @@ import cr.ac.ucr.sigebi.domain.Estado;
 import cr.ac.ucr.sigebi.domain.Sincronizar;
 import cr.ac.ucr.sigebi.domain.Tipo;
 import cr.ac.ucr.sigebi.domain.UnidadEjecutora;
+import cr.ac.ucr.sigebi.domain.Usuario;
 import java.util.List;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
@@ -246,6 +247,8 @@ public class BienDao extends GenericDaoImpl {
         }
     }
     
+    
+    
     @Transactional
     public void almacenar(Bien bien) throws FWExcepcion {
         try {
@@ -462,10 +465,38 @@ public class BienDao extends GenericDaoImpl {
     }
 
     @Transactional(readOnly = true)
-    public List<Bien> listar(Integer primerRegistro, Integer ultimoRegistro, Long id, UnidadEjecutora unidadejecutora, String identificacion, String descripcion, String marca, String modelo, String serie, Estado estado, Estado estadoInterno) throws FWExcepcion {
+    public List<Bien> listar(Integer primerRegistro
+                            , Integer ultimoRegistro
+                            , Long id
+                            , UnidadEjecutora unidadejecutora
+                            , String identificacion
+            
+                            , String descripcion
+                            , String marca
+                            , String modelo
+                            , String serie
+                            , Estado estado
+            
+                            , Estado estadoInterno
+                            , Boolean listadoAsignacion
+                    ) throws FWExcepcion {
         Session session = dao.getSessionFactory().openSession();
         try {
-            Query query = this.creaQuery(Boolean.FALSE, session, id, unidadejecutora, identificacion, descripcion, marca, modelo, serie, estado, estadoInterno);
+            Query query = this.creaQuery(Boolean.FALSE
+                                        , session
+                                        , id
+                                        , unidadejecutora
+                                        , identificacion
+                    
+                                        , descripcion
+                                        , marca
+                                        , modelo
+                                        , serie
+                                        , estado
+                    
+                                        , estadoInterno
+                                        , listadoAsignacion
+                                        );
             if (!(primerRegistro.equals(1) && ultimoRegistro.equals(1))) {
                 query.setFirstResult(primerRegistro);
                 query.setMaxResults(ultimoRegistro - primerRegistro);
@@ -478,10 +509,35 @@ public class BienDao extends GenericDaoImpl {
         }
     }
 
-    public Long contar(Long id, UnidadEjecutora unidadejecutora, String identificacion, String descripcion, String marca, String modelo, String serie, Estado estado, Estado estadoInterno) throws FWExcepcion {
+    public Long contar(Long id
+                    , UnidadEjecutora unidadejecutora
+                    , String identificacion
+                    , String descripcion
+                    , String marca
+
+                    , String modelo
+                    , String serie
+                    , Estado estado
+                    , Estado estadoInterno
+                    , Boolean listadoAsignacion
+    ) throws FWExcepcion {
         Session session = dao.getSessionFactory().openSession();
         try {
-            Query query = this.creaQuery(Boolean.TRUE, session, id, unidadejecutora, identificacion, descripcion, marca, modelo, serie, estado, estadoInterno);
+            Query query = this.creaQuery(Boolean.TRUE
+                                        , session
+                                        , id
+                                        , unidadejecutora
+                                        , identificacion
+                    
+                                        , descripcion
+                                        , marca
+                                        , modelo
+                                        , serie
+                                        , estado
+                    
+                                        , estadoInterno
+                                        ,listadoAsignacion
+                                        );
             return (Long) query.uniqueResult();
         } catch (HibernateException e) {
             throw new FWExcepcion("sigebi.error.notificacionDao.contarNotificaciones", "Error contando los registros de tipo " + this.getClass(), e.getCause());
@@ -490,7 +546,21 @@ public class BienDao extends GenericDaoImpl {
         }
     }
 
-    private Query creaQuery(Boolean contar, Session session, Long id, UnidadEjecutora unidadEjecutora, String identificacion, String descripcion, String marca, String modelo,  String serie, Estado estado, Estado estadoInterno) {
+    private Query creaQuery(Boolean contar
+                            , Session session
+                            , Long id
+                            , UnidadEjecutora unidadEjecutora
+                            , String identificacion
+            
+                            , String descripcion
+                            , String marca
+                            , String modelo
+                            , String serie
+                            , Estado estado
+            
+                            , Estado estadoInterno
+                            , Boolean listadoAsignacion
+    ) {
         StringBuilder sql = new StringBuilder("SELECT ");
         if (contar) {
             sql.append("count(entity) FROM Bien entity ");
@@ -499,8 +569,6 @@ public class BienDao extends GenericDaoImpl {
         }
 
         sql.append("WHERE entity.unidadEjecutora = :unidadEjecutora ");
-        sql.append("AND entity.estado = :estado ");
-        sql.append("AND entity.estadoInterno = :estadoInterno ");
         if(id != null && id > 0) {
             sql.append("AND entity.id = :id ");
         } else {
@@ -519,22 +587,33 @@ public class BienDao extends GenericDaoImpl {
             if(serie != null && serie.length() > 0){
                 sql.append("AND UPPER(entity.resumenBien.serie) LIKE UPPER(:serie) ");
             }
+            if(estado != null)
+                sql.append("AND entity.estado = :estado ");
+            if(estadoInterno != null)
+                sql.append("AND entity.estadoInterno = :estadoInterno ");
+            if(listadoAsignacion)
+                sql.append("AND entity.usuarioResponsable is null ");
+                
      }
         sql.append("ORDER BY entity.id ASC ");
         
         Query q = session.createQuery(sql.toString());
         q.setParameter("unidadEjecutora", unidadEjecutora);
-        q.setParameter("estado", estado);
-        q.setParameter("estadoInterno", estadoInterno);
+        
         if(id != null && id > 0) {
             q.setParameter("id", id);
         } else {
-            if (identificacion != null && identificacion.length() > 0) {
+            if (estado != null)
+                q.setParameter("estado", estado);
+            if (estadoInterno != null)
+                q.setParameter("estadoInterno", estadoInterno);
+            
+            if (identificacion != null && identificacion.length() > 0) 
                 q.setParameter("identificacion",  '%'+ identificacion + '%');
-            }
-            if (descripcion != null && descripcion.length() > 0) {
+                
+            if (descripcion != null && descripcion.length() > 0) 
                 q.setParameter("descripcion", '%' + descripcion + '%');
-            }
+            
             if (marca != null && marca.length() > 0) {
                 q.setParameter("marca", '%' + marca + '%');
             }
@@ -547,6 +626,155 @@ public class BienDao extends GenericDaoImpl {
         }
         return q;
     }
+    
+    
+    // <editor-fold defaultstate="collapsed" desc=" MisBienes ">
+
+    
+    
+    @Transactional(readOnly = true)
+    public List<Bien> listarMisBienes(Integer primerRegistro
+                            , Integer ultimoRegistro
+                            , UnidadEjecutora unidadejecutora
+                            , String identificacion
+            
+                            , String descripcion
+                            , String marca
+                            , String modelo
+                            , String serie
+                            , Estado estado
+            
+                            , Usuario usuario
+                    ) throws FWExcepcion {
+        Session session = dao.getSessionFactory().openSession();
+        try {
+            Query query = this.creaQueryMisBienes(Boolean.FALSE
+                                        , session
+                                        , unidadejecutora
+                                        , identificacion
+                    
+                                        , descripcion
+                                        , marca
+                                        , modelo
+                                        , serie
+                                        , estado
+                    
+                                        , usuario);
+            if (!(primerRegistro.equals(1) && ultimoRegistro.equals(1))) {
+                query.setFirstResult(primerRegistro);
+                query.setMaxResults(ultimoRegistro - primerRegistro);
+            }
+            return (List<Bien>) query.list();
+        } catch (HibernateException e) {
+            throw new FWExcepcion("sigebi.error.notificacionDao.listar", "Error obtener los registros de tipo " + this.getClass(), e.getCause());
+        } finally {
+            session.close();
+        }
+    }
+
+    public Long contarMisBienes(UnidadEjecutora unidadejecutora
+                    , String identificacion
+                    , String descripcion
+                    , String marca
+            
+                    , String modelo
+                    , String serie
+                    , Estado estado
+                    , Usuario usuario) throws FWExcepcion {
+        Session session = dao.getSessionFactory().openSession();
+        try {
+            Query query = this.creaQueryMisBienes(Boolean.TRUE
+                                        , session
+                                        , unidadejecutora
+                                        , identificacion
+                    
+                                        , descripcion
+                                        , marca
+                                        , modelo
+                                        , serie
+                                        , estado
+                    
+                                        , usuario);
+            return (Long) query.uniqueResult();
+        } catch (HibernateException e) {
+            throw new FWExcepcion("sigebi.error.notificacionDao.contarNotificaciones", "Error contando los registros de tipo " + this.getClass(), e.getCause());
+        } finally {
+            session.close();
+        }
+    }
+
+    private Query creaQueryMisBienes(Boolean contar
+                            , Session session
+                            , UnidadEjecutora unidadEjecutora
+                            , String identificacion
+            
+                            , String descripcion
+                            , String marca
+                            , String modelo
+                            , String serie
+                            , Estado estado
+            
+                            , Usuario usuario) {
+        StringBuilder sql = new StringBuilder("SELECT ");
+        if (contar) {
+            sql.append("count(entity) FROM Bien entity ");
+        } else {
+            sql.append("entity FROM Bien entity ");
+        }
+
+        sql.append("WHERE entity.unidadEjecutora = :unidadEjecutora ");
+        sql.append("AND entity.usuarioResponsable = :usuarioResponsable ");
+        
+        if (identificacion != null && identificacion.length() > 0) {
+            sql.append("AND UPPER(entity.identificacion.identificacion) LIKE UPPER(:identificacion) ");
+        }
+        if(descripcion != null && descripcion.length() > 0){
+            sql.append("AND UPPER(entity.descripcion) LIKE UPPER(:descripcion) ");
+        }
+        if(marca != null && marca.length() > 0){
+            sql.append("AND UPPER(entity.resumenBien.marca) LIKE UPPER(:marca) ");
+        }
+        if(modelo != null && modelo.length() > 0){
+            sql.append("AND UPPER(entity.resumenBien.modelo) LIKE UPPER(:modelo) ");
+        }
+        if(serie != null && serie.length() > 0){
+            sql.append("AND UPPER(entity.resumenBien.serie) LIKE UPPER(:serie) ");
+        }
+        if(estado != null)
+            sql.append("AND entity.estadoAsignacion = :estado ");
+
+        sql.append("ORDER BY entity.estadoAsignacion ASC ");
+        
+        
+        
+        Query q = session.createQuery(sql.toString());
+        q.setParameter("unidadEjecutora", unidadEjecutora);
+        q.setParameter("usuarioResponsable", usuario);
+        
+        if (estado != null)
+            q.setParameter("estado", estado);
+
+        if (identificacion != null && identificacion.length() > 0) 
+            q.setParameter("identificacion",  '%'+ identificacion + '%');
+
+        if (descripcion != null && descripcion.length() > 0) 
+            q.setParameter("descripcion", '%' + descripcion + '%');
+
+        if (marca != null && marca.length() > 0) {
+            q.setParameter("marca", '%' + marca + '%');
+        }
+        if (modelo != null && modelo.length() > 0) {
+            q.setParameter("modelo", '%' + modelo + '%');
+        }
+        if (serie != null && serie.length() > 0) {
+            q.setParameter("serie", '%' + serie + '%');
+        }
+        return q;
+    }
+    
+    
+    // </editor-fold>
+    
     
     @Transactional(readOnly = true)
     public List<Bien> listarReporteSobrantes(String identificacion, String descripcion, String marca, String modelo, String serie, String usuario,  Estado estado) throws FWExcepcion {

@@ -14,7 +14,6 @@ import java.util.List;
 import org.hibernate.HibernateException;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import org.hibernate.Query;
@@ -25,7 +24,6 @@ import org.hibernate.Session;
  * @author jorge.serrano
  */
 @Repository(value = "ubicacionDao")
-
 public class UbicacionDao extends GenericDaoImpl {
 
     @Autowired
@@ -98,11 +96,11 @@ public class UbicacionDao extends GenericDaoImpl {
     
     
     @Transactional(readOnly = true)
-    public List<Ubicacion> listar(String descripcion, Integer pPrimerRegistro, Integer pUltimoRegistro) throws FWExcepcion {
+    public List<Ubicacion> listar(String descripcion, UnidadEjecutora unidadEjecutora, Integer pPrimerRegistro, Integer pUltimoRegistro) throws FWExcepcion {
         Session session = this.dao.getSessionFactory().openSession();
         try {
             //Se genera el query para la busqueda
-            Query q = this.creaQueryListar(descripcion, false, session);
+            Query q = this.creaQueryListar(descripcion, unidadEjecutora, false, session);
 
             //Paginacion
             if (!(pPrimerRegistro.equals(1) && pUltimoRegistro.equals(1))) {
@@ -121,12 +119,12 @@ public class UbicacionDao extends GenericDaoImpl {
     }
 
     @Transactional(readOnly = true)
-    public Long contar(String descripcion) throws FWExcepcion {
+    public Long contar(String descripcion, UnidadEjecutora unidadEjecutora) throws FWExcepcion {
         Session session = dao.getSessionFactory().openSession();
         try {
 
             //Se genera el query para la busqueda de los bienes
-            Query q = this.creaQueryListar(descripcion, true, session);
+            Query q = this.creaQueryListar(descripcion, unidadEjecutora, true, session);
 
             //Se obtienen los resutltados
             return (Long) q.uniqueResult();
@@ -139,9 +137,9 @@ public class UbicacionDao extends GenericDaoImpl {
         }
     }
 
-    private Query creaQueryListar(String descripcion, Boolean contar,Session session) {
+    private Query creaQueryListar(String descripcion, UnidadEjecutora unidadEjecutora, Boolean contar,Session session) {
 
-        StringBuilder sql = new StringBuilder(" ");
+        StringBuilder sql = new StringBuilder(" "); 
         if (contar) {
             sql.append("SELECT count(obj) FROM Ubicacion obj ");
         } else {
@@ -154,6 +152,9 @@ public class UbicacionDao extends GenericDaoImpl {
         if (descripcion != null && descripcion.length() > 0) {
            sql.append(" and upper(obj.detalle) like upper(:detalle)");
         }
+        if(unidadEjecutora != null){
+           sql.append(" and obj.unidadEjecutora = :unidadEjecutora");
+        }
 
         sql.append(" ORDER BY obj.id desc ");
 
@@ -161,6 +162,9 @@ public class UbicacionDao extends GenericDaoImpl {
 
         if (descripcion != null && descripcion.length() > 0) {
             q.setParameter("detalle", '%' + descripcion + '%');
+        }
+        if(unidadEjecutora != null){
+            q.setParameter("unidadEjecutora", unidadEjecutora);
         }
         return q;
     }   

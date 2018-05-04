@@ -1,0 +1,144 @@
+<ice:form id="frm_listarAsignacionPlcas" 
+          xmlns:ice="http://www.icesoft.com/icefaces/component"
+          xmlns:h="http://java.sun.com/jsf/html"
+          xmlns:f="http://java.sun.com/jsf/core"
+          xmlns:ui="http://java.sun.com/jsf/facelets">
+    <div class="contenido-pagina">
+
+        <div class="container"> 
+            <!-- Titulo -->
+            <div class="row">
+                <div class='col-sm-12'>
+                    <h1 style="margin: 0;">
+                    </h1>
+                </div>                
+            </div>
+            <div class="row">
+                <div class='col-sm-6'>
+                    <h1 style="margin: 0;">                       
+                        <ice:outputFormat value="#{label['sigebi.label.vista.asignacionPlaca.titulo']}"/>
+                    </h1>
+                </div>
+                <div class="col-sm-6">
+                    <ice:commandButton id="botonNuevo"
+                                       style="float:right" 
+                                       styleClass="boton" 
+                                       partialSubmit="true" 
+                                       actionListener="#{controllerAsignacionPlaca.nuevoRegistro}"
+                                       value="#{label['sigebi.label.vista.asignacionPlaca.nuevo']}"  >
+                        <f:attribute id="vistaOrigenParam" name="keyVistaOrigen"  value="sol_placas"/>
+                    </ice:commandButton>                    
+                </div>              
+            </div>            
+            
+            <!-- Paginacion -->
+            <div class="row">
+                <div class="col-sm-12">
+                    <ice:outputFormat value="#{label['label.generico.paginacion.encabezado']}">
+                        <f:param value="#{controllerListarAsignacionPlacas.cantidadRegistros}"/>
+                        <f:param value="#{controllerListarAsignacionPlacas.cantidadRegistrosMostrados}"/>
+                        <f:param value="#{controllerListarAsignacionPlacas.primerRegistro}"/>
+                        <f:param value="#{controllerListarAsignacionPlacas.ultimoRegistro}"/>
+                        <f:param value="#{controllerListarAsignacionPlacas.paginaActual}"/>
+                        <f:param value="#{controllerListarAsignacionPlacas.cantidadPaginas}"/>
+                    </ice:outputFormat>
+                    <div>
+                        <table>
+                            <tr>
+                                <td style="padding-right: 5px;">
+                                    <ice:outputText value="#{label['label.paginacion.cantidad.pagina']} "/>
+                                </td>
+                                <td>
+                                    
+                                    <ice:selectOneMenu id="cantRegistroPorPagina"
+                                           value="#{controllerListarAsignacionPlacas.cantRegistroPorPagina}" 
+                                           valueChangeListener="#{controllerListarAsignacionPlacas.cambioRegistrosPorPagina}"
+                                           partialSubmit="true">
+                                            <f:selectItems id="item_pa" value="#{controllerListarAsignacionPlacas.listaRegistrosPagina}"/>
+                                    </ice:selectOneMenu>    
+                                    
+                                </td>
+                            </tr>
+                        </table>                        
+                    </div>                    
+                    <div>
+                        <ice:commandButton image="./imagenes/botones/first.png" partialSubmit="true" actionListener="#{controllerListarAsignacionPlacas.primero}" rendered="#{controllerListarAsignacionPlacas.cantidadPaginas > 1}"/>
+                        <ice:commandButton image="./imagenes/botones/previos.png" partialSubmit="true" actionListener="#{controllerListarAsignacionPlacas.anterior}" rendered="#{controllerListarAsignacionPlacas.cantidadPaginas > 1}"/>
+                        <ui:repeat value="#{controllerListarAsignacionPlacas.arregloPaginas}" var="pagina">
+                            <ice:commandLink value="#{pagina}" partialSubmit="true" actionListener="#{controllerListarAsignacionPlacas.irPagina}">
+                                <f:param name="numPag" value="#{pagina}"/>
+                            </ice:commandLink>
+                        </ui:repeat>            
+                        <ice:commandButton image="./imagenes/botones/next.png" partialSubmit="true" actionListener="#{controllerListarAsignacionPlacas.siguiente}" rendered="#{controllerListarAsignacionPlacas.cantidadPaginas > 1}"/>
+                        <ice:commandButton image="./imagenes/botones/last.png" partialSubmit="true" actionListener="#{controllerListarAsignacionPlacas.ultimo}" rendered="#{controllerListarAsignacionPlacas.cantidadPaginas > 1}"/>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Data Table -->
+            <div class="row">
+                <div class="col-sm-12">
+                    <div>
+                        <ice:dataTable id="solicitudsTecnicos"
+                                       value="#{controllerListarAsignacionPlacas.asignacionPlacas}"
+                                   var="asignacionPlaca"
+                                   paginator="true"
+                                   paginatorPosition="bottom">
+                            
+                            <ice:column id="colId">
+                                <f:facet name="header">
+                                    <ice:columnGroup>
+                                        <ice:headerRow>
+                                            <ice:outputText value="#{label['sigebi.label.vista.asignacionPlaca.id']}"/>
+                                        </ice:headerRow>
+                                        <ice:headerRow>
+                                            <ice:inputText id="fltId"
+                                                           style="width: 130px;"
+                                                           value="#{controllerListarAsignacionPlacas.fltId}"                                   
+                                                           partialSubmit="true"
+                                                           valueChangeListener="#{controllerListarAsignacionPlacas.cambioFiltro}"/>
+                                        </ice:headerRow>
+                                    </ice:columnGroup>
+                                </f:facet>                                
+                                <h:outputText id="idCell" value="#{asignacionPlaca.id}"/>
+                            </ice:column>
+
+                            <ice:column id="colEstado">
+                                <f:facet name="header">
+                                    <ice:columnGroup>
+                                        <ice:headerRow>
+                                            <ice:outputText value="#{label['sigebi.label.vista.asignacionPlaca.estado']}"/>
+                                        </ice:headerRow>
+                                        <ice:headerRow>
+                                           <ice:selectOneMenu id="filtroEstado"
+                                                       valueChangeListener="#{controllerListarAsignacionPlacas.cambioFiltro}"
+                                                       value="#{controllerListarAsignacionPlacas.fltEstado}"
+                                                       partialSubmit="true">
+                                                <f:selectItem itemLabel="N/A" itemValue="-1"/>
+                                                <f:selectItems id="slcEstadoItem" value="#{controllerListarAsignacionPlacas.estadosOptions}"/>
+                                            </ice:selectOneMenu>
+                                        </ice:headerRow>
+                                    </ice:columnGroup>
+                                </f:facet>                                
+                                <h:outputText id="estadoCell" value="#{asignacionPlaca.estado.nombre}"/>
+                            </ice:column>
+
+                            <ice:column style="text-align: center;">
+
+                                 <ice:commandButton id="botonDetalle"
+                                                   style="float:right;margin-top:2%" 
+                                                   styleClass="boton" 
+                                                   partialSubmit="true" 
+                                                   actionListener="#{controllerAsignacionPlaca.modificarRegistro}"
+                                                   value="#{label['sigebi.label.vista.asignacionPlaca.detalle']}"  >
+                                    <f:attribute id="asignacionPlacaSeleccionada" name="asignacionPlacaSeleccionada"  value="#{asignacionPlaca}"/>
+                                    <f:attribute id="vistaOrigenParamDetalle" name="keyVistaOrigen"  value="sol_placas"/>
+                                </ice:commandButton>                                
+                            </ice:column>
+                        </ice:dataTable>
+                    </div>
+                </div>
+            </div>
+        </div>    
+    </div>
+</ice:form>

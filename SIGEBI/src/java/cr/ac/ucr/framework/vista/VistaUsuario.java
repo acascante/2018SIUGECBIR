@@ -430,6 +430,14 @@ public class VistaUsuario {
         inicializar();
         return "index";
     }
+    
+    public String elegirUnidad(){
+        if (this.cargarUnidades()){
+            return "principal";
+        }else{
+            return "index";
+        }
+    }
 
     // </editor-fold>
     // <editor-fold defaultstate="collapsed" desc="Sets y Gets">

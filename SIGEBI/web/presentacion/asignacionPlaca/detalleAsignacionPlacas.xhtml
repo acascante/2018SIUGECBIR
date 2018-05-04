@@ -1,0 +1,111 @@
+<ice:form id="frmDetalleAsignacionPlaca" 
+          xmlns:ice="http://www.icesoft.com/icefaces/component" 
+          xmlns:f="http://java.sun.com/jsf/core" 
+          xmlns:ui="http://java.sun.com/jsf/facelets">
+
+    <!-- Seccion de TABS -->
+    <div class="container">
+        <div class="row" style="margin-top: 10px;">
+                <div class='col-sm-8'>
+                    <h1 style="margin: 0;">
+                        <ice:outputFormat value="#{label['sigebi.label.vista.detalleAsignacionPlaca.titulo']}" />
+                    </h1>
+                </div>
+
+                <div class="col-sm-2">
+                    <ice:commandButton id="boton_regresar" value="Regresar" style="float:right" partialSubmit="true" styleClass="boton" action="#{controllerAsignacionPlaca.regresarListado}"/>
+                </div>
+        </div>
+
+        <div class="row">
+           <div class="col-md-4">
+                <div class="form-group"> 
+                    <label class="control-label" for="txtConsecutivo">
+                        <ice:outputText value="#{label['sigebi.label.vista.detalleAsignacionPlaca.consecutivo']}" />                            
+                    </label>
+                    <ice:inputText id="txtConsecutivo" 
+                                   partialSubmit="false"
+                                   styleClass="form-control"
+                                   readonly="true"
+                                   value="#{controllerAsignacionPlaca.asignacionPlacaCommand.asignacionPlaca.id}" />
+                </div>                                             
+           </div>
+           <div class="col-md-4">
+                <div class="form-group"> 
+                    <label class="control-label" for="txtCantidadDisponibles">
+                        <ice:outputText value="#{label['sigebi.label.vista.detalleAsignacionPlaca.cantidadDisponibles']}" />
+                    </label>                                               
+                    <ice:inputText id="txtCantidadDisponibles" 
+                                   partialSubmit="false"
+                                   styleClass="form-control"
+                                   readonly="true"
+                                   value="#{controllerAsignacionPlaca.asignacionPlacaCommand.cantidadDisponible}" />
+                </div>                                             
+           </div>               
+        </div>          
+        <div class="row">
+           <div class="col-md-8">
+                <div class="form-group"> 
+                    <label class="control-label" for="txtCantidadSolicitada">
+                        <ice:outputText value="#{label['sigebi.label.vista.detalleAsignacionPlaca.cantidadSolicitada']}" />
+                    </label>                                               
+                    <ice:inputText id="txtCantidadSolicitada" 
+                                   partialSubmit="false"
+                                   styleClass="form-control"
+                                   value="#{controllerAsignacionPlaca.asignacionPlacaCommand.asignacionPlaca.cantidadSolicitada}" />
+                </div>                                             
+           </div>               
+        </div>          
+        <div class="row">
+            <div class="col-md-8" style="margin-top: 20px;">
+                <div class="form-group">
+                    <label class="control-label" for="txtJustificacion">
+                        <ice:outputText value="#{label['sigebi.label.vista.asignacionPlaca.justificacion']}"/> 
+                        <ice:outputText value="#{label['label.requerido']}" />
+                    </label>
+                    <ice:inputTextarea  id="txtJustificacion" 
+                                        styleClass="form-control"
+                                        cols="2" 
+                                        value="#{controllerAsignacionPlaca.asignacionPlacaCommand.asignacionPlaca.justificacion}"/>
+                </div>
+            </div>    
+        </div> 
+
+        <div class="row">
+            <div class="col-md-6">
+                <ice:commandButton id="botonGuardar" 
+                                   value="Guardar" 
+                                   partialSubmit="true" 
+                                   styleClass="boton" 
+                                   action="#{controllerAsignacionPlaca.guardaAsignacionPlaca}"
+                                   rendered="#{controllerAsignacionPlaca.asignacionPlacaCommand.permiteModificar}"/>
+                
+                <ice:commandButton id="botonAprobar" 
+                                   value="Aprobar" 
+                                   partialSubmit="true" 
+                                   styleClass="boton" 
+                                   actionListener="#{controllerAsignacionPlaca.mostrarPanel}"
+                                   rendered="#{(controllerAsignacionPlaca.asignacionPlacaCommand.permiteAprobarRechazar)}">
+                                    <f:attribute id="accion" name="accion"  value="2"/>
+                </ice:commandButton> 
+
+                <ice:commandButton id="botonRechazar" 
+                                   value="Rechazar" 
+                                   partialSubmit="true" 
+                                   styleClass="boton" 
+                                   actionListener="#{controllerAsignacionPlaca.mostrarPanel}"
+                                   rendered="#{(controllerAsignacionPlaca.asignacionPlacaCommand.permiteAprobarRechazar)}">             
+                                    <f:attribute id="accion" name="accion"  value="1"/>
+                </ice:commandButton>                 
+                 
+            </div>
+        </div>
+ 
+
+       <!-- Panel de confirmacion -->   
+        <ui:insert name="modalConfirmacionAsignacion">
+            <ui:include src="../asignacionPlaca/panelConfirmacionAsignacionPlacas.xhtml" />
+        </ui:insert>   
+        
+    </div>
+</ice:form>

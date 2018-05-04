@@ -12,6 +12,7 @@ import cr.ac.ucr.sigebi.domain.Bien;
 import cr.ac.ucr.sigebi.domain.RegistroMovimiento;
 import cr.ac.ucr.sigebi.domain.Solicitud;
 import cr.ac.ucr.sigebi.domain.SolicitudDetalle;
+import java.util.ArrayList;
 import java.util.List;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
@@ -51,9 +52,15 @@ public class RegistroMovimientoDao extends GenericDaoImpl {
 //            sql = "SELECT m FROM Solicitud m WHERE m.detalles.bien = :bien";
             Query query = session.createQuery(sql);
             query.setParameter("bien", bien);
-            return (List<Solicitud>) query.list();
+            
+            List<Solicitud> movimientos = (List<Solicitud>) query.list();
+            
+            return movimientos;
         } catch (HibernateException e) {
-            throw new FWExcepcion("sigebi.error.notificacionDao.listar", "Error obtener los registros de tipo " + this.getClass(), e.getCause());
+            
+            return new ArrayList<Solicitud>();
+            
+            //throw new FWExcepcion("sigebi.error.notificacionDao.listar", "Error obtener los registros de tipo " + this.getClass(), e.getCause());
         } finally {
             session.close();
         }

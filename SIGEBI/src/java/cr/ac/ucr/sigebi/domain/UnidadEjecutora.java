@@ -51,6 +51,7 @@ public class UnidadEjecutora extends ObjetoBase implements Serializable {
  
     @Column(name = "ORDEN")
     private Integer orden;
+     
     //</editor-fold>
 
     //<editor-fold defaultstate="collapsed" desc="GET's y SET's">
@@ -133,6 +134,7 @@ public class UnidadEjecutora extends ObjetoBase implements Serializable {
     public void setOrden(Integer orden) {
         this.orden = orden;
     }
+
     //</editor-fold>
     
     //<editor-fold defaultstate="collapsed" desc="Metodos">

@@ -5,6 +5,7 @@
  */
 package cr.ac.ucr.sigebi.commands;
 
+import cr.ac.ucr.sigebi.domain.TomaFisica;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -52,6 +53,8 @@ public class ReporteInventFaltantesCommand {
     List<SelectItem> itemsOrdenColumnas2;
     List<SelectItem> itemsOrdenColumnas3;
     
+    TomaFisica tomaSeleccionada;
+    
     private Map<Integer, SelectItem> itemsColumnas2;
     
     //</editor-fold>
@@ -87,6 +90,7 @@ public class ReporteInventFaltantesCommand {
             
             
         
+        tomaSeleccionada = new TomaFisica();
         
     }
     
@@ -108,6 +112,16 @@ public class ReporteInventFaltantesCommand {
 
     //<editor-fold defaultstate="collapsed" desc="Gets y Sets">
 
+    public TomaFisica getTomaSeleccionada() {
+        return tomaSeleccionada;
+    }
+
+    public void setTomaSeleccionada(TomaFisica tomaSeleccionada) {
+        this.tomaSeleccionada = tomaSeleccionada;
+    }
+
+    
+    
     public Long getUbicacion() {
         return ubicacion;
     }
@@ -296,7 +310,7 @@ public class ReporteInventFaltantesCommand {
 "            \n" +
 "            , UNID.DSC_UNIDAD_EJECUTORA	 UNIDAD_EJECUTORA\n" +
 "            , UBIC.DETALLE               UBICACION\n" +
-"            , 'FUNCIONARIO ASIGNADO'     FUNCIONARIO_ASIGNADO\n" +
+"            , USU.DSC_NOMBRE_COMPLETO     FUNCIONARIO_ASIGNADO\n" +
 "            , SIGEBI_OAF.FC_SIGB_OBTENER_DOCUMENTO_BIEN(BIEN.ID_BIEN) ESTADO\n" +
 "            \n" +
 "            \n" +
@@ -304,9 +318,13 @@ public class ReporteInventFaltantesCommand {
 "        (\n" +
 "        SELECT BIEN.* \n" +
 "            FROM SIGEBI_OAF.SIGB_BIEN BIEN\n" +
-"            WHERE BIEN.ID_UBICACION = "+ubicacion+"  \n" +
-"                AND BIEN.ID_ESTADO IN (5, 37) \n" +
-"        ) BIEN \n" +
+"            WHERE  BIEN.ID_ESTADO IN (5, 37)  \n";
+        
+        ///Valido si la toma corresponde a una ubicación
+        if(ubicacion > 0)
+            sql += "                AND  BIEN.ID_UBICACION = "+ubicacion+" \n";
+        
+        sql += "        ) BIEN \n" +
 "        LEFT JOIN( \n" +
 "            SELECT BIEN.* \n" +
 "            FROM SIGEBI_OAF.SIGB_TOMA_FISICA TOM\n" +
@@ -328,7 +346,9 @@ public class ReporteInventFaltantesCommand {
 "        LEFT JOIN SIGEBI_OAF.SIGB_UBICACION UBIC\n" +
 "            ON(BIEN.ID_UBICACION = UBIC.ID_UBICACION)\n" +
 "        LEFT JOIN SIGEBI_OAF.SIGB_SUB_CLASIFICACION SUB_CLASIF \n" +
-"            ON (BIEN.ID_SUB_CLASIFICACION = SUB_CLASIF.ID_SUB_CLASIFICACION) \n" +
+"            ON (BIEN.ID_SUB_CLASIFICACION = SUB_CLASIF.ID_SUB_CLASIFICACION)  \n"
+                + "LEFT JOIN SEGURIDAD_USUARIO USU \n" +
+"            ON(BIEN.ID_RESPONSABLE = USU.ID_USUARIO)\n" +
 "	WHERE BIEN.ID_UNIDAD_EJECUTORA = "+unidadEjecutora+"\n" +
 "        AND UPPER(IDEN.NUMERO_IDENTIFICACION) LIKE  UPPER('%"+identificacion+"%')\n" +
 "        AND UPPER(BIEN.DESCRIPCION) LIKE  UPPER('%"+descripcion+"%')\n" +
@@ -336,7 +356,9 @@ public class ReporteInventFaltantesCommand {
 "        AND UPPER(NVL(CAR.MODELO, '--')) LIKE  UPPER('%"+modelo+"%')\n" +
 "        AND UPPER(NVL(CAR.SERIE, '--')) LIKE  UPPER('%"+serie+"%')\n" +
 "        AND UPPER(EST.NOMBRE) LIKE  UPPER('%"+estado+"%')\n" +
+"        AND UPPER(USU.DSC_NOMBRE_COMPLETO) LIKE  UPPER('%"+oficialAsignado.replace(' ', '%')+"%')\n" +
 "	ORDER BY UBIC.DETALLE  "+tipoOrden+",  "+orden1+" "+tipoOrden+", "+orden2+" "+tipoOrden+", "+orden3+" "+tipoOrden;
+        
         return sql;
     }
     

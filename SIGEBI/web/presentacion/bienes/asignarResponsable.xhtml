@@ -1,0 +1,308 @@
+<ice:form id="frm_AsignarResponsable" 
+          xmlns:ice="http://www.icesoft.com/icefaces/component"
+          xmlns:h="http://java.sun.com/jsf/html"
+          xmlns:f="http://java.sun.com/jsf/core"
+          xmlns:ui="http://java.sun.com/jsf/facelets"
+          >
+
+
+    <div class="contenido-pagina">
+
+        <div class="container"> 
+            <!-- Titulo -->
+            <div class="row">
+                <div class='col-sm-10'>
+                    <h1 style="margin: 0;">
+                        <ice:outputFormat value="#{label['sigebi.Responsable.Titulo']}"/>
+                    </h1>
+                </div> 
+                <div class='col-sm-2'>
+                </div>
+            </div>
+
+
+
+            <!-- SELECCIONAR PROVEEDOR -->
+            <div class="row" style="padding-top: 1rem">
+                <div class="col-sm-8"> 
+                    <div class="form-group">
+                        <ice:outputText value="#{label['sigebi.Responsable.label.Funcionario']}" /> 
+                        <ice:inputText id="txtProvedor" styleClass="form-control" 
+                                       value="#{responsableController.responsableCommand.usuarioCommand.usuarioSeleccionado}"  
+                                       readonly="true" 
+                                       partialSubmit="true"/>
+                    </div>
+                </div>
+                <div class="col-sm-2">
+                    <ice:commandButton id="botonProveedores" 
+                                       value="#{label['sigebi.Bien.Btn.Buscar']}" 
+                                       partialSubmit="true" 
+                                       styleClass="boton" 
+                                       style="margin-top: 1.5rem"
+                                       action="#{responsableController.mostrarPanelUsuarios}"/>
+                </div>
+                <div class="col-sm-2">
+                    <ice:commandButton id="botonProveedoresLimpiar" 
+                                       value="#{label['sigebi.Bien.Btn.Limpiar']}" 
+                                       partialSubmit="true" 
+                                       styleClass="boton" 
+                                       style="margin-top: 1.5rem"
+                                       action="#{responsableController.limpiarUsuario}"/>
+                </div>
+            </div>
+
+
+
+
+
+            <!-- SELECCIONAR BIENES PARA ASIGNAR  -->
+
+            <!-- Listado de Bienes Asociados-->
+            <div class="row">
+                <div class="col-sm-12">
+
+                    <ice:panelGroup visible="true" style="padding-top: 1rem">
+
+
+
+                        <div class="container" style="overflow: auto; padding-bottom: 20px;">
+
+
+                            <!-- Tabla de Bienes Asociados -->
+                            <div class="row">
+
+
+                                <div class="col-sm-10">
+                                    <h4>
+                                        <ice:outputFormat
+                                            value="#{label['sigebi.Responsable.label.SeleccionarBienes']}"
+                                            />
+                                    </h4>
+                                </div>
+
+                                <div class="col-sm-2">
+
+                                    <ice:commandButton id="btnBuscarBienes"
+                                                       partialSubmit="true"
+                                                       style="margin-bottom: 1rem"
+                                                       action="#{responsableController.abrirListaBienes}"
+                                                       styleClass="boton"  
+                                                       value="#{label['sigebi.Acta.Btn.Buscar']}" />
+
+                                </div>
+                            </div>
+
+
+                            <!-- Data Table -->
+                            <div class="row" >
+                                <div class="col-sm-12">
+                                    <div>
+                                        <ice:dataTable id="informesTecnicos"
+                                                       value="#{responsableController.bienesAsociados}"
+                                                       var="detalle"
+                                                       paginator="true"
+                                                       paginatorPosition="bottom"
+                                                       rows="10">
+                                            <ice:column id="idBien">                                 
+                                                <f:facet name="header">
+                                                    <ice:columnGroup>
+                                                        <ice:headerRow>
+                                                            <ice:outputText value="#{label['sigebi.label.vista.listarBienSincronizar.identificacion']} "/>
+                                                        </ice:headerRow>
+                                                    </ice:columnGroup>
+                                                </f:facet>
+                                                <h:outputText id="idBienCell" value="#{detalle.identificacion.identificacion}"/>
+                                            </ice:column>
+
+                                            <ice:column id="descripcion">
+                                                <f:facet name="header">
+                                                    <ice:columnGroup>
+                                                        <ice:headerRow>
+                                                            <ice:outputText value="#{label['sigebi.label.vista.listarBienSincronizar.descripcion']} "/>
+                                                        </ice:headerRow>
+                                                    </ice:columnGroup>
+                                                </f:facet>                                
+                                                <h:outputText id="descripcionCell" value="#{detalle.descripcion}"/>
+                                            </ice:column>
+
+
+                                            <ice:column id="colMarca">
+                                                <f:facet name="header">
+                                                    <ice:columnGroup>
+                                                        <ice:headerRow>
+                                                            <ice:outputText value="#{label['sigebi.label.vista.listarBienSincronizar.marca']} "/>
+                                                        </ice:headerRow>
+                                                    </ice:columnGroup>
+                                                </f:facet>                                
+                                                <h:outputText id="marcaCell" value="#{detalle.resumenBien.marca}"/>
+                                            </ice:column>
+
+                                            <ice:column id="colModelo">
+                                                <f:facet name="header">
+                                                    <ice:columnGroup>
+                                                        <ice:headerRow>
+                                                            <ice:outputText value="#{label['sigebi.label.vista.listarBienSincronizar.modelo']}"/>
+                                                        </ice:headerRow>
+                                                    </ice:columnGroup>
+                                                </f:facet>                                 
+                                                <h:outputText id="modeloCell" value="#{detalle.resumenBien.modelo}"/>
+                                            </ice:column>
+
+                                            <!-- Columna de ESTADO ASIGNACIÓN -->
+                                            <ice:column id="colAcciones">
+                                                <f:facet name="header">
+                                                    <ice:columnGroup>
+                                                        <ice:headerRow>
+                                                            <ice:outputText value="#{label['sigebi.label.vista.listarBienSincronizar.estado']}"/>
+                                                        </ice:headerRow>
+                                                    </ice:columnGroup>
+                                                </f:facet>                                
+
+                                                <h:outputText id="estadoCell" 
+                                                              rendered="#{!detalle.marcado}"
+                                                              value="#{detalle.estado.nombre}"/>
+
+                                            </ice:column>
+
+
+                                            <!-- Columna Eliminar -->
+                                            <ice:column id="colElimin"
+                                                        >
+                                                <f:facet name="header">
+                                                    <ice:columnGroup>
+                                                        <ice:headerRow>
+                                                            <ice:outputText value="#{label['sigebi.label.vista.listarBienSincronizar.eliminar']}"/>
+                                                        </ice:headerRow>
+                                                    </ice:columnGroup>
+                                                </f:facet>
+
+                                                <ice:commandButton id="btnEliminarBien"
+                                                                   style="margin-top:2%" 
+                                                                   styleClass="btnEliminar" 
+                                                                   partialSubmit="true"  
+                                                                   actionListener="#{responsableController.quitarBienSeleccionado}"
+                                                                   >
+                                                    <f:attribute id="bienSeleccionado" name="bienSeleccionado"  value="#{detalle}"/> 
+                                                </ice:commandButton>   
+
+                                            </ice:column>
+
+                                        </ice:dataTable>
+
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>  
+
+
+
+                    </ice:panelGroup>
+
+
+                </div>
+            </div>
+
+            <!-- Acciones  -->
+            <div class="row" style="margin-bottom: 1rem">
+
+
+                <div class="col-sm-8">
+                    
+                    <!--
+                    <ice:commandButton id="btnMisBienes" 
+                                       value="#{label['sigebi.Responsable.btnVerMisBienes']}" 
+                                       action="#{responsableController.verMisBienesAsignados}" 
+                                       partialSubmit="true" 
+                                       style="float: left" 
+                                       styleClass="boton"/>
+                    -->
+                </div>
+
+                <div class="col-sm-2">
+
+
+                </div>
+                <div class="col-sm-2">
+                    <ice:commandButton id="botonGuardar" 
+                                       value="#{label['label.login.listado.boton.aceptar']}" 
+                                       action="#{responsableController.guardarAsignacionConfirmacion}" 
+                                       partialSubmit="true" 
+                                       style="float: right" 
+                                       rendered="#{responsableController.validarFormulario}"
+                                       styleClass="boton"/>
+
+                </div>
+            </div>
+
+
+
+
+        </div>
+    </div>
+
+
+
+
+
+
+    <!-- Agrega el model para buscar Bienes -->
+    <ui:insert name="modalBuscarBienes">
+        <ui:include src="../plantillas/buscarBienesAsignarResponsable.xhtml" />
+    </ui:insert>
+
+
+    <!-- Panel de Usuarios --> 
+    <ui:insert name="modalUsuario">
+        <ui:include src="../bienes/asignarRespUsuario.xhtml" />
+    </ui:insert>
+
+
+
+    <!-- Modal para confirmar -->
+    <ice:panelPopup modal="true" visible="#{responsableController.responsableCommand.visiblePanelConfirmacion}" styleClass="popup">
+        <f:facet name="body">
+            <fieldset class="panel_Container" >
+                <div class="container" style="margin-top: 20px;">
+                    <!-- Titulo -->
+                    <div class="row">
+                        <div class='col-sm-12'>
+                            <h1 style="margin: 0px;">
+                                <ice:outputFormat value="#{label['sigebi.label.prestamos.confirmacion.titulo']}"/>
+                            </h1>
+                        </div>                
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12" style="margin-top: 20px;">
+                            <ice:outputFormat value="#{label['sigebi.Responsable.label.ConfirmaGuardar']}"/>
+                        </div>
+                    </div>
+                    <div class="row" style="margin-top: 20px; margin-bottom: 20px;">
+                        <div class='col-md-6'>
+                            <ice:commandButton id="btnCerrarPanel" 
+                                               value="#{label['label.regresar']}" 
+                                               action="#{responsableController.cerrarPanelConfirmar}" 
+                                               partialSubmit="true" 
+                                               rendered="true" 
+                                               style="float: left" 
+                                               styleClass="boton" />
+                        </div>
+                        <div class="col-md-6">
+                            <ice:commandButton id="botonAceptarGuardar" 
+                                               value="#{label['label.login.listado.boton.aceptar']}" 
+                                               action="#{responsableController.guardarAsignacion}" 
+                                               partialSubmit="true" 
+                                               style="float: right" 
+                                               styleClass="boton"/>
+                        </div>
+                    </div>
+                </div>                
+            </fieldset>       
+        </f:facet>  
+    </ice:panelPopup>
+    
+    
+
+
+</ice:form>
+

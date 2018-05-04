@@ -13,7 +13,11 @@ import cr.ac.ucr.sigebi.domain.Bien;
 import cr.ac.ucr.sigebi.domain.Estado;
 import cr.ac.ucr.sigebi.domain.ReporteSobrantes;
 import cr.ac.ucr.sigebi.domain.Tipo;
+import cr.ac.ucr.sigebi.domain.TomaFisica;
+import cr.ac.ucr.sigebi.domain.TomaFisicaSobrante;
 import cr.ac.ucr.sigebi.models.BienModel;
+import cr.ac.ucr.sigebi.models.TomaFisicaModel;
+import cr.ac.ucr.sigebi.models.TomaFisicaSobranteModel;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -21,6 +25,7 @@ import java.util.Map;
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import javax.faces.component.UIViewRoot;
+import javax.faces.event.ActionEvent;
 import javax.faces.model.SelectItem;
 import net.sf.jasperreports.engine.JasperCompileManager;
 import net.sf.jasperreports.engine.JasperExportManager;
@@ -38,7 +43,27 @@ import org.springframework.stereotype.Controller;
 @Scope("session")
 public class GenerarReporteSobrantesController extends BaseController {
     
+    private static class Parametros {
+        private static final String IDENTIFICACION = "IDENTIFICACION";
+	private static final String DESCRIPCION = "DESCRIPCION";
+	private static final String MARCA = "MARCA";
+	private static final String MODELO = "MODELO";
+	private static final String SERIE = "SERIE";
+	private static final String UNIDAD_CUSTODIO = "UNIDAD_CUSTODIO";
+	private static final String USUARIO = "USUARIO";
+	private static final String TOMA_FISICA = "TOMA_FISICA";
+	private static final String UBICACION = "UBICACION";
+	private static final String UNIDAD_EJECUTORA = "UNIDAD_EJECUTORA";
+        
+        private static final String INSTITUCION = "INSTITUCION";
+        private static final String NOMBRE_REPORTE = "NOMBRE_REPORTE";
+	private static final String VALOR_INSTITUCION = "UNIVERSIDAD DE COSTA RICA";
+        private static final String VALOR_NOMBRE_REPORTE = "Reporte de Bienes Sobrantes";
+    }
+    
     @Resource private BienModel bienModel;
+    @Resource private TomaFisicaModel tomaFisicaModel;
+    @Resource private TomaFisicaSobranteModel tomaFisicaSobranteModel;
     
     private Map<Long, Tipo> tiposReporte;
     private List<SelectItem> itemsTipoReporte;
@@ -58,7 +83,6 @@ public class GenerarReporteSobrantesController extends BaseController {
 
     public GenerarReporteSobrantesController() {
         super();
-        this.inicializarDatos();
     }
 
     @PostConstruct
@@ -105,71 +129,82 @@ public class GenerarReporteSobrantesController extends BaseController {
         }
     }
     
-    private void inicializarDatos() {
+    public void detalleReporteSobrantes(ActionEvent event) {
+        Long id = (Long)event.getComponent().getAttributes().get("idTomaFisica");
+
         this.mensaje = new String();
-        this.command = new GenerarReporteSobrantesCommand();    
+        this.command = new GenerarReporteSobrantesCommand(id);
+
+        Util.navegar(Constantes.KEY_REPORTE_SOBRANTES);
     }
     
     public String validarForm(UIViewRoot root) {
         if (this.command.getIdTipo().equals(Constantes.DEFAULT_ID)) {
             return Util.getEtiquetas("sigebi.label.reporteBien.error.tipo");
         }
-        
         return Constantes.OK;
     }
     
     public void generarReporte() {
         try {
             //reportes/reporteSobrantes.jrxml
-            Estado estado = this.estadosBien.get(this.command.getIdEstado());
-            List<Bien> bienes = this.bienModel.listarReporteSobrantes(this.command.getIdentificacion(), this.command.getDescripcion(), this.command.getMarca(), this.command.getModelo(), this.command.getSerie(), this.command.getUsuario(), estado);
-            if (!bienes.isEmpty()) {
+            TomaFisica tomaFisica = this.tomaFisicaModel.buscarPorId(this.command.getIdTomaFisica());
+            List<TomaFisicaSobrante> sobrantes = this.tomaFisicaSobranteModel.listarReporte(tomaFisica, this.command.getIdentificacion(),  
+                    this.command.getUbicacion(), this.command.getDescripcion(), this.command.getSerie(), this.command.getMarca(), this.command.getModelo(),
+                    this.command.getIdOrden().equals(-1L)?null:this.tipoPorId(this.command.getIdOrden()).getNombre(),
+                    this.command.getIdOrden1().equals(-1L)?null:this.tipoPorId(this.command.getIdOrden1()).getNombre(),
+                    this.command.getIdOrden2().equals(-1L)?null:this.tipoPorId(this.command.getIdOrden2()).getNombre(),
+                    this.command.getIdOrden3().equals(-1L)?null:this.tipoPorId(this.command.getIdOrden3()).getNombre());
+            if (!sobrantes.isEmpty()) {
                 String template = cr.ac.ucr.framework.reporte.componente.utilitario.Util.ConvertirRutas("/reportes/reporteSobrantes.jrxml");
                 String jasperFile = cr.ac.ucr.framework.reporte.componente.utilitario.Util.ConvertirRutas("/reportes/reporteSobrantes.jasper");
                 String outputFile = cr.ac.ucr.framework.reporte.componente.utilitario.Util.ConvertirRutas("/reportes/reporteSobrantes.pdf");
                 
                 JasperCompileManager.compileReportToFile(template, jasperFile);
                 ArrayList<ReporteSobrantes> datosReporte = new ArrayList<ReporteSobrantes>();
-                for (Bien bien : bienes) {
-                    ReporteSobrantes dato = new ReporteSobrantes(bien);
+                for (TomaFisicaSobrante bienSobrante : sobrantes) {
+                    ReporteSobrantes dato;
+                    if (!bienSobrante.getIdentificacion().isEmpty()) {
+                        Bien bien = this.bienModel.buscarPorIdentificacion(bienSobrante.getIdentificacion());
+                        if (bien != null) {
+                            dato = new ReporteSobrantes(bienSobrante, bien.getEstado());
+                        } else {
+                            dato = new ReporteSobrantes(bienSobrante, null);
+                        }
+                    } else {
+                        dato = new ReporteSobrantes(bienSobrante, null);
+                    }
                     datosReporte.add(dato);
                 }
                 
                 JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(datosReporte);
-                JasperPrint jasperPrint = JasperFillManager.fillReport(jasperFile, generarParametros(), dataSource);
+                JasperPrint jasperPrint = JasperFillManager.fillReport(jasperFile, generarParametros(tomaFisica), dataSource);
                 JasperExportManager.exportReportToPdfFile(jasperPrint, outputFile);
-            }
-            Mensaje.agregarInfo("Reporte generado exitosamente");
+                Mensaje.agregarInfo("Reporte generado exitosamente");
+            } else {
+                Mensaje.agregarErrorAdvertencia("No hay sobrantes en esta Toma");
+            }            
         } catch (Exception err) {
             Mensaje.agregarErrorAdvertencia(err.getMessage());
             this.mensaje = err.getMessage();
         }
     }
     
-    public Map generarParametros() {
+    public Map generarParametros(TomaFisica tomaFisica) {
         Map parametros = new HashMap();
-        parametros.put("institucion", Constantes.REPORTE_SOBRANTES_PARAMETRO_INSTITUCION);
-        parametros.put("nombreReporte", Constantes.REPORTE_SOBRANTES_PARAMETRO_NOMBRE);
-        parametros.put("unidadEjecutora", this.unidadEjecutora.getDescripcion());
-        parametros.put("identificacion", this.command.getIdentificacion());
-        parametros.put("descripcion", this.command.getDescripcion());
-        parametros.put("marca", this.command.getMarca());
-        parametros.put("modelo", this.command.getModelo());
-        parametros.put("serie", this.command.getSerie());
+        parametros.put(Parametros.INSTITUCION, Parametros.VALOR_INSTITUCION);
+        parametros.put(Parametros.NOMBRE_REPORTE, Parametros.VALOR_NOMBRE_REPORTE);
         
-        if (this.command.getIdEstado().equals(Constantes.DEFAULT_ID)) {
-               parametros.put("nomEstado", null);
-        } else {
-            parametros.put("nomEstado", this.estadosBien.get(this.command.getIdEstado()).getNombre());
-        }
-        parametros.put("usuario", this.usuarioSIGEBI.getNombreCompleto());
-        parametros.put("unidadCustodio", unidadEjecutora.getDescripcion());
-        
-        parametros.put("unidadDestino", null);
-        parametros.put("unidadOrigen", null);
-        parametros.put("tomaFisica", null);
-        parametros.put("ubicacion", null);
-        
+        parametros.put(Parametros.IDENTIFICACION, this.command.getIdentificacion());
+        parametros.put(Parametros.DESCRIPCION, this.command.getDescripcion());
+        parametros.put(Parametros.MARCA, this.command.getMarca());
+        parametros.put(Parametros.MODELO, this.command.getModelo());
+        parametros.put(Parametros.SERIE, this.command.getSerie());
+        parametros.put(Parametros.UNIDAD_CUSTODIO, unidadEjecutora.getDescripcion());
+        parametros.put(Parametros.USUARIO, this.usuarioSIGEBI.getNombreCompleto());
+        parametros.put(Parametros.TOMA_FISICA, tomaFisica.getId());
+        parametros.put(Parametros.UBICACION, null);
+        parametros.put(Parametros.UNIDAD_EJECUTORA, tomaFisica.getUnidadEjecutora().getDescripcion());
         return parametros;
     }
     

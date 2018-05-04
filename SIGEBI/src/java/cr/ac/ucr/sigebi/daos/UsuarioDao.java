@@ -8,13 +8,13 @@ package cr.ac.ucr.sigebi.daos;
 import cr.ac.ucr.framework.daoHibernate.DaoHelper;
 import cr.ac.ucr.framework.daoImpl.GenericDaoImpl;
 import cr.ac.ucr.framework.utils.FWExcepcion;
+import cr.ac.ucr.sigebi.domain.UnidadEjecutora;
 import cr.ac.ucr.sigebi.domain.Usuario;
 import java.util.List;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -120,4 +120,23 @@ public class UsuarioDao extends GenericDaoImpl {
         return q;
     }
 
+    @Transactional(readOnly = true)
+    public List<Usuario> listarUsuariosUnidad(UnidadEjecutora unidadEjecutora) throws FWExcepcion {
+        Session session = this.dao.getSessionFactory().openSession();
+        try {
+            //Se genera el query para la busqueda
+            String sql = "SELECT obj.usuario FROM UnidadEjecutoraUsuario obj ";
+            sql = sql + " WHERE  obj.unidadEjecutora = :unidadEjecutora ";
+            Query q = session.createQuery(sql);
+            q.setParameter("unidadEjecutora", unidadEjecutora);
+        
+            //Se obtienen los resutltados
+            return (List<Usuario>) q.list();
+
+        } catch (HibernateException e) {
+            throw new FWExcepcion("sigebi.error.dao.usuarioDao.listarUsuariosUnidad","Error obtener los registros de tipo " + this.getClass(), e.getCause());
+        } finally {
+            session.close();
+        }
+    }
 }

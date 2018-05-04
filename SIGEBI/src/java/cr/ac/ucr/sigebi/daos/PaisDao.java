@@ -23,7 +23,6 @@ import org.springframework.transaction.annotation.Transactional;
  * @author jairo.cisneros
  */
 @Repository(value = "paisDao")
-
 public class PaisDao extends GenericDaoImpl {
 
     @Autowired

@@ -53,6 +53,10 @@ public class TomaFisica extends ObjetoBase implements Serializable {
     @ManyToOne
     private Ubicacion ubicacion;
 
+    @ManyToOne
+    @JoinColumn(name = "ID_UNIDAD_EJECUTORA", referencedColumnName = "ID")
+    private UnidadEjecutora unidadEjecutora;
+
     @Transient
     private List<TomaFisicaUnitaria> tomasUnitarias;
 
@@ -111,6 +115,14 @@ public class TomaFisica extends ObjetoBase implements Serializable {
 
     public void setUbicacion(Ubicacion ubicacion) {
         this.ubicacion = ubicacion;
+    }
+
+    public UnidadEjecutora getUnidadEjecutora() {
+        return unidadEjecutora;
+    }
+
+    public void setUnidadEjecutora(UnidadEjecutora unidadEjecutora) {
+        this.unidadEjecutora = unidadEjecutora;
     }
 
     public List<TomaFisicaUnitaria> getTomasUnitarias() {

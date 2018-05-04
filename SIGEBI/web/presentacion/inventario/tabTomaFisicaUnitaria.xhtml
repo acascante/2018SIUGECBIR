@@ -146,5 +146,178 @@
                 </div>
             </div>                
         </div>
+        
+        
+        <div class="container-fluid">
+            
+
+            <div class="row">
+                <div class="col-lg-6">
+                    <h3 style="margin-top: 12px;">
+                        <ice:outputFormat value="#{label['sigebi.CargarInventario.Label']}"/>
+                    </h3>
+                </div>
+
+                <div class="col-lg-6">
+                    <ice:inputFile id="inputFileComponent2" 
+                                   styleClass="boton btn-file" 
+                                   style="
+                                            color: #FFFFFF; 
+                                            border: 0 none; 
+                                            border-radius: 2px 2px 2px 2px; 
+                                            background: none repeat scroll 0 0 #0090D8;
+                                            cursor: pointer; 
+                                            display: inline-block; 
+                                            font-family: Arial,sans-serif; 
+                                            font-size: 16px; 
+                                            font-weight: lighter;
+                                            line-height: 20px; 
+                                            margin-bottom: 0; 
+                                            padding: 4px 10px; 
+                                            text-transform: none; 
+                                            transition: all 0.3s ease 0s;
+                                            -moz-transition: all 0.3s ease 0s; 
+                                            -webkit-transition: all 0.3s ease 0s; 
+                                            text-align: center; 
+                                            text-shadow: none;
+                                            min-height: 37px;
+                                            margin-bottom: 30px;
+                                   "
+                                   actionListener="#{controllerTomaFisica.subirFile}">
+                    </ice:inputFile>
+
+                </div>
+            </div>
+
+
+
+
+            <div class="row" style="max-height: 300px; overflow: auto;">
+                <div class="col-md-12">
+
+
+                    <ice:dataTable id="cargaTomasFisicasUnitarias"
+                                   value="#{controllerTomaFisica.tomaFisicaCommand.objetosCarga}"
+                                   var="objetoCarga"
+                                   paginator="true"
+                                   paginatorPosition="bottom">
+
+                        <ice:column id="colIdentificacion">
+                            <f:facet name="header">
+                                <ice:columnGroup>
+                                    <ice:headerRow>
+                                       <ice:outputText value="#{label['sigebi.label.vista.detalleTomaFisica.bien.identificacion']}"/>
+                                    </ice:headerRow>
+                                </ice:columnGroup>
+                            </f:facet>                                
+                            <h:outputText id="colIdentificacionTxt" value="#{objetoCarga.identificacion}"/>
+                        </ice:column>
+
+                        <ice:column id="colDescripcion">
+                            <f:facet name="header">
+                                <ice:columnGroup>
+                                    <ice:headerRow>
+                                       <ice:outputText value="#{label['sigebi.label.vista.detalleTomaFisica.bien.descripcion']}"/>
+                                    </ice:headerRow>
+                                </ice:columnGroup>
+                            </f:facet>                                
+                            <h:outputText id="colDescripcionTxt" value="#{objetoCarga.descripcion}"/>
+                        </ice:column>
+
+
+                        <ice:column id="colErrorCarga">
+                            <f:facet name="header">
+                                <ice:columnGroup>
+                                    <ice:headerRow>
+                                       <ice:outputText value="#{label['sigebi.CargarInventario.ColError']}"/>
+                                    </ice:headerRow>
+                                </ice:columnGroup>
+                            </f:facet>                             
+                            <h:outputText id="colDescripcionTxt" value="#{objetoCarga.descripcionError}"/>
+                        </ice:column>
+
+
+
+                    </ice:dataTable>
+
+                </div>
+
+            </div>
+
+
+            <div class="row" style="">
+                <div class="col-md-6">
+
+                    <a id="btnDocumentoCargar"
+                       style=" color: white; margin-top: 10px; margin-botton: 10px;"
+                       class="btn btn-info"
+                       href="Documentos/CargarBienes.xlsx"
+                       >Descargar Plantilla
+                    </a>
+                    <!--
+                    <ice:commandLink id="btnDocumentoCargar"
+                                     value="Descargar Plantilla"
+                                     action="/Documentos/CargarBienes.xlsx"
+                                     >
+
+                    </ice:commandLink>
+                    -->
+                </div>
+
+                <div class="col-md-6">
+
+                        <ice:commandButton id="btnSincronizarTodo"
+                                            style="float:right; margin-top: 15px;"    
+                                            action="#{controllerTomaFisica.procesarCargaUnitaria}"    
+                                            styleClass="boton" 
+                                            rendered="#{controllerTomaFisica.tomaFisicaCommand.procesarCargaUnitaria}"
+                                            partialSubmit="true"
+                                            value="#{label['sigebi.CargarInventario.ProcesarDatos']}"  >                             
+                        </ice:commandButton>            
+
+
+                </div>
+            </div>
+
+
+
+            <ice:outputHtml id="panelErrores"
+                            style="max-height: 300px; overflow: auto;"
+                            rendered="#{controllerTomaFisica.tomaFisicaCommand.mostrarErroresCargaUnitaria}"
+                            >
+               <div class="row">
+                   <div class="col-md-12">
+                       <h4>
+                           <h:outputText value="#{label['sigebi.CargarInventario.LabelErrores']}"/>
+                       </h4>
+                   </div>
+               </div>
+               <div class="row">
+                   <div class="col-md-6">
+
+
+                    <ice:dataTable id="tblErroresTomasUnitarias"
+                                   value="#{controllerTomaFisica.tomaFisicaCommand.erroresRegistradosCargaUnitaria}"
+                                   var="error">
+
+                        <ice:column id="colIdentificacion">
+                            <f:facet name="header">
+                                <ice:columnGroup>
+                                    <ice:headerRow>
+                                       <ice:outputText value="#{label['sigebi.label.vista.detalleTomaFisica.bien.identificacion']}"/>
+                                    </ice:headerRow>
+                                </ice:columnGroup>
+                            </f:facet>                                
+                            <h:outputText id="colIdentificacionTxt" value="#{error}"/>
+                        </ice:column>
+                    </ice:dataTable>
+
+                   </div>
+               </div>
+
+           </ice:outputHtml>
+
+        </div>
+        
     </div>    
 </ice:outputHtml>

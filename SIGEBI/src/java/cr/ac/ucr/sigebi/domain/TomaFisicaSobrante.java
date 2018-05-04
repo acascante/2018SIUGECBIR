@@ -50,9 +50,8 @@ public class TomaFisicaSobrante extends ObjetoBase implements Serializable {
     @JoinColumn(name = "ID_SUB_CLASIFICACION", referencedColumnName = "ID_SUB_CLASIFICACION")
     private SubClasificacion subClasificacion;
 
-    @JoinColumn(name = "ID_UBICACION", referencedColumnName = "ID_UBICACION", nullable = true)
-    @ManyToOne
-    private Ubicacion ubicacion;
+    @Column(name = "UBICACION")
+    private String ubicacion;
     
     @Column(name = "MARCA")
     private String marca;
@@ -115,11 +114,11 @@ public class TomaFisicaSobrante extends ObjetoBase implements Serializable {
         this.subClasificacion = subClasificacion;
     }
 
-    public Ubicacion getUbicacion() {
+    public String getUbicacion() {
         return ubicacion;
     }
 
-    public void setUbicacion(Ubicacion ubicacion) {
+    public void setUbicacion(String ubicacion) {
         this.ubicacion = ubicacion;
     }
 

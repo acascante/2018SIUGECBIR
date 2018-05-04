@@ -138,6 +138,18 @@ public class Bien extends ObjetoBase implements Serializable {
     @JoinColumn(name = "ID_USUARIO_REGISTRA", referencedColumnName = "ID_USUARIO")
     private Usuario usuarioRegistra;
     
+            
+    @ManyToOne
+    @JoinColumn(name = "ID_RESPONSABLE", referencedColumnName = "ID_USUARIO")
+    private Usuario usuarioResponsable;
+    
+    
+    @ManyToOne
+    @JoinColumn(name = "ID_ESTADO_ASIGNACION", referencedColumnName = "ID_ESTADO")
+    private Estado estadoAsignacion;
+    
+    
+    
     @Transient
     private List<Accesorio> accesorios;
     
@@ -148,6 +160,25 @@ public class Bien extends ObjetoBase implements Serializable {
     //</editor-fold>
 
     //<editor-fold defaultstate="collapsed" desc="GET's y SET's">
+
+    public Usuario getUsuarioResponsable() {
+        return usuarioResponsable;
+    }
+
+    public void setUsuarioResponsable(Usuario usuarioResponsable) {
+        this.usuarioResponsable = usuarioResponsable;
+    }
+
+    public Estado getEstadoAsignacion() {
+        return estadoAsignacion;
+    }
+
+    public void setEstadoAsignacion(Estado estadoAsignacion) {
+        this.estadoAsignacion = estadoAsignacion;
+    }
+    
+    
+    
     public Long getId() {
         return id;
     }
@@ -459,6 +490,7 @@ public class Bien extends ObjetoBase implements Serializable {
         hash = 23 * hash + (this.estado != null ? this.estado.hashCode() : 0);
         hash = 23 * hash + (this.lote != null ? this.lote.hashCode() : 0);
         hash = 23 * hash + (this.capitalizable != null ? this.capitalizable.hashCode() : 0);
+        
         hash = 23 * hash + (this.ubicacion != null ? this.ubicacion.hashCode() : 0);
         hash = 23 * hash + (this.descripcionUbicacion != null ? this.descripcionUbicacion.hashCode() : 0);
         hash = 23 * hash + (this.estadoInterno != null ? this.estadoInterno.hashCode() : 0);

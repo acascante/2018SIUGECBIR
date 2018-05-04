@@ -45,6 +45,7 @@
     <mapping class="cr.ac.ucr.sigebi.domain.RegistroMovimientoConvenio"/>
     <mapping class="cr.ac.ucr.sigebi.domain.RegistroMovimientoSolicitud"/>
     <mapping class="cr.ac.ucr.sigebi.domain.RegistroMovimientoDocumento"/>
+    <mapping class="cr.ac.ucr.sigebi.domain.RegistroMovimientoAsignacionPlaca"/>    
     <mapping class="cr.ac.ucr.sigebi.domain.ReporteBien"/>
     <mapping class="cr.ac.ucr.sigebi.domain.Rol"/>
     <mapping class="cr.ac.ucr.sigebi.domain.Solicitud"/>
@@ -60,6 +61,7 @@
     <mapping class="cr.ac.ucr.sigebi.domain.Tipo"/>
     <mapping class="cr.ac.ucr.sigebi.domain.Ubicacion"/>
     <mapping class="cr.ac.ucr.sigebi.domain.UnidadEjecutora"/>
+    <mapping class="cr.ac.ucr.sigebi.domain.UnidadEjecutoraUsuario"/>
     <mapping class="cr.ac.ucr.sigebi.domain.Usuario"/>
     <mapping class="cr.ac.ucr.sigebi.domain.ViewResumenBien"/>
     <mapping class="cr.ac.ucr.sigebi.domain.Factura"/>
@@ -75,41 +77,10 @@
     <mapping class="cr.ac.ucr.sigebi.domain.TomaFisicaLote"/>
     <mapping class="cr.ac.ucr.sigebi.domain.TomaFisicaUnitaria"/>
     <mapping class="cr.ac.ucr.sigebi.domain.TomaFisicaSobrante"/>
+
+    <mapping class="cr.ac.ucr.sigebi.domain.AsignacionPlaca"/>
     
-    <!--<mapping class="cr.ac.ucr.sigebi.entities.AccesoriosEntity"/>
-    <mapping class="cr.ac.ucr.sigebi.entities.ActaDetalleEntity"/>
-    <mapping class="cr.ac.ucr.sigebi.entities.ActaEntity"/>
-    <mapping class="cr.ac.ucr.sigebi.entities.AdjuntoEntity"/>
-    <mapping class="cr.ac.ucr.sigebi.entities.AdjuntoBienEntity"/>
-    <mapping class="cr.ac.ucr.sigebi.entities.BienEntity"/>
-    <mapping class="cr.ac.ucr.sigebi.entities.CategEntity"/>
-    <mapping class="cr.ac.ucr.sigebi.entities.ClasificacionEntity"/>
-    <mapping class="cr.ac.ucr.sigebi.entities.DatoBienEntity"/>
-    <mapping class="cr.ac.ucr.sigebi.entities.DocumentoEntity"/>
-    <mapping class="cr.ac.ucr.sigebi.entities.DocumentoRolEntity"/>
-    <mapping class="cr.ac.ucr.sigebi.entities.DocumentoRolEstadoEntity"/>
-    <mapping class="cr.ac.ucr.sigebi.entities.DocumentoRolPersonaEntity"/>
-    <mapping class="cr.ac.ucr.sigebi.entities.EstadoEntity"/>
-    <mapping class="cr.ac.ucr.sigebi.entities.ExclusionDetalleEntity"/>
-    <mapping class="cr.ac.ucr.sigebi.entities.ExclusionEntity"/>
-    <mapping class="cr.ac.ucr.sigebi.entities.InformeTecnicoEntity"/>
-    <mapping class="cr.ac.ucr.sigebi.entities.LoteEntity"/>
-    <mapping class="cr.ac.ucr.sigebi.entities.MonedaEntity"/>
-    <mapping class="cr.ac.ucr.sigebi.entities.NotaEntity"/>
-    <mapping class="cr.ac.ucr.sigebi.entities.PersonaEntity"/>
-    <mapping class="cr.ac.ucr.sigebi.entities.PlacasEntity"/>
-    <mapping class="cr.ac.ucr.sigebi.entities.ProveedorEntity"/>
-    <mapping class="cr.ac.ucr.sigebi.entities.RegistroMovimientoEntity"/>
-    <mapping class="cr.ac.ucr.sigebi.entities.RolEntity"/>
-    <mapping class="cr.ac.ucr.sigebi.entities.SubClasificacionEntity"/>
-    <mapping class="cr.ac.ucr.sigebi.entities.SubCategoriaEntity"/>
-    <mapping class="cr.ac.ucr.sigebi.entities.TipoEntity"/>
-    <mapping class="cr.ac.ucr.sigebi.entities.UbicacionBien"/>
-    <mapping class="cr.ac.ucr.sigebi.entities.ViewBienEntity"/>
-    <mapping class="cr.ac.ucr.sigebi.entities.SincronizarEntity"/>
-    <mapping class="cr.ac.ucr.sigebi.entities.ViewDocumAprobEntity"/>
-    <mapping class="cr.ac.ucr.sigebi.entities.UnidadEjecutoraEntity"/>
-    <mapping class="cr.ac.ucr.sigebi.entities.JustificacionEntity"/> -->
+    <mapping class="cr.ac.ucr.sigebi.domain.AsignarResponsableHistorico"/>
     
   </session-factory>
 </hibernate-configuration>

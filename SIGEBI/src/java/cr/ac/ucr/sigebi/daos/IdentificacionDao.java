@@ -32,8 +32,7 @@ public class IdentificacionDao extends GenericDaoImpl {
     private DaoHelper dao;
         
     @Transactional(readOnly = true)
-    public Identificacion siguienteDisponible(Estado estado
-                                        , UnidadEjecutora unidadEjecutora
+    public Identificacion siguienteDisponible(Estado estado, UnidadEjecutora unidadEjecutora
     ) throws FWExcepcion {
         Session session = dao.getSessionFactory().openSession();
         try {
@@ -100,6 +99,48 @@ public class IdentificacionDao extends GenericDaoImpl {
             return (Identificacion) query.uniqueResult();
         } catch (HibernateException e) {
             throw new FWExcepcion("sigebi.error.identificacionDao.buscarPorIdentificacion", "Error obtener los registros de tipo " + this.getClass(), e.getCause());
+        } finally {
+            session.close();
+        }
+    }
+    
+    
+    @Transactional(readOnly = true)
+    public Long cantidadDisponibles(UnidadEjecutora unidadEjecutora, Estado estado) throws FWExcepcion {
+        Session session = dao.getSessionFactory().openSession();
+        try {
+            String sql = "SELECT count(obj) FROM Identificacion obj WHERE obj.estado = :estado ";
+            if(unidadEjecutora != null){
+                sql = sql  + " and obj.unidadEjecutora = upper(:unidadEjecutora)";
+            }else{
+                sql = sql  + " and obj.unidadEjecutora is null";
+            }
+            Query query = session.createQuery(sql);
+            query.setParameter("estado", estado);
+            if(unidadEjecutora != null){
+                query.setParameter("unidadEjecutora", unidadEjecutora);
+            }
+            return (Long) query.uniqueResult();
+        } catch (HibernateException e) {
+            throw new FWExcepcion("sigebi.error.identificacionDao.cantidadDisponibles", "Error obtener los registros de tipo " + this.getClass(), e.getCause());
+        } finally {
+            session.close();
+        }
+    }
+
+    @Transactional(readOnly = true)
+    public void reservarIdentificaciones(Long cantidadSolicitada, Long idUnidadEjecutora, Integer estado, Long idAsignacion) throws FWExcepcion {
+        Session session = dao.getSessionFactory().openSession();
+        try {
+            Query query = session.createSQLQuery("CALL SIGEBI_OAF.CAMBIA_ESTADO_IDENTIFICACIONES(:cantidad, :unidadEjecutora, :estado, :idAsignacion)");
+            query.setParameter("cantidad", cantidadSolicitada);
+            query.setParameter("unidadEjecutora", idUnidadEjecutora);
+            query.setParameter("estado", estado);            
+            query.setParameter("idAsignacion", idAsignacion);
+            query.executeUpdate();
+            
+        } catch (HibernateException e) {
+            throw new FWExcepcion("sigebi.error.identificacionDao.reservarIdentificaciones", "Error obtener los registros de tipo " + this.getClass(), e.getCause());
         } finally {
             session.close();
         }

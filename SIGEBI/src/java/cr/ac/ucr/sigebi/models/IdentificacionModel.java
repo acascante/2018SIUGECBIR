@@ -40,4 +40,12 @@ public class IdentificacionModel {
     public Identificacion buscarPorIdentificacion(String identificacion) throws FWExcepcion{
         return identificacionDao.buscarPorIdentificacion(identificacion);
     }
+    
+    public Long cantidadDisponibles(UnidadEjecutora unidadEjecutora, Estado estado) throws FWExcepcion {
+        return identificacionDao.cantidadDisponibles(unidadEjecutora, estado);
+    }
+    
+    public void reservarIdentificaciones(Long cantidadSolicitada, Long idUnidadEjecutora, Integer estado, Long idAsignacion) throws FWExcepcion {
+        identificacionDao.reservarIdentificaciones(cantidadSolicitada, idUnidadEjecutora, estado, idAsignacion);
+    }
 }

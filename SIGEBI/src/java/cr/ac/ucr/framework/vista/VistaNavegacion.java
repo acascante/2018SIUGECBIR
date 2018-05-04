@@ -20,7 +20,7 @@ import org.springframework.stereotype.Controller;
 
 /*
 * @author Adrián Zamora Villalta
-*/
+ */
 @Controller(value = "vistaNavegacion")
 @Scope("session")
 public class VistaNavegacion {
@@ -45,7 +45,7 @@ public class VistaNavegacion {
     private void inicializar() {
         gPaginas = new HashMap();
         gPaginaSeleccionada = "";
-        
+
         //Opciones del menú  
         gPaginas.put(Constantes.KEY_VISTA_LISTAR_BIENES, Constantes.VISTA_LISTAR_BIENES);
         gPaginas.put(Constantes.KEY_VISTA_DETALLE_BIEN, Constantes.VISTA_DETALLE_BIEN);
@@ -53,13 +53,13 @@ public class VistaNavegacion {
         gPaginas.put(Constantes.KEY_VISTA_DETALLE_BIEN_INTERFAZ, Constantes.VISTA_DETALLE_BIEN_INTERFAZ);
 
         gPaginas.put(Constantes.VISTA_SINCRONIZACION_BIEN, Constantes.VISTA_SINCRONIZACION_BIEN_LISTADO);
-        
+
         gPaginas.put(Constantes.VISTA_NOTIFICACION_LISTADO, Constantes.VISTA_NOTIFICACION_LISTADO_PAGINA);
         gPaginas.put(Constantes.VISTA_NOTIFICACION_NUEVA, Constantes.VISTA_NOTIFICACION_NUEVA_PAGINA);
-        
+
         gPaginas.put(Constantes.VISTA_CONVENIO_LISTADO, Constantes.VISTA_CONVENIO_LISTADO_PAGINA);
         gPaginas.put(Constantes.VISTA_CONVENIO_NUEVO, Constantes.VISTA_CONVENIO_NUEVO_PAGINA);
-        
+
         gPaginas.put(Constantes.VISTA_EXCLUSION_LISTADO, Constantes.VISTA_EXCLUSION_LISTADO_PAGINA);
         gPaginas.put(Constantes.VISTA_EXCLUSION_NUEVA, Constantes.VISTA_EXCLUSION_NUEVA_PAGINA);
 
@@ -75,7 +75,7 @@ public class VistaNavegacion {
         //ACTAS
         gPaginas.put(Constantes.KEY_VISTA_ACTA, Constantes.VISTA_ACTA);
         gPaginas.put(Constantes.KEY_VISTA_LISTAR_ACTAS, Constantes.VISTA_LISTAR_ACTAS);
-       
+
         //TRASLADOS
         gPaginas.put(Constantes.KEY_VISTA_TRASLADOS_LISTAR, Constantes.VISTA_TRASLADOS_LISTAR);
         gPaginas.put(Constantes.KEY_VISTA_TRASLADO_DETALLE, Constantes.VISTA_TRASLADO_DETALLE);
@@ -84,24 +84,37 @@ public class VistaNavegacion {
         //Donaciones
         gPaginas.put(Constantes.KEY_VISTA_SOLICITUD_DONACION_LISTADO, Constantes.VISTA_SOLICITUD_DONACION_LISTADO);
         gPaginas.put(Constantes.KEY_VISTA_SOLICITUD_DONACION_DETALLE, Constantes.VISTA_SOLICITUD_DONACION_DETALLE);
-        
+
         //REPORTES
         gPaginas.put(Constantes.KEY_VISTA_REPORTE_TRASLADO, Constantes.VISTA_REPORTE_TRASLADO);
         gPaginas.put(Constantes.KEY_VISTA_REPORTE_MOVIMIENTOS, Constantes.VISTA_REPORTE_MOVIMIENTOS);
         //gPaginas.put(Constantes.KEY_VISTA_REPORTE_BIENES, Constantes.VISTA_REPORTE_BIENES);
         gPaginas.put(Constantes.KEY_REPORTE_INVENT_FALTANTES, Constantes.VISTA_REPORTE_INVENT_FALTANTES);
         gPaginas.put(Constantes.KEY_REPORTE_SOBRANTES, Constantes.VISTA_REPORTE_SOBRANTES);
-        
+
         //Interfaz Bien
         gPaginas.put(Constantes.KEY_VISTA_INTERFAZ_BIEN_LISTADO, Constantes.VISTA_INTERFAZ_BIEN_LISTADO);
         gPaginas.put(Constantes.KEY_VISTA_INTERFAZ_BIEN_DETALLE, Constantes.VISTA_INTERFAZ_BIEN_DETALLE);
-        
+
         //Inventarios
         gPaginas.put(Constantes.KEY_VISTA_LISTAR_TOMA_FISICA, Constantes.VISTA_LISTAR_TOMA_FISICA);
         gPaginas.put(Constantes.KEY_VISTA_TOMA_FISICA_DETALLE, Constantes.VISTA_TOMA_FISICA_DETALLE);
 
+        //Asignacion placas
+        gPaginas.put(Constantes.KEY_VISTA_LISTAR_ASIGNACION_PLACA, Constantes.VISTA_LISTAR_ASIGNACION_PLACA);
+        gPaginas.put(Constantes.KEY_VISTA_ASIGNACION_PLACA_DETALLE, Constantes.VISTA_ASIGNACIONPLACA_DETALLE);
+
+        gPaginas.put("inicio", "../inicio.xhtml");
+
         //Ubicaciones
         gPaginas.put(Constantes.KEY_VISTA_UBICACION, Constantes.VISTA_UBICACION);
+        
+        //Asignar Responsable Bienes
+        gPaginas.put(Constantes.KEY_VISTA_ASIGNA_RESPONSABLE, Constantes.VISTA_ASIGNA_RESPONSABLE);
+        
+        //Mis Bienes
+        gPaginas.put(Constantes.KEY_VISTA_MIS_BIENES, Constantes.VISTA_MIS_BIENES);
+        
 
     }//fin del método inicializar
 
@@ -136,7 +149,7 @@ public class VistaNavegacion {
         gPaginaSeleccionada = gPaginas.get(regla).toString();
     }
     // </editor-fold>
-    
+
     // <editor-fold defaultstate="collapsed" desc="Sets y Gets">
     public String getgPaginaAnterior() {
         return gPaginaAnterior;
@@ -145,7 +158,7 @@ public class VistaNavegacion {
     public void setgPaginaAnterior(String gPaginaAnterior) {
         this.gPaginaAnterior = gPaginaAnterior;
     }
-    
+
     public String getgPaginaSeleccionada() {
         return gPaginaSeleccionada;
     }

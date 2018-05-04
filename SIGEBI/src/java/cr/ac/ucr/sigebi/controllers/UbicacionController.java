@@ -9,8 +9,11 @@ import cr.ac.ucr.framework.utils.FWExcepcion;
 import cr.ac.ucr.framework.vista.util.Mensaje;
 import cr.ac.ucr.framework.vista.util.Util;
 import cr.ac.ucr.sigebi.commands.UbicacionCommand;
+import cr.ac.ucr.sigebi.domain.Lote;
 import cr.ac.ucr.sigebi.domain.Ubicacion;
+import cr.ac.ucr.sigebi.domain.Usuario;
 import cr.ac.ucr.sigebi.models.UbicacionModel;
+import cr.ac.ucr.sigebi.models.UsuarioModel;
 import cr.ac.ucr.sigebi.utils.Constantes;
 import cr.ac.ucr.sigebi.utils.NodoSIGEBI;
 import cr.ac.ucr.sigebi.utils.TreeSIGEBI;
@@ -21,6 +24,7 @@ import javax.annotation.Resource;
 import javax.faces.event.ActionEvent;
 import javax.faces.event.PhaseId;
 import javax.faces.event.ValueChangeEvent;
+import javax.faces.model.SelectItem;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
@@ -36,12 +40,15 @@ public class UbicacionController extends BaseController {
     @Resource
     private UbicacionModel ubicacionModel;
 
+    @Resource
+    private UsuarioModel usuarioModel;            
+                
     // Se usan en el jsp
     boolean modificarUbicacion = false;
     boolean agregarUbicacion = false;
 
     UbicacionCommand ubicacionCommand;
-
+    
     //</editor-fold>
     
     //<editor-fold defaultstate="collapsed" desc="Get's & Set's">
@@ -79,14 +86,22 @@ public class UbicacionController extends BaseController {
     }
 
     @PostConstruct
-    public void Inicializar() {
+    public void inicializar() {
         ubicacionCommand = new UbicacionCommand();
+        ubicacionCommand.setTreeSIGEBI(new TreeSIGEBI());
+        ubicacionCommand.getTreeSIGEBI().inicializa(null, "Ubicaciones", "detalle");
+
         this.cargaDatosGenerales();
         this.buscar();
     }
 
-    private void cargaDatosGenerales() {
-
+    private void cargaDatosGenerales() {    
+        ubicacionCommand.setResponsablesOptions(new ArrayList<SelectItem>());
+        for (Usuario usuario : usuarioModel.listarUsuariosUnidad(unidadEjecutora)) {
+            ubicacionCommand.getResponsablesOptions().add(new SelectItem(usuario.getId(), usuario.getNombreCompleto()));
+        }
+        
+        ubicacionCommand.getUsuarioResponsable().setId("-1");
     }
 
     //</editor-fold>
@@ -146,8 +161,6 @@ public class UbicacionController extends BaseController {
             Ubicacion ubicacion = ((Ubicacion) nodoSIGEBI.getObject());
             ubicacionCommand.setUbicacion(new Ubicacion());
             ubicacionCommand.setUbicacionPadre(ubicacion);
-
-            this.cargaDatosGenerales();            
         }else{
             ubicacionCommand.setUbicacion(new Ubicacion());
             ubicacionCommand.setUbicacionPadre(new Ubicacion());            
@@ -223,6 +236,28 @@ public class UbicacionController extends BaseController {
 
     }
 
+    public void cambiarResponsable(ValueChangeEvent event) {
+        try {
+            if (!event.getPhaseId().equals(PhaseId.INVOKE_APPLICATION)) {
+                event.setPhaseId(PhaseId.INVOKE_APPLICATION);
+                event.queue();
+                return;
+            }
+
+            // Se obtiene el id del tipoInforme
+            String valor = ubicacionCommand.getUsuarioResponsable().getId();
+            if (!valor.equals("-1")) {
+                ubicacionCommand.getUbicacion().setResponsable(usuarioModel.buscarPorId(valor));
+            }else{
+                ubicacionCommand.getUbicacion().setResponsable(null);
+            }
+        } catch (FWExcepcion e) {
+            Mensaje.agregarErrorAdvertencia(e.getError_para_usuario());
+        } catch (Exception e) {
+            Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.error.informeTecnicoController.cambiarTipoInforme"));
+        }
+
+    }
     //</editor-fold>
     
     //<editor-fold defaultstate="collapsed" desc="Paginacion">
@@ -243,7 +278,7 @@ public class UbicacionController extends BaseController {
         try {
 
             //Se cuenta la cantidad de registros
-            Long contador = ubicacionModel.contar(ubicacionCommand.getFltDescripcionUbicacion());
+            Long contador = ubicacionModel.contar(ubicacionCommand.getFltDescripcionUbicacion(), null);
 
             //Se actualiza la cantidad de registros segun los filtros
             this.setCantidadRegistros(contador.intValue());
@@ -261,10 +296,11 @@ public class UbicacionController extends BaseController {
     private void listar() {
         try {
 
-            List<Ubicacion> resultado = ubicacionModel.listar(ubicacionCommand.getFltDescripcionUbicacion(), this.getPrimerRegistro() - 1, this.getUltimoRegistro());
+            List<Ubicacion> resultado = ubicacionModel.listar(ubicacionCommand.getFltDescripcionUbicacion(), null, this.getPrimerRegistro() - 1, this.getUltimoRegistro());
 
             //Se crea el tree que se utiliza en la pantalla
-            ubicacionCommand.setTreeSIGEBI(new TreeSIGEBI(new ArrayList<Object>(resultado), "Ubicaciones", "detalle"));
+            ubicacionCommand.getTreeSIGEBI().asignaObjetos(new ArrayList<Object>(resultado));
+
 
         } catch (FWExcepcion e) {
             Mensaje.agregarErrorAdvertencia(e.getError_para_usuario());

@@ -135,9 +135,18 @@ public final class Constantes {
     public static final Integer ESTADO_INTERFAZ_BIEN_PROCESADO = 3;
     public static final Integer ESTADO_INTERFAZ_BIEN_ANULADO = 4;
 
+    //Estados ASIGNAR_RESPONSABLE
+    public static final Integer ESTADO_ASIGNAR_RESPONSABLE_PENDIENTE = 1;
+    public static final Integer ESTADO_ASIGNAR_RESPONSABLE_ASIGNADO = 2;    
+    
     // Toma Fisica
     public static final Integer ESTADO_TOMA_FISICA_PENDIENTE = 1;
     public static final Integer ESTADO_TOMA_FISICA_CERRADO = 2;
+
+    // Toma Fisica
+    public static final Integer ESTADO_ASIGNACION_PLACA_PENDIENTE = 1;
+    public static final Integer ESTADO_ASIGNACION_PLACA_ANULADA = 2;
+    public static final Integer ESTADO_ASIGNACION_PLACA_FINALIZADA = 3;
 
     //Dominios
     public static final String DOMINIO_ACTA = "ACTA";
@@ -165,6 +174,8 @@ public final class Constantes {
     public static final String DOMINIO_SOLI_DONACION = "SOL_DONACION";
     public static final String DOMINIO_TOMA_FISICA = "TOMA_FISICA";
     public static final String DOMINIO_TOMA_FISICA_MOTIVO = "TOMA_FISICA_MOTIVO";
+    public static final String DOMINIO_ASIGNAR_RESPONSABLE = "ASIGNAR_RESPONSABLE";
+    public static final String DOMINIO_ASIGNACION_PLACA = "ASIGNACION_PLACA";
 
     //TIPO ADJUNTO
     public static final Integer TIPO_ADJUNTO_BIEN = 1;
@@ -174,6 +185,10 @@ public final class Constantes {
 
     //TIPOS ORIGENES
     public static final Integer TIPO_ORIGEN_EXTERNA = 7;
+    
+    //TIPOS PROCESO
+    public static final Integer TIPO_PROCESO_RESPONSABLE = 7;
+    public static final Integer TIPO_PROCESO_RESPONSABLE_RECHAZAR = 8;
 
     //TIPOS REGISTROS MOVIMIENTOS
     public static final Integer TIPO_REGISTRO_MOVIMIENTO_CAMBIO_ESTADO_BIEN = 1;
@@ -181,6 +196,7 @@ public final class Constantes {
     public static final Integer TIPO_REGISTRO_MOVIMIENTO_CAMBIO_ESTADO_DOCUMENTO = 3;
     public static final Integer TIPO_REGISTRO_MOVIMIENTO_RECHAZAR_AUTORIZACION = 4;
     public static final Integer TIPO_REGISTRO_MOVIMIENTO_CAMBIO_CONVENIO = 5;
+    public static final Integer TIPO_REGISTRO_MOVIMIENTO_RECHAZO_ASIGNACION_PLACA = 6;
 
     public static final String TIPO_MOVIMIENTO_SINCRONIZAR_AGREGAR = "AGREGAR";
     public static final String TIPO_MOVIMIENTO_SINCRONIZAR_EXCLUIR = "EXCLUIR";
@@ -198,6 +214,7 @@ public final class Constantes {
     //Identificaciones
     public static final Integer IDENTIFICACION_ESTADO_DISPONIBLE = 1;
     public static final Integer IDENTIFICACION_ESTADO_OCUPADA = 2;
+    public static final Integer IDENTIFICACION_ESTADO_RESERVADA_UNIDAD = 3;
 
     //codigos de documentos
     public static final Integer CODIGO_AUTORIZACION_INFORME_EXCLUSION = 1;
@@ -302,6 +319,18 @@ public final class Constantes {
     public static final String VISTA_LISTAR_TOMA_FISICA = "../inventario/listarInventarios.xhtml";
     public static final String KEY_VISTA_LISTAR_TOMA_FISICA = "inventario";
 
+    //Navegación Asignació Responsable Bienes
+    public static final String KEY_VISTA_ASIGNA_RESPONSABLE = "asignacion";
+    public static final String VISTA_ASIGNA_RESPONSABLE = "../bienes/asignarResponsable.xhtml";
+    public static final String KEY_VISTA_MIS_BIENES = "mis_bienes";
+    public static final String VISTA_MIS_BIENES = "../bienes/asignarResponsableMisBienes.xhtml";
+    
+    //Asignacion de placas
+    public static final String KEY_VISTA_ASIGNACION_PLACA_DETALLE = "asignacion_placa_detalle";
+    public static final String VISTA_ASIGNACIONPLACA_DETALLE = "../asignacionPlaca/detalleAsignacionPlacas.xhtml";
+    public static final String VISTA_LISTAR_ASIGNACION_PLACA = "../asignacionPlaca/listarAsignacionPlacas.xhtml";
+    public static final String KEY_VISTA_LISTAR_ASIGNACION_PLACA = "sol_placas";
+    
     
     //ACCIONES TRASLADOS
     public static final String DOCUMENTO_TRASLADO = "TRASLADO";
@@ -365,7 +394,14 @@ public final class Constantes {
     //COnsultas en listados de bienes
     public static final Integer BIENES_LISTADO_ACTAS = 2;
     
-    //Reporte de Sobrantes
-    public static final String REPORTE_SOBRANTES_PARAMETRO_INSTITUCION = "UNIVERSIDAD DE COSTA RICA";
-    public static final String REPORTE_SOBRANTES_PARAMETRO_NOMBRE = "Reporte de Bienes Sobrantes";
+
+    //Tipos de unidades    
+    //Unidades con placas espesificas
+    public static final String TIPO_UNIDAD_EJECUTORA_COMPRA = "UEC";
+
+    
+    //Acciones asignacion de placas
+    public static final Integer ACCION_ASIGNACION_PLACA_RECHAZAR = 1;
+    public static final Integer ACCION_ASIGNACION_PLACA_ACEPTAR = 2;
+    
 }

@@ -1,0 +1,138 @@
+  <ice:outputHtml id="frmNotas" 
+                  xmlns:ice="http://www.icesoft.com/icefaces/component" 
+                  xmlns:icecore="http://www.icefaces.org/icefaces/core" 
+                  xmlns:h="http://java.sun.com/jsf/html" 
+                  xmlns:f="http://java.sun.com/jsf/core" 
+                  xmlns:ui="http://java.sun.com/jsf/facelets" 
+                  xmlns:c="http://java.sun.com/jstl/core">
+    <div>
+        <div class="row"  style="padding-bottom: 20px">
+
+            <div class="col-md-5">
+                <!-- Detalle Usuario Responsable-->
+                <div class="form-group">
+                    <ice:outputText value="#{label['sigebi.Responsable.label.UsuarioResponsable']}" />  
+                    <ice:inputText id="txtUsuarioResponsable" 
+                                   styleClass="form-control" 
+                                   readonly="true" 
+                                   partialSubmit="false"
+                                   value="#{controllerAgregarBienes.bien.usuarioResponsable.nombreCompleto}" >
+                    </ice:inputText>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <!-- Esatdo Responsable-->
+                <div class="form-group">
+                    <ice:outputText value="#{label['sigebi.Responsable.label.EstadoResponsable']}" />  
+                    <ice:inputText id="txtUsuarioResponsable" 
+                                   styleClass="form-control" 
+                                   readonly="true" 
+                                   partialSubmit="false"
+                                   value="#{controllerAgregarBienes.bien.estadoAsignacion.nombre}" >
+                    </ice:inputText>
+                </div>
+            </div>
+            
+            <div class="col-md-3">
+                
+                <ice:commandButton id="botonAbrir" 
+                                   style="float:right;margin-top:20px; margin-right: 10px;" 
+                                   styleClass="boton" 
+                                   rendered="#{controllerAgregarBienes.bien.usuarioResponsable != null}"
+                                   partialSubmit="true" 
+                                   action="#{controllerAgregarBienes.modalLiberarResponsable}"
+                                   value="#{label['sigebi.Responsable.liberar']}"  >
+                </ice:commandButton>
+                
+            </div>
+            
+        </div>
+        
+        
+        <div class="row"  style="padding-bottom: 20px">
+            <div class="col-sm-12">
+                <div>
+                    <ice:dataTable id="informesTecnicos"
+                                   value="#{controllerAgregarBienes.asignaciones}"
+                                   var="asignacion"
+                                   paginator="true"
+                                   paginatorPosition="bottom"
+                                   rows="10">
+
+                        <ice:column id="colResponsable">
+                            <f:facet name="header">
+                                <ice:columnGroup>
+                                    <ice:headerRow>
+                                        <ice:outputText value="#{label['sigebi.Responsable.Tab.ColFuncionario']} "/>
+                                    </ice:headerRow>
+                                </ice:columnGroup>
+                            </f:facet>                                
+                            <h:outputText id="descripcionCell" value="#{asignacion.responsable.nombreCompleto}"/>
+                        </ice:column>
+
+
+
+                        <ice:column id="colDesde">
+                            <f:facet name="header">
+                                <ice:columnGroup>
+                                    <ice:headerRow>
+                                        <ice:outputText value="#{label['sigebi.Responsable.Tab.ColDesde']} "/>
+                                    </ice:headerRow>
+                                </ice:columnGroup>
+                            </f:facet>                                
+                            <h:outputText id="descripcionCell" value="#{asignacion.fechaDesde}"/>
+                        </ice:column>
+                        
+
+                        <ice:column id="colHasta">
+                            <f:facet name="header">
+                                <ice:columnGroup>
+                                    <ice:headerRow>
+                                        <ice:outputText value="#{label['sigebi.Responsable.Tab.ColHasta']} "/>
+                                    </ice:headerRow>
+                                </ice:columnGroup>
+                            </f:facet>                                
+                            <h:outputText id="descripcionCell" value="#{asignacion.fechaHasta}"/>
+                        </ice:column>
+
+
+                        <ice:column id="colObservaciones">
+                            <f:facet name="header">
+                                <ice:columnGroup>
+                                    <ice:headerRow>
+                                        <ice:outputText value="#{label['sigebi.Responsable.Tab.ColObservaciones']} "/>
+                                    </ice:headerRow>
+                                </ice:columnGroup>
+                            </f:facet>                                
+                            <h:outputText id="descripcionCell" value="#{asignacion.observacion}"/>
+                        </ice:column>
+
+                        <ice:column id="colLiberado">
+                            <f:facet name="header">
+                                <ice:columnGroup>
+                                    <ice:headerRow>
+                                        <ice:outputText value="#{label['sigebi.Responsable.Tab.ColLibera']} "/>
+                                    </ice:headerRow>
+                                </ice:columnGroup>
+                            </f:facet>                                
+                            <h:outputText id="descripcionCell" 
+                                          value="#{asignacion.funcionarioLibera.nombreCompleto}"/>
+                            
+                        </ice:column>
+
+
+
+
+                    </ice:dataTable>
+
+                </div>
+            </div>
+        </div>
+
+        
+      
+        
+        
+    </div>
+</ice:outputHtml>
+

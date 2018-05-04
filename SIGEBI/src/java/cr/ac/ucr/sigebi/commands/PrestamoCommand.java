@@ -82,8 +82,8 @@ public class PrestamoCommand {
     private Usuario usuario;
     private List<Bien> bienesEliminar;  // Bienes a eliminar
     private List<Bien> bienesAgregar;   // Bienes a agregar
-    private List<SolicitudDetallePrestamo> detallesEliminar;
     private Map<Long, BienDetalle> bienes;     // Bienes existenetes en la solicitud
+    private List<SolicitudDetallePrestamo> detallesEliminar;
     private Map<Long, SolicitudDetallePrestamo> detalles;
     
     private String observacionConfirmacion;

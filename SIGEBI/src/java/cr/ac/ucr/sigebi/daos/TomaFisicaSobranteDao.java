@@ -229,4 +229,99 @@ public class TomaFisicaSobranteDao extends GenericDaoImpl {
 
         return q;
     }
+    
+    @Transactional(readOnly = true)
+    public List<TomaFisicaSobrante> listarReporte(TomaFisica tomaFisica, String identificacion, String ubicacion, String descripcion, String serie, String marca, String modelo, String orden, String orden1, String orden2, String orden3) throws FWExcepcion {
+        Session session = this.dao.getSessionFactory().openSession();
+        try {
+            Query q = this.creaQueryListarReporte(session, tomaFisica, identificacion, descripcion, serie, marca, modelo, ubicacion, orden, orden1, orden2, orden3);
+            return (List<TomaFisicaSobrante>) q.list();
+        } catch (HibernateException e) {
+            throw new FWExcepcion("sigebi.error.tomaFisicaSobranteDao.listar", "Error obtener los registros de tipo " + this.getClass(), e.getCause());
+        } finally {
+            session.close();
+        }
+    }
+    
+     private Query creaQueryListarReporte(Session session, TomaFisica tomaFisica, String identificacion, String descripcion, String serie, String marca, String modelo, String ubicacion, String orden, String orden1, String orden2, String orden3) {
+        StringBuilder sql = new StringBuilder(" ");
+        sql.append("SELECT obj FROM TomaFisicaSobrante obj ");
+        sql.append("WHERE obj.tomaFisica = :tomaFisica ");
+
+        if (identificacion != null && identificacion.length() > 0) {
+            sql.append(" AND UPPER(obj.identificacion) LIKE UPPER(:identificacion)");
+        }
+
+        if (descripcion != null && descripcion.length() > 0) {
+            sql.append(" AND UPPER(obj.descripcion) LIKE UPPER(:descripcion)");
+        }
+
+        if (serie != null && serie.length() > 0) {
+            sql.append(" AND UPPER(obj.serie) LIKE UPPER(:serie)");
+        }
+
+        if (marca != null && marca.length() > 0) {
+            sql.append(" AND UPPER(obj.marca) LIKE UPPER(:marca)");
+        }
+
+        if (modelo != null && modelo.length() > 0) {
+            sql.append(" AND UPPER(obj.modelo) LIKE UPPER(:modelo)");
+        }
+        
+        if (ubicacion != null && ubicacion.length() > 0) {
+            sql.append(" AND UPPER(obj.ubicacion) LIKE UPPER(:ubicacion)");
+        }
+
+        if (orden1 != null && orden1.length() > 0) {
+            sql.append(" ORDER BY obj.:orden1 ");
+            if (orden2 != null && orden2.length() > 0) {
+               sql.append(", obj.:orden2 ");
+                if (orden3 != null && orden3.length() > 0) {
+                    sql.append(", obj.:orden3 ");
+                }
+            }
+            sql.append(" :orden ");
+        } else {
+            sql.append(" ORDER BY obj.id asc ");
+        }
+        Query q = session.createQuery(sql.toString());
+        q.setParameter("tomaFisica", tomaFisica);
+
+        if (identificacion != null && identificacion.length() > 0) {
+            q.setParameter("identificacion", '%' + identificacion + '%');
+        }
+
+        if (descripcion != null && descripcion.length() > 0) {
+            q.setParameter("descripcion", '%' + descripcion + '%');
+        }
+
+        if (serie != null && serie.length() > 0) {
+            q.setParameter("serie", '%' + serie + '%');
+        }
+
+        if (marca != null && marca.length() > 0) {
+            q.setParameter("marca", '%' + marca + '%');
+        }
+
+        if (modelo != null && modelo.length() > 0) {
+            q.setParameter("modelo", '%' + modelo + '%');
+        }
+        
+        if (ubicacion != null && ubicacion.length() > 0) {
+            q.setParameter("ubicacion", '%' + ubicacion + '%');
+        }
+        
+        if (orden1 != null && orden1.length() > 0) {
+            q.setParameter("modelo", '%' + orden1 + '%');
+            if (orden2 != null && orden2.length() > 0) {
+               q.setParameter("modelo", '%' + orden2 + '%');
+                if (orden3 != null && orden3.length() > 0) {
+                    q.setParameter("modelo", '%' + orden3 + '%');
+                }
+            }
+            q.setParameter("modelo", '%' + orden + '%');
+        }
+
+        return q;
+    }
 }

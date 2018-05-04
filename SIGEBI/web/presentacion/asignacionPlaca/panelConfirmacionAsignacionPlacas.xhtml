@@ -1,0 +1,74 @@
+<div xmlns:ice="http://www.icesoft.com/icefaces/component"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core" >
+
+    <!-- Modal para confirmar -->
+    <ice:panelPopup
+        modal="true" 
+        visible="#{(controllerAsignacionPlaca.asignacionPlacaCommand.presentarPanelConfirmar 
+                   || controllerAsignacionPlaca.asignacionPlacaCommand.presentarPanelRechazar)}"
+        rendered="#{(controllerAsignacionPlaca.asignacionPlacaCommand.presentarPanelConfirmar 
+                   || controllerAsignacionPlaca.asignacionPlacaCommand.presentarPanelRechazar)}"
+        styleClass="popup">
+        
+        <f:facet name="body">
+
+            <fieldset class="panel_Container" >
+                <div class="container" style="margin-top: 20px;">
+                    <!-- Titulo -->
+                    <div class="row">
+                        <div class='col-sm-12'>
+                            <h1 style="margin: 0px;">
+                                <ice:outputFormat value="#{label['sigebi.label.vista.asignacionPlaca.confirmacion.titulo']}"/>
+                            </h1>                                 
+                        </div>                
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12" style="margin-top: 20px;">
+                            #{controllerAsignacionPlaca.asignacionPlacaCommand.mensajeConfirmacion}
+                        </div>
+                    </div>
+                    <ice:outputHtml rendered="#{!controllerAsignacionPlaca.asignacionPlacaCommand.presentarPanelConfirmar}" id="outDataTable" >
+                        <div class="row">
+                            <div class="col-md-12" style="margin-top: 20px;">
+                                <div class="form-group" >
+                                    <label class="control-label" for="txtObservacion">
+                                        <ice:outputText value="#{label['sigebi.label.vista.asignacionPlaca.confirmacion.observacion']}"/> 
+                                    </label>
+                                    <ice:inputTextarea  id="observacionConfirmacion" 
+                                                        styleClass="form-control"
+                                                        cols="2" 
+                                                        value="#{controllerAsignacionPlaca.asignacionPlacaCommand.observacionConfirmacion}"/>
+                                </div>
+                            </div>    
+                        </div>                    
+                    </ice:outputHtml>
+                    <div class="row"  style="margin-top: 20px; margin-bottom: 20px;">
+                        <div class="col-md-6 align-content-center">
+                                                       
+                            <ice:commandButton id="botonAprobarPanel" 
+                                               value="Aprobar" 
+                                               partialSubmit="true" 
+                                               styleClass="boton" 
+                                               action="#{controllerAsignacionPlaca.aprobarSolicitud}"
+                                               rendered="#{(controllerAsignacionPlaca.asignacionPlacaCommand.presentarPanelConfirmar)}"/>
+
+                            <ice:commandButton id="botonRechazarPanel" 
+                                               value="Rechazar" 
+                                               partialSubmit="true" 
+                                               styleClass="boton" 
+                                               action="#{controllerAsignacionPlaca.rechazarSolicitud}"
+                                               rendered="#{(controllerAsignacionPlaca.asignacionPlacaCommand.presentarPanelRechazar)}"/>                            
+                        </div>
+                        <div class='col-md-6'>
+                            <span class="alineado_derecha">
+                                <ice:commandButton id="btn_cancelar_panel" partialSubmit="true" action="#{controllerAsignacionPlaca.cerrarPanel}" styleClass="boton"  value="Regresar" />
+                            </span>
+                        </div>                        
+                    </div>
+                </div>                
+            </fieldset>       
+        </f:facet>  
+    </ice:panelPopup>
+</div>

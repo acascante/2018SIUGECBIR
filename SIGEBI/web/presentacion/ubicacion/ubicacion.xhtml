@@ -137,10 +137,14 @@
                                     <label class="control-label" for="txtResponsable">
                                         <ice:outputText value="#{label['sigebi.label.vista.ubicacion.responsable']}" />                            
                                     </label>
-                                    <ice:inputText id="txtResponsable" 
-                                                   partialSubmit="false"
-                                                   styleClass="form-control"
-                                                   value="#{controllerUbicacion.ubicacionCommand.ubicacion.responsable}" />
+                                    <ice:selectOneMenu id="txtResponsable"                                           
+                                                       styleClass="form-control"
+                                                       partialSubmit="true"
+                                                       value="#{controllerUbicacion.ubicacionCommand.usuarioResponsable.id}"
+                                                       valueChangeListener="#{controllerUbicacion.cambiarResponsable}">
+                                                       <f:selectItem itemLabel="N/A" itemValue="-1"/>
+                                                       <f:selectItems id="slcTipoItem" value="#{controllerUbicacion.ubicacionCommand.responsablesOptions}"/>
+                                    </ice:selectOneMenu>                                    
                                 </div>                                             
                            </div>                                       
                         </div>

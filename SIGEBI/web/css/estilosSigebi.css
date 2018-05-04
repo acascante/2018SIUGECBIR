@@ -43,6 +43,26 @@ body {
   padding : 5px 15px;
 }
 
+.btn-file{
+    color: #FFFFFF; 
+    border: 0 none; 
+    border-radius: 2px 2px 2px 2px; 
+    background: none repeat scroll 0 0 #0090D8;
+    cursor: pointer; 
+    display: inline-block; 
+    font-family: Arial,sans-serif; 
+    font-size: 16px; 
+    font-weight: lighter;
+    line-height: 20px; 
+    margin-bottom: 0; 
+    padding: 4px 10px; 
+    text-transform: none; 
+    transition: all 0.3s ease 0s;
+    -moz-transition: all 0.3s ease 0s; 
+    -webkit-transition: all 0.3s ease 0s; 
+    text-align: center; 
+    text-shadow: none;
+}
 
 
 

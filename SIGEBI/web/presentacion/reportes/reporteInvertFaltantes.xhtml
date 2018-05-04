@@ -20,7 +20,8 @@
                     </h4>
                 </div>
                 <div class='col-sm-3'>
-                    <ice:selectOneMenu id="selTipoReporte" styleClass="form-control"
+                    <ice:selectOneMenu id="selTipoReporte" 
+                                       styleClass="form-control"
                                         value="#{controllerReporte.tipoReporteSelec}" >
                          <f:selectItems id="optSelTipoBien" value="#{controllerReporte.itemsTiposReporte}"/>
                      </ice:selectOneMenu>
@@ -47,12 +48,11 @@
                                      </div>
                                     <div class='col-sm-9'>
                                        
-                                        <ice:selectOneMenu id="selUbicaciónToma" 
+                                            <ice:inputText id="txtUbicacion" 
+                                                           partialSubmit="false"
                                                            styleClass="form-control"
-                                                           value="#{controllerReporte.tipoReporteSelec}" >
-                                             <f:selectItems id="optSelTipoBien" value="#{controllerReporte.itemsTiposReporte}"/>
-                                         </ice:selectOneMenu>
-                                        
+                                                           readonly="true"
+                                                           value="#{controllerReporte.commandInventarioFaltantes.tomaSeleccionada.ubicacion.detalle}" />
                                    </div>  
                                      
                                 </div>
@@ -66,15 +66,15 @@
                                      </div>
                                     <div class='col-sm-9'>
                                        
-                                        <ice:selectOneMenu id="selTomaFisica" 
+                                            <ice:inputText id="txtConsecutivo" 
+                                                           partialSubmit="false"
                                                            styleClass="form-control"
-                                                           value="#{controllerReporte.tipoReporteSelec}" >
-                                             <f:selectItems id="optSelTipoBien" value="#{controllerReporte.itemsTiposReporte}"/>
-                                         </ice:selectOneMenu>
-                                        
-                                   </div>  
+                                                           readonly="true"
+                                                           value="#{controllerReporte.commandInventarioFaltantes.tomaSeleccionada.id}" />
+                                    </div>            
+
+                               </div>  
                                      
-                                </div>
                                  
                                  <div class="row">
                                      <div class='col-sm-3 align-middle'>
@@ -267,14 +267,15 @@
                                        styleClass="boton" 
                                        partialSubmit="true" 
                                        action="#{controllerReporte.mostrarInventarioFaltantes}"
-                                       value="Reporte Traslados">
+                                       value="Reporte Faltantes">
                     </ice:commandButton>
                 </div>  
             </div>
             
 
         </div>    
-    </div>
-
+    
+        
+    </div>   
 
 </ice:form>

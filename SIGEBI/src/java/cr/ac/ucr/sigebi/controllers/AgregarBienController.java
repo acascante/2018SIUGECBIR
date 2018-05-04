@@ -14,6 +14,7 @@ import cr.ac.ucr.sigebi.commands.BienCommand;
 import cr.ac.ucr.sigebi.commands.BienCommand.NotaCommand;
 import cr.ac.ucr.sigebi.domain.Accesorio;
 import cr.ac.ucr.sigebi.domain.Adjunto;
+import cr.ac.ucr.sigebi.domain.AsignarResponsableHistorico;
 import cr.ac.ucr.sigebi.domain.AutorizacionRolPersona;
 import cr.ac.ucr.sigebi.domain.Bien;
 import cr.ac.ucr.sigebi.domain.BienCaracteristica;
@@ -43,6 +44,7 @@ import cr.ac.ucr.sigebi.domain.Ubicacion;
 import cr.ac.ucr.sigebi.domain.UnidadEjecutora;
 import cr.ac.ucr.sigebi.models.AccesorioModel;
 import cr.ac.ucr.sigebi.models.AdjuntoModel;
+import cr.ac.ucr.sigebi.models.AsignarResponsableHistoricoModel;
 import cr.ac.ucr.sigebi.models.AutorizacionRolPersonaModel;
 import cr.ac.ucr.sigebi.models.BienCaracteristicaModel;
 import cr.ac.ucr.sigebi.models.BienModel;
@@ -58,6 +60,8 @@ import cr.ac.ucr.sigebi.models.SubClasificacionModel;
 import cr.ac.ucr.sigebi.models.UbicacionModel;
 import cr.ac.ucr.sigebi.models.UnidadEjecutoraModel;
 import cr.ac.ucr.sigebi.utils.Constantes;
+import cr.ac.ucr.sigebi.utils.NodoSIGEBI;
+import cr.ac.ucr.sigebi.utils.TreeUbicacionSIGEBI;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -180,6 +184,7 @@ public class AgregarBienController extends BaseController {
     private Estado estadoGeneralActivo;
     private SolicitudDonacion solicitudDonacion;
     private InterfazBien interfazBien;
+    private TreeUbicacionSIGEBI treeUbicacionSIGEBI;
 
     //</editor-fold>
     
@@ -187,7 +192,7 @@ public class AgregarBienController extends BaseController {
     public AgregarBienController() {
         super();
         tipoAdjuntoDoc = this.tipoPorDominioValor(Constantes.DOMINIO_ADJUNTO, Constantes.TIPO_ADJUNTO_BIEN);
-        estadoGeneralActivo = this.estadoPorDominioValor(Constantes.DOMINIO_IDENTIFICACION, Constantes.ESTADO_GENERAL_ACTIVO);
+        estadoGeneralActivo = this.estadoPorDominioValor(Constantes.DOMINIO_IDENTIFICACION, Constantes.ESTADO_GENERAL_ACTIVO);        
     }
 
     private void inicializarNuevo() {
@@ -255,8 +260,13 @@ public class AgregarBienController extends BaseController {
         ingreso.setDiscriminator(0);
         movs.add(ingreso);
         
-        movs.addAll( modelMovimientos.movimientosPorBien(bien) );
+        List<Solicitud> movs1 = modelMovimientos.movimientosPorBien(bien);
+        if(movs1.size() > 0)
+            movs.addAll( movs1 );
         command.setMovimientos(movs);
+        
+        //Cargo responsables
+        consultarHistorialResponsable();
     }
 
     private void inicializarDatos() {
@@ -335,6 +345,12 @@ public class AgregarBienController extends BaseController {
                     command.getItemCommand().getItemsMoneda().put(item.getId(), item);
                 }
             }
+            
+                    
+            treeUbicacionSIGEBI = new TreeUbicacionSIGEBI();
+            treeUbicacionSIGEBI.setUbicacionModel(modelUbicacion);
+
+
         } catch (FWExcepcion e) {
             Mensaje.agregarErrorAdvertencia(e.getError_para_usuario());
         } catch (Exception e) {
@@ -1047,41 +1063,48 @@ public class AgregarBienController extends BaseController {
     //</editor-fold>
 
     //<editor-fold defaultstate="collapsed" desc="Ubicaciones">
-    public void mostrarPanelUbicaciones() {
-        cargarUbicaciones();
-        this.setVisiblePanelUbicaciones(true);
-    }
+//    public void mostrarPanelUbicaciones() {
+//        cargarUbicaciones();
+//        this.setVisiblePanelUbicaciones(true);
+//    }
 
     public void limpiarUbicacion() {
         command.getUbicacionCommand().setIdUbicacion(Constantes.DEFAULT_ID);
         command.getUbicacionCommand().setDescripcion(new String());
     }
 
-    public void cerrarPanelUbicaciones() {
-        if (command.getUbicacionCommand().getIdUbicacion() != null && command.getUbicacionCommand().getIdUbicacion() > 0) {
-
-            command.getUbicacionCommand().setUbicacion(command.getItemCommand().getItemsUbicacion().get(command.getUbicacionCommand().getIdUbicacion()));
-        }
-        this.setVisiblePanelUbicaciones(false);
-    }
-
-    private void cargarUbicaciones() {
+     /**
+     * Metodo que busca y asigna al command la ubicacion seleccionada
+     *
+     * @param event
+     */
+    public void cambiarUbicacion(ActionEvent event) {
         try {
-            List<Ubicacion> ubicaciones = modelUbicacion.listar(unidadEjecutora);
-            if (!ubicaciones.isEmpty()) {
-                itemsUbicacion = new ArrayList<SelectItem>();
-                for (Ubicacion item : ubicaciones) {
-                    itemsUbicacion.add(new SelectItem(item.getId(), item.getDetalle()));  // ID + Nombre -- Usado para combo de filtro para enviar el ID al Dao para la consulta
-                    command.getItemCommand().getItemsUbicacion().put(item.getId(), item);
-                }
+            if (!event.getPhaseId().equals(PhaseId.INVOKE_APPLICATION)) {
+                event.setPhaseId(PhaseId.INVOKE_APPLICATION);
+                event.queue();
+                return;
             }
+
+            //Se busca el nodo seleccionado
+            NodoSIGEBI nodoSIGEBI = (NodoSIGEBI) event.getComponent().getAttributes().get("nodoSeleccionado");
+            
+            //Se asigna la ubicacion 
+            command.getUbicacionCommand().setUbicacion((Ubicacion) nodoSIGEBI.getObject());
+            if (command.getUbicacionCommand().getUbicacion() != null) {
+                command.getUbicacionCommand().getUbicacion().setIdTemporal(command.getUbicacionCommand().getUbicacion().getId());
+            }
+            
+            //Se cierra el panel
+            treeUbicacionSIGEBI.setPresentaPanelUbicacion(false);
+            
         } catch (FWExcepcion e) {
             Mensaje.agregarErrorAdvertencia(e.getError_para_usuario());
         } catch (Exception e) {
             Mensaje.agregarErrorAdvertencia(e, Util.getEtiquetas("sigebi.error.agregarBienController.cargarUbicaciones"));
         }
-
     }
+
     //</editor-fold>
 
     //<editor-fold defaultstate="collapsed" desc="Proveedores">
@@ -1888,6 +1911,14 @@ public class AgregarBienController extends BaseController {
         return itemsCategoria;
     }
 
+    public TreeUbicacionSIGEBI getTreeUbicacionSIGEBI() {
+        return treeUbicacionSIGEBI;
+    }
+
+    public void setTreeUbicacionSIGEBI(TreeUbicacionSIGEBI treeUbicacionSIGEBI) {
+        this.treeUbicacionSIGEBI = treeUbicacionSIGEBI;
+    }
+
     public void setItemsCategoria(List<SelectItem> itemsCategoria) {
         this.itemsCategoria = itemsCategoria;
     }
@@ -2256,4 +2287,98 @@ public class AgregarBienController extends BaseController {
     //</editor-fold>
     
     
+    //<editor-fold defaultstate="collapsed" desc="Tab Responsable">
+  
+    
+    
+    @Resource
+    AsignarResponsableHistoricoModel histModel;
+    Boolean liberarBien;
+    List<AsignarResponsableHistorico> asignaciones;
+    Boolean modalLiberar;
+    String observacion;
+    public void consultarHistorialResponsable() {
+        try {
+            asignaciones = new ArrayList<AsignarResponsableHistorico>();
+            
+            asignaciones = histModel.listarRespoansables(this.bien, unidadEjecutora);
+            
+        }
+        catch(Exception err){
+            
+        }
+    }
+    
+    public void modalLiberarResponsable(){
+        modalLiberar = true;
+    }
+    
+    
+    public void cerrarModalLiberar(){
+        modalLiberar = false;
+    }
+    
+    public void confirmaLiberar(){
+        try{
+            
+//            //Actualizo el bien
+            Bien bienLib = modelBien.buscarPorId(bien.getId());
+            bienLib.setEstadoAsignacion(null);
+            bienLib.setUsuarioResponsable(null);
+            bien.setEstadoAsignacion(null);
+            bien.setUsuarioResponsable(null);
+            modelBien.actualizar(bienLib);
+//            
+//            //Actualizo histórico
+//            
+            AsignarResponsableHistorico hist = histModel.getHistoricoActivo(bien);
+            if(hist != null && hist.getId() != null ){
+                hist.setObservacion(observacion);
+                hist.setFechaHasta(new Date());
+                hist.setFuncionarioLibera(usuarioSIGEBI);
+                histModel.guargar(hist);
+            }
+            
+            modalLiberar = false;
+
+            consultarHistorialResponsable();
+        }
+        catch(Exception err){
+            Mensaje.agregarErrorAdvertencia(err, Util.getEtiquetas("sigebi.Responsable.error.Guardar"));
+            
+        }
+    }
+    
+    
+    //
+
+    public List<AsignarResponsableHistorico> getAsignaciones() {
+        return asignaciones;
+    }
+
+    public void setAsignaciones(List<AsignarResponsableHistorico> asignaciones) {
+        this.asignaciones = asignaciones;
+    }
+
+    
+    
+    public String getObservacion() {    
+        return observacion;
+    }
+
+    public void setObservacion(String observacion) {
+        this.observacion = observacion;
+    }
+
+    public Boolean getModalLiberar() {
+        return modalLiberar;
+    }
+
+    public void setModalLiberar(Boolean modalLiberar) {
+        this.modalLiberar = modalLiberar;
+    }
+    
+    
+    
+    //</editor-fold>
 }

@@ -19,6 +19,7 @@ import cr.ac.ucr.sigebi.domain.TomaFisicaLote;
 import cr.ac.ucr.sigebi.domain.TomaFisicaSobrante;
 import cr.ac.ucr.sigebi.domain.TomaFisicaUnitaria;
 import cr.ac.ucr.sigebi.domain.Ubicacion;
+import java.util.ArrayList;
 import java.util.List;
 import javax.faces.model.SelectItem;
 
@@ -42,11 +43,16 @@ public class TomaFisicaCommand {
     List<SelectItem> subCategoriaOptions;
     List<SelectItem> clasificacionOptions;
     List<SelectItem> subClasificacionOptions;
-    List<SelectItem> ubicacionOptions;
 
     List<TomaFisicaUnitaria> tomasFisicasUnitarias;
     List<TomaFisicaLote> tomasFisicasLotes;
     List<TomaFisicaSobrante> tomasFisicasSobrantes;
+    
+    List<ObjetoCarga> objetosCarga;
+    ObjetoCarga objetoCarga;
+    List<String> erroresRegistradosCargaUnitaria;
+    Boolean mostrarErroresCargaUnitaria;
+    Boolean procesarCargaUnitaria;
     
     //</editor-fold>
     
@@ -56,6 +62,8 @@ public class TomaFisicaCommand {
         this.tomaFisica.setTipo(new Tipo());
         this.tomaFisica.setMotivo(new Tipo());
         this.ubicacion = new Ubicacion();
+        this.objetosCarga = new ArrayList<ObjetoCarga>();
+        setMostrarErroresCargaUnitaria(false);
     }
 
     public TomaFisicaCommand(TomaFisica tomaFisica) {
@@ -67,6 +75,8 @@ public class TomaFisicaCommand {
         this.tomaFisicaUnitariaCommand = new TomaFisicaUnitariaCommand();
         this.tomaFisicaLoteCommand = new TomaFisicaLoteCommand();
         this.tomaFisicaSobranteCommand = new TomaFisicaSobranteCommand();
+        this.objetosCarga = new ArrayList<ObjetoCarga>();
+        setMostrarErroresCargaUnitaria(false);
     }
 
     public TomaFisica prepararTomaFisica(Estado estado) {
@@ -79,11 +89,39 @@ public class TomaFisicaCommand {
         if (estado != null) {
             tomaFisica.setEstado(estado);
         }
+        
+//        if(treeUbicacionSIGEBI.getUbicacion() != null && treeUbicacionSIGEBI.getUbicacion().getId() > 0){
+//            tomaFisica.setUbicacion(ubicacion);
+//        }
+        
         return tomaFisica;
     }
     //</editor-fold>
 
     //<editor-fold defaultstate="collapsed" desc="Get and Set">
+
+    public Boolean getProcesarCargaUnitaria() {
+        procesarCargaUnitaria = objetosCarga.size() > 0;
+        return procesarCargaUnitaria;
+    }
+
+    
+    public Boolean getMostrarErroresCargaUnitaria() {
+        return mostrarErroresCargaUnitaria;
+    }
+
+    public void setMostrarErroresCargaUnitaria(Boolean mostrarErroresCargaUnitaria) {
+        this.mostrarErroresCargaUnitaria = mostrarErroresCargaUnitaria;
+    }
+
+    public List<String> getErroresRegistradosCargaUnitaria() {
+        return erroresRegistradosCargaUnitaria;
+    }
+
+    public void setErroresRegistradosCargaUnitaria(List<String> erroresRegistradosCargaUnitaria) {
+        this.erroresRegistradosCargaUnitaria = erroresRegistradosCargaUnitaria;
+    }
+
     public TomaFisica getTomaFisica() {
         return tomaFisica;
     }
@@ -130,14 +168,6 @@ public class TomaFisicaCommand {
 
     public void setCategoriaOptions(List<SelectItem> categoriaOptions) {
         this.categoriaOptions = categoriaOptions;
-    }
-
-    public List<SelectItem> getUbicacionOptions() {
-        return ubicacionOptions;
-    }
-
-    public void setUbicacionOptions(List<SelectItem> ubicacionOptions) {
-        this.ubicacionOptions = ubicacionOptions;
     }
 
     public TomaFisicaUnitariaCommand getTomaFisicaUnitariaCommand() {
@@ -211,6 +241,7 @@ public class TomaFisicaCommand {
     public void setSubClasificacionOptions(List<SelectItem> subClasificacionOptions) {
         this.subClasificacionOptions = subClasificacionOptions;
     }
+
 
     //</editor-fold>
     
@@ -357,7 +388,7 @@ public class TomaFisicaCommand {
         SubCategoria subCategoria;
         Clasificacion clasificacion;
         SubClasificacion subClasificacion;
-        Ubicacion ubicacion;
+        String ubicacionSobrante;
         
         TomaFisicaSobrante tomaFisicaSobrante;
         
@@ -365,7 +396,6 @@ public class TomaFisicaCommand {
         
         //<editor-fold defaultstate="collapsed" desc="Constructor y Metodos">
         public TomaFisicaSobranteCommand() {
-            ubicacion = new Ubicacion();
             subClasificacion = new SubClasificacion();
             clasificacion = new Clasificacion();
             subCategoria = new SubCategoria();
@@ -402,11 +432,6 @@ public class TomaFisicaCommand {
                 resultado.setSubClasificacion(this.subClasificacion);
             }else{
                 resultado.setSubClasificacion(null);
-            }
-            if (this.getUbicacion() != null && this.getUbicacion().getIdTemporal() > 0) {
-                resultado.setUbicacion(this.getUbicacion());
-            }else{
-                resultado.setUbicacion(null);
             }
             return resultado;
         }
@@ -494,14 +519,6 @@ public class TomaFisicaCommand {
             this.subClasificacion = subClasificacion;
         }
 
-        public Ubicacion getUbicacion() {
-            return ubicacion;
-        }
-
-        public void setUbicacion(Ubicacion ubicacion) {
-            this.ubicacion = ubicacion;
-        }
-
         public TomaFisicaSobrante getTomaFisicaSobrante() {
             return tomaFisicaSobrante;
         }
@@ -515,5 +532,112 @@ public class TomaFisicaCommand {
 
     //</editor-fold>
     
+    //<editor-fold defaultstate="collapsed" desc="Cargas de Excel">
+    
+    //Estructura carga Excel
+    public class ObjetoCarga{
+        
+        //<editor-fold defaultstate="collapsed" desc="Atributos">
+        String identificacion;
+        String descripcion;
+        Boolean mostrarErrores;
+        Boolean seleccionado;
+        String descripcionError;
+        Bien bien;
+
+        
+        //</editor-fold>
+        
+        //<editor-fold defaultstate="collapsed" desc="Costructor">
+        public ObjetoCarga() {
+        }
+        
+        //</editor-fold>
+        
+        
+        //<editor-fold defaultstate="collapsed" desc="SETs & GETs">
+
+        
+        public String getDescripcionError() {
+            return descripcionError;
+        }
+
+        public void setDescripcionError(String descripcionError) {
+            this.descripcionError = descripcionError;
+        }
+        
+        public String getIdentificacion() {
+            return identificacion;
+        }
+
+        public void setIdentificacion(String identificacion) {
+            this.identificacion = identificacion;
+        }
+
+        public String getDescripcion() {
+            return descripcion;
+        }
+
+        public void setDescripcion(String descripcion) {
+            this.descripcion = descripcion;
+        }
+
+        public Boolean getMostrarErrores() {
+            return mostrarErrores;
+        }
+
+        public void setMostrarErrores(Boolean mostrarErrores) {
+            this.mostrarErrores = mostrarErrores;
+        }
+
+
+        public Boolean getSeleccionado() {
+            return seleccionado;
+        }
+
+        public void setSeleccionado(Boolean seleccionado) {
+            this.seleccionado = seleccionado;
+        }
+
+        public Bien getBien() {
+            return bien;
+        }
+
+        public void setBien(Bien bien) {
+            this.bien = bien;
+        }
+        
+        //</editor-fold>
+        
+        
+        
+        
+    }
+    
+    public ObjetoCarga getNewObjetoCarga(){
+        return new ObjetoCarga();
+    }
+    
+    public List<ObjetoCarga> getObjetosCarga() {
+        return objetosCarga;
+    }
+
+    public void setObjetosCarga(List<ObjetoCarga> objetosCarga) {
+        this.objetosCarga = objetosCarga;
+    }
+
+    public ObjetoCarga getObjetoCarga() {
+        return objetoCarga;
+    }
+
+    public void setObjetoCarga(ObjetoCarga objetoCarga) {
+        this.objetoCarga = objetoCarga;
+    }
+    
+    
+    
+    
+    //</editor-fold>
+
     
 }
