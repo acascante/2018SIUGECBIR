@@ -66,6 +66,11 @@ public class VistaNavegacion {
         gPaginas.put(Constantes.VISTA_PRESTAMO_LISTADO, Constantes.VISTA_PRESTAMO_LISTADO_PAGINA);
         gPaginas.put(Constantes.VISTA_PRESTAMO_NUEVO, Constantes.VISTA_PRESTAMO_NUEVO_PAGINA);
 
+        gPaginas.put(Constantes.VISTA_RECEPCION_PRESTAMO_LISTADO, Constantes.VISTA_RECEPCION_PRESTAMO_LISTADO_PAGINA);
+        gPaginas.put(Constantes.VISTA_RECEPCION_PRESTAMO_NUEVO, Constantes.VISTA_RECEPCION_PRESTAMO_NUEVO_PAGINA);
+        
+        gPaginas.put(Constantes.KEY_VISTA_TIPOS, Constantes.KEY_VISTA_TIPOS_PAGINA);
+        
         gPaginas.put(Constantes.VISTA_INFORME_TECNICO, Constantes.VISTA_INFORME_TECNICO_LISTADO);
         gPaginas.put(Constantes.VISTA_INFORME_TECNICO_DET, Constantes.VISTA_INFORME_TECNICO_DETALLE);
 

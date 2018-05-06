@@ -76,6 +76,7 @@ public class AsignarResponsableControlles  extends ListadoBienesGeneralControlle
     private void incializaDatos() {
         try{
             cargoMisDatos();
+            this.responsableCommand = new ResponsableCommand();
         }catch(Exception err){
             Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.Responsable.exito.CargarMisDatos"));
         }
@@ -347,7 +348,6 @@ public class AsignarResponsableControlles  extends ListadoBienesGeneralControlle
     
     public void verMisBienesAsignados() {
         try {
-
             cargoMisDatos();
             Util.navegar(Constantes.KEY_VISTA_MIS_BIENES);
 
@@ -446,8 +446,10 @@ public class AsignarResponsableControlles  extends ListadoBienesGeneralControlle
         movBien.setEstado(this.responsableCommand.getEstadoAsignacionPendiente());
         movBien.setFecha(new Date());
         movBien.setObservacion(  Util.getEtiquetas("sigebi.Responsable.mensaje.movimientoRechazo") 
-                + bien.getIdentificacion().getIdentificacion() + " a "
-                + responsableCommand.getUsuarioCommand().getUsuarioSeleccionado()+ ". "
+                        + bien.getIdentificacion().getIdentificacion() + " a "
+                        + responsableCommand.getUsuarioCommand().getUsuarioSeleccionado()+ ". "
+                        + "\n\n"
+                        + "Justificación: " + getJustificacion()
                 );
         movBien.setTipo(this.tipoPorDominioValor(Constantes.DOMINIO_PROCESO, Constantes.TIPO_PROCESO_RESPONSABLE_RECHAZAR));
         movBien.setUsuario(usuarioSIGEBI);
@@ -522,6 +524,9 @@ public class AsignarResponsableControlles  extends ListadoBienesGeneralControlle
     @Resource
     AsignarResponsableHistoricoModel histModel;
     Boolean rechazarBienes;
+    private Boolean rechazar;
+    private String justificacion;
+    
     public void confirmaAceptarBienes(){
         try{
             List<Bien> modifBienes = new ArrayList<Bien>();
@@ -546,6 +551,7 @@ public class AsignarResponsableControlles  extends ListadoBienesGeneralControlle
                     bienSel.setUsuarioResponsable(null);
                     modifBienes.add(bienSel);
                     this.guardarMovimientoRechazar(bienSel);
+                    setJustificacion("");
                     
                 }
             }
@@ -565,6 +571,8 @@ public class AsignarResponsableControlles  extends ListadoBienesGeneralControlle
             rechazarBienes = false;
             responsableCommand.setMensajeConfirmar(Util.getEtiquetas("sigebi.Responsable.Confirma.Aceptar"));
             visiblePanelConfirmacionMisBienes = true;
+            setRechazar(false);
+            setJustificacion("");
         }
         catch(Exception err){
             
@@ -574,6 +582,8 @@ public class AsignarResponsableControlles  extends ListadoBienesGeneralControlle
     public void cerrarPanelMisBienesConfirmar(){
         try{
             visiblePanelConfirmacionMisBienes = false;
+            setRechazar(false);
+            setJustificacion("");
         }
         catch(Exception err){
             
@@ -585,6 +595,8 @@ public class AsignarResponsableControlles  extends ListadoBienesGeneralControlle
         try{
             rechazarBienes = true;
             responsableCommand.setMensajeConfirmar(Util.getEtiquetas("sigebi.Responsable.Confirma.Rechaza"));
+            setRechazar(true);
+            setJustificacion("");
             visiblePanelConfirmacionMisBienes = true;
         }
         catch(Exception err){
@@ -606,6 +618,23 @@ public class AsignarResponsableControlles  extends ListadoBienesGeneralControlle
     }
 
 
+    public Boolean getRechazar() {
+        return rechazar;
+    }
+
+    public void setRechazar(Boolean rechazar) {
+        this.rechazar = rechazar;
+    }
+
+    public String getJustificacion() {
+        return justificacion;
+    }
+
+    public void setJustificacion(String justificacion) {
+        this.justificacion = justificacion;
+    }
+
+    
     
     //</editor-fold>
 

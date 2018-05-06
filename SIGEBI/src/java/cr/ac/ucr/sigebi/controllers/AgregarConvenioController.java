@@ -59,6 +59,7 @@ public class AgregarConvenioController extends BaseController {
     private void inicializarNuevo() {
         this.command = new ConvenioCommand(this.unidadEjecutora);
         this.convenioRegistrado = false;
+        inicializarDatos();
     }
         
     private void inicializarDetalle(Convenio convenio) {
@@ -170,7 +171,11 @@ public class AgregarConvenioController extends BaseController {
         }
         
         if (this.command.getInstitucion().isEmpty()) {
-            return Util.getEtiquetas("Campo Institucion es requerido");
+            return Util.getEtiquetas("sigebi.label.convenios.error.institucion");
+        }        
+
+        if (this.command.getResponsable().isEmpty()) {
+            return Util.getEtiquetas("sigebi.label.convenios.error.responsable");
         }        
 
         if (this.command.getFechaFin().before(this.command.getFechaInicio())) {

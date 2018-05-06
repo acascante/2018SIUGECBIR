@@ -57,6 +57,7 @@ public class AgregarExclusionController extends BaseController {
         private ListarBienesCommand command;
         private Estado estadoInternoNormal;
         private Estado estadoActivo;
+        private Map<Long, Bien> allBienes;
         private Map<Long, Bien> bienes;
         private Map<Long, Boolean> bienesSeleccionados;
 
@@ -64,6 +65,7 @@ public class AgregarExclusionController extends BaseController {
             super();
             this.command = new ListarBienesCommand();
             this.bienes = new HashMap<Long, Bien>();
+            this.allBienes = new HashMap<Long, Bien>();
             this.bienesSeleccionados = new HashMap<Long, Boolean>();
         }
 
@@ -93,6 +95,7 @@ public class AgregarExclusionController extends BaseController {
                 List<Bien> itemsBienes = bienModel.listar(this.getPrimerRegistro() - 1, this.getUltimoRegistro(), this.command.getFltIdCodigo(), this.unidadEjecutora , command.getFltIdentificacion(), command.getFltDescripcion(), command.getFltMarca(), command.getFltModelo(), command.getFltSerie(), this.estadoActivo, this.estadoInternoNormal);
                 this.bienes.clear();
                 for (Bien item : itemsBienes) {
+                    this.allBienes.put(item.getId(), item);
                     this.bienes.put(item.getId(), item);
                 }
            } catch (FWExcepcion e) {
@@ -145,6 +148,14 @@ public class AgregarExclusionController extends BaseController {
 
         public void setBienes(Map<Long, Bien> bienes) {
             this.bienes = bienes;
+        }
+
+        public Map<Long, Bien> getAllBienes() {
+            return allBienes;
+        }
+
+        public void setAllBienes(Map<Long, Bien> allBienes) {
+            this.allBienes = allBienes;
         }
 
         public Map<Long, Boolean> getBienesSeleccionados() {
@@ -261,14 +272,15 @@ public class AgregarExclusionController extends BaseController {
     private boolean exclusionRegistrada;
     
     private int accion;
-  
+    private Long bienSeleccionado;
+    
     public AgregarExclusionController() {
         super();
     }
     
     private void inicializarNuevo() {
-        Estado estado = this.estadoPorDominioValor(Constantes.DOMINIO_EXCLUSION, Constantes.ESTADO_EXCLUSION_CREADA);
-        this.command = new ExclusionCommand(this.unidadEjecutora, estado, this.usuarioSIGEBI);
+        Estado estadoExclusionCreada = this.estadoPorDominioValor(Constantes.DOMINIO_EXCLUSION, Constantes.ESTADO_EXCLUSION_CREADA);
+        this.command = new ExclusionCommand(this.unidadEjecutora, estadoExclusionCreada, this.usuarioSIGEBI);
         this.exclusionRegistrada = false;
         this.autorizadoAprobar = false;
         inicializarDatos();
@@ -293,6 +305,9 @@ public class AgregarExclusionController extends BaseController {
             case Constantes.TIPO_EXCLUSION_DONACION:
                 codigoAutorizacion = Constantes.CODIGO_AUTORIZACION_EXCLUSION_DONACION;
             break;
+            
+            default: 
+                return true;
         }
         
         if (codigoAutorizacion != 0) {
@@ -339,16 +354,17 @@ public class AgregarExclusionController extends BaseController {
                 Tipo tipo = this.tipoPorId(command.getIdTipo());
                 
                 // Almaceno o actualizo Solicitud
+                // Se almacenan o actualizan los detalles tambien
                 SolicitudExclusion exclusion = command.getExclusion(tipo);
                 this.exclusionModel.salvar(exclusion);
-                
                 if (!command.getDetallesEliminar().isEmpty()) {
                     this.exclusionModel.eliminarDetalles(command.getDetallesEliminar());
                 }
                 
-                List<Bien> listBienes = new ArrayList<Bien>(command.getBienes().values());
-                if (!listBienes.isEmpty()) {
-                    this.bienModel.actualizar(listBienes);
+                List<Bien> listBienesAgregar = new ArrayList<Bien>();
+                listBienesAgregar.addAll(this.command.getBienesAgregar());
+                if (!listBienesAgregar.isEmpty()) {
+                    this.bienModel.actualizar(listBienesAgregar);
                 }
                 
                 List<Bien> listBienesEliminar = new ArrayList<Bien>(command.getBienesEliminar());
@@ -556,12 +572,14 @@ public class AgregarExclusionController extends BaseController {
         Estado estadoEnSolicitud = this.estadoPorDominioValor(Constantes.DOMINIO_BIEN_INTERNO, Constantes.ESTADO_INTERNO_BIEN_EXCLUSION);
         
         if (!this.listadoBienes.bienesSeleccionados.isEmpty()) {
-            for (Map.Entry<Long, Boolean> entry : this.listadoBienes.bienesSeleccionados.entrySet()) {
-                if (entry.getValue()) {
-                    Bien bien = this.listadoBienes.bienes.get(entry.getKey());
+            for (Map.Entry<Long, Boolean> rowBien : this.listadoBienes.bienesSeleccionados.entrySet()) {
+                Bien bien = this.listadoBienes.allBienes.get(rowBien.getKey());
+                if (rowBien.getValue()) {
                     bien.setEstadoInterno(estadoEnSolicitud);
-                    this.command.getBienes().put(bien.getId(), bien);
+                    this.command.addBien(bien); //this.bienes.put(bien.getId(), bien);
                     this.command.getBienesAgregar().add(bien);
+                } else if (this.command.getBienes().containsKey(bien.getId())){
+                    this.command.getBienes().remove(bien.getId());    // Lo saco de la lista de bienes que se muestran en pantalla
                 }
             }
         }
@@ -570,15 +588,13 @@ public class AgregarExclusionController extends BaseController {
     public void eliminarBien(ActionEvent event) {
         Estado estadoInternoNormal = this.estadoPorDominioValor(Constantes.DOMINIO_BIEN_INTERNO, Constantes.ESTADO_INTERNO_BIEN_NORMAL);
         Long idBien = (Long) event.getComponent().getAttributes().get("bienSeleccionado");
-        Bien bien = this.command.getBienes().get(idBien);
+        Bien bien = this.listadoBienes.allBienes.containsKey(idBien) ? this.listadoBienes.allBienes.get(idBien) : this.command.getBien(idBien);
         
         bien.setEstadoInterno(estadoInternoNormal);
-        this.command.getBienesEliminar().add(bien); // Lo agrego a la lista de bienes a eliminar
         this.command.getBienes().remove(idBien);    // Lo saco de la lista de bienes que se muestran en pantalla
         if (this.command.getDetalles().containsKey(bien.getId())) { // Si esta en la lista de detalles, es xq se trata de un detalle existente en la BD
-            this.command.getDetallesEliminar().add(this.command.getDetalles().get(bien.getId()));   // Lo agrego a la lista de detalles a eliminar
-            this.command.getDetalles().remove(bien.getId());    // Lo elimino de la lista de detalles, esto ahorita no sirve
-        }                                                       // xq la version de hibernate no permite actualizar colecciones
+            this.command.getBienesEliminar().add(bien); // Lo agrego a la lista de bienes a eliminar
+        }
     }
     
     public void solicitarBien(ActionEvent event) {
@@ -590,11 +606,12 @@ public class AgregarExclusionController extends BaseController {
         this.command.setObservacionConfirmacion(new String());
         this.visiblePanelObservacion = true;
         this.accion = ACCION_RECHAZAR_BIEN;
+        this.bienSeleccionado = (Long) event.getComponent().getAttributes().get("bienSeleccionado");
     }
 
-    public void rechazarBienObservacion(ActionEvent event) {
-        Long idBien = (Long) event.getComponent().getAttributes().get("bienSeleccionado");
-        movimientoBien(idBien, Constantes.ESTADO_EXCLUSION_RECHAZADA, Constantes.ESTADO_INTERNO_BIEN_NORMAL);        
+    public void rechazarBienObservacion() {
+        this.visiblePanelObservacion = false;
+        movimientoBien(this.bienSeleccionado, Constantes.ESTADO_EXCLUSION_RECHAZADA, Constantes.ESTADO_INTERNO_BIEN_NORMAL);        
     }
     
     private void movimientoBien(Long idBien, int solicitud, int bienInterno) {
@@ -728,7 +745,7 @@ public class AgregarExclusionController extends BaseController {
    
     public boolean isVisibleBotonRevisar() {
         this.visibleBotonRevisar = false;
-        if (Constantes.ESTADO_EXCLUSION_SOLICITADA.equals(this.command.getEstado().getValor()) && this.autorizadoAprobar) {
+        if (Constantes.ESTADO_EXCLUSION_SOLICITADA.equals(this.command.getEstado().getValor())) {
             this.visibleBotonRevisar = true;
         }        
         return visibleBotonRevisar;
@@ -736,7 +753,7 @@ public class AgregarExclusionController extends BaseController {
 
     public boolean isVisibleBotonGuardar() {
         this.visibleBotonGuardar = false;
-        if (Constantes.ESTADO_EXCLUSION_CREADA.equals(this.command.getEstado().getValor()) && !this.autorizadoAprobar) {
+        if (Constantes.ESTADO_EXCLUSION_CREADA.equals(this.command.getEstado().getValor())) {
             this.visibleBotonGuardar = true;
         }
         return visibleBotonGuardar;
@@ -744,7 +761,7 @@ public class AgregarExclusionController extends BaseController {
 
     public boolean isVisibleBotonAgregarBienes() {
         this.visibleBotonAgregarBienes = false;
-        if (Constantes.ESTADO_EXCLUSION_CREADA.equals(this.command.getEstado().getValor()) && !this.autorizadoAprobar) {
+        if (Constantes.ESTADO_EXCLUSION_CREADA.equals(this.command.getEstado().getValor())) {
             this.visibleBotonAgregarBienes = true;
         }
         return visibleBotonAgregarBienes;
@@ -752,7 +769,7 @@ public class AgregarExclusionController extends BaseController {
 
     public boolean isVisibleBotonEliminarBien() {
         this.visibleBotonEliminarBien = false;
-        if (Constantes.ESTADO_EXCLUSION_CREADA.equals(this.command.getEstado().getValor()) && !this.autorizadoAprobar) {
+        if (Constantes.ESTADO_EXCLUSION_CREADA.equals(this.command.getEstado().getValor())) {
             this.visibleBotonEliminarBien = true;
         }
         return visibleBotonEliminarBien;
@@ -760,7 +777,7 @@ public class AgregarExclusionController extends BaseController {
 
     public boolean isVisibleBotonSolicitarBien() {
         this.visibleBotonSolicitarBien = false;
-        if (Constantes.ESTADO_EXCLUSION_CREADA.equals(this.command.getEstado().getValor()) && this.exclusionRegistrada && !this.autorizadoAprobar) {
+        if (Constantes.ESTADO_EXCLUSION_CREADA.equals(this.command.getEstado().getValor()) && this.exclusionRegistrada) {
             this.visibleBotonSolicitarBien = true;
         }
         return visibleBotonSolicitarBien;

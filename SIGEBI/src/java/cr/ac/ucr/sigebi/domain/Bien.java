@@ -471,33 +471,6 @@ public class Bien extends ObjetoBase implements Serializable {
     public int hashCode() {
         int hash = 7;
         hash = 23 * hash + (this.id != null ? this.id.hashCode() : 0);
-        hash = 23 * hash + (this.descripcion != null ? this.descripcion.hashCode() : 0);
-        hash = 23 * hash + (this.cantidad != null ? this.cantidad.hashCode() : 0);
-        hash = 23 * hash + (this.subCategoria != null ? this.subCategoria.hashCode() : 0);
-        hash = 23 * hash + (this.subClasificacion != null ? this.subClasificacion.hashCode() : 0);
-        hash = 23 * hash + (this.tipo != null ? this.tipo.hashCode() : 0);
-        hash = 23 * hash + (this.origen != null ? this.origen.hashCode() : 0);
-        hash = 23 * hash + (this.resumenBien != null ? this.resumenBien.hashCode() : 0);
-        hash = 23 * hash + (this.unidadEjecutora != null ? this.unidadEjecutora.hashCode() : 0);
-        hash = 23 * hash + (this.proveedor != null ? this.proveedor.hashCode() : 0);
-        hash = 23 * hash + (this.moneda != null ? this.moneda.hashCode() : 0);
-        hash = 23 * hash + (this.costo != null ? this.costo.hashCode() : 0);
-        hash = 23 * hash + (this.fechaAdquisicion != null ? this.fechaAdquisicion.hashCode() : 0);
-        hash = 23 * hash + (this.persona != null ? this.persona.hashCode() : 0);
-        hash = 23 * hash + (this.inicioGarantia != null ? this.inicioGarantia.hashCode() : 0);
-        hash = 23 * hash + (this.finGarantia != null ? this.finGarantia.hashCode() : 0);
-        hash = 23 * hash + (this.descripcionGarantia != null ? this.descripcionGarantia.hashCode() : 0);
-        hash = 23 * hash + (this.estado != null ? this.estado.hashCode() : 0);
-        hash = 23 * hash + (this.lote != null ? this.lote.hashCode() : 0);
-        hash = 23 * hash + (this.capitalizable != null ? this.capitalizable.hashCode() : 0);
-        
-        hash = 23 * hash + (this.ubicacion != null ? this.ubicacion.hashCode() : 0);
-        hash = 23 * hash + (this.descripcionUbicacion != null ? this.descripcionUbicacion.hashCode() : 0);
-        hash = 23 * hash + (this.estadoInterno != null ? this.estadoInterno.hashCode() : 0);
-        hash = 23 * hash + (this.referencia != null ? this.referencia.hashCode() : 0);
-        hash = 23 * hash + (this.identificacion != null ? this.identificacion.hashCode() : 0);
-        hash = 23 * hash + (this.accesorios != null ? this.accesorios.hashCode() : 0);
-        hash = 23 * hash + (this.caracteristicas != null ? this.caracteristicas.hashCode() : 0);
         return hash;
     }
 
@@ -513,85 +486,7 @@ public class Bien extends ObjetoBase implements Serializable {
             return false;
         }
         final Bien other = (Bien) obj;
-        if ((this.descripcion == null) ? (other.descripcion != null) : !this.descripcion.equals(other.descripcion)) {
-            return false;
-        }
-        if ((this.descripcionGarantia == null) ? (other.descripcionGarantia != null) : !this.descripcionGarantia.equals(other.descripcionGarantia)) {
-            return false;
-        }
-        if ((this.descripcionUbicacion == null) ? (other.descripcionUbicacion != null) : !this.descripcionUbicacion.equals(other.descripcionUbicacion)) {
-            return false;
-        }
-        if (this.id != other.id && (this.id == null || !this.id.equals(other.id))) {
-            return false;
-        }
-        if (this.cantidad != other.cantidad && (this.cantidad == null || !this.cantidad.equals(other.cantidad))) {
-            return false;
-        }
-        if (this.subCategoria != other.subCategoria && (this.subCategoria == null || !this.subCategoria.equals(other.subCategoria))) {
-            return false;
-        }
-        if (this.subClasificacion != other.subClasificacion && (this.subClasificacion == null || !this.subClasificacion.equals(other.subClasificacion))) {
-            return false;
-        }
-        if (this.tipo != other.tipo && (this.tipo == null || !this.tipo.equals(other.tipo))) {
-            return false;
-        }
-        if (this.origen != other.origen && (this.origen == null || !this.origen.equals(other.origen))) {
-            return false;
-        }
-        if (this.resumenBien != other.resumenBien && (this.resumenBien == null || !this.resumenBien.equals(other.resumenBien))) {
-            return false;
-        }
-        if (this.unidadEjecutora != other.unidadEjecutora && (this.unidadEjecutora == null || !this.unidadEjecutora.equals(other.unidadEjecutora))) {
-            return false;
-        }
-        if (this.proveedor != other.proveedor && (this.proveedor == null || !this.proveedor.equals(other.proveedor))) {
-            return false;
-        }
-        if (this.moneda != other.moneda && (this.moneda == null || !this.moneda.equals(other.moneda))) {
-            return false;
-        }
-        if (this.costo != other.costo && (this.costo == null || !this.costo.equals(other.costo))) {
-            return false;
-        }
-        if (this.fechaAdquisicion != other.fechaAdquisicion && (this.fechaAdquisicion == null || !this.fechaAdquisicion.equals(other.fechaAdquisicion))) {
-            return false;
-        }
-        if (this.persona != other.persona && (this.persona == null || !this.persona.equals(other.persona))) {
-            return false;
-        }
-        if (this.inicioGarantia != other.inicioGarantia && (this.inicioGarantia == null || !this.inicioGarantia.equals(other.inicioGarantia))) {
-            return false;
-        }
-        if (this.finGarantia != other.finGarantia && (this.finGarantia == null || !this.finGarantia.equals(other.finGarantia))) {
-            return false;
-        }
-        if (this.estado != other.estado && (this.estado == null || !this.estado.equals(other.estado))) {
-            return false;
-        }
-        if (this.lote != other.lote && (this.lote == null || !this.lote.equals(other.lote))) {
-            return false;
-        }
-        if (this.capitalizable != other.capitalizable && (this.capitalizable == null || !this.capitalizable.equals(other.capitalizable))) {
-            return false;
-        }
-        if (this.ubicacion != other.ubicacion && (this.ubicacion == null || !this.ubicacion.equals(other.ubicacion))) {
-            return false;
-        }
-        if (this.estadoInterno != other.estadoInterno && (this.estadoInterno == null || !this.estadoInterno.equals(other.estadoInterno))) {
-            return false;
-        }
-        if (this.referencia != other.referencia && (this.referencia == null || !this.referencia.equals(other.referencia))) {
-            return false;
-        }
-        if (this.identificacion != other.identificacion && (this.identificacion == null || !this.identificacion.equals(other.identificacion))) {
-            return false;
-        }
-        if (this.accesorios != other.accesorios && (this.accesorios == null || !this.accesorios.equals(other.accesorios))) {
-            return false;
-        }
-        if (this.caracteristicas != other.caracteristicas && (this.caracteristicas == null || !this.caracteristicas.equals(other.caracteristicas))) {
+        if (this.id.longValue() != other.id.longValue()) {
             return false;
         }
         return true;

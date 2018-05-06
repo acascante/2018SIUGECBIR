@@ -27,9 +27,6 @@ import javax.persistence.Transient;
 public class SolicitudPrestamo extends Solicitud {
 
     //<editor-fold defaultstate="collapsed" desc="Atributos">
-    @Column(name = "OBSERVACION")
-    private String observacion;
-    
     @Column(name = "ENTIDAD")
     private String entidad;    
     
@@ -42,14 +39,6 @@ public class SolicitudPrestamo extends Solicitud {
     //</editor-fold>
     
     //<editor-fold defaultstate="collapsed" desc="Get's y Set's">
-    public String getObservacion() {
-        return observacion;
-    }
-
-    public void setObservacion(String observacion) {
-        this.observacion = observacion;
-    }
-
     public String getEntidad() {
         return entidad;
     }

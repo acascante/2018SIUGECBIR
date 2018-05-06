@@ -17,8 +17,10 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.TimeZone;
 
 /**
@@ -38,31 +40,28 @@ public class ExclusionCommand {
     private Long idTipo;
     private Date fecha;
     private String observacion;
+    private String observacionConfirmacion;
     private Usuario usuario;
     private List<Bien> bienesEliminar;  // Bienes a eliminar
-    private List<Bien> bienesAgregar;   // Bienes a agregar
-    private List<SolicitudDetalle> detallesEliminar;
+    private Set<Bien> bienesAgregar;   // Bienes a agregar
     private Map<Long, Bien> bienes;     // Bienes existenetes en la solicitud
+    private List<SolicitudDetalle> detallesEliminar;
     private Map<Long, SolicitudDetalle> detalles;
-    
-    private String observacionConfirmacion;
     //</editor-fold>
     
     //<editor-fold defaultstate="collapsed" desc="Constructores">
     public ExclusionCommand() {
         super();
+        this.fecha = getDefaultDate();
         this.bienes = new HashMap<Long, Bien>();
         this.detalles = new HashMap<Long, SolicitudDetalle>();
     }
 
     public ExclusionCommand(UnidadEjecutora unidadEjecutora, Estado estado, Usuario usuario) {
-        super();
+        this();
         this.unidadEjecutora = unidadEjecutora;
-        this.estado = estado;
-        this.fecha = getDefaultDate();
+        this.estado = estado;        
         this.usuario = usuario;
-        this.bienes = new HashMap<Long, Bien>();
-        this.detalles = new HashMap<Long, SolicitudDetalle>();
     }
 
     public ExclusionCommand(SolicitudExclusion exclusion) {
@@ -72,8 +71,9 @@ public class ExclusionCommand {
         this.estado = exclusion.getEstado();
         this.fecha = exclusion.getFecha();
         this.idTipo = exclusion.getTipoExclusion().getId();
-        this.bienes = new HashMap<Long, Bien>();
         this.usuario = exclusion.getUsuario();
+
+        this.bienes = new HashMap<Long, Bien>();
         this.detalles = new HashMap<Long, SolicitudDetalle>();
         for (SolicitudDetalle detalle : exclusion.getDetalles()) {
             this.bienes.put(detalle.getBien().getId(), detalle.getBien());
@@ -89,16 +89,22 @@ public class ExclusionCommand {
         exclusion.setUnidadEjecutora(this.unidadEjecutora);
         exclusion.setEstado(this.estado);
         exclusion.setFecha(this.fecha);
-        exclusion.setUsuario(this.usuario);
         exclusion.setTipoExclusion(tipo);
+        exclusion.setUsuario(this.usuario);
         exclusion.setDiscriminator(Constantes.DISCRIMINATOR_SOLICITUD_EXCLUSION);
         
         List<SolicitudDetalle> listDetalles = new ArrayList<SolicitudDetalle>(this.detalles.values());
-        exclusion.setDetalles(listDetalles);
-        
-        for (Bien bien : this.getBienesAgregar()) {
-            exclusion.getDetalles().add(new SolicitudDetalle(exclusion, bien, this.estado));
+        for (Bien bienAgregar : this.getBienesAgregar()) {
+            listDetalles.add(new SolicitudDetalle(exclusion, bienAgregar, this.estado));
         }
+        
+        for (SolicitudDetalle detalle : listDetalles) { //Actualizo fecha de los detalles en caso que se haya modificado
+            if (!this.bienes.containsKey(detalle.getBien().getId())) {
+                this.getDetallesEliminar().add(detalle);
+                this.detalles.remove(detalle.getBien().getId());
+            }
+        }        
+        exclusion.setDetalles(listDetalles);        
         return exclusion;
     }
     //</editor-fold>    
@@ -191,14 +197,14 @@ public class ExclusionCommand {
         this.bienesEliminar = bienesEliminar;
     }
     
-    public List<Bien> getBienesAgregar() {
+    public Set<Bien> getBienesAgregar() {
         if (this.bienesAgregar == null) {
-            this.bienesAgregar = new ArrayList<Bien>();
+            this.bienesAgregar = new HashSet<Bien>();
         }
         return bienesAgregar;
     }
 
-    public void setBienesAgregar(List<Bien> bienesAgregar) {
+    public void setBienesAgregar(Set<Bien> bienesAgregar) {
         this.bienesAgregar = bienesAgregar;
     }
     
@@ -219,6 +225,14 @@ public class ExclusionCommand {
 
     public void setDetalles(Map<Long, SolicitudDetalle> detalles) {
         this.detalles = detalles;
+    }
+    
+    public void addBien(Bien bien) {
+        this.bienes.put(bien.getId(), bien);
+    }    
+    
+    public Bien getBien(Long id) {
+        return bienes.get(id);
     }
     
     public String getObservacionConfirmacion() {

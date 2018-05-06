@@ -72,12 +72,14 @@ public class ReporteDao extends GenericDaoImpl {
             extension = ".pdf";
         } else if (formatoReporte.equalsIgnoreCase("MSEXCEL")) {
             exporter = new JExcelApiExporter(); //Excel
-            extension = ".xls";
+            extension = ".xlsx";
+            /*
             exporter.setParameter(JExcelApiExporterParameter.IS_ONE_PAGE_PER_SHEET, Boolean.FALSE);
             exporter.setParameter(JExcelApiExporterParameter.IS_DETECT_CELL_TYPE, Boolean.TRUE);
             exporter.setParameter(JExcelApiExporterParameter.IS_REMOVE_EMPTY_SPACE_BETWEEN_COLUMNS, Boolean.TRUE);
             exporter.setParameter(JExcelApiExporterParameter.IS_IGNORE_CELL_BACKGROUND, Boolean.FALSE);
             exporter.setParameter(JExcelApiExporterParameter.IS_IGNORE_CELL_BORDER, Boolean.FALSE);
+            */
         } else if (formatoReporte.equalsIgnoreCase("HTML")) {
             exporter = new JRHtmlExporter(); //Html
             extension = ".html";

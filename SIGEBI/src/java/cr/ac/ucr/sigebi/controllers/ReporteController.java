@@ -321,6 +321,34 @@ public class ReporteController extends BaseController {
     }
     
 
+    
+    
+    public void plantillaCargaLotes(){
+        try{
+            ServletContext context = (ServletContext) FacesContext.getCurrentInstance().getExternalContext().getContext();
+           
+            String ruta = cr.ac.ucr.framework.reporte.componente.utilitario.Util.ConvertirRutas("/reportes/PlantillaCargaLotes.jasper");
+            
+            
+            
+            String directorioRaiz7 = context.getRealPath("/reportes/PlantillaCargaLotes.jasper");
+            String directorioRaiz = "reportes/PlantillaCargaLotes.jasper";
+
+
+            String exportReporte = "plantillaLotes";
+            
+            Map parameter = new HashMap();
+            
+            reporteDao.ejecutarReporte( exportReporte, ruta, parameter, "MSEXCEL");
+        }catch(Exception e){
+            Mensaje.agregarErrorAdvertencia( e, Util.getEtiquetas("sigebi.Traslado.Err.Reporte"));
+            commandMovimiento.setError(e.getCause().getMessage());
+        }
+    }
+    
+    
+    
+    
     // </editor-fold>
     
     

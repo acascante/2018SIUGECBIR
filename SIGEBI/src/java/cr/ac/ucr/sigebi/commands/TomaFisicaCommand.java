@@ -532,7 +532,7 @@ public class TomaFisicaCommand {
 
     //</editor-fold>
     
-    //<editor-fold defaultstate="collapsed" desc="Cargas de Excel">
+    //<editor-fold defaultstate="collapsed" desc="Cargas de Excel Unitaria">
     
     //Estructura carga Excel
     public class ObjetoCarga{
@@ -541,7 +541,7 @@ public class TomaFisicaCommand {
         String identificacion;
         String descripcion;
         Boolean mostrarErrores;
-        Boolean seleccionado;
+        Boolean esSobrante;
         String descripcionError;
         Bien bien;
 
@@ -590,14 +590,14 @@ public class TomaFisicaCommand {
             this.mostrarErrores = mostrarErrores;
         }
 
-
-        public Boolean getSeleccionado() {
-            return seleccionado;
+        public Boolean getEsSobrante() {
+            return esSobrante;
         }
 
-        public void setSeleccionado(Boolean seleccionado) {
-            this.seleccionado = seleccionado;
+        public void setEsSobrante(Boolean esSobrante) {
+            this.esSobrante = esSobrante;
         }
+
 
         public Bien getBien() {
             return bien;
@@ -635,9 +635,116 @@ public class TomaFisicaCommand {
     }
     
     
+    //</editor-fold>
+
+    
+    
+    //<editor-fold defaultstate="collapsed" desc="Cargas de Excel Unitaria">
+    private List<ObjetoCargaLote> objetosCargaLote;
+    private ObjetoCargaLote objetoCargaLote;
+    //Estructura carga Excel
+    public class ObjetoCargaLote{
+        
+        //<editor-fold defaultstate="collapsed" desc="Atributos">
+        String identificacion;
+        String descripcion;
+        Boolean esValido;
+        String descripcionError;
+        int cantidad;
+
+        
+        //</editor-fold>
+        
+        //<editor-fold defaultstate="collapsed" desc="Costructor">
+        
+        public ObjetoCargaLote() {
+            esValido = false;
+            descripcionError = "";
+            descripcion = "";
+            identificacion = "";
+            cantidad = 0;
+            
+        }
+        
+        //</editor-fold>
+        
+        
+        //<editor-fold defaultstate="collapsed" desc="SETs & GETs">
+
+        
+        
+        
+        //</editor-fold>
+
+        public String getIdentificacion() {
+            return identificacion;
+        }
+
+        public void setIdentificacion(String identificacion) {
+            this.identificacion = identificacion;
+        }
+
+        public String getDescripcion() {
+            return descripcion;
+        }
+
+        public void setDescripcion(String descripcion) {
+            this.descripcion = descripcion;
+        }
+
+        public Boolean getEsValido() {
+            return esValido;
+        }
+
+        public void setEsValido(Boolean esValido) {
+            this.esValido = esValido;
+        }
+
+        public String getDescripcionError() {
+            return descripcionError;
+        }
+
+        public void setDescripcionError(String descripcionError) {
+            this.descripcionError = descripcionError;
+        }
+
+        public int getCantidad() {
+            return cantidad;
+        }
+
+        public void setCantidad(int cantidad) {
+            this.cantidad = cantidad;
+        }
+        
+        
+        
+        
+    }
+    
+    public ObjetoCargaLote getNewObjetoCargaLote(){
+        return new ObjetoCargaLote();
+    }
+    
+    public List<ObjetoCargaLote> getObjetosCargaLote() {
+        return objetosCargaLote;
+    }
+
+    public void setObjetosCargaLote(List<ObjetoCargaLote> objetosCargaLote) {
+        this.objetosCargaLote = objetosCargaLote;
+    }
+
+    public ObjetoCargaLote getObjetoCargaLote() {
+        return objetoCargaLote;
+    }
+
+    public void setObjetoCargaLote(ObjetoCargaLote objetoCargaLote) {
+        this.objetoCargaLote = objetoCargaLote;
+    }
     
     
     //</editor-fold>
 
+    
+    
     
 }

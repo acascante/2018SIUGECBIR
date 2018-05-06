@@ -76,6 +76,26 @@ public class ConvenioDao extends GenericDaoImpl {
         }
     }
     
+    @Transactional(readOnly = true)
+    public List<Convenio> listarActivosRecibir(UnidadEjecutora unidadEjecutora, Date fecha) throws FWExcepcion {
+        Session session = dao.getSessionFactory().openSession();
+        try {
+            StringBuilder sql = new StringBuilder("SELECT c FROM Convenio c WHERE ");
+            sql.append(":fecha BETWEEN c.fechaInicio AND c.fechaFin AND ");
+            sql.append("(c.unidadEjecutora = :unidadEjecutora OR c.soloEstaUnidad = 0) AND ");
+            sql.append("c.recibirPrestamo = 1 ");
+            Query query = session.createQuery(sql.toString());
+            query.setParameter("fecha", fecha);
+            query.setParameter("unidadEjecutora", unidadEjecutora);
+            
+            return (List<Convenio>) query.list();
+        } catch (HibernateException e) {
+            throw new FWExcepcion("sigebi.label.convenios.error.listar", "Error obtener los registros de tipo " + this.getClass(), e.getCause());
+        }finally{
+            session.close();        
+        }
+    }
+    
     @Transactional
     public void salvar(Convenio convenio) throws FWExcepcion {
         try {

@@ -8,7 +8,6 @@ package cr.ac.ucr.sigebi.models;
 import cr.ac.ucr.sigebi.daos.TipoDao;
 import cr.ac.ucr.framework.utils.FWExcepcion;
 import cr.ac.ucr.sigebi.domain.Tipo;
-import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 import java.util.List;
@@ -23,6 +22,14 @@ public class TipoModel {
     
     @Resource
     private TipoDao tipoDao;
+    
+    public void salvar(Tipo tipo) throws FWExcepcion {
+        tipoDao.salvar(tipo);
+    }
+    
+    public void eliminar(Tipo tipo) throws FWExcepcion {
+        tipoDao.eliminar(tipo);
+    }
     
     public List<Tipo> listar() throws FWExcepcion {
         return tipoDao.listar();

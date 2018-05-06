@@ -1,0 +1,38 @@
+<div xmlns:ice="http://www.icesoft.com/icefaces/component"
+      xmlns:f="http://java.sun.com/jsf/core" >
+
+    <!-- Modal para confirmar -->
+    <ice:panelPopup modal="true" visible="#{controllerAgregarTipos.visiblePanelConfirmacion}" styleClass="popup">
+        <f:facet name="body">
+            <fieldset class="panel_Container" >
+                <div class="container" style="margin-top: 20px;">
+                    <!-- Titulo -->
+                    <div class="row">
+                        <div class='col-sm-12'>
+                            <h1 style="margin: 0px;">
+                                <ice:outputFormat value="#{label['sigebi.label.agregar.tipo.confirmacion.titulo']}"/>
+                            </h1>
+                        </div>                
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12" style="margin-top: 20px;">
+                            <ice:outputFormat value="#{label['sigebi.label.exclusiones.confirmacion.mensaje']}"/>
+                        </div>
+                    </div>
+                    <div class="row"  style="margin-top: 20px; margin-bottom: 20px;">
+                        <div class='col-md-6'>
+                            <span class="alineado_izquierda">
+                                <ice:commandButton id="btnCancelar" value="#{label['label.cancelar']}" action="#{controllerAgregarTipos.eliminarTipoCancelar}" partialSubmit="true" styleClass="boton" />
+                            </span>
+                        </div>
+                        <div class="col-md-6">
+                            <span class="alineado_derecha">
+                                <ice:commandButton id="btbAceptar" value="#{label['label.aceptar']}" action="#{controllerAgregarTipos.eliminarTipoAceptar}" rendered="#{controllerAgregarExclusiones.visibleBotonRevisarObservacion}" partialSubmit="true" style="float: right" styleClass="boton"/>
+                            </span>
+                        </div>
+                    </div>
+                </div>                
+            </fieldset>       
+        </f:facet>  
+    </ice:panelPopup>
+</div>

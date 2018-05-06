@@ -234,6 +234,24 @@
                             <ice:outputFormat value="#{label['sigebi.Responsable.label.ConfirmaGuardar']}"/>
                         </div>
                     </div>
+                    <div class="row">
+                        <div class="col-md-12" >
+                                  
+                                                        
+                            
+                                <ice:outputText value="#{label['sigebi.Justificacion.Label.Justificacion']}" 
+                                                   rendered="#{responsableController.rechazar}"/>  
+                                <ice:inputTextarea id="txtJustificacion" 
+                                                   styleClass="form-control" 
+                                                   rendered="#{responsableController.rechazar}"
+                                                   partialSubmit="false"
+                                                   style="resize: none"
+                                               value="#{responsableController.justificacion}" >
+                                </ice:inputTextarea>
+                            
+                            
+                        </div>
+                    </div>
                     <div class="row" style="margin-top: 20px; margin-bottom: 20px;">
                         <div class='col-md-6'>
                             <ice:commandButton id="btnCerrarPanel" 

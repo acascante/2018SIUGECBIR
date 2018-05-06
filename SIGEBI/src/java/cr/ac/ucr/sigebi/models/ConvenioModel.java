@@ -40,6 +40,10 @@ public class ConvenioModel {
         return convenioDao.listarActivos(unidadEjecutora, fecha);
     }
     
+    public List<Convenio> listarActivosRecibir(UnidadEjecutora unidadEjecutora) throws FWExcepcion {
+        return convenioDao.listarActivosRecibir(unidadEjecutora, new Date());
+    }
+    
     public void salvar(Convenio convenio) throws FWExcepcion {
         convenioDao.salvar(convenio);
     }

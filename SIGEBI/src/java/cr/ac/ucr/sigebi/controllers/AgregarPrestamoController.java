@@ -20,7 +20,6 @@ import cr.ac.ucr.sigebi.domain.Convenio;
 import cr.ac.ucr.sigebi.domain.Estado;
 import cr.ac.ucr.sigebi.domain.Persona;
 import cr.ac.ucr.sigebi.domain.RegistroMovimientoSolicitud;
-import cr.ac.ucr.sigebi.domain.SolicitudDetallePrestamo;
 import cr.ac.ucr.sigebi.domain.SolicitudPrestamo;
 import cr.ac.ucr.sigebi.domain.Tipo;
 import cr.ac.ucr.sigebi.domain.UnidadEjecutora;
@@ -69,6 +68,7 @@ public class AgregarPrestamoController extends BaseController {
         private ListarBienesCommand command;
         private Estado estadoInternoNormal;
         private Estado estadoActivo;
+        private Map<Long, Bien> allBienes;
         private Map<Long, Bien> bienes;
         private Map<Long, Boolean> bienesSeleccionados;
 
@@ -76,12 +76,13 @@ public class AgregarPrestamoController extends BaseController {
             super();
             this.command = new ListarBienesCommand();
             this.bienes = new HashMap<Long, Bien>();
+            this.allBienes = new HashMap<Long, Bien>();
             this.bienesSeleccionados = new HashMap<Long, Boolean>();            
         }
 
-        public ListadoBienes(Estado estadoNormal, Estado estadoActivo) {
+        public ListadoBienes(Estado estadoInternoNormal, Estado estadoActivo) {
             this();
-            this.estadoInternoNormal = estadoNormal;
+            this.estadoInternoNormal = estadoInternoNormal;
             this.estadoActivo = estadoActivo;
         }
         
@@ -105,6 +106,7 @@ public class AgregarPrestamoController extends BaseController {
                 List<Bien> itemsBienes = bienModel.listar(this.getPrimerRegistro() - 1, this.getUltimoRegistro(), this.command.getFltIdCodigo(), this.unidadEjecutora , this.command.getFltIdentificacion(), this.command.getFltDescripcion(), this.command.getFltMarca(), this.command.getFltModelo(), this.command.getFltSerie(), this.estadoActivo, this.estadoInternoNormal);
                 this.bienes.clear();
                 for (Bien item : itemsBienes) {
+                    this.allBienes.put(item.getId(), item);
                     this.bienes.put(item.getId(), item);
                 }
            } catch (FWExcepcion e) {
@@ -151,6 +153,14 @@ public class AgregarPrestamoController extends BaseController {
             this.estadoActivo = estadoActivo;
         }
 
+        public Map<Long, Bien> getAllBienes() {
+            return allBienes;
+        }
+
+        public void setAllBienes(Map<Long, Bien> allBienes) {
+            this.allBienes = allBienes;
+        }
+        
         public Map<Long, Bien> getBienes() {
             return bienes;
         }
@@ -435,14 +445,15 @@ public class AgregarPrestamoController extends BaseController {
     private boolean autorizadoAprobar;
     
     private int accion;
-
+    private Long bienSeleccionado;
+    
     public AgregarPrestamoController() {
         super();
     }
     
     private void inicializarNuevo() {
-        Estado estado = this.estadoPorDominioValor(Constantes.DOMINIO_PRESTAMO, Constantes.ESTADO_PRESTAMO_CREADO);
-        this.command = new PrestamoCommand(this.unidadEjecutora, estado, this.usuarioSIGEBI);
+        Estado estadoPrestamoCreado = this.estadoPorDominioValor(Constantes.DOMINIO_PRESTAMO, Constantes.ESTADO_PRESTAMO_CREADO);
+        this.command = new PrestamoCommand(this.unidadEjecutora, estadoPrestamoCreado, this.usuarioSIGEBI);
         this.solicitudRegistrada = false;
         this.autorizadoAprobar = false;
         this.disableEntidades = true;
@@ -507,17 +518,21 @@ public class AgregarPrestamoController extends BaseController {
                 Tipo tipo = this.tipoPorId(this.command.getIdTipoEntidad());
                 
                 // Almaceno o actualizo Solicitud
+                // Se almacenan o actualizan los detalles tambien
                 SolicitudPrestamo solicitud = this.command.getPrestamo(tipo);
-                this.prestamoModel.salvar(solicitud);
+                this.prestamoModel.salvar(solicitud);   
                 if (!this.command.getDetallesEliminar().isEmpty()) {
                     this.prestamoModel.eliminarDetalles(this.command.getDetallesEliminar());
                 }
                 
-                List<Bien> listBienes = new ArrayList<Bien>(this.command.getListBienes());
-                if (!listBienes.isEmpty()) {
-                    this.bienModel.actualizar(listBienes);
+                // Acualizo el estado de bienes que se agregaron
+                List<Bien> listBienesAgregar = new ArrayList<Bien>();
+                listBienesAgregar.addAll(this.command.getBienesAgregar());
+                if (!listBienesAgregar.isEmpty()) {
+                    this.bienModel.actualizar(listBienesAgregar);
                 }
                 
+                // Acualizo el estado de bienes que se eliminaron
                 List<Bien> listBienesEliminar = new ArrayList<Bien>(this.command.getBienesEliminar());
                 if (!listBienesEliminar.isEmpty()) {
                     this.bienModel.actualizar(listBienesEliminar);
@@ -645,7 +660,7 @@ public class AgregarPrestamoController extends BaseController {
             Calendar calendar = Calendar.getInstance(Constantes.DEFAULT_TIME_ZONE);
             calendar.setTime(today);
             calendar.add(Calendar.DATE, -1);
-            if (fecha.before(calendar.getTime())) {
+            if (!this.solicitudRegistrada && fecha.before(calendar.getTime()) ) {
                 Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.label.prestamos.error.fecha.menor.hoy"));
                 ((UIInput) component).setValid(false); 
             } 
@@ -724,7 +739,7 @@ public class AgregarPrestamoController extends BaseController {
                 }
             }
             almacenarObservacion(tipo);
-            mensajeExito = "Exclusion procesada exitosamente.";
+            mensajeExito = "Solicitud procesada exitosamente.";
         } catch (FWExcepcion err) {
             mensaje = err.getMessage();
         } catch (Exception ex) {
@@ -744,13 +759,14 @@ public class AgregarPrestamoController extends BaseController {
         Estado estadoEnSolicitud = this.estadoPorDominioValor(Constantes.DOMINIO_BIEN_INTERNO, Constantes.ESTADO_INTERNO_BIEN_PRESTAMO);
         
         if (!this.listadoBienes.bienesSeleccionados.isEmpty()) {
-            for (Map.Entry<Long, Boolean> entry : this.listadoBienes.bienesSeleccionados.entrySet()) {
-                if (entry.getValue()) {
-                    Bien bien = this.listadoBienes.bienes.get(entry.getKey());
+            for (Map.Entry<Long, Boolean> rowBien : this.listadoBienes.bienesSeleccionados.entrySet()) {
+                Bien bien = this.listadoBienes.allBienes.get(rowBien.getKey());
+                if (rowBien.getValue()) {
                     bien.setEstadoInterno(estadoEnSolicitud);
-                    //TODO revisar fechas
-                    this.command.addBien(bien, null, null);
-                    this.command.getBienesAgregar().add(bien);
+                    this.command.addBien(bien); //Detalles -- this.bienes.put(bien.getId(), new BienDetalle(bien));
+                    this.command.getBienesAgregar().add(bien);  // Lista de bienes a los que se les debe actualizar el estado
+                } else if (this.command.getBienes().containsKey(bien.getId())){
+                    this.command.getBienes().remove(bien.getId());    // Lo saco de la lista de bienes que se muestran en pantalla
                 }
             }
         }
@@ -759,15 +775,14 @@ public class AgregarPrestamoController extends BaseController {
     public void eliminarBien(ActionEvent event) {
         Estado estadoInternoNormal = this.estadoPorDominioValor(Constantes.DOMINIO_BIEN_INTERNO, Constantes.ESTADO_INTERNO_BIEN_NORMAL);
         Long idBien = (Long) event.getComponent().getAttributes().get("bienSeleccionado");
-        Bien bien = this.command.getBien(idBien);
+        Bien bien = this.listadoBienes.allBienes.containsKey(idBien) ? this.listadoBienes.allBienes.get(idBien) : this.command.getBien(idBien);
+        this.command.getBienesAgregar().remove(bien); // Lo elimino de la lista de bienes a agregar
         
         bien.setEstadoInterno(estadoInternoNormal);
-        this.command.getBienesEliminar().add(bien); // Lo agrego a la lista de bienes a eliminar
         this.command.getBienes().remove(idBien);    // Lo saco de la lista de bienes que se muestran en pantalla
         if (this.command.getDetalles().containsKey(bien.getId())) { // Si esta en la lista de detalles, es xq se trata de un detalle existente en la BD
-            this.command.getDetallesEliminar().add(this.command.getDetalles().get(bien.getId()));   // Lo agrego a la lista de detalles a eliminar
-            this.command.getDetalles().remove(bien.getId());    // Lo elimino de la lista de detalles, esto ahorita no sirve
-        }                                                       // xq la version de hibernate no permite actualizar colecciones
+            this.command.getBienesEliminar().add(bien); // Lo agrego a la lista de bienes a eliminar
+        }
     }
     
     public void solicitarBien(ActionEvent event) {
@@ -784,11 +799,12 @@ public class AgregarPrestamoController extends BaseController {
         this.command.setObservacionConfirmacion(new String());
         this.visiblePanelObservacion = true;
         this.accion = ACCION_RECHAZAR_BIEN;
+        this.bienSeleccionado = (Long) event.getComponent().getAttributes().get("bienSeleccionado");
     }
-
-    public void rechazarBienObservacion(ActionEvent event) {
-        Long idBien = (Long) event.getComponent().getAttributes().get("bienSeleccionado");
-        movimientoBien(idBien, Constantes.ESTADO_PRESTAMO_RECHAZADO, Constantes.ESTADO_INTERNO_BIEN_NORMAL);        
+    
+    public void rechazarBienObservacion() {
+        this.visiblePanelObservacion = false;
+        movimientoBien(this.bienSeleccionado, Constantes.ESTADO_PRESTAMO_RECHAZADO, Constantes.ESTADO_INTERNO_BIEN_NORMAL);        
     }
     
     private void movimientoBien(Long idBien, int solicitud, int bienInterno) {
@@ -797,7 +813,7 @@ public class AgregarPrestamoController extends BaseController {
         Estado estadoSolicitud = this.estadoPorDominioValor(Constantes.DOMINIO_PRESTAMO, solicitud);
         
         bien.setEstadoInterno(estadoBienInterno);
-        bienModel.actualizar(bien);
+        this.bienModel.actualizar(bien);
         
         // Si todos los bienes de la solicitud tienen el mismo estado, se modifica el estado de la solicitud
         if (verificarSolicitud(estadoBienInterno)) {
@@ -895,7 +911,7 @@ public class AgregarPrestamoController extends BaseController {
                 
                 case 5: // ENTIDAD EXTERNA (CONVENIOS)
                     this.visibleCampoEntidad = false;
-                    List<Convenio> convenios = this.convenioModel.listar();
+                    List<Convenio> convenios = this.convenioModel.listarActivos(unidadEjecutora, new Date());
                     if  (convenios.isEmpty()) {
                         Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.error.agregarBienController.cargarSubCategorias"));
                     } else {

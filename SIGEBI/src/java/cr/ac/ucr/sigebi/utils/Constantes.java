@@ -169,9 +169,11 @@ public final class Constantes {
     public static final String DOMINIO_PRESTAMO = "PRESTAMO";
     public static final String DOMINIO_PRESTAMO_ENTIDAD = "PRESTAMO_ENTIDAD";
     public static final String DOMINIO_PROCESO = "PROCESO";
+    public static final String DOMINIO_RECEPCION_PRESTAMO = "RECEPCION_PRESTAMO";
     public static final String DOMINIO_REGISTRO_MOVIMIENTO = "REGISTRO_MOVIMIENTO";
     public static final String DOMINIO_REPORTE = "REPORTE";
     public static final String DOMINIO_SOLI_DONACION = "SOL_DONACION";
+    public static final String DOMINIO_TIPOS_MODIFICAR = "TIPOS_MODIFICAR";
     public static final String DOMINIO_TOMA_FISICA = "TOMA_FISICA";
     public static final String DOMINIO_TOMA_FISICA_MOTIVO = "TOMA_FISICA_MOTIVO";
     public static final String DOMINIO_ASIGNAR_RESPONSABLE = "ASIGNAR_RESPONSABLE";
@@ -182,6 +184,7 @@ public final class Constantes {
     public static final Integer TIPO_ADJUNTO_DOCUMENTO = 2;
     public static final Integer TIPO_ADJUNTO_DONACION = 3;
     public static final Integer TIPO_ADJUNTO_CONVENIO = 4;
+    public static final Integer TIPO_ADJUNTO_RECEPCION_PRESTAMO = 5;
 
     //TIPOS ORIGENES
     public static final Integer TIPO_ORIGEN_EXTERNA = 7;
@@ -197,6 +200,7 @@ public final class Constantes {
     public static final Integer TIPO_REGISTRO_MOVIMIENTO_RECHAZAR_AUTORIZACION = 4;
     public static final Integer TIPO_REGISTRO_MOVIMIENTO_CAMBIO_CONVENIO = 5;
     public static final Integer TIPO_REGISTRO_MOVIMIENTO_RECHAZO_ASIGNACION_PLACA = 6;
+    public static final Integer TIPO_REGISTRO_MOVIMIENTO_CAMBIO_RECEPCION_PRESTAMO = 7;
 
     public static final String TIPO_MOVIMIENTO_SINCRONIZAR_AGREGAR = "AGREGAR";
     public static final String TIPO_MOVIMIENTO_SINCRONIZAR_EXCLUIR = "EXCLUIR";
@@ -264,6 +268,11 @@ public final class Constantes {
     public static final String VISTA_CONVENIO_NUEVO = "convenio_nuevo";
     public static final String VISTA_CONVENIO_NUEVO_PAGINA = "../convenios/convenioDetalle.xhtml";
 
+    public static final String VISTA_RECEPCION_PRESTAMO_LISTADO = "rec_prestamo";
+    public static final String VISTA_RECEPCION_PRESTAMO_LISTADO_PAGINA = "../prestamos/listarRecepcionPrestamos.xhtml";
+    public static final String VISTA_RECEPCION_PRESTAMO_NUEVO = "rec_prestamo_nuevo";
+    public static final String VISTA_RECEPCION_PRESTAMO_NUEVO_PAGINA = "../prestamos/recepcionPrestamoDetalle.xhtml";
+
     public static final String VISTA_INFORME_TECNICO = "informe";
     public static final String VISTA_INFORME_TECNICO_LISTADO = "../exclusiones/listarInformesTecnicos.xhtml";
     public static final String VISTA_INFORME_TECNICO_DET = "informe_detalle";
@@ -290,6 +299,10 @@ public final class Constantes {
     public static final String KEY_VISTA_LISTAR_ACTAS = "acta";
     public static final String VISTA_LISTAR_ACTAS = "../exclusiones/actasListar.xhtml";
 
+    //TIPOS
+    public static final String KEY_VISTA_TIPOS = "tipos";
+    public static final String KEY_VISTA_TIPOS_PAGINA = "../tipos/agregarTipos.xhtml";
+
     //TRASLADOS
     public static final String KEY_VISTA_TRASLADOS_LISTAR = "traslados";
     public static final String VISTA_TRASLADOS_LISTAR = "../movimientos/trasladosListar.xhtml";
@@ -308,7 +321,6 @@ public final class Constantes {
     public static final String KEY_REPORTE_SOBRANTES = "rep_sobrantes"; 
     public static final String VISTA_REPORTE_SOBRANTES = "../reportes/reporteSobrantes.xhtml";
     
-
     //PERMISOS TRASLADOS
     public static final String KEY_VISTA_TRASLADO_PERMISOS = "permisosMovimientos";
     public static final String VISTA_TRASLADO_PERMISOS = "../movimientos/permisosMovimientos.xhtml";

@@ -22,7 +22,7 @@
                     <div class="row">
                         <div class="col-md-12" style="margin-top: 20px;">
                             <div class="form-group">
-                                <label class="control-label" for="txtDetalle">
+                                <label class="control-label" for="observacionConfirmacion">
                                     <ice:outputText value="#{label['sigebi.label.prestamos.confirmacion.observacion']}"/> 
                                 </label>
                                 <ice:inputTextarea id="observacionConfirmacion" styleClass="form-control" cols="2" 
@@ -35,7 +35,7 @@
                             <ice:commandButton id="btnCerrarPanel" value="#{label['label.regresar']}" action="#{controllerAgregarPrestamos.cerrarPanelObservaciones}" partialSubmit="true" rendered="true" style="float: left" styleClass="boton" />
                         </div>
                         <div class="col-md-6">
-                            <ice:commandButton id="botonRechazarBienObservacion" value="#{label['label.rechazar']}" action="#{controllerAgregarPrestamos.rechazarBienObservacion}" rendered="#{controllerAgregarPrestamos.visibleBotonRechazarBienObservacion}" partialSubmit="true" style="float: right" styleClass="boton"/>
+                            <ice:commandButton id="botonRechazarBienObservacion" value="#{label['label.rechazarBien']}" action="#{controllerAgregarPrestamos.rechazarBienObservacion}" rendered="#{controllerAgregarPrestamos.visibleBotonRechazarBienObservacion}" partialSubmit="true" style="float: right" styleClass="boton"/>
                             <ice:commandButton id="botonRechazarObservacion" value="#{label['label.rechazar']}" action="#{controllerAgregarPrestamos.rechazarPrestamoObservacion}" rendered="#{controllerAgregarPrestamos.visibleBotonRechazarObservacion}" partialSubmit="true" style="float: right" styleClass="boton"/>
                             <ice:commandButton id="botonRevisarObservacion" value="#{label['label.revisar']}" action="#{controllerAgregarPrestamos.revisarPrestamoObservacion}" rendered="#{controllerAgregarPrestamos.visibleBotonRevisarObservacion}" partialSubmit="true" style="float: right" styleClass="boton"/>
                             <ice:commandButton id="botonAnularObservacion" value="#{label['label.anular']}" action="#{controllerAgregarPrestamos.anularPrestamoObservacion}" rendered="#{controllerAgregarPrestamos.visibleBotonAnularObservacion}" partialSubmit="true" style="float: right" styleClass="boton"/>
@@ -45,6 +45,4 @@
             </fieldset>       
         </f:facet>  
     </ice:panelPopup>
-    
-    
 </div>

@@ -17,8 +17,10 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.TimeZone;
 
 /**
@@ -39,12 +41,25 @@ public class PrestamoCommand {
 
         public BienDetalle() { }
 
+        public BienDetalle(Bien bien) {
+            this.bien = bien;
+            this.fechaInicio = getDefaultDate();
+            this.fechaFin = getDefaultDate();
+        }
+        
         public BienDetalle(Bien bien, Date fechaInicio, Date fechaFin) {
             this.bien = bien;
             this.fechaInicio = fechaInicio;
             this.fechaFin = fechaFin;
         }
         
+        private Date getDefaultDate() {
+            Date today = new Date();
+            Calendar calendar = Calendar.getInstance(Constantes.DEFAULT_TIME_ZONE);
+            calendar.setTime(today);
+            return calendar.getTime();
+        }
+
         public Bien getBien() {
             return bien;
         }
@@ -79,14 +94,14 @@ public class PrestamoCommand {
     private String entidad;
     private Date fecha;
     private String observacion;
+    private String observacionConfirmacion;
     private Usuario usuario;
+
     private List<Bien> bienesEliminar;  // Bienes a eliminar
-    private List<Bien> bienesAgregar;   // Bienes a agregar
+    private Set<Bien> bienesAgregar;   // Bienes a agregar
     private Map<Long, BienDetalle> bienes;     // Bienes existenetes en la solicitud
     private List<SolicitudDetallePrestamo> detallesEliminar;
-    private Map<Long, SolicitudDetallePrestamo> detalles;
-    
-    private String observacionConfirmacion;
+    private Map<Long, SolicitudDetallePrestamo> detalles;    
     //</editor-fold>
     
     //<editor-fold defaultstate="collapsed" desc="Constructores">
@@ -132,26 +147,31 @@ public class PrestamoCommand {
         prestamo.setFecha(this.fecha);
         prestamo.setTipo(tipo);
         prestamo.setEntidad(this.entidad);
-        prestamo.setObservacion(this.observacion);
         prestamo.setUsuario(this.usuario);
         prestamo.setDiscriminator(Constantes.DISCRIMINATOR_SOLICITUD_PRESTAMO);
         
         List<SolicitudDetallePrestamo> listDetalles = new ArrayList<SolicitudDetallePrestamo>(this.detalles.values());
-        for (SolicitudDetallePrestamo detalle : listDetalles) {
-            BienDetalle bienDetalle = bienes.get(detalle.getBien().getId());
-            if(!bienDetalle.getFechaInicio().equals(detalle.getFechaInicio())) {
-                detalle.setFechaInicio(bienDetalle.getFechaInicio());
-            }
-            if(!bienDetalle.getFechaFin().equals(detalle.getFechaFin())) {
-                detalle.setFechaFin(bienDetalle.getFechaFin());
+        
+        for (Bien bien : this.getBienesAgregar()) {
+            BienDetalle bienDetalle = this.bienes.get(bien.getId());
+            listDetalles.add(new SolicitudDetallePrestamo(prestamo, bien, this.estado, bienDetalle.getFechaInicio(), bienDetalle.getFechaFin()));
+        }
+         
+        for (SolicitudDetallePrestamo detalle : listDetalles) { //Actualizo fecha de los detalles en caso que se haya modificado
+            if (this.bienes.containsKey(detalle.getBien().getId())) {
+                BienDetalle bienDetalle = this.bienes.get(detalle.getBien().getId());
+                if(!bienDetalle.getFechaInicio().equals(detalle.getFechaInicio())) {
+                    detalle.setFechaInicio(bienDetalle.getFechaInicio());
+                }
+                if(!bienDetalle.getFechaFin().equals(detalle.getFechaFin())) {
+                    detalle.setFechaFin(bienDetalle.getFechaFin());
+                }
+            } else {
+                this.getDetallesEliminar().add(detalle);
+                this.detalles.remove(detalle.getBien().getId());
             }
         }
         prestamo.setDetallesPrestamo(listDetalles);
-        
-        for (Bien bien : this.getBienesAgregar()) {
-            BienDetalle bienDetalle = bienes.get(bien.getId());
-            prestamo.getDetalles().add(new SolicitudDetallePrestamo(prestamo, bien, this.estado, bienDetalle.getFechaInicio(), bienDetalle.getFechaFin()));
-        }
         return prestamo;
     }
     //</editor-fold>    
@@ -211,7 +231,6 @@ public class PrestamoCommand {
     public void setIdEntidad(Long idEntidad) {
         this.idEntidad = idEntidad;
     }
-
     
     public String getEntidad() {
         return entidad;
@@ -256,14 +275,14 @@ public class PrestamoCommand {
         this.bienesEliminar = bienesEliminar;
     }
 
-    public List<Bien> getBienesAgregar() {
+    public Set<Bien> getBienesAgregar() {
         if (this.bienesAgregar == null) {
-            this.bienesAgregar = new ArrayList<Bien>();
+            this.bienesAgregar = new HashSet<Bien>();
         }
         return bienesAgregar;
     }
 
-    public void setBienesAgregar(List<Bien> bienesAgregar) {
+    public void setBienesAgregar(Set<Bien> bienesAgregar) {
         this.bienesAgregar = bienesAgregar;
     }
 
@@ -296,12 +315,16 @@ public class PrestamoCommand {
     }
 
     public List<BienDetalle> getListBienesDetalle() {
-        List<BienDetalle> list = new ArrayList<BienDetalle>(bienes.values());
+        List<BienDetalle> list = new ArrayList<BienDetalle>(this.bienes.values());
         return list;
     }
 
     public void addBien(Bien bien, Date fechaInicio, Date fechaFin) {
         this.bienes.put(bien.getId(), new BienDetalle(bien, fechaInicio, fechaFin));
+    }
+    
+    public void addBien(Bien bien) {
+        this.bienes.put(bien.getId(), new BienDetalle(bien));
     }
     
     public void setBienes(Map<Long, BienDetalle> bienes) {
@@ -324,7 +347,6 @@ public class PrestamoCommand {
         List<SolicitudDetallePrestamo> list = new ArrayList<SolicitudDetallePrestamo>(detalles.values());
         return list;
     }
-
 
     public void setDetalles(Map<Long, SolicitudDetallePrestamo> detalles) {
         this.detalles = detalles;

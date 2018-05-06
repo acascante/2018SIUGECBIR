@@ -13,6 +13,7 @@ import cr.ac.ucr.sigebi.utils.Constantes;
 import cr.ac.ucr.framework.vista.util.Util;
 import cr.ac.ucr.sigebi.commands.TomaFisicaCommand;
 import cr.ac.ucr.sigebi.commands.TomaFisicaCommand.ObjetoCarga;
+import cr.ac.ucr.sigebi.commands.TomaFisicaCommand.ObjetoCargaLote;
 import cr.ac.ucr.sigebi.domain.Bien;
 import cr.ac.ucr.sigebi.domain.Categoria;
 import cr.ac.ucr.sigebi.domain.Clasificacion;
@@ -48,6 +49,10 @@ import javax.faces.event.ActionEvent;
 import javax.faces.event.PhaseId;
 import javax.faces.event.ValueChangeEvent;
 import javax.faces.model.SelectItem;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
@@ -1346,9 +1351,12 @@ public class TomaFisicaController extends BaseController {
     
     public void validarLineaCargaUnitaria(ObjetoCarga lineaCarga){
         try{
+            String descError =  Util.getEtiquetas("sigebi.CargarInventario.ErrorSobrante") + ": " ;
+            lineaCarga.setEsSobrante(false);
             if(lineaCarga.getIdentificacion().length() > 0){
                 Bien bien = bienModel.buscarPorIdentificacion(lineaCarga.getIdentificacion());
                 if( (bien != null) && (bien.getId() != null) && (bien.getId() > 0)){
+                    lineaCarga.setBien(bien);
                     if(bien.getUnidadEjecutora().getId().equals(this.unidadEjecutora.getId())){
                         if((this.tomaFisicaCommand.getUbicacion() == null) || (this.tomaFisicaCommand.getUbicacion().getId() == null)){
                             lineaCarga.setBien(bien);
@@ -1357,20 +1365,51 @@ public class TomaFisicaController extends BaseController {
                                 lineaCarga.setBien(bien);
                             }
                             else{
-                                lineaCarga.setDescripcionError( Util.getEtiquetas("sigebi.CargarInventario.ErrorBienOtraUbicacion") );
+                                descError += Util.getEtiquetas("sigebi.CargarInventario.ErrorBienOtraUbicacion");
+                                //Pertenece a otra Ubicación
+                                //Lo pongo como sobrante
+                                lineaCarga.setEsSobrante(true);
+                                lineaCarga.setDescripcionError( descError );
                             }
-                        }
-                            
+                        }   
                     }
                     else{
-                        lineaCarga.setDescripcionError( Util.getEtiquetas("sigebi.CargarInventario.ErrorBienOtraUnidad") );
+                        descError += Util.getEtiquetas("sigebi.CargarInventario.ErrorBienOtraUnidad");
+                        //Pertenece a otra Unidad
+                        //Lo pongo como sobrante
+                        lineaCarga.setEsSobrante(true);
+                        lineaCarga.setDescripcionError( descError );
                     }
                 }else{
-                    lineaCarga.setDescripcionError( Util.getEtiquetas("sigebi.CargarInventario.ErrorBienNoEncontrado") );
+                    
+                    //El bién no se encontró
+                    
+                    //Si tiene descripción y una identificación menor a 30 
+                    //Lo pongo como sobrante
+                    if(lineaCarga.getIdentificacion().length() > 0 && lineaCarga.getIdentificacion().length() < 31 ){
+                        lineaCarga.setEsSobrante(true);
+                        descError += Util.getEtiquetas("sigebi.CargarInventario.ErrorBienNoEncontrado");
+                    }
+                    else{
+                        descError = Util.getEtiquetas("sigebi.CargarInventario.ErrorIdentifInvalida");
+                    }
+                    lineaCarga.setDescripcionError( descError );
                 }
             }
             else{
-                lineaCarga.setDescripcionError( Util.getEtiquetas("sigebi.CargarInventario.ErrorSinIdentificacion") );
+                
+                //Campo sin Identificación
+                
+                //Si tiene descripción 
+                //Lo pongo como sobrante
+                if(lineaCarga.getDescripcion().length() > 0 && lineaCarga.getDescripcion().length() < 200 ){
+                        lineaCarga.setEsSobrante(true);
+                        descError += Util.getEtiquetas("sigebi.CargarInventario.ErrorSinIdentificacion");
+                    }
+                    else{
+                        descError = Util.getEtiquetas("sigebi.CargarInventario.ErrorDescripcionReq");
+                    }
+                lineaCarga.setDescripcionError( descError );
             }
         }catch(Exception err){
             lineaCarga.setDescripcionError( Util.getEtiquetas("sigebi.CargarInventario.ErrorBienNoEncontrado") );
@@ -1396,17 +1435,54 @@ public class TomaFisicaController extends BaseController {
         }
     }
 
+    
+    
+    
     public void procesarCargaUnitaria(){
         try{
             if(tomaFisicaCommand.getObjetosCarga().size() > 0){
                 String respuesta = "";
                 List<String> respErrores = new ArrayList();
                 for(ObjetoCarga carga : tomaFisicaCommand.getObjetosCarga()){
+                    
                     respuesta = "";
-                    if(carga.getDescripcionError() != null && carga.getDescripcionError().length() > 0)
-                        respuesta = " - Bien "+ carga.getIdentificacion()+ ": " + carga.getDescripcionError();
-                    else
-                        respuesta = agregarBien(carga.getBien());
+                    
+                    //Agrego Sobrantes
+                    if(carga.getEsSobrante()){
+                        
+                        
+                                
+                        TomaFisicaSobrante sobrante = new TomaFisicaSobrante(); 
+
+                        sobrante.setIdentificacion(carga.getIdentificacion());
+                        sobrante.setDescripcion(carga.getDescripcion());
+                        sobrante.setTomaFisica(tomaFisicaCommand.getTomaFisica());
+                        
+                        String descSobrante = carga.getDescripcion();
+                        if (descSobrante == null || descSobrante.isEmpty() ) {
+                            //No tiene descripción pero el bien si existe
+                            if(carga.getBien() == null || 
+                               carga.getBien().getIdentificacion() == null ||
+                               carga.getBien().getIdentificacion().getIdentificacion().length() == 0    ){
+                                respuesta = Util.getEtiquetas("sigebi.CargarInventario.ErrorDescripcionReq");
+                                }
+                            else{
+                                
+                                sobrante.setDescripcion(carga.getBien().getDescripcion());
+                                tomaFisicaSobranteModel.agregar(sobrante);
+                            
+                            }
+                            
+                        }
+                        else
+                            tomaFisicaSobranteModel.agregar(sobrante);
+                    }
+                    else{
+                        if(carga.getDescripcionError() != null && carga.getDescripcionError().length() > 0)
+                            respuesta = " - Bien "+ carga.getIdentificacion()+ ": " + carga.getDescripcionError();
+                        else
+                            respuesta = agregarBien(carga.getBien());
+                    }
                     
                     if(respuesta.length() > 0)
                         respErrores.add(respuesta);
@@ -1417,6 +1493,9 @@ public class TomaFisicaController extends BaseController {
                 else
                     tomaFisicaCommand.setMostrarErroresCargaUnitaria(false);
                 //rendered="#{controllerTomaFisica.tomaFisicaCommand.objetoCarga.mostrarErrores}"
+                
+                //Se actualiza la lista
+                this.buscarTomasFisicasSobrantes();
             }
             else{
                 Mensaje.agregarErrorAdvertencia( Util.getEtiquetas("sigebi.CargarInventario.ErrorVacio") );
@@ -1425,6 +1504,79 @@ public class TomaFisicaController extends BaseController {
             
         }
     }
+    
+    
+    
+    
+    public void procesarCargaLotes(){
+        try{
+//            if(tomaFisicaCommand.getObjetosCarga().size() > 0){
+//                String respuesta = "";
+//                List<String> respErrores = new ArrayList();
+//                for(ObjetoCarga carga : tomaFisicaCommand.getObjetosCarga()){
+//                    
+//                    respuesta = "";
+//                    
+//                    //Agrego Sobrantes
+//                    if(carga.getEsSobrante()){
+//                        
+//                        
+//                                
+//                        TomaFisicaSobrante sobrante = new TomaFisicaSobrante(); 
+//
+//                        sobrante.setIdentificacion(carga.getIdentificacion());
+//                        sobrante.setDescripcion(carga.getDescripcion());
+//                        sobrante.setTomaFisica(tomaFisicaCommand.getTomaFisica());
+//                        
+//                        String descSobrante = carga.getDescripcion();
+//                        if (descSobrante == null || descSobrante.isEmpty() ) {
+//                            //No tiene descripción pero el bien si existe
+//                            if(carga.getBien() == null || 
+//                               carga.getBien().getIdentificacion() == null ||
+//                               carga.getBien().getIdentificacion().getIdentificacion().length() == 0    ){
+//                                respuesta = Util.getEtiquetas("sigebi.CargarInventario.ErrorDescripcionReq");
+//                                }
+//                            else{
+//                                
+//                                sobrante.setDescripcion(carga.getBien().getDescripcion());
+//                                tomaFisicaSobranteModel.agregar(sobrante);
+//                            
+//                            }
+//                            
+//                        }
+//                        else
+//                            tomaFisicaSobranteModel.agregar(sobrante);
+//                    }
+//                    else{
+//                        if(carga.getDescripcionError() != null && carga.getDescripcionError().length() > 0)
+//                            respuesta = " - Bien "+ carga.getIdentificacion()+ ": " + carga.getDescripcionError();
+//                        else
+//                            respuesta = agregarBien(carga.getBien());
+//                    }
+//                    
+//                    if(respuesta.length() > 0)
+//                        respErrores.add(respuesta);
+//                }
+//                tomaFisicaCommand.setErroresRegistradosCargaUnitaria(respErrores);
+//                if(respErrores.size()> 0)
+//                    tomaFisicaCommand.setMostrarErroresCargaUnitaria(true);
+//                else
+//                    tomaFisicaCommand.setMostrarErroresCargaUnitaria(false);
+//                //rendered="#{controllerTomaFisica.tomaFisicaCommand.objetoCarga.mostrarErrores}"
+//                
+//                //Se actualiza la lista
+//                this.buscarTomasFisicasSobrantes();
+//            }
+//            else{
+//                Mensaje.agregarErrorAdvertencia( Util.getEtiquetas("sigebi.CargarInventario.ErrorVacio") );
+//            }
+        }catch(Exception err){
+            
+        }
+    }
+    
+    
+    
     
     private String agregarBien(Bien bien){
         try{
@@ -1457,5 +1609,235 @@ public class TomaFisicaController extends BaseController {
     
     //</editor-fold>
     
+    
+    
+    //<editor-fold defaultstate="collapsed" desc="Carga Lotes Excel">
+    
+    
+    
+    
+    public void subirFileLotes(ActionEvent event) {
+        try {
+            InputFile inputFile = (InputFile) event.getSource();
+            FileInfo fileInfo = inputFile.getFileInfo();
+            
+            
+            File fileName = inputFile.getFile();
+            
+            FileInputStream file = new FileInputStream(fileName);
+            
+            leerExcelLotes(fileName);
+            //leerArchivoTomaLotes(file);
+            tomaFisicaCommand.setMostrarErroresCargaUnitaria(false);
+            
+        } catch (Exception err) {
+            Mensaje.agregarErrorAdvertencia(err, Util.getEtiquetas("sigebi.Bien.Error.Registro"));
+        }
+    }
+
+    
+    //C:\SIGEBI_FINAL\web\Documentos
+    public void leerArchivoTomaLotes(FileInputStream file){
+        try{
+            //Agrega el bien a la toma física
+            //agregarBienPorIdentificacionTomasFisicaUnitaria
+            
+            List cellData = new ArrayList();
+//            File fileName = new File("C:/SIGEBI_FINAL/web/Documentos/CargarBienes.xlsx");
+//            
+//            FileInputStream file = new FileInputStream(fileName);
+            
+
+            XSSFWorkbook workBook = new XSSFWorkbook(file);
+            
+            XSSFSheet hssfSheet = workBook.getSheetAt(0);
+            Iterator rowIterator = hssfSheet.rowIterator();
+            List cellTemp = new ArrayList();
+            
+            
+            List<ObjetoCargaLote> objetosCargaLote = new ArrayList<ObjetoCargaLote>();
+            tomaFisicaCommand.setObjetosCargaLote(objetosCargaLote);
+            int i = 0;
+            while(rowIterator.hasNext()){
+                //Obtenemos el valor del row
+                XSSFRow hssfRow = (XSSFRow) rowIterator.next();
+                
+                //Metemos la fila en un Iterador
+                Iterator iterator = hssfRow.cellIterator();
+                
+                //Paso el row del excel al objetoCarga
+                if(i>0)
+                    obtenerLineaLote(iterator);
+                i++;
+            }
+            
+            //obtenerDatos(cellData);
+                    
+            
+        }
+        catch(Exception err){
+            err.printStackTrace();
+        }
+    }
+    
+    
+    private ObjetoCargaLote obtenerLineaLote(Iterator iterator){
+        try{
+            ObjetoCargaLote lineaCarga;
+            lineaCarga = tomaFisicaCommand.getNewObjetoCargaLote();
+            int j=0;
+            while(iterator.hasNext()){
+                //Obtengo los datos de cada columna
+                XSSFCell hssfCell = (XSSFCell) iterator.next();
+                if(j==0){
+                    String iden = hssfCell.toString();
+                    lineaCarga.setIdentificacion((String) iden);
+                }
+                if(j==1){
+                    String desc = hssfCell.toString();
+                    lineaCarga.setDescripcion((String) desc);
+                }
+                if(j==2){
+                    String val = hssfCell.toString();
+                    if(tryParseInt(val)){
+                        Float valInt = Float.parseFloat(val);
+                        lineaCarga.setCantidad(valInt.intValue());
+                    }
+                    else
+                        lineaCarga.setCantidad(0);
+                }
+                j++;
+            }
+            if(lineaCarga.getDescripcion().length()>0 && lineaCarga.getIdentificacion().length() > 0){
+                validarLineaCargaLotes(lineaCarga);
+                tomaFisicaCommand.getObjetosCargaLote().add(lineaCarga);
+                //objetosCargaLote.add(obtenerLineaLote(iterator));
+            }
+            return lineaCarga;
+            
+        }catch(Exception err){
+            return tomaFisicaCommand.getNewObjetoCargaLote();
+        }
+    }
+    
+    private boolean tryParseInt(String value) {  
+        try {  
+            Float.parseFloat(value);  
+            return true;  
+         } catch (NumberFormatException e) {  
+            return false;  
+         }  
+    }
+    
+    
+    
+    public void validarLineaCargaLotes(ObjetoCargaLote lineaCarga){
+        try{
+            Lote lote = new Lote();
+            //Valido si el ID exite
+            if(lineaCarga.getIdentificacion().length() > 0){
+                //Valido que la Descripción exista
+                if(lineaCarga.getDescripcion().length() > 0){
+                    //Valido que el ID exista
+                    int valInt = 0;
+                    if( tryParseInt(lineaCarga.getIdentificacion()) ){
+                        lote = loteModel.buscarPorId( Long.parseLong(lineaCarga.getIdentificacion()) );
+                        
+                        if(lote == null || lote.getId() == null){
+                                lineaCarga.setDescripcionError( Util.getEtiquetas("sigebi.CargarInventario.Error.LoteNoEncontrado") );
+                            //Valido que la descripción y el ID coinsidan
+                            if( lote.getDescripcion().compareTo(lineaCarga.getDescripcion()) == 0 ){
+                                //Agrego el valor
+                                lineaCarga.setDescripcionError( Util.getEtiquetas("sigebi.CargarInventario.Error.LoteNoCoinsiden") );
+                            }
+                            else{
+                                lineaCarga.setDescripcionError( Util.getEtiquetas("sigebi.CargarInventario.Error.LoteNoCoinsiden") );
+                            }
+                        }
+                    }
+                    else{
+                        lineaCarga.setDescripcionError( Util.getEtiquetas("sigebi.CargarInventario.Error.LoteInvalidId") );
+                    }
+                    
+                }
+                else{
+                    lineaCarga.setDescripcionError( Util.getEtiquetas("sigebi.CargarInventario.Error.LoteDescripcion") );
+                }
+                
+            }
+            else{
+                lineaCarga.setDescripcionError( Util.getEtiquetas("sigebi.CargarInventario.Error.LoteId") );
+            }
+            
+            
+        }catch(Exception err){
+            lineaCarga.setDescripcionError( Util.getEtiquetas("sigebi.CargarInventario.Error.LoteLinea") );
+        }
+        lineaCarga.setEsValido(lineaCarga.getDescripcionError().length() == 0);
+    }
+    
+    private void leerExcelLotes(File file)
+    {
+        try{
+            FileInputStream excelFile = new FileInputStream(file);
+            Workbook workbook = new XSSFWorkbook(excelFile);
+            Sheet datatypeSheet = workbook.getSheetAt(0);
+            Iterator<Row> iterator = datatypeSheet.iterator();
+
+            ObjetoCargaLote lineaCarga;
+            lineaCarga = tomaFisicaCommand.getNewObjetoCargaLote();
+            
+            while (iterator.hasNext()) {
+
+                Row currentRow = iterator.next();
+                Iterator<Cell> cellIterator = currentRow.iterator();
+                int j=0;
+                
+                while (cellIterator.hasNext()) {
+
+                    Cell currentCell = cellIterator.next();
+                    //getCellTypeEnum shown as deprecated for version 3.15
+                    //getCellTypeEnum ill be renamed to getCellType starting from version 4.0
+                    String val = currentCell.getStringCellValue();
+                    if(j==0){
+                        String iden = val;
+                        lineaCarga.setIdentificacion((String) iden);
+                    }
+                    if(j==1){
+                        String desc = val;
+                        lineaCarga.setDescripcion((String) desc);
+                    }
+                    if(j==2){
+                        if(tryParseInt(val)){
+                            Float valInt = Float.parseFloat(val);
+                            lineaCarga.setCantidad(valInt.intValue());
+                        }
+                        else
+                            lineaCarga.setCantidad(0);
+                    }
+                    j++;
+
+                }
+                
+
+                
+//                if(lineaCarga.getDescripcion().length()>0 && lineaCarga.getIdentificacion().length() > 0){
+//                    validarLineaCargaLotes(lineaCarga);
+//                    tomaFisicaCommand.getObjetosCargaLote().add(lineaCarga);
+//                    //objetosCargaLote.add(obtenerLineaLote(iterator));
+//                }
+                tomaFisicaCommand.getObjetosCargaLote().add(lineaCarga);
+                
+            }
+            
+            
+            
+        }
+        catch(Exception err){
+            Mensaje.agregarErrorAdvertencia(err.getCause().getMessage());
+        }
+    }
+    
+    //</editor-fold>
     
 }
