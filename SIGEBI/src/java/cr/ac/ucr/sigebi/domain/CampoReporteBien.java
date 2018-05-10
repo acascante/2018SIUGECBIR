@@ -39,28 +39,35 @@ public class CampoReporteBien implements Serializable {
     @JoinColumn(name = "ID_CAMPO_BIEN", referencedColumnName = "ID_CAMPO_BIEN")
     private CampoBien campoBien;
     
-    @Column(name = "MOSTRAR")
-    private Boolean mostrar;
-    
     @Column(name = "VALOR")
     private String valor;
+    
+    @Column(name = "TAMANO_COLUMNA")
+    private Integer tamanoColumna;
+    
+    @Column(name = "CAMPO_ORDEN")
+    private Integer orden;    
     //</editor-fold>
     
     //<editor-fold defaultstate="collapsed" desc="Constructores">
     public CampoReporteBien() {}
+
+    public CampoReporteBien(CampoBien campoBien) {
+        this.campoBien = campoBien;
+    }
     
-    public CampoReporteBien(Long id, ReporteBien reporteBien, CampoBien campoBien, Boolean mostrar, String valor) {
+    public CampoReporteBien(ReporteBien reporteBien, CampoBien campoBien) {
+        this.reporteBien = reporteBien;
+        this.campoBien = campoBien;
+    }
+    
+    public CampoReporteBien(Long id, ReporteBien reporteBien, CampoBien campoBien, String valor, Integer tamanoColumna, Integer orden) {
         this.id = id;
         this.reporteBien = reporteBien;
         this.campoBien = campoBien;
-        this.mostrar = mostrar;
         this.valor = valor;
-    }
-    
-    public CampoReporteBien(CampoBien campoBien) {
-        this.campoBien = campoBien;
-        this.mostrar = false;
-        this.valor = null;
+        this.tamanoColumna = tamanoColumna;
+        this.orden = orden;
     }
     //</editor-fold>  
 
@@ -89,14 +96,22 @@ public class CampoReporteBien implements Serializable {
         this.campoBien = campoBien;
     }
 
-    public Boolean getMostrar() {
-        return mostrar;
+    public Integer getTamanoColumna() {
+        return tamanoColumna;
     }
 
-    public void setMostrar(Boolean mostrar) {
-        this.mostrar = mostrar;
+    public void setTamanoColumna(Integer tamanoColumna) {
+        this.tamanoColumna = tamanoColumna;
     }
 
+    public Integer getOrden() {
+        return orden;
+    }
+
+    public void setOrden(Integer orden) {
+        this.orden = orden;
+    }
+    
     public String getValor() {
         return valor;
     }

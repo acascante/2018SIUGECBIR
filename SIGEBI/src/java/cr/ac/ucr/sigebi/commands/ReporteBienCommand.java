@@ -9,7 +9,11 @@ import cr.ac.ucr.sigebi.domain.CampoReporteBien;
 import cr.ac.ucr.sigebi.domain.ReporteBien;
 import cr.ac.ucr.sigebi.domain.Tipo;
 import cr.ac.ucr.sigebi.domain.Usuario;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  *
@@ -18,11 +22,14 @@ import java.util.List;
 public class ReporteBienCommand {
         
     //<editor-fold defaultstate="collapsed" desc="Atributos">
-    private String nombre;
-    private String descripcion;
-    private Long idTipoReporte;
     private Long idReporte;
+    private String nombre;
     private Usuario usuario;
+    private Long idTipoReporte;
+    private String descripcion;
+    private Integer tamanoFuente;   
+    private Map<Long, CampoReporteBien> camposReporte;
+    
     //</editor-fold>
     
     //<editor-fold defaultstate="collapsed" desc="Constructores">
@@ -30,23 +37,46 @@ public class ReporteBienCommand {
         super();
         this.idReporte = -1L;
         this.idTipoReporte = -1L;
+        this.tamanoFuente = 10;
+        this.camposReporte = new HashMap<Long, CampoReporteBien>();
     }
     
     public ReporteBienCommand(Usuario usuario) {
         this();
         this.usuario = usuario;
     }    
+
+    public ReporteBienCommand(ReporteBien reporte) {
+        super();
+        this.idReporte = reporte.getId();
+        this.nombre = reporte.getNombre();
+        this.usuario = reporte.getUsuario();
+        this.idTipoReporte = reporte.getTipoReporte().getId();
+        this.descripcion = reporte.getDescripcion();
+        this.tamanoFuente = reporte.getTamanoFuente();
+        
+        this.camposReporte = new HashMap<Long, CampoReporteBien>();
+        for (CampoReporteBien campo : reporte.getCamposReporte()) {
+            this.camposReporte.put(campo.getCampoBien().getId(), campo);
+        }
+    }    
     //</editor-fold>
  
     //<editor-fold defaultstate="collapsed" desc="Metodos">
-    public ReporteBien getReporteBien(Tipo tipoReporte, List<CampoReporteBien> campos) { 
+   public ReporteBien getReporteBien(Tipo tipoReporte) { 
         ReporteBien reporteBien = new ReporteBien();
         reporteBien.setId(this.idReporte);
-        reporteBien.setDescripcion(this.descripcion);
         reporteBien.setNombre(this.nombre);
-        reporteBien.setTipoReporte(tipoReporte);
         reporteBien.setUsuario(this.usuario);
-        reporteBien.setCamposReporte(campos);
+        reporteBien.setTipoReporte(tipoReporte);
+        reporteBien.setDescripcion(this.descripcion);
+        reporteBien.setTamanoFuente(this.tamanoFuente);
+        
+        for (Map.Entry<Long, CampoReporteBien> entry : this.camposReporte.entrySet()) {
+           Long key = entry.getKey();
+           CampoReporteBien value = entry.getValue();
+           reporteBien.getCamposReporte().add(value);
+       }        
         return reporteBien;
     }
     //</editor-fold>
@@ -84,12 +114,28 @@ public class ReporteBienCommand {
         this.descripcion = descripcion;
     }
 
+    public Integer getTamanoFuente() {
+        return tamanoFuente;
+    }
+
+    public void setTamanoFuente(Integer tamanoFuente) {
+        this.tamanoFuente = tamanoFuente;
+    }
+
     public Usuario getUsuario() {
         return usuario;
     }
 
     public void setUsuario(Usuario usuario) {
         this.usuario = usuario;
+    }
+    
+    public Map<Long, CampoReporteBien> getCamposReporte() {
+        return camposReporte;
+    }
+    
+    public void setCamposReporte(Map<Long, CampoReporteBien> camposReporte) {
+        this.camposReporte = camposReporte;
     }
     //</editor-fold>
 }

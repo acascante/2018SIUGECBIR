@@ -34,21 +34,25 @@ public class CampoBien implements Serializable {
     @Column(name = "NOMBRE")
     private String nombre;
     
-    @Column(name = "NOMBRE_COLUMNA")
-    private String nombreColumna;
+    @Column(name = "ID_COLUMNA")
+    private String idColumna;
     
     @Column(name = "NOMBRE_HQL")
     private String nombreHQL;
+    
+    @Column(name = "DESCRIPCION")
+    private String descripcion;
     //</editor-fold>
     
     //<editor-fold defaultstate="collapsed" desc="Constructores">
     public CampoBien() {}
     
-    public CampoBien(Long id, String nombre, String nombreColumna, String nombreHQL) {
+    public CampoBien(Long id, String nombre, String idColumna, String nombreHQL, String descripcion) {
         this.id = id;
         this.nombre = nombre;
-        this.nombreColumna = nombreColumna;
+        this.idColumna = idColumna;
         this.nombreHQL = nombreHQL;
+        this.descripcion = descripcion;
     }
     //</editor-fold>  
 
@@ -69,12 +73,12 @@ public class CampoBien implements Serializable {
         this.nombre = nombre;
     }
 
-    public String getNombreColumna() {
-        return nombreColumna;
+    public String getIdColumna() {
+        return idColumna;
     }
 
-    public void setNombreColumna(String nombreColumna) {
-        this.nombreColumna = nombreColumna;
+    public void setIdColumna(String idColumna) {
+        this.idColumna = idColumna;
     }
 
     public String getNombreHQL() {
@@ -84,5 +88,13 @@ public class CampoBien implements Serializable {
     public void setNombreHQL(String nombreHQL) {
         this.nombreHQL = nombreHQL;
     }
-    //</editor-fold> 
+    
+    public String getDescripcion() {
+        return descripcion;
+    }
+
+    public void setDescripcion(String descripcion) {
+        this.descripcion = descripcion;
+    }
+    //</editor-fold>
 }
