@@ -11,6 +11,7 @@ import cr.ac.ucr.framework.utils.FWExcepcion;
 import cr.ac.ucr.sigebi.domain.CampoReporteBien;
 import cr.ac.ucr.sigebi.domain.ReporteBien;
 import java.util.List;
+import java.util.Set;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -56,14 +57,14 @@ public class CampoReporteBienDao extends GenericDaoImpl {
     }
     
     @Transactional(readOnly = true)
-    public List<CampoReporteBien> listarPorReporte(ReporteBien reporteBien) throws FWExcepcion {
+    public Set<CampoReporteBien> listarPorReporte(ReporteBien reporteBien) throws FWExcepcion {
         Session session = dao.getSessionFactory().openSession();
         try {
             StringBuilder sql = new StringBuilder("SELECT entity FROM CampoReporteBien entity WHERE ");
             sql.append("entity.reporteBien = :reporteBien " );
             Query query = session.createQuery(sql.toString());
             query.setParameter("reporteBien", reporteBien);
-            return (List<CampoReporteBien>) query.list();
+            return (Set<CampoReporteBien>) query.list();
         } catch (HibernateException e) {
             throw new FWExcepcion("sigebi.label.campoReporteBien.error.listar", "Error obtener los registros de tipo " + this.getClass(), e.getCause());
         }finally{
@@ -81,7 +82,7 @@ public class CampoReporteBienDao extends GenericDaoImpl {
     }
     
     @Transactional
-    public void salvar(List<CampoReporteBien> campos) throws FWExcepcion {
+    public void salvar(Set<CampoReporteBien> campos) throws FWExcepcion {
         try {
             persist(campos.toArray());
         } catch (DataAccessException e) {
@@ -99,7 +100,7 @@ public class CampoReporteBienDao extends GenericDaoImpl {
     }
     
     @Transactional
-    public void eliminar(List<CampoReporteBien> campos) throws FWExcepcion {
+    public void eliminar(Set<CampoReporteBien> campos) throws FWExcepcion {
         try {
             delete(campos.toArray());
         } catch (DataAccessException e) {

@@ -138,17 +138,13 @@ public class Bien extends ObjetoBase implements Serializable {
     @JoinColumn(name = "ID_USUARIO_REGISTRA", referencedColumnName = "ID_USUARIO")
     private Usuario usuarioRegistra;
     
-            
     @ManyToOne
     @JoinColumn(name = "ID_RESPONSABLE", referencedColumnName = "ID_USUARIO")
     private Usuario usuarioResponsable;
     
-    
     @ManyToOne
     @JoinColumn(name = "ID_ESTADO_ASIGNACION", referencedColumnName = "ID_ESTADO")
     private Estado estadoAsignacion;
-    
-    
     
     @Transient
     private List<Accesorio> accesorios;

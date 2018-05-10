@@ -1,7 +1,8 @@
 package cr.ac.ucr.sigebi.domain;
 
 import java.io.Serializable;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -41,22 +42,26 @@ public class ReporteBien implements Serializable {
     @JoinColumn(name = "ID_TIPO", referencedColumnName = "ID_TIPO")
     private Tipo tipoReporte;
     
+    @Column(name = "TAMANO_FUENTE")
+    private Integer tamanoFuente;
+    
     @Column(name = "DESCRIPCION")
     private String descripcion;
     
     @Transient
-    private List<CampoReporteBien> camposReporte;
+    private Set<CampoReporteBien> camposReporte;
     //</editor-fold>
     
     //<editor-fold defaultstate="collapsed" desc="Constructores">
     public ReporteBien() {}
     
-    public ReporteBien(Long id, String nombre, Usuario usuario, List<CampoReporteBien> camposReporte, Tipo tipoReporte, String descripcion) {
+    public ReporteBien(Long id, String nombre, Usuario usuario, Set<CampoReporteBien> camposReporte, Tipo tipoReporte, Integer tamanoFuente, String descripcion) {
         this.id = id;
         this.nombre = nombre;
         this.usuario = usuario;
         this.camposReporte = camposReporte;
         this.tipoReporte = tipoReporte;
+        this.tamanoFuente = tamanoFuente;
         this.descripcion = descripcion;
     }
     //</editor-fold>
@@ -101,12 +106,22 @@ public class ReporteBien implements Serializable {
     public void setDescripcion(String descripcion) {
         this.descripcion = descripcion;
     }
+
+    public Integer getTamanoFuente() {
+        return tamanoFuente;
+    }
+
+    public void setTamanoFuente(Integer tamanoFuente) {
+        this.tamanoFuente = tamanoFuente;
+    }
     
-    public List<CampoReporteBien> getCamposReporte() {
+    public Set<CampoReporteBien> getCamposReporte() {
+        if (this.camposReporte.isEmpty())
+            this.camposReporte = new HashSet<CampoReporteBien>();
         return camposReporte;
     }
 
-    public void setCamposReporte(List<CampoReporteBien> camposReporte) {
+    public void setCamposReporte(Set<CampoReporteBien> camposReporte) {
         this.camposReporte = camposReporte;
     }
     //</editor-fold>

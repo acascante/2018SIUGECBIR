@@ -15,6 +15,7 @@ import cr.ac.ucr.sigebi.domain.Tipo;
 import cr.ac.ucr.sigebi.domain.UnidadEjecutora;
 import cr.ac.ucr.sigebi.domain.Usuario;
 import java.util.List;
+import java.util.Map;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -42,6 +43,25 @@ public class BienDao extends GenericDaoImpl {
         }
     }
 
+    @Transactional(readOnly = true)
+    public List<Bien> listar(String sql, Map<String, Object> parametros) throws FWExcepcion {
+        Session session = dao.getSessionFactory().openSession();
+        try {
+            Query query = session.createQuery(sql);
+            for (Map.Entry<String, Object> entry : parametros.entrySet()) {
+                String key = entry.getKey();
+                Object value = entry.getValue();
+                query.setParameter(key, value);    
+            }            
+            return (List<Bien>) query.list();
+        } catch (HibernateException e) {
+            throw new FWExcepcion("sigebi.error.bienCaracteristica.dao.traerTodo", "Error obtener los registros de tipo " + this.getClass(), e.getCause());
+        } finally {
+            session.close();
+        }
+    }
+
+    
     @Transactional(readOnly = true)
     public List<Bien> listarPorUnidadEjecutora(UnidadEjecutora unidadEjecutora) throws FWExcepcion {
         Session session = dao.getSessionFactory().openSession();

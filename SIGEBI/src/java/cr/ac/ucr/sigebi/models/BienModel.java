@@ -18,6 +18,7 @@ import cr.ac.ucr.sigebi.utils.Constantes;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import javax.annotation.Resource;
 import org.springframework.stereotype.Service;
 
@@ -40,6 +41,10 @@ public class BienModel {
 
     public List<Bien> listar() throws FWExcepcion {
         return bienDao.listar();
+    }
+    
+    public List<Bien> listar(String sql, Map<String, Object> parametros) throws FWExcepcion {
+        return bienDao.listar(sql, parametros);
     }
 
     public List<Bien> listarPorUnidadEjecutora(UnidadEjecutora unidadejecutora) throws FWExcepcion {
