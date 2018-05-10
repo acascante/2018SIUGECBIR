@@ -41,6 +41,7 @@ import cr.ac.ucr.sigebi.utils.NodoSIGEBI;
 import cr.ac.ucr.sigebi.utils.TreeUbicacionSIGEBI;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -53,6 +54,7 @@ import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
@@ -704,7 +706,10 @@ public class TomaFisicaController extends BaseController {
     
     private void agregaTomaFisicaLote(){    
         
-        if(tomaFisicaCommand.getTomaFisicaLoteCommand().getCantidad() != null && tomaFisicaCommand.getTomaFisicaLoteCommand().getCantidad() != 0 && tomaFisicaCommand.getTomaFisicaLoteCommand().getLote() != null && tomaFisicaCommand.getTomaFisicaLoteCommand().getLote().getIdTemporal() > 0){
+        if(tomaFisicaCommand.getTomaFisicaLoteCommand().getCantidad() != null 
+                && tomaFisicaCommand.getTomaFisicaLoteCommand().getCantidad() != 0 
+                && tomaFisicaCommand.getTomaFisicaLoteCommand().getLote() != null 
+                && tomaFisicaCommand.getTomaFisicaLoteCommand().getLote().getIdTemporal() > 0){
             
             //Se busca si ya existe la toma por lote          
             TomaFisicaLote tomaFisicaLote = tomaFisicaLoteModel.buscarPorLote(tomaFisicaCommand.getTomaFisica(), tomaFisicaCommand.getTomaFisicaLoteCommand().getLote());            
@@ -1281,40 +1286,44 @@ public class TomaFisicaController extends BaseController {
     //C:\SIGEBI_FINAL\web\Documentos
     public void leerArchivoTomaUnitaria(FileInputStream file){
         try{
-            //Agrega el bien a la toma física
-            //agregarBienPorIdentificacionTomasFisicaUnitaria
             
-            List cellData = new ArrayList();
-//            File fileName = new File("C:/SIGEBI_FINAL/web/Documentos/CargarBienes.xlsx");
-//            
-//            FileInputStream file = new FileInputStream(fileName);
             
-            XSSFWorkbook workBook = new XSSFWorkbook(file);
             
-            XSSFSheet hssfSheet = workBook.getSheetAt(0);
-            Iterator rowIterator = hssfSheet.rowIterator();
-            List cellTemp = new ArrayList();
-            
+            Workbook workbook = new XSSFWorkbook(file);
+            Sheet datatypeSheet = workbook.getSheetAt(0);
+            Iterator<Row> iterator = datatypeSheet.iterator();
+
+            ObjetoCarga lineaCarga;
             
             List<ObjetoCarga> objetosCarga = new ArrayList<ObjetoCarga>();
-            int i = 0;
-            while(rowIterator.hasNext()){
-                //Obtenemos el valor del row
-                XSSFRow hssfRow = (XSSFRow) rowIterator.next();
+            tomaFisicaCommand.setObjetosCarga(objetosCarga);
+            // Row en el que me voy a desplazar 
+            int r = 0;
+            while (iterator.hasNext()) {
                 
-                //Metemos la fila en un Iterador
-                Iterator iterator = hssfRow.cellIterator();
+                Row currentRow = datatypeSheet.getRow(r);
                 
-                //Paso el row del excel al objetoCarga
-                if(i>0)
-                    objetosCarga.add(obtenerLinea(iterator));
-                i++;
+                if(r > 0){
+                    if(currentRow != null){
+                        if((currentRow.getCell(0) != null) || (currentRow.getCell(1) != null)){
+
+                            lineaCarga = obtenerLinea(currentRow);
+                            if(lineaCarga != null
+                                &&lineaCarga.getIdentificacion() != null
+                                && lineaCarga.getIdentificacion() != null
+                                && lineaCarga.getIdentificacion() != null
+                                    )
+                                objetosCarga.add(lineaCarga);
+                        }
+                    }
+                    else
+                        break;
+                }
+                r++;
             }
             
             tomaFisicaCommand.setObjetosCarga(objetosCarga);
             //obtenerDatos(cellData);
-                    
-            
         }
         catch(Exception err){
             err.printStackTrace();
@@ -1322,24 +1331,22 @@ public class TomaFisicaController extends BaseController {
     }
     
     
-    private ObjetoCarga obtenerLinea(Iterator iterator){
+    private ObjetoCarga obtenerLinea(Row currentRow){
         try{
             ObjetoCarga lineaCarga;
             lineaCarga = tomaFisicaCommand.getNewObjetoCarga();
-            int j=0;
-            while(iterator.hasNext()){
-                //Obtengo los datos de cada columna
-                XSSFCell hssfCell = (XSSFCell) iterator.next();
-                if(j==0){
-                    String iden = hssfCell.toString();
-                    lineaCarga.setIdentificacion((String) iden);
-                }
-                if(j==1){
-                    String desc = hssfCell.toString();
-                    lineaCarga.setDescripcion((String) desc);
-                }
-                j++;
-            }
+            
+            String iden = "";
+            String desc = "";
+            
+            if(currentRow.getCell(0) != null)
+                iden = currentRow.getCell(0).toString();
+            lineaCarga.setIdentificacion(iden);
+                    
+            if(currentRow.getCell(1) != null)
+                desc = currentRow.getCell(1).toString();
+            lineaCarga.setDescripcion((String) desc);
+            
             validarLineaCargaUnitaria(lineaCarga);
             return lineaCarga;
             
@@ -1436,8 +1443,6 @@ public class TomaFisicaController extends BaseController {
     }
 
     
-    
-    
     public void procesarCargaUnitaria(){
         try{
             if(tomaFisicaCommand.getObjetosCarga().size() > 0){
@@ -1507,77 +1512,6 @@ public class TomaFisicaController extends BaseController {
     
     
     
-    
-    public void procesarCargaLotes(){
-        try{
-//            if(tomaFisicaCommand.getObjetosCarga().size() > 0){
-//                String respuesta = "";
-//                List<String> respErrores = new ArrayList();
-//                for(ObjetoCarga carga : tomaFisicaCommand.getObjetosCarga()){
-//                    
-//                    respuesta = "";
-//                    
-//                    //Agrego Sobrantes
-//                    if(carga.getEsSobrante()){
-//                        
-//                        
-//                                
-//                        TomaFisicaSobrante sobrante = new TomaFisicaSobrante(); 
-//
-//                        sobrante.setIdentificacion(carga.getIdentificacion());
-//                        sobrante.setDescripcion(carga.getDescripcion());
-//                        sobrante.setTomaFisica(tomaFisicaCommand.getTomaFisica());
-//                        
-//                        String descSobrante = carga.getDescripcion();
-//                        if (descSobrante == null || descSobrante.isEmpty() ) {
-//                            //No tiene descripción pero el bien si existe
-//                            if(carga.getBien() == null || 
-//                               carga.getBien().getIdentificacion() == null ||
-//                               carga.getBien().getIdentificacion().getIdentificacion().length() == 0    ){
-//                                respuesta = Util.getEtiquetas("sigebi.CargarInventario.ErrorDescripcionReq");
-//                                }
-//                            else{
-//                                
-//                                sobrante.setDescripcion(carga.getBien().getDescripcion());
-//                                tomaFisicaSobranteModel.agregar(sobrante);
-//                            
-//                            }
-//                            
-//                        }
-//                        else
-//                            tomaFisicaSobranteModel.agregar(sobrante);
-//                    }
-//                    else{
-//                        if(carga.getDescripcionError() != null && carga.getDescripcionError().length() > 0)
-//                            respuesta = " - Bien "+ carga.getIdentificacion()+ ": " + carga.getDescripcionError();
-//                        else
-//                            respuesta = agregarBien(carga.getBien());
-//                    }
-//                    
-//                    if(respuesta.length() > 0)
-//                        respErrores.add(respuesta);
-//                }
-//                tomaFisicaCommand.setErroresRegistradosCargaUnitaria(respErrores);
-//                if(respErrores.size()> 0)
-//                    tomaFisicaCommand.setMostrarErroresCargaUnitaria(true);
-//                else
-//                    tomaFisicaCommand.setMostrarErroresCargaUnitaria(false);
-//                //rendered="#{controllerTomaFisica.tomaFisicaCommand.objetoCarga.mostrarErrores}"
-//                
-//                //Se actualiza la lista
-//                this.buscarTomasFisicasSobrantes();
-//            }
-//            else{
-//                Mensaje.agregarErrorAdvertencia( Util.getEtiquetas("sigebi.CargarInventario.ErrorVacio") );
-//            }
-        }catch(Exception err){
-            
-        }
-    }
-    
-    
-    
-    
     private String agregarBien(Bien bien){
         try{
             
@@ -1631,105 +1565,10 @@ public class TomaFisicaController extends BaseController {
             tomaFisicaCommand.setMostrarErroresCargaUnitaria(false);
             
         } catch (Exception err) {
-            Mensaje.agregarErrorAdvertencia(err, Util.getEtiquetas("sigebi.Bien.Error.Registro"));
+            Mensaje.agregarErrorAdvertencia(err, Util.getEtiquetas("sigebi.CargarInventario.LabelErrores"));
         }
     }
 
-    
-    //C:\SIGEBI_FINAL\web\Documentos
-    public void leerArchivoTomaLotes(FileInputStream file){
-        try{
-            //Agrega el bien a la toma física
-            //agregarBienPorIdentificacionTomasFisicaUnitaria
-            
-            List cellData = new ArrayList();
-//            File fileName = new File("C:/SIGEBI_FINAL/web/Documentos/CargarBienes.xlsx");
-//            
-//            FileInputStream file = new FileInputStream(fileName);
-            
-
-            XSSFWorkbook workBook = new XSSFWorkbook(file);
-            
-            XSSFSheet hssfSheet = workBook.getSheetAt(0);
-            Iterator rowIterator = hssfSheet.rowIterator();
-            List cellTemp = new ArrayList();
-            
-            
-            List<ObjetoCargaLote> objetosCargaLote = new ArrayList<ObjetoCargaLote>();
-            tomaFisicaCommand.setObjetosCargaLote(objetosCargaLote);
-            int i = 0;
-            while(rowIterator.hasNext()){
-                //Obtenemos el valor del row
-                XSSFRow hssfRow = (XSSFRow) rowIterator.next();
-                
-                //Metemos la fila en un Iterador
-                Iterator iterator = hssfRow.cellIterator();
-                
-                //Paso el row del excel al objetoCarga
-                if(i>0)
-                    obtenerLineaLote(iterator);
-                i++;
-            }
-            
-            //obtenerDatos(cellData);
-                    
-            
-        }
-        catch(Exception err){
-            err.printStackTrace();
-        }
-    }
-    
-    
-    private ObjetoCargaLote obtenerLineaLote(Iterator iterator){
-        try{
-            ObjetoCargaLote lineaCarga;
-            lineaCarga = tomaFisicaCommand.getNewObjetoCargaLote();
-            int j=0;
-            while(iterator.hasNext()){
-                //Obtengo los datos de cada columna
-                XSSFCell hssfCell = (XSSFCell) iterator.next();
-                if(j==0){
-                    String iden = hssfCell.toString();
-                    lineaCarga.setIdentificacion((String) iden);
-                }
-                if(j==1){
-                    String desc = hssfCell.toString();
-                    lineaCarga.setDescripcion((String) desc);
-                }
-                if(j==2){
-                    String val = hssfCell.toString();
-                    if(tryParseInt(val)){
-                        Float valInt = Float.parseFloat(val);
-                        lineaCarga.setCantidad(valInt.intValue());
-                    }
-                    else
-                        lineaCarga.setCantidad(0);
-                }
-                j++;
-            }
-            if(lineaCarga.getDescripcion().length()>0 && lineaCarga.getIdentificacion().length() > 0){
-                validarLineaCargaLotes(lineaCarga);
-                tomaFisicaCommand.getObjetosCargaLote().add(lineaCarga);
-                //objetosCargaLote.add(obtenerLineaLote(iterator));
-            }
-            return lineaCarga;
-            
-        }catch(Exception err){
-            return tomaFisicaCommand.getNewObjetoCargaLote();
-        }
-    }
-    
-    private boolean tryParseInt(String value) {  
-        try {  
-            Float.parseFloat(value);  
-            return true;  
-         } catch (NumberFormatException e) {  
-            return false;  
-         }  
-    }
-    
-    
     
     public void validarLineaCargaLotes(ObjetoCargaLote lineaCarga){
         try{
@@ -1744,11 +1583,13 @@ public class TomaFisicaController extends BaseController {
                         lote = loteModel.buscarPorId( Long.parseLong(lineaCarga.getIdentificacion()) );
                         
                         if(lote == null || lote.getId() == null){
-                                lineaCarga.setDescripcionError( Util.getEtiquetas("sigebi.CargarInventario.Error.LoteNoEncontrado") );
+                            lineaCarga.setDescripcionError( Util.getEtiquetas("sigebi.CargarInventario.Error.LoteNoEncontrado") );
+                        }
+                        else{
                             //Valido que la descripción y el ID coinsidan
                             if( lote.getDescripcion().compareTo(lineaCarga.getDescripcion()) == 0 ){
                                 //Agrego el valor
-                                lineaCarga.setDescripcionError( Util.getEtiquetas("sigebi.CargarInventario.Error.LoteNoCoinsiden") );
+                                lineaCarga.setLote(lote);
                             }
                             else{
                                 lineaCarga.setDescripcionError( Util.getEtiquetas("sigebi.CargarInventario.Error.LoteNoCoinsiden") );
@@ -1776,67 +1617,180 @@ public class TomaFisicaController extends BaseController {
         lineaCarga.setEsValido(lineaCarga.getDescripcionError().length() == 0);
     }
     
-    private void leerExcelLotes(File file)
-    {
+    
+    public ObjetoCargaLote objetoCargaLote(Row currentRow){
+        
+        ObjetoCargaLote lineaCarga = tomaFisicaCommand.getNewObjetoCargaLote();
         try{
-            FileInputStream excelFile = new FileInputStream(file);
+            
+            String desc = "";
+            String iden = "";
+            String cant = "0";
+            Float valInt = 0f; 
+            //int type1 = currentRow.getCell(0).getCellType();
+
+            if(currentRow.getCell(0) != null)
+                iden = currentRow.getCell(0).toString();
+            lineaCarga.setIdentificacion(iden);
+
+            if(currentRow.getCell(1) != null)
+                desc = currentRow.getCell(1).toString();
+            lineaCarga.setDescripcion(desc);
+
+            if(currentRow.getCell(2) != null)
+                cant = currentRow.getCell(2).toString();
+            
+            //Valido la cantidad
+            if(tryParseInt(cant))
+                valInt = Float.parseFloat(cant);
+            lineaCarga.setCantidad(valInt.intValue());
+            
+            validarLineaCargaLotes(lineaCarga);
+            
+            return lineaCarga;
+            
+        }catch(Exception err){
+            return tomaFisicaCommand.getNewObjetoCargaLote();
+        }
+    }
+    
+    
+    private void leerExcelLotes(File file) throws IOException{
+        FileInputStream excelFile = null;
+        try{
+            excelFile = new FileInputStream(file);
             Workbook workbook = new XSSFWorkbook(excelFile);
             Sheet datatypeSheet = workbook.getSheetAt(0);
             Iterator<Row> iterator = datatypeSheet.iterator();
 
             ObjetoCargaLote lineaCarga;
-            lineaCarga = tomaFisicaCommand.getNewObjetoCargaLote();
             
+            List<ObjetoCargaLote> objetosCargaLote = new ArrayList<ObjetoCargaLote>();
+            tomaFisicaCommand.setObjetosCargaLote(objetosCargaLote);
+            // Row en el que me voy a desplazar 
+            int r = 0;
             while (iterator.hasNext()) {
-
-                Row currentRow = iterator.next();
-                Iterator<Cell> cellIterator = currentRow.iterator();
-                int j=0;
                 
-                while (cellIterator.hasNext()) {
-
-                    Cell currentCell = cellIterator.next();
-                    //getCellTypeEnum shown as deprecated for version 3.15
-                    //getCellTypeEnum ill be renamed to getCellType starting from version 4.0
-                    String val = currentCell.getStringCellValue();
-                    if(j==0){
-                        String iden = val;
-                        lineaCarga.setIdentificacion((String) iden);
-                    }
-                    if(j==1){
-                        String desc = val;
-                        lineaCarga.setDescripcion((String) desc);
-                    }
-                    if(j==2){
-                        if(tryParseInt(val)){
-                            Float valInt = Float.parseFloat(val);
-                            lineaCarga.setCantidad(valInt.intValue());
+                Row currentRow = datatypeSheet.getRow(r);
+                
+                if(r > 0){
+                    
+                    if(currentRow != null){
+                        if((currentRow.getCell(0) != null) || (currentRow.getCell(1) != null)){
+                            lineaCarga = objetoCargaLote(currentRow);
+                            if(lineaCarga != null
+                                &&lineaCarga.getIdentificacion() != null
+                                && lineaCarga.getIdentificacion() != null
+                                && lineaCarga.getIdentificacion() != null
+                                    )
+                                tomaFisicaCommand.getObjetosCargaLote().add(lineaCarga);
                         }
-                        else
-                            lineaCarga.setCantidad(0);
                     }
-                    j++;
-
+                    else
+                        break;
                 }
-                
-
-                
-//                if(lineaCarga.getDescripcion().length()>0 && lineaCarga.getIdentificacion().length() > 0){
-//                    validarLineaCargaLotes(lineaCarga);
-//                    tomaFisicaCommand.getObjetosCargaLote().add(lineaCarga);
-//                    //objetosCargaLote.add(obtenerLineaLote(iterator));
-//                }
-                tomaFisicaCommand.getObjetosCargaLote().add(lineaCarga);
-                
+                r++;
             }
-            
-            
-            
         }
         catch(Exception err){
             Mensaje.agregarErrorAdvertencia(err.getCause().getMessage());
         }
+        finally{
+            if(excelFile != null)
+                excelFile.close();
+            
+        }
     }
+    
+    
+    private boolean tryParseInt(String value) {  
+        try {  
+            Float.parseFloat(value);  
+            return true;  
+         } catch (NumberFormatException e) {  
+            return false;  
+         }  
+    }
+   
+    
+    public void procesarCargaLotes(){
+        try{
+            if(tomaFisicaCommand.getObjetosCargaLote().size() > 0){
+                String respuesta = "";
+                List<String> respErrores = new ArrayList();
+                int linea = 0;
+                for(ObjetoCargaLote carga : tomaFisicaCommand.getObjetosCargaLote()){
+                    linea ++;
+                    respuesta = "";
+                        if(carga.getDescripcionError() != null && carga.getDescripcionError().length() > 0)
+                            respuesta = " - Linea: "+linea+" -> "+ carga.getIdentificacion()+ ": " + carga.getDescripcionError();
+                        else{
+                            tomaFisicaCommand.getTomaFisicaLoteCommand().setCantidad(Long.parseLong(carga.getCantidad()+""));
+                            carga.getLote().setIdTemporal(carga.getLote().getId());
+                            tomaFisicaCommand.getTomaFisicaLoteCommand().setLote(carga.getLote());
+                            
+                            respuesta = agregaTomaFisicaLoteCarga(linea);
+                        }
+                    if(respuesta.length() > 0)
+                        respErrores.add(respuesta);
+                }
+                tomaFisicaCommand.setErroresRegistradosCargaUnitaria(respErrores);
+                    
+                tomaFisicaCommand.setMostrarErroresCargaLotes(respErrores.size()> 0);
+                //rendered="#{controllerTomaFisica.tomaFisicaCommand.objetoCarga.mostrarErrores}"
+                
+                //Se actualiza la lista
+                this.buscarTomasFisicasSobrantes();
+            }
+            else{
+                Mensaje.agregarErrorAdvertencia( Util.getEtiquetas("sigebi.CargarInventario.ErrorVacio") );
+            }
+        }catch(Exception err){
+            
+        }
+    }
+    
+    
+    private String agregaTomaFisicaLoteCarga(int linea){    
+        
+        try{
+        if(tomaFisicaCommand.getTomaFisicaLoteCommand().getCantidad() != null 
+                && tomaFisicaCommand.getTomaFisicaLoteCommand().getCantidad() != 0 
+                && tomaFisicaCommand.getTomaFisicaLoteCommand().getLote() != null 
+                && tomaFisicaCommand.getTomaFisicaLoteCommand().getLote().getIdTemporal() > 0){
+            
+            //Se busca si ya existe la toma por lote          
+            TomaFisicaLote tomaFisicaLote = tomaFisicaLoteModel.buscarPorLote(tomaFisicaCommand.getTomaFisica(), tomaFisicaCommand.getTomaFisicaLoteCommand().getLote());            
+            
+            //Se crea o se actualiza
+            if(tomaFisicaLote != null){
+                Long cantidad = tomaFisicaLote.getCantidad() + tomaFisicaCommand.getTomaFisicaLoteCommand().getCantidad();
+                if(cantidad > 0){
+                    tomaFisicaLote.setCantidad(cantidad);
+                    tomaFisicaLoteModel.modificar(tomaFisicaLote);
+                }else{
+                    tomaFisicaLoteModel.eliminar(tomaFisicaLote);
+                }
+                mensajeActualizaTomaFisicaLote();
+            }else{
+                if(tomaFisicaCommand.getTomaFisicaLoteCommand().getCantidad() > 0){
+                    tomaFisicaLote = new TomaFisicaLote(tomaFisicaCommand.getTomaFisica(), tomaFisicaCommand.getTomaFisicaLoteCommand().getLote(), tomaFisicaCommand.getTomaFisicaLoteCommand().getCantidad());
+                    tomaFisicaLoteModel.agregar(tomaFisicaLote);
+                    mensajeActualizaTomaFisicaLote();
+                }    
+            }
+        }
+        else{
+            return Util.getEtiquetas("sigebi.CargarInventario.sinDatos"); 
+        }
+        }
+        catch(Exception err){
+            return Util.getEtiquetas("sigebi.CargarInventario.errorLinea"); 
+        }
+        return "";
+    }
+
+    
     
     //</editor-fold>
     

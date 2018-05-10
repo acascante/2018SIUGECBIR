@@ -64,6 +64,7 @@ public class TomaFisicaCommand {
         this.ubicacion = new Ubicacion();
         this.objetosCarga = new ArrayList<ObjetoCarga>();
         setMostrarErroresCargaUnitaria(false);
+        objetosCargaLote = new ArrayList<ObjetoCargaLote>();
     }
 
     public TomaFisicaCommand(TomaFisica tomaFisica) {
@@ -76,6 +77,7 @@ public class TomaFisicaCommand {
         this.tomaFisicaLoteCommand = new TomaFisicaLoteCommand();
         this.tomaFisicaSobranteCommand = new TomaFisicaSobranteCommand();
         this.objetosCarga = new ArrayList<ObjetoCarga>();
+        objetosCargaLote = new ArrayList<ObjetoCargaLote>();
         setMostrarErroresCargaUnitaria(false);
     }
 
@@ -639,9 +641,13 @@ public class TomaFisicaCommand {
 
     
     
-    //<editor-fold defaultstate="collapsed" desc="Cargas de Excel Unitaria">
+    //<editor-fold defaultstate="collapsed" desc="Cargas de Excel LOTES">
     private List<ObjetoCargaLote> objetosCargaLote;
     private ObjetoCargaLote objetoCargaLote;
+    
+    List<String> erroresRegistradosCargaLotes;
+    Boolean mostrarErroresCargaLotes;
+    Boolean procesarCargaLotes;
     //Estructura carga Excel
     public class ObjetoCargaLote{
         
@@ -651,7 +657,7 @@ public class TomaFisicaCommand {
         Boolean esValido;
         String descripcionError;
         int cantidad;
-
+        Lote lote;
         
         //</editor-fold>
         
@@ -663,7 +669,7 @@ public class TomaFisicaCommand {
             descripcion = "";
             identificacion = "";
             cantidad = 0;
-            
+            //lote = new Lote();
         }
         
         //</editor-fold>
@@ -715,6 +721,15 @@ public class TomaFisicaCommand {
         public void setCantidad(int cantidad) {
             this.cantidad = cantidad;
         }
+
+        public Lote getLote() {
+            return lote;
+        }
+
+        public void setLote(Lote lote) {
+            this.lote = lote;
+        }
+        
         
         
         
@@ -741,6 +756,32 @@ public class TomaFisicaCommand {
         this.objetoCargaLote = objetoCargaLote;
     }
     
+    
+    public List<String> getErroresRegistradosCargaLotes() {
+        return erroresRegistradosCargaLotes;
+    }
+
+    public void setErroresRegistradosCargaLotes(List<String> erroresRegistradosCargaLotes) {
+        this.erroresRegistradosCargaLotes = erroresRegistradosCargaLotes;
+    }
+
+    public Boolean getMostrarErroresCargaLotes() {
+        return mostrarErroresCargaLotes;
+    }
+
+    public void setMostrarErroresCargaLotes(Boolean mostrarErroresCargaLotes) {
+        this.mostrarErroresCargaLotes = mostrarErroresCargaLotes;
+    }
+
+    public Boolean getProcesarCargaLotes() {
+        procesarCargaLotes = objetosCargaLote.size() > 0;
+        return procesarCargaLotes;
+    }
+
+    public void setProcesarCargaLotes(Boolean procesarCargaLotes) {
+        this.procesarCargaLotes = procesarCargaLotes;
+    }
+
     
     //</editor-fold>
 

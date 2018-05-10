@@ -107,7 +107,6 @@ public class TrasladoController extends ListadoBienesGeneralController {
     
     Usuario usuarioRegistradoClass;
 
-    private TreeUbicacionSIGEBI treeUbicacionSIGEBI;
 
     //</editor-fold>
     
@@ -120,15 +119,6 @@ public class TrasladoController extends ListadoBienesGeneralController {
     public void setEstadoGeneralActivo(Estado estadoGeneralActivo) {
         this.estadoGeneralActivo = estadoGeneralActivo;
     }
-
-    public TreeUbicacionSIGEBI getTreeUbicacionSIGEBI() {
-        return treeUbicacionSIGEBI;
-    }
-
-    public void setTreeUbicacionSIGEBI(TreeUbicacionSIGEBI treeUbicacionSIGEBI) {
-        this.treeUbicacionSIGEBI = treeUbicacionSIGEBI;
-    }
-
     public Estado getEstadoGeneralPendiente() {
         return estadoGeneralPendiente;
     }
@@ -1088,6 +1078,20 @@ public class TrasladoController extends ListadoBienesGeneralController {
     @Resource
     private UbicacionModel ubicModel;
 
+    boolean habilitaUbicacion = false;
+    
+    private TreeUbicacionSIGEBI treeUbicacionSIGEBI;
+
+
+    public TreeUbicacionSIGEBI getTreeUbicacionSIGEBI() {
+        return treeUbicacionSIGEBI;
+    }
+
+    public void setTreeUbicacionSIGEBI(TreeUbicacionSIGEBI treeUbicacionSIGEBI) {
+        this.treeUbicacionSIGEBI = treeUbicacionSIGEBI;
+    }
+
+    
     private void iniciaUbicaciones() {
         try {
             treeUbicacionSIGEBI = new TreeUbicacionSIGEBI(traslado.getUnidadEjecutoraDestino());
