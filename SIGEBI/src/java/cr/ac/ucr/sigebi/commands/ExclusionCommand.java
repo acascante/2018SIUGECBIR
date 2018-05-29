@@ -72,6 +72,7 @@ public class ExclusionCommand {
         this.fecha = exclusion.getFecha();
         this.idTipo = exclusion.getTipoExclusion().getId();
         this.usuario = exclusion.getUsuario();
+        this.observacion = exclusion.getObservacion();
 
         this.bienes = new HashMap<Long, Bien>();
         this.detalles = new HashMap<Long, SolicitudDetalle>();
@@ -92,6 +93,7 @@ public class ExclusionCommand {
         exclusion.setTipoExclusion(tipo);
         exclusion.setUsuario(this.usuario);
         exclusion.setDiscriminator(Constantes.DISCRIMINATOR_SOLICITUD_EXCLUSION);
+        exclusion.setObservacion(this.observacion);
         
         List<SolicitudDetalle> listDetalles = new ArrayList<SolicitudDetalle>(this.detalles.values());
         for (Bien bienAgregar : this.getBienesAgregar()) {

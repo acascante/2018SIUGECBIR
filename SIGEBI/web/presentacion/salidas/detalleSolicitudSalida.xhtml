@@ -1,0 +1,61 @@
+<ice:form id="frmDetalleInventario" 
+          xmlns:ice="http://www.icesoft.com/icefaces/component" 
+          xmlns:f="http://java.sun.com/jsf/core" 
+          xmlns:ui="http://java.sun.com/jsf/facelets">
+
+    <!-- Seccion de TABS -->
+    <div class="container">
+        <div class="row" style="margin-top: 10px;">
+                <div class='col-sm-8'>
+                    <h1 style="margin: 0;">
+                        <ice:outputFormat value="#{label['sigebi.label.vista.detalleSalida.titulo']}" />
+                    </h1>
+                </div>
+
+                <div class="col-sm-2">
+                    <ice:commandButton id="boton_regresar" value="Regresar" style="float:right" partialSubmit="true" styleClass="boton" action="#{controllerSolicitudSalida.regresarListado}"/>
+                </div>
+        </div>
+
+        <div class="row" style="margin-top: 10px;">
+            <div class="col-md-12">
+                <ice:panelGroup>
+                    <ice:panelGroup id="tabInventario" style="padding-bottom: 60px; padding-top: 10px;" styleClass="tabsContent panelTabSetContainer">
+                        <ice:panelTabSet>
+                            <!-- TAB Toma Fisica-->
+                            <ice:panelTab id="tabTomaFisica" label="#{label['sigebi.label.vista.detalleSalida.tabGeneral']}">
+                                <ui:insert name="addTomaFisica">
+                                    <ui:include src="../salidas/tabDetalleSalida.xhtml" />
+                                </ui:insert>
+                            </ice:panelTab>
+
+                            <!-- TAB Toma Fisica Unitaria-->
+                            <ice:panelTab id="tabTomaFisicaUnitaria" label="#{label['sigebi.label.vista.detalleSalida.tabBienesSalidas']}" rendered="#{controllerSolicitudSalida.command.yaRegistrada}">
+                                <ui:insert name="addTomaFisicaUnitaria">
+                                    <ui:include src="../salidas/tabBienesAsociados.xhtml" />
+                                </ui:insert>
+                            </ice:panelTab>
+
+                        </ice:panelTabSet>
+                    </ice:panelGroup>
+                </ice:panelGroup>
+            </div>
+        </div>
+
+        <!-- Panel de persona -->   
+        <ui:insert name="modalPersona">
+            <ui:include src="../salidas/personasSalida.xhtml" />
+        </ui:insert>   
+
+        <!-- Panel de bines -->   
+        <ui:insert name="modalBienes">
+            <ui:include src="../salidas/bienesSalidas.xhtml" />
+        </ui:insert>   
+
+        <!-- Panel confirmar -->   
+        <ui:insert name="modalConfirma">
+            <ui:include src="../salidas/panelConfirmacionSalida.xhtml" />
+        </ui:insert>   
+
+    </div>
+</ice:form>

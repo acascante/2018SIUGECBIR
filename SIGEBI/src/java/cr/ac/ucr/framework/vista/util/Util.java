@@ -228,7 +228,7 @@ public class Util {
         Iterator variablesSession = context.getExternalContext().getSessionMap().values().iterator();
         while (variablesSession.hasNext()) {
             String variable = variablesSession.next().toString();
-            if (variable.contains("vista")) {
+            if (variable.contains("vista") || variable.contains("controller")) {
                 if (!variable.contains("VistaNavegacion")
                         && !variable.contains("VistaMenu")
                         && !variable.contains("VistaUsuario")) {
@@ -237,8 +237,7 @@ public class Util {
 
             }
         }
-        agregarVariableSession(
-                Util.getEtiquetas("sesion.id.malla.modificada"), null);
+        agregarVariableSession(Util.getEtiquetas("sesion.id.malla.modificada"), null);
         /*for(int i = 0; i < context.getExternalContext().getSessionMap().size(); i++){
         if(context.getExternalContext().getSessionMap().){
         remove("vistaPropuesta");

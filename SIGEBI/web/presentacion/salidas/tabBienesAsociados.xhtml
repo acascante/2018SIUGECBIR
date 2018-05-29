@@ -1,0 +1,158 @@
+
+<ice:outputHtml id="frmTabBienesSolicitudSalida" xmlns:ice="http://www.icesoft.com/icefaces/component" xmlns:icecore="http://www.icefaces.org/icefaces/core" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:c="http://java.sun.com/jstl/core">
+
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <ice:commandButton id="btnBuscarBienes" 
+                                   value="#{label['sigebi.Bien.Btn.Buscar']}"  
+                                   partialSubmit="true" 
+                                   styleClass="boton" 
+                                   style="padding-bottom: 5px;  margin-top: 1.5rem; float:right"
+                                   actionListener="#{controllerSolicitudSalida.mostrarPanel}">
+                    <f:attribute id="accion" name="accion"  value="1"/>                
+                </ice:commandButton>    
+            </div>
+        </div>        
+        <div class="row">
+            <label class="control-label" for="txtTitulo">
+                <ice:outputText value="#{label['sigebi.label.vista.detalleSalida.bien.titulo']}" />
+            </label>  
+            <div class="col-md-12">
+                <div class="form-group"> 
+                    <div>
+                        <ice:dataTable id="bienesSolicitudSalida"
+                                       value="#{controllerSolicitudSalida.command.bienesDetalles}"
+                                       var="detalle"
+                                       paginator="true"
+                                       paginatorPosition="bottom">
+
+                            <ice:column id="colIdentificacion">
+                                <f:facet name="header">
+                                    <ice:columnGroup>
+                                        <ice:headerRow>
+                                           <ice:outputText value="#{label['sigebi.label.vista.detalleSalida.bien.identificacion']}"/>
+                                        </ice:headerRow>
+                                    </ice:columnGroup>
+                                </f:facet>                                
+                                <h:outputText id="colIdentificacionTxt" value="#{detalle.bien.identificacion.identificacion}"/>
+                            </ice:column>                            
+                            <ice:column id="colDescripcion">
+                                <f:facet name="header">
+                                    <ice:columnGroup>
+                                        <ice:headerRow>
+                                           <ice:outputText value="#{label['sigebi.label.vista.detalleSalida.bien.descripcion']}"/>
+                                        </ice:headerRow>
+                                    </ice:columnGroup>
+                                </f:facet>                                
+                                <h:outputText id="colDescripcionTxt" value="#{detalle.bien.descripcion}"/>
+                            </ice:column>
+                            <ice:column id="colMarca">
+                                <f:facet name="header">
+                                    <ice:columnGroup>
+                                        <ice:headerRow>
+                                           <ice:outputText value="#{label['sigebi.label.vista.detalleSalida.bien.marca']}"/>
+                                        </ice:headerRow>
+                                    </ice:columnGroup>
+                                </f:facet>                                
+                                <h:outputText id="colMarcaTxt" value="#{detalle.bien.resumenBien.marca}"/>
+                            </ice:column>
+                            <ice:column id="colModelo">
+                                <f:facet name="header">
+                                    <ice:columnGroup>
+                                        <ice:headerRow>
+                                           <ice:outputText value="#{label['sigebi.label.vista.detalleSalida.bien.modelo']}"/>
+                                        </ice:headerRow>
+                                    </ice:columnGroup>
+                                </f:facet>                                
+                                <h:outputText id="colModeloTxt" value="#{detalle.bien.resumenBien.modelo}"/>
+                            </ice:column>
+                            <ice:column id="colSerie">
+                                <f:facet name="header">
+                                    <ice:columnGroup>
+                                        <ice:headerRow>
+                                           <ice:outputText value="#{label['sigebi.label.vista.detalleSalida.bien.serie']}"/>
+                                        </ice:headerRow>
+                                    </ice:columnGroup>
+                                </f:facet>                                
+                                <h:outputText id="colSerieTxt" value="#{detalle.bien.resumenBien.serie}"/>
+                            </ice:column>
+                            <ice:column id="colEstado">
+                                <f:facet name="header">
+                                    <ice:columnGroup>
+                                        <ice:headerRow>
+                                           <ice:outputText value="#{label['sigebi.label.vista.detalleSalida.detalle.estado']}"/>
+                                        </ice:headerRow>
+                                    </ice:columnGroup>
+                                </f:facet>                                
+                                <h:outputText id="colEstadoTxt" value="#{detalle.estado.nombre}"/>
+                            </ice:column>
+                            <ice:column id="colFechaSalida">
+                                <f:facet name="header">
+                                    <ice:columnGroup>
+                                        <ice:headerRow>
+                                           <ice:outputText value="#{label['sigebi.label.vista.detalleSalida.detalle.fechaSalida']}"/>
+                                        </ice:headerRow>
+                                    </ice:columnGroup>
+                                </f:facet>
+                                <div class="form-group">                                 
+                                    <ice:selectInputDate id="txtFechaSalida" partialSubmit="false" styleClass="form-control" renderAsPopup="true" renderMonthAsDropdown="true"
+                                                         valueChangeListener="#{controllerSolicitudSalida.cambioFecha}"
+                                                         value="#{detalle.fechaSalida}">
+                                        <f:convertDateTime pattern="dd/MM/yyyy" timeZone="GMT-6:00" />
+                                        <f:attribute id="detalleSelIngreso" name="detalleSeleccionado"  value="#{detalle}"/>                                      
+                                    </ice:selectInputDate>
+                                </div>    
+                            </ice:column>
+                            <ice:column id="colFechaIngreso">
+                                <f:facet name="header">
+                                    <ice:columnGroup>
+                                        <ice:headerRow>
+                                           <ice:outputText value="#{label['sigebi.label.vista.detalleSalida.detalle.fechaIngreso']}"/>
+                                        </ice:headerRow>
+                                    </ice:columnGroup>
+                                </f:facet>                                
+                                <div class="form-group">                                 
+                                    <ice:selectInputDate id="txtFechaIngreso" partialSubmit="true" styleClass="form-control" 
+                                                         renderAsPopup="true" renderMonthAsDropdown="true"
+                                                         valueChangeListener="#{controllerSolicitudSalida.cambioFecha}"
+                                                         value="#{detalle.fechaIngreso}">
+                                        <f:convertDateTime pattern="dd/MM/yyyy" timeZone="GMT-6:00" />
+                                        <f:attribute id="detalleSelIngreso" name="detalleSeleccionado"  value="#{detalle}"/>                                      
+                                    </ice:selectInputDate>
+                                </div>    
+                            </ice:column>
+                            
+                            <ice:column style="text-align: center;">
+                                <ice:commandButton id="botonEliminarBien"
+                                                   style="margin-top:2%" 
+                                                   styleClass="btnEliminar_bienSolicitud" 
+                                                   partialSubmit="true"
+                                                   rendered="#{controllerSolicitudSalida.command.permiteEliminarDetalles}"
+                                                   actionListener="#{controllerSolicitudSalida.eliminarBien}">
+                                    <f:attribute id="EliminarSel" name="detalleSeleccionado"  value="#{detalle}"/>                                
+                                </ice:commandButton>
+                                <ice:commandButton id="botonAprobarBien" 
+                                                   style="margin-top:2%" 
+                                                   styleClass="btnAprobar_bienSolicitud" 
+                                                   partialSubmit="true"
+                                                   rendered="#{controllerSolicitudSalida.command.permiteAprobarRechazarDetalles}"
+                                                   actionListener="#{controllerSolicitudSalida.aprobarBien}">
+                                    <f:attribute id="AprobarSel" name="detalleSeleccionado"  value="#{detalle}"/>                                
+                                </ice:commandButton>
+                                <ice:commandButton id="botonRechazaBien"
+                                                   style="margin-top:2%" 
+                                                   styleClass="btnRechazar_bienSolicitud" 
+                                                   partialSubmit="true"
+                                                   rendered="#{controllerSolicitudSalida.command.permiteAprobarRechazarDetalles}"
+                                                   actionListener="#{controllerSolicitudSalida.rechazarBien}">
+                                    <f:attribute id="rechazarSel" name="detalleSeleccionado"  value="#{detalle}"/>                                
+                                </ice:commandButton>
+                            </ice:column>
+                        </ice:dataTable>
+                    </div>
+                </div>
+            </div>                
+        </div>
+    </div>    
+</ice:outputHtml>

@@ -1,0 +1,82 @@
+<div xmlns:ice="http://www.icesoft.com/icefaces/component"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core" >
+
+    <!-- Modal para confirmar -->
+    <ice:panelPopup
+        modal="true" 
+        visible="#{(controllerSolicitudSalida.command.presentarPanelCorregirConfirmar || 
+                   controllerSolicitudSalida.command.presentarPanelAnularConfirmar || 
+                   controllerSolicitudSalida.command.presentarPanelRechazarConfirmar)}"
+        rendered="#{(controllerSolicitudSalida.command.presentarPanelCorregirConfirmar || 
+                   controllerSolicitudSalida.command.presentarPanelAnularConfirmar || 
+                   controllerSolicitudSalida.command.presentarPanelRechazarConfirmar)}"
+        styleClass="popup">
+        
+        <f:facet name="body">
+
+            <fieldset class="panel_Container" >
+                <div class="container" style="margin-top: 20px;">
+                    <!-- Titulo -->
+                    <div class="row">
+                        <div class='col-sm-12'>
+                            <h1 style="margin: 0px;">
+                                <ice:outputFormat value="#{label['sigebi.label.vista.detalleSalida.confirmacion.titulo']}"/>
+                            </h1>
+                        </div>                
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12" style="margin-top: 20px;">
+                            #{controllerSolicitudSalida.command.mensajeConfirmacion}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12" style="margin-top: 20px;">
+                            <div class="form-group">
+                                <label class="control-label" for="txtDetalle">
+                                    <ice:outputText value="#{label['sigebi.label.vista.detalleSalida.confirmacion.observacion']}"/> 
+                                </label>
+                                <ice:inputTextarea  id="observacionConfirmacion" 
+                                                    styleClass="form-control"
+                                                    cols="2" 
+                                                    value="#{controllerSolicitudSalida.command.observacionConfirmacion}"/>
+                            </div>
+                        </div>    
+                    </div>
+                    <div class="row"  style="margin-top: 20px; margin-bottom: 20px;">
+                        <div class='col-md-6'>
+                            <span class="alineado_derecha">
+                                <ice:commandButton id="btn_cancelar" partialSubmit="true" action="#{controllerSolicitudSalida.cerrarPanel}" styleClass="boton"  value="Regresar" />
+                            </span>
+                        </div>
+                        <div class="col-md-6 align-content-center">
+                            
+                            <ice:commandButton id="botonRevisar" 
+                                                   value="Revisar" 
+                                                   partialSubmit="true" 
+                                                   styleClass="boton" 
+                                                   rendered="#{controllerSolicitudSalida.command.presentarPanelCorregirConfirmar}"
+                                                   action="#{controllerSolicitudSalida.corregirSolicitud}"/>
+                            
+                            <ice:commandButton id="botonAnular" 
+                                                   value="Anular" 
+                                                   partialSubmit="true" 
+                                                   styleClass="boton" 
+                                                   rendered="#{controllerSolicitudSalida.command.presentarPanelAnularConfirmar}"
+                                                   action="#{controllerSolicitudSalida.anularSolicitud}"/>
+
+                            <ice:commandButton id="botonRechazar" 
+                                                   value="Rechazar" 
+                                                   partialSubmit="true" 
+                                                   styleClass="boton" 
+                                                   rendered="#{controllerSolicitudSalida.command.presentarPanelRechazarConfirmar}"
+                                                   action="#{controllerSolicitudSalida.rechazarSolicitud}"/>                            
+                        </div>
+                        
+                    </div>
+                </div>                
+            </fieldset>       
+        </f:facet>  
+    </ice:panelPopup>
+</div>

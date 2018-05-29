@@ -74,12 +74,6 @@ public class ListarPrestamosController extends BaseController {
         }
     }
     
-    public void regresarListado() {
-        Util.navegar(vistaOrigen);
-        this.inicializarDatos();
-        this.inicializarListado();
-    }    
-    
     private void inicializarDatos() {
         this.command = new ListarPrestamosCommand();
         this.vistaOrigen = Constantes.VISTA_PRESTAMO_LISTADO;

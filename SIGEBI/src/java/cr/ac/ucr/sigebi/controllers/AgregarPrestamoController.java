@@ -21,6 +21,7 @@ import cr.ac.ucr.sigebi.domain.Estado;
 import cr.ac.ucr.sigebi.domain.Persona;
 import cr.ac.ucr.sigebi.domain.RegistroMovimientoSolicitud;
 import cr.ac.ucr.sigebi.domain.SolicitudPrestamo;
+import cr.ac.ucr.sigebi.domain.SolicitudSalida;
 import cr.ac.ucr.sigebi.domain.Tipo;
 import cr.ac.ucr.sigebi.domain.UnidadEjecutora;
 import cr.ac.ucr.sigebi.models.AutorizacionRolPersonaModel;
@@ -62,6 +63,8 @@ public class AgregarPrestamoController extends BaseController {
     private final int ACCION_REVISAR = 2;
     private final int ACCION_ANULAR = 4;
     private final int ACCION_RECHAZAR_BIEN = 3;
+    private final int ACCION_DEVOLVER = 5;
+    private final int ACCION_DEVOLVER_BIEN = 6;
     
     public class ListadoBienes extends BaseController {
         
@@ -270,7 +273,7 @@ public class AgregarPrestamoController extends BaseController {
         
         private void contarEntidades() {
             try {
-                Long contador = personaModel.contar(this.estudiante, this.funcionario, this.command.getFltIdCodigo(), this.command.getFltNombre(), this.command.getFltPrimerApellido(), this.command.getFltSegundoApellido());
+                Long contador = personaModel.contar(this.estudiante, this.funcionario, this.command.getFltIdCodigo(), this.command.getFltNombre(), null,  this.command.getFltPrimerApellido(), this.command.getFltSegundoApellido());
                 this.setCantidadRegistros(contador.intValue());
             } catch (FWExcepcion e) {
                 Mensaje.agregarErrorAdvertencia(e.getError_para_usuario());
@@ -280,7 +283,7 @@ public class AgregarPrestamoController extends BaseController {
         private void listarEntidades() {
             try {
                 this.personas.clear();
-                this.personas = personaModel.listar(this.getPrimerRegistro() - 1, this.getUltimoRegistro(), this.estudiante, this.funcionario, this.command.getFltIdCodigo(), this.command.getFltNombre(), this.command.getFltPrimerApellido(), this.command.getFltSegundoApellido());                
+                this.personas = personaModel.listar(this.getPrimerRegistro() - 1, this.getUltimoRegistro(), this.estudiante, this.funcionario, this.command.getFltIdCodigo(), this.command.getFltNombre(), null, this.command.getFltPrimerApellido(), this.command.getFltSegundoApellido());                
            } catch (FWExcepcion e) {
                Mensaje.agregarErrorAdvertencia(e.getError_para_usuario());
            }
@@ -437,6 +440,8 @@ public class AgregarPrestamoController extends BaseController {
     
     private boolean visibleBotonRechazarObservacion;
     private boolean visibleBotonRechazarBienObservacion;
+    private boolean visibleBotonDevolverObservacion;
+    private boolean visibleBotonDevolverBienObservacion;
     private boolean visibleBotonRevisarObservacion;
     private boolean visibleBotonAnularObservacion;
     
@@ -589,6 +594,29 @@ public class AgregarPrestamoController extends BaseController {
         }
     }
 
+    
+    public void verDetalle(SolicitudPrestamo movimiento, String vistaOrigen) {
+        
+        try{
+            this.inicializarDetalle(movimiento);
+
+            this.vistaOrigen = vistaOrigen;
+            Util.navegar(Constantes.VISTA_PRESTAMO_NUEVO);
+
+        } catch (FWExcepcion err) {
+            this.mensaje = err.getMessage();
+        }
+    }
+    
+    
+    public void regresarListado() {
+        if (vistaOrigen != null) {
+            Util.navegar(vistaOrigen, true);
+        } else {
+            Util.navegar(Constantes.VISTA_PRESTAMO_LISTADO, true);
+        }
+    }
+    
     private void almacenarObservacion(Tipo tipo) {
         if (!command.getObservacionConfirmacion().isEmpty()) {
             Integer telefono = lVistaUsuario.getgUsuarioActual().getTelefono1() != null ? Integer.parseInt(lVistaUsuario.getgUsuarioActual().getTelefono1()) : 0;
@@ -602,28 +630,9 @@ public class AgregarPrestamoController extends BaseController {
                 this.command.getEstado(),
                 this.command.getPrestamo(tipo));
             this.registroMovimientoModel.agregar(registroMovimientoSolicitud);
-        }
-        
-        if (!this.command.getObservacion().isEmpty()) {
-            Integer telefono = lVistaUsuario.getgUsuarioActual().getTelefono1() != null ? Integer.parseInt(lVistaUsuario.getgUsuarioActual().getTelefono1()) : 0;
-
-            RegistroMovimientoSolicitud registroMovimientoSolicitud = new RegistroMovimientoSolicitud(
-                this.tipoPorDominioValor(Constantes.DOMINIO_REGISTRO_MOVIMIENTO, Constantes.TIPO_REGISTRO_MOVIMIENTO_CAMBIO_ESTADO_SOLICITUD), 
-                this.command.getObservacion(), 
-                telefono, 
-                new Date(), 
-                usuarioSIGEBI, 
-                this.command.getEstado(),
-                this.command.getPrestamo(tipo));
-            this.registroMovimientoModel.agregar(registroMovimientoSolicitud);
-        }
+        }        
     }
     
-    public void verDetalle(SolicitudPrestamo prestamo, String vistaOrigen) {
-        inicializarDetalle(prestamo);
-        this.vistaOrigen = vistaOrigen;
-        Util.navegar(Constantes.VISTA_PRESTAMO_NUEVO);
-    }
     
     //<editor-fold defaultstate="collapsed" desc="Validaciones">
     public String validarForm(UIViewRoot root) {
@@ -677,7 +686,9 @@ public class AgregarPrestamoController extends BaseController {
     }
     
     public void devolverPrestamo() {   // Cambia bienes a estado normal
-        movimientoPrestamo(Constantes.ESTADO_PRESTAMO_DEVUELTO, Constantes.ESTADO_INTERNO_BIEN_NORMAL);
+        this.command.setObservacionConfirmacion(new String());
+        this.visiblePanelObservacion = true;
+        this.accion = ACCION_DEVOLVER;        
     }
     
     public void rechazarPrestamo() {  // Abre ventana de confirmacion
@@ -704,6 +715,11 @@ public class AgregarPrestamoController extends BaseController {
 
     public void cerrarPanelObservaciones() {
         this.visiblePanelObservacion = false;
+    }
+    
+    public void devolverPrestamoObservacion() {
+        this.visiblePanelObservacion = false;
+        movimientoPrestamo(Constantes.ESTADO_PRESTAMO_DEVUELTO, Constantes.ESTADO_INTERNO_BIEN_NORMAL);
     }
     
     public void rechazarPrestamoObservacion() { // Cambia bienes a estado normal
@@ -791,8 +807,10 @@ public class AgregarPrestamoController extends BaseController {
     }
     
     public void devolverBien(ActionEvent event) {
-        Long idBien = (Long) event.getComponent().getAttributes().get("bienSeleccionado");
-        movimientoBien(idBien, Constantes.ESTADO_PRESTAMO_DEVUELTO, Constantes.ESTADO_INTERNO_BIEN_NORMAL);
+        this.command.setObservacionConfirmacion(new String());
+        this.visiblePanelObservacion = true;
+        this.accion = ACCION_DEVOLVER_BIEN;
+        this.bienSeleccionado = (Long) event.getComponent().getAttributes().get("bienSeleccionado");
     }
     
     public void rechazarBien(ActionEvent event) {
@@ -805,6 +823,11 @@ public class AgregarPrestamoController extends BaseController {
     public void rechazarBienObservacion() {
         this.visiblePanelObservacion = false;
         movimientoBien(this.bienSeleccionado, Constantes.ESTADO_PRESTAMO_RECHAZADO, Constantes.ESTADO_INTERNO_BIEN_NORMAL);        
+    }
+
+    public void devolverBienObservacion() {
+        this.visiblePanelObservacion = false;
+        movimientoBien(this.bienSeleccionado, Constantes.ESTADO_PRESTAMO_DEVUELTO, Constantes.ESTADO_INTERNO_BIEN_NORMAL);
     }
     
     private void movimientoBien(Long idBien, int solicitud, int bienInterno) {
@@ -1227,6 +1250,22 @@ public class AgregarPrestamoController extends BaseController {
             this.visibleBotonRechazarBienObservacion = true;    
         }        
         return visibleBotonRechazarBienObservacion;
+    }
+
+    public boolean isVisibleBotonDevolverObservacion() {
+        this.visibleBotonDevolverObservacion = false;
+        if (this.accion == ACCION_DEVOLVER) {
+            this.visibleBotonDevolverObservacion = true;    
+        }
+        return visibleBotonDevolverObservacion;
+    }
+
+    public boolean isVisibleBotonDevolverBienObservacion() {
+        this.visibleBotonDevolverBienObservacion = false;
+        if (this.accion == ACCION_DEVOLVER_BIEN) {
+            this.visibleBotonDevolverBienObservacion = true;    
+        }        
+        return visibleBotonDevolverBienObservacion;
     }
 
     public boolean isVisibleBotonRevisarObservacion() {

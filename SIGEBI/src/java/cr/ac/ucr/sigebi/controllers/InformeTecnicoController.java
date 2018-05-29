@@ -296,9 +296,9 @@ public class InformeTecnicoController extends BaseController {
 
     public void regresarListado() {
         if (vistaOrigen != null) {
-            Util.navegar(vistaOrigen);
+            Util.navegar(vistaOrigen, true);
         } else {
-            Util.navegar("informe");
+            Util.navegar("informe", true);
         }
     }
 

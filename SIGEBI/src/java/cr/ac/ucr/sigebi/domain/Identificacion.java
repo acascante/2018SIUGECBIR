@@ -47,6 +47,11 @@ public class Identificacion extends ObjetoBase implements Serializable {
     @ManyToOne
     @JoinColumn(name = "ID_UNIDAD_EJECUTORA", referencedColumnName = "ID")
     private UnidadEjecutora unidadEjecutora;
+
+    @ManyToOne
+    @JoinColumn(name = "ID_ASIGNACION", referencedColumnName = "ID_ASIGNACION")
+    private AsignacionPlaca asignacionPlaca;
+
     //</editor-fold>
 
     //<editor-fold defaultstate="collapsed" desc="Get's y Set's">
@@ -88,6 +93,14 @@ public class Identificacion extends ObjetoBase implements Serializable {
 
     public void setUnidadEjecutora(UnidadEjecutora unidadEjecutora) {
         this.unidadEjecutora = unidadEjecutora;
+    }
+    
+    public AsignacionPlaca getAsignacionPlaca() {
+        return asignacionPlaca;
+    }
+
+    public void setAsignacionPlaca(AsignacionPlaca asignacionPlaca) {
+        this.asignacionPlaca = asignacionPlaca;
     }
     //</editor-fold>
     

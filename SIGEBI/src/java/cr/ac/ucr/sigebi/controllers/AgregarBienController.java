@@ -37,6 +37,8 @@ import cr.ac.ucr.sigebi.domain.Solicitud;
 import cr.ac.ucr.sigebi.domain.SolicitudDetalle;
 import cr.ac.ucr.sigebi.domain.SolicitudDonacion;
 import cr.ac.ucr.sigebi.domain.SolicitudExclusion;
+import cr.ac.ucr.sigebi.domain.SolicitudPrestamo;
+import cr.ac.ucr.sigebi.domain.SolicitudSalida;
 import cr.ac.ucr.sigebi.domain.SolicitudTraslado;
 import cr.ac.ucr.sigebi.domain.SubCategoria;
 import cr.ac.ucr.sigebi.domain.SubClasificacion;
@@ -179,9 +181,13 @@ public class AgregarBienController extends BaseController {
     private boolean bienRegistrado;
     private boolean donacion;
     private boolean interfaz;
+    private boolean visibleBotonEnviarSincronizar;
+    private boolean visibleBotonActivarBien;
 
     private Tipo tipoAdjuntoDoc;
     private Estado estadoGeneralActivo;
+    private Estado estadoBienActivo;
+    private Estado estadoBienPendiente;
     private SolicitudDonacion solicitudDonacion;
     private InterfazBien interfazBien;
     private TreeUbicacionSIGEBI treeUbicacionSIGEBI;
@@ -192,7 +198,9 @@ public class AgregarBienController extends BaseController {
     public AgregarBienController() {
         super();
         tipoAdjuntoDoc = this.tipoPorDominioValor(Constantes.DOMINIO_ADJUNTO, Constantes.TIPO_ADJUNTO_BIEN);
-        estadoGeneralActivo = this.estadoPorDominioValor(Constantes.DOMINIO_IDENTIFICACION, Constantes.ESTADO_GENERAL_ACTIVO);        
+        estadoGeneralActivo = this.estadoPorDominioValor(Constantes.DOMINIO_GENERAL, Constantes.ESTADO_GENERAL_ACTIVO);   
+        estadoBienActivo = this.estadoPorDominioValor(Constantes.DOMINIO_BIEN, Constantes.ESTADO_BIEN_ACTIVO); 
+        estadoBienPendiente = this.estadoPorDominioValor(Constantes.DOMINIO_BIEN, Constantes.ESTADO_BIEN_PENDIENTE); 
     }
 
     private void inicializarNuevo() {
@@ -207,16 +215,22 @@ public class AgregarBienController extends BaseController {
 
     private void inicializarBanderasBotones(Bien bien) {
         if (bien.getEstado().getValor().equals(Constantes.ESTADO_BIEN_PENDIENTE)) {
-            this.setVisibleBotonSincronizar(true);
+            this.setVisibleBotonSincronizar(bien.getCapitalizable());
         } else {
             this.setVisibleBotonSincronizar(false);
         }
         if (bien.getEstado().getValor().equals(Constantes.ESTADO_BIEN_PENDIENTE_SINCRONIZAR)) {
             this.setVisibleBotonRechazar(true);
+            this.setVisibleBotonEnviarSincronizar(true);
         } else {
             this.setVisibleBotonRechazar(false);
+            this.setVisibleBotonEnviarSincronizar(false);
         }
-        
+        if(bien.getEstado().getId().equals(this.estadoExclusionAprobada.getId())){
+            this.setVisibleBotonEnviarSincronizar(true);
+        }else{
+            this.setVisibleBotonEnviarSincronizar(false);
+        }
         //Verifica si puede cambiar la identificacion del bien
         AutorizacionRolPersona autorizado = autorizacionRolPersonaModel.buscar(Constantes.CODIGO_AUTORIZACION_ADMINISTRADOR, Constantes.CODIGO_ROL_ADMINISTRADOR_AUTORIZACION_ADMINISTRADOR, usuarioSIGEBI, unidadEjecutora);
         this.setVisibleBotonActualizarIdentificacion(autorizado != null && !(command.getIdentificacion().getId() != null && command.getIdentificacion().getId() > 0));
@@ -288,7 +302,7 @@ public class AgregarBienController extends BaseController {
         this.visiblePanelEliminarNota = false;
         this.visiblePanelAdjunto = false;
         this.visiblePanelEliminarAccesorio = false;
-
+        this.visibleBotonEnviarSincronizar = false;
         this.bienRegistrado = false;
     }
 
@@ -347,7 +361,7 @@ public class AgregarBienController extends BaseController {
             }
             
                     
-            treeUbicacionSIGEBI = new TreeUbicacionSIGEBI();
+            treeUbicacionSIGEBI = new TreeUbicacionSIGEBI(unidadEjecutora);
             treeUbicacionSIGEBI.setUbicacionModel(modelUbicacion);
 
 
@@ -359,43 +373,45 @@ public class AgregarBienController extends BaseController {
     }
 
     public String validarForm(UIViewRoot root, UIInput component) {
-        try{
-        //Se validan los datos requeridos 
-        String mensajeUsuario = Constantes.OK;
-        if (command.getDescripcion().isEmpty()) {
-            mensajeUsuario = Util.getEtiquetas("sigebi.error.agregarBienController.descripcion.requerido");
-        } else if (command.getIdTipo() == null || command.getIdTipo() <= 0) {
-            mensajeUsuario = Util.getEtiquetas("sigebi.error.agregarBienController.tipo.requerido");
-        } else if (command.getIdOrigen() == null || command.getIdOrigen() <= 0) {
-            mensajeUsuario = Util.getEtiquetas("sigebi.error.agregarBienController.origen.requerido");
-        } else if (command.getCantidad() == null || command.getCantidad() <= 0) {
-            mensajeUsuario = Util.getEtiquetas("sigebi.error.agregarBienController.cantidad.requerido");
-        } else if (command.getIdCategoria() == null || command.getIdCategoria() <= 0) {
-            mensajeUsuario = Util.getEtiquetas("sigebi.error.agregarBienController.categoria.requerido");
-        } else if (command.getIdSubCategoria() == null || command.getIdSubCategoria() <= 0) {
-            mensajeUsuario = Util.getEtiquetas("sigebi.error.agregarBienController.subcategoria.requerido");
-        } else if (command.getIdClasificacion() == null || command.getIdClasificacion() <= 0) {
-            mensajeUsuario = Util.getEtiquetas("sigebi.error.agregarBienController.clasificacion.requerido");
-        } else if (command.getIdSubClasificacion() == null || command.getIdSubClasificacion() <= 0) {
-            mensajeUsuario = Util.getEtiquetas("sigebi.error.agregarBienController.subclasificacion.requerido");
-        } else if (command.getUbicacionCommand().getIdUbicacion() == null || (command.getUbicacionCommand().getIdUbicacion() != null && command.getUbicacionCommand().getIdUbicacion() <= 0)) {
-            mensajeUsuario = Util.getEtiquetas("sigebi.error.agregarBienController.ubicacion.requerido");
-        } else if (command.getProveedorCommand() == null || (command.getProveedorCommand() != null && command.getProveedorCommand().getProveedor() == null)) {
-            mensajeUsuario = Util.getEtiquetas("sigebi.error.agregarBienController.proveedor.requerido");
-        } else if (command.getFechaAdquisicion() == null) {
-            mensajeUsuario = Util.getEtiquetas("sigebi.error.agregarBienController.fechaAdquisicion.requerido");
-        } else if (command.getIdMoneda() == null || command.getIdMoneda() <= 0) {
-            mensajeUsuario = Util.getEtiquetas("sigebi.error.agregarBienController.moneda.requerido");
-        } else if (command.getCosto() == null || command.getCosto() < 0) {
-            mensajeUsuario = Util.getEtiquetas("sigebi.error.agregarBienController.costo.requerido");
-        } else if (command.getDescripcion().length() <= 3) {
-            mensajeUsuario = Util.getEtiquetas("sigebi.error.agregarBienController.descripcion.minimo");
-
-        }
-        return mensajeUsuario;
-        }catch(Exception err){
+        try {
+            //Se validan los datos requeridos 
+            String mensajeUsuario = Constantes.OK;
+            if (command.getDescripcion().isEmpty()) {
+                mensajeUsuario = Util.getEtiquetas("sigebi.error.agregarBienController.descripcion.requerido");
+            } else if (command.getIdTipo() == null || command.getIdTipo() <= 0) {
+                mensajeUsuario = Util.getEtiquetas("sigebi.error.agregarBienController.tipo.requerido");
+            } else if (command.getIdOrigen() == null || command.getIdOrigen() <= 0) {
+                mensajeUsuario = Util.getEtiquetas("sigebi.error.agregarBienController.origen.requerido");
+            } else if (command.getCantidad() == null || command.getCantidad() <= 0) {
+                mensajeUsuario = Util.getEtiquetas("sigebi.error.agregarBienController.cantidad.requerido");
+            } else if (command.getIdCategoria() == null || command.getIdCategoria() <= 0) {
+                mensajeUsuario = Util.getEtiquetas("sigebi.error.agregarBienController.categoria.requerido");
+            } else if (command.getIdSubCategoria() == null || command.getIdSubCategoria() <= 0) {
+                mensajeUsuario = Util.getEtiquetas("sigebi.error.agregarBienController.subcategoria.requerido");
+            } else if (command.getIdClasificacion() == null || command.getIdClasificacion() <= 0) {
+                mensajeUsuario = Util.getEtiquetas("sigebi.error.agregarBienController.clasificacion.requerido");
+            } else if (command.getIdSubClasificacion() == null || command.getIdSubClasificacion() <= 0) {
+                mensajeUsuario = Util.getEtiquetas("sigebi.error.agregarBienController.subclasificacion.requerido");
+            } else if (command.getUbicacionCommand().getUbicacion() == null
+                    || (command.getUbicacionCommand().getUbicacion() != null && command.getUbicacionCommand().getUbicacion().getId() == null)
+                    || (command.getUbicacionCommand().getUbicacion() != null && command.getUbicacionCommand().getUbicacion().getId() <= 0)) {
+                mensajeUsuario = Util.getEtiquetas("sigebi.error.agregarBienController.ubicacion.requerido");
+            } else if (command.getProveedorCommand().getProveedor() == null
+                    || (command.getProveedorCommand().getProveedor() != null && command.getProveedorCommand().getProveedor().getNumPersona() == null)
+                    || (command.getProveedorCommand().getProveedor() != null && command.getProveedorCommand().getProveedor().getNumPersona() <= 0)) {
+                mensajeUsuario = Util.getEtiquetas("sigebi.error.agregarBienController.proveedor.requerido");
+            } else if (command.getFechaAdquisicion() == null) {
+                mensajeUsuario = Util.getEtiquetas("sigebi.error.agregarBienController.fechaAdquisicion.requerido");
+            } else if (command.getIdMoneda() == null || command.getIdMoneda() <= 0) {
+                mensajeUsuario = Util.getEtiquetas("sigebi.error.agregarBienController.moneda.requerido");
+            } else if (command.getCosto() == null || command.getCosto() < 0) {
+                mensajeUsuario = Util.getEtiquetas("sigebi.error.agregarBienController.costo.requerido");
+            } else if (command.getDescripcion().length() <= 3) {
+                mensajeUsuario = Util.getEtiquetas("sigebi.error.agregarBienController.descripcion.minimo");
+            }
+            return mensajeUsuario;
+        } catch (Exception err) {
             return Util.getEtiquetas("sigebi.error.agregarBienController.Error.Validacion");
-            
         }
     }
 
@@ -435,8 +451,7 @@ public class AgregarBienController extends BaseController {
          
             if (!bienRegistrado) {
                 //Se busca la identificacion del bien
-                Estado estadoDisponible = this.estadoPorDominioValor(Constantes.DOMINIO_IDENTIFICACION, Constantes.IDENTIFICACION_ESTADO_DISPONIBLE);
-                identificacion = modelIdentificacion.siguienteDisponible(estadoDisponible, unidadEjecutora);
+                identificacion = modelIdentificacion.siguienteDisponible(unidadEjecutora, command.getCapitalizable());
                 if (identificacion == null) {
                     Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.error.agregarBienController.identificacion.requerido"));
                     return;
@@ -585,9 +600,9 @@ public class AgregarBienController extends BaseController {
 
     public void regresarListado() {
         if (vistaOrigen != null) {
-            Util.navegar(vistaOrigen);
+            Util.navegar(vistaOrigen, true);
         } else {
-            Util.navegar(Constantes.KEY_VISTA_LISTAR_BIENES);
+            Util.navegar(Constantes.KEY_VISTA_LISTAR_BIENES, true);
         }
     }
 
@@ -605,7 +620,7 @@ public class AgregarBienController extends BaseController {
                 this.procesarBien();
 
                 context.getExternalContext().getSessionMap().remove("controllerSolicitudDonacion");
-                Util.agregarVariableSession("idDonacion", solicitudDonacion.getId());
+                //Util.agregarVariableSession("idDonacion", solicitudDonacion.getId());
                 Util.navegar(vistaOrigen);
                 Mensaje.agregarInfo(Util.getEtiquetas("sigebi.error.agregarBienController.mensaje.exito"));
 
@@ -633,6 +648,7 @@ public class AgregarBienController extends BaseController {
         inicializarNuevo();
         this.vistaOrigen = event.getComponent().getAttributes().get(Constantes.KEY_VISTA_ORIGEN).toString();
         solicitudDonacion = (SolicitudDonacion) event.getComponent().getAttributes().get("solicitudDonacion");
+        Util.agregarVariableSession("idDonacion", solicitudDonacion.getId());        
         Util.navegar(Constantes.KEY_VISTA_DETALLE_BIEN_DONACION);
     }
 
@@ -651,6 +667,7 @@ public class AgregarBienController extends BaseController {
         solicitudDonacion = (SolicitudDonacion) event.getComponent().getAttributes().get("solicitudDonacion");
 
         this.vistaOrigen = event.getComponent().getAttributes().get(Constantes.KEY_VISTA_ORIGEN).toString();
+        Util.agregarVariableSession("idDonacion", solicitudDonacion.getId());        
         Util.navegar(Constantes.KEY_VISTA_DETALLE_BIEN_DONACION);
     }
 
@@ -821,9 +838,7 @@ public class AgregarBienController extends BaseController {
 
                     }else if (identificacion == null && interfazBien.getIdentificacionBien().isEmpty()) {
                         //Caso 2: No se envia la identificacion, Se busca la siguiente identificacion disponible
-                        Estado estadoDispo = this.estadoPorDominioValor(Constantes.DOMINIO_IDENTIFICACION, Constantes.IDENTIFICACION_ESTADO_DISPONIBLE);
-                        identificacion = modelIdentificacion.siguienteDisponible(estadoDispo, unidadEjecutora);
-                        
+                        identificacion = modelIdentificacion.siguienteDisponible(unidadEjecutora, bien.getCapitalizable());
                         if (identificacion == null) {
                             //El bien se deja en estado de pre-ingreso para que el administrador le asigne la identificacion
                             bien.setEstado(this.estadoPorDominioValor(Constantes.DOMINIO_BIEN, Constantes.ESTADO_BIEN_PRE_INGRESO));
@@ -1903,6 +1918,42 @@ public class AgregarBienController extends BaseController {
     //</editor-fold>
     
     //<editor-fold defaultstate="collapsed" desc="Get's y Set's">
+
+    public boolean isVisibleBotonActivarBien() {
+        
+        if(bien == null){
+            visibleBotonActivarBien = false;
+        }
+        else{
+            if(bien.getEstado() != null){
+                if(bien.getEstado().getId() != null){
+                    visibleBotonActivarBien = bien.getEstado().getId() == estadoBienPendiente.getId();
+                    if(visibleBotonActivarBien)
+                        visibleBotonActivarBien = !bien.getCapitalizable();
+                    if(visibleBotonActivarBien)
+                        visibleBotonSincronizar = false;
+                }
+            }
+        }
+        return visibleBotonActivarBien;
+    }
+
+    public void setVisibleBotonActivarBien(boolean visibleBotonActivarBien) {
+        this.visibleBotonActivarBien = visibleBotonActivarBien;
+    }
+
+    
+    
+    public boolean isVisibleBotonEnviarSincronizar() {
+        return visibleBotonEnviarSincronizar;
+    }
+
+    public void setVisibleBotonEnviarSincronizar(boolean visibleBotonEnviarSincronizar) {
+        this.visibleBotonEnviarSincronizar = visibleBotonEnviarSincronizar;
+    }
+    
+    
+    
     public void setSolicitudDonacion(SolicitudDonacion solicitudDonacion) {
         this.solicitudDonacion = solicitudDonacion;
     }
@@ -2139,7 +2190,7 @@ public class AgregarBienController extends BaseController {
         this.visiblePanelIdentificador = visiblePanelIdentificador;
     }
 
-    public boolean isVisibleBotonSincronizar() {
+    public boolean isVisibleBotonSincronizar() {        
         return visibleBotonSincronizar;
     }
 
@@ -2252,6 +2303,10 @@ public class AgregarBienController extends BaseController {
     SolicitudDonacionController don;
     @Autowired
     TrasladoController tra;
+    @Autowired
+    SolicitudSalidaController sal;
+    @Autowired
+    AgregarPrestamoController pre;
     
     public void consultarMovimiento(ActionEvent event) {
         try {
@@ -2274,7 +2329,13 @@ public class AgregarBienController extends BaseController {
                     break;
                 case 3:
                     tra.verDetalle( (SolicitudTraslado) verMovimiento, Constantes.KEY_VISTA_DETALLE_BIEN );
-                    break;                    
+                    break;      
+                case 4:
+                    pre.verDetalle( (SolicitudPrestamo) verMovimiento, Constantes.KEY_VISTA_DETALLE_BIEN );
+                    break;    
+                case 5:
+                    sal.verDetalle( (SolicitudSalida) verMovimiento, Constantes.KEY_VISTA_DETALLE_BIEN );
+                    break;                  
             }
             
         } catch (Exception err) {
@@ -2381,4 +2442,58 @@ public class AgregarBienController extends BaseController {
     
     
     //</editor-fold>
+
+    public void sincronizarBien(){
+        try{
+            //Debo apartar los bienes de Eclusiones y Hacer los registros por aparte Exlusiones o Inclusiones
+            List<Bien> bienesNuevos = new ArrayList<Bien>();
+            List<Bien> bienesExclusion = new ArrayList<Bien>();
+            
+            if(bien.getEstado().getValor().equals(this.estadoPendienteSincronizar))
+                bienesNuevos.add(bien);
+            if(bien.getEstado().getId().equals(this.estadoExclusionAprobada.getId()))
+                bienesExclusion.add(bien);
+               
+            Integer telefono = lVistaUsuario.getgUsuarioActual().getTelefono1() != null ? Integer.parseInt(lVistaUsuario.getgUsuarioActual().getTelefono1()) : 0;
+            modelBien.sincronizarBien(bienesNuevos
+                                    , Util.getEtiquetas("sigebi.sincronizarBien.Observacion.NuevoBien")
+                                    , telefono
+                                    , this.usuarioSIGEBI
+                                    , this.estadoPorDominioValor(Constantes.DOMINIO_BIEN, Constantes.ESTADO_BIEN_PENDIENTE_ACTIVACION)
+                                    );
+            
+            modelBien.sincronizarBien(bienesExclusion
+                                    , Util.getEtiquetas("sigebi.sincronizarBien.Observacion.Exclusion")
+                                    , telefono
+                                    , this.usuarioSIGEBI
+                                    , this.estadoPorDominioValor(Constantes.DOMINIO_BIEN, Constantes.ESTADO_BIEN_TRANSITO_POR_EXCLUSION)
+                                    );
+            
+        } catch (FWExcepcion err) {
+            Mensaje.agregarErrorAdvertencia(err.getError_para_usuario());
+        } catch (Exception err) {
+            Mensaje.agregarErrorAdvertencia(err,Util.getEtiquetas("sigebi.error.controllerListarBienSincronizar.sincronizarTodo"));
+        }
+    }
+
+    
+    public void activarBien(){
+        try{
+            //367
+            //Debo apartar los bienes de Eclusiones y Hacer los registros por aparte Exlusiones o Inclusiones
+            
+            bien = modelBien.buscarPorId(bien.getId());
+            bien.setEstado(this.estadoBienActivo);
+            modelBien.actualizar(bien);
+            command.setEstado(estadoBienActivo);
+            
+        } catch (FWExcepcion err) {
+            Mensaje.agregarErrorAdvertencia(err.getError_para_usuario());
+        } catch (Exception err) {
+            Mensaje.agregarErrorAdvertencia(err,Util.getEtiquetas("sigebi.error.controllerListarBienSincronizar.sincronizarTodo"));
+        }
+    }
+
+    
+    
 }

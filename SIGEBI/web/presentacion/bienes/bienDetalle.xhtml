@@ -12,7 +12,7 @@
                 <div class="col-sm-6">
                     <ice:commandButton id="boton_regresar" style="float:right" partialSubmit="true" styleClass="boton" 
                                        value="#{label['sigebi.Bien.Btn.Regresar']}"  
-                                       action="#{controllerListarBienes.regresarListado}"/>
+                                       action="#{controllerAgregarBienes.regresarListado}"/>
                 </div>
             </div>
             
@@ -21,19 +21,43 @@
                     <ui:include src="../bienes/bienDetalleInclude.xhtml" />
             </ui:insert>
 
-            <div class="row">
+            <div class="row" style="margin: 1rem 0">
                 <div class="col-md-4">    
-                    <ice:commandButton id="botonGuardar" value="#{label['sigebi.Bien.Btn.Guardar']}" partialSubmit="true" styleClass="boton" 
+                    <ice:commandButton id="botonGuardar" value="#{label['sigebi.Bien.Btn.Guardar']}" 
+                                       partialSubmit="true" 
+                                       styleClass="boton" 
                                        action="#{controllerAgregarBienes.agregarBien}"/>
 
-                    <ice:commandButton id="botonSincronizar" value="#{label['sigebi.Bien.Btn.Sincronizacion']}" style="float:right" styleClass="boton" partialSubmit="true" 
-                               rendered="#{controllerAgregarBienes.visibleBotonSincronizar}"
-                               action="#{controllerAgregarBienes.solicitarSincronizacion}">
+                    <ice:commandButton id="botonSincronizar" value="#{label['sigebi.Bien.Btn.Sincronizacion']}" 
+                                       style="float:right" styleClass="boton" 
+                                       partialSubmit="true" 
+                                       rendered="#{controllerAgregarBienes.visibleBotonSincronizar}"
+                                       action="#{controllerAgregarBienes.solicitarSincronizacion}">
                     </ice:commandButton>
 
-                    <ice:commandButton id="botonRechazar" value="#{label['sigebi.Bien.Btn.Rechazar']}" style="float:right" styleClass="boton" partialSubmit="true"
+                    <ice:commandButton id="botonRechazar" 
+                                       value="#{label['sigebi.Bien.Btn.Rechazar']}" 
+                                       style="float:right" 
+                                       styleClass="boton" 
+                                       partialSubmit="true"
                                        rendered="#{controllerAgregarBienes.visibleBotonRechazar}"
                                        actionListener="#{controllerAgregarBienes.mostrarPanelObservaciones}">
+                    </ice:commandButton>
+                </div>
+                <div class="col-md-4">
+                    
+                    <ice:commandButton id="btnActivar" value="#{label['sigebi.Bien.Btn.Activar']}" 
+                                       style="float:right" styleClass="boton" 
+                                       partialSubmit="true" 
+                                       rendered="#{controllerAgregarBienes.visibleBotonActivarBien}"
+                                       action="#{controllerAgregarBienes.activarBien}">
+                    </ice:commandButton>
+
+                    <ice:commandButton id="btnEnviarSincronizar" 
+                                       value="#{label['sigebi.Bien.Btn.Sincronizacion']}" 
+                                       style="float:right" styleClass="boton" partialSubmit="true"
+                                       rendered="#{controllerAgregarBienes.visibleBotonRechazar}"
+                                       action="#{controllerAgregarBienes.sincronizarBien}">
                     </ice:commandButton>
                 </div>
             </div>

@@ -54,6 +54,7 @@ public class CampoReporteBien implements Serializable {
 
     public CampoReporteBien(CampoBien campoBien) {
         this.campoBien = campoBien;
+        this.tamanoColumna = campoBien.getTamanoColumna();
     }
     
     public CampoReporteBien(ReporteBien reporteBien, CampoBien campoBien) {

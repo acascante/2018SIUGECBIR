@@ -7,9 +7,11 @@ package cr.ac.ucr.sigebi.models;
 
 import cr.ac.ucr.framework.utils.FWExcepcion;
 import cr.ac.ucr.sigebi.daos.IdentificacionDao;
+import cr.ac.ucr.sigebi.domain.AsignacionPlaca;
 import cr.ac.ucr.sigebi.domain.Estado;
 import cr.ac.ucr.sigebi.domain.Identificacion;
 import cr.ac.ucr.sigebi.domain.UnidadEjecutora;
+import cr.ac.ucr.sigebi.utils.Constantes;
 import java.util.List;
 import javax.annotation.Resource;
 import org.springframework.stereotype.Service;
@@ -24,13 +26,39 @@ public class IdentificacionModel {
     
     @Resource
     private IdentificacionDao identificacionDao;
+
+    @Resource
+    private EstadoModel estadoModel;
     
     public List<Identificacion> listar(Estado estado, UnidadEjecutora unidadEjecutora, String identificacion){
         return identificacionDao.listar(estado, unidadEjecutora, identificacion);
     }
+
+    public List<Identificacion> listar(AsignacionPlaca asignacionPlaca, Estado estadoIdentificacion){
+        return identificacionDao.listar(asignacionPlaca, estadoIdentificacion);
+    }
+
+    public Identificacion siguienteDisponible(UnidadEjecutora unidadEjecutora, Boolean capitalizable) throws FWExcepcion {
+
+        Estado estado = null;
+        if (capitalizable != null && capitalizable) {
+            if (unidadEjecutora.getIdTipoUnidad().equals(Constantes.TIPO_UNIDAD_EJECUTORA_COMPRA)) {
+
+                //Se busca las identificaciones asociadas a la unidad y en estado de reserva
+                estado = estadoModel.buscarPorDominioEstado(Constantes.DOMINIO_IDENTIFICACION, Constantes.IDENTIFICACION_ESTADO_RESERVADA_UNIDAD);
+                return identificacionDao.siguienteDisponible(estado, unidadEjecutora);
+            } else {
+
+                //Se busca las identificaciones sin unidad y en estado disponible
+                estado = estadoModel.buscarPorDominioEstado(Constantes.DOMINIO_IDENTIFICACION, Constantes.IDENTIFICACION_ESTADO_DISPONIBLE);
+                return identificacionDao.siguienteDisponible(estado, unidadEjecutora);
+            }
+        } else {
             
-    public Identificacion siguienteDisponible(Estado estado, UnidadEjecutora unidadEjecutora) throws FWExcepcion {
-        return identificacionDao.siguienteDisponible(estado, unidadEjecutora);
+            //Se busca las identificaciones sin unidad y en estado disponible
+            estado = estadoModel.buscarPorDominioEstado(Constantes.DOMINIO_IDENTIFICACION, Constantes.IDENTIFICACION_ESTADO_DISPONIBLE);
+            return identificacionDao.siguienteDisponible(estado, null);
+        }
     }
 
     public void actualizar(Identificacion identificacion) {

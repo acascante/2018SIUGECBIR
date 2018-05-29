@@ -1,0 +1,88 @@
+<div xmlns:ice="http://www.icesoft.com/icefaces/component"
+        xmlns:ui="http://java.sun.com/jsf/facelets"
+        xmlns:h="http://java.sun.com/jsf/html"
+        xmlns:f="http://java.sun.com/jsf/core" >
+    
+    <ice:panelPopup modal="true" visible="#{controllerReporteBien.visiblePanelAgregarCampos}" rendered="true" styleClass="popup">
+        <f:facet name="header">
+            <h4><ice:outputFormat  value="#{label['sigebi.label.reporteBien.seleccionar.campos']}"/></h4>
+        </f:facet>
+        
+        <f:facet name="body">
+            <fieldset class="panel_Container" >
+                <div class="row">
+                    <div class="col-md-12">
+                        <ice:outputFormat value="#{label['sigebi.label.reporteBien.seleccionar.campos']}" /> 
+                    </div>
+                </div>
+
+                <!-- PARAMETROS PAGINACIÓN -->
+                <div class="row">
+                    <div class="col-sm-12">
+                        <ice:outputFormat value="#{label['label.generico.paginacion.encabezado']}">
+                            <f:param value="#{controllerReporteBien.cantidadRegistros}"/>
+                            <f:param value="#{controllerReporteBien.cantidadRegistrosMostrados}"/>
+                            <f:param value="#{controllerReporteBien.primerRegistro}"/>
+                            <f:param value="#{controllerReporteBien.ultimoRegistro}"/>
+                            <f:param value="#{controllerReporteBien.paginaActual}"/>
+                            <f:param value="#{controllerReporteBien.cantidadPaginas}"/>
+                        </ice:outputFormat>                    
+                        <div>
+                            <ice:commandButton image="./imagenes/botones/first.png" partialSubmit="true" actionListener="#{controllerReporteBien.primero}" rendered="#{controllerReporteBien.cantidadPaginas > 1}"/>
+                            <ice:commandButton image="./imagenes/botones/previos.png" partialSubmit="true" actionListener="#{controllerReporteBien.anterior}" rendered="#{controllerReporteBien.cantidadPaginas > 1}"/>
+                            <ui:repeat value="#{controllerReporteBien.arregloPaginas}" var="pagina">
+                                <ice:commandLink value="#{pagina}" partialSubmit="true" actionListener="#{controllerReporteBien.irPagina}">
+                                    <f:param name="numPag" value="#{pagina}"/>
+                                </ice:commandLink>
+                            </ui:repeat>            
+                            <ice:commandButton image="./imagenes/botones/next.png" partialSubmit="true" actionListener="#{controllerReporteBien.siguiente}" rendered="#{controllerReporteBien.cantidadPaginas > 1}"/>
+                            <ice:commandButton image="./imagenes/botones/last.png" partialSubmit="true" actionListener="#{controllerReporteBien.ultimo}" rendered="#{controllerReporteBien.cantidadPaginas > 1}"/>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- LISTADO DE CAMPOS -->
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div>
+                            <ice:dataTable id="tblAgregarBienes" value="#{controllerReporteBien.listCampos}" var="campo" paginator="true" paginatorPosition="bottom" rows="5">
+                                <ice:column id="seleccionar" style="text-align: center;">
+                                    <f:facet name="header">
+                                        <ice:outputText value="#{label['sigebi.label.reporteBien.seleccionar.campo.sel']} "/>
+                                    </f:facet>
+                                    <h:selectBooleanCheckbox id="celSeleccionar" value="#{controllerReporteBien.camposSeleccionados[campo.id]}" />
+                                </ice:column>
+                                
+                                <ice:column id="id" style="text-align: center;">
+                                    <f:facet name="header">
+                                        <ice:outputText value="#{label['sigebi.label.reporteBien.seleccionar.campo.id']} "/>
+                                    </f:facet>
+                                    <h:outputText id="celId" value="#{campo.id}" />
+                                </ice:column>
+                                
+                                <ice:column id="nombre" style="text-align: center;">
+                                    <f:facet name="header">
+                                        <ice:outputText value="#{label['sigebi.label.reporteBien.seleccionar.campo.nombre']} "/>
+                                    </f:facet>
+                                    <h:outputText id="celNombre" value="#{campo.nombre}"/>
+                                </ice:column>
+                                
+                                <ice:column id="descripcion" style="text-align: center;">
+                                    <f:facet name="header">
+                                        <ice:outputText value="#{label['sigebi.label.reporteBien.seleccionar.campo.descripcion']} "/>
+                                    </f:facet>
+                                    <h:outputText id="celDescripcion" value="#{campo.descripcion}"/>
+                                </ice:column>
+                            </ice:dataTable>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-11 align-self-md-end">
+                        <ice:commandButton id="btnCerrar" action="#{controllerReporteBien.cerrarPanelAgregarCampos}" styleClass="boton" style="margin-bottom: 1rem;" value="Regresar" />
+                    </div>
+                </div>
+            </fieldset>       
+        </f:facet>
+    </ice:panelPopup>
+</div>

@@ -635,6 +635,8 @@ public class TrasladoController extends ListadoBienesGeneralController {
                 return;
             }
             if (validarRegistro()) {
+                
+                traslado.setUsuario(usuarioRegistradoClass);
                 trasladoModel.guardar(traslado);
 
                 //Actualizo el estado de lso Bienes que se eliminan
@@ -676,11 +678,10 @@ public class TrasladoController extends ListadoBienesGeneralController {
             }
 
             //Validar Ubicacion
-            if ((traslado.getUbicacion().getId() == null) || (traslado.getUbicacion().getId() == 0)) {
+            if ((traslado.getUbicacion() == null)||(traslado.getUbicacion().getId() == null) || (traslado.getUbicacion().getId() == 0)) {
                 mensaje = Util.getEtiquetas("sigebi.Traslado.Mns.SelecUbicacion");
             }
             
-            traslado.setUsuario(usuarioRegistradoClass);
 
             if (!mensaje.equals("")) {
                 Mensaje.agregarErrorAdvertencia(mensaje);
@@ -699,6 +700,7 @@ public class TrasladoController extends ListadoBienesGeneralController {
         try {
             if (validarRegistro() && (trasladoDetalle.size() > 0)) {
                 traslado.setEstado(estadoGeneralActivo);
+                traslado.setUsuario(usuarioRegistradoClass);
                 trasladoModel.guardar(traslado);
 
                 trasladoModel.eliminarBienes( trasladoDetalleEliminar );
@@ -762,6 +764,7 @@ public class TrasladoController extends ListadoBienesGeneralController {
 
     private void aplicarRevision() {
         if (validarRegistro()) {
+            traslado.setUsuario(usuarioRegistradoClass);
             traslado.setEstado(estadoGeneralPendiente);
             trasladoModel.guardar(traslado);
 
@@ -1134,8 +1137,11 @@ public class TrasladoController extends ListadoBienesGeneralController {
             NodoSIGEBI nodoSIGEBI = (NodoSIGEBI) event.getComponent().getAttributes().get("nodoSeleccionado");
 
             if(nodoSIGEBI != null){
+                
+                Ubicacion ubicSelec = (Ubicacion) nodoSIGEBI.getObject();
+                
                 //Se asigna la ubicacion 
-                traslado.setUbicacion((Ubicacion) nodoSIGEBI.getObject());
+                traslado.setUbicacion(ubicSelec);
                 if (traslado.getUbicacion() != null) {
                     traslado.getUbicacion().setIdTemporal(traslado.getUbicacion().getId());
                 }
@@ -1283,7 +1289,7 @@ public class TrasladoController extends ListadoBienesGeneralController {
             }
 
         } catch (Exception err) {
-            Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.Traslado.Err.Email"));
+            //Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.Traslado.Err.Email"));
         }
     }
 

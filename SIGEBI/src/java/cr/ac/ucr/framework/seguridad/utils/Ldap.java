@@ -19,8 +19,8 @@ import javax.naming.directory.SearchControls;
 public class Ldap {
 
     private String INITCTX = "com.sun.jndi.ldap.LdapCtxFactory";
-//    private String HOST_LDAP = "ldaps://ldap2.ucr.ac.cr";
-    private String HOST_LDAP = "t3://localhost:7001";
+    private String HOST_LDAP = "ldaps://ldap2.ucr.ac.cr";
+//    private String HOST_LDAP = "t3://localhost:7001";
     private DirContext ctx;
 
     public Ldap() {

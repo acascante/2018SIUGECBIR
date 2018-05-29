@@ -63,8 +63,10 @@ public class TomaFisicaCommand {
         this.tomaFisica.setMotivo(new Tipo());
         this.ubicacion = new Ubicacion();
         this.objetosCarga = new ArrayList<ObjetoCarga>();
-        setMostrarErroresCargaUnitaria(false);
         objetosCargaLote = new ArrayList<ObjetoCargaLote>();
+        erroresRegistradosCargaLotes = new ArrayList<String>();
+        erroresRegistradosCargaUnitaria = new ArrayList<String>();
+        
     }
 
     public TomaFisicaCommand(TomaFisica tomaFisica) {
@@ -78,7 +80,8 @@ public class TomaFisicaCommand {
         this.tomaFisicaSobranteCommand = new TomaFisicaSobranteCommand();
         this.objetosCarga = new ArrayList<ObjetoCarga>();
         objetosCargaLote = new ArrayList<ObjetoCargaLote>();
-        setMostrarErroresCargaUnitaria(false);
+        erroresRegistradosCargaLotes = new ArrayList<String>();
+        erroresRegistradosCargaUnitaria = new ArrayList<String>();
     }
 
     public TomaFisica prepararTomaFisica(Estado estado) {
@@ -113,6 +116,7 @@ public class TomaFisicaCommand {
     }
 
     public void setMostrarErroresCargaUnitaria(Boolean mostrarErroresCargaUnitaria) {
+        mostrarErroresCargaUnitaria = erroresRegistradosCargaUnitaria.size() > 0;
         this.mostrarErroresCargaUnitaria = mostrarErroresCargaUnitaria;
     }
 
@@ -766,6 +770,7 @@ public class TomaFisicaCommand {
     }
 
     public Boolean getMostrarErroresCargaLotes() {
+        mostrarErroresCargaLotes = erroresRegistradosCargaLotes.size() > 0;
         return mostrarErroresCargaLotes;
     }
 

@@ -25,6 +25,14 @@ public class CampoBienModel {
         return campoBienDao.listar();
     }
     
+    public List<CampoBien> listar(Integer primerRegistro, Integer ultimoRegistro)throws FWExcepcion {
+        return campoBienDao.listar(primerRegistro, ultimoRegistro);
+    }
+    
+    public Long contar() throws FWExcepcion {
+        return campoBienDao.contar();
+    }
+    
     public CampoBien buscarPorId(Long id) throws FWExcepcion {
         return campoBienDao.buscarPorId(id);
     }

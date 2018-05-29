@@ -11,7 +11,6 @@ import cr.ac.ucr.framework.utils.FWExcepcion;
 import cr.ac.ucr.sigebi.domain.Lote;
 import cr.ac.ucr.sigebi.domain.TomaFisicaLote;
 import cr.ac.ucr.sigebi.domain.TomaFisica;
-import cr.ac.ucr.sigebi.domain.TomaFisicaUnitaria;
 import java.util.List;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;

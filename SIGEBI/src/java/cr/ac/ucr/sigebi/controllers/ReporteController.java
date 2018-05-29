@@ -239,7 +239,7 @@ public class ReporteController extends BaseController {
         try{
             ServletContext context = (ServletContext) FacesContext.getCurrentInstance().getExternalContext().getContext();
            
-            String ruta = cr.ac.ucr.framework.reporte.componente.utilitario.Util.ConvertirRutas("/reportes/trasladosReporte.jasper");
+            String ruta = cr.ac.ucr.framework.reporte.componente.utilitario.Util.ConvertirRutas("/reportes/movimientosReporte.jasper");
             
             
             
@@ -279,7 +279,8 @@ public class ReporteController extends BaseController {
             
             //commandInventarioFaltantes.setTomaFisica(1l);
             //commandInventarioFaltantes.setUbicacion(1l);
-
+            String ruta = cr.ac.ucr.framework.reporte.componente.utilitario.Util.ConvertirRutas("/reportes/fatlInventReporte.jasper");
+            
             String directorioRelativa = "reportes/fatlInventReporte.jasper";
             //Dentro de reporteDao.ejecutarReporte busca la ruta absoluta.
             String ubicReporte = reporte.ConvertirRutas(directorioRelativa);// directorioRaiz + rutaRelativa; 
@@ -290,7 +291,8 @@ public class ReporteController extends BaseController {
             
             
             parametros.put("numTomaFisica", commandInventarioFaltantes.getTomaSeleccionada().getId());
-            parametros.put("ubicacion", commandInventarioFaltantes.getTomaSeleccionada().getUbicacion().getDetalle());
+            //parametros.put("ubicacion", commandInventarioFaltantes.getTomaSeleccionada().getUbicacion().getDetalle());
+            parametros.put("ubicacion", "");
             
             parametros.put("unidadEjecutora", unidadEjecutora.getId());
             parametros.put("identificacion", commandInventarioFaltantes.getIdentificacion());
@@ -313,7 +315,7 @@ public class ReporteController extends BaseController {
             parametros.put("nomUnidadCustodio", unidadEjecutora.getDescripcion());
             
             
-            reporteDao.ejecutarReporte( exportReporte, ubicReporte, parametros, tipoReporteSelec);
+            reporteDao.ejecutarReporte( exportReporte, ruta, parametros, tipoReporteSelec);
         }catch(Exception e){
             Mensaje.agregarErrorAdvertencia( e, Util.getEtiquetas("sigebi.Traslado.Err.Reporte"));
             commandMovimiento.setError(e.getCause().getMessage());

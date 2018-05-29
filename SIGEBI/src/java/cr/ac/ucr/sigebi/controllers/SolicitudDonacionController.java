@@ -210,9 +210,9 @@ public class SolicitudDonacionController extends BaseController {
     }
     public void regresarListado() {
         if (vistaOrigen != null) {
-            Util.navegar(vistaOrigen);
+            Util.navegar(vistaOrigen, true);
         } else {
-            Util.navegar(Constantes.KEY_VISTA_SOLICITUD_DONACION_LISTADO);
+            Util.navegar(Constantes.KEY_VISTA_SOLICITUD_DONACION_LISTADO, true);
         }
     }
     //</editor-fold>

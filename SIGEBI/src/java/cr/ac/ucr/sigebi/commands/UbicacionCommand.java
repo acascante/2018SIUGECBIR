@@ -30,8 +30,8 @@ public class UbicacionCommand {
     //<editor-fold defaultstate="collapsed" desc="Constructores">
     public UbicacionCommand() {
         this.ubicacion = new Ubicacion();
-        this.usuarioResponsable = new Usuario();        
         this.fltDescripcionUbicacion = "";
+        this.usuarioResponsable = new Usuario();
     }
 
     //</editor-fold>

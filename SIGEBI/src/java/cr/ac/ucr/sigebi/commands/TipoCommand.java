@@ -18,6 +18,7 @@ public class TipoCommand {
     private String nombre;
     private String dominio;
     private Integer valor;
+    private String nuevoTipo;
     //</editor-fold>
     
     //<editor-fold defaultstate="collapsed" desc="Constructores">
@@ -37,7 +38,7 @@ public class TipoCommand {
     //<editor-fold defaultstate="collapsed" desc="Metodos">
     public Tipo getTipo() { 
         Tipo tipo = new Tipo();
-        tipo.setNombre(this.nombre);
+        tipo.setNombre(this.nuevoTipo);
         tipo.setDominio(this.dominio);
         tipo.setValor(this.valor);
         return tipo;
@@ -67,6 +68,14 @@ public class TipoCommand {
 
     public void setDominio(String dominio) {
         this.dominio = dominio;
+    }
+
+    public String getNuevoTipo() {
+        return nuevoTipo;
+    }
+
+    public void setNuevoTipo(String nuevoTipo) {
+        this.nuevoTipo = nuevoTipo;
     }
 
     public Integer getValor() {

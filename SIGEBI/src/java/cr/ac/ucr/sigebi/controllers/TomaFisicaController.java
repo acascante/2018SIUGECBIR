@@ -50,14 +50,9 @@ import javax.faces.event.ActionEvent;
 import javax.faces.event.PhaseId;
 import javax.faces.event.ValueChangeEvent;
 import javax.faces.model.SelectItem;
-import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.ss.usermodel.WorkbookFactory;
-import org.apache.poi.xssf.usermodel.XSSFCell;
-import org.apache.poi.xssf.usermodel.XSSFRow;
-import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
@@ -183,9 +178,9 @@ public class TomaFisicaController extends BaseController {
 
     public void regresarListado() {
         if (vistaOrigen != null) {
-            Util.navegar(vistaOrigen);
+            Util.navegar(vistaOrigen, true);
         } else {
-            Util.navegar(Constantes.KEY_VISTA_LISTAR_TOMA_FISICA);
+            Util.navegar(Constantes.KEY_VISTA_LISTAR_TOMA_FISICA, true);
         }
     }
     //</editor-fold>
@@ -260,7 +255,7 @@ public class TomaFisicaController extends BaseController {
             buscarTomasFisicasSobrantes();
         }
         
-        treeUbicacionSIGEBI = new TreeUbicacionSIGEBI();
+        treeUbicacionSIGEBI = new TreeUbicacionSIGEBI(unidadEjecutora);
         treeUbicacionSIGEBI.setUbicacionModel(ubicacionModel);
     }
 
@@ -1543,8 +1538,6 @@ public class TomaFisicaController extends BaseController {
     
     //</editor-fold>
     
-    
-    
     //<editor-fold defaultstate="collapsed" desc="Carga Lotes Excel">
     
     
@@ -1734,9 +1727,8 @@ public class TomaFisicaController extends BaseController {
                     if(respuesta.length() > 0)
                         respErrores.add(respuesta);
                 }
-                tomaFisicaCommand.setErroresRegistradosCargaUnitaria(respErrores);
+                tomaFisicaCommand.setErroresRegistradosCargaLotes(respErrores);
                     
-                tomaFisicaCommand.setMostrarErroresCargaLotes(respErrores.size()> 0);
                 //rendered="#{controllerTomaFisica.tomaFisicaCommand.objetoCarga.mostrarErrores}"
                 
                 //Se actualiza la lista

@@ -97,7 +97,13 @@
                                    rendered="#{(controllerAsignacionPlaca.asignacionPlacaCommand.permiteAprobarRechazar)}">             
                                     <f:attribute id="accion" name="accion"  value="1"/>
                 </ice:commandButton>                 
-                 
+                               
+                <ice:commandButton id="botonReporte" 
+                                   value="Generar Reporte" 
+                                   partialSubmit="true" 
+                                   styleClass="boton" 
+                                   action="#{controllerAsignacionPlaca.generarReporte}"
+                                   rendered="#{controllerAsignacionPlaca.asignacionPlacaCommand.permiteReporte}"/>
             </div>
         </div>
  

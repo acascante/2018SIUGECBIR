@@ -15,7 +15,7 @@
                 </div>
                 <div class="col-sm-2">
                     <ice:commandButton id="botonRegresar"  value="#{label['label.regresar']}" style="float:right" partialSubmit="false" styleClass="boton" 
-                        action="#{controllerListarExclusiones.regresarListado}" >
+                        action="#{controllerAgregarExclusiones.regresarListado}" >
                     </ice:commandButton>
                 </div>
             </div>
@@ -71,7 +71,7 @@
                                     </h4>
                                 </div>
                                 <div class="col-sm-2">
-                                    <ice:commandButton id="botonAgregarBienes" action="#{controllerAgregarExclusiones.mostarPanelAgregarBienes}" value="#{label['sigebi.label.solicitud.bienes.agregar']}" rendered="#{controllerAgregarExclusiones.visibleBotonAgregarBienes}" style="margin-bottom: 1rem; float:right" styleClass="boton" partialSubmit="true"/>
+                                    <ice:commandButton id="botonAgregarBienes" action="#{controllerAgregarExclusiones.mostarPanelAgregarBienes}" value="#{label['label.agregarBienes']}" rendered="#{controllerAgregarExclusiones.visibleBotonAgregarBienes}" style="margin-bottom: 1rem; float:right" styleClass="boton" partialSubmit="true"/>
                                 </div>
                             </div>
                             <div class="row" >
@@ -169,18 +169,16 @@
             </div>
             
             <!--Observcion-->
-            <ice:panelGroup rendered="#{controllerAgregarExclusiones.exclusionRegistrada}" >
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="form-group" > 
-                            <ice:outputText value="#{label['sigebi.label.exclusiones.observacion']}" />
-                            <ice:inputTextarea id="txtObservacion" styleClass="form-control" style="resize: none" cols="4" partialSubmit="false"
-                                               value="#{controllerAgregarExclusiones.command.observacion}">
-                            </ice:inputTextarea>
-                        </div>                                             
-                    </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group" > 
+                        <ice:outputText value="#{label['sigebi.label.exclusiones.observacion']}" />
+                        <ice:inputTextarea id="txtObservacion" styleClass="form-control" style="resize: none" cols="4" partialSubmit="false"
+                                           value="#{controllerAgregarExclusiones.command.observacion}">
+                        </ice:inputTextarea>
+                    </div>                                             
                 </div>
-            </ice:panelGroup>
+            </div>
             
             <!--Botones -->
             <div class="row">

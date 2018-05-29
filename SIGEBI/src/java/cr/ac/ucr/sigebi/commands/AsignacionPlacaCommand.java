@@ -122,6 +122,10 @@ public class AsignacionPlacaCommand {
         return this.yaRegistrada && this.permiteModificar;
     }
 
+    public Boolean getPermiteReporte() {
+        return this.yaRegistrada && this.getAsignacionPlaca().getEstado().getValor().equals(Constantes.ESTADO_ASIGNACION_PLACA_FINALIZADA);        
+    }
+
     
     //<editor-fold defaultstate="collapsed" desc="Metodos">
 }

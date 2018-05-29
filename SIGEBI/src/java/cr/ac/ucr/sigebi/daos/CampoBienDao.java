@@ -39,6 +39,23 @@ public class CampoBienDao extends GenericDaoImpl {
     }
     
     @Transactional(readOnly = true)
+    public List<CampoBien> listar(Integer primerRegistro, Integer ultimoRegistro) throws FWExcepcion {
+        Session session = dao.getSessionFactory().openSession();
+        try {
+            Query query = session.createQuery("from CampoBien");
+            if (!(primerRegistro.equals(1) && ultimoRegistro.equals(1))) {
+                query.setFirstResult(primerRegistro);
+                query.setMaxResults(ultimoRegistro - primerRegistro);
+            }    
+            return query.list();
+        } catch (HibernateException e) {
+            throw new FWExcepcion("sigebi.label.campoBien.error.listar", "Error obtener los registros de tipo " + this.getClass(), e.getCause());
+        } finally {
+            session.close();
+        }
+    }
+    
+    @Transactional(readOnly = true)
     public CampoBien buscarPorId(Long id) throws FWExcepcion {
         Session session = dao.getSessionFactory().openSession();
         try {
@@ -49,6 +66,18 @@ public class CampoBienDao extends GenericDaoImpl {
             return (CampoBien) query.uniqueResult();
         } catch (HibernateException e) {
             throw new FWExcepcion("sigebi.label.campoBien.error.listar", "Error obtener los registros de tipo " + this.getClass(), e.getCause());
+        } finally {
+            session.close();
+        }
+    }
+    
+    public Long contar() throws FWExcepcion {
+        Session session = dao.getSessionFactory().openSession();
+        try {
+            Query query = session.createQuery("SELECT count(entity) FROM CampoBien entity ");
+            return (Long) query.uniqueResult();
+        } catch (HibernateException e) {
+            throw new FWExcepcion("sigebi.label.campoBien.error.listar", "Error contando los registros de tipo " + this.getClass(), e.getCause());
         } finally {
             session.close();
         }

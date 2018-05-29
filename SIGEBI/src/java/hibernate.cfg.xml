@@ -53,6 +53,7 @@
     <mapping class="cr.ac.ucr.sigebi.domain.Solicitud"/>
     <mapping class="cr.ac.ucr.sigebi.domain.SolicitudDetalle"/>
     <mapping class="cr.ac.ucr.sigebi.domain.SolicitudDetallePrestamo"/>    
+    <mapping class="cr.ac.ucr.sigebi.domain.SolicitudDetalleSalida"/>    
     <mapping class="cr.ac.ucr.sigebi.domain.SolicitudExclusion"/>
     <mapping class="cr.ac.ucr.sigebi.domain.SolicitudPrestamo"/>
     <mapping class="cr.ac.ucr.sigebi.domain.SolicitudTraslado"/>
@@ -70,18 +71,15 @@
     <mapping class="cr.ac.ucr.sigebi.domain.Pais"/>
     <mapping class="cr.ac.ucr.sigebi.domain.SolicitudAutorizacion"/>
     <mapping class="cr.ac.ucr.sigebi.domain.SolicitudDonacion"/>
-
+    <mapping class="cr.ac.ucr.sigebi.domain.SolicitudSalida"/>
     <mapping class="cr.ac.ucr.sigebi.domain.InterfazBien"/>
     <mapping class="cr.ac.ucr.sigebi.domain.InterfazAdjunto"/>
     <mapping class="cr.ac.ucr.sigebi.domain.InterfazAccesorio"/>
-    
     <mapping class="cr.ac.ucr.sigebi.domain.TomaFisica"/>
     <mapping class="cr.ac.ucr.sigebi.domain.TomaFisicaLote"/>
     <mapping class="cr.ac.ucr.sigebi.domain.TomaFisicaUnitaria"/>
     <mapping class="cr.ac.ucr.sigebi.domain.TomaFisicaSobrante"/>
-
     <mapping class="cr.ac.ucr.sigebi.domain.AsignacionPlaca"/>
-    
     <mapping class="cr.ac.ucr.sigebi.domain.AsignarResponsableHistorico"/>
     
   </session-factory>

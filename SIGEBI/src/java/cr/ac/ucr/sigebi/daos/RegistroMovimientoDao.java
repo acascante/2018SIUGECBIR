@@ -11,7 +11,6 @@ import cr.ac.ucr.framework.utils.FWExcepcion;
 import cr.ac.ucr.sigebi.domain.Bien;
 import cr.ac.ucr.sigebi.domain.RegistroMovimiento;
 import cr.ac.ucr.sigebi.domain.Solicitud;
-import cr.ac.ucr.sigebi.domain.SolicitudDetalle;
 import java.util.ArrayList;
 import java.util.List;
 import org.hibernate.HibernateException;

@@ -45,9 +45,12 @@ public class SolicitudDetalle extends ObjetoBase implements Serializable {
     @JoinColumn(name = "ID_BIEN", referencedColumnName = "ID_BIEN")
     @ManyToOne(fetch = FetchType.EAGER)
     private Bien bien;
-    
-    //</editor-fold>
 
+    @JoinColumn(name = "ID_ESTADO", referencedColumnName = "ID_ESTADO")
+    @ManyToOne
+    private Estado estado;
+
+    //</editor-fold>
     //<editor-fold defaultstate="collapsed" desc="Constructores">
     public SolicitudDetalle() {
     }
@@ -55,11 +58,10 @@ public class SolicitudDetalle extends ObjetoBase implements Serializable {
     public SolicitudDetalle(Solicitud solicitud, Bien bien, Estado estado) {
         this.solicitud = solicitud;
         this.bien = bien;
-        
+        this.estado = estado;
     }
 
     //</editor-fold>
-    
     //<editor-fold defaultstate="collapsed" desc="Get's y Set's">
     public Long getId() {
         return id;
@@ -85,8 +87,15 @@ public class SolicitudDetalle extends ObjetoBase implements Serializable {
         this.bien = bien;
     }
 
+    public Estado getEstado() {
+        return estado;
+    }
+
+    public void setEstado(Estado estado) {
+        this.estado = estado;
+    }
+
     //</editor-fold>
-    
     //<editor-fold defaultstate="collapsed" desc="Sobrecargas">
     @Override
     public int hashCode() {

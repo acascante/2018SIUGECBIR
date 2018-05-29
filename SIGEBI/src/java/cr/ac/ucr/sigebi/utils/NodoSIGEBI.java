@@ -50,7 +50,11 @@ public class NodoSIGEBI extends IceUserObject {
     public void agregarNodos(ArrayList<Object> objetos, String campoDescripcion) {
 
         //Se limpian los hijos del node
-        this.wrapper.removeAllChildren();
+        try {
+            this.wrapper.removeAllChildren();            
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         for (Object objeto : objetos) {
             try {

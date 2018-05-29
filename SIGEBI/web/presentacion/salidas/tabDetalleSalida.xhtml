@@ -1,0 +1,155 @@
+<ice:outputHtml id="frmTabDetalleSalida" xmlns:ice="http://www.icesoft.com/icefaces/component" xmlns:icecore="http://www.icefaces.org/icefaces/core" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:c="http://java.sun.com/jstl/core">
+
+    <div class="container">
+        <div class="row">
+           <div class="col-md-6">
+               <div class="form-group"> 
+                   <label class="control-label" for="txtConsecutivo">
+                        <ice:outputText value="#{label['sigebi.label.vista.detalleSalida.consecutivo']}" />                            
+                    </label>
+                    <ice:inputText id="txtConsecutivo" 
+                                   partialSubmit="false"
+                                   styleClass="form-control"
+                                   readonly="true"
+                                   value="#{controllerSolicitudSalida.command.solicitudSalida.id}" />
+                </div>                                             
+           </div>
+           <div class="col-md-6">
+               <div class="form-group"> 
+                   <label class="control-label" for="txtEstado">
+                        <ice:outputText value="#{label['sigebi.label.vista.detalleSalida.estado']}" /> 
+                    </label>
+                    <ice:inputText id="txtEstado" 
+                                   partialSubmit="false"
+                                   styleClass="form-control"
+                                   readonly="true"
+                                   value="#{controllerSolicitudSalida.command.solicitudSalida.estado.nombre}" />
+                </div>                                             
+           </div>
+          <div class="col-md-6">
+                <div class="form-group"> 
+                    <label class="control-label" for="txtFecha">
+                        <ice:outputText value="#{label['sigebi.label.vista.detalleSalida.fecha']}" />
+                        <ice:outputText value="#{label['label.requerido']}" />
+                    </label>                                               
+
+                    <ice:selectInputDate id="txtFechaInput" partialSubmit="false" styleClass="form-control" renderAsPopup="true" renderMonthAsDropdown="true"
+                                         value="#{controllerSolicitudSalida.command.solicitudSalida.fecha}">
+                        <f:convertDateTime pattern="dd/MM/yyyy" timeZone="GMT-6:00" />
+                    </ice:selectInputDate>
+                </div>                                             
+            </div>               
+           <div class="col-md-6">
+                <div class="form-group"> 
+                    <label class="control-label" for="txtTipo">
+                        <ice:outputText value="#{label['sigebi.label.vista.detalleSalida.tipo']}" />
+                        <ice:outputText value="#{label['label.requerido']}" />
+                    </label>                                               
+                    <ice:selectOneRadio id="radioTipo"
+                                        partialSubmit="true" 
+                                        valueChangeListener="#{controllerSolicitudSalida.cambiarTipo}"
+                                        value="#{controllerSolicitudSalida.command.idTipo}">
+                        <f:selectItem id="nacional" itemValue="#{controllerSolicitudSalida.command.idTipoNacional.id}" 
+                                      itemLabel="#{controllerSolicitudSalida.command.idTipoNacional.nombre}  "/>
+                        <f:selectItem id="internacional" itemValue="#{controllerSolicitudSalida.command.idTipoInternacional.id}" itemLabel="#{controllerSolicitudSalida.command.idTipoInternacional.nombre}"/>
+                    </ice:selectOneRadio>
+                </div>                                             
+            </div>               
+        </div>
+                              
+        <div class="row">
+           
+            <div class="col-md-4">
+                <div class="form-group"> 
+                    <label class="control-label" for="txtCedula">
+                        <ice:outputText value="#{label['sigebi.label.vista.detalleSalida.cedula']}" />
+                        <ice:outputText value="#{label['label.requerido']}" />
+                    </label>                                               
+                    <ice:inputText id="txtCedula" styleClass="form-control" readonly="true" transient="true" partialSubmit="false"
+                                       value="#{controllerSolicitudSalida.command.solicitudSalida.persona.identificacion}"/>                    
+                </div>                                             
+           </div>               
+            <div class="col-md-6">
+                <div class="form-group"> 
+                    <label class="control-label" for="txtNombre">
+                        <ice:outputText value="#{label['sigebi.label.vista.detalleSalida.nombre']}" />
+                    </label>                                               
+                    <ice:inputText id="txtNombre" styleClass="form-control" readonly="true" transient="true" partialSubmit="false"
+                                       value="#{controllerSolicitudSalida.command.solicitudSalida.persona.nombre}"/>                    
+                </div>                                             
+           </div>               
+            <div class="col-sm-2">
+                <ice:commandButton id="btnBuscarPersona" 
+                                   value="#{label['sigebi.Bien.Btn.Buscar']}"  
+                                   partialSubmit="true" 
+                                   styleClass="boton" 
+                                   style="margin-top: 1.5rem"
+                                   actionListener="#{controllerSolicitudSalida.mostrarPanel}">
+                    <f:attribute id="accion" name="accion"  value="4"/>                
+                </ice:commandButton>    
+            </div>
+            
+        </div>        
+        <div class="row">
+            <div class="col-md-3">
+                <ice:commandButton id="botonGuardar" 
+                                   value="Guardar" 
+                                   partialSubmit="true" 
+                                   rendered="#{controllerSolicitudSalida.command.permiteGuardarSolicitud}"
+                                   styleClass="boton" action="#{controllerSolicitudSalida.guardarDatos}"/>
+            </div>
+            <div class="col-md-3">
+                <ice:commandButton id="botonAplicar" 
+                                   value="Aplicar" 
+                                   partialSubmit="true" 
+                                   rendered="#{controllerSolicitudSalida.command.permiteAplicarSolicitud}"
+                                   styleClass="boton" 
+                                   action="#{controllerSolicitudSalida.aplicarSolicitud}"/>
+            </div>
+
+        </div>        
+        <div class="row">
+            <div class="col-md-3">
+                <ice:commandButton id="botonAceptar" 
+                                   value="Aceptar" 
+                                   partialSubmit="true" 
+                                   rendered="#{controllerSolicitudSalida.command.permiteProcesarSolicitud}"
+                                   styleClass="boton" 
+                                   action="#{controllerSolicitudSalida.aceptarSolicitud}"/>
+            </div>
+            <div class="col-md-3">
+                <ice:commandButton id="botonRevisar" 
+                                   value="Revisar"  
+                                   partialSubmit="true" 
+                                   styleClass="boton" 
+                                   rendered="#{controllerSolicitudSalida.command.permiteProcesarSolicitud}"
+                                   actionListener="#{controllerSolicitudSalida.mostrarPanel}">
+                    <f:attribute id="accion" name="accion"  value="5"/>                
+                </ice:commandButton>    
+            </div>
+            <div class="col-md-3">
+                <ice:commandButton id="botonRechazar" 
+                                   value="Rechazar"  
+                                   partialSubmit="true" 
+                                   styleClass="boton" 
+                                   rendered="#{controllerSolicitudSalida.command.permiteProcesarSolicitud}"
+                                   actionListener="#{controllerSolicitudSalida.mostrarPanel}">
+                    <f:attribute id="accion" name="accion"  value="3"/>                
+                </ice:commandButton>    
+            </div>
+            <div class="col-md-3">
+                <ice:commandButton id="botonAnular" 
+                                   value="Anular"  
+                                   partialSubmit="true" 
+                                   styleClass="boton" 
+                                   rendered="#{controllerSolicitudSalida.command.permiteProcesarSolicitud}"
+                                   actionListener="#{controllerSolicitudSalida.mostrarPanel}">
+                    <f:attribute id="accion" name="accion"  value="2"/>                
+                </ice:commandButton>    
+            </div>
+
+        </div>        
+    </div>
+    
+</ice:outputHtml>
+

@@ -14,16 +14,19 @@ import cr.ac.ucr.sigebi.domain.Solicitud;
 import cr.ac.ucr.sigebi.domain.SolicitudAutorizacion;
 import cr.ac.ucr.sigebi.domain.SolicitudDetalle;
 import cr.ac.ucr.sigebi.domain.Estado;
+import cr.ac.ucr.sigebi.domain.SolicitudSalida;
 import cr.ac.ucr.sigebi.domain.Tipo;
 import cr.ac.ucr.sigebi.domain.UnidadEjecutora;
 import cr.ac.ucr.sigebi.domain.Usuario;
 import cr.ac.ucr.sigebi.utils.Constantes;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import javax.annotation.Resource;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  *
@@ -54,6 +57,10 @@ public class SolicitudModel {
 
     public void modificar(Solicitud solicitud) throws FWExcepcion {
         solicitudDao.agregar(solicitud);
+    }
+    
+    public void modificar(SolicitudDetalle solicitudDetalle) throws FWExcepcion {
+        solicitudDao.modificar(solicitudDetalle);        
     }
 
     public Solicitud buscarPorId(Long id) throws FWExcepcion {
@@ -110,6 +117,10 @@ public class SolicitudModel {
         return solicitudDao.listarDetallesSolicitud(solicitud);
     }
 
+    public SolicitudDetalle listarDetallesSolicitud(Solicitud solicitud, Bien bien) throws FWExcepcion {
+        return solicitudDao.listarDetallesSolicitud(solicitud, bien);        
+    }
+    
     public void eliminarDetalleSolicitud(SolicitudDetalle solicitud) throws FWExcepcion {
         solicitudDao.eliminarDetalleSolicitud(solicitud);
     }
@@ -117,5 +128,32 @@ public class SolicitudModel {
     public List<Solicitud> movimientosPorBien(Bien bien) {
         return solicitudDao.movimientosPorBien(bien);
     }
-
+    
+    @Transactional(readOnly = true)
+    public List<SolicitudSalida> listarSalidas(String id,
+            UnidadEjecutora unidadEjecutora,
+            Estado estado,
+            String cedula,
+            String nombre,
+            Tipo tipo,
+            Integer tipoSolicitud,
+            Date fecha,
+            Integer pPrimerRegistro,
+            Integer pUltimoRegistro
+    ) throws FWExcepcion {
+        return solicitudDao.listarSalidas(id, unidadEjecutora, estado, cedula, nombre, tipo, tipoSolicitud, fecha, pPrimerRegistro, pUltimoRegistro);
+    }
+    
+    @Transactional(readOnly = true)
+    public Long contarSalidas(String id,
+            UnidadEjecutora unidadEjecutora,
+            Estado estado,
+            String cedula,
+            String nombre,
+            Tipo tipo,
+            Integer tipoSolicitud,
+            Date fecha            
+    ) throws FWExcepcion {
+        return solicitudDao.contarSalidas(id, unidadEjecutora, estado, cedula, nombre, tipo, tipoSolicitud, fecha);
+    }
 }

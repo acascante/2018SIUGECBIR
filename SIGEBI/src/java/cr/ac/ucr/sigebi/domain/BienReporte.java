@@ -5,22 +5,10 @@
  */
 package cr.ac.ucr.sigebi.domain;
 
-import cr.ac.ucr.framework.seguridad.ObjetoBase;
-import cr.ac.ucr.sigebi.utils.Constantes;
-import java.io.Serializable;
-import java.util.Date;
-import java.util.List;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.SequenceGenerator;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.Transient;
+import cr.ac.ucr.framework.vista.util.Mensaje;
+import java.util.Map;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
 
 /**
  *
@@ -28,34 +16,7 @@ import javax.persistence.Transient;
  */
 public class BienReporte {
     
-//    <field name="descripcion" class="java.lang.String"/>
-//	<field name="cantidad" class="java.lang.Integer"/>
-//	<field name="subCategoria" class="java.lang.String"/>
-//	<field name="subClasificacion" class="java.lang.String"/>
-//	<field name="tipo" class="java.lang.String"/>
-//	<field name="origen" class="java.lang.String"/>
-//	<field name="marca" class="java.lang.String"/>
-//	<field name="modelo" class="java.lang.String"/>
-//	<field name="serie" class="java.lang.String"/>
-//	<field name="unidadEjecutora" class="java.lang.String"/>
-//	<field name="proveedor" class="java.lang.String"/>
-//	<field name="moneda" class="java.lang.String"/>
-//	<field name="costo" class="java.lang.Double"/>
-//	<field name="fechaAdquisicion" class="java.lang.String"/>
-//	<field name="fechaInicioGarantia" class="java.lang.String"/>
-//	<field name="fechaFinGarantia" class="java.lang.String"/>
-//	<field name="descripcionGarantia" class="java.lang.String"/>
-//	<field name="estado" class="java.lang.String"/>
-//	<field name="lote" class="java.lang.String"/>
-//	<field name="capitalizable" class="java.lang.String"/>
-//	<field name="ubicacion" class="java.lang.String"/>
-//	<field name="estadoInterno" class="java.lang.String"/>
-//	<field name="identificacion" class="java.lang.String"/>
-//	<field name="fechaIngreso" class="java.lang.String"/>
-//	<field name="usuarioRegistro" class="java.lang.String"/>
-//	<field name="usuarioResponsable" class="java.lang.String"/>
-//	<field name="estadoAsignacion" class="java.lang.String"/>
-    //<editor-fold defaultstate="collapsed" desc="Atributos">
+    private Long id;
     private String descripcion;
     private Integer cantidad;
     private String subCategoria;
@@ -85,35 +46,44 @@ public class BienReporte {
     private String estadoAsignacion;
 
     public BienReporte(Bien bien) {
+        this.id = bien.getId();
         this.descripcion = bien.getDescripcion();
         this.cantidad = bien.getCantidad();
-        this.subCategoria = bien.getSubCategoria().getDescripcion();
-        this.subClasificacion = bien.getSubClasificacion().getNombre();
-        this.tipo = bien.getTipo().getNombre();
-        this.origen = bien.getOrigen().getNombre();
-        this.marca = bien.getResumenBien().getMarca();
-        this.modelo = bien.getResumenBien().getModelo();
-        this.serie = bien.getResumenBien().getSerie();
+        this.subCategoria = bien.getSubCategoria() == null ? null : bien.getSubCategoria().getDescripcion();
+        this.subClasificacion = bien.getSubClasificacion()== null ? null : bien.getSubClasificacion().getNombre();
+        this.tipo = bien.getTipo()== null ? null : bien.getTipo().getNombre();
+        this.origen = bien.getOrigen() == null ? null : bien.getOrigen().getNombre();
+        this.marca = bien.getResumenBien() == null ? null : bien.getResumenBien().getMarca();
+        this.modelo = bien.getResumenBien() == null ? null : bien.getResumenBien().getModelo();
+        this.serie = bien.getResumenBien() == null ? null : bien.getResumenBien().getSerie();
         this.unidadEjecutora = bien.getUnidadEjecutora().getDescripcion();
-        this.proveedor = bien.getProveedor().getNombreCompleto();
-        this.moneda = bien.getMoneda().getDescripcion();
+        this.proveedor = bien.getProveedor() == null ? null : bien.getProveedor().getNombreCompleto();
+        this.moneda = bien.getMoneda() == null ? null : bien.getMoneda().getDescripcion();
         this.costo = bien.getCosto();
-        this.fechaAdquisicion = bien.getFechaAdquisicion().toString();
-        this.fechaInicioGarantia = bien.getInicioGarantia().toString();
-        this.fechaFinGarantia = bien.getFinGarantia().toString();
+        this.fechaAdquisicion = bien.getFechaAdquisicion() == null ? null : bien.getFechaAdquisicion().toString();
+        this.fechaInicioGarantia = bien.getInicioGarantia() == null ? null : bien.getInicioGarantia().toString();
+        this.fechaFinGarantia = bien.getFinGarantia() == null ? null : bien.getFinGarantia().toString();
         this.descripcionGarantia = bien.getDescripcionGarantia();
-        this.estado = bien.getEstado().getNombre();
-        this.lote = bien.getLote().getDescripcion();
+        this.estado = bien.getEstado() == null ? null : bien.getEstado().getNombre();
+        this.lote = bien.getLote() == null ? null : bien.getLote().getDescripcion();
         this.capitalizable = bien.getCapitalizable()?"SI":"NO";
-        this.ubicacion = bien.getUbicacion().getDescripcionCompleta();
-        this.estadoInterno = bien.getEstadoInterno().getNombre();
-        this.identificacion = bien.getIdentificacion().getIdentificacion();
-        this.fechaIngreso = bien.getFechaIngreso().toString();
-        this.usuarioRegistro = bien.getUsuarioRegistra().getId();
-        this.usuarioResponsable = bien.getUsuarioResponsable().getId();
-        this.estadoAsignacion = bien.getEstadoAsignacion().getNombre();
+        this.ubicacion = bien.getUbicacion() == null ? null : bien.getUbicacion().getDescripcionCompleta();
+        this.estadoInterno = bien.getEstadoInterno() == null ? null : bien.getEstadoInterno().getNombre();
+        this.identificacion = bien.getIdentificacion() == null ? null : bien.getIdentificacion().getIdentificacion();
+        this.fechaIngreso = bien.getFechaIngreso() == null ? null : bien.getFechaIngreso().toString();
+        this.usuarioRegistro = bien.getUsuarioRegistra() == null ? null : bien.getUsuarioRegistra().getId();
+        this.usuarioResponsable = bien.getUsuarioResponsable() == null ? null : bien.getUsuarioResponsable().getId();
+        this.estadoAsignacion = bien.getEstadoAsignacion() == null ? null : bien.getEstadoAsignacion().getNombre();
+    }
+   
+    public Long getId() {
+        return id;
     }
 
+    public void setId(Long id) {
+        this.id = id;
+    }
+    
     public String getDescripcion() {
         return descripcion;
     }

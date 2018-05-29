@@ -12,10 +12,10 @@
                     <h1 style="margin: 0;">
                         <ice:outputFormat value="#{label['sigebi.label.prestamos.titulo.mantenimiento']} "/>
                     </h1>
-                </div>                
+                </div>
                 <div class="col-sm-2">
                     <ice:commandButton id="boton_regresar" value="#{label['label.regresar']}" style="float:right" partialSubmit="false" styleClass="boton" 
-                        action="#{controllerListarPrestamos.regresarListado}" >
+                        action="#{controllerAgregarPrestamos.regresarListado}" >
                     </ice:commandButton>
                 </div>
             </div>
@@ -124,7 +124,7 @@
                                     </h4>
                                 </div>
                                 <div class='col-sm-2'>
-                                    <ice:commandButton id="botonAgregarBienes" action="#{controllerAgregarPrestamos.mostarPanelAgregarBienes}" value="#{label['sigebi.label.solicitud.bienes.agregar']}" rendered="#{controllerAgregarPrestamos.visibleBotonAgregarBienes}" style="margin-bottom: 1rem" styleClass="boton" partialSubmit="true" />
+                                    <ice:commandButton id="botonAgregarBienes" action="#{controllerAgregarPrestamos.mostarPanelAgregarBienes}" value="#{label['label.agregarBienes']}" rendered="#{controllerAgregarPrestamos.visibleBotonAgregarBienes}" style="margin-bottom: 1rem" styleClass="boton" partialSubmit="true" />
                                 </div>
                             </div>
                             <div class="row" >
@@ -246,18 +246,16 @@
             </div>
             
             <!--Observacion-->
-            <ice:panelGroup rendered="#{controllerAgregarPrestamos.solicitudRegistrada}" >
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="form-group"> 
-                            <ice:outputText value="#{label['sigebi.label.prestamos.observacion']}" />
-                            <ice:inputTextarea id="txtObservacion" styleClass="form-control" style="resize: none" cols="4" partialSubmit="false"
-                                               value="#{controllerAgregarPrestamos.command.observacion}">
-                            </ice:inputTextarea>
-                        </div>                                             
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group"> 
+                        <ice:outputText value="#{label['sigebi.label.prestamos.observacion']}" />
+                        <ice:inputTextarea id="txtObservacion" styleClass="form-control" style="resize: none" cols="4" partialSubmit="false"
+                                           value="#{controllerAgregarPrestamos.command.observacion}">
+                        </ice:inputTextarea>
                     </div>
                 </div>
-            </ice:panelGroup>
+            </div>
             
             <!--Botones-->
             <div class="row">

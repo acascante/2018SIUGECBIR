@@ -9,7 +9,6 @@ import cr.ac.ucr.framework.utils.FWExcepcion;
 import cr.ac.ucr.framework.vista.util.Mensaje;
 import cr.ac.ucr.framework.vista.util.Util;
 import cr.ac.ucr.sigebi.commands.UbicacionCommand;
-import cr.ac.ucr.sigebi.domain.Lote;
 import cr.ac.ucr.sigebi.domain.Ubicacion;
 import cr.ac.ucr.sigebi.domain.Usuario;
 import cr.ac.ucr.sigebi.models.UbicacionModel;
@@ -100,8 +99,6 @@ public class UbicacionController extends BaseController {
         for (Usuario usuario : usuarioModel.listarUsuariosUnidad(unidadEjecutora)) {
             ubicacionCommand.getResponsablesOptions().add(new SelectItem(usuario.getId(), usuario.getNombreCompleto()));
         }
-        
-        ubicacionCommand.getUsuarioResponsable().setId("-1");
     }
 
     //</editor-fold>
@@ -129,7 +126,7 @@ public class UbicacionController extends BaseController {
             Ubicacion ubicacion = ((Ubicacion) nodoSIGEBI.getObject());
             ubicacionCommand.setUbicacion(ubicacion);
             ubicacionCommand.setUbicacionPadre(ubicacion.getPertenece());
-
+            ubicacionCommand.setUsuarioResponsable(ubicacion.getResponsable() != null ? ubicacion.getResponsable() : new Usuario());            
             this.cargaDatosGenerales();
 
             modificarUbicacion = true;
@@ -161,9 +158,11 @@ public class UbicacionController extends BaseController {
             Ubicacion ubicacion = ((Ubicacion) nodoSIGEBI.getObject());
             ubicacionCommand.setUbicacion(new Ubicacion());
             ubicacionCommand.setUbicacionPadre(ubicacion);
+            ubicacionCommand.setUsuarioResponsable(new Usuario());
         }else{
             ubicacionCommand.setUbicacion(new Ubicacion());
             ubicacionCommand.setUbicacionPadre(new Ubicacion());            
+            ubicacionCommand.setUsuarioResponsable(new Usuario());
         }
         modificarUbicacion = false;
         agregarUbicacion = true;
@@ -181,6 +180,11 @@ public class UbicacionController extends BaseController {
                     ubicacionCommand.getUbicacion().setPertenece(ubicacionCommand.getUbicacionPadre());
                 }else{
                     ubicacionCommand.getUbicacion().setPertenece(null);
+                }
+                if (ubicacionCommand.getUsuarioResponsable() != null && (ubicacionCommand.getUsuarioResponsable().getId() != null && !ubicacionCommand.getUsuarioResponsable().getId().equals("-1") )) {
+                    ubicacionCommand.getUbicacion().setResponsable(ubicacionCommand.getUsuarioResponsable());
+                }else{
+                    ubicacionCommand.getUbicacion().setResponsable(null);
                 }
                 if (agregarUbicacion) {
                     ubicacionCommand.getUbicacion().setEstado(this.estadoPorDominioValor(Constantes.DOMINIO_GENERAL, Constantes.ESTADO_GENERAL_ACTIVO));
@@ -247,9 +251,9 @@ public class UbicacionController extends BaseController {
             // Se obtiene el id del tipoInforme
             String valor = ubicacionCommand.getUsuarioResponsable().getId();
             if (!valor.equals("-1")) {
-                ubicacionCommand.getUbicacion().setResponsable(usuarioModel.buscarPorId(valor));
+                ubicacionCommand.setUsuarioResponsable(usuarioModel.buscarPorId(valor));
             }else{
-                ubicacionCommand.getUbicacion().setResponsable(null);
+                ubicacionCommand.setUsuarioResponsable(new Usuario());
             }
         } catch (FWExcepcion e) {
             Mensaje.agregarErrorAdvertencia(e.getError_para_usuario());

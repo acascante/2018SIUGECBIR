@@ -478,13 +478,12 @@ public class AsignarResponsableControlles  extends ListadoBienesGeneralControlle
                                             , 70
                                             , unidadEjecutora
                                             , ""
-
                                             , ""
                                             , ""
                                             , ""
                                             , ""
                                             , null
-
+                                            ,null
                                             , usuarioSIGEBI);
         
         

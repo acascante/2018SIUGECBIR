@@ -27,11 +27,11 @@ public class PersonaModel {
         return personaDao.listar();
     }
     
-    public Long contar(Boolean estudiante, Boolean funcionario, Long id, String nombre, String primerApellido, String segundoApellido) throws FWExcepcion {
-        return personaDao.contar(estudiante, funcionario, id, nombre, primerApellido, segundoApellido);
+    public Long contar(Boolean estudiante, Boolean funcionario, Long id, String identificacion, String nombre, String primerApellido, String segundoApellido) throws FWExcepcion {
+        return personaDao.contar(estudiante, funcionario, id, identificacion, nombre, primerApellido, segundoApellido);
     }
     
-    public List<Persona> listar(Integer primerRegistro, Integer ultimoRegistro, Boolean estudiante, Boolean funcionario, Long id, String nombre, String primerApellido, String segundoApellido) throws FWExcepcion {
-        return personaDao.listar(primerRegistro, ultimoRegistro, estudiante, funcionario, id, nombre, primerApellido, segundoApellido);
+    public List<Persona> listar(Integer primerRegistro, Integer ultimoRegistro, Boolean estudiante, Boolean funcionario, Long id, String identificacion, String nombre, String primerApellido, String segundoApellido) throws FWExcepcion {
+        return personaDao.listar(primerRegistro, ultimoRegistro, estudiante, funcionario, id, identificacion, nombre, primerApellido, segundoApellido);
     }
 }

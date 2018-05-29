@@ -74,12 +74,6 @@ public class ListarExclusionesController extends BaseController {
         }
     }
     
-    public void regresarListado() {
-        Util.navegar(vistaOrigen);
-        this.inicializarDatos();
-        this.inicializarListado();
-    }    
-    
     private void inicializarDatos() {
         this.command = new ListarExclusionesCommand();
         this.vistaOrigen = Constantes.VISTA_EXCLUSION_LISTADO;

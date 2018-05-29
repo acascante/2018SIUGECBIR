@@ -44,6 +44,8 @@ public class AsignarResponsableHistoricoDao extends GenericDaoImpl {
             return (List<AsignarResponsableHistorico>) query.list();
         } catch (DataAccessException e) {
             throw new FWExcepcion("sigebi.error.AsignarResponsableHistoricoDao.listarMisBienes", "Error obtener los registros " + this.getClass(), e.getCause());
+        }finally {
+            session.close();
         }
     }
     
@@ -74,6 +76,8 @@ public class AsignarResponsableHistoricoDao extends GenericDaoImpl {
                 return new AsignarResponsableHistorico();
         } catch (DataAccessException e) {
             throw new FWExcepcion("sigebi.error.AsignarResponsableHistoricoDao.listarMisBienes", "Error obtener los registros " + this.getClass(), e.getCause());
+        }finally {
+            session.close();
         }
     }
     

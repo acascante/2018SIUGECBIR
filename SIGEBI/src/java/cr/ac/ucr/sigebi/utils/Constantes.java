@@ -120,6 +120,14 @@ public final class Constantes {
     public static final Integer ESTADO_SOLITUD_DONACION_RECHAZADA = 4;
     public static final Integer ESTADO_SOLITUD_DONACION_ANULADA = 5;
 
+    // Estados de una solicitud de salida
+    public static final Integer ESTADO_SOLITUD_SALIDA_NUEVO = 1;
+    public static final Integer ESTADO_SOLITUD_SALIDA_PROCESO = 2;
+    public static final Integer ESTADO_SOLITUD_SALIDA_APROBADA = 3;
+    public static final Integer ESTADO_SOLITUD_SALIDA_RECHAZADA = 4;
+    public static final Integer ESTADO_SOLITUD_SALIDA_ANULADA = 5;
+    public static final Integer ESTADO_SOLITUD_SALIDA_CORRECION = 6;
+
     // Estados generales
     public static final Integer ESTADO_GENERAL_ACTIVO = 1;
     public static final Integer ESTADO_GENERAL_INACTIVO = 2;
@@ -173,7 +181,8 @@ public final class Constantes {
     public static final String DOMINIO_REGISTRO_MOVIMIENTO = "REGISTRO_MOVIMIENTO";
     public static final String DOMINIO_REPORTE = "REPORTE";
     public static final String DOMINIO_SOLI_DONACION = "SOL_DONACION";
-    public static final String DOMINIO_TIPOS_MODIFICAR = "TIPOS_MODIFICAR";
+    public static final String DOMINIO_SOLI_SALIDAS = "SOL_SALIDAS";
+    public static final String DOMINIO_TIPOS_MODIFICAR = "TIPO";
     public static final String DOMINIO_TOMA_FISICA = "TOMA_FISICA";
     public static final String DOMINIO_TOMA_FISICA_MOTIVO = "TOMA_FISICA_MOTIVO";
     public static final String DOMINIO_ASIGNAR_RESPONSABLE = "ASIGNAR_RESPONSABLE";
@@ -185,6 +194,10 @@ public final class Constantes {
     public static final Integer TIPO_ADJUNTO_DONACION = 3;
     public static final Integer TIPO_ADJUNTO_CONVENIO = 4;
     public static final Integer TIPO_ADJUNTO_RECEPCION_PRESTAMO = 5;
+
+    //TIPO Solicitud Salidas
+    public static final Integer TIPO_SOLICITUD_SALIDA_NACIONAL = 1;
+    public static final Integer TIPO_SOLICITUD_SALIDA_INTERNACIONAL = 2;
 
     //TIPOS ORIGENES
     public static final Integer TIPO_ORIGEN_EXTERNA = 7;
@@ -202,6 +215,9 @@ public final class Constantes {
     public static final Integer TIPO_REGISTRO_MOVIMIENTO_RECHAZO_ASIGNACION_PLACA = 6;
     public static final Integer TIPO_REGISTRO_MOVIMIENTO_CAMBIO_RECEPCION_PRESTAMO = 7;
 
+    public static final String TIPO_REPORTE_PDF = "PDF";
+    public static final String TIPO_REPORTE_EXCELL = "EXCELL";
+    
     public static final String TIPO_MOVIMIENTO_SINCRONIZAR_AGREGAR = "AGREGAR";
     public static final String TIPO_MOVIMIENTO_SINCRONIZAR_EXCLUIR = "EXCLUIR";
     public static final String TIPO_MOVIMIENTO_SINCRONIZAR_MODIFICAR = "MODIFICAR";
@@ -283,6 +299,12 @@ public final class Constantes {
     public static final String KEY_VISTA_UBICACION = "ubicaciones";
     public static final String VISTA_UBICACION = "../ubicacion/ubicacion.xhtml";
 
+    public static final String KEY_VISTA_SOLICITUD_SALIDA_LISTADO = "permisos_tras";
+    public static final String VISTA_SOLICITUD_SALIDA_LISTADO = "../salidas/listarSalidas.xhtml";
+    public static final String KEY_VISTA_SOLICITUD_SALIDA_DETALLE = "permisos_tras_deta";
+    public static final String VISTA_SOLICITUD_SALIDA_DETALLE = "../salidas/detalleSolicitudSalida.xhtml";
+
+    
     //BIENES
     public static final String VISTA_LISTAR_BIENES = "../bienes/listarBienes.xhtml";
     public static final String KEY_VISTA_LISTAR_BIENES = "reg_manual";
@@ -361,6 +383,13 @@ public final class Constantes {
     public static final Integer ACCION_DONACION_ELIMINAR_BIEN = 3;
     public static final Integer ACCION_DONACION_RECHAZAR_AUTORIZACION = 4;
 
+    //Acciones solicitud salidas
+    public static final Integer ACCION_SALIDA_BUSCAR_BIEN = 1;
+    public static final Integer ACCION_SALIDA_ANULAR = 2;
+    public static final Integer ACCION_SALIDA_RECHAZAR = 3;
+    public static final Integer ACCION_SALIDA_BUSCAR_PERSONA = 4;
+    public static final Integer ACCION_SALIDA_CORREGIR = 5;
+
     //Sincronizar
     public static final char SINCRONIZAR_ESTADO_ACTIVO = '1';
     public static final char SINCRONIZAR_ESTADO_INACTIVO = '2';
@@ -391,6 +420,7 @@ public final class Constantes {
     public static final Integer DISCRIMINATOR_SOLICITUD_DONACION = 2;
     public static final Integer DISCRIMINATOR_SOLICITUD_TRASLADO = 3;
     public static final Integer DISCRIMINATOR_SOLICITUD_PRESTAMO = 4;
+    public static final Integer DISCRIMINATOR_SOLICITUD_SALIDA = 5;
 
     //Discriminator Detalle Solicitud
     public static final Integer DISCRIMINATOR_DETALE_SOLICITUD = 1;
@@ -399,7 +429,7 @@ public final class Constantes {
 
     //Discriminator Registro Movimiento
     public static final Integer DISCRIMINATOR_REGISTRO_MOVIMIENTO_BIEN = 1;
-    public static final Integer DISCRIMINATOR_REGISTRO_MOVIMIENTO_DOCUMENTO = 2;
+    public static final Integer DISCRIMINATOR_REGISTRO_MOVIMIENTO_DOCUMENTO = 2; 
     public static final Integer DISCRIMINATOR_REGISTRO_MOVIMIENTO_SOLICITUD = 3;
     public static final Integer DISCRIMINATOR_REGISTRO_MOVIMIENTO_CONVENIO= 4;
 
@@ -410,6 +440,7 @@ public final class Constantes {
     //Tipos de unidades    
     //Unidades con placas espesificas
     public static final String TIPO_UNIDAD_EJECUTORA_COMPRA = "UEC";
+    // Para pruebas public static final String TIPO_UNIDAD_EJECUTORA_COMPRA = "SRC";
 
     
     //Acciones asignacion de placas

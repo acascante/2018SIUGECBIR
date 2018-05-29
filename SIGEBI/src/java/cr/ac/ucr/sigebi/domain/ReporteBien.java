@@ -23,8 +23,6 @@ import javax.persistence.Transient;
 @SequenceGenerator(name="sqReporteBien", sequenceName = "SIGEBI_OAF.SGB_SQ_REPORTE_BIEN", initialValue=1, allocationSize=1)
 public class ReporteBien implements Serializable {
 
-    private static final long serialVersionUID = 2221478451097290266L;
-
     //<editor-fold defaultstate="collapsed" desc="Atributos">
     @Id
     @GeneratedValue(strategy=GenerationType.SEQUENCE, generator = "sqReporteBien")
@@ -116,7 +114,7 @@ public class ReporteBien implements Serializable {
     }
     
     public Set<CampoReporteBien> getCamposReporte() {
-        if (this.camposReporte.isEmpty())
+        if (this.camposReporte == null)
             this.camposReporte = new HashSet<CampoReporteBien>();
         return camposReporte;
     }

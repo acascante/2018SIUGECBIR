@@ -6,7 +6,6 @@
 package cr.ac.ucr.sigebi.domain;
 
 import cr.ac.ucr.sigebi.utils.Constantes;
-import javax.persistence.Column;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
@@ -25,26 +24,13 @@ import javax.persistence.Table;
 public class SolicitudTraslado extends Solicitud {
 
     //<editor-fold defaultstate="collapsed" desc="Atributos">
-//    @ManyToOne
-//    @JoinColumn(name = "ID_UNIDAD_EJECU_ORIG", referencedColumnName = "ID")
-//    private UnidadEjecutora unidadEjecutoraOrigen;
-
     @ManyToOne
     @JoinColumn(name = "ID_UNIDAD_EJECU_DEST", referencedColumnName = "ID")
     private UnidadEjecutora unidadEjecutoraDestino;
 
-
-//    @ManyToOne
-//    @JoinColumn(name = "ID_USUARIO_RECIBE", referencedColumnName = "ID_USUARIO")
-//    private Usuario personaRecibe;
-
     @ManyToOne
     @JoinColumn(name = "ID_UBICACION", referencedColumnName = "ID_UBICACION")
     private Ubicacion ubicacion;
-
-    @Column(name = "OBSERVACIONES") // VARCHAR2 (500 Byte) 
-    private String observaciones;
-
     //</editor-fold>
     
     
@@ -67,7 +53,6 @@ public class SolicitudTraslado extends Solicitud {
        super();
       this.setDiscriminator(Constantes.DISCRIMINATOR_SOLICITUD_TRASLADO);
     }
-
     
     public UnidadEjecutora getUnidadEjecutoraDestino() {
         return unidadEjecutoraDestino;
@@ -77,21 +62,12 @@ public class SolicitudTraslado extends Solicitud {
         this.unidadEjecutoraDestino = unidadEjecutoraDestino;
     }
 
-
     public Ubicacion getUbicacion() {
         return ubicacion;
     }
 
     public void setUbicacion(Ubicacion ubicacion) {
         this.ubicacion = ubicacion;
-    }
-
-    public String getObservaciones() {
-        return observaciones;
-    }
-
-    public void setObservaciones(String observaciones) {
-        this.observaciones = observaciones;
     }
 
     //</editor-fold> 
@@ -102,7 +78,6 @@ public class SolicitudTraslado extends Solicitud {
         int hash = 5;
         hash = 89 * hash + (this.unidadEjecutoraDestino != null ? this.unidadEjecutoraDestino.hashCode() : 0);
         hash = 89 * hash + (this.ubicacion != null ? this.ubicacion.hashCode() : 0);
-        hash = 89 * hash + (this.observaciones != null ? this.observaciones.hashCode() : 0);
         return hash;
     }
 
@@ -118,12 +93,6 @@ public class SolicitudTraslado extends Solicitud {
             return false;
         }
         final SolicitudTraslado other = (SolicitudTraslado) obj;
-        if ((this.observaciones == null) ? (other.observaciones != null) : !this.observaciones.equals(other.observaciones)) {
-            return false;
-        }
-//        if (this.unidadEjecutoraOrigen != other.unidadEjecutoraOrigen && (this.unidadEjecutoraOrigen == null || !this.unidadEjecutoraOrigen.equals(other.unidadEjecutoraOrigen))) {
-//            return false;
-//        }
         if (this.unidadEjecutoraDestino != other.unidadEjecutoraDestino && (this.unidadEjecutoraDestino == null || !this.unidadEjecutoraDestino.equals(other.unidadEjecutoraDestino))) {
             return false;
         }

@@ -8,6 +8,7 @@ package cr.ac.ucr.sigebi.daos;
 import cr.ac.ucr.framework.daoHibernate.DaoHelper;
 import cr.ac.ucr.framework.daoImpl.GenericDaoImpl;
 import cr.ac.ucr.framework.utils.FWExcepcion;
+import cr.ac.ucr.sigebi.domain.AsignacionPlaca;
 import cr.ac.ucr.sigebi.domain.Estado;
 import cr.ac.ucr.sigebi.domain.Identificacion;
 import cr.ac.ucr.sigebi.domain.UnidadEjecutora;
@@ -36,12 +37,18 @@ public class IdentificacionDao extends GenericDaoImpl {
     ) throws FWExcepcion {
         Session session = dao.getSessionFactory().openSession();
         try {
-            String sql = "SELECT i FROM Identificacion i "
-                        + "WHERE i.estado = :estado "
-                        + "     and i.unidadEjecutora = :unidadEjecutora";
-            Query query = session.createQuery(sql);
+            StringBuilder sql = new StringBuilder("SELECT i FROM Identificacion i");
+            sql.append(" WHERE i.estado = :estado ");
+            if(unidadEjecutora != null){
+                sql.append(" and i.unidadEjecutora = :unidadEjecutora "); 
+            }else{
+                sql.append(" and i.unidadEjecutora is null "); 
+            }
+            Query query = session.createQuery(sql.toString());
             query.setParameter("estado", estado);
-            query.setParameter("unidadEjecutora", unidadEjecutora);
+            if(unidadEjecutora != null){
+                query.setParameter("unidadEjecutora", unidadEjecutora);
+            }    
             query.setMaxResults(1); 
             return (Identificacion) query.uniqueResult();
         } catch (HibernateException e) {
@@ -71,6 +78,25 @@ public class IdentificacionDao extends GenericDaoImpl {
             }
             query.setFirstResult(0);
             query.setMaxResults(15);                
+            return (List<Identificacion>) query.list();
+        } catch (HibernateException e) {
+            throw new FWExcepcion("sigebi.error.identificacionDao.listar", "Error obtener los registros de tipo " + this.getClass(), e.getCause());
+        }finally{
+            session.close();        
+        }
+    }
+    
+    
+    @Transactional(readOnly = true)
+    public List<Identificacion> listar(AsignacionPlaca asignacionPlaca, Estado estadoIdentificacion) {
+        Session session = dao.getSessionFactory().openSession();
+        try {
+            StringBuilder sql = new StringBuilder("SELECT obj FROM Identificacion obj ");
+            sql.append(" WHERE obj.asignacionPlaca = :asignacionPlaca ");        
+            sql.append(" and obj.estado = :estadoIdentificacion ");        
+            Query query = session.createQuery(sql.toString());
+            query.setParameter("asignacionPlaca", asignacionPlaca);
+            query.setParameter("estadoIdentificacion", estadoIdentificacion);
             return (List<Identificacion>) query.list();
         } catch (HibernateException e) {
             throw new FWExcepcion("sigebi.error.identificacionDao.listar", "Error obtener los registros de tipo " + this.getClass(), e.getCause());

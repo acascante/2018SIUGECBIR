@@ -105,6 +105,12 @@
                                    >
                                     <f:attribute id="tomaFisicaSeleccionada" name="tomaFisicaSeleccionada"  value="#{controllerTomaFisica.tomaFisicaCommand.tomaFisica}"/>
                 </ice:commandButton>  
+                
+                <ice:commandButton id="btnReporteSobrantes" style="float: left" styleClass="boton" partialSubmit="true" 
+                                   actionListener="#{controllerReporteSobrantes.detalleReporteSobrantes}"
+                                   value="Reporte Sobrantes">
+                    <f:attribute id="idTomaFisica" name="idTomaFisica" value="#{controllerTomaFisica.tomaFisicaCommand.tomaFisica.id}"/>
+                </ice:commandButton>
             </div>
         </div>        
     </div>

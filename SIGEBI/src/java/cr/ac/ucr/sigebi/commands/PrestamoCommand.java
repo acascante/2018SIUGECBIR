@@ -128,6 +128,7 @@ public class PrestamoCommand {
         this.idTipoEntidad = prestamo.getTipo().getId();
         this.entidad = prestamo.getEntidad();
         this.usuario = prestamo.getUsuario();
+        this.observacion = prestamo.getObservacion();
         
         this.bienes = new HashMap<Long, BienDetalle>();
         this.detalles = new HashMap<Long, SolicitudDetallePrestamo>();
@@ -148,6 +149,7 @@ public class PrestamoCommand {
         prestamo.setTipo(tipo);
         prestamo.setEntidad(this.entidad);
         prestamo.setUsuario(this.usuario);
+        prestamo.setObservacion(this.observacion);
         prestamo.setDiscriminator(Constantes.DISCRIMINATOR_SOLICITUD_PRESTAMO);
         
         List<SolicitudDetallePrestamo> listDetalles = new ArrayList<SolicitudDetallePrestamo>(this.detalles.values());

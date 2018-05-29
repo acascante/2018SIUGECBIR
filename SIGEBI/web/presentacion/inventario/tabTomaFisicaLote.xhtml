@@ -140,7 +140,7 @@
             <div class="row">
                 
                 <div class="col-lg-6" style="padding: 10px 15px;">
-                    <ice:inputFile id="flsLotes" 
+                    <ice:inputFile id="fls_Lotes" 
                                    styleClass="boton btn-file" 
                                    style="
                                             color: #FFFFFF; 
@@ -173,7 +173,7 @@
                 <div class="col-md-12">
 
 
-                    <ice:dataTable id="tblCargaLotesFile"
+                    <ice:dataTable id="tblCarga_LotesFile"
                                    value="#{controllerTomaFisica.tomaFisicaCommand.objetosCargaLote}"
                                    var="objetoCarga"
                                    paginator="true"
@@ -235,12 +235,12 @@
 
 
         
-            <div class="row">
+            <div class="row" style="float: left; margin-top: 15px 0;" >
             <div class="col-md-6">
                 <div class="form-group"> 
                     
                     <ice:commandButton id="btnReporteMovimiento"
-                                       style="float: left" 
+                                       style="float: left; margin-top: 15px;" 
                                        styleClass="boton" 
                                        partialSubmit="true" 
                                        action="#{controllerReporte.plantillaCargaLotes}"
@@ -269,8 +269,12 @@
             
 
             <ice:outputHtml id="panelErroresLotes"
-                            style="max-height: 300px; overflow: auto;"
+                            rendered="#{controllerTomaFisica.tomaFisicaCommand.mostrarErroresCargaLotes}"
                             >
+                <div class="container-fluid"
+                     style="max-height: 300px; overflow: auto; margin: 25px 0px;"
+                     >
+                    
                <div class="row">
                    <div class="col-md-12">
                        <h4>
@@ -282,8 +286,8 @@
                    <div class="col-md-6">
 
 
-                    <ice:dataTable id="tblErroresTomaLotes"
-                                   value="#{controllerTomaFisica.tomaFisicaCommand.erroresRegistradosCargaUnitaria}"
+                    <ice:dataTable id="tblErrores_TomaLotes"
+                                   value="#{controllerTomaFisica.tomaFisicaCommand.erroresRegistradosCargaLotes}"
                                    var="error">
 
                         <ice:column id="colDescripcion">
@@ -301,6 +305,7 @@
                    </div>
                </div>
 
+                </div>
            </ice:outputHtml>
             
             

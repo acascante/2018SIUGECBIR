@@ -8,7 +8,6 @@ package cr.ac.ucr.sigebi.daos;
 import cr.ac.ucr.framework.daoHibernate.DaoHelper;
 import cr.ac.ucr.framework.daoImpl.GenericDaoImpl;
 import cr.ac.ucr.framework.utils.FWExcepcion;
-import cr.ac.ucr.sigebi.domain.Convenio;
 import cr.ac.ucr.sigebi.domain.RecepcionPrestamo;
 import java.util.Date;
 import java.util.List;

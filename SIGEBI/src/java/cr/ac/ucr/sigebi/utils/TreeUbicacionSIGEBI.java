@@ -124,19 +124,22 @@ public class TreeUbicacionSIGEBI extends TreeSIGEBI {
             event.queue();
             return;
         }
+        try {
+            //Se busca el nodo seleccionado
+            NodoSIGEBI nodoSIGEBI = (NodoSIGEBI) event.getComponent().getAttributes().get("nodoSeleccionado");
 
-        //Se busca el nodo seleccionado
-        NodoSIGEBI nodoSIGEBI = (NodoSIGEBI) event.getComponent().getAttributes().get("nodoSeleccionado");
+            if (nodoSIGEBI.getObject() != null) {
 
-        if (nodoSIGEBI.getObject() != null) {
+                //Se busca las unidades
+                List<Ubicacion> resultado = ubicacionModel.listarUbicacionPadre(((Ubicacion) nodoSIGEBI.getObject()));
+                nodoSIGEBI.agregarNodos(new ArrayList<Object>(resultado), "detalle");
 
-            //Se busca las unidades
-            List<Ubicacion> resultado = ubicacionModel.listarUbicacionPadre(((Ubicacion) nodoSIGEBI.getObject()));
-            nodoSIGEBI.agregarNodos(new ArrayList<Object>(resultado), "detalle");
+            } else {
 
-        } else {
-            
-            this.buscar();
+                this.buscar();
+            }            
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 

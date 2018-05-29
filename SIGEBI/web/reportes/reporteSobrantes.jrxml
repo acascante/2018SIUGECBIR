@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="inventFaltantesReporte" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="f3eb3432-9ff9-4e28-8d6c-60ec9d6c686b">
 	<property name="ireport.zoom" value="1.3310000000000244"/>
-	<property name="ireport.x" value="0"/>
+	<property name="ireport.x" value="209"/>
 	<property name="ireport.y" value="0"/>
 	<parameter name="IDENTIFICACION" class="java.lang.String"/>
 	<parameter name="DESCRIPCION" class="java.lang.String"/>
@@ -18,9 +18,8 @@
 	<field name="marca" class="java.lang.String"/>
 	<field name="modelo" class="java.lang.String"/>
 	<field name="serie" class="java.lang.String"/>
-	<field name="nombreEstado" class="java.lang.String"/>
+	<field name="estado" class="java.lang.String"/>
 	<field name="funcionario" class="java.lang.String"/>
-	<field name="clasificacion" class="java.lang.String"/>
 	<field name="descripcion" class="java.lang.String"/>
 	<field name="subCategoria" class="java.lang.String"/>
 	<field name="subClasificacion" class="java.lang.String"/>
@@ -318,13 +317,13 @@
 				<reportElement x="5" y="5" width="75" height="20" uuid="8fcaa567-493b-4572-9731-24390d4c8231"/>
 				<textFieldExpression><![CDATA[$F{identificacion}]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField isBlankWhenNull="true">
 				<reportElement x="85" y="5" width="170" height="20" uuid="e42e86b2-12b9-460f-a1e4-02062264cc24"/>
 				<textFieldExpression><![CDATA[$F{subClasificacion}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
 				<reportElement x="735" y="5" width="60" height="20" uuid="de74981e-47da-469e-b206-03e13ddaa4f6"/>
-				<textFieldExpression><![CDATA[$F{nombreEstado}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{estado}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>

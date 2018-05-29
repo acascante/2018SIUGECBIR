@@ -32,21 +32,36 @@ public class ReporteSobrantes implements Serializable {
         super();
     }
 
-    public ReporteSobrantes(TomaFisicaSobrante bienSobrante, Estado estado) {
+    public ReporteSobrantes(TomaFisicaSobrante bienSobrante) {
         this.identificacion = bienSobrante.getIdentificacion();
         this.funcionario = "Pendiente Definir"; 
         this.descripcion = bienSobrante.getDescripcion();
         this.marca = bienSobrante.getMarca();
         this.modelo = bienSobrante.getModelo();
         this.serie = bienSobrante.getSerie();
-        this.subClasificacion = bienSobrante.getSubClasificacion().getClasificacion().getNombre();
-        this.subCategoria = bienSobrante.getSubCategoria().getCategoria().getDescripcion();
+        this.subClasificacion = getDescSubClasificacion(bienSobrante.getSubClasificacion());
+        this.subCategoria = getDescSubCategoria(bienSobrante.getSubCategoria());
         this.unidadEjecutora = bienSobrante.getTomaFisica().getUnidadEjecutora().getDescripcion();
         this.ubicacion = bienSobrante.getUbicacion();
+    }
+    
+    public ReporteSobrantes(TomaFisicaSobrante bienSobrante, Estado estado) {
+        this(bienSobrante);
         this.estado = estado.getNombre();
     }
     //</editor-fold>
     
+    private String getDescSubClasificacion(SubClasificacion sc) {
+        if(sc != null && sc.getClasificacion() != null)
+            return sc.getClasificacion().getNombre();
+        return null;
+    }
+    
+    private String getDescSubCategoria(SubCategoria sc) {
+        if(sc != null && sc.getCategoria()!= null)
+            return sc.getCategoria().getDescripcion();
+        return null;
+    }
     //<editor-fold defaultstate="collapsed" desc="GET's y SET's">
     public String getIdentificacion() {
         return identificacion;

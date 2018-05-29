@@ -63,13 +63,13 @@
                                 </h4>
                             </div>
                             <div class="col-sm-2">
-                                <ice:commandButton id="btnAgregarCampos" action="#{controllerReporteBien.mostarPanelAgregarCampos}" value="#{label['sigebi.agregar']}" rendered="#{controllerReporteBien.visibleBotonAgregarCampos}" style="margin-bottom: 1rem; float:right" styleClass="boton" partialSubmit="true"/>
+                                <ice:commandButton id="btnAgregarCampos" action="#{controllerReporteBien.mostarPanelAgregarCampos}" value="#{label['label.agregar']}" rendered="true" style="margin-bottom: 1rem; float:right" styleClass="boton" partialSubmit="true"/>
                             </div>                         
                         </div>
                         <div class="row" >
                             <div class="col-md-12">
                                 <div>
-                                    <ice:dataTable id="listadoCampos" value="#{controllerReporteBien.listCamposReporte}" var="campo">
+                                    <ice:dataTable id="listadoCampos" value="#{controllerReporteBien.command.listCamposReporte}" var="campo">
                                         <f:facet name="header">
                                             <ice:columnGroup>
                                                 <ice:headerRow>
@@ -85,12 +85,6 @@
                                                     <ice:column id="tamano" rowspan="2" style="vertical-align:top;">
                                                         <ice:outputText value="#{label['sigebi.label.reporteBien.campo.tamano']} "/>
                                                     </ice:column>
-
-                                                    <!--Orden-->
-                                                    <ice:column id="orden" rowspan="2" style="vertical-align:top;">
-                                                        <ice:outputText value="#{label['sigebi.label.reporteBien.campo.orden']} "/>
-                                                    </ice:column>
-
                                                 </ice:headerRow>
                                             </ice:columnGroup>
                                         </f:facet>
@@ -98,13 +92,10 @@
                                             <h:outputText id="nombreCell" value="#{campo.campoBien.nombre}"/>
                                         </ice:column>
                                         <ice:column>
-                                            <h:outputText id="valor" value="#{campo.valor}"/>
+                                            <ice:inputText id="txtNombre" value="#{campo.valor}" styleClass="form-control" />
                                         </ice:column>
                                         <ice:column>
-                                            <h:outputText id="valor" value="#{campo.tamanoColumna}"/>
-                                        </ice:column>
-                                        <ice:column>
-                                            <h:outputText id="valor" value="#{campo.orden}"/>
+                                            <ice:inputText id="txtTamano" value="#{campo.tamanoColumna}" styleClass="form-control" />
                                         </ice:column>
                                     </ice:dataTable>
                                 </div>
@@ -131,7 +122,7 @@
         
         <!-- Panel Agregar Bienes -->
         <ui:insert name="panelAgregarCampos">
-            <ui:include src="../reportes/listadoBienes.xhtml" />
+            <ui:include src="../reportes/listadoCampos.xhtml" />
         </ui:insert>
     </div>
 </ice:form>

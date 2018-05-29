@@ -5,20 +5,36 @@
  */
 package cr.ac.ucr.sigebi.controllers;
 
+import com.icesoft.faces.context.effects.JavascriptContext;
 import cr.ac.ucr.framework.utils.FWExcepcion;
 import cr.ac.ucr.framework.vista.util.Mensaje;
 import cr.ac.ucr.sigebi.utils.Constantes;
 import cr.ac.ucr.framework.vista.util.Util;
 import cr.ac.ucr.sigebi.commands.AsignacionPlacaCommand;
+import cr.ac.ucr.sigebi.commands.ReporteAsignacionPlacaCommand;
 import cr.ac.ucr.sigebi.domain.AsignacionPlaca;
+import cr.ac.ucr.sigebi.domain.Bien;
+import cr.ac.ucr.sigebi.domain.Estado;
+import cr.ac.ucr.sigebi.domain.Identificacion;
 import cr.ac.ucr.sigebi.domain.RegistroMovimientoAsignacionPlaca;
 import cr.ac.ucr.sigebi.models.AsignacionPlacaModel;
+import cr.ac.ucr.sigebi.models.BienModel;
 import cr.ac.ucr.sigebi.models.IdentificacionModel;
 import cr.ac.ucr.sigebi.models.RegistroMovimientoModel;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import javax.annotation.Resource;
+import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 import javax.faces.event.PhaseId;
+import net.sf.jasperreports.engine.JasperCompileManager;
+import net.sf.jasperreports.engine.JasperExportManager;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
@@ -39,7 +55,11 @@ public class AsignacionPlacaController extends BaseController {
 
     @Resource
     private RegistroMovimientoModel registroMovimientoModel;
-            
+
+    @Resource
+    private BienModel bienModel;
+
+    
     // Se usan en el jsp
 
     AsignacionPlacaCommand asignacionPlacaCommand;
@@ -106,9 +126,9 @@ public class AsignacionPlacaController extends BaseController {
 
     public void regresarListado() {
         if (vistaOrigen != null) {
-            Util.navegar(vistaOrigen);
+            Util.navegar(vistaOrigen, true);
         } else {
-            Util.navegar(Constantes.KEY_VISTA_LISTAR_ASIGNACION_PLACA);
+            Util.navegar(Constantes.KEY_VISTA_LISTAR_ASIGNACION_PLACA, true);
         }
     }
     //</editor-fold>
@@ -287,5 +307,68 @@ public class AsignacionPlacaController extends BaseController {
         
         return true;
     }
+    
+    public void generarReporte() {
+        try {
+
+            //Asignacion de placas
+            AsignacionPlaca asignacionPlaca = asignacionPlacaCommand.getAsignacionPlaca();
+            
+            //Se busca las identificaciones reservadas, no deberian estar asociadas a un bien
+            Estado estadoIdentificacionReservada = this.estadoPorDominioValor(Constantes.DOMINIO_IDENTIFICACION, Constantes.IDENTIFICACION_ESTADO_RESERVADA_UNIDAD);
+            List<Identificacion> identificaciones = identificacionModel.listar(asignacionPlaca, estadoIdentificacionReservada);
+
+            Estado estadoIdentificacionOcupada = this.estadoPorDominioValor(Constantes.DOMINIO_IDENTIFICACION, Constantes.IDENTIFICACION_ESTADO_OCUPADA);
+            List<Bien> bienes = bienModel.listarPorAsignacionPlaca(this.asignacionPlacaCommand.getAsignacionPlaca());
+            
+            Integer totalDisponibles =  0;
+            
+            if (!identificaciones.isEmpty() || !bienes.isEmpty()) {
+                String template = cr.ac.ucr.framework.reporte.componente.utilitario.Util.ConvertirRutas("/reportes/reporteLiquidacionPlacas.jrxml");
+                String jasperFile = cr.ac.ucr.framework.reporte.componente.utilitario.Util.ConvertirRutas("/reportes/reporteLiquidacionPlacas.jasper");
+                String outputFile = cr.ac.ucr.framework.reporte.componente.utilitario.Util.ConvertirRutas("/reportes/reporteLiquidacionPlacas.pdf");
+
+                ArrayList<ReporteAsignacionPlacaCommand> datosReporte = new ArrayList<ReporteAsignacionPlacaCommand>();                
+                if(!identificaciones.isEmpty()){
+                    totalDisponibles = identificaciones.size();
+                    for (Identificacion identificacion : identificaciones) {
+                        datosReporte.add(new ReporteAsignacionPlacaCommand(identificacion, estadoIdentificacionReservada));
+                    }
+                }
+                
+                if(!bienes.isEmpty()){
+                    for (Bien bien : bienes) {
+                        datosReporte.add(new ReporteAsignacionPlacaCommand(bien, estadoIdentificacionOcupada));
+                    }
+                }
+                
+                JasperCompileManager.compileReportToFile(template, jasperFile);
+                JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(datosReporte);
+                JasperPrint jasperPrint = JasperFillManager.fillReport(jasperFile, generarParametros(totalDisponibles), dataSource);
+                JasperExportManager.exportReportToPdfFile(jasperPrint, outputFile);
+                JavascriptContext.addJavascriptCall(FacesContext.getCurrentInstance(), "reporte('reporteLiquidacionPlacas','.pdf');");
+    
+                Mensaje.agregarInfo("Reporte generado exitosamente");
+            }else{
+                Mensaje.agregarInfo("Favor verifique, no exiten datos para generar el reporte");
+            }
+            
+            
+        } catch (Exception err) {
+            Mensaje.agregarErrorAdvertencia(err.getMessage());
+        }
+    }
+    
+     public Map generarParametros(Integer totalDisponibles) {
+        Map parametros = new HashMap();
+        parametros.put("USUARIO", this.usuarioSIGEBI.getNombreCompleto());
+        parametros.put("ASIGNACIONPLACAID", this.asignacionPlacaCommand.getAsignacionPlaca().getId());
+        parametros.put("INSTITUCION", "UNIVERSIDAD DE COSTA RICA");
+        parametros.put("NOMBREREPORTE", "Reporte liquidacion de placas");
+        parametros.put("TOTALASIGNADOS", totalDisponibles + "/" + this.asignacionPlacaCommand.getAsignacionPlaca().getCantidadSolicitada());        
+        parametros.put("UNIDADEJECUTORA", this.asignacionPlacaCommand.getAsignacionPlaca().getUnidadEjecutora().getDescripcion());
+        return parametros;
+    }    
+    
     //</editor-fold>
 }

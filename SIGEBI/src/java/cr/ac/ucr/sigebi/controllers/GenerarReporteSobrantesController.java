@@ -164,15 +164,15 @@ public class GenerarReporteSobrantesController extends BaseController {
                 ArrayList<ReporteSobrantes> datosReporte = new ArrayList<ReporteSobrantes>();
                 for (TomaFisicaSobrante bienSobrante : sobrantes) {
                     ReporteSobrantes dato;
-                    if (!bienSobrante.getIdentificacion().isEmpty()) {
+                    if (bienSobrante.getIdentificacion() != null && !bienSobrante.getIdentificacion().isEmpty()) {
                         Bien bien = this.bienModel.buscarPorIdentificacion(bienSobrante.getIdentificacion());
                         if (bien != null) {
                             dato = new ReporteSobrantes(bienSobrante, bien.getEstado());
                         } else {
-                            dato = new ReporteSobrantes(bienSobrante, null);
+                            dato = new ReporteSobrantes(bienSobrante);
                         }
                     } else {
-                        dato = new ReporteSobrantes(bienSobrante, null);
+                        dato = new ReporteSobrantes(bienSobrante);
                     }
                     datosReporte.add(dato);
                 }

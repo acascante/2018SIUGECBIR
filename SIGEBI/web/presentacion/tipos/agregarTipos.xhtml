@@ -28,15 +28,35 @@
                 <div class="col-md-6">
                     <div class="form-group"> 
                         <ice:outputText value="#{label['sigebi.label.agregar.tipo.dominios']}" />
-                        <ice:selectOneMenu id="cmbDominios" partialSubmit="true" styleClass="form-control"
-                                           valueChangeListener="#{controllerAgregarTipos.cargarTipos}"
-                                           value="#{controllerAgregarTipos.command.id}">
+                        <ice:selectOneMenu  id="cmbTipo" partialSubmit="true" styleClass="form-control"
+                                           value="#{controllerAgregarTipos.command.id}"
+                                           valueChangeListener="#{controllerAgregarTipos.cargarTipos}">
                             <f:selectItem itemLabel="N/A" itemValue="-1"/>
                             <f:selectItems id="slcReporteItem" value="#{controllerAgregarTipos.itemsTipo}"/>
                         </ice:selectOneMenu>
                     </div>
                 </div>
             </div>
+            
+            <!--Nuevo Tipo-->
+            <ice:panelGroup rendered="#{controllerAgregarTipos.visiblePanelTipo}" >
+               <div class="row">
+                    <div class="col-sm-8"> 
+                        <div class="form-group">
+                            <ice:outputText value="#{label['sigebi.label.agregar.tipo.tipos.nuevo']}" /> 
+                            <ice:inputText id="txtEntidad" styleClass="form-control" partialSubmit="true"
+                                           value="#{controllerAgregarTipos.command.nuevoTipo}" >
+                            </ice:inputText>
+                        </div>
+                    </div>
+                    <div class="col-sm-2" >
+                        <br/> 
+                        <ice:commandButton id="botonAgregarTipo" value="#{label['label.agregar']}" partialSubmit="false" styleClass="boton" 
+                            action="#{controllerAgregarTipos.agregarTipo}" >
+                        </ice:commandButton>
+                    </div>
+                </div>
+            </ice:panelGroup>
             
             <!--Tabla Tipo-->
             <div class="row">
@@ -47,6 +67,7 @@
                                 <h4>
                                     <ice:outputFormat value="#{label['sigebi.label.agregar.tipo.tipos']}" />
                                 </h4>
+                                
                             </div>
                         </div>
                         <div class="row" >
@@ -60,10 +81,6 @@
                                                         <ice:outputText value="#{label['sigebi.label.agregar.tipo.tipos.nombre']} "/>
                                                     </ice:column>
                                                     
-                                                    <ice:column id="valor" style="vertical-align:top;">
-                                                        <ice:outputText value="#{label['sigebi.label.agregar.tipo.tipos.valor']} "/>
-                                                    </ice:column>
-
                                                     <ice:column id="descripcion" style="vertical-align:top;">
                                                         <ice:outputText value="#{label['sigebi.label.agregar.tipo.tipos.opciones']} "/>
                                                     </ice:column>
@@ -72,9 +89,6 @@
                                         </f:facet>
                                         <ice:column>
                                             <h:outputText id="nombreCell" value="#{tipo.nombre}"/>
-                                        </ice:column>
-                                        <ice:column>
-                                            <h:outputText id="valorCell" value="#{tipo.valor}"/>
                                         </ice:column>
                                         <ice:column>
                                             <ice:commandButton id="btnEliminar" partialSubmit="true" value="Eliminar" style="float: right" styleClass="boton"

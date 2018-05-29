@@ -349,6 +349,8 @@ public class VistaUsuario {
                                 gSede = aux;
                             } else if ("SFC".equals(aux.getIdTipoUnidad())) {
                                 gFacultad = aux;
+                            }else if ("UCO".equals(aux.getIdTipoUnidad())) {
+                                gFacultad = aux;
                             }
                             this.gSucesores.add(aux);
                             aux = this.seguridadMgr.obtenerUnidadEjecutoraPadre(aux.getId_unidad_ejecutora_padre());

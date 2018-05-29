@@ -1,0 +1,217 @@
+<ice:form id="frm_listarSalidas" 
+          xmlns:ice="http://www.icesoft.com/icefaces/component"
+          xmlns:h="http://java.sun.com/jsf/html"
+          xmlns:f="http://java.sun.com/jsf/core"
+          xmlns:ui="http://java.sun.com/jsf/facelets"
+          >
+    <div class="contenido-pagina">
+
+        <div class="container"> 
+            <!-- Titulo -->
+            <div class="row">
+                <div class='col-sm-12'>
+                    <h1 style="margin: 0;">
+                    </h1>
+                </div>                
+            </div>
+            <div class="row">
+                <div class='col-sm-6'>
+                    <h1 style="margin: 0;">                       
+                        <ice:outputFormat value="#{label['sigebi.label.vista.listarSalidas.titulo']}"/>
+                    </h1>
+                </div>
+                <div class="col-sm-6">
+                    <ice:commandButton id="botonNuevo"
+                                       style="float:right" 
+                                       styleClass="boton" 
+                                       partialSubmit="true" 
+                                       actionListener="#{controllerSolicitudSalida.nuevoRegistro}"
+                                       value="#{label['sigebi.label.vista.listarSalidas.nuevo']}"  >
+                        <f:attribute id="vistaOrigenParam" name="keyVistaOrigen"  value="permisos_tras"/>
+                    </ice:commandButton>                    
+                </div>              
+            </div>            
+
+            <!-- Paginacion -->
+            <div class="row">
+                <div class="col-sm-12">
+                    <ice:outputFormat value="#{label['label.generico.paginacion.encabezado']}">
+                        <f:param value="#{controllerListarSolicitudSalidas.cantidadRegistros}"/>
+                        <f:param value="#{controllerListarSolicitudSalidas.cantidadRegistrosMostrados}"/>
+                        <f:param value="#{controllerListarSolicitudSalidas.primerRegistro}"/>
+                        <f:param value="#{controllerListarSolicitudSalidas.ultimoRegistro}"/>
+                        <f:param value="#{controllerListarSolicitudSalidas.paginaActual}"/>
+                        <f:param value="#{controllerListarSolicitudSalidas.cantidadPaginas}"/>
+                    </ice:outputFormat>
+                    <div>
+                        <table>
+                            <tr>
+                                <td style="padding-right: 5px;">
+                                    <ice:outputText value="#{label['label.paginacion.cantidad.pagina']} "/>
+                                </td>
+                                <td>
+                                    
+                                    <ice:selectOneMenu id="cantRegistroPorPagina"
+                                           value="#{controllerListarSolicitudSalidas.cantRegistroPorPagina}" 
+                                           valueChangeListener="#{controllerListarSolicitudSalidas.cambioRegistrosPorPagina}"
+                                           partialSubmit="true">
+                                            <f:selectItems id="item_pa" value="#{controllerListarSolicitudSalidas.listaRegistrosPagina}"/>
+                                    </ice:selectOneMenu>    
+                                    
+                                </td>
+                            </tr>
+                        </table>                        
+                    </div>                    
+                    <div>
+                        <ice:commandButton image="./imagenes/botones/first.png" partialSubmit="true" actionListener="#{controllerListarSolicitudSalidas.primero}" rendered="#{controllerListarSolicitudSalidas.cantidadPaginas > 1}"/>
+                        <ice:commandButton image="./imagenes/botones/previos.png" partialSubmit="true" actionListener="#{controllerListarSolicitudSalidas.anterior}" rendered="#{controllerListarSolicitudSalidas.cantidadPaginas > 1}"/>
+                        <ui:repeat value="#{controllerListarSolicitudSalidas.arregloPaginas}" var="pagina">
+                            <ice:commandLink value="#{pagina}" partialSubmit="true" actionListener="#{controllerListarSolicitudSalidas.irPagina}">
+                                <f:param name="numPag" value="#{pagina}"/>
+                            </ice:commandLink>
+                        </ui:repeat>            
+                        <ice:commandButton image="./imagenes/botones/next.png" partialSubmit="true" actionListener="#{controllerListarSolicitudSalidas.siguiente}" rendered="#{controllerListarSolicitudSalidas.cantidadPaginas > 1}"/>
+                        <ice:commandButton image="./imagenes/botones/last.png" partialSubmit="true" actionListener="#{controllerListarSolicitudSalidas.ultimo}" rendered="#{controllerListarSolicitudSalidas.cantidadPaginas > 1}"/>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Data Table -->
+            <div class="row">
+                <div class="col-sm-12">
+                    <div>
+                        <ice:dataTable id="solicitudSalidas"
+                                   value="#{controllerListarSolicitudSalidas.solicitudes}"
+                                   var="solicitud"
+                                   paginator="true"
+                                   paginatorPosition="bottom"
+                                   rows="10">
+                            
+                            <ice:column id="colId">
+                                <f:facet name="header">
+                                    <ice:columnGroup>
+                                        <ice:headerRow>
+                                            <ice:outputText value="#{label['sigebi.label.vista.listarSalidas.id']}"/>
+                                        </ice:headerRow>
+                                        <ice:headerRow>
+                                            <ice:inputText id="fltId"
+                                                           style="width: 130px;"
+                                                           value="#{controllerListarSolicitudSalidas.fltId}"                                   
+                                                           partialSubmit="true"
+                                                           valueChangeListener="#{controllerListarSolicitudSalidas.cambioFiltro}"/>
+                                        </ice:headerRow>
+                                    </ice:columnGroup>
+                                </f:facet>                                
+                                <h:outputText id="idCell" value="#{solicitud.id}"/>
+                            </ice:column>
+
+                            <ice:column id="colCedula">                                 
+                                <f:facet name="header">
+                                    <ice:columnGroup>
+                                        <ice:headerRow>
+                                            <ice:outputText value="#{label['sigebi.label.vista.listarSalidas.cedula']} "/>
+                                        </ice:headerRow>
+                                        <ice:headerRow>
+                                            <ice:inputText id="fltCedula"
+                                                           style="width: 130px;"
+                                                           value="#{controllerListarSolicitudSalidas.fltCedula}"                                   
+                                                           partialSubmit="true"
+                                                           valueChangeListener="#{controllerListarSolicitudSalidas.cambioFiltro}"/>
+                                        </ice:headerRow>
+                                    </ice:columnGroup>
+                                </f:facet>
+                                <h:outputText id="cedulaCell" value="#{solicitud.persona.identificacion}"/>
+                            </ice:column>     
+
+                            <ice:column id="colNombre">                                 
+                                <f:facet name="header">
+                                    <ice:columnGroup>
+                                        <ice:headerRow>
+                                            <ice:outputText value="#{label['sigebi.label.vista.listarSalidas.nombre']} "/>
+                                        </ice:headerRow>                                       
+                                        <ice:headerRow>
+                                            <ice:inputText id="fltNombre"
+                                                           style="width: 130px;"
+                                                           value="#{controllerListarSolicitudSalidas.fltNombre}"                                   
+                                                           partialSubmit="true"
+                                                           valueChangeListener="#{controllerListarSolicitudSalidas.cambioFiltro}"/>
+                                        </ice:headerRow>
+                                    </ice:columnGroup>
+                                </f:facet>
+                                <h:outputText id="nombreCell" value="#{solicitud.persona.nombre}"/>
+                            </ice:column>                                   
+                            
+                            <ice:column id="colFecha">                                 
+                                <f:facet name="header">
+                                    <ice:columnGroup>
+                                        <ice:headerRow>
+                                            <ice:outputText value="#{label['sigebi.label.vista.listarSalidas.fecha']} "/>
+                                        </ice:headerRow>                                       
+                                    </ice:columnGroup>
+                                </f:facet>
+                                <h:outputText id="fechaCell" value="#{solicitud.fecha}"/>
+                            </ice:column>                                   
+                            
+
+                            <ice:column id="colTipo">
+                                <f:facet name="header">
+                                    <ice:columnGroup>
+                                        <ice:headerRow>
+                                            <ice:outputText value="#{label['sigebi.label.vista.listarSalidas.tipo']}"/>
+                                        </ice:headerRow>
+                                        <ice:headerRow>
+                                           <ice:selectOneMenu id="filtroCondicionTipo"
+                                                       valueChangeListener="#{controllerListarSolicitudSalidas.cambioFiltro}"
+                                                       value="#{controllerListarSolicitudSalidas.fltIdTipo}"
+                                                       partialSubmit="true"
+                                                       >
+                                                <f:selectItem itemLabel="N/A" itemValue="-1"/>
+                                                <f:selectItems id="slcTipoItem" value="#{controllerListarSolicitudSalidas.tipoOptions}"/>
+                                            </ice:selectOneMenu>
+                                        </ice:headerRow>
+                                    </ice:columnGroup>
+                                </f:facet>                                
+                                <h:outputText id="tipoCell" value="#{solicitud.tipo.nombre}"/>
+                            </ice:column>
+                            
+                            <ice:column id="colEstado">
+                                <f:facet name="header">
+                                    <ice:columnGroup>
+                                        <ice:headerRow>
+                                            <ice:outputText value="#{label['sigebi.label.vista.listarSalidas.estado']}"/>
+                                        </ice:headerRow>
+                                        <ice:headerRow>
+                                           <ice:selectOneMenu id="filtroCondicionContractual"
+                                                       valueChangeListener="#{controllerListarSolicitudSalidas.cambioFiltro}"
+                                                       value="#{controllerListarSolicitudSalidas.fltEstado}"
+                                                       partialSubmit="true"
+                                                       >
+                                                <f:selectItem itemLabel="N/A" itemValue="-1"/>
+                                                <f:selectItems id="slcEstadoItem" value="#{controllerListarSolicitudSalidas.estadosOptions}"/>
+                                            </ice:selectOneMenu>
+                                        </ice:headerRow>
+                                    </ice:columnGroup>
+                                </f:facet>                                
+                                <h:outputText id="estadoCell" value="#{solicitud.estado.nombre}"/>
+                            </ice:column>
+                            
+                            <ice:column style="text-align: center;">
+
+                                 <ice:commandButton id="botonDetalle"
+                                                   style="float:right;margin-top:2%" 
+                                                   styleClass="boton" 
+                                                   partialSubmit="true" 
+                                                   actionListener="#{controllerSolicitudSalida.modificarRegistro}"
+                                                   value="#{label['sigebi.label.vista.listarSalidas.detalle']}"  >
+                                    <f:attribute id="bienSeleccionado" name="solicitudSeleccionada"  value="#{solicitud}"/>
+                                    <f:attribute id="vistaOrigenParam" name="keyVistaOrigen"  value="permisos_tras"/>
+                                </ice:commandButton>
+                            </ice:column>
+                        </ice:dataTable>
+                    </div>
+                </div>
+            </div>
+        </div>    
+    </div>
+</ice:form>
+

@@ -535,7 +535,8 @@ public class ListarBienSincronizarController extends BaseController {
                 bienMod.cambiaEstadoBien(this.bienesPorRechazar.values(), this.estadoPorDominioValor(Constantes.DOMINIO_BIEN, Constantes.ESTADO_BIEN_PENDIENTE), 
                         observacionCliente, telefono, usuarioSIGEBI, this.tipoPorDominioValor(Constantes.DOMINIO_REGISTRO_MOVIMIENTO, Constantes.TIPO_REGISTRO_MOVIMIENTO_CAMBIO_ESTADO_BIEN));
                 this.bienesPorRechazar.clear();
-
+                this.bienesEnviarSincronizar.clear();
+                
                 observacionCliente = "";
 
                 //Se consulta la vista nuevamente

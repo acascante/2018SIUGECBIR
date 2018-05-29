@@ -423,6 +423,14 @@ public class AgregarExclusionController extends BaseController {
         }
     }
     
+    public void regresarListado() {
+        if (vistaOrigen != null) {
+            Util.navegar(vistaOrigen, true);
+        } else {
+            Util.navegar(Constantes.VISTA_EXCLUSION_LISTADO, true);
+        }
+    }    
+    
     private void almacenarObservacion(Tipo tipo) {
         if (!command.getObservacionConfirmacion().isEmpty()) {
             Integer telefono = lVistaUsuario.getgUsuarioActual().getTelefono1() != null ? Integer.parseInt(lVistaUsuario.getgUsuarioActual().getTelefono1()) : 0;
@@ -430,20 +438,6 @@ public class AgregarExclusionController extends BaseController {
             RegistroMovimientoSolicitud registroMovimientoSolicitud = new RegistroMovimientoSolicitud(
                 this.tipoPorDominioValor(Constantes.DOMINIO_REGISTRO_MOVIMIENTO, Constantes.TIPO_REGISTRO_MOVIMIENTO_CAMBIO_ESTADO_SOLICITUD), 
                 command.getObservacionConfirmacion(), 
-                telefono, 
-                new Date(), 
-                usuarioSIGEBI, 
-                command.getEstado(),
-                command.getExclusion(tipo));
-            registroMovimientoModel.agregar(registroMovimientoSolicitud);
-        }
-        
-        if (!command.getObservacion().isEmpty()) {
-            Integer telefono = lVistaUsuario.getgUsuarioActual().getTelefono1() != null ? Integer.parseInt(lVistaUsuario.getgUsuarioActual().getTelefono1()) : 0;
-
-            RegistroMovimientoSolicitud registroMovimientoSolicitud = new RegistroMovimientoSolicitud(
-                this.tipoPorDominioValor(Constantes.DOMINIO_REGISTRO_MOVIMIENTO, Constantes.TIPO_REGISTRO_MOVIMIENTO_CAMBIO_ESTADO_SOLICITUD), 
-                command.getObservacion(), 
                 telefono, 
                 new Date(), 
                 usuarioSIGEBI, 

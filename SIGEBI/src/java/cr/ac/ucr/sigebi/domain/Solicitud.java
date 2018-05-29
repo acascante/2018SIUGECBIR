@@ -59,6 +59,9 @@ public abstract class Solicitud extends ObjetoBase implements Serializable {
     @Column(name = "DISCRIMINATOR")
     private Integer discriminator;
 
+    @Column(name = "OBSERVACION") // VARCHAR2 (500 Byte) 
+    private String observacion;
+
     @ManyToOne
     @JoinColumn(name = "ID_USUARIO", referencedColumnName = "ID_USUARIO")
     private Usuario usuario;
@@ -150,6 +153,14 @@ public abstract class Solicitud extends ObjetoBase implements Serializable {
         this.usuario = usuario;
     }
 
+    public String getObservacion() {
+        return observacion;
+    }
+
+    public void setObservacion(String observacion) {
+        this.observacion = observacion;
+    }
+
     public String getTipoMovimiento() {
         switch (discriminator){
             case 0:
@@ -160,6 +171,10 @@ public abstract class Solicitud extends ObjetoBase implements Serializable {
                 return Util.getEtiquetas("sigebi.TipoMovimiento.SolicitudDonacion");
             case 3:
                 return Util.getEtiquetas("sigebi.TipoMovimiento.Traslado");
+            case 4:
+                return Util.getEtiquetas("sigebi.TipoMovimiento.Prestamo");
+            case 5:
+                return Util.getEtiquetas("sigebi.TipoMovimiento.Salida");
         }
         return "";
     }

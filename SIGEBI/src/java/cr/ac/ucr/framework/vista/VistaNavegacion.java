@@ -90,10 +90,14 @@ public class VistaNavegacion {
         gPaginas.put(Constantes.KEY_VISTA_SOLICITUD_DONACION_LISTADO, Constantes.VISTA_SOLICITUD_DONACION_LISTADO);
         gPaginas.put(Constantes.KEY_VISTA_SOLICITUD_DONACION_DETALLE, Constantes.VISTA_SOLICITUD_DONACION_DETALLE);
 
+        //Salidas
+        gPaginas.put(Constantes.KEY_VISTA_SOLICITUD_SALIDA_LISTADO, Constantes.VISTA_SOLICITUD_SALIDA_LISTADO);
+        gPaginas.put(Constantes.KEY_VISTA_SOLICITUD_SALIDA_DETALLE, Constantes.VISTA_SOLICITUD_SALIDA_DETALLE);
+
         //REPORTES
         gPaginas.put(Constantes.KEY_VISTA_REPORTE_TRASLADO, Constantes.VISTA_REPORTE_TRASLADO);
         gPaginas.put(Constantes.KEY_VISTA_REPORTE_MOVIMIENTOS, Constantes.VISTA_REPORTE_MOVIMIENTOS);
-        //gPaginas.put(Constantes.KEY_VISTA_REPORTE_BIENES, Constantes.VISTA_REPORTE_BIENES);
+        gPaginas.put(Constantes.KEY_VISTA_REPORTE_BIENES, Constantes.VISTA_REPORTE_BIENES);
         gPaginas.put(Constantes.KEY_REPORTE_INVENT_FALTANTES, Constantes.VISTA_REPORTE_INVENT_FALTANTES);
         gPaginas.put(Constantes.KEY_REPORTE_SOBRANTES, Constantes.VISTA_REPORTE_SOBRANTES);
 

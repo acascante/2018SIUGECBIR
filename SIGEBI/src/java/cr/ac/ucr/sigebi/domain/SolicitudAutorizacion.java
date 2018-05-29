@@ -56,6 +56,7 @@ public class SolicitudAutorizacion extends ObjetoBase implements Serializable {
     private Date fecha;
 
     //</editor-fold>
+    
     //<editor-fold defaultstate="collapsed" desc="Constructores">
     public SolicitudAutorizacion() {
 

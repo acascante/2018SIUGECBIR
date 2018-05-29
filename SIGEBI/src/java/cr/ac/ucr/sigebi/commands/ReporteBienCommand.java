@@ -70,14 +70,17 @@ public class ReporteBienCommand {
         reporteBien.setUsuario(this.usuario);
         reporteBien.setTipoReporte(tipoReporte);
         reporteBien.setDescripcion(this.descripcion);
-        reporteBien.setTamanoFuente(this.tamanoFuente);
-        
+        reporteBien.setTamanoFuente(this.tamanoFuente);            
+        return reporteBien;
+    }
+   
+   public Set<CampoReporteBien> getCamposReporteBien(ReporteBien reporteBien) { 
         for (Map.Entry<Long, CampoReporteBien> entry : this.camposReporte.entrySet()) {
-           Long key = entry.getKey();
            CampoReporteBien value = entry.getValue();
+           value.setReporteBien(reporteBien);
            reporteBien.getCamposReporte().add(value);
        }        
-        return reporteBien;
+        return reporteBien.getCamposReporte();
     }
     //</editor-fold>
     
@@ -132,6 +135,10 @@ public class ReporteBienCommand {
     
     public Map<Long, CampoReporteBien> getCamposReporte() {
         return camposReporte;
+    }
+    
+    public List<CampoReporteBien> getListCamposReporte() {
+        return new ArrayList<CampoReporteBien>(this.camposReporte.values());
     }
     
     public void setCamposReporte(Map<Long, CampoReporteBien> camposReporte) {
