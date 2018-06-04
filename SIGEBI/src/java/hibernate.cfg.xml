@@ -55,6 +55,7 @@
     <mapping class="cr.ac.ucr.sigebi.domain.SolicitudDetallePrestamo"/>    
     <mapping class="cr.ac.ucr.sigebi.domain.SolicitudDetalleSalida"/>    
     <mapping class="cr.ac.ucr.sigebi.domain.SolicitudExclusion"/>
+    <mapping class="cr.ac.ucr.sigebi.domain.SolicitudMantenimiento"/>
     <mapping class="cr.ac.ucr.sigebi.domain.SolicitudPrestamo"/>
     <mapping class="cr.ac.ucr.sigebi.domain.SolicitudTraslado"/>
     <mapping class="cr.ac.ucr.sigebi.domain.SolicitudDetalleTraslado"/>

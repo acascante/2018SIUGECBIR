@@ -9,20 +9,17 @@ import cr.ac.ucr.sigebi.utils.Constantes;
 import cr.ac.ucr.framework.utils.FWExcepcion;
 import cr.ac.ucr.framework.vista.util.Mensaje;
 import cr.ac.ucr.framework.vista.util.Util;
-import cr.ac.ucr.sigebi.models.ExclusionModel;
-import cr.ac.ucr.sigebi.commands.ExclusionCommand;
 import cr.ac.ucr.sigebi.commands.ListarBienesCommand;
-import cr.ac.ucr.sigebi.commands.ListarExclusionesCommand;
+import cr.ac.ucr.sigebi.commands.ListarMantenimientosCommand;
+import cr.ac.ucr.sigebi.commands.MantenimientoCommand;
 import cr.ac.ucr.sigebi.domain.Bien;
-import cr.ac.ucr.sigebi.domain.DocumentoInformeTecnico;
 import cr.ac.ucr.sigebi.domain.Estado;
 import cr.ac.ucr.sigebi.domain.RegistroMovimientoSolicitud;
-import cr.ac.ucr.sigebi.domain.SolicitudExclusion;
-import cr.ac.ucr.sigebi.domain.Tipo;
+import cr.ac.ucr.sigebi.domain.SolicitudMantenimiento;
 import cr.ac.ucr.sigebi.models.AutorizacionRolPersonaModel;
 import cr.ac.ucr.sigebi.models.BienModel;
-import cr.ac.ucr.sigebi.models.DocumentoModel;
 import cr.ac.ucr.sigebi.models.RegistroMovimientoModel;
+import cr.ac.ucr.sigebi.models.SolicitudMantenimientoModel;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -36,7 +33,6 @@ import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 import javax.faces.event.PhaseId;
 import javax.faces.event.ValueChangeEvent;
-import javax.faces.model.SelectItem;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
@@ -44,13 +40,15 @@ import org.springframework.stereotype.Controller;
  *
  * @author alvaro.cascante
  */
-@Controller(value = "controllerAgregarExclusiones")
+@Controller(value = "controllerAgregarMantenimientos")
 @Scope("session")
-public class AgregarExclusionController extends BaseController {
+public class AgregarMantenimientoController extends BaseController {
 
-    private final int ACCION_RECHAZAR = 1;
-    private final int ACCION_REVISAR = 2;
-    private final int ACCION_RECHAZAR_BIEN = 3;
+    private final int ACCION_SOLICITAR_CORRECCION = 1;
+    private final int ACCION_RECHAZAR = 2;
+    private final int ACCION_SOLICITAR_CORRECCION_BIEN = 3;
+    private final int ACCION_RECHAZAR_BIEN = 4;
+    
     
     public class ListadoBienes extends BaseController {
         
@@ -236,13 +234,10 @@ public class AgregarExclusionController extends BaseController {
     
     @Resource private AutorizacionRolPersonaModel autorizacionRolPersonaModel;
     @Resource private BienModel bienModel;
-    @Resource private DocumentoModel documentoModel;
-    @Resource private ExclusionModel exclusionModel;
+    @Resource private SolicitudMantenimientoModel mantenimientoModel;
     @Resource private RegistroMovimientoModel registroMovimientoModel;
     
-    private ExclusionCommand command;
-    
-    private List<SelectItem> itemsTipo;
+    private MantenimientoCommand command;
     
     private String mensajeExito;
     private String mensaje;
@@ -255,65 +250,52 @@ public class AgregarExclusionController extends BaseController {
     private boolean visibleBotonAgregarBienes;
     
     private boolean visibleBotonEliminarBien;
-    private boolean visibleBotonSolicitarBien;
+    private boolean visibleBotonAceptarBien;
     private boolean visibleBotonRechazarBien;
+    private boolean visibleBotonAplicarBien;
+    private boolean visibleBotonFinalizarBien;
     
-    private boolean visibleBotonSolicitar;
+    private boolean visibleBotonAnular;
+    private boolean visibleBotonSolicitarCorreccion;    
+    private boolean visibleBotonAceptar;
     private boolean visibleBotonRechazar;
-    private boolean visibleBotonRevisar;
-    private boolean visibleBotonAprobar;
+    private boolean visibleBotonAplicar;
+    private boolean visibleBotonFinalizar;
     
     private boolean visibleBotonRechazarObservacion;
     private boolean visibleBotonRechazarBienObservacion;
-    private boolean visibleBotonRevisarObservacion;
+    private boolean visibleBotonSolicitarObservacion;
+    private boolean visibleBotonSolicitarBienObservacion;
     
     private boolean autorizadoAprobar;
     
-    private boolean exclusionRegistrada;
+    private boolean solicitudRegistrada;
     
     private int accion;
     private Long bienSeleccionado;
     
-    public AgregarExclusionController() {
+    public AgregarMantenimientoController() {
         super();
     }
     
     private void inicializarNuevo() {
-        Estado estadoExclusionCreada = this.estadoPorDominioValor(Constantes.DOMINIO_EXCLUSION, Constantes.ESTADO_EXCLUSION_CREADA);
-        this.command = new ExclusionCommand(this.unidadEjecutora, estadoExclusionCreada, this.usuarioSIGEBI);
-        this.exclusionRegistrada = false;
+        Estado estadoNuevo = this.estadoPorDominioValor(Constantes.DOMINIO_EXCLUSION, Constantes.ESTADO_MANTENIMIENTO_NUEVO);
+        this.command = new MantenimientoCommand(this.unidadEjecutora, estadoNuevo, this.usuarioSIGEBI);
+        this.solicitudRegistrada = false;
         this.autorizadoAprobar = false;
         inicializarDatos();
     }
     
-    private void inicializarDetalle(SolicitudExclusion exclusion) {
-        exclusion.setDetalles(exclusionModel.listarDetalles(exclusion));
-        this.command = new ExclusionCommand(exclusion);
-        this.exclusionRegistrada = true;
+    private void inicializarDetalle(SolicitudMantenimiento solicitud) {
+        solicitud.setDetalles(mantenimientoModel.listarDetalles(solicitud));
+        this.command = new MantenimientoCommand(solicitud);
+        this.solicitudRegistrada = true;
         this.autorizadoAprobar = inicializarAutorizaciones();
         inicializarDatos();
     }
     
     private boolean inicializarAutorizaciones() {
-        Tipo tipo = this.tipoPorId(this.command.getIdTipo());
-        int codigoAutorizacion = 0;
-        switch (tipo.getValor()) {
-            case Constantes.TIPO_EXCLUSION_DESECHO:
-                codigoAutorizacion = Constantes.CODIGO_AUTORIZACION_EXCLUSION_DESECHO;
-            break;
-            
-            case Constantes.TIPO_EXCLUSION_DONACION:
-                codigoAutorizacion = Constantes.CODIGO_AUTORIZACION_EXCLUSION_DONACION;
-            break;
-            
-            default: 
-                return true;
-        }
-        
-        if (codigoAutorizacion != 0) {
-            return autorizacionRolPersonaModel.buscarAutorizacion(codigoAutorizacion, this.unidadEjecutora, this.usuarioSIGEBI);
-        }
-        return false;
+        return autorizacionRolPersonaModel.buscarAutorizacion(Constantes.CODIGO_AUTORIZACION_MANTENIMIENTO, this.unidadEjecutora, this.usuarioSIGEBI);
     }
 
     private void inicializarDatos() {
@@ -325,15 +307,7 @@ public class AgregarExclusionController extends BaseController {
         
         this.visiblePanelConfirmacion = false;
         this.visiblePanelObservacion = false;
-        this.visiblePanelBienes = false;
-        
-        List<Tipo> tipos = this.tiposPorDominio(Constantes.DOMINIO_EXCLUSION);
-        if (!tipos.isEmpty()) {
-            this.itemsTipo = new ArrayList<SelectItem>();
-            for (Tipo item : tipos) {
-                this.itemsTipo.add(new SelectItem(item.getId(), item.getNombre()));
-            }
-        }
+        this.visiblePanelBienes = false;        
     }
     
     public void confirmarSolicitud() {
@@ -351,14 +325,12 @@ public class AgregarExclusionController extends BaseController {
             UIViewRoot root = context.getViewRoot();
             String messageValidacion = validarForm(root);
             if (Constantes.OK.equals(messageValidacion)) {
-                Tipo tipo = this.tipoPorId(command.getIdTipo());
-                
                 // Almaceno o actualizo Solicitud
                 // Se almacenan o actualizan los detalles tambien
-                SolicitudExclusion exclusion = command.getExclusion(tipo);
-                this.exclusionModel.salvar(exclusion);
+                SolicitudMantenimiento solicitud = command.getSolicitud();
+                this.mantenimientoModel.salvar(solicitud);
                 if (!command.getDetallesEliminar().isEmpty()) {
-                    this.exclusionModel.eliminarDetalles(command.getDetallesEliminar());
+                    this.mantenimientoModel.eliminarDetalles(command.getDetallesEliminar());
                 }
                 
                 List<Bien> listBienesAgregar = new ArrayList<Bien>();
@@ -372,12 +344,12 @@ public class AgregarExclusionController extends BaseController {
                     this.bienModel.actualizar(listBienesEliminar);
                 }
                 
-                if (!this.exclusionRegistrada) {
-                    this.exclusionRegistrada = true;
-                    command.setIdExclusion(exclusion.getId());
+                if (!this.solicitudRegistrada) {
+                    this.solicitudRegistrada = true;
+                    command.setId(solicitud.getId());
                     mensajeExito = "Los datos se salvaron con éxito.";
                 } else {
-                    almacenarObservacion(tipo);
+                    almacenarObservacion();
                     mensajeExito = "Los datos se actualizaron con éxito.";
                 }                
             } else {
@@ -386,7 +358,7 @@ public class AgregarExclusionController extends BaseController {
         } catch (FWExcepcion err) {
             mensaje = err.getMessage();
         } catch (Exception ex) {
-            Logger.getLogger(AgregarExclusionController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(AgregarMantenimientoController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     
@@ -399,7 +371,7 @@ public class AgregarExclusionController extends BaseController {
             }
             inicializarNuevo();
             this.vistaOrigen = event.getComponent().getAttributes().get(Constantes.KEY_VISTA_ORIGEN).toString();
-            Util.navegar(Constantes.VISTA_EXCLUSION_NUEVA);
+            Util.navegar(Constantes.VISTA_MANTENIMIENTO_NUEVO);
         } catch (FWExcepcion err) {
             mensaje = err.getMessage();
         }
@@ -413,11 +385,11 @@ public class AgregarExclusionController extends BaseController {
                 return;
             }
             
-            Long id = (Long)event.getComponent().getAttributes().get(ListarExclusionesCommand.KEY_EXCLUSION);
-            SolicitudExclusion exclusion = exclusionModel.buscarPorId(id);
-            inicializarDetalle(exclusion);
+            Long id = (Long)event.getComponent().getAttributes().get(ListarMantenimientosCommand.KEY_MANTENIMIENTO);
+            SolicitudMantenimiento solicitud = mantenimientoModel.buscarPorId(id);
+            inicializarDetalle(solicitud);
             this.vistaOrigen = event.getComponent().getAttributes().get(Constantes.KEY_VISTA_ORIGEN).toString();
-            Util.navegar(Constantes.VISTA_EXCLUSION_NUEVA);
+            Util.navegar(Constantes.VISTA_MANTENIMIENTO_NUEVO);
         } catch (FWExcepcion err) {
             mensaje = err.getMessage();
         }
@@ -427,11 +399,11 @@ public class AgregarExclusionController extends BaseController {
         if (vistaOrigen != null) {
             Util.navegar(vistaOrigen, true);
         } else {
-            Util.navegar(Constantes.VISTA_EXCLUSION_LISTADO, true);
+            Util.navegar(Constantes.VISTA_MANTENIMIENTO_LISTADO, true);
         }
     }    
     
-    private void almacenarObservacion(Tipo tipo) {
+    private void almacenarObservacion() {
         if (!command.getObservacionConfirmacion().isEmpty()) {
             Integer telefono = lVistaUsuario.getgUsuarioActual().getTelefono1() != null ? Integer.parseInt(lVistaUsuario.getgUsuarioActual().getTelefono1()) : 0;
 
@@ -442,115 +414,96 @@ public class AgregarExclusionController extends BaseController {
                 new Date(), 
                 usuarioSIGEBI, 
                 command.getEstado(),
-                command.getExclusion(tipo));
+                command.getSolicitud());
             registroMovimientoModel.agregar(registroMovimientoSolicitud);
         }
     }
     
-    public void verDetalle(SolicitudExclusion exclusion, String vistaOrigen) {
-        inicializarDetalle(exclusion);
+    public void verDetalle(SolicitudMantenimiento solicitud, String vistaOrigen) {
+        inicializarDetalle(solicitud);
         this.vistaOrigen = vistaOrigen;
-        Util.navegar(Constantes.VISTA_EXCLUSION_NUEVA);
+        Util.navegar(Constantes.VISTA_MANTENIMIENTO_NUEVO);
     }
     
     //<editor-fold defaultstate="collapsed" desc="Validaciones">
     public String validarForm(UIViewRoot root) {
         if (command.getBienes().isEmpty()) {
-            return Util.getEtiquetas("sigebi.label.exclusiones.error.validacion.bienes");
-        }
-        if (command.getIdTipo().equals(Constantes.DEFAULT_ID)) {
-            return Util.getEtiquetas("sigebi.label.exclusiones.error.validacion.tipo");
+            return Util.getEtiquetas("sigebi.label.solicitudes.error.validacion.bienes");
         }
         return Constantes.OK;
     }
     //</editor-fold>
 
     //<editor-fold defaultstate="collapsed" desc="Movimientos sobre la Solicitud">
-    public void solicitarExclusion() {
-        movimientoExclusion(Constantes.ESTADO_EXCLUSION_SOLICITADA, Constantes.ESTADO_INTERNO_BIEN_EXCLUSION_SOLICITADO, false);
+    public void solicitarCorreccionMantenimiento() {
+        this.command.setObservacionConfirmacion(new String());
+        this.visiblePanelObservacion = true;
+        this.accion = ACCION_SOLICITAR_CORRECCION;
     }
     
-    public void rechazarExclusion() {
+    public void rechazarMantenimiento() {
         this.command.setObservacionConfirmacion(new String());
         this.visiblePanelObservacion = true;
         this.accion = ACCION_RECHAZAR;
     }
     
-    public void aprobarExclusion() {
-        Tipo tipo = this.tipoPorId(this.command.getIdTipo());
-        if (tipo.getValor().equals(Constantes.TIPO_EXCLUSION_DESECHO) || tipo.getValor().equals(Constantes.TIPO_EXCLUSION_DONACION)) {
-            // Exclusiones por desecho o donacion generan Informes Tecnicos
-            Estado estadoInformeTecnicoNuevo = this.estadoPorDominioValor(Constantes.DOMINIO_INFORME_TECNICO, Constantes.ESTADO_INFORME_TECNICO_NUEVO);
-            List<Bien> listBienes = new ArrayList<Bien>(command.getBienes().values());
-            for (Bien bien : listBienes) {
-                DocumentoInformeTecnico dit = new DocumentoInformeTecnico(estadoInformeTecnicoNuevo, null, bien, "Creacion Automatica de Informe", unidadEjecutora);
-                this.documentoModel.agregar(dit);
-            }
-            movimientoExclusion(Constantes.ESTADO_EXCLUSION_APROBADA, Constantes.ESTADO_INTERNO_BIEN_INFORME_TECNICO, false);
-        } else {
-            movimientoExclusion(Constantes.ESTADO_EXCLUSION_APROBADA, Constantes.ESTADO_INTERNO_BIEN_EXCLUSION_APROBADO, true);
-        }
-    }
-
-    public void revisarExclusion() {
-        this.command.setObservacionConfirmacion(new String());
-        this.visiblePanelObservacion = true;
-        this.accion = ACCION_REVISAR;
-    }
-
     public void cerrarPanelObservaciones() {
         this.visiblePanelObservacion = false;
     }
     
-    public void rechazarExclusionObservacion() {
+    public void solicitarCorreccionMantenimientoObservacion() {
         this.visiblePanelObservacion = false;
-        movimientoExclusion(Constantes.ESTADO_EXCLUSION_RECHAZADA, Constantes.ESTADO_INTERNO_BIEN_NORMAL, false);
+        movimientoSolicitud(Constantes.ESTADO_MANTENIMIENTO_CORRECCION_SOLICITADA, Constantes.ESTADO_INTERNO_BIEN_SOLICITUD_MANTENIMIENTO, 0);
+    }
+        
+    public void rechazarMantenimientoObservacion() {
+        this.visiblePanelObservacion = false;
+        movimientoSolicitud(Constantes.ESTADO_MANTENIMIENTO_RECHAZADO, Constantes.ESTADO_INTERNO_BIEN_NORMAL, 0);
     }
     
-    public void revisarExclusionObservacion() {
-        this.visiblePanelObservacion = false;
-        movimientoExclusion(Constantes.ESTADO_EXCLUSION_CREADA, Constantes.ESTADO_INTERNO_BIEN_EXCLUSION, false);
+    public void anularSolicitud() {
+        movimientoSolicitud(Constantes.ESTADO_MANTENIMIENTO_ANULADO, Constantes.ESTADO_INTERNO_BIEN_NORMAL, 0);
+    }
+
+    public void aceptarSolicitud() {
+        movimientoSolicitud(Constantes.ESTADO_MANTENIMIENTO_APROBADO, Constantes.ESTADO_INTERNO_BIEN_MANTENIMIENTO_APROBADO, Constantes.ESTADO_BIEN_TRANSITO_POR_REPARACION);
     }
     
-    private void movimientoExclusion(int solicitud, int bienInterno, boolean actualizarEstadoBien) {
+    public void aplicarSolicitud() {
+        movimientoSolicitud(Constantes.ESTADO_MANTENIMIENTO_APLICADO, Constantes.ESTADO_INTERNO_BIEN_MANTENIMIENTO_APLICADO, 0);
+    }
+    
+    public void finalizarSolicitud() {
+        movimientoSolicitud(Constantes.ESTADO_MANTENIMIENTO_FINALIZADO, Constantes.ESTADO_INTERNO_BIEN_NORMAL, Constantes.ESTADO_BIEN_ACTIVO);
+    }
+    
+    private void movimientoSolicitud(int valorEstadoSolicitud, int valorEstadoBienInterno, int valorEstadoBien) {
         try {
-            Tipo tipo = this.tipoPorId(this.command.getIdTipo());
-            Estado estadoSolicitud = this.estadoPorDominioValor(Constantes.DOMINIO_EXCLUSION, solicitud);
+            Estado estadoSolicitud = this.estadoPorDominioValor(Constantes.DOMINIO_SOLICITUD_MANTENIMIENTO, valorEstadoSolicitud);
             this.command.setEstado(estadoSolicitud);
-            this.exclusionModel.salvar(this.command.getExclusion(tipo));
+            this.mantenimientoModel.salvar(this.command.getSolicitud());
             
             // Actualiza todos los bienes con el estado segun el movimiento que se hizo a la solicitud
-            Estado estadoInternoBien = this.estadoPorDominioValor(Constantes.DOMINIO_BIEN_INTERNO, bienInterno);
-            Estado estadoBienInactivo = this.estadoPorDominioValor(Constantes.DOMINIO_BIEN, Constantes.ESTADO_BIEN_INACTIVO);
-            Estado estadoBienPendiente = this.estadoPorDominioValor(Constantes.DOMINIO_BIEN, Constantes.ESTADO_BIEN_PENDIENTE_SINCRONIZAR);
-            List<Bien> listBienes = new ArrayList<Bien>(this.command.getBienes().values());
+            Estado estadoInternoBien = this.estadoPorDominioValor(Constantes.DOMINIO_BIEN_INTERNO, valorEstadoBienInterno);
             
-            boolean modificar;
+            List<Bien> listBienes = new ArrayList<Bien>(this.command.getBienes().values());            
             for (Bien bien : listBienes) {
-                modificar = false;
-                if (actualizarEstadoBien) {
-                    if (bien.getCapitalizable()) {
-                        bien.setEstado(estadoBienPendiente);                        
-                    } else {
-                        bien.setEstado(estadoBienInactivo);
-                    }
-                    modificar = true;
-                }
-                if (!estadoInternoBien.equals(bien.getEstadoInterno()) &&                                               // Si el bien tiene un estado diferente se actualiza
-                    !Constantes.ESTADO_INTERNO_BIEN_EXCLUSION_APROBADO.equals(bien.getEstadoInterno().getValor())) {    // Si esta aprobado no se modifica
+                if (!estadoInternoBien.equals(bien.getEstadoInterno()) &&                                                   // Si el bien tiene un estado diferente se actualiza
+                    !Constantes.ESTADO_INTERNO_BIEN_MANTENIMIENTO_ANULADO.equals(bien.getEstadoInterno().getValor()) &&
+                    !Constantes.ESTADO_INTERNO_BIEN_MANTENIMIENTO_FINALIZADO.equals(bien.getEstadoInterno().getValor())) {    // Si esta aprobado no se modifica
                     bien.setEstadoInterno(estadoInternoBien);
-                    modificar = true;
                 }
-                if (modificar) {
-                    bienModel.actualizar(bien);
+                if (valorEstadoBien != 0) {
+                    bien.setEstado(this.estadoPorDominioValor(Constantes.DOMINIO_BIEN_INTERNO, valorEstadoBien));
                 }
+                bienModel.actualizar(bien);
             }
-            almacenarObservacion(tipo);
-            this.mensajeExito = "Exclusion procesada exitosamente.";
+            almacenarObservacion();
+            this.mensajeExito = "Solicitud de Mantenimiento procesada exitosamente.";
         } catch (FWExcepcion err) {
             this.mensaje = err.getMessage();
         } catch (Exception ex) {
-            Logger.getLogger(AgregarExclusionController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(AgregarMantenimientoController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     //</editor-fold>
@@ -591,9 +544,11 @@ public class AgregarExclusionController extends BaseController {
         }
     }
     
-    public void solicitarBien(ActionEvent event) {
-        Long idBien = (Long) event.getComponent().getAttributes().get("bienSeleccionado");
-        movimientoBien(idBien, Constantes.ESTADO_EXCLUSION_SOLICITADA, Constantes.ESTADO_INTERNO_BIEN_EXCLUSION_SOLICITADO);
+    public void solicitarCorreccionBien(ActionEvent event) {
+        this.command.setObservacionConfirmacion(new String());
+        this.visiblePanelObservacion = true;
+        this.accion = ACCION_SOLICITAR_CORRECCION_BIEN;
+        this.bienSeleccionado = (Long) event.getComponent().getAttributes().get("bienSeleccionado");
     }
     
     public void rechazarBien(ActionEvent event) {
@@ -603,24 +558,46 @@ public class AgregarExclusionController extends BaseController {
         this.bienSeleccionado = (Long) event.getComponent().getAttributes().get("bienSeleccionado");
     }
 
-    public void rechazarBienObservacion() {
+    public void solicitarCorreccionBienObservacion() {
         this.visiblePanelObservacion = false;
-        movimientoBien(this.bienSeleccionado, Constantes.ESTADO_EXCLUSION_RECHAZADA, Constantes.ESTADO_INTERNO_BIEN_NORMAL);        
+        movimientoBien(this.bienSeleccionado, Constantes.ESTADO_MANTENIMIENTO_CORRECCION_SOLICITADA, Constantes.ESTADO_INTERNO_BIEN_SOLICITUD_MANTENIMIENTO, 0);        
     }
     
-    private void movimientoBien(Long idBien, int solicitud, int bienInterno) {
+    public void rechazarBienObservacion() {
+        this.visiblePanelObservacion = false;
+        movimientoBien(this.bienSeleccionado, Constantes.ESTADO_MANTENIMIENTO_RECHAZADO, Constantes.ESTADO_INTERNO_BIEN_NORMAL, 0);        
+    }
+    
+    public void aceptarBien(ActionEvent event) {
+        Long idBien = (Long) event.getComponent().getAttributes().get("bienSeleccionado");
+        movimientoBien(idBien, Constantes.ESTADO_MANTENIMIENTO_APROBADO, Constantes.ESTADO_INTERNO_BIEN_MANTENIMIENTO_APROBADO, Constantes.ESTADO_BIEN_TRANSITO_POR_REPARACION);        
+    }
+    
+    public void aplicarBien(ActionEvent event) {
+        Long idBien = (Long) event.getComponent().getAttributes().get("bienSeleccionado");
+        movimientoBien(idBien, Constantes.ESTADO_MANTENIMIENTO_APLICADO, Constantes.ESTADO_INTERNO_BIEN_MANTENIMIENTO_APLICADO, 0);        
+    }
+    
+    public void finalizarBien(ActionEvent event) {
+        Long idBien = (Long) event.getComponent().getAttributes().get("bienSeleccionado");
+        movimientoBien(idBien, Constantes.ESTADO_MANTENIMIENTO_FINALIZADO, Constantes.ESTADO_INTERNO_BIEN_NORMAL, Constantes.ESTADO_BIEN_ACTIVO);        
+    }
+    
+    private void movimientoBien(Long idBien, int valorEstadoSolicitud, int valorEstadoBienInterno, int valorEstadoBien) {
         Bien bien = this.command.getBienes().get(idBien);
-        Estado estadoBienInterno = this.estadoPorDominioValor(Constantes.DOMINIO_BIEN_INTERNO, bienInterno);
-        Estado estadoSolicitud = this.estadoPorDominioValor(Constantes.DOMINIO_EXCLUSION, solicitud);
+        Estado estadoBienInterno = this.estadoPorDominioValor(Constantes.DOMINIO_BIEN_INTERNO, valorEstadoBienInterno);
+        Estado estadoSolicitud = this.estadoPorDominioValor(Constantes.DOMINIO_EXCLUSION, valorEstadoSolicitud);
         
         bien.setEstadoInterno(estadoBienInterno);
+        if (valorEstadoBien != 0) {
+            bien.setEstado(this.estadoPorDominioValor(Constantes.DOMINIO_BIEN_INTERNO, valorEstadoBien));
+        }
         this.bienModel.actualizar(bien);
         
         // Si todos los bienes de la solicitud tienen el mismo estado, se modifica el estado de la solicitud
         if (verificarSolicitud(estadoBienInterno)) {
-            Tipo tipo = this.tipoPorId(this.command.getIdTipo());
             this.command.setEstado(estadoSolicitud);
-            this.exclusionModel.salvar(this.command.getExclusion(tipo));
+            this.mantenimientoModel.salvar(this.command.getSolicitud());
         }
     }
     
@@ -635,30 +612,14 @@ public class AgregarExclusionController extends BaseController {
     //</editor-fold>
     
     //<editor-fold defaultstate="collapsed" desc="Gets y Sets">
-    public ExclusionCommand getCommand() {
+    public MantenimientoCommand getCommand() {
         return command;
     }
 
-    public void setCommand(ExclusionCommand command) {
+    public void setCommand(MantenimientoCommand command) {
         this.command = command;
     }
 
-    public Long getBienSeleccionado() {
-        return bienSeleccionado;
-    }
-
-    public void setBienSeleccionado(Long bienSeleccionado) {
-        this.bienSeleccionado = bienSeleccionado;
-    }
-
-    public List<SelectItem> getItemsTipo() {
-        return itemsTipo;
-    }
-
-    public void setItemsTipo(List<SelectItem> itemsTipo) {
-        this.itemsTipo = itemsTipo;
-    }
-    
     public String getMensajeExito() {
         return mensajeExito;
     }
@@ -682,15 +643,23 @@ public class AgregarExclusionController extends BaseController {
     public void setListadoBienes(ListadoBienes listadoBienes) {
         this.listadoBienes = listadoBienes;
     }
+
+    public boolean isSolicitudRegistrada() {
+        return solicitudRegistrada;
+    }
+
+    public void setSolicitudRegistrada(boolean solicitudRegistrada) {
+        this.solicitudRegistrada = solicitudRegistrada;
+    }
+
+    public Long getBienSeleccionado() {
+        return bienSeleccionado;
+    }
+
+    public void setBienSeleccionado(Long bienSeleccionado) {
+        this.bienSeleccionado = bienSeleccionado;
+    }
     
-    public boolean isExclusionRegistrada() {
-        return exclusionRegistrada;
-    }
-
-    public void setExclusionRegistrada(boolean exclusionRegistrada) {
-        this.exclusionRegistrada = exclusionRegistrada;
-    }
-
     public boolean isAutorizadoAprobar() {
         return autorizadoAprobar;
     }
@@ -721,41 +690,61 @@ public class AgregarExclusionController extends BaseController {
         return visiblePanelConfirmacion;
     }
 
-    public boolean isVisibleBotonSolicitar() {
-        this.visibleBotonSolicitar = false;
-        if (Constantes.ESTADO_EXCLUSION_CREADA.equals(this.command.getEstado().getValor()) && this.exclusionRegistrada) {
-            this.visibleBotonSolicitar = true;
+    public boolean isVisibleBotonAnular() {
+        this.visibleBotonAnular = false;
+        if (Constantes.ESTADO_MANTENIMIENTO_NUEVO.equals(this.command.getEstado().getValor()) && this.solicitudRegistrada ||
+            Constantes.ESTADO_MANTENIMIENTO_APLICADO.equals(this.command.getEstado().getValor()) && this.solicitudRegistrada ||
+            Constantes.ESTADO_MANTENIMIENTO_CORRECCION_SOLICITADA.equals(this.command.getEstado().getValor()) && this.solicitudRegistrada) {
+            this.visibleBotonAnular = true;
         }
-        return visibleBotonSolicitar;
+        return visibleBotonAnular;
     }
 
+    public boolean isVisibleBotonSolicitarCorreccion() {
+        this.visibleBotonSolicitarCorreccion = false;
+        if (Constantes.ESTADO_MANTENIMIENTO_APROBADO.equals(this.command.getEstado().getValor()) && this.autorizadoAprobar) {
+            this.visibleBotonSolicitarCorreccion = true;
+        }
+        return visibleBotonSolicitarCorreccion;
+    }
+
+    public boolean isVisibleBotonAceptar() {
+        this.visibleBotonAceptar = false;
+        if (Constantes.ESTADO_MANTENIMIENTO_NUEVO.equals(this.command.getEstado().getValor()) ||
+            Constantes.ESTADO_MANTENIMIENTO_CORRECCION_SOLICITADA.equals(this.command.getEstado().getValor())) {
+            this.visibleBotonAceptar = true;
+        }
+        return visibleBotonAceptar;
+    }
+   
     public boolean isVisibleBotonRechazar() {
         this.visibleBotonRechazar = false;
-        if (Constantes.ESTADO_EXCLUSION_SOLICITADA.equals(this.command.getEstado().getValor()) && this.autorizadoAprobar) {
+        if (Constantes.ESTADO_MANTENIMIENTO_APROBADO.equals(this.command.getEstado().getValor()) && this.autorizadoAprobar) {
             this.visibleBotonRechazar = true;
         }
         return visibleBotonRechazar;
     }
 
-    public boolean isVisibleBotonAprobar() {
-        this.visibleBotonAprobar = false;
-        if (Constantes.ESTADO_EXCLUSION_SOLICITADA.equals(this.command.getEstado().getValor()) && this.autorizadoAprobar) {
-            this.visibleBotonAprobar = true;
-        }
-        return visibleBotonAprobar;
-    }
-   
-    public boolean isVisibleBotonRevisar() {
-        this.visibleBotonRevisar = false;
-        if (Constantes.ESTADO_EXCLUSION_SOLICITADA.equals(this.command.getEstado().getValor())) {
-            this.visibleBotonRevisar = true;
+    public boolean isVisibleBotonAplicar() {
+        this.visibleBotonAplicar = false;
+        if (Constantes.ESTADO_MANTENIMIENTO_NUEVO.equals(this.command.getEstado().getValor())) {
+            this.visibleBotonAplicar = true;
         }        
-        return visibleBotonRevisar;
+        return visibleBotonAplicar;
+    }
+
+    public boolean isVisibleBotonFinalizar() {
+        this.visibleBotonFinalizar = false;
+        if (Constantes.ESTADO_MANTENIMIENTO_APROBADO.equals(this.command.getEstado().getValor()) && this.autorizadoAprobar) {
+            this.visibleBotonFinalizar = true;
+        }       
+        return visibleBotonFinalizar;
     }
 
     public boolean isVisibleBotonGuardar() {
         this.visibleBotonGuardar = false;
-        if (Constantes.ESTADO_EXCLUSION_CREADA.equals(this.command.getEstado().getValor())) {
+        if (Constantes.ESTADO_MANTENIMIENTO_NUEVO.equals(this.command.getEstado().getValor()) ||
+            Constantes.ESTADO_MANTENIMIENTO_CORRECCION_SOLICITADA.equals(this.command.getEstado().getValor())) {
             this.visibleBotonGuardar = true;
         }
         return visibleBotonGuardar;
@@ -763,7 +752,8 @@ public class AgregarExclusionController extends BaseController {
 
     public boolean isVisibleBotonAgregarBienes() {
         this.visibleBotonAgregarBienes = false;
-        if (Constantes.ESTADO_EXCLUSION_CREADA.equals(this.command.getEstado().getValor())) {
+        if (Constantes.ESTADO_MANTENIMIENTO_NUEVO.equals(this.command.getEstado().getValor()) ||
+            Constantes.ESTADO_MANTENIMIENTO_CORRECCION_SOLICITADA.equals(this.command.getEstado().getValor())) {
             this.visibleBotonAgregarBienes = true;
         }
         return visibleBotonAgregarBienes;
@@ -771,32 +761,53 @@ public class AgregarExclusionController extends BaseController {
 
     public boolean isVisibleBotonEliminarBien() {
         this.visibleBotonEliminarBien = false;
-        if (Constantes.ESTADO_EXCLUSION_CREADA.equals(this.command.getEstado().getValor())) {
+        if (Constantes.ESTADO_MANTENIMIENTO_NUEVO.equals(this.command.getEstado().getValor())) {
             this.visibleBotonEliminarBien = true;
         }
         return visibleBotonEliminarBien;
     }
 
-    public boolean isVisibleBotonSolicitarBien() {
-        this.visibleBotonSolicitarBien = false;
-        if (Constantes.ESTADO_EXCLUSION_CREADA.equals(this.command.getEstado().getValor()) && this.exclusionRegistrada) {
-            this.visibleBotonSolicitarBien = true;
+    public boolean isVisibleBotonAceptarBien() {
+        this.visibleBotonAceptarBien = false;
+        if (Constantes.ESTADO_MANTENIMIENTO_NUEVO.equals(this.command.getEstado().getValor()) ||
+            Constantes.ESTADO_MANTENIMIENTO_CORRECCION_SOLICITADA.equals(this.command.getEstado().getValor())) {
+            this.visibleBotonAceptarBien = true;
         }
-        return visibleBotonSolicitarBien;
+        return visibleBotonAceptarBien;
     }
 
     public boolean isVisibleBotonRechazarBien() {
         this.visibleBotonRechazarBien = false;
-        if (this.autorizadoAprobar) {
+        if (Constantes.ESTADO_MANTENIMIENTO_APROBADO.equals(this.command.getEstado().getValor()) && this.autorizadoAprobar) {
             this.visibleBotonRechazarBien = true;
-        }
-        if (Constantes.ESTADO_EXCLUSION_RECHAZADA.equals(this.command.getEstado().getValor())  || 
-            Constantes.ESTADO_EXCLUSION_APROBADA.equals(this.command.getEstado().getValor())) {
-            this.visibleBotonSolicitarBien = false;
         }
         return visibleBotonRechazarBien;
     }
     
+    public boolean isVisibleBotonAplicarBien() {
+        this.visibleBotonAplicarBien = false;
+        if (Constantes.ESTADO_MANTENIMIENTO_NUEVO.equals(this.command.getEstado().getValor())) {
+            this.visibleBotonAplicarBien = true;
+        }
+        return visibleBotonAplicarBien;
+    }
+
+    public boolean isVisibleBotonFinalizarBien() {
+        this.visibleBotonFinalizarBien = false;
+        if (Constantes.ESTADO_MANTENIMIENTO_APROBADO.equals(this.command.getEstado().getValor()) && this.autorizadoAprobar) {
+            this.visibleBotonFinalizarBien = true;
+        } 
+        return visibleBotonFinalizarBien;
+    }
+    
+    public boolean isVisibleBotonSolicitarObservacion() {
+        this.visibleBotonSolicitarObservacion = false;
+        if (this.accion == ACCION_SOLICITAR_CORRECCION) {
+            this.visibleBotonSolicitarObservacion = true;    
+        }
+        return visibleBotonSolicitarObservacion;
+    }
+
     public boolean isVisibleBotonRechazarObservacion() {
         this.visibleBotonRechazarObservacion = false;
         if (this.accion == ACCION_RECHAZAR) {
@@ -805,6 +816,14 @@ public class AgregarExclusionController extends BaseController {
         return visibleBotonRechazarObservacion;
     }
 
+    public boolean isVisibleBotonSolicitarBienObservacion() {
+        this.visibleBotonSolicitarBienObservacion = false;
+        if (this.accion == ACCION_SOLICITAR_CORRECCION_BIEN) {
+            this.visibleBotonSolicitarBienObservacion = true;    
+        }        
+        return visibleBotonSolicitarBienObservacion;
+    }
+    
     public boolean isVisibleBotonRechazarBienObservacion() {
         this.visibleBotonRechazarBienObservacion = false;
         if (this.accion == ACCION_RECHAZAR_BIEN) {
@@ -813,14 +832,6 @@ public class AgregarExclusionController extends BaseController {
         return visibleBotonRechazarBienObservacion;
     }
 
-    public boolean isVisibleBotonRevisarObservacion() {
-        this.visibleBotonRevisarObservacion = false;
-        if (this.accion == ACCION_REVISAR) {
-            this.visibleBotonRevisarObservacion = true;    
-        }
-        return visibleBotonRevisarObservacion;
-    }
-    
     public void setVisiblePanelBienes(boolean visiblePanelBienes) {
         this.visiblePanelBienes = visiblePanelBienes;
     }
@@ -833,22 +844,10 @@ public class AgregarExclusionController extends BaseController {
         this.visiblePanelConfirmacion = visiblePanelConfirmacion;
     }
 
-    public void setVisibleBotonSolicitar(boolean visibleBotonSolicitar) {
-        this.visibleBotonSolicitar = visibleBotonSolicitar;
-    }
-
     public void setVisibleBotonRechazar(boolean visibleBotonRechazar) {
         this.visibleBotonRechazar = visibleBotonRechazar;
     }
 
-    public void setVisibleBotonAprobar(boolean visibleBotonAprobar) {
-        this.visibleBotonAprobar = visibleBotonAprobar;
-    }
-
-    public void setVisibleBotonRevisar(boolean visibleBotonRevisar) {
-        this.visibleBotonRevisar = visibleBotonRevisar;
-    }
-    
     public void setVisibleBotonGuardar(boolean visibleBotonGuardar) {
         this.visibleBotonGuardar = visibleBotonGuardar;
     }
@@ -861,10 +860,6 @@ public class AgregarExclusionController extends BaseController {
         this.visibleBotonEliminarBien = visibleBotonEliminarBien;
     }
     
-    public void setVisibleBotonSolicitarBien(boolean visibleBotonSolicitarBien) {
-        this.visibleBotonSolicitarBien = visibleBotonSolicitarBien;
-    }
-    
     public void setVisibleBotonRechazarBien(boolean visibleBotonRechazarBien) {
         this.visibleBotonRechazarBien = visibleBotonRechazarBien;
     }
@@ -872,13 +867,9 @@ public class AgregarExclusionController extends BaseController {
     public void setVisibleBotonRechazarObservacion(boolean visibleBotonRechazarObservacion) {
         this.visibleBotonRechazarObservacion = visibleBotonRechazarObservacion;
     }
-
+    
     public void setVisibleBotonRechazarBienObservacion(boolean visibleBotonRechazarBienObservacion) {
         this.visibleBotonRechazarBienObservacion = visibleBotonRechazarBienObservacion;
-    }
-
-    public void setVisibleBotonRevisarObservacion(boolean visibleBotonRevisarObservacion) {
-        this.visibleBotonRevisarObservacion = visibleBotonRevisarObservacion;
     }
     //</editor-fold>
 }

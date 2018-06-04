@@ -1,0 +1,152 @@
+<ice:form id="frmListarExclusiones" 
+          xmlns:ice="http://www.icesoft.com/icefaces/component" 
+          xmlns:h="http://java.sun.com/jsf/html" 
+          xmlns:f="http://java.sun.com/jsf/core" 
+          xmlns:ui="http://java.sun.com/jsf/facelets">
+    
+    <div class="contenido-pagina">
+        <div class="container">
+            
+            <!-- Encabezado -->
+            <div class="row">
+                <div class='col-sm-6'>
+                    <h1 style="margin: 0;">
+                        <ice:outputFormat value="#{label['sigebi.label.mantenimiento.titulo.listar']} "/>
+                    </h1>
+                </div>                
+            </div>
+            
+            <!-- Paginacion -->
+            <div class="row">
+                <div class="col-sm-12">
+                    <ice:outputFormat value="#{label['label.generico.paginacion.encabezado']}">
+                        <f:param value="#{controllerListarMantenimientos.cantidadRegistros}"/>
+                        <f:param value="#{controllerListarMantenimientos.cantidadRegistrosMostrados}"/>
+                        <f:param value="#{controllerListarMantenimientos.primerRegistro}"/>
+                        <f:param value="#{controllerListarMantenimientos.ultimoRegistro}"/>
+                        <f:param value="#{controllerListarMantenimientos.paginaActual}"/>
+                        <f:param value="#{controllerListarMantenimientos.cantidadPaginas}"/>
+                    </ice:outputFormat>
+                    <div>
+                        <table>
+                            <tr>
+                                <td style="padding-right: 5px;">
+                                    <ice:outputText value="#{label['label.paginacion.cantidad.pagina']} "/>
+                                </td>
+                                <td>
+                                    <ice:selectOneMenu id="cantRegistroPorPagina" value="#{controllerListarMantenimientos.cantRegistroPorPagina}"  valueChangeListener="#{controllerListarMantenimientos.cambioRegistrosPorPagina}" partialSubmit="true">
+                                        <f:selectItems id="item_pa" value="#{controllerListarMantenimientos.listaRegistrosPagina}"/>
+                                    </ice:selectOneMenu>
+                                </td>
+                            </tr>
+                        </table>                        
+                    </div>                    
+                    <div>
+                        <ice:commandButton image="./imagenes/botones/first.png" partialSubmit="true" actionListener="#{controllerListarMantenimientos.primero}" rendered="#{controllerListarMantenimientos.cantidadPaginas > 1}"/>
+                        <ice:commandButton image="./imagenes/botones/previos.png" partialSubmit="true" actionListener="#{controllerListarMantenimientos.anterior}" rendered="#{controllerListarMantenimientos.cantidadPaginas > 1}"/>
+                        <ui:repeat value="#{controllerListarMantenimientos.arregloPaginas}" var="pagina">
+                            <ice:commandLink value="#{pagina}" partialSubmit="true" actionListener="#{controllerListarMantenimientos.irPagina}">
+                                <f:param name="numPag" value="#{pagina}"/>
+                            </ice:commandLink>
+                        </ui:repeat>            
+                        <ice:commandButton image="./imagenes/botones/next.png" partialSubmit="true" actionListener="#{controllerListarMantenimientos.siguiente}" rendered="#{controllerListarMantenimientos.cantidadPaginas > 1}"/>
+                        <ice:commandButton image="./imagenes/botones/last.png" partialSubmit="true" actionListener="#{controllerListarMantenimientos.ultimo}" rendered="#{controllerListarMantenimientos.cantidadPaginas > 1}"/>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Tabla -->
+            <div class="row">
+                <div class="col-sm-12">                    
+                    <div>
+                        <ice:dataTable id="listadoExclusiones" value="#{controllerListarMantenimientos.solicitudesMantenimiento}" var="solicitud" paginator="true" paginatorPosition="bottom" rows="10">
+                            <f:facet name="header">
+                                <ice:columnGroup>
+                                    <ice:headerRow>
+                                        <!-- ID -->
+                                        <ice:column id="id" rowspan="2" style="vertical-align:top;">
+                                            <ice:outputText value="#{label['sigebi.label.mantenimiento.id']} "/>
+                                            <ice:inputText id="fltId" 
+                                                           value="#{controllerListarMantenimientos.command.fltId}" 
+                                                           validator="#{controllerListarMantenimientos.validarFiltroId}"
+                                                           valueChangeListener="#{controllerListarMantenimientos.cambioFiltro}"/>
+                                        </ice:column>
+                                        
+                                        <!-- Fecha -->
+                                        <ice:column id="fecha" >
+                                            <ice:outputText value="#{label['sigebi.label.mantenimiento.fecha']} "/>
+
+                                            <ice:selectInputDate 
+                                                highlightClass="dateHighlightGray" 
+                                                highlightUnit="DAY_OF_WEEK" 
+                                                highlightValue="1"
+                                                partialSubmit="false" 
+                                                renderAsPopup="true" 
+                                                renderMonthAsDropdown="true" 
+                                                renderYearAsDropdown="true"
+                                                validator="#{controllerListarMantenimientos.validarFiltroFecha}"
+                                                value="#{controllerListarMantenimientos.command.fltFecha}" 
+                                                valueChangeListener="#{controllerListarMantenimientos.cambioFiltro}" >
+                                                <f:convertDateTime pattern="#{controllerListarMantenimientos.command.datePattern}" timeZone="#{controllerListarMantenimientos.command.timeZone}" />
+                                            </ice:selectInputDate>
+                                        </ice:column>
+                            
+                                        <!-- Estado -->
+                                        <ice:column id="estado" rowspan="2" style="vertical-align:top;">                                 
+                                            <ice:outputText value="#{label['sigebi.label.mantenimiento.estado']}"/>
+                                            <ice:selectOneMenu  id="fltEstado"
+                                                                valueChangeListener="#{controllerListarMantenimientos.cambioFiltro}"
+                                                                value="#{controllerListarMantenimientos.command.fltEstado}"
+                                                                partialSubmit="true">
+                                                <f:selectItem itemLabel="N/A" itemValue="-1"/>
+                                                <f:selectItems id="slcEstadoItem" value="#{controllerListarMantenimientos.itemsEstado}"/>
+                                            </ice:selectOneMenu>
+                                        </ice:column>
+                                        
+                                        <!-- Unidad Ejecutora -->
+                                        <ice:column id="unidadEjecutora">
+                                            <ice:outputText value="#{label['sigebi.label.mantenimiento.unidadEjecutora']} "/>
+                                        </ice:column>
+                                        
+                                        <ice:column id="opciones" >
+                                            <ice:outputText value="#{label['label.opciones']} "/>
+                                        </ice:column>
+                                    </ice:headerRow>
+                                </ice:columnGroup>
+                            </f:facet>
+                            <ice:column>
+                                <h:outputText id="idExclusionCell" value="#{solicitud.id}"/>
+                            </ice:column>
+                            <ice:column>
+                                <h:outputText id="fechaCell" value="#{solicitud.fecha}" >
+                                    <f:convertDateTime type="date" pattern="#{controllerListarMantenimientos.command.datePattern}" />
+                                </h:outputText>
+                            </ice:column>
+                            <ice:column>
+                                <h:outputText id="estadoCell" value="#{solicitud.estado.nombre}"/>
+                            </ice:column>
+                            <ice:column>
+                                <h:outputText id="unidadEjecutoraCell" value="#{solicitud.unidadEjecutora.descripcion}"/>
+                            </ice:column>
+
+                            <ice:column style="text-align: center;">
+                                <ice:commandButton id="botonDetalle" actionListener="#{controllerAgregarExclusiones.detalleRegistro}" value="#{label['label.detalle']}" style="float:right;margin-top:2%" styleClass="boton" partialSubmit="true">
+                                    <f:attribute id="solicitudDetalle" name="#{controllerListarMantenimientos.command.key}"  value="#{solicitud.id}"/>
+                                    <f:attribute id="vistaOrigen" name="#{controllerListarMantenimientos.command.keyVistaOrigen}"  value="#{controllerListarMantenimientos.vistaOrigen}"/>
+                                </ice:commandButton>
+                            </ice:column>
+                        </ice:dataTable>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class='col-sm-12'>
+                   <ice:commandButton id="botonNuevo" actionListener="#{controllerAgregarMantenimientos.nuevoRegistro}" value="#{label['label.nuevo']}" style="float:right" styleClass="boton" partialSubmit="true">
+                       <f:attribute id="vistaOrigen" name="#{controllerListarMantenimientos.command.keyVistaOrigen}"  value="#{controllerListarMantenimientos.vistaOrigen}"/>
+                    </ice:commandButton>
+                </div>
+            </div>
+        </div>
+    </div>
+</ice:form>

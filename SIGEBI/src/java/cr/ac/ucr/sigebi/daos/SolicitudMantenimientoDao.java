@@ -8,7 +8,7 @@ package cr.ac.ucr.sigebi.daos;
 import cr.ac.ucr.framework.daoHibernate.DaoHelper;
 import cr.ac.ucr.framework.daoImpl.GenericDaoImpl;
 import cr.ac.ucr.framework.utils.FWExcepcion;
-import cr.ac.ucr.sigebi.domain.SolicitudExclusion;
+import cr.ac.ucr.sigebi.domain.SolicitudMantenimiento;
 import cr.ac.ucr.sigebi.domain.SolicitudDetalle;
 import cr.ac.ucr.sigebi.domain.UnidadEjecutora;
 import java.util.Date;
@@ -26,121 +26,117 @@ import org.springframework.transaction.annotation.Transactional;
  * @author alvaro.cascante
  */
 
-@Repository(value = "exclusionDao")
+@Repository(value = "solicitudMantenimientoDao")
 
-public class ExclusionDao extends GenericDaoImpl {
+public class SolicitudMantenimientoDao extends GenericDaoImpl {
     
     @Autowired
     private DaoHelper dao;
 
     @Transactional(readOnly = true)
-    public List<SolicitudExclusion> listar() throws FWExcepcion {
+    public List<SolicitudMantenimiento> listar() throws FWExcepcion {
         Session session = dao.getSessionFactory().openSession();
         try {
-            String sql = "SELECT exc FROM SolicitudExclusion exc";
+            String sql = "SELECT sol FROM SolicitudMantenimiento sol";
             Query query = session.createQuery(sql);
-            return (List<SolicitudExclusion>) query.list();
+            return (List<SolicitudMantenimiento>) query.list();
         } catch (DataAccessException e) {
-            throw new FWExcepcion("sigebi.label.exclusiones.error.listar", "Error obtener los registros de tipo " + this.getClass(), e.getCause());
+            throw new FWExcepcion("sigebi.label.mantenimiento.error.listar", "Error obtener los registros de tipo " + this.getClass(), e.getCause());
         } finally {
             session.close();
         }
     }
     
     @Transactional(readOnly = true)
-    public List<SolicitudExclusion> listar(UnidadEjecutora unidadEjecutora) throws FWExcepcion {
+    public List<SolicitudMantenimiento> listar(UnidadEjecutora unidadEjecutora) throws FWExcepcion {
         Session session = dao.getSessionFactory().openSession();
         try {
-            String sql = "SELECT exc FROM SolicitudExclusion exc WHERE exc.unidadEjecutora = :unidadEjecutora";
+            String sql = "SELECT sol FROM SolicitudMantenimiento sol WHERE sol.unidadEjecutora = :unidadEjecutora";
             Query query = session.createQuery(sql);
             query.setParameter("unidadEjecutora", unidadEjecutora);
-            return (List<SolicitudExclusion>) query.list();
+            return (List<SolicitudMantenimiento>) query.list();
         } catch (DataAccessException e) {
-            throw new FWExcepcion("sigebi.label.exclusiones.error.listar", "Error obtener los registros de tipo " + this.getClass(), e.getCause());
+            throw new FWExcepcion("sigebi.label.mantenimiento.error.listar", "Error obtener los registros de tipo " + this.getClass(), e.getCause());
         } finally {
             session.close();
         }
     }
     
     @Transactional(readOnly = true)
-    public SolicitudExclusion buscarPorId(Long id) throws FWExcepcion {
+    public SolicitudMantenimiento buscarPorId(Long id) throws FWExcepcion {
         Session session = dao.getSessionFactory().openSession();
         try {
-            String sql = "SELECT se FROM SolicitudExclusion se WHERE se.id = :id";
+            String sql = "SELECT sol FROM SolicitudMantenimiento sol WHERE sol.id = :id";
             Query query = session.createQuery(sql);
             query.setParameter("id", id);
-
-            return (SolicitudExclusion) query.uniqueResult();
+            return (SolicitudMantenimiento) query.uniqueResult();
         } catch (HibernateException e) {
-            throw new FWExcepcion("sigebi.label.exclusiones.error.listar", "Error obtener los registros de tipo " + this.getClass(), e.getCause());
+            throw new FWExcepcion("sigebi.label.mantenimiento.error.listar", "Error obtener los registros de tipo " + this.getClass(), e.getCause());
         } finally {
             session.close();
         }
     }
 
     @Transactional
-    public void salvar(SolicitudExclusion exclusion) throws FWExcepcion {
+    public void salvar(SolicitudMantenimiento solicitudMantenimiento) throws FWExcepcion {
         try {
-            persist(exclusion);
+            persist(solicitudMantenimiento);
         } catch (DataAccessException e) {
-            throw new FWExcepcion("sigebi.label.exclusiones.error.salvar", "Error guardando registro de tipo " + this.getClass(), e.getCause());
+            throw new FWExcepcion("sigebi.label.mantenimiento.error.salvar", "Error guardando registro de tipo " + this.getClass(), e.getCause());
         }
     }
     
     @Transactional(readOnly = true)
-    public Long contar(UnidadEjecutora unidadEjecutora, Long id, Date fecha, Long estado, Long tipoExclusion) throws FWExcepcion {
+    public Long contar(UnidadEjecutora unidadEjecutora, Long id, Date fecha, Long estado) throws FWExcepcion {
         Session session = dao.getSessionFactory().openSession();
         try {
-            Query query = this.queryListar(session, true, unidadEjecutora, id, fecha, estado, tipoExclusion);
+            Query query = this.queryListar(session, true, unidadEjecutora, id, fecha, estado);
             return (Long)query.uniqueResult();
 
         } catch (FWExcepcion e) {
-            throw new FWExcepcion("sigebi.label.exclusiones.error.listar", "Error contando los registros de tipo " + this.getClass(), e.getCause());
+            throw new FWExcepcion("sigebi.label.mantenimiento.error.listar", "Error contando los registros de tipo " + this.getClass(), e.getCause());
         }finally{
             session.close();        
         }        
     }
     
     @Transactional(readOnly = true)
-    public List<SolicitudExclusion> listar(Integer primerRegistro, Integer ultimoRegistro, UnidadEjecutora unidadEjecutora, Long id, Date fecha, Long estado, Long tipo) throws FWExcepcion {
+    public List<SolicitudMantenimiento> listar(Integer primerRegistro, Integer ultimoRegistro, UnidadEjecutora unidadEjecutora, Long id, Date fecha, Long estado) throws FWExcepcion {
         Session session = dao.getSessionFactory().openSession();
         try {
-            Query query = this.queryListar(session, false, unidadEjecutora, id, fecha, estado, tipo);
+            Query query = this.queryListar(session, false, unidadEjecutora, id, fecha, estado);
             if(!(primerRegistro.equals(1) && ultimoRegistro.equals(1))) {
                 query.setFirstResult(primerRegistro);
                 query.setMaxResults(ultimoRegistro - primerRegistro);
             }
-            return (List<SolicitudExclusion>) query.list();
+            return (List<SolicitudMantenimiento>) query.list();
         } catch (HibernateException e) {
-            throw new FWExcepcion("sigebi.label.exclusiones.error.listar", "Error obtener los registros de tipo " + this.getClass(), e.getCause());
+            throw new FWExcepcion("sigebi.label.mantenimiento.error.listar", "Error obtener los registros de tipo " + this.getClass(), e.getCause());
         }finally{
             session.close();        
         }        
     }
     
-    private Query queryListar(Session session, Boolean contar, UnidadEjecutora unidadEjecutora, Long id, Date fecha, Long idEstado, Long idTipoExclusion) {
+    private Query queryListar(Session session, Boolean contar, UnidadEjecutora unidadEjecutora, Long id, Date fecha, Long idEstado) {
         StringBuilder sql = new StringBuilder("SELECT ");
         if (contar) {
-            sql.append("COUNT(exc) FROM SolicitudExclusion exc ");
+            sql.append("COUNT(sol) FROM SolicitudMantenimiento sol ");
         } else {
-            sql.append("exc FROM SolicitudExclusion exc ");
+            sql.append("exc FROM SolicitudMantenimiento sol ");
         }
     
-        sql.append("WHERE exc.unidadEjecutora = :unidadEjecutora "); 
+        sql.append("WHERE sol.unidadEjecutora = :unidadEjecutora "); 
         if(id != null && id > 0){
-           sql.append("AND exc.id = :id ");
+           sql.append("AND sol.id = :id ");
         } else {
             if(fecha != null){
-                sql.append("AND exc.fecha = :fecha ");
+                sql.append("AND sol.fecha = :fecha ");
             }
             if(idEstado != null && idEstado > 0){
-                sql.append(" AND exc.estado.id = :idEstado ");
-            }
-            if(idTipoExclusion != null && idTipoExclusion > 0){
-                sql.append(" AND exc.tipoExclusion.id = :idTipoExclusion ");
+                sql.append(" AND sol.estado.id = :idEstado ");
             }
         }
-        sql.append(" ORDER BY exc.id asc");
+        sql.append(" ORDER BY sol.id asc");
         
         Query query = session.createQuery(sql.toString());
         query.setParameter("unidadEjecutora", unidadEjecutora);
@@ -153,9 +149,6 @@ public class ExclusionDao extends GenericDaoImpl {
             if(idEstado != null && idEstado > 0){
                 query.setParameter("idEstado", idEstado);
             }
-            if(idTipoExclusion != null && idTipoExclusion > 0){
-                query.setParameter("idTipoExclusion", idTipoExclusion);
-            }
         }
         return query;
     }
@@ -165,7 +158,7 @@ public class ExclusionDao extends GenericDaoImpl {
         try {
             persist(detalles.toArray());
         } catch (DataAccessException e) {
-            throw new FWExcepcion("sigebi.label.exclusiones.error.salvar", "Error guardando registro de tipo " + this.getClass(), e.getCause());
+            throw new FWExcepcion("sigebi.label.mantenimiento.error.salvar", "Error guardando registro de tipo " + this.getClass(), e.getCause());
         }
     }
     
@@ -174,38 +167,38 @@ public class ExclusionDao extends GenericDaoImpl {
         try {
             delete(detalles.toArray());
         } catch (DataAccessException e) {
-            throw new FWExcepcion("sigebi.label.exclusiones.error.eliminar", "Error guardando registro de tipo " + this.getClass(), e.getCause());
+            throw new FWExcepcion("sigebi.label.mantenimiento.error.eliminar", "Error guardando registro de tipo " + this.getClass(), e.getCause());
         }
     }
     
     @Transactional(readOnly = true)
-    public Long contarDetalles(SolicitudExclusion exclusion) throws FWExcepcion {
+    public Long contarDetalles(SolicitudMantenimiento solicitudMantenimiento) throws FWExcepcion {
         Session session = dao.getSessionFactory().openSession();
         try {
-            Query query = this.queryListarDetalles(session, true, exclusion);
+            Query query = this.queryListarDetalles(session, true, solicitudMantenimiento);
             return (Long)query.uniqueResult();
 
         } catch (HibernateException e) {
-            throw new FWExcepcion("sigebi.label.exclusiones.error.listar", "Error contando los registros de tipo " + this.getClass(), e.getCause());
+            throw new FWExcepcion("sigebi.label.mantenimiento.error.listar", "Error contando los registros de tipo " + this.getClass(), e.getCause());
         }finally{
             session.close();        
         }        
     }
     
     @Transactional(readOnly = true)
-    public List<SolicitudDetalle> listarDetalles(SolicitudExclusion exclusion) throws FWExcepcion {
+    public List<SolicitudDetalle> listarDetalles(SolicitudMantenimiento solicitudMantenimiento) throws FWExcepcion {
         Session session = dao.getSessionFactory().openSession();
         try {
-            Query query = this.queryListarDetalles(session, false, exclusion);
+            Query query = this.queryListarDetalles(session, false, solicitudMantenimiento);
             return (List<SolicitudDetalle>) query.list();
         } catch (HibernateException e) {
-            throw new FWExcepcion("sigebi.label.exclusiones.error.listar", "Error obtener los registros de tipo " + this.getClass(), e.getCause());
+            throw new FWExcepcion("sigebi.label.mantenimiento.error.listar", "Error obtener los registros de tipo " + this.getClass(), e.getCause());
         }finally{
             session.close();        
         }        
     }
     
-    private Query queryListarDetalles(Session session, Boolean contar, SolicitudExclusion solicitud) throws FWExcepcion {
+    private Query queryListarDetalles(Session session, Boolean contar, SolicitudMantenimiento solicitudMantenimiento) throws FWExcepcion {
         StringBuilder sql = new StringBuilder("SELECT ");
         if (contar) {
             sql.append("COUNT(det) FROM SolicitudDetalle det ");
@@ -217,7 +210,7 @@ public class ExclusionDao extends GenericDaoImpl {
         sql.append(" ORDER BY det.solicitud.id asc");
         
         Query query = session.createQuery(sql.toString());
-        query.setParameter("solicitud", solicitud);
+        query.setParameter("solicitud", solicitudMantenimiento);
         return query;
     }
 }

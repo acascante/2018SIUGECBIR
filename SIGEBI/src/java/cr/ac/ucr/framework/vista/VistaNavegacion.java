@@ -63,6 +63,9 @@ public class VistaNavegacion {
         gPaginas.put(Constantes.VISTA_EXCLUSION_LISTADO, Constantes.VISTA_EXCLUSION_LISTADO_PAGINA);
         gPaginas.put(Constantes.VISTA_EXCLUSION_NUEVA, Constantes.VISTA_EXCLUSION_NUEVA_PAGINA);
 
+        gPaginas.put(Constantes.VISTA_MANTENIMIENTO_LISTADO, Constantes.VISTA_MANTENIMIENTO_LISTADO_PAGINA);
+        gPaginas.put(Constantes.VISTA_MANTENIMIENTO_NUEVO, Constantes.VISTA_MANTENIMIENTO_NUEVA_PAGINA);
+
         gPaginas.put(Constantes.VISTA_PRESTAMO_LISTADO, Constantes.VISTA_PRESTAMO_LISTADO_PAGINA);
         gPaginas.put(Constantes.VISTA_PRESTAMO_NUEVO, Constantes.VISTA_PRESTAMO_NUEVO_PAGINA);
 

@@ -33,6 +33,7 @@ public final class Constantes {
     public static final Integer ESTADO_BIEN_TRANSITO_POR_EXCLUSION = 9;
     public static final Integer ESTADO_BIEN_EXCLUSION_APROBADA = 10;
     public static final Integer ESTADO_BIEN_EXCLUIDO = 11;
+    public static final Integer ESTADO_BIEN_TRANSITO_POR_REPARACION = 12;
 
     // Estado Interno de un bien
     public static final Integer ESTADO_INTERNO_BIEN_NORMAL = 1;
@@ -46,12 +47,17 @@ public final class Constantes {
     public static final Integer ESTADO_INTERNO_BIEN_EXCLUSION_SOLICITADO = 21;
     public static final Integer ESTADO_INTERNO_BIEN_EXCLUSION_RECHAZADO = 22;
     public static final Integer ESTADO_INTERNO_BIEN_EXCLUSION_APROBADO = 23;
-        
     public static final Integer ESTADO_INTERNO_BIEN_PRESTAMO_SOLICITADO = 31;
     public static final Integer ESTADO_INTERNO_BIEN_PRESTAMO_APROBADO = 33;
     public static final Integer ESTADO_INTERNO_BIEN_PRESTAMO_ANULADO = 34;
     public static final Integer ESTADO_INTERNO_BIEN_INFORME_TECNICO = 6;
-
+    public static final Integer ESTADO_INTERNO_BIEN_SOLICITUD_MANTENIMIENTO = 9;
+    public static final Integer ESTADO_INTERNO_BIEN_MANTENIMIENTO_APLICADO = 91;
+    public static final Integer ESTADO_INTERNO_BIEN_MANTENIMIENTO_RECHAZADO = 92;
+    public static final Integer ESTADO_INTERNO_BIEN_MANTENIMIENTO_APROBADO = 93;
+    public static final Integer ESTADO_INTERNO_BIEN_MANTENIMIENTO_ANULADO = 94;
+    public static final Integer ESTADO_INTERNO_BIEN_MANTENIMIENTO_FINALIZADO = 95;
+    
     // Estados de una nota
     public static final int ESTADO_NOTA_CREADA = 1;
 
@@ -84,6 +90,15 @@ public final class Constantes {
     public static final Integer ESTADO_EXCLUSION_SOLICITADA = 2;
     public static final Integer ESTADO_EXCLUSION_RECHAZADA = 3;
     public static final Integer ESTADO_EXCLUSION_APROBADA = 4;
+    
+    // Mantenimientos
+    public static final Integer ESTADO_MANTENIMIENTO_NUEVO = 1;
+    public static final Integer ESTADO_MANTENIMIENTO_APLICADO = 2;      // Aplicar, iniciar proceso    
+    public static final Integer ESTADO_MANTENIMIENTO_APROBADO = 3;      // Aprobar inicio de proceso
+    public static final Integer ESTADO_MANTENIMIENTO_CORRECCION_SOLICITADA = 4;
+    public static final Integer ESTADO_MANTENIMIENTO_RECHAZADO = 5;
+    public static final Integer ESTADO_MANTENIMIENTO_FINALIZADO = 6;
+    public static final Integer ESTADO_MANTENIMIENTO_ANULADO = 7;
     
     public static final int TIPO_EXCLUSION_RETORNO = 4;
     public static final int TIPO_EXCLUSION_PRESTAMO = 3;
@@ -180,6 +195,7 @@ public final class Constantes {
     public static final String DOMINIO_RECEPCION_PRESTAMO = "RECEPCION_PRESTAMO";
     public static final String DOMINIO_REGISTRO_MOVIMIENTO = "REGISTRO_MOVIMIENTO";
     public static final String DOMINIO_REPORTE = "REPORTE";
+    public static final String DOMINIO_SOLICITUD_MANTENIMIENTO = "MANTENIMIENTO";
     public static final String DOMINIO_SOLI_DONACION = "SOL_DONACION";
     public static final String DOMINIO_SOLI_SALIDAS = "SOL_SALIDAS";
     public static final String DOMINIO_TIPOS_MODIFICAR = "TIPO";
@@ -248,6 +264,7 @@ public final class Constantes {
     public static final Integer CODIGO_AUTORIZACION_EXCLUSION_DESECHO = 9;
     public static final Integer CODIGO_AUTORIZACION_EXCLUSION_DONACION = 10;
     public static final Integer CODIGO_AUTORIZACION_PRESTAMO = 11;
+    public static final Integer CODIGO_AUTORIZACION_MANTENIMIENTO = 12;
 
     public static final String ACTA_ID_TIPO_DONACION = "26";
     public static final String ACTA_ID_TIPO_DESECHO = "27";
@@ -268,6 +285,11 @@ public final class Constantes {
     public static final String VISTA_PRESTAMO_NUEVO_PAGINA = "../prestamos/prestamoDetalle.xhtml";
     public static final String VISTA_SINCRONIZACION_BIEN = "sincronizar";
     public static final String VISTA_SINCRONIZACION_BIEN_LISTADO = "../bienes/listarBienSincronizar.xhtml";
+    
+    public static final String VISTA_MANTENIMIENTO_LISTADO = "mantenimiento";
+    public static final String VISTA_MANTENIMIENTO_LISTADO_PAGINA = "../mantenimiento/listarMantenimientos.xhtml";
+    public static final String VISTA_MANTENIMIENTO_NUEVO = "mantenimiento_nueva";
+    public static final String VISTA_MANTENIMIENTO_NUEVA_PAGINA = "../mantenimiento/mantenimientoDetalle.xhtml";
     
     public static final String KEY_VISTA_SOLICITUD_DONACION_LISTADO = "donacion";
     public static final String VISTA_SOLICITUD_DONACION_LISTADO = "../inclusiones/listarDonaciones.xhtml";
