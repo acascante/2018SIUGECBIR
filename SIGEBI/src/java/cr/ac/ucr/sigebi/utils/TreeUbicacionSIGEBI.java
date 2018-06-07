@@ -4,6 +4,7 @@ import cr.ac.ucr.framework.utils.FWExcepcion;
 import cr.ac.ucr.framework.vista.util.Mensaje;
 import cr.ac.ucr.framework.vista.util.PaginacionOracle;
 import cr.ac.ucr.framework.vista.util.Util;
+import cr.ac.ucr.sigebi.domain.Estado;
 import cr.ac.ucr.sigebi.domain.Ubicacion;
 import cr.ac.ucr.sigebi.domain.UnidadEjecutora;
 import cr.ac.ucr.sigebi.models.UbicacionModel;
@@ -24,11 +25,12 @@ public class TreeUbicacionSIGEBI extends TreeSIGEBI {
     private String fltDescripcion;
 
     private UnidadEjecutora fltUnidadEjecutora;
+    private Estado fltEstadoActivo;
 
     private Boolean presentaPanelUbicacion;
 
     private Ubicacion ubicacion;
-    
+
     //</editor-fold>
     
     //<editor-fold defaultstate="collapsed" desc="GET's y SET's">
@@ -89,8 +91,9 @@ public class TreeUbicacionSIGEBI extends TreeSIGEBI {
         fltUnidadEjecutora = null;
     }
 
-    public TreeUbicacionSIGEBI(UnidadEjecutora unidadEjecutora) {
+    public TreeUbicacionSIGEBI(UnidadEjecutora unidadEjecutora, Estado estadoActivo) {
         fltUnidadEjecutora = unidadEjecutora;
+        fltEstadoActivo = estadoActivo;
     }
     
     public void abrirPantalla() {
@@ -131,7 +134,7 @@ public class TreeUbicacionSIGEBI extends TreeSIGEBI {
             if (nodoSIGEBI.getObject() != null) {
 
                 //Se busca las unidades
-                List<Ubicacion> resultado = ubicacionModel.listarUbicacionPadre(((Ubicacion) nodoSIGEBI.getObject()));
+                List<Ubicacion> resultado = ubicacionModel.listarUbicacionPadre(((Ubicacion) nodoSIGEBI.getObject()), fltEstadoActivo);
                 nodoSIGEBI.agregarNodos(new ArrayList<Object>(resultado), "detalle");
 
             } else {
@@ -187,7 +190,7 @@ public class TreeUbicacionSIGEBI extends TreeSIGEBI {
         try {
 
             //Se cuenta la cantidad de registros
-            Long contador = ubicacionModel.contar(fltDescripcion, fltUnidadEjecutora);
+            Long contador = ubicacionModel.contar(fltDescripcion, fltUnidadEjecutora, fltEstadoActivo);
 
             //Se actualiza la cantidad de registros segun los filtros
             paginacionOracle.setCantidadRegistros(contador.intValue());
@@ -205,7 +208,7 @@ public class TreeUbicacionSIGEBI extends TreeSIGEBI {
     private void listar() {
         try {
 
-            List<Ubicacion> resultado = ubicacionModel.listar(fltDescripcion, fltUnidadEjecutora, paginacionOracle.getPrimerRegistro() - 1, paginacionOracle.getUltimoRegistro());
+            List<Ubicacion> resultado = ubicacionModel.listar(fltDescripcion, fltUnidadEjecutora, fltEstadoActivo, paginacionOracle.getPrimerRegistro() - 1, paginacionOracle.getUltimoRegistro());
 
             //Se crea el tree que se utiliza en la pantalla
             this.asignaObjetos(new ArrayList<Object>(resultado));

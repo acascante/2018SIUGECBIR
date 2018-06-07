@@ -5,6 +5,7 @@
  */
 package cr.ac.ucr.sigebi.controllers;
 
+import com.icesoft.faces.context.effects.JavascriptContext;
 import cr.ac.ucr.framework.utils.FWExcepcion;
 import cr.ac.ucr.framework.vista.util.Mensaje;
 import cr.ac.ucr.framework.vista.util.Util;
@@ -34,6 +35,7 @@ import javax.faces.event.ActionEvent;
 import javax.faces.event.PhaseId;
 import javax.faces.event.ValueChangeEvent;
 import javax.faces.model.SelectItem;
+import javax.servlet.ServletContext;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -303,10 +305,9 @@ public class ReporteBienController extends BaseController {
             sql.append(" ORDER BY b.id ASC");
 
             try {
-    //            String sourceFileName = "C:\\Users\\aocc\\Documents\\NetBeansProjects\\Reportes\\web\\reportes\\reporte.jrxml";
                 String sourceFileName = cr.ac.ucr.framework.reporte.componente.utilitario.Util.ConvertirRutas("/reportes/reporteBienes.jrxml");
                 String tempFileName = cr.ac.ucr.framework.reporte.componente.utilitario.Util.ConvertirRutas("/reportes/reporteBienesTemp.jrxml");
-                String pdfFileName = cr.ac.ucr.framework.reporte.componente.utilitario.Util.ConvertirRutas("/reportes/reporteBienes");
+                String reportFileName = cr.ac.ucr.framework.reporte.componente.utilitario.Util.ConvertirRutas("/reportes/reporteBienes");
 
                 this.actualizarXMLReporte(sourceFileName, tempFileName, listCamposReporte);
 
@@ -326,10 +327,13 @@ public class ReporteBienController extends BaseController {
                 logMessage("Id Reporte " + this.command.getIdTipoReporte());
                 logMessage("No Reporte " + tipoReporte.getNombre());
                 if(tipoReporte.getNombre().equals(Constantes.TIPO_REPORTE_PDF)) {
-                    JasperExportManager.exportReportToPdfFile(jasperPrint, pdfFileName + ".pdf");
+                    JasperExportManager.exportReportToPdfFile(jasperPrint, reportFileName + Constantes.TIPO_REPORTE_PDF_EXTENSION);
+                    JavascriptContext.addJavascriptCall(FacesContext.getCurrentInstance(), "reporte('" + "reporteBienes" + "','" + Constantes.TIPO_REPORTE_PDF_EXTENSION + "');");
                 } else {
-                    JasperExportManager.exportReportToXmlFile(jasperPrint, pdfFileName + ".xls", true);
+                    JasperExportManager.exportReportToXmlFile(jasperPrint, reportFileName + Constantes.TIPO_REPORTE_EXCELL_EXTENSION, true);
+                    JavascriptContext.addJavascriptCall(FacesContext.getCurrentInstance(), "reporte(' " + "reporteBienes" + "','" + Constantes.TIPO_REPORTE_EXCELL_EXTENSION + "');");
                 }
+                
                 Mensaje.agregarInfo("Reporte generado exitosamente");
              } catch (Exception err) {
                 Mensaje.agregarErrorAdvertencia(err.getMessage());

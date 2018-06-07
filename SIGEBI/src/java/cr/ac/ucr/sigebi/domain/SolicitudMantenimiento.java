@@ -17,7 +17,7 @@ import javax.persistence.Table;
 @Entity(name = "SolicitudMantenimiento")
 @Table(name = "SIGEBI_OAF.SIGB_SOLICITUD_MANTENIMIENTO")
 @PrimaryKeyJoinColumn(name = "ID_SOLICITUD", referencedColumnName = "ID_SOLICITUD")
-@DiscriminatorValue("3")
+@DiscriminatorValue("6")
 public class SolicitudMantenimiento extends Solicitud {
 
 }

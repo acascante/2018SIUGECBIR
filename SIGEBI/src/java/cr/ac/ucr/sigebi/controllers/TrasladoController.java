@@ -265,7 +265,7 @@ public class TrasladoController extends ListadoBienesGeneralController {
     
     public TrasladoController() {
         justificacion = new Justificacion();
-        treeUbicacionSIGEBI = new TreeUbicacionSIGEBI(unidadEjecutora);
+        treeUbicacionSIGEBI = new TreeUbicacionSIGEBI(unidadEjecutora, this.estadoPorDominioValor(Constantes.DOMINIO_GENERAL, Constantes.ESTADO_GENERAL_ACTIVO));
     } 
 
     @PostConstruct
@@ -1097,7 +1097,7 @@ public class TrasladoController extends ListadoBienesGeneralController {
     
     private void iniciaUbicaciones() {
         try {
-            treeUbicacionSIGEBI = new TreeUbicacionSIGEBI(traslado.getUnidadEjecutoraDestino());
+            treeUbicacionSIGEBI = new TreeUbicacionSIGEBI(traslado.getUnidadEjecutoraDestino(), this.estadoPorDominioValor(Constantes.DOMINIO_GENERAL, Constantes.ESTADO_GENERAL_ACTIVO));
             treeUbicacionSIGEBI.setUbicacionModel(ubicModel);
         } catch (Exception err) { 
             Mensaje.agregarErrorFatal(err.getMessage());
@@ -1139,11 +1139,15 @@ public class TrasladoController extends ListadoBienesGeneralController {
             if(nodoSIGEBI != null){
                 
                 Ubicacion ubicSelec = (Ubicacion) nodoSIGEBI.getObject();
-                
-                //Se asigna la ubicacion 
-                traslado.setUbicacion(ubicSelec);
-                if (traslado.getUbicacion() != null) {
-                    traslado.getUbicacion().setIdTemporal(traslado.getUbicacion().getId());
+                if(ubicSelec != null){
+                    //Se asigna la ubicacion 
+                    traslado.setUbicacion(ubicSelec);
+                    if (traslado.getUbicacion() != null) {
+                        traslado.getUbicacion().setIdTemporal(traslado.getUbicacion().getId());
+                    }
+                }
+                else{
+                    Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.error.seleccionarUbicacion"));
                 }
             }
  

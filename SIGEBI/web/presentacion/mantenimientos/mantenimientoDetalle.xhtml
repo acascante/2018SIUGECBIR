@@ -1,4 +1,4 @@
-<ice:form id="frmDetalleExclusion" 
+<ice:form id="frmDetalleMantenimiento" 
           xmlns:ice="http://www.icesoft.com/icefaces/component" 
           xmlns:h="http://java.sun.com/jsf/html" 
           xmlns:f="http://java.sun.com/jsf/core" 
@@ -138,30 +138,31 @@
                                             <ice:column>
                                                 <ice:commandButton id="btnAplicarBien" partialSubmit="true" value="#{label['label.aplicar']}" style="float: right" styleClass="boton"
                                                                     actionListener="#{controllerAgregarMantenimientos.aplicarBien}" 
-                                                                    rendered="#{bien.solicitar and controllerAgregarMantenimientos.visibleBotonAplicarBien}">
+                                                                    rendered="#{bien.aplicarMantenimiento and controllerAgregarMantenimientos.visibleBotonAplicarBien}">
                                                     <f:attribute id="bienSeleccionado" name="bienSeleccionado"  value="#{bien.id}"/> 
                                                 </ice:commandButton>
+                                            </ice:column>
                                             <ice:column>
                                                 <ice:commandButton id="btnAceptarBien" partialSubmit="true" value="#{label['label.aceptar']}" style="float: right" styleClass="boton"
                                                                     actionListener="#{controllerAgregarMantenimientos.aceptarBien}" 
-                                                                    rendered="#{bien.solicitar and controllerAgregarMantenimientos.visibleBotonAceptarBien}">
+                                                                    rendered="#{bien.aceptarMantenimiento and controllerAgregarMantenimientos.visibleBotonAceptarBien}">
                                                     <f:attribute id="bienSeleccionado" name="bienSeleccionado"  value="#{bien.id}"/> 
                                                 </ice:commandButton>
+                                            </ice:column>
                                             <ice:column>
                                                 <ice:commandButton id="btnFinalizarBien" partialSubmit="true" value="#{label['label.finalizar']}" style="float: right" styleClass="boton"
                                                                     actionListener="#{controllerAgregarMantenimientos.finalizarBien}" 
-                                                                    rendered="#{bien.solicitar and controllerAgregarMantenimientos.visibleBotonFinalizarBien}">
+                                                                    rendered="#{bien.finalizarMantenimiento and controllerAgregarMantenimientos.visibleBotonFinalizarBien}">
                                                     <f:attribute id="bienSeleccionado" name="bienSeleccionado"  value="#{bien.id}"/> 
                                                 </ice:commandButton>
                                             </ice:column>
-                                            <ice:column >
+                                            <ice:column>
                                                 <ice:commandButton id="btnRechazarBien" partialSubmit="true" value="#{label['label.rechazar']}" style="float: right" styleClass="boton"
                                                                     actionListener="#{controllerAgregarMantenimientos.rechazarBien}"
-                                                                    rendered="#{bien.rechazar and controllerAgregarMantenimientos.visibleBotonRechazarBien}">
+                                                                    rendered="#{bien.finalizarMantenimiento and controllerAgregarMantenimientos.visibleBotonRechazarBien}">
                                                     <f:attribute id="bienSeleccionado" name="bienSeleccionado"  value="#{bien.id}"/> 
                                                 </ice:commandButton>
-                                            </ice:column>
-                                            
+                                            </ice:column>                                            
                                         </ice:dataTable>
                                     </div>
                                 </div>
@@ -199,17 +200,17 @@
         
         <!-- Panel de confirmacion --> 
         <ui:insert name="modalConfirmacion">
-            <ui:include src="../exclusiones/panelConfirmacion.xhtml" />
+            <ui:include src="../mantenimientos/panelConfirmacion.xhtml" />
         </ui:insert>
         
         <!-- Panel de confirmacion de Solicitud--> 
         <ui:insert name="modalConfirmarSolicitud">
-            <ui:include src="../exclusiones/panelConfirmacionSolicitud.xhtml" />
+            <ui:include src="../mantenimientos/panelConfirmacionSolicitud.xhtml" />
         </ui:insert>
         
         <!-- Panel Agregar Bienes -->
         <ui:insert name="panelAgregarBienes">
-            <ui:include src="../exclusiones/listadoBienes.xhtml" />
+            <ui:include src="../mantenimientos/listadoBienes.xhtml" />
         </ui:insert>
     </div>
 </ice:form>

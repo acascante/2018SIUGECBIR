@@ -161,6 +161,21 @@
                                                    value="#{controllerUbicacion.ubicacionCommand.ubicacionPadre.detalle}" />
                                 </div>                                             
                            </div>                                                             
+                           <div class="col-md-6">
+                                <div class="form-group"> 
+                                    <label class="control-label" for="txtEstado">
+                                        <ice:outputText value="#{label['sigebi.label.vista.ubicacion.estado']}" />                            
+                                    </label>
+                                    <ice:selectOneMenu id="txtEstado"                                           
+                                                       styleClass="form-control"
+                                                       partialSubmit="true"
+                                                       value="#{controllerUbicacion.ubicacionCommand.estado.idTemporal}"
+                                                       valueChangeListener="#{controllerUbicacion.cambiarEstado}">
+                                                       <f:selectItem itemLabel="N/A" itemValue="-1"/>
+                                                       <f:selectItems id="slcEstadoItem" value="#{controllerUbicacion.ubicacionCommand.estadoOptions}"/>
+                                    </ice:selectOneMenu>                                    
+                                </div>                                             
+                           </div>                                       
                         </div>
                         <div class="row">
                             <div class="col-md-6">

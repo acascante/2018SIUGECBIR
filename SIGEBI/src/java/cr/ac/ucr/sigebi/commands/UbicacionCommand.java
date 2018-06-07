@@ -5,6 +5,7 @@
  */
 package cr.ac.ucr.sigebi.commands;
 
+import cr.ac.ucr.sigebi.domain.Estado;
 import cr.ac.ucr.sigebi.domain.Ubicacion;
 import cr.ac.ucr.sigebi.domain.Usuario;
 import cr.ac.ucr.sigebi.utils.TreeSIGEBI;
@@ -23,7 +24,9 @@ public class UbicacionCommand {
     private String fltDescripcionUbicacion;
     private TreeSIGEBI treeSIGEBI;
     private List<SelectItem> responsablesOptions;
+    private List<SelectItem> estadoOptions;
     private Usuario usuarioResponsable;
+    private Estado estado;
 
     //</editor-fold>
     
@@ -32,6 +35,7 @@ public class UbicacionCommand {
         this.ubicacion = new Ubicacion();
         this.fltDescripcionUbicacion = "";
         this.usuarioResponsable = new Usuario();
+        this.estado = new Estado();
     }
 
     //</editor-fold>
@@ -81,11 +85,26 @@ public class UbicacionCommand {
         return treeSIGEBI;
     }
 
+    public Estado getEstado() {
+        return estado;
+    }
+
+    public void setEstado(Estado estado) {
+        this.estado = estado;
+    }
+
     public void setTreeSIGEBI(TreeSIGEBI treeSIGEBI) {
         this.treeSIGEBI = treeSIGEBI;
     }
+
+    public List<SelectItem> getEstadoOptions() {
+        return estadoOptions;
+    }
+
+    public void setEstadoOptions(List<SelectItem> estadoOptions) {
+        this.estadoOptions = estadoOptions;
+    }
     
     //</editor-fold>
-
     
 }

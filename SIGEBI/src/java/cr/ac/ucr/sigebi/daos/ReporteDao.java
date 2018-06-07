@@ -47,8 +47,8 @@ public class ReporteDao extends GenericDaoImpl {
 
     // <editor-fold defaultstate="collapsed" desc="Metodos">
     @Transactional
-    public void ejecutarReporte(String idReporte
-                                , String direccionReporte
+    public void ejecutarReporte(String idReporte            // traslado
+                                , String direccionReporte   //jasper
                                 , Map parametros
                                 , String formatoReporte) throws JRException, Exception {
 
@@ -92,6 +92,7 @@ public class ReporteDao extends GenericDaoImpl {
         }
         exporter.setParameter(JRExporterParameter.JASPER_PRINT, jasperPrint);
         String direccion_exportacion = ((ServletContext) FacesContext.getCurrentInstance().getExternalContext().getContext()).getRealPath("reportes/" + idReporte + extension);
+        //direccion_exportacion = (String) "C:\\cygwin64\\home\\alvaro.cascante\\2018\\workspace\\SIGEBI\\build\\web\\reportes\\traslados.pdf"	
         exporter.setParameter(JRExporterParameter.OUTPUT_FILE, new java.io.File(direccion_exportacion));
 //        try {
             exporter.exportReport();

@@ -361,7 +361,7 @@ public class AgregarBienController extends BaseController {
             }
             
                     
-            treeUbicacionSIGEBI = new TreeUbicacionSIGEBI(unidadEjecutora);
+            treeUbicacionSIGEBI = new TreeUbicacionSIGEBI(unidadEjecutora, this.estadoPorDominioValor(Constantes.DOMINIO_GENERAL, Constantes.ESTADO_GENERAL_ACTIVO));
             treeUbicacionSIGEBI.setUbicacionModel(modelUbicacion);
 
 

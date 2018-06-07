@@ -49,7 +49,6 @@ public class AgregarMantenimientoController extends BaseController {
     private final int ACCION_SOLICITAR_CORRECCION_BIEN = 3;
     private final int ACCION_RECHAZAR_BIEN = 4;
     
-    
     public class ListadoBienes extends BaseController {
         
         private ListarBienesCommand command;
@@ -279,7 +278,7 @@ public class AgregarMantenimientoController extends BaseController {
     }
     
     private void inicializarNuevo() {
-        Estado estadoNuevo = this.estadoPorDominioValor(Constantes.DOMINIO_EXCLUSION, Constantes.ESTADO_MANTENIMIENTO_NUEVO);
+        Estado estadoNuevo = this.estadoPorDominioValor(Constantes.DOMINIO_SOLICITUD_MANTENIMIENTO, Constantes.ESTADO_MANTENIMIENTO_NUEVO);
         this.command = new MantenimientoCommand(this.unidadEjecutora, estadoNuevo, this.usuarioSIGEBI);
         this.solicitudRegistrada = false;
         this.autorizadoAprobar = false;
@@ -494,7 +493,7 @@ public class AgregarMantenimientoController extends BaseController {
                     bien.setEstadoInterno(estadoInternoBien);
                 }
                 if (valorEstadoBien != 0) {
-                    bien.setEstado(this.estadoPorDominioValor(Constantes.DOMINIO_BIEN_INTERNO, valorEstadoBien));
+                    bien.setEstado(this.estadoPorDominioValor(Constantes.DOMINIO_BIEN, valorEstadoBien));
                 }
                 bienModel.actualizar(bien);
             }
@@ -516,7 +515,7 @@ public class AgregarMantenimientoController extends BaseController {
 
     public void cerrarPanelAgregarBienes() {
         this.visiblePanelBienes = false;
-        Estado estadoEnSolicitud = this.estadoPorDominioValor(Constantes.DOMINIO_BIEN_INTERNO, Constantes.ESTADO_INTERNO_BIEN_EXCLUSION);
+        Estado estadoEnSolicitud = this.estadoPorDominioValor(Constantes.DOMINIO_BIEN_INTERNO, Constantes.ESTADO_INTERNO_BIEN_SOLICITUD_MANTENIMIENTO);
         
         if (!this.listadoBienes.bienesSeleccionados.isEmpty()) {
             for (Map.Entry<Long, Boolean> rowBien : this.listadoBienes.bienesSeleccionados.entrySet()) {
@@ -590,7 +589,7 @@ public class AgregarMantenimientoController extends BaseController {
         
         bien.setEstadoInterno(estadoBienInterno);
         if (valorEstadoBien != 0) {
-            bien.setEstado(this.estadoPorDominioValor(Constantes.DOMINIO_BIEN_INTERNO, valorEstadoBien));
+            bien.setEstado(this.estadoPorDominioValor(Constantes.DOMINIO_BIEN, valorEstadoBien));
         }
         this.bienModel.actualizar(bien);
         
@@ -710,8 +709,7 @@ public class AgregarMantenimientoController extends BaseController {
 
     public boolean isVisibleBotonAceptar() {
         this.visibleBotonAceptar = false;
-        if (Constantes.ESTADO_MANTENIMIENTO_NUEVO.equals(this.command.getEstado().getValor()) ||
-            Constantes.ESTADO_MANTENIMIENTO_CORRECCION_SOLICITADA.equals(this.command.getEstado().getValor())) {
+        if (Constantes.ESTADO_MANTENIMIENTO_APLICADO.equals(this.command.getEstado().getValor())) {
             this.visibleBotonAceptar = true;
         }
         return visibleBotonAceptar;
@@ -727,7 +725,8 @@ public class AgregarMantenimientoController extends BaseController {
 
     public boolean isVisibleBotonAplicar() {
         this.visibleBotonAplicar = false;
-        if (Constantes.ESTADO_MANTENIMIENTO_NUEVO.equals(this.command.getEstado().getValor())) {
+        if (Constantes.ESTADO_MANTENIMIENTO_NUEVO.equals(this.command.getEstado().getValor()) &&
+            this.solicitudRegistrada) {
             this.visibleBotonAplicar = true;
         }        
         return visibleBotonAplicar;
@@ -769,8 +768,7 @@ public class AgregarMantenimientoController extends BaseController {
 
     public boolean isVisibleBotonAceptarBien() {
         this.visibleBotonAceptarBien = false;
-        if (Constantes.ESTADO_MANTENIMIENTO_NUEVO.equals(this.command.getEstado().getValor()) ||
-            Constantes.ESTADO_MANTENIMIENTO_CORRECCION_SOLICITADA.equals(this.command.getEstado().getValor())) {
+        if (Constantes.ESTADO_MANTENIMIENTO_APLICADO.equals(this.command.getEstado().getValor())) {
             this.visibleBotonAceptarBien = true;
         }
         return visibleBotonAceptarBien;
@@ -786,7 +784,9 @@ public class AgregarMantenimientoController extends BaseController {
     
     public boolean isVisibleBotonAplicarBien() {
         this.visibleBotonAplicarBien = false;
-        if (Constantes.ESTADO_MANTENIMIENTO_NUEVO.equals(this.command.getEstado().getValor())) {
+        if ((Constantes.ESTADO_MANTENIMIENTO_NUEVO.equals(this.command.getEstado().getValor()) ||
+            Constantes.ESTADO_MANTENIMIENTO_CORRECCION_SOLICITADA.equals(this.command.getEstado().getValor())) &&
+            this.solicitudRegistrada) {
             this.visibleBotonAplicarBien = true;
         }
         return visibleBotonAplicarBien;

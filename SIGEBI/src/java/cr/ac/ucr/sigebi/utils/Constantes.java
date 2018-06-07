@@ -56,6 +56,7 @@ public final class Constantes {
     public static final Integer ESTADO_INTERNO_BIEN_MANTENIMIENTO_RECHAZADO = 92;
     public static final Integer ESTADO_INTERNO_BIEN_MANTENIMIENTO_APROBADO = 93;
     public static final Integer ESTADO_INTERNO_BIEN_MANTENIMIENTO_ANULADO = 94;
+    public static final Integer ESTADO_INTERNO_BIEN_MANTENIMIENTO_CORRECCION_SOLICITADA = 96;
     public static final Integer ESTADO_INTERNO_BIEN_MANTENIMIENTO_FINALIZADO = 95;
     
     // Estados de una nota
@@ -233,6 +234,8 @@ public final class Constantes {
 
     public static final String TIPO_REPORTE_PDF = "PDF";
     public static final String TIPO_REPORTE_EXCELL = "EXCELL";
+    public static final String TIPO_REPORTE_PDF_EXTENSION = ".pdf";
+    public static final String TIPO_REPORTE_EXCELL_EXTENSION = ".xlsx";
     
     public static final String TIPO_MOVIMIENTO_SINCRONIZAR_AGREGAR = "AGREGAR";
     public static final String TIPO_MOVIMIENTO_SINCRONIZAR_EXCLUIR = "EXCLUIR";
@@ -287,9 +290,9 @@ public final class Constantes {
     public static final String VISTA_SINCRONIZACION_BIEN_LISTADO = "../bienes/listarBienSincronizar.xhtml";
     
     public static final String VISTA_MANTENIMIENTO_LISTADO = "mantenimiento";
-    public static final String VISTA_MANTENIMIENTO_LISTADO_PAGINA = "../mantenimiento/listarMantenimientos.xhtml";
+    public static final String VISTA_MANTENIMIENTO_LISTADO_PAGINA = "../mantenimientos/listarMantenimientos.xhtml";
     public static final String VISTA_MANTENIMIENTO_NUEVO = "mantenimiento_nueva";
-    public static final String VISTA_MANTENIMIENTO_NUEVA_PAGINA = "../mantenimiento/mantenimientoDetalle.xhtml";
+    public static final String VISTA_MANTENIMIENTO_NUEVA_PAGINA = "../mantenimientos/mantenimientoDetalle.xhtml";
     
     public static final String KEY_VISTA_SOLICITUD_DONACION_LISTADO = "donacion";
     public static final String VISTA_SOLICITUD_DONACION_LISTADO = "../inclusiones/listarDonaciones.xhtml";
@@ -321,9 +324,9 @@ public final class Constantes {
     public static final String KEY_VISTA_UBICACION = "ubicaciones";
     public static final String VISTA_UBICACION = "../ubicacion/ubicacion.xhtml";
 
-    public static final String KEY_VISTA_SOLICITUD_SALIDA_LISTADO = "permisos_tras";
+    public static final String KEY_VISTA_SOLICITUD_SALIDA_LISTADO = "salidas";
     public static final String VISTA_SOLICITUD_SALIDA_LISTADO = "../salidas/listarSalidas.xhtml";
-    public static final String KEY_VISTA_SOLICITUD_SALIDA_DETALLE = "permisos_tras_deta";
+    public static final String KEY_VISTA_SOLICITUD_SALIDA_DETALLE = "salidas_deta";
     public static final String VISTA_SOLICITUD_SALIDA_DETALLE = "../salidas/detalleSolicitudSalida.xhtml";
 
     

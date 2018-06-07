@@ -92,7 +92,6 @@ public class SolicitudMantenimientoDao extends GenericDaoImpl {
         try {
             Query query = this.queryListar(session, true, unidadEjecutora, id, fecha, estado);
             return (Long)query.uniqueResult();
-
         } catch (FWExcepcion e) {
             throw new FWExcepcion("sigebi.label.mantenimiento.error.listar", "Error contando los registros de tipo " + this.getClass(), e.getCause());
         }finally{
@@ -122,7 +121,7 @@ public class SolicitudMantenimientoDao extends GenericDaoImpl {
         if (contar) {
             sql.append("COUNT(sol) FROM SolicitudMantenimiento sol ");
         } else {
-            sql.append("exc FROM SolicitudMantenimiento sol ");
+            sql.append("sol FROM SolicitudMantenimiento sol ");
         }
     
         sql.append("WHERE sol.unidadEjecutora = :unidadEjecutora "); 

@@ -27,7 +27,7 @@
                                        partialSubmit="true" 
                                        actionListener="#{controllerSolicitudSalida.nuevoRegistro}"
                                        value="#{label['sigebi.label.vista.listarSalidas.nuevo']}"  >
-                        <f:attribute id="vistaOrigenParam" name="keyVistaOrigen"  value="permisos_tras"/>
+                        <f:attribute id="vistaOrigenParam" name="keyVistaOrigen"  value="salidas"/>
                     </ice:commandButton>                    
                 </div>              
             </div>            
@@ -204,7 +204,7 @@
                                                    actionListener="#{controllerSolicitudSalida.modificarRegistro}"
                                                    value="#{label['sigebi.label.vista.listarSalidas.detalle']}"  >
                                     <f:attribute id="bienSeleccionado" name="solicitudSeleccionada"  value="#{solicitud}"/>
-                                    <f:attribute id="vistaOrigenParam" name="keyVistaOrigen"  value="permisos_tras"/>
+                                    <f:attribute id="vistaOrigenParam" name="keyVistaOrigen"  value="salidas"/>
                                 </ice:commandButton>
                             </ice:column>
                         </ice:dataTable>

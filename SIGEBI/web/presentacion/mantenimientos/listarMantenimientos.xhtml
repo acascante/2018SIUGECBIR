@@ -1,4 +1,4 @@
-<ice:form id="frmListarExclusiones" 
+<ice:form id="frmListarMantenimientos" 
           xmlns:ice="http://www.icesoft.com/icefaces/component" 
           xmlns:h="http://java.sun.com/jsf/html" 
           xmlns:f="http://java.sun.com/jsf/core" 
@@ -130,7 +130,7 @@
                             </ice:column>
 
                             <ice:column style="text-align: center;">
-                                <ice:commandButton id="botonDetalle" actionListener="#{controllerAgregarExclusiones.detalleRegistro}" value="#{label['label.detalle']}" style="float:right;margin-top:2%" styleClass="boton" partialSubmit="true">
+                                <ice:commandButton id="botonDetalle" actionListener="#{controllerAgregarMantenimientos.detalleRegistro}" value="#{label['label.detalle']}" style="float:right;margin-top:2%" styleClass="boton" partialSubmit="true">
                                     <f:attribute id="solicitudDetalle" name="#{controllerListarMantenimientos.command.key}"  value="#{solicitud.id}"/>
                                     <f:attribute id="vistaOrigen" name="#{controllerListarMantenimientos.command.keyVistaOrigen}"  value="#{controllerListarMantenimientos.vistaOrigen}"/>
                                 </ice:commandButton>

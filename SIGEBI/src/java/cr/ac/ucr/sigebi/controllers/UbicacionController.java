@@ -9,6 +9,7 @@ import cr.ac.ucr.framework.utils.FWExcepcion;
 import cr.ac.ucr.framework.vista.util.Mensaje;
 import cr.ac.ucr.framework.vista.util.Util;
 import cr.ac.ucr.sigebi.commands.UbicacionCommand;
+import cr.ac.ucr.sigebi.domain.Estado;
 import cr.ac.ucr.sigebi.domain.Ubicacion;
 import cr.ac.ucr.sigebi.domain.Usuario;
 import cr.ac.ucr.sigebi.models.UbicacionModel;
@@ -45,6 +46,9 @@ public class UbicacionController extends BaseController {
     // Se usan en el jsp
     boolean modificarUbicacion = false;
     boolean agregarUbicacion = false;
+
+    Estado estadoActivoUbi = this.estadoPorDominioValor(Constantes.DOMINIO_GENERAL, Constantes.ESTADO_GENERAL_ACTIVO);
+    Estado estadoInactivoUbi = this.estadoPorDominioValor(Constantes.DOMINIO_GENERAL, Constantes.ESTADO_GENERAL_INACTIVO);
 
     UbicacionCommand ubicacionCommand;
     
@@ -95,10 +99,15 @@ public class UbicacionController extends BaseController {
     }
 
     private void cargaDatosGenerales() {    
-        ubicacionCommand.setResponsablesOptions(new ArrayList<SelectItem>());
+        ubicacionCommand.setResponsablesOptions(new ArrayList<SelectItem>());        
         for (Usuario usuario : usuarioModel.listarUsuariosUnidad(unidadEjecutora)) {
             ubicacionCommand.getResponsablesOptions().add(new SelectItem(usuario.getId(), usuario.getNombreCompleto()));
         }
+        
+        //Lista de estados
+        ubicacionCommand.setEstadoOptions(new ArrayList<SelectItem>());        
+        ubicacionCommand.getEstadoOptions().add(new SelectItem(estadoActivoUbi.getId(), estadoActivoUbi.getNombre()));        
+        ubicacionCommand.getEstadoOptions().add(new SelectItem(estadoInactivoUbi.getId(), estadoInactivoUbi.getNombre()));        
     }
 
     //</editor-fold>
@@ -116,7 +125,7 @@ public class UbicacionController extends BaseController {
 
         if (nodoSIGEBI.getObject() != null) {
             //Se busca las unidades
-            List<Ubicacion> resultado = ubicacionModel.listarUbicacionPadre(((Ubicacion) nodoSIGEBI.getObject()));
+            List<Ubicacion> resultado = ubicacionModel.listarUbicacionPadre(((Ubicacion) nodoSIGEBI.getObject()), null);
             nodoSIGEBI.agregarNodos(new ArrayList<Object>(resultado), "detalle");
 
             //Se selecciona el nodo 
@@ -126,7 +135,9 @@ public class UbicacionController extends BaseController {
             Ubicacion ubicacion = ((Ubicacion) nodoSIGEBI.getObject());
             ubicacionCommand.setUbicacion(ubicacion);
             ubicacionCommand.setUbicacionPadre(ubicacion.getPertenece());
-            ubicacionCommand.setUsuarioResponsable(ubicacion.getResponsable() != null ? ubicacion.getResponsable() : new Usuario());            
+            ubicacionCommand.setUsuarioResponsable(ubicacion.getResponsable() != null ? ubicacion.getResponsable() : new Usuario());        
+            ubicacionCommand.setEstado(ubicacion.getEstado());
+            ubicacionCommand.getEstado().setIdTemporal(ubicacion.getEstado().getId());
             this.cargaDatosGenerales();
 
             modificarUbicacion = true;
@@ -159,10 +170,12 @@ public class UbicacionController extends BaseController {
             ubicacionCommand.setUbicacion(new Ubicacion());
             ubicacionCommand.setUbicacionPadre(ubicacion);
             ubicacionCommand.setUsuarioResponsable(new Usuario());
+            ubicacionCommand.setEstado(new Estado());
         }else{
             ubicacionCommand.setUbicacion(new Ubicacion());
             ubicacionCommand.setUbicacionPadre(new Ubicacion());            
             ubicacionCommand.setUsuarioResponsable(new Usuario());
+            ubicacionCommand.setEstado(new Estado());
         }
         modificarUbicacion = false;
         agregarUbicacion = true;
@@ -187,9 +200,9 @@ public class UbicacionController extends BaseController {
                     ubicacionCommand.getUbicacion().setResponsable(null);
                 }
                 if (agregarUbicacion) {
-                    ubicacionCommand.getUbicacion().setEstado(this.estadoPorDominioValor(Constantes.DOMINIO_GENERAL, Constantes.ESTADO_GENERAL_ACTIVO));
                     ubicacionCommand.getUbicacion().setUnidadEjecutora(this.unidadEjecutora);
                 }
+                ubicacionCommand.getUbicacion().setEstado(ubicacionCommand.getEstado());
                 ubicacionModel.almacenar(ubicacionCommand.getUbicacion());
                 modificarUbicacion = false;
                 agregarUbicacion = false;
@@ -213,7 +226,10 @@ public class UbicacionController extends BaseController {
             Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.error.controllerUbicacion.descripcion.requerido"));
             return false;
         }
-
+        if (ubicacionCommand.getEstado() == null || (ubicacionCommand.getEstado() != null && ubicacionCommand.getEstado().getId() <= 0)) {
+            Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.error.controllerUbicacion.estado.requerido"));
+            return false;
+        }
         return true;
     }
 
@@ -250,7 +266,7 @@ public class UbicacionController extends BaseController {
 
             // Se obtiene el id del tipoInforme
             String valor = ubicacionCommand.getUsuarioResponsable().getId();
-            if (!valor.equals("-1")) {
+            if (valor != null && !valor.equals("-1")) {
                 ubicacionCommand.setUsuarioResponsable(usuarioModel.buscarPorId(valor));
             }else{
                 ubicacionCommand.setUsuarioResponsable(new Usuario());
@@ -258,10 +274,31 @@ public class UbicacionController extends BaseController {
         } catch (FWExcepcion e) {
             Mensaje.agregarErrorAdvertencia(e.getError_para_usuario());
         } catch (Exception e) {
-            Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.error.informeTecnicoController.cambiarTipoInforme"));
+            Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.error.controllerUbicacion.cambiarResponsable"));
         }
-
     }
+    
+    public void cambiarEstado(ValueChangeEvent event) {
+        try {
+            if (!event.getPhaseId().equals(PhaseId.INVOKE_APPLICATION)) {
+                event.setPhaseId(PhaseId.INVOKE_APPLICATION);
+                event.queue();
+                return;
+            }
+
+            // Se obtiene el id del tipoInforme
+            Long valor = ubicacionCommand.getEstado().getIdTemporal();
+            if (valor > 0) {
+                ubicacionCommand.setEstado(this.estadoPorId(valor));
+                ubicacionCommand.getEstado().setIdTemporal(valor);                
+            }
+        } catch (FWExcepcion e) {
+            Mensaje.agregarErrorAdvertencia(e.getError_para_usuario());
+        } catch (Exception e) {
+            Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.error.controllerUbicacion.cambiarEstado"));
+        }
+    }
+    
     //</editor-fold>
     
     //<editor-fold defaultstate="collapsed" desc="Paginacion">
@@ -282,7 +319,7 @@ public class UbicacionController extends BaseController {
         try {
 
             //Se cuenta la cantidad de registros
-            Long contador = ubicacionModel.contar(ubicacionCommand.getFltDescripcionUbicacion(), null);
+            Long contador = ubicacionModel.contar(ubicacionCommand.getFltDescripcionUbicacion(), unidadEjecutora, null);
 
             //Se actualiza la cantidad de registros segun los filtros
             this.setCantidadRegistros(contador.intValue());
@@ -300,7 +337,7 @@ public class UbicacionController extends BaseController {
     private void listar() {
         try {
 
-            List<Ubicacion> resultado = ubicacionModel.listar(ubicacionCommand.getFltDescripcionUbicacion(), null, this.getPrimerRegistro() - 1, this.getUltimoRegistro());
+            List<Ubicacion> resultado = ubicacionModel.listar(ubicacionCommand.getFltDescripcionUbicacion(), unidadEjecutora, null, this.getPrimerRegistro() - 1, this.getUltimoRegistro());
 
             //Se crea el tree que se utiliza en la pantalla
             ubicacionCommand.getTreeSIGEBI().asignaObjetos(new ArrayList<Object>(resultado));

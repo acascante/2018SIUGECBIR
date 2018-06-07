@@ -7,6 +7,7 @@ package cr.ac.ucr.sigebi.models;
 
 import cr.ac.ucr.framework.utils.FWExcepcion;
 import cr.ac.ucr.sigebi.daos.UbicacionDao;
+import cr.ac.ucr.sigebi.domain.Estado;
 import cr.ac.ucr.sigebi.domain.Ubicacion;
 import cr.ac.ucr.sigebi.domain.UnidadEjecutora;
 import java.util.List;
@@ -27,8 +28,8 @@ public class UbicacionModel {
 //        return ubicacionDao.listar(unidadEjecutora);
 //    }
     
-    public List<Ubicacion> listarUbicacionPadre(Ubicacion ubicacion) throws FWExcepcion {
-        return ubicacionDao.listarUbicacionPadre(ubicacion);        
+    public List<Ubicacion> listarUbicacionPadre(Ubicacion ubicacion,  Estado estado) throws FWExcepcion {
+        return ubicacionDao.listarUbicacionPadre(ubicacion, estado);        
     }
     
     public Ubicacion buscarPorId(Long id) throws FWExcepcion {
@@ -43,12 +44,12 @@ public class UbicacionModel {
         ubicacionDao.eliminar(ubicacion);
     }
     
-    public Long contar(String descripcion, UnidadEjecutora unidadEjecutora) throws FWExcepcion {
-        return ubicacionDao.contar(descripcion, unidadEjecutora);
+    public Long contar(String descripcion, UnidadEjecutora unidadEjecutora, Estado estado) throws FWExcepcion {
+        return ubicacionDao.contar(descripcion, unidadEjecutora, estado);
     }
 
-    public List<Ubicacion> listar(String descripcion, UnidadEjecutora unidadEjecutora, Integer pPrimerRegistro, Integer pUltimoRegistro) throws FWExcepcion {
-        return ubicacionDao.listar(descripcion, unidadEjecutora, pPrimerRegistro, pUltimoRegistro);
+    public List<Ubicacion> listar(String descripcion, UnidadEjecutora unidadEjecutora, Estado estado, Integer pPrimerRegistro, Integer pUltimoRegistro) throws FWExcepcion {
+        return ubicacionDao.listar(descripcion, unidadEjecutora, estado, pPrimerRegistro, pUltimoRegistro);
     }
 
 }

@@ -460,6 +460,28 @@ public class Bien extends ObjetoBase implements Serializable {
         }
         return true;
     }
+    
+    public boolean getAplicarMantenimiento() {
+        if (Constantes.ESTADO_INTERNO_BIEN_SOLICITUD_MANTENIMIENTO.equals(this.getEstadoInterno().getValor()) ||
+            Constantes.ESTADO_INTERNO_BIEN_MANTENIMIENTO_CORRECCION_SOLICITADA.equals(this.getEstadoInterno().getValor())) {
+            return true;
+        }
+        return false;
+    }
+    public boolean getAceptarMantenimiento() {
+        if (Constantes.ESTADO_INTERNO_BIEN_MANTENIMIENTO_APLICADO.equals(this.getEstadoInterno().getValor())) {
+            return true;
+        }
+        return false;
+    }
+    public boolean getFinalizarMantenimiento() {
+        if (Constantes.ESTADO_INTERNO_BIEN_MANTENIMIENTO_APROBADO.equals(this.getEstadoInterno().getValor())) {
+            return true;
+        }
+        return false;
+    }
+    
+    
     //</editor-fold>
     
     //<editor-fold defaultstate="collapsed" desc="Metodos">

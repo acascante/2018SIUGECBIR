@@ -8,6 +8,7 @@ package cr.ac.ucr.sigebi.daos;
 import cr.ac.ucr.framework.daoHibernate.DaoHelper;
 import cr.ac.ucr.framework.daoImpl.GenericDaoImpl;
 import cr.ac.ucr.framework.utils.FWExcepcion;
+import cr.ac.ucr.sigebi.domain.Estado;
 import cr.ac.ucr.sigebi.domain.Ubicacion;
 import cr.ac.ucr.sigebi.domain.UnidadEjecutora;
 import java.util.List;
@@ -46,13 +47,18 @@ public class UbicacionDao extends GenericDaoImpl {
     }
 
     @Transactional(readOnly = true)
-    public List<Ubicacion> listarUbicacionPadre(Ubicacion ubicacion) throws FWExcepcion {
+    public List<Ubicacion> listarUbicacionPadre(Ubicacion ubicacion, Estado estado) throws FWExcepcion {
         Session session = dao.getSessionFactory().openSession();
         try {
-            String sql = "SELECT ub FROM Ubicacion ub WHERE ub.pertenece = :ubicacion ";
+            String sql = "SELECT ub FROM Ubicacion ub WHERE ub.pertenece = :ubicacion";
+            if(estado != null){
+                sql = sql + " and estado = :estado";
+            }
             Query query = session.createQuery(sql);
             query.setParameter("ubicacion", ubicacion);
-
+            if(estado != null){
+                query.setParameter("estado", estado);
+            }
             return (List<Ubicacion>) query.list();
         } catch (HibernateException e) {
             throw new FWExcepcion("sigebi.error.ubicacionDao.listarUbicacionPadre", "Error obtener los registros de tipo " + this.getClass(), e.getCause());
@@ -96,11 +102,11 @@ public class UbicacionDao extends GenericDaoImpl {
     
     
     @Transactional(readOnly = true)
-    public List<Ubicacion> listar(String descripcion, UnidadEjecutora unidadEjecutora, Integer pPrimerRegistro, Integer pUltimoRegistro) throws FWExcepcion {
+    public List<Ubicacion> listar(String descripcion, UnidadEjecutora unidadEjecutora, Estado estado, Integer pPrimerRegistro, Integer pUltimoRegistro) throws FWExcepcion {
         Session session = this.dao.getSessionFactory().openSession();
         try {
             //Se genera el query para la busqueda
-            Query q = this.creaQueryListar(descripcion, unidadEjecutora, false, session);
+            Query q = this.creaQueryListar(descripcion, unidadEjecutora, estado, false, session);
 
             //Paginacion
             if (!(pPrimerRegistro.equals(1) && pUltimoRegistro.equals(1))) {
@@ -119,12 +125,12 @@ public class UbicacionDao extends GenericDaoImpl {
     }
 
     @Transactional(readOnly = true)
-    public Long contar(String descripcion, UnidadEjecutora unidadEjecutora) throws FWExcepcion {
+    public Long contar(String descripcion, UnidadEjecutora unidadEjecutora, Estado estado) throws FWExcepcion {
         Session session = dao.getSessionFactory().openSession();
         try {
 
             //Se genera el query para la busqueda de los bienes
-            Query q = this.creaQueryListar(descripcion, unidadEjecutora, true, session);
+            Query q = this.creaQueryListar(descripcion, unidadEjecutora, estado, true, session);
 
             //Se obtienen los resutltados
             return (Long) q.uniqueResult();
@@ -137,7 +143,7 @@ public class UbicacionDao extends GenericDaoImpl {
         }
     }
 
-    private Query creaQueryListar(String descripcion, UnidadEjecutora unidadEjecutora, Boolean contar,Session session) {
+    private Query creaQueryListar(String descripcion, UnidadEjecutora unidadEjecutora, Estado estado, Boolean contar,Session session) {
 
         StringBuilder sql = new StringBuilder(" "); 
         if (contar) {
@@ -155,6 +161,9 @@ public class UbicacionDao extends GenericDaoImpl {
         if(unidadEjecutora != null){
            sql.append(" and obj.unidadEjecutora = :unidadEjecutora");
         }
+        if (estado != null ) {
+           sql.append(" and obj.estado = :estado");
+        }
 
         sql.append(" ORDER BY obj.id desc ");
 
@@ -165,6 +174,9 @@ public class UbicacionDao extends GenericDaoImpl {
         }
         if(unidadEjecutora != null){
             q.setParameter("unidadEjecutora", unidadEjecutora);
+        }
+        if(estado != null){
+            q.setParameter("estado", estado);
         }
         return q;
     }   

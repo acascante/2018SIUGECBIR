@@ -255,7 +255,7 @@ public class TomaFisicaController extends BaseController {
             buscarTomasFisicasSobrantes();
         }
         
-        treeUbicacionSIGEBI = new TreeUbicacionSIGEBI(unidadEjecutora);
+        treeUbicacionSIGEBI = new TreeUbicacionSIGEBI(unidadEjecutora, this.estadoPorDominioValor(Constantes.DOMINIO_GENERAL, Constantes.ESTADO_GENERAL_ACTIVO));
         treeUbicacionSIGEBI.setUbicacionModel(ubicacionModel);
     }
 
