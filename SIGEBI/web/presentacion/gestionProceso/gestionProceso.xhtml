@@ -27,7 +27,7 @@
                         <ice:selectOneMenu id="procesoSelec"                                           
                                            styleClass="form-control"
                                            partialSubmit="true"
-                                           value="#{controllerGestionProceso.command.tipoProceso.idTemporal}"
+                                           value="#{controllerGestionProceso.command.tipoProceso.idTemporal}"                                          
                                            valueChangeListener="#{controllerGestionProceso.seleccionProceso}">
                                            <f:selectItem itemLabel="N/A" itemValue="-1"/>
                                            <f:selectItems id="procesoSelecItem" value="#{controllerGestionProceso.tiposProceso}"/>
@@ -87,6 +87,7 @@
                                                    style="margin-top:2%" 
                                                    styleClass="btnAgregar_Proceso" 
                                                    partialSubmit="true"
+                                                   rendered="#{controllerGestionProceso.command.autorizacion.idTemporal > 0}"                                                   
                                                    actionListener="#{controllerGestionProceso.mostrarPanel}">
                             <f:attribute id="accion" name="accion"  value="3"/>
                         </ice:commandButton>
@@ -103,7 +104,7 @@
             </div>
             
             <!-- Tabla de usuarios -->
-            <ice:outputHtml rendered="#{controllerGestionProceso.usuarios != null}" id="outDataTable" >
+            <ice:outputHtml  rendered="#{controllerGestionProceso.usuarios != null}" id="outDataTable" >
                 <!-- Paginacion -->
                 <div class="row">
                     <div class="col-sm-12">
@@ -159,8 +160,7 @@
                                                 var="usuario"
                                                 paginator="true"
                                                 paginatorPosition="bottom"
-                                                rendered="#{controllerGestionProceso.usuarios != null}"
-                                                rows="5">                            
+                                                rendered="#{controllerGestionProceso.usuarios != null}">                            
                                     <ice:column id="colIdUsuario">
                                         <f:facet name="header">
                                             <ice:columnGroup>
@@ -176,7 +176,7 @@
                                                 </ice:headerRow>
                                             </ice:columnGroup>
                                         </f:facet>                                
-                                        <h:outputText id="colIdUsuarioTxt" value="#{usuario.id}"/>
+                                        <h:outputText id="colIdUsuarioTxt" value="#{usuario.usuarioSeguridad.id}"/>
                                     </ice:column>
                                     <ice:column id="colNombre">
                                         <f:facet name="header">
@@ -193,14 +193,14 @@
                                                 </ice:headerRow>
                                             </ice:columnGroup>
                                         </f:facet>                                
-                                        <h:outputText id="colNombreTxt" value="#{usuario.nombreCompleto}"/>
+                                        <h:outputText id="colNombreTxt" value="#{usuario.usuarioSeguridad.nombreCompleto}"/>
                                     </ice:column>                                                                                       
                                     <ice:column style="text-align: center;">
                                         <ice:commandButton id="botonAprobar"
                                                            style="margin-top:2%" 
                                                            styleClass="btnAgregar_usuario" 
                                                            partialSubmit="true" 
-                                                           rendered="#{!usuario.marcado}"
+                                                           rendered="#{!usuario.tieneAutorizacionRol}"
                                                            actionListener="#{controllerGestionProceso.agregar}">
                                             <f:attribute id="usuarioSelApro" name="usuarioSelApro"  value="#{usuario}"/>                                
                                         </ice:commandButton>
@@ -208,7 +208,7 @@
                                                            style="margin-top:2%" 
                                                            styleClass="btnEliminar_usuario" 
                                                            partialSubmit="true"
-                                                           rendered="#{usuario.marcado}"
+                                                           rendered="#{usuario.tieneAutorizacionRol}"
                                                            actionListener="#{controllerGestionProceso.eliminar}">
                                             <f:attribute id="usuarioSelRech" name="usuarioSelRech"  value="#{usuario}"/>                                
                                         </ice:commandButton>

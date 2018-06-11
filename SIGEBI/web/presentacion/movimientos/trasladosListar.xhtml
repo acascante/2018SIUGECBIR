@@ -24,6 +24,7 @@
                                        partialSubmit="true" 
                                        actionListener="#{trasladoController.nuevoRegistro}"
                                        value="#{label['sigebi.Bien.Btn.Nuevo']}">
+                        <f:attribute id="keyVistaOrigen" name="keyVistaOrigen"  value="traslados"/>                        
                     </ice:commandButton>
                 </div>               
             </div>
@@ -214,7 +215,8 @@
                                                    partialSubmit="true"
                                                    actionListener="#{trasladoController.verDetalle}"  
                                                    value="#{label['sigebi.ActaListar.Label.VER']}"  >    
-                                    <f:attribute id="itemSeleccionado" name="itemSeleccionado"  value="#{traslado}"/>                         
+                                    <f:attribute id="itemSeleccionado" name="itemSeleccionado"  value="#{traslado}"/>  
+                                    <f:attribute id="keyVistaOrigen" name="keyVistaOrigen"  value="traslados"/>                              
                                 </ice:commandButton>
                                 
                             </ice:column>

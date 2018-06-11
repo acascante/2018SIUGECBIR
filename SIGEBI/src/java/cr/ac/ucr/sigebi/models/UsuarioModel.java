@@ -7,8 +7,10 @@ package cr.ac.ucr.sigebi.models;
 
 import cr.ac.ucr.framework.utils.FWExcepcion;
 import cr.ac.ucr.sigebi.daos.UsuarioDao;
+import cr.ac.ucr.sigebi.domain.AutorizacionRol;
 import cr.ac.ucr.sigebi.domain.UnidadEjecutora;
 import cr.ac.ucr.sigebi.domain.Usuario;
+import cr.ac.ucr.sigebi.domain.ViewAutorizacionRolUsuarioUnidad;
 import java.util.List;
 import javax.annotation.Resource;
 import org.springframework.stereotype.Service;
@@ -39,5 +41,12 @@ public class UsuarioModel {
     public List<Usuario> listarUsuariosUnidad(UnidadEjecutora unidadEjecutora) throws FWExcepcion{
         return usuarioDao.listarUsuariosUnidad(unidadEjecutora);
     }
-            
+        
+    public List<ViewAutorizacionRolUsuarioUnidad> listarUsuariosGestionProceso(String idUsuario, String nombreCompleto, String correo, AutorizacionRol autorizacionRol, UnidadEjecutora unidadEjecutora, Integer pPrimerRegistro, Integer pUltimoRegistro) throws FWExcepcion {
+        return usuarioDao.listarUsuariosGestionProceso(idUsuario, nombreCompleto, correo, autorizacionRol, unidadEjecutora, pPrimerRegistro, pUltimoRegistro);
+    }
+
+    public Long contarUsuariosGestionProceso(String idUsuario, String nombreCompleto, String correo, AutorizacionRol autorizacionRol, UnidadEjecutora unidadEjecutora) throws FWExcepcion {
+        return usuarioDao.contarUsuariosGestionProceso(idUsuario, nombreCompleto, correo, autorizacionRol, unidadEjecutora);
+    }
 }

@@ -273,14 +273,18 @@ public class TomaFisicaSobranteDao extends GenericDaoImpl {
         }
 
         if (orden1 != null && orden1.length() > 0) {
-            sql.append(" ORDER BY obj.:orden1 ");
+            sql.append(" ORDER BY obj.");
+            sql.append(orden1.toLowerCase());
             if (orden2 != null && orden2.length() > 0) {
-               sql.append(", obj.:orden2 ");
+                sql.append(", obj.");
+                sql.append(orden2.toLowerCase());
                 if (orden3 != null && orden3.length() > 0) {
-                    sql.append(", obj.:orden3 ");
+                    sql.append(", obj.");
+                    sql.append(orden3.toLowerCase());            
                 }
             }
-            sql.append(" :orden ");
+            sql.append(" ");
+            sql.append(orden);
         } else {
             sql.append(" ORDER BY obj.id asc ");
         }
@@ -310,18 +314,6 @@ public class TomaFisicaSobranteDao extends GenericDaoImpl {
         if (ubicacion != null && ubicacion.length() > 0) {
             q.setParameter("ubicacion", '%' + ubicacion + '%');
         }
-        
-        if (orden1 != null && orden1.length() > 0) {
-            q.setParameter("modelo", '%' + orden1 + '%');
-            if (orden2 != null && orden2.length() > 0) {
-               q.setParameter("modelo", '%' + orden2 + '%');
-                if (orden3 != null && orden3.length() > 0) {
-                    q.setParameter("modelo", '%' + orden3 + '%');
-                }
-            }
-            q.setParameter("modelo", '%' + orden + '%');
-        }
-
         return q;
     }
 }

@@ -1,11 +1,15 @@
 package cr.ac.ucr.sigebi.utils;
 
 import java.util.TimeZone;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Controller;
 
 /**
  *
  * @author jairo.cisneros
  */
+@Controller(value = "costantes")
+@Scope("session")
 public final class Constantes {
 
     static {
@@ -446,6 +450,7 @@ public final class Constantes {
     public static final Integer DISCRIMINATOR_SOLICITUD_TRASLADO = 3;
     public static final Integer DISCRIMINATOR_SOLICITUD_PRESTAMO = 4;
     public static final Integer DISCRIMINATOR_SOLICITUD_SALIDA = 5;
+    public static final Integer DISCRIMINATOR_SOLICITUD_MANTENIMIENTO = 6;
 
     //Discriminator Detalle Solicitud
     public static final Integer DISCRIMINATOR_DETALE_SOLICITUD = 1;

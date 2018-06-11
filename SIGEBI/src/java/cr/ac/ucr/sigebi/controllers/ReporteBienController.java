@@ -35,7 +35,6 @@ import javax.faces.event.ActionEvent;
 import javax.faces.event.PhaseId;
 import javax.faces.event.ValueChangeEvent;
 import javax.faces.model.SelectItem;
-import javax.servlet.ServletContext;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -164,11 +163,17 @@ public class ReporteBienController extends BaseController {
     }
     
     private void inicializarReporte() {
-        ReporteBien reporteBien = reportes.get(this.command.getIdReporte());
-        reporteBien.setCamposReporte(this.campoReporteBienModel.listarPorReporte(reporteBien));
-        
-        this.reporteRegistrado = true;
-        this.visibleBotonEliminar = true;
+        if (this.command.getIdReporte().equals(Constantes.DEFAULT_ID)) {
+            this.reporteRegistrado = false;
+            this.visibleBotonEliminar = false;
+            this.command = new ReporteBienCommand(usuarioSIGEBI);
+        } else {        
+            ReporteBien reporteBien = this.reportes.get(this.command.getIdReporte());
+            reporteBien.setCamposReporte(this.campoReporteBienModel.listarPorReporte(reporteBien));
+            this.command = new ReporteBienCommand(reporteBien);
+            this.reporteRegistrado = true;
+            this.visibleBotonEliminar = true;
+        }
     }      
     
     public void guardarReporte() {
@@ -179,19 +184,15 @@ public class ReporteBienController extends BaseController {
             if (Constantes.OK.equals(messageValidacion)) {
                 Tipo tipo = this.tipoPorId(this.command.getIdTipoReporte());
                 ReporteBien reporteBien = this.command.getReporteBien(tipo);
-                logMessage("-- Salvar Reporte --");
                 this.reporteBienModel.salvar(reporteBien);
-                logMessage("-- Salvar Campos Reporte --");
                 this.command.setIdReporte(reporteBien.getId());
-                
-                this.campoReporteBienModel.salvar(reporteBien.getCamposReporte());
+                this.campoReporteBienModel.salvar(this.command.getCamposReporteBien(reporteBien));
                 
                 this.visibleBotonEliminar = true;
                 this.visiblePanelNombreReporte = false;
                 
                 this.itemsReporte.add(new SelectItem(reporteBien.getId(), reporteBien.getNombre()));
                 this.reportes.put(reporteBien.getId(), reporteBien);
-                logMessage("-- Done --");
                 Mensaje.agregarInfo("Reporte guardado exitosamente");
             } else {
                 Mensaje.agregarErrorAdvertencia(messageValidacion);
@@ -255,12 +256,16 @@ public class ReporteBienController extends BaseController {
     }
     
     public void abrirPanelNombreReporte() {
-        this.visiblePanelNombreReporte = true;
-    }
-    
-    public void abrirPanelNombreReporteCopiar() {
-        this.command.setIdReporte(null);
-        this.visiblePanelNombreReporte = true;
+        if (this.command.getIdReporte().equals(Constantes.DEFAULT_ID)) {
+            this.visiblePanelNombreReporte = true;
+        } else {
+            Tipo tipo = this.tipoPorId(this.command.getIdTipoReporte());
+            ReporteBien reporteBien = this.command.getReporteBien(tipo);
+            reporteBien.setId(this.command.getIdReporte());
+            this.reporteBienModel.salvar(reporteBien);
+            this.campoReporteBienModel.salvar(this.command.getCamposReporteBien(reporteBien));
+            Mensaje.agregarInfo("Reporte guardado exitosamente");
+        }
     }
     
     public void cerrarPanelNombreReporte() {
@@ -284,22 +289,31 @@ public class ReporteBienController extends BaseController {
     }
     
     public void generarReporte() {
-                
         if (this.command.getIdTipoReporte().equals(Constantes.DEFAULT_ID)) {
             Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.label.reporteBien.error.tipo"));
         } else {
-        
             Map<String, Object> parametros = new HashMap<String, Object>();
             List<CampoReporteBien> listCamposReporte = this.command.getListCamposReporte();
             StringBuilder sql = new StringBuilder();
             sql.append("SELECT b FROM Bien b WHERE 1=1 ");
             for (CampoReporteBien campo : listCamposReporte) {
                 if(campo.getValor() != null && !campo.getValor().isEmpty()) {
-                    sql.append(" AND b.");
-                    sql.append(campo.getCampoBien().getNombreHQL());
-                    sql.append("= :");
-                    sql.append(campo.getCampoBien().getNombreHQL());
-                    parametros.put(campo.getCampoBien().getNombreHQL(), campo.getValor());
+                    //sql.append(" AND UPPER(b.descripcion) LIKE UPPER(:descripcion) ");
+                    sql.append(" AND ");
+                    if (campo.getCampoBien().getEsTexto() == 1) {
+                        sql.append("UPPER(b.");
+                        sql.append(campo.getCampoBien().getNombreHQL());
+                        sql.append(") LIKE UPPER(:");
+                        sql.append(campo.getCampoBien().getIdColumna());
+                        sql.append(")");
+                    } else {
+                        //sql.append(" AND b.unidadEjecutora = :unidadEjecutora ");
+                        sql.append("b.");
+                        sql.append(campo.getCampoBien().getNombreHQL());
+                        sql.append(" =:");
+                        sql.append(campo.getCampoBien().getIdColumna());
+                    }
+                    parametros.put(campo.getCampoBien().getIdColumna(), campo);
                 }
             }
             sql.append(" ORDER BY b.id ASC");
@@ -324,8 +338,6 @@ public class ReporteBienController extends BaseController {
                 JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, beanColDataSource);
 
                 Tipo tipoReporte = this.tipoPorId(this.command.getIdTipoReporte());
-                logMessage("Id Reporte " + this.command.getIdTipoReporte());
-                logMessage("No Reporte " + tipoReporte.getNombre());
                 if(tipoReporte.getNombre().equals(Constantes.TIPO_REPORTE_PDF)) {
                     JasperExportManager.exportReportToPdfFile(jasperPrint, reportFileName + Constantes.TIPO_REPORTE_PDF_EXTENSION);
                     JavascriptContext.addJavascriptCall(FacesContext.getCurrentInstance(), "reporte('" + "reporteBienes" + "','" + Constantes.TIPO_REPORTE_PDF_EXTENSION + "');");

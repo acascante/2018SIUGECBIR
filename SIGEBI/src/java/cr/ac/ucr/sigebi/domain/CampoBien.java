@@ -43,6 +43,9 @@ public class CampoBien implements Serializable {
     @Column(name = "TAMANO_COLUMNA")
     private Integer tamanoColumna;
     
+    @Column(name = "ES_TEXTO")
+    private Integer esTexto;
+    
     @Column(name = "DESCRIPCION")
     private String descripcion;
     //</editor-fold>
@@ -50,12 +53,13 @@ public class CampoBien implements Serializable {
     //<editor-fold defaultstate="collapsed" desc="Constructores">
     public CampoBien() {}
     
-    public CampoBien(Long id, String nombre, String idColumna, String nombreHQL, Integer tamanoColumna, String descripcion) {
+    public CampoBien(Long id, String nombre, String idColumna, String nombreHQL, Integer tamanoColumna, Integer esTexto, String descripcion) {
         this.id = id;
         this.nombre = nombre;
         this.idColumna = idColumna;
         this.nombreHQL = nombreHQL;
         this.tamanoColumna = tamanoColumna;
+        this.esTexto = esTexto;
         this.descripcion = descripcion;
     }
     //</editor-fold>  
@@ -99,6 +103,14 @@ public class CampoBien implements Serializable {
 
     public void setTamanoColumna(Integer tamanoColumna) {
         this.tamanoColumna = tamanoColumna;
+    }
+
+    public Integer getEsTexto() {
+        return esTexto;
+    }
+
+    public void setEsTexto(Integer esTexto) {
+        this.esTexto = esTexto;
     }
     
     public String getDescripcion() {

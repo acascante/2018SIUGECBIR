@@ -18,6 +18,13 @@
                     </h1>
                 </div> 
                 <div class='col-sm-2'>
+                    <ice:commandButton id="btnRegresar"
+                                       style="float: right" 
+                                       styleClass="boton" 
+                                       partialSubmit="true" 
+                                       actionListener="#{trasladoController.regresar}"
+                                       value="#{label['sigebi.Bien.Btn.Regresar']}">
+                    </ice:commandButton>
                 </div>
 
             </div>

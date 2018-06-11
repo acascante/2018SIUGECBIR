@@ -28,7 +28,7 @@
                                        styleClass="boton" 
                                        action="#{controllerAgregarBienes.agregarBien}"/>
 
-                    <ice:commandButton id="botonSincronizar" value="#{label['sigebi.Bien.Btn.Sincronizacion']}" 
+                    <ice:commandButton id="botonSincronizar" value="#{label['sigebi.Bien.Btn.SolicSincronizacion']}" 
                                        style="float:right" styleClass="boton" 
                                        partialSubmit="true" 
                                        rendered="#{controllerAgregarBienes.visibleBotonSincronizar}"
@@ -54,7 +54,7 @@
                     </ice:commandButton>
 
                     <ice:commandButton id="btnEnviarSincronizar" 
-                                       value="#{label['sigebi.Bien.Btn.Sincronizacion']}" 
+                                       value="#{label['sigebi.Bien.Btn.EnviarSincronizar']}" 
                                        style="float:right" styleClass="boton" partialSubmit="true"
                                        rendered="#{controllerAgregarBienes.visibleBotonRechazar}"
                                        action="#{controllerAgregarBienes.sincronizarBien}">

@@ -6,6 +6,7 @@
    
     <div class="contenido-pagina">
         <div class="container">
+            
             <!-- Encabezado -->
             <div class="row">
                 <div class='col-sm-6'>
@@ -15,6 +16,7 @@
                 </div>                
             </div>
             
+            <!-- Paginacion -->
             <div class="row">
                 <div class="col-sm-12">
                     <ice:outputFormat value="#{label['label.generico.paginacion.encabezado']}">
@@ -62,19 +64,47 @@
                                 <ice:columnGroup>
                                     <ice:headerRow>
                                         <!-- ID -->
-                                        <ice:column id="id" rowspan="2" style="vertical-align:top;">
+                                        <ice:column id="id" style="vertical-align:top;">
                                             <ice:outputText value="#{label['sigebi.label.prestamos.id']} "/>
-                                            <ice:inputText id="filtroId" 
+                                        </ice:column>
+                                        
+                                        <!-- Fecha -->
+                                        <ice:column id="fecha" >
+                                            <ice:outputText value="#{label['sigebi.label.prestamos.fecha']} "/>
+                                        </ice:column>
+                            
+                                        <!-- Estado -->
+                                        <ice:column id="estado" style="vertical-align:top;">                                 
+                                            <ice:outputText value="#{label['sigebi.label.prestamos.estado']}"/>
+                                        </ice:column>
+                                        
+                                        <!-- Tipo Entidad -->
+                                        <ice:column id="tipoEntidad" style="vertical-align:top;">                                 
+                                            <ice:outputText value="#{label['sigebi.label.prestamos.tipoEntidad']}"/>
+                                        </ice:column>
+                                        
+                                        <!-- Entidad -->
+                                        <ice:column id="entidad" style="vertical-align:top;">                                 
+                                            <ice:outputText value="#{label['sigebi.label.prestamos.entidad']} "/>
+                                        </ice:column>
+                                        
+                                        <ice:column id="opciones" rowspan="2">
+                                            <ice:outputText value="#{label['sigebi.label.prestamos.opciones']} "/>
+                                        </ice:column>
+                                    </ice:headerRow>
+                                    <ice:headerRow>
+                                        <!-- ID -->
+                                        <ice:column id="fltId" style="vertical-align:top;">
+                                            <ice:inputText id="txtFltId" 
                                                            value="#{controllerListarPrestamos.command.fltId}" 
                                                            validator="#{controllerListarPrestamos.validarFiltroId}"
                                                            valueChangeListener="#{controllerListarPrestamos.cambioFiltro}"/>
                                         </ice:column>
                                         
                                         <!-- Fecha -->
-                                        <ice:column id="fecha" >
-                                            <ice:outputText value="#{label['sigebi.label.prestamos.fecha']} "/>
-
+                                        <ice:column id="fltFecha" >
                                             <ice:selectInputDate 
+                                                id="fltTxtFecha" 
                                                 highlightClass="dateHighlightGray" 
                                                 highlightUnit="DAY_OF_WEEK" 
                                                 highlightValue="1"
@@ -90,9 +120,8 @@
                                         </ice:column>
                             
                                         <!-- Estado -->
-                                        <ice:column id="estado" rowspan="2" style="vertical-align:top;">                                 
-                                            <ice:outputText value="#{label['sigebi.label.prestamos.estado']}"/>
-                                            <ice:selectOneMenu  id="filtroEstado"
+                                        <ice:column id="fltEstado" style="vertical-align:top;">                                 
+                                            <ice:selectOneMenu  id="txtFltEstado"
                                                                 valueChangeListener="#{controllerListarPrestamos.cambioFiltro}"
                                                                 value="#{controllerListarPrestamos.command.fltEstado}"
                                                                 partialSubmit="true">
@@ -102,9 +131,8 @@
                                         </ice:column>
                                         
                                         <!-- Tipo Entidad -->
-                                        <ice:column id="tipo" rowspan="2" style="vertical-align:top;">                                 
-                                            <ice:outputText value="#{label['sigebi.label.prestamos.tipoEntidad']}"/>
-                                            <ice:selectOneMenu  id="filtroTipo"
+                                        <ice:column id="fltTipoEntidad" style="vertical-align:top;">                                 
+                                            <ice:selectOneMenu  id="txtFltTipoEntidad"
                                                                 valueChangeListener="#{controllerListarPrestamos.cambioFiltro}"
                                                                 value="#{controllerListarPrestamos.command.fltTipoEntidad}"
                                                                 partialSubmit="true">
@@ -114,15 +142,10 @@
                                         </ice:column>
                                         
                                         <!-- Entidad -->
-                                        <ice:column id="entidad" rowspan="2" style="vertical-align:top;">                                 
-                                            <ice:outputText value="#{label['sigebi.label.prestamos.entidad']} "/>
-                                            <ice:inputText id="filtroEntidad"
+                                        <ice:column id="fltEntidad" style="vertical-align:top;">                                 
+                                            <ice:inputText id="txtFltEntidad"
                                                            value="#{controllerListarPrestamos.command.fltEntidad}" 
                                                            valueChangeListener="#{controllerListarPrestamos.cambioFiltro}"/>
-                                        </ice:column>
-                                        
-                                        <ice:column id="opciones" >
-                                            <ice:outputText value="#{label['sigebi.label.prestamos.opciones']} "/>
                                         </ice:column>
                                     </ice:headerRow>
                                 </ice:columnGroup>
@@ -156,6 +179,7 @@
                 </div>
             </div>
 
+            <!-- Botones -->
             <div class="row">
                 <div class='col-sm-12'>
                    <ice:commandButton id="botonNuevo" style="float:right" styleClass="boton" partialSubmit="true" actionListener="#{controllerAgregarPrestamos.nuevoRegistro}" value="Nuevo" >

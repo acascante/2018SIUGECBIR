@@ -55,7 +55,7 @@ public class AgregarTiposController extends BaseController {
 
     @PostConstruct
     public final void inicializar() {
-        //Cargar Tipos de Reporte
+        //Cargar Tipos
         List<Tipo> tiposDominio = this.tiposPorDominio(Constantes.DOMINIO_TIPOS_MODIFICAR);
         if (!tiposDominio.isEmpty()) {
             this.tiposModificables = new HashMap<Long, String>();
@@ -101,6 +101,7 @@ public class AgregarTiposController extends BaseController {
                 this.tiposGenerales.add(tipo);
                 this.tipos.add(tipo);
                 this.command.setNuevoTipo("");
+                inicializar();
                 Mensaje.agregarInfo("Datos almacenados exitosamente");
             } else {
                 Mensaje.agregarErrorAdvertencia(messageValidacion);
@@ -141,11 +142,12 @@ public class AgregarTiposController extends BaseController {
             Tipo tipo = this.tipoPorId(this.idTipo);
             this.tipoModel.eliminar(tipo);
             this.tiposGenerales.remove(tipo);
-            this.tipos.remove(tipo);
-            this.visiblePanelConfirmacion = false;
+            this.tipos.remove(tipo);        
             Mensaje.agregarInfo("Datos eliminados exitosamente");
-        } catch (FWExcepcion err) {
-            this.mensaje = err.getMessage();
+        } catch (Exception err) {
+            Mensaje.agregarErrorAdvertencia("No es posible eliminar el registro");
+        } finally {
+            this.visiblePanelConfirmacion = false;
         }
     }
     

@@ -1,6 +1,13 @@
-<ice:form id="frm_listarNotificaciones" xmlns:ice="http://www.icesoft.com/icefaces/component" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core" xmlns:ui="http://java.sun.com/jsf/facelets">
+<ice:form id="frm_listarNotificaciones" 
+          xmlns:ice="http://www.icesoft.com/icefaces/component" 
+          xmlns:h="http://java.sun.com/jsf/html" 
+          xmlns:f="http://java.sun.com/jsf/core" 
+          xmlns:ui="http://java.sun.com/jsf/facelets">
+    
     <div class="contenido-pagina">
         <div class="container">
+            
+            <!-- Encabezado -->
             <div class="row">
                 <div class='col-sm-6'>
                     <h1 style="margin: 0;">
@@ -8,6 +15,8 @@
                     </h1>
                 </div>                
             </div>
+            
+            <!-- Paginacion -->
             <div class="row">
                 <div class="col-sm-12">
                     <ice:outputFormat value="#{label['label.generico.paginacion.encabezado']}">
@@ -25,14 +34,9 @@
                                     <ice:outputText value="#{label['label.paginacion.cantidad.pagina']} "/>
                                 </td>
                                 <td>
-                                    
-                                    <ice:selectOneMenu id="cantRegistroPorPagina"
-                                           value="#{controllerListarNotificaciones.cantRegistroPorPagina}" 
-                                           valueChangeListener="#{controllerListarNotificaciones.cambioRegistrosPorPagina}"
-                                           partialSubmit="true">
+                                    <ice:selectOneMenu id="cantRegistroPorPagina" value="#{controllerListarNotificaciones.cantRegistroPorPagina}" valueChangeListener="#{controllerListarNotificaciones.cambioRegistrosPorPagina}" partialSubmit="true">
                                             <f:selectItems id="item_pa" value="#{controllerListarNotificaciones.listaRegistrosPagina}"/>
                                     </ice:selectOneMenu>    
-                                    
                                 </td>
                             </tr>
                         </table>                        
@@ -50,6 +54,8 @@
                     </div>
                 </div>
             </div>
+            
+            <!-- Tabla -->
             <div class="row">
                 <div class="col-sm-12">                    
                     <div>
@@ -57,36 +63,60 @@
                             <f:facet name="header">
                                 <ice:columnGroup>
                                     <ice:headerRow>
-                                        <ice:column id="idNotificacion" rowspan="2" style="vertical-align:top;">
+                                        <ice:column id="idNotificacion" style="vertical-align:top;">
                                             <ice:outputText value="#{label['sigebi.label.notificaciones.id']} "/>
-                                            <ice:inputText id="filtroId" 
+                                        </ice:column>
+                                        
+                                        <ice:column id="asunto" style="vertical-align:top;">                                 
+                                            <ice:outputText value="#{label['sigebi.label.notificaciones.asunto']} "/>
+                                        </ice:column>
+                                        
+                                        <ice:column id="destinatario" style="vertical-align:top;">                                 
+                                            <ice:outputText value="#{label['sigebi.label.notificaciones.destinatario']} "/>
+                                        </ice:column>
+                            
+                                        <ice:column id="mensaje" style="vertical-align:top;">
+                                            <ice:outputText value="#{label['sigebi.label.notificaciones.mensaje']} "/>
+                                        </ice:column>
+
+                                        <ice:column id="fecha" >
+                                            <ice:outputText value="#{label['sigebi.label.notificaciones.fecha']} "/>
+                                        </ice:column>
+                            
+                                        <ice:column id="estado" style="vertical-align:top;">                                 
+                                            <ice:outputText value="#{label['sigebi.label.notificaciones.estado']}"/>
+                                        </ice:column>
+                                        
+                                        <ice:column id="opciones" rowspan="2">
+                                            <ice:outputText value="#{label['label.opciones']} "/>
+                                        </ice:column>
+                                    </ice:headerRow>
+                                    <ice:headerRow>
+                                        <ice:column id="fltId" style="vertical-align:top;">
+                                            <ice:inputText id="txtFltId" 
                                                            value="#{controllerListarNotificaciones.command.fltId}" 
                                                            validator="#{controllerListarNotificaciones.validarFiltroId}"
                                                            valueChangeListener="#{controllerListarNotificaciones.cambioFiltro}"/>
                                         </ice:column>
                                         
-                                        <ice:column id="asunto" rowspan="2"  style="vertical-align:top;">                                 
-                                            <ice:outputText value="#{label['sigebi.label.notificaciones.asunto']} "/>
-                                            <ice:inputText id="filtroAsunto"  value="#{controllerListarNotificaciones.command.fltAsunto}" partialSubmit="true" valueChangeListener="#{controllerListarNotificaciones.cambioFiltro}"/>
+                                        <ice:column id="fltAsunto" style="vertical-align:top;">                                 
+                                            <ice:inputText id="txtFltAsunto"  value="#{controllerListarNotificaciones.command.fltAsunto}" partialSubmit="true" valueChangeListener="#{controllerListarNotificaciones.cambioFiltro}"/>
                                         </ice:column>
                                         
-                                        <ice:column id="destinatario" rowspan="2" style="vertical-align:top;">                                 
-                                            <ice:outputText value="#{label['sigebi.label.notificaciones.destinatario']} "/>
-                                            <ice:inputText id="filtroDestinatario"  value="#{controllerListarNotificaciones.command.fltDestinatario}" partialSubmit="true" valueChangeListener="#{controllerListarNotificaciones.cambioFiltro}"/>
+                                        <ice:column id="fltDestinatario" style="vertical-align:top;">                                 
+                                            <ice:inputText id="xtFltDestinatario"  value="#{controllerListarNotificaciones.command.fltDestinatario}" partialSubmit="true" valueChangeListener="#{controllerListarNotificaciones.cambioFiltro}"/>
                                         </ice:column>
                             
-                                        <ice:column id="mensaje" rowspan="2" style="vertical-align:top;">
-                                            <ice:outputText value="#{label['sigebi.label.notificaciones.mensaje']} "/>
-                                            <ice:inputText id="filtroMensaje"  
+                                        <ice:column id="fltMensaje" style="vertical-align:top;">
+                                            <ice:inputText id="txtFltMensaje"  
                                                            value="#{controllerListarNotificaciones.command.fltMensaje}" 
                                                            partialSubmit="true"
                                                            valueChangeListener="#{controllerListarNotificaciones.cambioFiltro}"/>
                                         </ice:column>
 
-                                        <ice:column id="fecha" >
-                                            <ice:outputText value="#{label['sigebi.label.notificaciones.fecha']} "/>
-
+                                        <ice:column id="fltFecha" >
                                             <ice:selectInputDate 
+                                                id="txtFltFecha"
                                                 highlightClass="dateHighlightGray" 
                                                 highlightUnit="DAY_OF_WEEK" 
                                                 highlightValue="1"
@@ -101,18 +131,14 @@
                                             </ice:selectInputDate>
                                         </ice:column>
                             
-                                        <ice:column id="estado" rowspan="2" style="vertical-align:top;">                                 
-                                            <ice:outputText value="#{label['sigebi.label.notificaciones.estado']}"/>
-                                            <ice:selectOneMenu  id="filtroEstado"
+                                        <ice:column id="fltEstado" style="vertical-align:top;">                                 
+                                            <ice:selectOneMenu  id="txtFltEstado"
                                                                 valueChangeListener="#{controllerListarNotificaciones.cambioFiltro}"
                                                                 value="#{controllerListarNotificaciones.command.fltEstado}"
                                                                 partialSubmit="true">
                                                 <f:selectItem itemLabel="N/A" itemValue="-1"/>
                                                 <f:selectItems id="slcEstadoItem" value="#{controllerListarNotificaciones.itemsEstado}"/>
                                             </ice:selectOneMenu>
-                                        </ice:column>
-                                        
-                                        <ice:column id="opciones" >
                                         </ice:column>
                                     </ice:headerRow>
                                 </ice:columnGroup>
@@ -148,6 +174,7 @@
                 </div>
             </div>
 
+            <!-- Botones -->
             <div class="row">
                 <div class='col-sm-12'>
                     <ice:commandButton id="botonNuevo" style="float:right" styleClass="boton" partialSubmit="true" actionListener="#{controllerAgregarNotificaciones.nuevoRegistro}" value="Nuevo" >

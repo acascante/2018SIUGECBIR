@@ -28,11 +28,14 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.Resource;
+import javax.faces.component.UIComponent;
+import javax.faces.component.UIInput;
 import javax.faces.component.UIViewRoot;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 import javax.faces.event.PhaseId;
 import javax.faces.event.ValueChangeEvent;
+import javax.faces.validator.ValidatorException;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
@@ -46,8 +49,7 @@ public class AgregarMantenimientoController extends BaseController {
 
     private final int ACCION_SOLICITAR_CORRECCION = 1;
     private final int ACCION_RECHAZAR = 2;
-    private final int ACCION_SOLICITAR_CORRECCION_BIEN = 3;
-    private final int ACCION_RECHAZAR_BIEN = 4;
+    private final int ACCION_RECHAZAR_BIEN = 3;
     
     public class ListadoBienes extends BaseController {
         
@@ -244,6 +246,7 @@ public class AgregarMantenimientoController extends BaseController {
     private boolean visiblePanelBienes;
     private boolean visiblePanelObservacion;
     private boolean visiblePanelConfirmacion;
+    private boolean visiblePanelEvento;
     
     private boolean visibleBotonGuardar;
     private boolean visibleBotonAgregarBienes;
@@ -253,6 +256,7 @@ public class AgregarMantenimientoController extends BaseController {
     private boolean visibleBotonRechazarBien;
     private boolean visibleBotonAplicarBien;
     private boolean visibleBotonFinalizarBien;
+    private boolean visibleBotonEventoBien;
     
     private boolean visibleBotonAnular;
     private boolean visibleBotonSolicitarCorreccion;    
@@ -264,7 +268,6 @@ public class AgregarMantenimientoController extends BaseController {
     private boolean visibleBotonRechazarObservacion;
     private boolean visibleBotonRechazarBienObservacion;
     private boolean visibleBotonSolicitarObservacion;
-    private boolean visibleBotonSolicitarBienObservacion;
     
     private boolean autorizadoAprobar;
     
@@ -306,7 +309,8 @@ public class AgregarMantenimientoController extends BaseController {
         
         this.visiblePanelConfirmacion = false;
         this.visiblePanelObservacion = false;
-        this.visiblePanelBienes = false;        
+        this.visiblePanelBienes = false;
+        this.visiblePanelEvento = false;
     }
     
     public void confirmarSolicitud() {
@@ -431,6 +435,23 @@ public class AgregarMantenimientoController extends BaseController {
         }
         return Constantes.OK;
     }
+    
+    public void validarEventoDescripcion(FacesContext context, UIComponent component, Object value) throws ValidatorException {
+        String descripcion = value.toString();
+        if (descripcion.isEmpty()) {
+            Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.label.mantenimiento.evento.error.descripcion"));
+                ((UIInput) component).setValid(false); 
+        }
+    }
+    
+    public void validarEventoCosto(FacesContext context, UIComponent component, Object value) throws ValidatorException {
+        Double costo = (Double) value;
+        if (costo == null || costo.isNaN()) {
+            Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.label.mantenimiento.evento.error.costo"));
+                ((UIInput) component).setValid(false); 
+        }
+    }
+    
     //</editor-fold>
 
     //<editor-fold defaultstate="collapsed" desc="Movimientos sobre la Solicitud">
@@ -543,23 +564,28 @@ public class AgregarMantenimientoController extends BaseController {
         }
     }
     
-    public void solicitarCorreccionBien(ActionEvent event) {
-        this.command.setObservacionConfirmacion(new String());
-        this.visiblePanelObservacion = true;
-        this.accion = ACCION_SOLICITAR_CORRECCION_BIEN;
+    public void agregarEvento(ActionEvent event) {
+        this.command.setEventoDescripcion("");
+        this.command.setEventoCosto(0.0);
+        this.visiblePanelEvento = true;
         this.bienSeleccionado = (Long) event.getComponent().getAttributes().get("bienSeleccionado");
     }
-    
+
+    public void agregarEventoAceptar() {
+        this.mantenimientoModel.salvarEvento(this.command.getEvento(this.bienSeleccionado));
+        this.visiblePanelEvento = false;
+        this.mensajeExito = "Evento Almacenado Exitosamente.";
+    }
+
+    public void agregarEventoCancelar() {
+        this.visiblePanelEvento = false;
+    }
+
     public void rechazarBien(ActionEvent event) {
         this.command.setObservacionConfirmacion(new String());
         this.visiblePanelObservacion = true;
         this.accion = ACCION_RECHAZAR_BIEN;
         this.bienSeleccionado = (Long) event.getComponent().getAttributes().get("bienSeleccionado");
-    }
-
-    public void solicitarCorreccionBienObservacion() {
-        this.visiblePanelObservacion = false;
-        movimientoBien(this.bienSeleccionado, Constantes.ESTADO_MANTENIMIENTO_CORRECCION_SOLICITADA, Constantes.ESTADO_INTERNO_BIEN_SOLICITUD_MANTENIMIENTO, 0);        
     }
     
     public void rechazarBienObservacion() {
@@ -585,7 +611,7 @@ public class AgregarMantenimientoController extends BaseController {
     private void movimientoBien(Long idBien, int valorEstadoSolicitud, int valorEstadoBienInterno, int valorEstadoBien) {
         Bien bien = this.command.getBienes().get(idBien);
         Estado estadoBienInterno = this.estadoPorDominioValor(Constantes.DOMINIO_BIEN_INTERNO, valorEstadoBienInterno);
-        Estado estadoSolicitud = this.estadoPorDominioValor(Constantes.DOMINIO_EXCLUSION, valorEstadoSolicitud);
+        Estado estadoSolicitud = this.estadoPorDominioValor(Constantes.DOMINIO_SOLICITUD_MANTENIMIENTO, valorEstadoSolicitud);
         
         bien.setEstadoInterno(estadoBienInterno);
         if (valorEstadoBien != 0) {
@@ -689,6 +715,10 @@ public class AgregarMantenimientoController extends BaseController {
         return visiblePanelConfirmacion;
     }
 
+    public boolean isVisiblePanelEvento() {
+        return visiblePanelEvento;
+    }
+
     public boolean isVisibleBotonAnular() {
         this.visibleBotonAnular = false;
         if (Constantes.ESTADO_MANTENIMIENTO_NUEVO.equals(this.command.getEstado().getValor()) && this.solicitudRegistrada ||
@@ -709,7 +739,7 @@ public class AgregarMantenimientoController extends BaseController {
 
     public boolean isVisibleBotonAceptar() {
         this.visibleBotonAceptar = false;
-        if (Constantes.ESTADO_MANTENIMIENTO_APLICADO.equals(this.command.getEstado().getValor())) {
+        if (Constantes.ESTADO_MANTENIMIENTO_APLICADO.equals(this.command.getEstado().getValor()) && this.autorizadoAprobar) {
             this.visibleBotonAceptar = true;
         }
         return visibleBotonAceptar;
@@ -717,7 +747,7 @@ public class AgregarMantenimientoController extends BaseController {
    
     public boolean isVisibleBotonRechazar() {
         this.visibleBotonRechazar = false;
-        if (Constantes.ESTADO_MANTENIMIENTO_APROBADO.equals(this.command.getEstado().getValor()) && this.autorizadoAprobar) {
+        if (Constantes.ESTADO_MANTENIMIENTO_APLICADO.equals(this.command.getEstado().getValor()) && this.autorizadoAprobar) {
             this.visibleBotonRechazar = true;
         }
         return visibleBotonRechazar;
@@ -768,7 +798,7 @@ public class AgregarMantenimientoController extends BaseController {
 
     public boolean isVisibleBotonAceptarBien() {
         this.visibleBotonAceptarBien = false;
-        if (Constantes.ESTADO_MANTENIMIENTO_APLICADO.equals(this.command.getEstado().getValor())) {
+        if (Constantes.ESTADO_MANTENIMIENTO_APLICADO.equals(this.command.getEstado().getValor()) && this.autorizadoAprobar) {
             this.visibleBotonAceptarBien = true;
         }
         return visibleBotonAceptarBien;
@@ -776,7 +806,7 @@ public class AgregarMantenimientoController extends BaseController {
 
     public boolean isVisibleBotonRechazarBien() {
         this.visibleBotonRechazarBien = false;
-        if (Constantes.ESTADO_MANTENIMIENTO_APROBADO.equals(this.command.getEstado().getValor()) && this.autorizadoAprobar) {
+        if (Constantes.ESTADO_MANTENIMIENTO_APLICADO.equals(this.command.getEstado().getValor()) && this.autorizadoAprobar) {
             this.visibleBotonRechazarBien = true;
         }
         return visibleBotonRechazarBien;
@@ -800,6 +830,14 @@ public class AgregarMantenimientoController extends BaseController {
         return visibleBotonFinalizarBien;
     }
     
+    public boolean isVisibleBotonEventoBien() {
+        this.visibleBotonEventoBien = false;
+        if (Constantes.ESTADO_MANTENIMIENTO_APROBADO.equals(this.command.getEstado().getValor()) && this.autorizadoAprobar) {
+            this.visibleBotonEventoBien = true;
+        } 
+        return visibleBotonEventoBien;
+    }
+    
     public boolean isVisibleBotonSolicitarObservacion() {
         this.visibleBotonSolicitarObservacion = false;
         if (this.accion == ACCION_SOLICITAR_CORRECCION) {
@@ -816,14 +854,6 @@ public class AgregarMantenimientoController extends BaseController {
         return visibleBotonRechazarObservacion;
     }
 
-    public boolean isVisibleBotonSolicitarBienObservacion() {
-        this.visibleBotonSolicitarBienObservacion = false;
-        if (this.accion == ACCION_SOLICITAR_CORRECCION_BIEN) {
-            this.visibleBotonSolicitarBienObservacion = true;    
-        }        
-        return visibleBotonSolicitarBienObservacion;
-    }
-    
     public boolean isVisibleBotonRechazarBienObservacion() {
         this.visibleBotonRechazarBienObservacion = false;
         if (this.accion == ACCION_RECHAZAR_BIEN) {
@@ -842,6 +872,10 @@ public class AgregarMantenimientoController extends BaseController {
 
     public void setVisiblePanelConfirmacion(boolean visiblePanelConfirmacion) {
         this.visiblePanelConfirmacion = visiblePanelConfirmacion;
+    }
+
+    public void setVisiblePanelEvento(boolean visiblePanelEvento) {
+        this.visiblePanelEvento = visiblePanelEvento;
     }
 
     public void setVisibleBotonRechazar(boolean visibleBotonRechazar) {
@@ -867,6 +901,47 @@ public class AgregarMantenimientoController extends BaseController {
     public void setVisibleBotonRechazarObservacion(boolean visibleBotonRechazarObservacion) {
         this.visibleBotonRechazarObservacion = visibleBotonRechazarObservacion;
     }
+
+    public void setVisibleBotonAceptarBien(boolean visibleBotonAceptarBien) {
+        this.visibleBotonAceptarBien = visibleBotonAceptarBien;
+    }
+
+    public void setVisibleBotonAplicarBien(boolean visibleBotonAplicarBien) {
+        this.visibleBotonAplicarBien = visibleBotonAplicarBien;
+    }
+
+    public void setVisibleBotonFinalizarBien(boolean visibleBotonFinalizarBien) {
+        this.visibleBotonFinalizarBien = visibleBotonFinalizarBien;
+    }
+
+    public void setVisibleBotonEventoBien(boolean visibleBotonEventoBien) {
+        this.visibleBotonEventoBien = visibleBotonEventoBien;
+    }
+
+    public void setVisibleBotonAnular(boolean visibleBotonAnular) {
+        this.visibleBotonAnular = visibleBotonAnular;
+    }
+
+    public void setVisibleBotonSolicitarCorreccion(boolean visibleBotonSolicitarCorreccion) {
+        this.visibleBotonSolicitarCorreccion = visibleBotonSolicitarCorreccion;
+    }
+
+    public void setVisibleBotonAceptar(boolean visibleBotonAceptar) {
+        this.visibleBotonAceptar = visibleBotonAceptar;
+    }
+
+    public void setVisibleBotonAplicar(boolean visibleBotonAplicar) {
+        this.visibleBotonAplicar = visibleBotonAplicar;
+    }
+
+    public void setVisibleBotonFinalizar(boolean visibleBotonFinalizar) {
+        this.visibleBotonFinalizar = visibleBotonFinalizar;
+    }
+
+    public void setVisibleBotonSolicitarObservacion(boolean visibleBotonSolicitarObservacion) {
+        this.visibleBotonSolicitarObservacion = visibleBotonSolicitarObservacion;
+    }
+    
     
     public void setVisibleBotonRechazarBienObservacion(boolean visibleBotonRechazarBienObservacion) {
         this.visibleBotonRechazarBienObservacion = visibleBotonRechazarBienObservacion;

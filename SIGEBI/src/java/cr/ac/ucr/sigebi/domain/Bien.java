@@ -480,6 +480,12 @@ public class Bien extends ObjetoBase implements Serializable {
         }
         return false;
     }
+    public boolean getAgregarEventoMantenimiento() {
+        if (Constantes.ESTADO_INTERNO_BIEN_MANTENIMIENTO_APROBADO.equals(this.getEstadoInterno().getValor())) {
+            return true;
+        }
+        return false;
+    }
     
     
     //</editor-fold>

@@ -15,7 +15,7 @@ import cr.ac.ucr.sigebi.domain.AutorizacionRol;
 import cr.ac.ucr.sigebi.domain.AutorizacionRolPersona;
 import cr.ac.ucr.sigebi.domain.Rol;
 import cr.ac.ucr.sigebi.domain.Tipo;
-import cr.ac.ucr.sigebi.domain.Usuario;
+import cr.ac.ucr.sigebi.domain.ViewAutorizacionRolUsuarioUnidad;
 import cr.ac.ucr.sigebi.models.AutorizacionModel;
 import cr.ac.ucr.sigebi.models.AutorizacionRolModel;
 import cr.ac.ucr.sigebi.models.AutorizacionRolPersonaModel;
@@ -61,7 +61,7 @@ public class GestionProcesosController extends BaseController {
     List<SelectItem> tiposProceso;
     List<SelectItem> autorizacionesTipoProceso;
     List<SelectItem> autorizacionesRol;
-    List<Usuario> usuarios;
+    List<ViewAutorizacionRolUsuarioUnidad> usuarios;
 
     GestionProcesoCommand command;
 
@@ -132,11 +132,11 @@ public class GestionProcesosController extends BaseController {
         this.autorizacionesRol = autorizacionesRol;
     }
 
-    public List<Usuario> getUsuarios() {
+    public List<ViewAutorizacionRolUsuarioUnidad> getUsuarios() {
         return usuarios;
     }
 
-    public void setUsuarios(List<Usuario> usuarios) {
+    public void setUsuarios(List<ViewAutorizacionRolUsuarioUnidad> usuarios) {
         this.usuarios = usuarios;
     }
 
@@ -193,11 +193,13 @@ public class GestionProcesosController extends BaseController {
             //Se inicializa la lista de autorizaciones
             autorizacionesTipoProceso = null;
             autorizacionesRol = null;
+            usuarios = null;
 
             // Se obtiene el id del proceso
             Long valor = command.getTipoProceso().getIdTemporal();
             command.getAutorizacion().setIdTemporal(-1L);
-            
+            command.getAutorizacionRol().setIdTemporal(-1L);
+
             if (valor > 0) {
 
                 //Se actualiza el tipo de proceso
@@ -235,9 +237,12 @@ public class GestionProcesosController extends BaseController {
             
             //Se inicializa la lista de roles por autorizacion
             autorizacionesRol = null;
+            usuarios = null;
 
             // Se obtiene el id del autorizacion
             Long valor = command.getAutorizacion().getIdTemporal();
+            command.getAutorizacionRol().setIdTemporal(-1L);
+            
             if (valor > 0) {
 
                 //Se actualiza la autorizacion
@@ -294,6 +299,7 @@ public class GestionProcesosController extends BaseController {
     private void buscaUsuariosAutorizacionRol() {
         try {
             usuarios = null;
+            this.setPrimerRegistro(1);
             this.setCantidadRegistros(0);
 
             if (command.getAutorizacionRol() != null && command.getAutorizacionRol().getIdTemporal() > 0) {
@@ -314,27 +320,8 @@ public class GestionProcesosController extends BaseController {
     private void listarUsuarios() {
         try {
 
-            //Se cargan los usuario asociados al rol
-            List<AutorizacionRolPersona> personasRolAutorizacion = null;
-            if (command.getAutorizacionRol() != null) {
-                personasRolAutorizacion = autorizacionRolPersonaModel.buscar(command.getAutorizacionRol(), unidadEjecutora);
-            }
-
             //Se buscan los usuarios del sistema de acuerdo a los filtros
-            this.usuarios = usuarioModel.listarUsuarios(command.getIdUsuario(), command.getNombreCompleto(), command.getCorreo(), this.getPrimerRegistro() - 1, this.getUltimoRegistro());
-
-            //Se marcan aquellos que tengan una autorizacion registrada
-            if (personasRolAutorizacion != null) {
-
-                //Se seleccionan los usuarios asociados a los roles
-                for (Usuario usuario : usuarios) {
-                    for (AutorizacionRolPersona personaRol : personasRolAutorizacion) {
-                        if (personaRol.getUsuarioSeguridad().getId().equals(usuario.getId())) {
-                            usuario.setMarcado(true);
-                        }
-                    }
-                }
-            }
+            this.usuarios = usuarioModel.listarUsuariosGestionProceso(command.getIdUsuario(), command.getNombreCompleto(), command.getCorreo(), command.getAutorizacionRol(), unidadEjecutora, this.getPrimerRegistro() - 1, this.getUltimoRegistro());
 
         } catch (FWExcepcion e) {
             Mensaje.agregarErrorAdvertencia(e.getError_para_usuario());
@@ -342,7 +329,7 @@ public class GestionProcesosController extends BaseController {
             Mensaje.agregarErrorAdvertencia(e, Util.getEtiquetas("sigebi.error.controllerGestionProcesos.listarUsuarios"));
         }
     }
-
+ 
     /**
      * Agregar el usuario
      *
@@ -361,17 +348,17 @@ public class GestionProcesosController extends BaseController {
             AutorizacionRol autorizacionRol = command.getAutorizacionRol();
 
             //Se busca el usuario
-            Usuario usuario = (Usuario) pEvent.getComponent().getAttributes().get("usuarioSelApro");
+            ViewAutorizacionRolUsuarioUnidad usuarioVista = (ViewAutorizacionRolUsuarioUnidad) pEvent.getComponent().getAttributes().get("usuarioSelApro");
 
             //Se incluye el usuario al rol
             AutorizacionRolPersona autorizacionRolPersona = new AutorizacionRolPersona();
             autorizacionRolPersona.setAutorizacionRol(autorizacionRol);
-            autorizacionRolPersona.setUsuarioSeguridad(usuario);
+            autorizacionRolPersona.setUsuarioSeguridad(usuarioVista.getUsuarioSeguridad());
             autorizacionRolPersona.setUnidadEjecutora(unidadEjecutora);
             autorizacionRolPersonaModel.agregar(autorizacionRolPersona);
 
             //Se marca el usuario como incluido
-            usuario.setMarcado(true);
+            usuarioVista.setTieneAutorizacionRol(true);
 
         } catch (FWExcepcion e) {
             Mensaje.agregarErrorAdvertencia(e.getError_para_usuario());
@@ -394,11 +381,11 @@ public class GestionProcesosController extends BaseController {
             }
 
             //Se busca el objeto para eliminar
-            Usuario usuario = (Usuario) pEvent.getComponent().getAttributes().get("usuarioSelRech");
-            AutorizacionRolPersona autorizacionRolPersona = autorizacionRolPersonaModel.buscar(command.getAutorizacionRol(), usuario, unidadEjecutora);
+            ViewAutorizacionRolUsuarioUnidad usuarioVista = (ViewAutorizacionRolUsuarioUnidad) pEvent.getComponent().getAttributes().get("usuarioSelRech");
+            AutorizacionRolPersona autorizacionRolPersona = autorizacionRolPersonaModel.buscar(command.getAutorizacionRol(), usuarioVista.getUsuarioSeguridad(), unidadEjecutora);
 
             autorizacionRolPersonaModel.eliminar(autorizacionRolPersona);
-            usuario.setMarcado(false);
+            usuarioVista.setTieneAutorizacionRol(false);
 
         } catch (FWExcepcion e) {
             Mensaje.agregarErrorAdvertencia(e.getError_para_usuario());
@@ -414,7 +401,7 @@ public class GestionProcesosController extends BaseController {
 
         try {
             //Se cuenta la cantidad de registros
-            Long contador = usuarioModel.contarUsuarios(command.getIdUsuario(), command.getNombreCompleto(), command.getCorreo());
+            Long contador = usuarioModel.contarUsuariosGestionProceso(command.getIdUsuario(), command.getNombreCompleto(), command.getCorreo(), command.getAutorizacionRol(), unidadEjecutora);
 
             //Se actualiza la cantidad de registros segun los filtros
             this.setCantidadRegistros(contador.intValue());
@@ -439,11 +426,10 @@ public class GestionProcesosController extends BaseController {
                 return;
             }
 
-            this.contarUsuarios();
-
             this.setPrimerRegistro(1);
-
+            this.contarUsuarios();
             this.listarUsuarios();
+
         } catch (FWExcepcion e) {
             Mensaje.agregarErrorAdvertencia(e.getError_para_usuario());
         } catch (Exception e) {
@@ -588,6 +574,7 @@ public class GestionProcesosController extends BaseController {
         }
         this.setCantRegistroPorPagina(Integer.parseInt(pEvent.getNewValue().toString()));
         this.setPrimerRegistro(1);
+        this.contarUsuarios();
         this.listarUsuarios();
     }
 

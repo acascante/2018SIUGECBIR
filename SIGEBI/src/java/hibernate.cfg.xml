@@ -33,6 +33,7 @@
     <mapping class="cr.ac.ucr.sigebi.domain.DocumentoDetalle"/>
     <mapping class="cr.ac.ucr.sigebi.domain.DocumentoInformeTecnico"/>
     <mapping class="cr.ac.ucr.sigebi.domain.Estado"/>
+    <mapping class="cr.ac.ucr.sigebi.domain.Evento"/>
     <mapping class="cr.ac.ucr.sigebi.domain.Identificacion"/>
     <mapping class="cr.ac.ucr.sigebi.domain.Justificacion"/>
     <mapping class="cr.ac.ucr.sigebi.domain.Lote"/>
@@ -82,6 +83,7 @@
     <mapping class="cr.ac.ucr.sigebi.domain.TomaFisicaSobrante"/>
     <mapping class="cr.ac.ucr.sigebi.domain.AsignacionPlaca"/>
     <mapping class="cr.ac.ucr.sigebi.domain.AsignarResponsableHistorico"/>
+    <mapping class="cr.ac.ucr.sigebi.domain.ViewAutorizacionRolUsuarioUnidad"/>
     
   </session-factory>
 </hibernate-configuration>

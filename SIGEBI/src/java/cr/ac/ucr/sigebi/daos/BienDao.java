@@ -10,6 +10,7 @@ import cr.ac.ucr.framework.daoImpl.GenericDaoImpl;
 import cr.ac.ucr.framework.utils.FWExcepcion;
 import cr.ac.ucr.sigebi.domain.AsignacionPlaca;
 import cr.ac.ucr.sigebi.domain.Bien;
+import cr.ac.ucr.sigebi.domain.CampoReporteBien;
 import cr.ac.ucr.sigebi.domain.Estado;
 import cr.ac.ucr.sigebi.domain.Sincronizar;
 import cr.ac.ucr.sigebi.domain.Tipo;
@@ -51,11 +52,15 @@ public class BienDao extends GenericDaoImpl {
             Query query = session.createQuery(sql);
             for (Map.Entry<String, Object> entry : parametros.entrySet()) {
                 String key = entry.getKey();
-                Object value = entry.getValue();
-                query.setParameter(key, value);    
+                CampoReporteBien campo = (CampoReporteBien)entry.getValue();
+                if (campo.getCampoBien().getEsTexto() == 1) {
+                    query.setParameter(key, '%' + campo.getValor() + '%');
+                } else {
+                    query.setParameter(key, campo.getValor());
+                }
             }            
             return (List<Bien>) query.list();
-        } catch (HibernateException e) {
+        } catch (Exception e) {
             throw new FWExcepcion("sigebi.error.bienCaracteristica.dao.traerTodo", "Error obtener los registros de tipo " + this.getClass(), e.getCause());
         } finally {
             session.close();
@@ -78,7 +83,6 @@ public class BienDao extends GenericDaoImpl {
         }
     }
     
-    
     @Transactional(readOnly = true)
     public List<Bien> listarPorAsignacionPlaca(AsignacionPlaca asignacionPlaca) throws FWExcepcion {
         Session session = dao.getSessionFactory().openSession();
@@ -93,7 +97,6 @@ public class BienDao extends GenericDaoImpl {
             session.close();
         }
     }
-
 
     @Transactional(readOnly = true)
     public List<Bien> listarPorUnidadEjecutoraEstado(UnidadEjecutora unidadEjecutora, Estado estado) throws FWExcepcion {

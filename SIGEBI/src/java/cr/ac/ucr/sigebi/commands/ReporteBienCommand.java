@@ -13,7 +13,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 /**
  *
@@ -65,7 +64,6 @@ public class ReporteBienCommand {
     //<editor-fold defaultstate="collapsed" desc="Metodos">
    public ReporteBien getReporteBien(Tipo tipoReporte) { 
         ReporteBien reporteBien = new ReporteBien();
-        reporteBien.setId(this.idReporte);
         reporteBien.setNombre(this.nombre);
         reporteBien.setUsuario(this.usuario);
         reporteBien.setTipoReporte(tipoReporte);
@@ -74,7 +72,7 @@ public class ReporteBienCommand {
         return reporteBien;
     }
    
-   public Set<CampoReporteBien> getCamposReporteBien(ReporteBien reporteBien) { 
+   public List<CampoReporteBien> getCamposReporteBien(ReporteBien reporteBien) { 
         for (Map.Entry<Long, CampoReporteBien> entry : this.camposReporte.entrySet()) {
            CampoReporteBien value = entry.getValue();
            value.setReporteBien(reporteBien);

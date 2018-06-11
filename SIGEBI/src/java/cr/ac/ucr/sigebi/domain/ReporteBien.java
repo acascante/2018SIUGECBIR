@@ -1,8 +1,8 @@
 package cr.ac.ucr.sigebi.domain;
 
 import java.io.Serializable;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -47,13 +47,13 @@ public class ReporteBien implements Serializable {
     private String descripcion;
     
     @Transient
-    private Set<CampoReporteBien> camposReporte;
+    private List<CampoReporteBien> camposReporte;
     //</editor-fold>
     
     //<editor-fold defaultstate="collapsed" desc="Constructores">
     public ReporteBien() {}
     
-    public ReporteBien(Long id, String nombre, Usuario usuario, Set<CampoReporteBien> camposReporte, Tipo tipoReporte, Integer tamanoFuente, String descripcion) {
+    public ReporteBien(Long id, String nombre, Usuario usuario, List<CampoReporteBien> camposReporte, Tipo tipoReporte, Integer tamanoFuente, String descripcion) {
         this.id = id;
         this.nombre = nombre;
         this.usuario = usuario;
@@ -113,13 +113,13 @@ public class ReporteBien implements Serializable {
         this.tamanoFuente = tamanoFuente;
     }
     
-    public Set<CampoReporteBien> getCamposReporte() {
+    public List<CampoReporteBien> getCamposReporte() {
         if (this.camposReporte == null)
-            this.camposReporte = new HashSet<CampoReporteBien>();
+            this.camposReporte = new ArrayList<CampoReporteBien>();
         return camposReporte;
     }
 
-    public void setCamposReporte(Set<CampoReporteBien> camposReporte) {
+    public void setCamposReporte(List<CampoReporteBien> camposReporte) {
         this.camposReporte = camposReporte;
     }
     //</editor-fold>

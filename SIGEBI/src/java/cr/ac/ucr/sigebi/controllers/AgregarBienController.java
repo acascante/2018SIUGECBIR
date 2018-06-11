@@ -74,6 +74,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.regex.Pattern;
+import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import javax.faces.component.UIInput;
 import javax.faces.component.UIViewRoot;
@@ -236,13 +237,24 @@ public class AgregarBienController extends BaseController {
         this.setVisibleBotonActualizarIdentificacion(autorizado != null && !(command.getIdentificacion().getId() != null && command.getIdentificacion().getId() > 0));
     }
 
+
+    @PostConstruct
+    public void initRegresar() {
+        Object id = Util.obtenerVariableSession("idBienRegresar");
+        if(id != null){
+            Util.removerVariableSession("idBienRegresar");
+            bien = modelBien.buscarPorId((Long)id);
+            this.inicializarDetalle(bien);
+        }
+    }
+
     private void inicializarDetalle(Bien bien) {
         this.command = new BienCommand(bien);
         this.bienRegistrado = true;
 
-        Estado estado = this.estadoPorDominioValor(Constantes.DOMINIO_BIEN, Constantes.ESTADO_BIEN_PENDIENTE);
-        this.command.setEstado(estado);
-        this.command.setEstadoInterno(estado); // TODO Revisar cual es el estado interno para BIENES
+//        Estado estado = this.estadoPorDominioValor(Constantes.DOMINIO_BIEN, Constantes.ESTADO_BIEN_PENDIENTE);
+//        this.command.setEstado(estado);
+//        this.command.setEstadoInterno(estado); // TODO Revisar cual es el estado interno para BIENES
 
         inicializarBanderasBotones(bien);
 
@@ -453,7 +465,11 @@ public class AgregarBienController extends BaseController {
                 //Se busca la identificacion del bien
                 identificacion = modelIdentificacion.siguienteDisponible(unidadEjecutora, command.getCapitalizable());
                 if (identificacion == null) {
-                    Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.error.agregarBienController.identificacion.requerido"));
+                    if(command.getCapitalizable())
+                        Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.error.agregarBienController.placa.requerido"));
+                    else
+                        Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.error.agregarBienController.identificacion.requerido"));
+                        
                     return;
                 } else {
                     command.setIdentificacion(identificacion);
@@ -620,7 +636,6 @@ public class AgregarBienController extends BaseController {
                 this.procesarBien();
 
                 context.getExternalContext().getSessionMap().remove("controllerSolicitudDonacion");
-                //Util.agregarVariableSession("idDonacion", solicitudDonacion.getId());
                 Util.navegar(vistaOrigen);
                 Mensaje.agregarInfo(Util.getEtiquetas("sigebi.error.agregarBienController.mensaje.exito"));
 
@@ -2320,6 +2335,8 @@ public class AgregarBienController extends BaseController {
             UIViewRoot root = context.getViewRoot();
             
             Solicitud verMovimiento = (Solicitud) event.getComponent().getAttributes().get("movimientoSelccionado");
+            Util.agregarVariableSession("idBienRegresar", bien.getId());
+            
             switch (verMovimiento.getDiscriminator()){
                 case 1:
                     exc.verDetalle( (SolicitudExclusion) verMovimiento, Constantes.KEY_VISTA_DETALLE_BIEN );
@@ -2468,7 +2485,9 @@ public class AgregarBienController extends BaseController {
                                     , this.usuarioSIGEBI
                                     , this.estadoPorDominioValor(Constantes.DOMINIO_BIEN, Constantes.ESTADO_BIEN_TRANSITO_POR_EXCLUSION)
                                     );
-            
+            Bien actual = modelBien.buscarPorId(bien.getId());
+            bien = actual;
+            this.inicializarDetalle(actual);
         } catch (FWExcepcion err) {
             Mensaje.agregarErrorAdvertencia(err.getError_para_usuario());
         } catch (Exception err) {

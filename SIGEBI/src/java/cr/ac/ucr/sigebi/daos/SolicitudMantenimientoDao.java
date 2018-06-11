@@ -8,6 +8,7 @@ package cr.ac.ucr.sigebi.daos;
 import cr.ac.ucr.framework.daoHibernate.DaoHelper;
 import cr.ac.ucr.framework.daoImpl.GenericDaoImpl;
 import cr.ac.ucr.framework.utils.FWExcepcion;
+import cr.ac.ucr.sigebi.domain.Evento;
 import cr.ac.ucr.sigebi.domain.SolicitudMantenimiento;
 import cr.ac.ucr.sigebi.domain.SolicitudDetalle;
 import cr.ac.ucr.sigebi.domain.UnidadEjecutora;
@@ -81,6 +82,15 @@ public class SolicitudMantenimientoDao extends GenericDaoImpl {
     public void salvar(SolicitudMantenimiento solicitudMantenimiento) throws FWExcepcion {
         try {
             persist(solicitudMantenimiento);
+        } catch (DataAccessException e) {
+            throw new FWExcepcion("sigebi.label.mantenimiento.error.salvar", "Error guardando registro de tipo " + this.getClass(), e.getCause());
+        }
+    }
+    
+    @Transactional
+    public void salvarEvento(Evento evento) {
+        try {
+            persist(evento);
         } catch (DataAccessException e) {
             throw new FWExcepcion("sigebi.label.mantenimiento.error.salvar", "Error guardando registro de tipo " + this.getClass(), e.getCause());
         }

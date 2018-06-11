@@ -396,6 +396,7 @@ public class ActaController extends ListadoBienesGeneralController {
             iniciaDatos();
             DocumentoActa item = (DocumentoActa) pEvent.getComponent().getAttributes().get("itemSeleccionado");
             cargarDetalle(item);
+            this.vistaOrigen = pEvent.getComponent().getAttributes().get(Constantes.KEY_VISTA_ORIGEN).toString();
             Util.navegar(Constantes.KEY_VISTA_ACTA);//"actaDetalle"
         } catch (Exception err) {
             Mensaje.agregarErrorAdvertencia(err, Util.getEtiquetas("sigebi.Acta.MsnError.Cargar"));
@@ -412,6 +413,7 @@ public class ActaController extends ListadoBienesGeneralController {
             }
 
             iniciaDatos();
+            this.vistaOrigen = Util.getActualPant();
 
             Util.navegar(Constantes.KEY_VISTA_ACTA);
 
@@ -429,14 +431,20 @@ public class ActaController extends ListadoBienesGeneralController {
                 return;
             }
             
-            
-            fltIdActa = "";
-            fltAutorizacion = "";
-            fltEstados = "";
-            fltFecha = "";
-            listadoInicializaDatos();
-            //inicializaDatos();
-            Util.navegar(Constantes.KEY_VISTA_LISTAR_ACTAS);
+            if (vistaOrigen != null) {
+                Util.navegar(vistaOrigen, true);
+            } else {
+
+                fltIdActa = "";
+                fltAutorizacion = "";
+                fltEstados = "";
+                fltFecha = "";
+                listadoInicializaDatos();
+                //inicializaDatos();
+                
+                Util.navegar(Util.getAnteriorPant());
+                //Util.navegar(Constantes.KEY_VISTA_LISTAR_ACTAS);
+            }
 
         } catch (Exception err) {
             Mensaje.agregarErrorAdvertencia(err.getCause().getMessage());

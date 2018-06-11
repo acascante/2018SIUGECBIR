@@ -8,8 +8,10 @@ package cr.ac.ucr.sigebi.daos;
 import cr.ac.ucr.framework.daoHibernate.DaoHelper;
 import cr.ac.ucr.framework.daoImpl.GenericDaoImpl;
 import cr.ac.ucr.framework.utils.FWExcepcion;
+import cr.ac.ucr.sigebi.domain.AutorizacionRol;
 import cr.ac.ucr.sigebi.domain.UnidadEjecutora;
 import cr.ac.ucr.sigebi.domain.Usuario;
+import cr.ac.ucr.sigebi.domain.ViewAutorizacionRolUsuarioUnidad;
 import java.util.List;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
@@ -138,5 +140,83 @@ public class UsuarioDao extends GenericDaoImpl {
         } finally {
             session.close();
         }
+    }
+    
+     @Transactional(readOnly = true)
+    public List<ViewAutorizacionRolUsuarioUnidad> listarUsuariosGestionProceso(String idUsuario, String nombreCompleto, String correo, AutorizacionRol autorizacionRol, UnidadEjecutora unidadEjecutora, Integer pPrimerRegistro, Integer pUltimoRegistro) throws FWExcepcion {
+        Session session = this.dao.getSessionFactory().openSession();
+        try {
+            //Se genera el query para la busqueda
+            Query q = this.creaQueryListarGestionProceso(idUsuario, nombreCompleto, correo, autorizacionRol, unidadEjecutora, false, session);
+
+            //Paginacion
+            if (!(pPrimerRegistro.equals(1) && pUltimoRegistro.equals(1))) {
+                q.setFirstResult(pPrimerRegistro);
+                q.setMaxResults(pUltimoRegistro - pPrimerRegistro);
+            }
+            //Se obtienen los resutltados
+            return (List<ViewAutorizacionRolUsuarioUnidad>) q.list();
+
+        } catch (HibernateException e) {
+            throw new FWExcepcion("sigebi.error.dao.usuarioDao.listarUsuariosGestionProceso","Error obtener los registros de tipo " + this.getClass(), e.getCause());
+        } finally {
+            session.close();
+        }
+    }
+
+    @Transactional(readOnly = true)
+    public Long contarUsuariosGestionProceso(String idUsuario, String nombreCompleto, String correo, AutorizacionRol autorizacionRol, UnidadEjecutora unidadEjecutora) throws FWExcepcion {
+        Session session = dao.getSessionFactory().openSession();
+        try {
+
+            //Se genera el query para la busqueda
+            Query q = this.creaQueryListarGestionProceso(idUsuario, nombreCompleto, correo, autorizacionRol, unidadEjecutora, true, session);
+
+            //Se obtienen los resutltados
+            return (Long) q.uniqueResult();
+
+        } catch (HibernateException e) {
+            throw new FWExcepcion("sigebi.error.dao.usuarioDao.contarUsuariosGestionProceso", "Error obtener los registros de tipo " + this.getClass(), e.getCause());
+        } finally {
+            session.close();
+        }
+    } 
+
+    
+    private Query creaQueryListarGestionProceso(String idUsuario, String nombreCompleto, String correo, AutorizacionRol autorizacionRol, UnidadEjecutora unidadEjecutora, Boolean contar, Session session) {
+        String sql;
+        if (contar) {
+            sql = "SELECT count(obj) FROM ViewAutorizacionRolUsuarioUnidad obj ";
+        } else {
+            sql = "SELECT obj FROM ViewAutorizacionRolUsuarioUnidad obj ";
+        }
+        //Select
+        sql = sql + " WHERE obj.autorizacionRol = :autorizacionRol and obj.unidadEjecutora = :unidadEjecutora";
+        if (idUsuario != null && idUsuario.length() > 0) {
+            sql = sql + " AND upper(obj.usuarioSeguridad.id) like upper(:idUsuario) ";
+        }
+        if (nombreCompleto != null && nombreCompleto.length() > 0) {
+            sql = sql + " AND upper(obj.usuarioSeguridad.nombreCompleto) like upper(:nombreCompleto) ";
+        }
+        if (correo != null && correo.length() > 0) {
+            sql = sql + " AND upper(obj.usuarioSeguridad.correo) like upper(:correo) ";
+        }
+        
+        sql = sql + " order by obj.tieneAutorizacionRol desc";
+
+        Query q = session.createQuery(sql);
+        q.setParameter("autorizacionRol", autorizacionRol);        
+        q.setParameter("unidadEjecutora", unidadEjecutora);
+        
+        if (idUsuario != null && idUsuario.length() > 0) {
+            q.setParameter("idUsuario", '%' + idUsuario + '%');
+        }
+        if (nombreCompleto != null && nombreCompleto.length() > 0) {
+            q.setParameter("nombreCompleto", '%' + nombreCompleto + '%');
+        }
+        if (correo != null && correo.length() > 0) {
+            q.setParameter("correo", '%' + correo + '%');
+        }        
+        return q;
     }
 }

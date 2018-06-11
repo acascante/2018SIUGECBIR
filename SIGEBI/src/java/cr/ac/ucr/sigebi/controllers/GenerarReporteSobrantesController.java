@@ -5,6 +5,7 @@
  */
 package cr.ac.ucr.sigebi.controllers;
 
+import com.icesoft.faces.context.effects.JavascriptContext;
 import cr.ac.ucr.framework.vista.util.Mensaje;
 import cr.ac.ucr.framework.vista.util.Util;
 import cr.ac.ucr.sigebi.commands.GenerarReporteSobrantesCommand;
@@ -25,12 +26,14 @@ import java.util.Map;
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import javax.faces.component.UIViewRoot;
+import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 import javax.faces.model.SelectItem;
 import net.sf.jasperreports.engine.JasperCompileManager;
 import net.sf.jasperreports.engine.JasperExportManager;
 import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.JasperReport;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
@@ -146,47 +149,59 @@ public class GenerarReporteSobrantesController extends BaseController {
     }
     
     public void generarReporte() {
-        try {
-            //reportes/reporteSobrantes.jrxml
-            TomaFisica tomaFisica = this.tomaFisicaModel.buscarPorId(this.command.getIdTomaFisica());
-            List<TomaFisicaSobrante> sobrantes = this.tomaFisicaSobranteModel.listarReporte(tomaFisica, this.command.getIdentificacion(),  
-                    this.command.getUbicacion(), this.command.getDescripcion(), this.command.getSerie(), this.command.getMarca(), this.command.getModelo(),
-                    this.command.getIdOrden().equals(-1L)?null:this.tipoPorId(this.command.getIdOrden()).getNombre(),
-                    this.command.getIdOrden1().equals(-1L)?null:this.tipoPorId(this.command.getIdOrden1()).getNombre(),
-                    this.command.getIdOrden2().equals(-1L)?null:this.tipoPorId(this.command.getIdOrden2()).getNombre(),
-                    this.command.getIdOrden3().equals(-1L)?null:this.tipoPorId(this.command.getIdOrden3()).getNombre());
-            if (!sobrantes.isEmpty()) {
-                String template = cr.ac.ucr.framework.reporte.componente.utilitario.Util.ConvertirRutas("/reportes/reporteSobrantes.jrxml");
-                String jasperFile = cr.ac.ucr.framework.reporte.componente.utilitario.Util.ConvertirRutas("/reportes/reporteSobrantes.jasper");
-                String outputFile = cr.ac.ucr.framework.reporte.componente.utilitario.Util.ConvertirRutas("/reportes/reporteSobrantes.pdf");
-                
-                JasperCompileManager.compileReportToFile(template, jasperFile);
-                ArrayList<ReporteSobrantes> datosReporte = new ArrayList<ReporteSobrantes>();
-                for (TomaFisicaSobrante bienSobrante : sobrantes) {
-                    ReporteSobrantes dato;
-                    if (bienSobrante.getIdentificacion() != null && !bienSobrante.getIdentificacion().isEmpty()) {
-                        Bien bien = this.bienModel.buscarPorIdentificacion(bienSobrante.getIdentificacion());
-                        if (bien != null) {
-                            dato = new ReporteSobrantes(bienSobrante, bien.getEstado());
+        if (this.command.getIdTipo().equals(Constantes.DEFAULT_ID)) {
+            Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.label.reporteBien.error.tipo"));
+        } else {
+            try {
+                //reportes/reporteSobrantes.jrxml
+                TomaFisica tomaFisica = this.tomaFisicaModel.buscarPorId(this.command.getIdTomaFisica());
+                List<TomaFisicaSobrante> sobrantes = this.tomaFisicaSobranteModel.listarReporte(tomaFisica, this.command.getIdentificacion(),  
+                        this.command.getUbicacion(), this.command.getDescripcion(), this.command.getSerie(), this.command.getMarca(), this.command.getModelo(),
+                        this.command.getIdOrden().equals(-1L)?null:this.tipoPorId(this.command.getIdOrden()).getNombre(),
+                        this.command.getIdOrden1().equals(-1L)?null:this.tipoPorId(this.command.getIdOrden1()).getNombre(),
+                        this.command.getIdOrden2().equals(-1L)?null:this.tipoPorId(this.command.getIdOrden2()).getNombre(),
+                        this.command.getIdOrden3().equals(-1L)?null:this.tipoPorId(this.command.getIdOrden3()).getNombre());
+                if (!sobrantes.isEmpty()) {
+                    String template = cr.ac.ucr.framework.reporte.componente.utilitario.Util.ConvertirRutas("/reportes/reporteSobrantes.jrxml");
+                    //String jasperFile = cr.ac.ucr.framework.reporte.componente.utilitario.Util.ConvertirRutas("/reportes/reporteSobrantes.jasper");
+                    String outputFile = cr.ac.ucr.framework.reporte.componente.utilitario.Util.ConvertirRutas("/reportes/reporteSobrantes");
+
+                    ArrayList<ReporteSobrantes> datosReporte = new ArrayList<ReporteSobrantes>();
+                    for (TomaFisicaSobrante bienSobrante : sobrantes) {
+                        ReporteSobrantes dato;
+                        if (bienSobrante.getIdentificacion() != null && !bienSobrante.getIdentificacion().isEmpty()) {
+                            Bien bien = this.bienModel.buscarPorIdentificacion(bienSobrante.getIdentificacion());
+                            if (bien != null) {
+                                dato = new ReporteSobrantes(bienSobrante, bien.getEstado());
+                            } else {
+                                dato = new ReporteSobrantes(bienSobrante);
+                            }
                         } else {
                             dato = new ReporteSobrantes(bienSobrante);
                         }
-                    } else {
-                        dato = new ReporteSobrantes(bienSobrante);
+                        datosReporte.add(dato);
                     }
-                    datosReporte.add(dato);
-                }
-                
-                JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(datosReporte);
-                JasperPrint jasperPrint = JasperFillManager.fillReport(jasperFile, generarParametros(tomaFisica), dataSource);
-                JasperExportManager.exportReportToPdfFile(jasperPrint, outputFile);
-                Mensaje.agregarInfo("Reporte generado exitosamente");
-            } else {
-                Mensaje.agregarErrorAdvertencia("No hay sobrantes en esta Toma");
-            }            
-        } catch (Exception err) {
-            Mensaje.agregarErrorAdvertencia(err.getMessage());
-            this.mensaje = err.getMessage();
+                    JRBeanCollectionDataSource beanColDataSource = new JRBeanCollectionDataSource(datosReporte);
+                    JasperReport jasperReport = JasperCompileManager.compileReport(template);
+                    JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, generarParametros(tomaFisica), beanColDataSource);
+
+                    Tipo tipoReporte = this.tipoPorId(this.command.getIdTipo());
+                    if(tipoReporte.getNombre().equals(Constantes.TIPO_REPORTE_PDF)) {
+                        JasperExportManager.exportReportToPdfFile(jasperPrint, outputFile + Constantes.TIPO_REPORTE_PDF_EXTENSION);
+                        JavascriptContext.addJavascriptCall(FacesContext.getCurrentInstance(), "reporte('reporteSobrantes','" + Constantes.TIPO_REPORTE_PDF_EXTENSION + "');");
+                    } else {
+                        JasperExportManager.exportReportToXmlFile(jasperPrint, outputFile + Constantes.TIPO_REPORTE_EXCELL_EXTENSION, true);
+                        JavascriptContext.addJavascriptCall(FacesContext.getCurrentInstance(), "reporte('reporteSobrantes','" + Constantes.TIPO_REPORTE_EXCELL_EXTENSION + "');");
+                    }
+
+                    Mensaje.agregarInfo("Reporte generado exitosamente");
+                } else {
+                    Mensaje.agregarErrorAdvertencia("No hay sobrantes en esta Toma");
+                }            
+            } catch (Exception err) {
+                Mensaje.agregarErrorAdvertencia(err.getMessage());
+                this.mensaje = err.getMessage();
+            }
         }
     }
     
@@ -204,7 +219,7 @@ public class GenerarReporteSobrantesController extends BaseController {
         parametros.put(Parametros.USUARIO, this.usuarioSIGEBI.getNombreCompleto());
         parametros.put(Parametros.TOMA_FISICA, tomaFisica.getId());
         parametros.put(Parametros.UBICACION, null);
-        parametros.put(Parametros.UNIDAD_EJECUTORA, tomaFisica.getUnidadEjecutora().getDescripcion());
+        parametros.put(Parametros.UNIDAD_EJECUTORA, tomaFisica.getUnidadEjecutora() != null ? tomaFisica.getUnidadEjecutora().getDescripcion() : "");
         return parametros;
     }
     

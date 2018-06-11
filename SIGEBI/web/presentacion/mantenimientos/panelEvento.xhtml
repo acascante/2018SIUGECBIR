@@ -1,0 +1,56 @@
+<div xmlns:ice="http://www.icesoft.com/icefaces/component"
+      xmlns:f="http://java.sun.com/jsf/core" >
+
+    <!-- Modal para confirmar -->
+    <ice:panelPopup modal="true" visible="#{controllerAgregarMantenimientos.visiblePanelEvento}" styleClass="popup">
+        <f:facet name="body">
+            <fieldset class="panel_Container" >
+                <div class="container" style="margin-top: 20px;">
+                    <!-- Titulo -->
+                    <div class="row">
+                        <div class='col-sm-12'>
+                            <h1 style="margin: 0px;">
+                                <ice:outputFormat value="#{label['sigebi.label.mantenimiento.evento.titulo']}"/>
+                            </h1>
+                        </div>                
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-12" style="margin-top: 20px;">
+                            <div class="form-group">
+                                <label class="control-label" for="txtEventoDescripcion">
+                                    <ice:outputText value="#{label['sigebi.label.mantenimiento.evento.descripcion']}"/> 
+                                </label>
+                                <ice:inputTextarea id="txtEventoDescripcion" styleClass="form-control" cols="2" 
+                                                   validator="#{controllerAgregarMantenimientos.validarEventoDescripcion}"
+                                                   value="#{controllerAgregarMantenimientos.command.eventoDescripcion}"/>
+                            </div>
+                        </div>    
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-12" style="margin-top: 20px;">
+                            <div class="form-group">
+                                <label class="control-label" for="txtEventoCosto">
+                                    <ice:outputText value="#{label['sigebi.label.mantenimiento.evento.costo']}"/> 
+                                </label>
+                                <ice:inputText id="txtEventoCosto" styleClass="form-control" 
+                                               validator="#{controllerAgregarMantenimientos.validarEventoCosto}"
+                                               value="#{controllerAgregarMantenimientos.command.eventoCosto}"/>
+                            </div>
+                        </div>    
+                    </div>
+                    
+                    <div class="row"  style="margin-top: 20px; margin-bottom: 20px;">
+                        <div class='col-md-6'>
+                            <ice:commandButton id="btnCerrarPanelEvento" value="#{label['label.regresar']}" action="#{controllerAgregarMantenimientos.agregarEventoCancelar}" partialSubmit="false" rendered="true" style="float: left" styleClass="boton" />
+                        </div>
+                        <div class="col-md-6 align-content-center">
+                            <ice:commandButton id="botonAceptarEvento" value="#{label['label.aceptar']}" action="#{controllerAgregarMantenimientos.agregarEventoAceptar}" partialSubmit="true" rendered="true" style="float: right" styleClass="boton"/>
+                        </div>
+                    </div>
+                </div>                
+            </fieldset>       
+        </f:facet>  
+    </ice:panelPopup>
+</div>

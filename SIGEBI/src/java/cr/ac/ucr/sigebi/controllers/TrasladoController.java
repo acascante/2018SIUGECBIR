@@ -235,6 +235,7 @@ public class TrasladoController extends ListadoBienesGeneralController {
 
             inicializaTraslado();
 
+            this.vistaOrigen = pEvent.getComponent().getAttributes().get(Constantes.KEY_VISTA_ORIGEN).toString();
             Util.navegar(Constantes.KEY_VISTA_TRASLADO_DETALLE);
 
         } catch (Exception err) {
@@ -249,9 +250,12 @@ public class TrasladoController extends ListadoBienesGeneralController {
                 pEvent.queue();
                 return;
             }
-
             listadoInicializaDatos();
-            Util.navegar(Constantes.KEY_VISTA_TRASLADOS_LISTAR);
+            if (vistaOrigen != null) {
+                Util.navegar(vistaOrigen, true);
+            } else {
+                Util.navegar(Constantes.KEY_VISTA_TRASLADOS_LISTAR);
+            }            
         } catch (Exception err) {
             Mensaje.agregarErrorAdvertencia(err.getCause().getMessage());
         }
@@ -368,6 +372,7 @@ public class TrasladoController extends ListadoBienesGeneralController {
             inicializaTraslado();
             SolicitudTraslado item = (SolicitudTraslado) pEvent.getComponent().getAttributes().get("itemSeleccionado");
             cargarDatosTraslado(item);
+            this.vistaOrigen = pEvent.getComponent().getAttributes().get(Constantes.KEY_VISTA_ORIGEN).toString();
             Util.navegar(Constantes.KEY_VISTA_TRASLADO_DETALLE);
         } catch (Exception err) {
             Mensaje.agregarErrorAdvertencia(err.getCause().getMessage());

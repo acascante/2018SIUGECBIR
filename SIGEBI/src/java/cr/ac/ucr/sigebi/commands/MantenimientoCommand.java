@@ -7,6 +7,7 @@ package cr.ac.ucr.sigebi.commands;
 
 import cr.ac.ucr.sigebi.domain.Bien;
 import cr.ac.ucr.sigebi.domain.Estado;
+import cr.ac.ucr.sigebi.domain.Evento;
 import cr.ac.ucr.sigebi.domain.SolicitudDetalle;
 import cr.ac.ucr.sigebi.domain.SolicitudMantenimiento;
 import cr.ac.ucr.sigebi.domain.UnidadEjecutora;
@@ -45,6 +46,10 @@ public class MantenimientoCommand {
     private Map<Long, Bien> bienes;     // Bienes existentes en la solicitud
     private List<SolicitudDetalle> detallesEliminar;
     private Map<Long, SolicitudDetalle> detalles;
+    
+    private String eventoDescripcion;
+    private Double eventoCosto;
+    
     //</editor-fold>
     
     //<editor-fold defaultstate="collapsed" desc="Constructores">
@@ -88,7 +93,7 @@ public class MantenimientoCommand {
         solicitud.setEstado(this.estado);
         solicitud.setFecha(this.fecha);
         solicitud.setUsuario(this.usuario);
-        solicitud.setDiscriminator(Constantes.DISCRIMINATOR_SOLICITUD_EXCLUSION);
+        solicitud.setDiscriminator(Constantes.DISCRIMINATOR_SOLICITUD_MANTENIMIENTO);
         solicitud.setObservacion(this.observacion);
         
         List<SolicitudDetalle> listDetalles = new ArrayList<SolicitudDetalle>(this.detalles.values());
@@ -104,6 +109,15 @@ public class MantenimientoCommand {
         }        
         solicitud.setDetalles(listDetalles);        
         return solicitud;
+    }
+    
+    public Evento getEvento(Long idBien) {
+        Evento evento = new Evento();
+        evento.setDescripcion(this.eventoDescripcion);
+        evento.setCosto(this.eventoCosto);
+        evento.setFecha(new Date());
+        evento.setDetalle(this.detalles.get(idBien));
+        return evento;        
     }
     //</editor-fold>    
     
@@ -223,6 +237,22 @@ public class MantenimientoCommand {
     
     public Bien getBien(Long id) {
         return bienes.get(id);
+    }
+
+    public String getEventoDescripcion() {
+        return eventoDescripcion;
+    }
+
+    public void setEventoDescripcion(String eventoDescripcion) {
+        this.eventoDescripcion = eventoDescripcion;
+    }
+
+    public Double getEventoCosto() {
+        return eventoCosto;
+    }
+
+    public void setEventoCosto(Double eventoCosto) {
+        this.eventoCosto = eventoCosto;
     }
     
     public String getObservacionConfirmacion() {

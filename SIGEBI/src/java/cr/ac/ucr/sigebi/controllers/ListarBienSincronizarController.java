@@ -64,7 +64,6 @@ public class ListarBienSincronizarController extends BaseController {
     List<SelectItem> estadosOptions;
 
     Map<Long, Bien> bienesPorSincronizar;
-    Map<Long, Bien> bienesPorRechazar;
     Map<Long, Bien> bienesEnviarSincronizar;
 
     boolean sincronizar;
@@ -99,6 +98,10 @@ public class ListarBienSincronizarController extends BaseController {
         return (bienesEnviarSincronizar.isEmpty());
     }
 
+    public boolean isSolicitarSincronizar() {
+        return (bienesPorSincronizar.isEmpty());
+    }
+    
     public void setSincronizar(boolean sincronizar) {
         this.sincronizar = sincronizar;
     }
@@ -199,14 +202,6 @@ public class ListarBienSincronizarController extends BaseController {
         this.bienesPorSincronizar = bienesPorSincronizar;
     }
 
-    public Map<Long, Bien> getBienesPorRechazar() {
-        return bienesPorRechazar;
-    }
-
-    public void setBienesPorRechazar(Map<Long, Bien> bienesPorRechazar) {
-        this.bienesPorRechazar = bienesPorRechazar;
-    }
-
     public void setBienesEnviarSincronizar(HashMap<Long, Bien> bienesEnviarSincronizar) {
         this.bienesEnviarSincronizar = bienesEnviarSincronizar;
     }
@@ -247,7 +242,6 @@ public class ListarBienSincronizarController extends BaseController {
 
         // Mapas para los bienese seleccionados en pantalla
         bienesPorSincronizar = new HashMap<Long, Bien>();
-        bienesPorRechazar = new HashMap<Long, Bien>();
         bienesEnviarSincronizar = new HashMap<Long, Bien>();
         estadosFiltros = new ArrayList<Estado>();
         estadosFiltros.add(this.estadoPorDominioValor(Constantes.DOMINIO_BIEN, Constantes.ESTADO_BIEN_PENDIENTE));
@@ -295,28 +289,6 @@ public class ListarBienSincronizarController extends BaseController {
             Mensaje.agregarErrorAdvertencia(err.getError_para_usuario());
         } catch (Exception err) {
             Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.error.controllerListarBienSincronizar.checkBienPorSincronizar"));
-        }
-    }
-
-    public void checkBienPorRechazar(ValueChangeEvent pEvent) {
-        try {
-            if (!pEvent.getPhaseId().equals(PhaseId.INVOKE_APPLICATION)) {
-                pEvent.setPhaseId(PhaseId.INVOKE_APPLICATION);
-                pEvent.queue();
-                return;
-            }
-
-            Bien bienSinco = (Bien) pEvent.getComponent().getAttributes().get("bienSeleccionado");
-            if (bienesPorRechazar.containsKey(bienSinco.getId())) {
-                bienesPorRechazar.remove(bienSinco.getId());
-            } else {
-                bienesPorRechazar.put(bienSinco.getId(), bienSinco);
-            }
-
-        } catch (FWExcepcion err) {
-            Mensaje.agregarErrorAdvertencia(err.getError_para_usuario());
-        } catch (Exception err) {
-            Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.error.controllerListarBienSincronizar.checkBienPorRechazar"));
         }
     }
 
@@ -417,7 +389,7 @@ public class ListarBienSincronizarController extends BaseController {
                 );
             }
             for (Bien bien : this.bienes) {
-                bien.setSeleccionado(bienesPorSincronizar.containsKey(bien.getId()) || bienesEnviarSincronizar.containsKey(bien.getId()) || bienesPorRechazar.containsKey(bien.getId()));
+                bien.setSeleccionado(bienesPorSincronizar.containsKey(bien.getId()) || bienesEnviarSincronizar.containsKey(bien.getId()));
             }
         } catch (FWExcepcion err) {
             Mensaje.agregarErrorAdvertencia(err.getError_para_usuario());
@@ -532,9 +504,8 @@ public class ListarBienSincronizarController extends BaseController {
             } else {
                 Integer telefono = lVistaUsuario.getgUsuarioActual().getTelefono1() != null ? Integer.parseInt(lVistaUsuario.getgUsuarioActual().getTelefono1()) : 0;
                 
-                bienMod.cambiaEstadoBien(this.bienesPorRechazar.values(), this.estadoPorDominioValor(Constantes.DOMINIO_BIEN, Constantes.ESTADO_BIEN_PENDIENTE), 
+                bienMod.cambiaEstadoBien(this.bienesEnviarSincronizar.values(), this.estadoPorDominioValor(Constantes.DOMINIO_BIEN, Constantes.ESTADO_BIEN_PENDIENTE), 
                         observacionCliente, telefono, usuarioSIGEBI, this.tipoPorDominioValor(Constantes.DOMINIO_REGISTRO_MOVIMIENTO, Constantes.TIPO_REGISTRO_MOVIMIENTO_CAMBIO_ESTADO_BIEN));
-                this.bienesPorRechazar.clear();
                 this.bienesEnviarSincronizar.clear();
                 
                 observacionCliente = "";
@@ -658,7 +629,6 @@ public class ListarBienSincronizarController extends BaseController {
             
             this.bienesEnviarSincronizar.clear();
             this.bienesPorSincronizar.clear();
-            this.bienesPorRechazar.clear();
 
             //Actualiza la lista
             this.contarBienes();

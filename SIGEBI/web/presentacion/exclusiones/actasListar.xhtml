@@ -15,12 +15,13 @@
                     </h1>
                 </div> 
                 <div class='col-sm-2'>
-                    <ice:commandButton id="botonAbrir"
+                    <ice:commandButton id="btnNuevo"
                                        style="float: right" 
                                        styleClass="boton" 
                                        partialSubmit="true" 
                                        actionListener="#{actaController.nuevoRegistro}"
                                        value="#{label['sigebi.Bien.Btn.Nuevo']}">
+                                    <f:attribute id="keyVistaOrigen" name="keyVistaOrigen"  value="acta"/>        
                     </ice:commandButton>
                 </div>               
             </div>
@@ -191,7 +192,8 @@
                                                    partialSubmit="true"
                                                    actionListener="#{actaController.verDetalle}"  
                                                    value="#{label['sigebi.ActaListar.Label.VER']}"  >    
-                                    <f:attribute id="itemSeleccionado" name="itemSeleccionado"  value="#{acta}"/>                         
+                                    <f:attribute id="itemSeleccionado" name="itemSeleccionado"  value="#{acta}"/> 
+                                    <f:attribute id="keyVistaOrigen" name="keyVistaOrigen"  value="acta"/>                          
                                 </ice:commandButton>
                                 
                             </ice:column>

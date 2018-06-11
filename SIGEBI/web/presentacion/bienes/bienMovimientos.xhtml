@@ -49,14 +49,14 @@
                     
                 </ice:dataPaginator>
                 
-                <!-- LISTAR NOTAS-->
+                <!-- LISTAR MOVIMIENTOS-->
                 <ice:dataTable id="movimientosLista" 
                                value="#{controllerAgregarBienes.command.movimientos}" 
                                var="movimiento" 
                                paginator="true" 
                                paginatorPosition="top" 
                                rows="5">
-                    <ice:column id="colEstadoMovim" >
+                    <ice:column id="colTipoMovim" >
                         <f:facet name="header">
                             <ice:outputText  value="#{label['sigebi.Bien.Col.TipoMov']}" />
                         </f:facet>
@@ -68,6 +68,13 @@
                             <ice:outputText  value="#{label['sigebi.Bien.Col.Fecha']}" />
                         </f:facet>
                         <h:outputText id="fechaCelMovim" value="#{movimiento.fecha}"/>
+                    </ice:column>
+                    
+                    <ice:column id="colEstadoMovim" >
+                        <f:facet name="header">
+                            <ice:outputText  value="#{label['sigebi.Acta.Label.Estado']}" />
+                        </f:facet>
+                        <h:outputText id="estadoCelMovim" value="#{movimiento.estado.nombre}"/>
                     </ice:column>
 
                     <ice:column id="colUsuarioMovim"  >

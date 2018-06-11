@@ -60,8 +60,8 @@ public class VistaNavegacion {
         gPaginas.put(Constantes.VISTA_CONVENIO_LISTADO, Constantes.VISTA_CONVENIO_LISTADO_PAGINA);
         gPaginas.put(Constantes.VISTA_CONVENIO_NUEVO, Constantes.VISTA_CONVENIO_NUEVO_PAGINA);
 
-        gPaginas.put(Constantes.VISTA_EXCLUSION_LISTADO, Constantes.VISTA_MANTENIMIENTO_LISTADO_PAGINA);
-        gPaginas.put(Constantes.VISTA_EXCLUSION_NUEVA, Constantes.VISTA_MANTENIMIENTO_NUEVA_PAGINA);
+        gPaginas.put(Constantes.VISTA_EXCLUSION_LISTADO, Constantes.VISTA_EXCLUSION_LISTADO_PAGINA);
+        gPaginas.put(Constantes.VISTA_EXCLUSION_NUEVA, Constantes.VISTA_EXCLUSION_NUEVA_PAGINA);
 
         gPaginas.put(Constantes.VISTA_MANTENIMIENTO_LISTADO, Constantes.VISTA_MANTENIMIENTO_LISTADO_PAGINA);
         gPaginas.put(Constantes.VISTA_MANTENIMIENTO_NUEVO, Constantes.VISTA_MANTENIMIENTO_NUEVA_PAGINA);

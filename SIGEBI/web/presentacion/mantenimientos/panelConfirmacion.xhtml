@@ -36,9 +36,8 @@
                         </div>
                         <div class="col-md-6 align-content-center">
                             <ice:commandButton id="botonRechazarBienObservacion" value="#{label['label.rechazar']}" action="#{controllerAgregarMantenimientos.rechazarBienObservacion}" rendered="#{controllerAgregarMantenimientos.visibleBotonRechazarBienObservacion}" partialSubmit="true" style="float: right" styleClass="boton"/>
-                            <ice:commandButton id="botonRechazarObservacion" value="#{label['label.rechazar']}" action="#{controllerAgregarMantenimientos.rechazarExclusionObservacion}" rendered="#{controllerAgregarMantenimientos.visibleBotonRechazarObservacion}" partialSubmit="true" style="float: right" styleClass="boton"/>
-                            <ice:commandButton id="botonSolicitarBienObservacion" value="#{label['label.rechazar']}" action="#{controllerAgregarMantenimientos.rechazarBienObservacion}" rendered="#{controllerAgregarMantenimientos.visibleBotonSolicitarBienObservacion}" partialSubmit="true" style="float: right" styleClass="boton"/>
-                            <ice:commandButton id="botonSolicitarObservacion" value="#{label['label.revisar']}" action="#{controllerAgregarMantenimientos.revisarExclusionObservacion}" rendered="#{controllerAgregarMantenimientos.visibleBotonSolicitarObservacion}" partialSubmit="true" style="float: right" styleClass="boton"/>
+                            <ice:commandButton id="botonRechazarObservacion" value="#{label['label.rechazar']}" action="#{controllerAgregarMantenimientos.rechazarMantenimientoObservacion}" rendered="#{controllerAgregarMantenimientos.visibleBotonRechazarObservacion}" partialSubmit="true" style="float: right" styleClass="boton"/>
+                            <ice:commandButton id="botonSolicitarObservacion" value="#{label['label.corregir']}" action="#{controllerAgregarMantenimientos.solicitarCorreccionMantenimientoObservacion}" rendered="#{controllerAgregarMantenimientos.visibleBotonSolicitarObservacion}" partialSubmit="true" style="float: right" styleClass="boton"/>
                             
                         </div>
                     </div>

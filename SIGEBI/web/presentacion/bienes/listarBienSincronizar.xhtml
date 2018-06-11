@@ -179,34 +179,21 @@
                                 <h:outputText id="costoCell" value="#{bien.estado.nombre}"/>
                             </ice:column>
 
+                            <!--  Columna rechazar o sincronizar  -->
                             <ice:column id="sincroColum" style="text-align: center;">
                                 <f:facet name="header">
                                     <ice:outputText value="#{label['sigebi.label.vista.listarBienSincronizar.sincronizar']}"/>
                                 </f:facet>
                                 <ice:selectBooleanCheckbox id="checkSincronizar"
-                                                   rendered="#{bien.estado.id == controllerListarBienSincronizar.estadoPendiente}" 
+                                                   rendered="#{(bien.estado.id == controllerListarBienSincronizar.estadoPendiente and controllerListarBienSincronizar.sincronizar)}" 
                                                    partialSubmit="true" 
                                                    valueChangeListener="#{controllerListarBienSincronizar.checkBienPorSincronizar}"
                                                    value="#{bien.seleccionado}">
                                     <f:attribute id="bienSeleccionado" name="bienSeleccionado"  value="#{bien}"/>
                                 </ice:selectBooleanCheckbox>
                             </ice:column>
-
-                            <ice:column id="rechaColum"  style="text-align: center;" rendered="false">
-                                <f:facet name="header">
-                                    <ice:outputText value="#{label['sigebi.label.vista.listarBienSincronizar.rechazar']}"/>
-                                </f:facet>
-                                <ice:selectBooleanCheckbox id="checkRechazar"
-                                                   rendered="#{bien.estado.id == controllerListarBienSincronizar.estadoPendienteSincronizar}" 
-                                                   partialSubmit="true" 
-                                                   valueChangeListener="#{controllerListarBienSincronizar.checkBienPorRechazar}"
-                                                   value="#{bien.seleccionado}">
-                                    <f:attribute id="bienSeleccionado" name="bienSeleccionado"  value="#{bien}"/>
-                                </ice:selectBooleanCheckbox>
-                            </ice:column>
-                              
                             
-                            <!--  Columna enviar a Sincronizar  -->
+                            <!--  Columna enviar solicitar sincronizar  -->
                             <ice:column id="columnSincronizar"  style="text-align: center;">
                                 <f:facet name="header">
                                     <ice:columnGroup>
@@ -216,8 +203,8 @@
                                     </ice:columnGroup>
                                 </f:facet>
                                 <ice:selectBooleanCheckbox id="checkRechazar"
-                                                   rendered="#{bien.estado.valor eq controllerListarBienSincronizar.estadoPendienteSincronizar
-                                                               or bien.estado.id eq controllerListarBienSincronizar.estadoExclusionAprobada.id}" 
+                                                   rendered="#{(bien.estado.valor eq controllerListarBienSincronizar.estadoPendienteSincronizar
+                                                               or bien.estado.id eq controllerListarBienSincronizar.estadoExclusionAprobada.id) and controllerListarBienSincronizar.solicitarSincronizar}" 
                                                    partialSubmit="true" 
                                                    valueChangeListener="#{controllerListarBienSincronizar.checkBienEnviarSincronizar}"
                                                    value="#{bien.seleccionado}">
@@ -271,6 +258,7 @@
                                        style="float:right" 
                                        styleClass="boton" 
                                        partialSubmit="true" 
+                                       disabled="#{!controllerListarBienSincronizar.sincronizar}"
                                        action="#{controllerListarBienSincronizar.solicitarSincronizacion}"
                                        value="#{label['sigebi.label.vista.listarBienSincronizar.sincronizar']}">
                     </ice:commandButton>                    

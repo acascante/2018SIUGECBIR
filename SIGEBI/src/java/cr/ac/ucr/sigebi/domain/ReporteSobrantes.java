@@ -41,7 +41,7 @@ public class ReporteSobrantes implements Serializable {
         this.serie = bienSobrante.getSerie();
         this.subClasificacion = getDescSubClasificacion(bienSobrante.getSubClasificacion());
         this.subCategoria = getDescSubCategoria(bienSobrante.getSubCategoria());
-        this.unidadEjecutora = bienSobrante.getTomaFisica().getUnidadEjecutora().getDescripcion();
+            this.unidadEjecutora = getDescUnidad(bienSobrante.getTomaFisica());
         this.ubicacion = bienSobrante.getUbicacion();
     }
     
@@ -50,6 +50,13 @@ public class ReporteSobrantes implements Serializable {
         this.estado = estado.getNombre();
     }
     //</editor-fold>
+    
+    private String getDescUnidad(TomaFisica tomaFisica) {
+        if (tomaFisica != null && tomaFisica.getUnidadEjecutora() != null) {
+            return tomaFisica.getUnidadEjecutora().getDescripcion();
+        }
+        return null;
+    }
     
     private String getDescSubClasificacion(SubClasificacion sc) {
         if(sc != null && sc.getClasificacion() != null)

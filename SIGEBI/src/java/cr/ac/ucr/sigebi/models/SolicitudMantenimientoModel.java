@@ -7,6 +7,7 @@ package cr.ac.ucr.sigebi.models;
 
 import cr.ac.ucr.framework.utils.FWExcepcion;
 import cr.ac.ucr.sigebi.daos.SolicitudMantenimientoDao;
+import cr.ac.ucr.sigebi.domain.Evento;
 import cr.ac.ucr.sigebi.domain.SolicitudDetalle;
 import cr.ac.ucr.sigebi.domain.SolicitudMantenimiento;
 import cr.ac.ucr.sigebi.domain.UnidadEjecutora;
@@ -33,6 +34,10 @@ public class SolicitudMantenimientoModel {
     public void salvar(SolicitudMantenimiento solicitudMantenimiento) throws FWExcepcion {
         solicitudMantenimientoDao.salvar(solicitudMantenimiento);
         solicitudMantenimientoDao.salvarDetalles(solicitudMantenimiento.getDetalles());
+    }
+    
+    public void salvarEvento(Evento evento) throws FWExcepcion {
+        solicitudMantenimientoDao.salvarEvento(evento);
     }
     
     public void eliminarDetalles(List<SolicitudDetalle> detalles) throws FWExcepcion {
