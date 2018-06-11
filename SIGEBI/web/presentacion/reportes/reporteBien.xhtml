@@ -77,13 +77,28 @@
                                                         <ice:outputText value="#{label['sigebi.label.reporteBien.campo.nombre']} "/>
                                                     </ice:column>
 
-                                                    <ice:column id="valor" rowspan="2" style="vertical-align:top;">
+                                                    <ice:column id="valor" style="vertical-align:top;">
                                                         <ice:outputText value="#{label['sigebi.label.reporteBien.campo.valor']} "/>
                                                     </ice:column>
 
                                                     <!--Tamano-->
-                                                    <ice:column id="tamano" rowspan="2" style="vertical-align:top;">
+                                                    <ice:column id="tamano" style="vertical-align:top;">
                                                         <ice:outputText value="#{label['sigebi.label.reporteBien.campo.tamano']} "/>
+                                                    </ice:column>
+                                                    
+                                                    <!--Orden-->
+                                                    <ice:column id="orden" style="vertical-align:top;">
+                                                        <ice:outputText value="#{label['sigebi.label.reporteBien.campo.orden']} "/>
+                                                    </ice:column>
+                                                    
+                                                    <!--Orden-->
+                                                    <ice:column id="descOrden" style="vertical-align:top;">
+                                                        <ice:outputText value="#{label['sigebi.label.reporteBien.campo.orden']} "/>
+                                                    </ice:column>
+                                                    
+                                                    <!--Mostar-->
+                                                    <ice:column id="mostrar" style="vertical-align:top;">
+                                                        <ice:outputText value="#{label['sigebi.label.reporteBien.campo.mostrar']} "/>
                                                     </ice:column>
                                                 </ice:headerRow>
                                             </ice:columnGroup>
@@ -96,6 +111,15 @@
                                         </ice:column>
                                         <ice:column>
                                             <ice:inputText id="txtTamano" value="#{campo.tamanoColumna}" styleClass="form-control" />
+                                        </ice:column>
+                                        <ice:column>
+                                            <ice:inputText id="txtOrden" value="#{campo.orden}" action="#{controllerReporteBien.seleccionarOrdenReporte}" styleClass="form-control" />
+                                        </ice:column>                                        
+                                        <ice:column>
+                                            <ice:inputText id="txtDescripcionOrden" value="#{campo.descripcionOrden}" styleClass="form-control" />
+                                        </ice:column>                                        
+                                        <ice:column>
+                                            <ice:selectBooleanCheckbox id="txtMostrar" value="#{campo.mostrarBoolean}" styleClass="form-control" />
                                         </ice:column>
                                     </ice:dataTable>
                                 </div>

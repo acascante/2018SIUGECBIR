@@ -15,12 +15,14 @@ import cr.ac.ucr.sigebi.domain.Bien;
 import cr.ac.ucr.sigebi.domain.BienReporte;
 import cr.ac.ucr.sigebi.domain.CampoBien;
 import cr.ac.ucr.sigebi.domain.CampoReporteBien;
+import cr.ac.ucr.sigebi.domain.Estado;
 import cr.ac.ucr.sigebi.domain.ReporteBien;
 import cr.ac.ucr.sigebi.domain.Tipo;
 import cr.ac.ucr.sigebi.models.BienModel;
 import cr.ac.ucr.sigebi.models.CampoBienModel;
 import cr.ac.ucr.sigebi.models.CampoReporteBienModel;
 import cr.ac.ucr.sigebi.models.ReporteBienModel;
+import java.awt.print.Book;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -86,6 +88,8 @@ public class ReporteBienController extends BaseController {
     private Boolean visiblePanelNombreReporte;
     private Boolean visiblePanelAgregarCampos;
     private Boolean visibleBotonEliminar;
+    
+    private Long lastIdOrden;
   
     public ReporteBienController() {
         super();
@@ -160,6 +164,7 @@ public class ReporteBienController extends BaseController {
         this.itemsReporte = new ArrayList<SelectItem>();
         this.reportes = new HashMap<Long, ReporteBien>();
         this.camposSeleccionados = new HashMap<Long, Boolean>();
+        this.lastIdOrden = Constantes.DEFAULT_ID;
     }
     
     private void inicializarReporte() {
@@ -315,6 +320,9 @@ public class ReporteBienController extends BaseController {
                     }
                     parametros.put(campo.getCampoBien().getIdColumna(), campo);
                 }
+                if(Constantes.DEFAULT_NO.equals(campo.getMostrar())) {
+                    listCamposReporte.remove(campo);
+                }
             }
             sql.append(" ORDER BY b.id ASC");
 
@@ -394,6 +402,28 @@ public class ReporteBienController extends BaseController {
                 i--;
                 bandNode.removeChild(node);
             }
+        }
+    }
+    
+    public void seleccionarOrdenReporte(ActionEvent event) {
+        //private Map<Long, CampoReporteBien> camposReporte;
+        
+        Long idCampo = (Long) event.getComponent().getAttributes().get("campoSeleccionado");
+        if (Constantes.DEFAULT_ID.equals(this.lastIdOrden)) {
+            // First time or no other one selected
+            this.lastIdOrden = idCampo;
+        } else if (this.lastIdOrden.equals(idCampo)){
+            // Same one
+            CampoReporteBien campo = this.command.getCamposReporte().get(lastIdOrden);
+            campo.setOrden();
+            this.lastIdOrden = Constantes.DEFAULT_ID;
+        } else {
+            // Other row
+            CampoReporteBien campoPasado = this.command.getCamposReporte().get(lastIdOrden);
+            campoPasado.setOrden(Constantes.DEFAULT_NO);
+            
+            CampoReporteBien campoNuevo = this.command.getCamposReporte().get(idCampo);
+            campoNuevo.setOrden();
         }
     }
     

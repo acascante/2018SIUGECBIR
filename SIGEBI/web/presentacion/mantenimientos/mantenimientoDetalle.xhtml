@@ -100,7 +100,7 @@
                                                             <ice:outputText value="#{label['sigebi.label.solicitud.bienes.estado']} "/>
                                                         </ice:column>
 
-                                                        <ice:column id="opciones" rowspan="2" colspan="6">
+                                                        <ice:column id="opciones" rowspan="2" colspan="7">
                                                             <ice:outputText value="#{label['sigebi.label.solicitud.bienes.opciones']} "/>
                                                         </ice:column>
                                                     </ice:headerRow>
@@ -164,6 +164,13 @@
                                                 </ice:commandButton>
                                             </ice:column>                                            
                                             <ice:column>
+                                                <ice:commandButton id="btnVerEventos" partialSubmit="true" value="#{label['label.ver.eventos']}" style="float: right" styleClass="boton"
+                                                                    actionListener="#{controllerAgregarMantenimientos.verListadoEventos}"
+                                                                    rendered="#{bien.agregarEventoMantenimiento and controllerAgregarMantenimientos.visibleBotonEventoBien}">
+                                                    <f:attribute id="bienSeleccionado" name="bienSeleccionado"  value="#{bien.id}"/> 
+                                                </ice:commandButton>
+                                            </ice:column>                                            
+                                            <ice:column>
                                                 <ice:commandButton id="btnRechazarBien" partialSubmit="true" value="#{label['label.rechazar']}" style="float: right" styleClass="boton"
                                                                     actionListener="#{controllerAgregarMantenimientos.rechazarBien}"
                                                                     rendered="#{bien.aceptarMantenimiento and controllerAgregarMantenimientos.visibleBotonRechazarBien}">
@@ -209,9 +216,14 @@
             <ui:include src="../mantenimientos/panelConfirmacion.xhtml" />
         </ui:insert>
         
-        <!-- Panel de confirmacion --> 
+        <!-- Panel Agregar Evento --> 
         <ui:insert name="modalEvento">
             <ui:include src="../mantenimientos/panelEvento.xhtml" />
+        </ui:insert>
+        
+        <!-- Panel Listar Evento --> 
+        <ui:insert name="modalListarEvento">
+            <ui:include src="../mantenimientos/listadoEventos.xhtml" />
         </ui:insert>
         
         <!-- Panel de confirmacion de Solicitud--> 

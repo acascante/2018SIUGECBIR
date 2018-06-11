@@ -36,10 +36,6 @@ public class SolicitudMantenimientoModel {
         solicitudMantenimientoDao.salvarDetalles(solicitudMantenimiento.getDetalles());
     }
     
-    public void salvarEvento(Evento evento) throws FWExcepcion {
-        solicitudMantenimientoDao.salvarEvento(evento);
-    }
-    
     public void eliminarDetalles(List<SolicitudDetalle> detalles) throws FWExcepcion {
         solicitudMantenimientoDao.eliminarDetalles(detalles);
     }

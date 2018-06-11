@@ -14,10 +14,12 @@ import cr.ac.ucr.sigebi.commands.ListarMantenimientosCommand;
 import cr.ac.ucr.sigebi.commands.MantenimientoCommand;
 import cr.ac.ucr.sigebi.domain.Bien;
 import cr.ac.ucr.sigebi.domain.Estado;
+import cr.ac.ucr.sigebi.domain.Evento;
 import cr.ac.ucr.sigebi.domain.RegistroMovimientoSolicitud;
 import cr.ac.ucr.sigebi.domain.SolicitudMantenimiento;
 import cr.ac.ucr.sigebi.models.AutorizacionRolPersonaModel;
 import cr.ac.ucr.sigebi.models.BienModel;
+import cr.ac.ucr.sigebi.models.EventoModel;
 import cr.ac.ucr.sigebi.models.RegistroMovimientoModel;
 import cr.ac.ucr.sigebi.models.SolicitudMantenimientoModel;
 import java.util.ArrayList;
@@ -231,10 +233,151 @@ public class AgregarMantenimientoController extends BaseController {
         // </editor-fold>
     }
     
+    public class ListadoEventos extends BaseController {
+        
+        private List<Evento> eventos;
+        private Long idDetalle;
+        private Double costoTotal;
+
+        public ListadoEventos() {
+            super();
+            this.eventos = new ArrayList<Evento>();
+        }
+
+        public ListadoEventos(Long idDetalle) {
+            this();
+            this.idDetalle = idDetalle;
+        }
+
+        private void inicializarListado() {
+            this.setPrimerRegistro(1);
+            this.contarEventos();
+            this.listarEventos();
+            this.costoTotalEventos();
+        }
+        
+        private void costoTotalEventos() {
+            try {
+                this.costoTotal = eventoModel.totalCosto(idDetalle);
+            } catch (FWExcepcion e) {
+                Mensaje.agregarErrorAdvertencia(e.getError_para_usuario());
+            }
+        }
+        
+        private void contarEventos() {
+            try {
+                Long contador = eventoModel.contar(idDetalle);
+                this.setCantidadRegistros(contador.intValue());
+            } catch (FWExcepcion e) {
+                Mensaje.agregarErrorAdvertencia(e.getError_para_usuario());
+            }
+        }
+
+        private void listarEventos() {
+            try {
+                this.eventos = eventoModel.listar(this.getPrimerRegistro() - 1, this.getUltimoRegistro(), idDetalle);
+           } catch (FWExcepcion e) {
+               Mensaje.agregarErrorAdvertencia(e.getError_para_usuario());
+           }
+       }
+
+        // <editor-fold defaultstate="collapsed" desc="Get's Set's">
+        public List<Evento> getEventos() {
+            return eventos;
+        }
+
+        public void setEventos(List<Evento> eventos) {
+            this.eventos = eventos;
+        }
+
+        public Long getIdDetalle() {
+            return idDetalle;
+        }
+
+        public void setIdDetalle(Long idDetalle) {
+            this.idDetalle = idDetalle;
+        }
+
+        public Double getCostoTotal() {
+            return costoTotal;
+        }
+
+        public void setCostoTotal(Double costoTotal) {
+            this.costoTotal = costoTotal;
+        }        
+        // </editor-fold>
+        
+        // <editor-fold defaultstate="collapsed" desc="Paginacion">
+        public void irPagina(ActionEvent pEvent) {
+            if (!pEvent.getPhaseId().equals(PhaseId.INVOKE_APPLICATION)) {
+                pEvent.setPhaseId(PhaseId.INVOKE_APPLICATION);
+                pEvent.queue();
+                return;
+            }
+            int numeroPagina = Integer.parseInt(Util.getRequestParameter("numPag"));
+            this.getPrimerRegistroPagina(numeroPagina);
+            this.listarEventos();
+        }
+
+        public void siguiente(ActionEvent pEvent) {
+            if (!pEvent.getPhaseId().equals(PhaseId.INVOKE_APPLICATION)) {
+                pEvent.setPhaseId(PhaseId.INVOKE_APPLICATION);
+                pEvent.queue();
+                return;
+            }
+            this.getSiguientePagina();
+            this.listarEventos();
+        }
+
+        public void anterior(ActionEvent pEvent) {
+            if (!pEvent.getPhaseId().equals(PhaseId.INVOKE_APPLICATION)) {
+                pEvent.setPhaseId(PhaseId.INVOKE_APPLICATION);
+                pEvent.queue();
+                return;
+            }
+            this.getPaginaAnterior();
+            this.listarEventos();
+        }
+
+        public void primero(ActionEvent pEvent) {
+            if (!pEvent.getPhaseId().equals(PhaseId.INVOKE_APPLICATION)) {
+                pEvent.setPhaseId(PhaseId.INVOKE_APPLICATION);
+                pEvent.queue();
+                return;
+            }
+            this.setPrimerRegistro(1);
+            this.listarEventos();
+        }
+
+        public void ultimo(ActionEvent pEvent) {
+            if (!pEvent.getPhaseId().equals(PhaseId.INVOKE_APPLICATION)) {
+                pEvent.setPhaseId(PhaseId.INVOKE_APPLICATION);
+                pEvent.queue();
+                return;
+            }
+            this.getPrimerRegistroUltimaPagina();
+            this.listarEventos();
+        }
+
+        public void cambioRegistrosPorPagina(ValueChangeEvent pEvent) {
+            if (!pEvent.getPhaseId().equals(PhaseId.INVOKE_APPLICATION)) {
+                pEvent.setPhaseId(PhaseId.INVOKE_APPLICATION);
+                pEvent.queue();
+                return;
+            }
+            this.setCantRegistroPorPagina(Integer.parseInt(pEvent.getNewValue().toString()));          
+            this.setPrimerRegistro(1);
+            this.listarEventos();
+        }
+        // </editor-fold>
+    }
+    
     ListadoBienes listadoBienes;
+    ListadoEventos listadoEventos;
     
     @Resource private AutorizacionRolPersonaModel autorizacionRolPersonaModel;
     @Resource private BienModel bienModel;
+    @Resource private EventoModel eventoModel;
     @Resource private SolicitudMantenimientoModel mantenimientoModel;
     @Resource private RegistroMovimientoModel registroMovimientoModel;
     
@@ -247,6 +390,7 @@ public class AgregarMantenimientoController extends BaseController {
     private boolean visiblePanelObservacion;
     private boolean visiblePanelConfirmacion;
     private boolean visiblePanelEvento;
+    private boolean visiblePanelListadoEventos;
     
     private boolean visibleBotonGuardar;
     private boolean visibleBotonAgregarBienes;
@@ -311,6 +455,7 @@ public class AgregarMantenimientoController extends BaseController {
         this.visiblePanelObservacion = false;
         this.visiblePanelBienes = false;
         this.visiblePanelEvento = false;
+        this.visiblePanelListadoEventos = false;
     }
     
     public void confirmarSolicitud() {
@@ -571,8 +716,19 @@ public class AgregarMantenimientoController extends BaseController {
         this.bienSeleccionado = (Long) event.getComponent().getAttributes().get("bienSeleccionado");
     }
 
+    public void verListadoEventos(ActionEvent event) {
+        this.visiblePanelListadoEventos = true;
+        this.bienSeleccionado = (Long) event.getComponent().getAttributes().get("bienSeleccionado");
+        this.listadoEventos = new ListadoEventos(bienSeleccionado);  
+        this.listadoEventos.inicializarListado();
+    }
+    
+    public void listadoEventosCerrar() {
+        this.visiblePanelListadoEventos = false;
+    }
+
     public void agregarEventoAceptar() {
-        this.mantenimientoModel.salvarEvento(this.command.getEvento(this.bienSeleccionado));
+        this.eventoModel.salvar(this.command.getEvento(this.bienSeleccionado));
         this.visiblePanelEvento = false;
         this.mensajeExito = "Evento Almacenado Exitosamente.";
     }
@@ -669,6 +825,14 @@ public class AgregarMantenimientoController extends BaseController {
         this.listadoBienes = listadoBienes;
     }
 
+    public ListadoEventos getListadoEventos() {
+        return listadoEventos;
+    }
+
+    public void setListadoEventos(ListadoEventos listadoEventos) {
+        this.listadoEventos = listadoEventos;
+    }
+
     public boolean isSolicitudRegistrada() {
         return solicitudRegistrada;
     }
@@ -717,6 +881,10 @@ public class AgregarMantenimientoController extends BaseController {
 
     public boolean isVisiblePanelEvento() {
         return visiblePanelEvento;
+    }
+
+    public boolean isVisiblePanelListadoEventos() {
+        return visiblePanelListadoEventos;
     }
 
     public boolean isVisibleBotonAnular() {
@@ -876,6 +1044,10 @@ public class AgregarMantenimientoController extends BaseController {
 
     public void setVisiblePanelEvento(boolean visiblePanelEvento) {
         this.visiblePanelEvento = visiblePanelEvento;
+    }
+
+    public void setVisiblePanelListadoEventos(boolean visiblePanelListadoEventos) {
+        this.visiblePanelListadoEventos = visiblePanelListadoEventos;
     }
 
     public void setVisibleBotonRechazar(boolean visibleBotonRechazar) {

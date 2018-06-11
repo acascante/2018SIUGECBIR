@@ -87,15 +87,6 @@ public class SolicitudMantenimientoDao extends GenericDaoImpl {
         }
     }
     
-    @Transactional
-    public void salvarEvento(Evento evento) {
-        try {
-            persist(evento);
-        } catch (DataAccessException e) {
-            throw new FWExcepcion("sigebi.label.mantenimiento.error.salvar", "Error guardando registro de tipo " + this.getClass(), e.getCause());
-        }
-    }
-    
     @Transactional(readOnly = true)
     public Long contar(UnidadEjecutora unidadEjecutora, Long id, Date fecha, Long estado) throws FWExcepcion {
         Session session = dao.getSessionFactory().openSession();

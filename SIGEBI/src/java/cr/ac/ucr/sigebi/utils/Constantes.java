@@ -23,6 +23,8 @@ public final class Constantes {
     public static final TimeZone DEFAULT_TIME_ZONE = TimeZone.getDefault();
     public static final String PATTERN_NUMERIC = "((-|\\+)?[0-9]+(\\.[0-9]+)?)+";
     public static final Long DEFAULT_ID = -1L;
+    public static final Integer DEFAULT_SI = 1;
+    public static final Integer DEFAULT_NO = 0;
     public static final String DEFAULT_COMBO_MESSAGE = "Seleccione una Opcion";
 
     // Estados de un bien
