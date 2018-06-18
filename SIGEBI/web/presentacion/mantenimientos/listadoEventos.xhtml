@@ -1,118 +1,70 @@
 <div xmlns:ice="http://www.icesoft.com/icefaces/component"
-      xmlns:ui="http://java.sun.com/jsf/facelets"
       xmlns:h="http://java.sun.com/jsf/html"
       xmlns:f="http://java.sun.com/jsf/core" >
     
     <ice:panelPopup modal="true" visible="#{controllerAgregarMantenimientos.visiblePanelListadoEventos}" rendered="true" styleClass="popup">
         <f:facet name="header">
-            <ice:outputFormat  value="#{label['sigebi.label.mantenimiento.listar.eventos.titulo']}"/>
+            <ice:outputFormat value="#{label['sigebi.label.mantenimiento.listar.eventos.titulo']}"/>
         </f:facet>
         
         <f:facet name="body">
             <fieldset class="panel_Container" >
                 
-                <!-- PARAMETROS PAGINACIÓN -->
-                <div class="row">
-                    <div class="col-sm-12">
-                        <ice:outputFormat value="#{label['label.generico.paginacion.encabezado']}">
-                            <f:param value="#{controllerAgregarMantenimientos.listadoBienes.cantidadRegistros}"/>
-                            <f:param value="#{controllerAgregarMantenimientos.listadoBienes.cantidadRegistrosMostrados}"/>
-                            <f:param value="#{controllerAgregarMantenimientos.listadoBienes.primerRegistro}"/>
-                            <f:param value="#{controllerAgregarMantenimientos.listadoBienes.ultimoRegistro}"/>
-                            <f:param value="#{controllerAgregarMantenimientos.listadoBienes.paginaActual}"/>
-                            <f:param value="#{controllerAgregarMantenimientos.listadoBienes.cantidadPaginas}"/>
-                        </ice:outputFormat>
-                        <div>
-                            <table>
-                                <tr>
-                                    <td style="padding-right: 5px;">
-                                        <ice:outputText value="#{label['label.paginacion.cantidad.pagina']} "/>
-                                    </td>
-                                    <td>
-                                        <ice:selectOneMenu id="cantRegistroPorPagina"
-                                               value="#{controllerAgregarMantenimientos.listadoBienes.cantRegistroPorPagina}" 
-                                               valueChangeListener="#{controllerAgregarMantenimientos.listadoBienes.cambioRegistrosPorPagina}"
-                                               partialSubmit="true">
-                                                <f:selectItems id="item_pa" value="#{controllerAgregarMantenimientos.listadoBienes.listaRegistrosPagina}"/>
-                                        </ice:selectOneMenu>
-                                    </td>
-                                </tr>
-                            </table>                        
-                        </div>                    
-                        <div>
-                            <ice:commandButton image="./imagenes/botones/first.png" partialSubmit="true" actionListener="#{controllerAgregarMantenimientos.listadoBienes.primero}" rendered="#{controllerAgregarMantenimientos.listadoBienes.cantidadPaginas > 1}"/>
-                            <ice:commandButton image="./imagenes/botones/previos.png" partialSubmit="true" actionListener="#{controllerAgregarMantenimientos.listadoBienes.anterior}" rendered="#{controllerAgregarMantenimientos.listadoBienes.cantidadPaginas > 1}"/>
-                            <ui:repeat value="#{controllerAgregarMantenimientos.listadoBienes.arregloPaginas}" var="pagina">
-                                <ice:commandLink value="#{pagina}" partialSubmit="true" actionListener="#{controllerAgregarMantenimientos.listadoBienes.irPagina}">
-                                    <f:param name="numPag" value="#{pagina}"/>
-                                </ice:commandLink>
-                            </ui:repeat>            
-                            <ice:commandButton image="./imagenes/botones/next.png" partialSubmit="true" actionListener="#{controllerAgregarMantenimientos.listadoBienes.siguiente}" rendered="#{controllerAgregarMantenimientos.listadoBienes.cantidadPaginas > 1}"/>
-                            <ice:commandButton image="./imagenes/botones/last.png" partialSubmit="true" actionListener="#{controllerAgregarMantenimientos.listadoBienes.ultimo}" rendered="#{controllerAgregarMantenimientos.listadoBienes.cantidadPaginas > 1}"/>
-                        </div>
-                    </div>
-                </div>
-                
                 <!-- LISTADO DE EVENTOS -->
                 <div class="row">
                     <div class="col-sm-12">
                         <div>
-                            <ice:dataTable id="tblAgregarBienes" value="#{controllerAgregarMantenimientos.listadoEventos.eventos}" var="evento" paginator="true" paginatorPosition="bottom" rows="5">
-                                <f:facet name="header">
-                                    <ice:columnGroup>
-                                        <ice:headerRow>
-                                            <!--Id-->
-                                            <ice:column id="id" style="vertical-align:top;">
-                                                <ice:outputText value="#{label['sigebi.label.mantenimiento.listar.evento.id']} "/>
-                                            </ice:column>
-
-                                            <!--Fecha-->
-                                            <ice:column id="fecha" style="vertical-align:top;">
-                                                <ice:outputText value="#{label['sigebi.label.mantenimiento.listar.evento.fecha']} "/>
-                                            </ice:column>
-
-                                            <!--Descripcion-->
-                                            <ice:column id="descripcion" style="vertical-align:top;">
-                                                <ice:outputText value="#{label['sigebi.label.mantenimiento.listar.evento.descripcion']} "/>
-                                            </ice:column>
-
-                                            <!--Costo-->
-                                            <ice:column id="costo" style="vertical-align:top;">
-                                                <ice:outputText value="#{label['sigebi.label.mantenimiento.listar.evento.costo']} "/>
-                                            </ice:column>
-                                        </ice:headerRow>
-                                    </ice:columnGroup>
-                                </f:facet>
-                                </ice:column>                    
-                                <ice:column>
-                                    <h:outputText id="idCell" value="#{evento.id}"/>
+                            <ice:commandButton id="btnCerrarListadoEventos" action="#{controllerAgregarMantenimientos.listadoEventosCerrar}" styleClass="boton" style="margin-right: 1rem; margin-bottom: 1rem; float:right" value="#{label['label.regresar']} " />
+                        </div>
+                        <div>
+                            <ice:dataTable id="tblListarEventos" value="#{controllerAgregarMantenimientos.listadoEventos.eventos}" var="evento" paginator="true" paginatorPosition="bottom" rows="5">
+                                <!--Fecha-->
+                                <ice:column id="id" style="vertical-align:top;">
+                                    <f:facet name="header">
+                                        <ice:outputText value="#{label['sigebi.label.mantenimiento.listar.evento.id']} "/>
+                                    </f:facet>
+                                    <h:outputText id="txtId" value="#{evento.id}"/>
                                 </ice:column>
-                                <ice:column>
-                                    <h:outputText id="identificacionCell" value="#{evento.fecha}"/>
+
+                                <!--Fecha-->
+                                <ice:column id="fecha" style="vertical-align:top;">
+                                    <f:facet name="header">
+                                        <ice:outputText value="#{label['sigebi.label.mantenimiento.listar.evento.fecha']} "/>
+                                    </f:facet>
+                                    <h:outputText id="txtFecha" value="#{evento.fecha}"/>
                                 </ice:column>
-                                <ice:column>
-                                    <h:outputText id="descripcionCell" escape="false" value="#{evento.descripcion}"/>
-                                </ice:column> 
-                                <ice:column>
-                                    <h:outputText id="marcaCell" escape="false" value="#{evento.costo}"/>
+
+                                <!--Descripcion-->
+                                <ice:column id="descripcion" style="vertical-align:top;">
+                                    <f:facet name="header">
+                                        <ice:outputText value="#{label['sigebi.label.mantenimiento.listar.evento.descripcion']} "/>
+                                    </f:facet>
+                                    <h:outputText id="txtDescripcion" escape="false" value="#{evento.descripcion}"/>
+                                    <f:facet name="footer">
+                                        <ice:outputText value="#{label['sigebi.label.mantenimiento.listar.evento.total']} " />                                            
+                                    </f:facet>                                                                            
                                 </ice:column>
-                                <f:facet name="footer">
-                                    <ice:columnGroup>
-                                        <ice:column>
-                                            <ice:outputText id="idCell" value="#{label['sigebi.label.mantenimiento.listar.evento.total']} "/>
-                                            <ice:outputText value="#{controllerAgregarMantenimientos.listadoEventos.costoTotal}"/>
-                                        </ice:column>
-                                    </ice:columnGroup>
-                                </f:facet>
+
+                                <!--Costo-->
+                                <ice:column id="costo" style="vertical-align:top;">
+                                    <f:facet name="header">
+                                        <ice:outputText value="#{label['sigebi.label.mantenimiento.listar.evento.costo']} "/>
+                                    </f:facet>
+                                    <h:outputText id="txtCosto" escape="false" value="#{evento.costo}">
+                                        <f:convertNumber type="number" locale="en_US"  pattern="#,##0.00" />
+                                    </h:outputText>
+                                    <f:facet name="footer">
+                                        <h:outputText id="txtId" value="#{controllerAgregarMantenimientos.listadoEventos.costoTotal}">
+                                            <f:convertNumber type="number" locale="en_US"  pattern="#,##0.00" />
+                                        </h:outputText>
+                                    </f:facet>                                    
+                                </ice:column>
+                                
                             </ice:dataTable>
                         </div>
                     </div>
                 </div>
-                <div class="row">
-                    <div class="col-md-11 align-self-md-end">
-                        <ice:commandButton id="btnCerrar" action="#{controllerAgregarMantenimientos.listadoEventosCerrar}" styleClass="boton" style="margin-bottom: 1rem;" value="#{label['label.regresar']} " />
-                    </div>
-                </div>
+                
             </fieldset>       
         </f:facet>
     </ice:panelPopup>

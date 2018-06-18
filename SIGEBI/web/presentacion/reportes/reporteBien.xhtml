@@ -28,7 +28,8 @@
                 <div class="col-md-6">
                     <div class="form-group"> 
                         <ice:outputText value="#{label['sigebi.label.reporteBien.reportes']}" />
-                        <ice:selectOneMenu id="cmbReportes" partialSubmit="true" styleClass="form-control"
+                        <ice:selectOneMenu id="cmbReportes" styleClass="form-control"
+                                           partialSubmit="true"
                                            valueChangeListener="#{controllerReporteBien.seleccionarReporte}"
                                            value="#{controllerReporteBien.command.idReporte}">
                             <f:selectItem itemLabel="N/A" itemValue="-1"/>
@@ -43,7 +44,7 @@
                 <div class="col-md-6">
                     <div class="form-group"> 
                         <ice:outputText value="#{label['sigebi.label.reporteBien.tipoReporte']}" />
-                        <ice:selectOneMenu id="cmbTipoReporte" partialSubmit="true" styleClass="form-control"
+                        <ice:selectOneMenu id="cmbTipoReporte" styleClass="form-control"
                                            value="#{controllerReporteBien.command.idTipoReporte}">
                             <f:selectItem itemLabel="N/A" itemValue="-1"/>
                             <f:selectItems id="slcTipoItem" value="#{controllerReporteBien.itemsTipoReporte}"/>
@@ -63,66 +64,55 @@
                                 </h4>
                             </div>
                             <div class="col-sm-2">
-                                <ice:commandButton id="btnAgregarCampos" action="#{controllerReporteBien.mostarPanelAgregarCampos}" value="#{label['label.agregar']}" rendered="true" style="margin-bottom: 1rem; float:right" styleClass="boton" partialSubmit="true"/>
+                                <ice:commandButton id="btnAgregarCampos" action="#{controllerReporteBien.mostarPanelAgregarCampos}" value="#{label['label.agregar']}" rendered="true" style="margin-bottom: 1rem; float:right" styleClass="boton" />
                             </div>                         
                         </div>
                         <div class="row" >
                             <div class="col-md-12">
-                                <div>
-                                    <ice:dataTable id="listadoCampos" value="#{controllerReporteBien.command.listCamposReporte}" var="campo">
+                                <ice:dataTable id="listadoCampos" value="#{controllerReporteBien.command.listCamposReporte}" var="campo">
+                                    <!--Nombre-->
+                                    <ice:column id="nombre" style="vertical-align:top;">
                                         <f:facet name="header">
-                                            <ice:columnGroup>
-                                                <ice:headerRow>
-                                                    <ice:column id="nombre" style="vertical-align:top;">
-                                                        <ice:outputText value="#{label['sigebi.label.reporteBien.campo.nombre']} "/>
-                                                    </ice:column>
-
-                                                    <ice:column id="valor" style="vertical-align:top;">
-                                                        <ice:outputText value="#{label['sigebi.label.reporteBien.campo.valor']} "/>
-                                                    </ice:column>
-
-                                                    <!--Tamano-->
-                                                    <ice:column id="tamano" style="vertical-align:top;">
-                                                        <ice:outputText value="#{label['sigebi.label.reporteBien.campo.tamano']} "/>
-                                                    </ice:column>
-                                                    
-                                                    <!--Orden-->
-                                                    <ice:column id="orden" style="vertical-align:top;">
-                                                        <ice:outputText value="#{label['sigebi.label.reporteBien.campo.orden']} "/>
-                                                    </ice:column>
-                                                    
-                                                    <!--Orden-->
-                                                    <ice:column id="descOrden" style="vertical-align:top;">
-                                                        <ice:outputText value="#{label['sigebi.label.reporteBien.campo.orden']} "/>
-                                                    </ice:column>
-                                                    
-                                                    <!--Mostar-->
-                                                    <ice:column id="mostrar" style="vertical-align:top;">
-                                                        <ice:outputText value="#{label['sigebi.label.reporteBien.campo.mostrar']} "/>
-                                                    </ice:column>
-                                                </ice:headerRow>
-                                            </ice:columnGroup>
+                                            <ice:outputText value="#{label['sigebi.label.reporteBien.campo.nombre']} "/>
                                         </f:facet>
-                                        <ice:column>
-                                            <h:outputText id="nombreCell" value="#{campo.campoBien.nombre}"/>
-                                        </ice:column>
-                                        <ice:column>
-                                            <ice:inputText id="txtNombre" value="#{campo.valor}" styleClass="form-control" />
-                                        </ice:column>
-                                        <ice:column>
-                                            <ice:inputText id="txtTamano" value="#{campo.tamanoColumna}" styleClass="form-control" />
-                                        </ice:column>
-                                        <ice:column>
-                                            <ice:inputText id="txtOrden" value="#{campo.orden}" action="#{controllerReporteBien.seleccionarOrdenReporte}" styleClass="form-control" />
-                                        </ice:column>                                        
-                                        <ice:column>
-                                            <ice:inputText id="txtDescripcionOrden" value="#{campo.descripcionOrden}" styleClass="form-control" />
-                                        </ice:column>                                        
-                                        <ice:column>
-                                            <ice:selectBooleanCheckbox id="txtMostrar" value="#{campo.mostrarBoolean}" styleClass="form-control" />
-                                        </ice:column>
-                                    </ice:dataTable>
-                                </div>
+                                        <h:outputText id="txtNombre" value="#{campo.campoBien.nombre}"/>
+                                    </ice:column>
+
+                                    <ice:column id="valor" style="vertical-align:top;">
+                                        <f:facet name="header">
+                                            <ice:outputText value="#{label['sigebi.label.reporteBien.campo.valor']} "/>
+                                        </f:facet>
+                                        <ice:inputText id="txtValor" value="#{campo.valor}" styleClass="form-control" />
+                                    </ice:column>
+
+                                    <ice:column id="indicadorOrden" style="vertical-align:top;">
+                                        <f:facet name="header">
+                                            <ice:outputText value="#{label['sigebi.label.reporteBien.campo.orden']} "/>
+                                        </f:facet>
+                                        <ice:selectBooleanCheckbox id="txtIndicadorOrden" value="#{campo.indicadorOrden}" 
+                                                                   partialSubmit="true"
+                                                                   valueChangeListener="#{controllerReporteBien.seleccionarCampoOrden}"                                                                   
+                                                                   styleClass="form-control" />
+                                    </ice:column>
+
+                                    <ice:column id="orden" style="vertical-align:top;">
+                                        <f:facet name="header">
+                                            <ice:outputText value="#{label['sigebi.label.reporteBien.campo.tipo.orden']} "/>
+                                        </f:facet>
+                                        <ice:selectOneMenu id="txtOrden" value="#{campo.orden}" disabled="#{!campo.indicadorOrden}" 
+                                                           styleClass="form-control" >
+                                            <f:selectItem itemLabel="ASC" itemValue="1"/>
+                                            <f:selectItem itemLabel="DESC" itemValue="2"/>
+                                        </ice:selectOneMenu>
+                                    </ice:column>
+
+                                    <ice:column id="mostrar" style="vertical-align:top;">
+                                        <f:facet name="header">
+                                            <ice:outputText value="#{label['sigebi.label.reporteBien.campo.mostrar']} "/>
+                                        </f:facet>
+                                        <ice:selectBooleanCheckbox id="txtMostrar" value="#{campo.mostrar}" styleClass="form-control" />
+                                    </ice:column>
+                                </ice:dataTable>
                             </div>
                         </div>
                     </div>
@@ -132,9 +122,9 @@
             <!--Botones -->
             <div class="row">
                 <div class="col-md-12">
-                    <ice:commandButton id="botonGuardar" value="#{label['label.guardar']}" action="#{controllerReporteBien.abrirPanelNombreReporte}" partialSubmit="true" style="float: right" styleClass="boton"/>
-                    <ice:commandButton id="botonEliminar" value="#{label['label.eliminar']}" action="#{controllerReporteBien.eliminarReporte}" rendered="#{controllerReporteBien.visibleBotonEliminar}" partialSubmit="true" style="float: right" styleClass="boton"/>
-                    <ice:commandButton id="botonReporte" value="#{label['label.reporte']}" action="#{controllerReporteBien.generarReporte}" partialSubmit="true" style="float: right" styleClass="boton"/>
+                    <ice:commandButton id="botonGuardar" value="#{label['label.guardar']}" action="#{controllerReporteBien.abrirPanelNombreReporte}" style="float: right" styleClass="boton"/>
+                    <ice:commandButton id="botonEliminar" value="#{label['label.eliminar']}" action="#{controllerReporteBien.eliminarReporte}" rendered="#{controllerReporteBien.visibleBotonEliminar}" style="float: right" styleClass="boton"/>
+                    <ice:commandButton id="botonReporte" value="#{label['label.reporte']}" action="#{controllerReporteBien.generarReporte}" style="float: right" styleClass="boton"/>
                 </div>
             </div>
         </div>

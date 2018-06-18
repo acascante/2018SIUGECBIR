@@ -104,7 +104,7 @@ public class ListarMantenimientosController extends BaseController {
         try {
             Integer.parseInt(value.toString());
         } catch (NumberFormatException e){
-            Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.label.solicitudMantenimientoes.error.cambioFiltro.id"));
+            Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.label.mantenimiento.error.cambioFiltro.id"));
             ((UIInput) component).setValid(false);
         }
     }

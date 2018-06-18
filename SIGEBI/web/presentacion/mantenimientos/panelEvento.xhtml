@@ -21,8 +21,7 @@
                                 <label class="control-label" for="txtEventoDescripcion">
                                     <ice:outputText value="#{label['sigebi.label.mantenimiento.evento.descripcion']}"/> 
                                 </label>
-                                <ice:inputTextarea id="txtEventoDescripcion" styleClass="form-control" cols="2" 
-                                                   validator="#{controllerAgregarMantenimientos.validarEventoDescripcion}"
+                                <ice:inputTextarea id="txtEventoDescripcion" styleClass="form-control"
                                                    value="#{controllerAgregarMantenimientos.command.eventoDescripcion}"/>
                             </div>
                         </div>    
@@ -34,19 +33,34 @@
                                 <label class="control-label" for="txtEventoCosto">
                                     <ice:outputText value="#{label['sigebi.label.mantenimiento.evento.costo']}"/> 
                                 </label>
-                                <ice:inputText id="txtEventoCosto" styleClass="form-control" 
-                                               validator="#{controllerAgregarMantenimientos.validarEventoCosto}"
+                                <ice:inputText id="txtEventoCosto" styleClass="form-control"
                                                value="#{controllerAgregarMantenimientos.command.eventoCosto}"/>
                             </div>
                         </div>    
                     </div>
                     
+                    <div class="row">
+                        <div class="col-md-12" style="margin-top: 20px;">
+                            <div class="form-group">
+                                <label class="control-label" for="txtFecha">
+                                    <ice:outputText value="#{label['sigebi.label.mantenimiento.evento.fecha']}" />
+                                    <ice:outputText value="#{label['label.requerido']}" />
+                                </label>
+                                <ice:selectInputDate highlightClass="dateHighlightGray" highlightUnit="DAY_OF_WEEK" highlightValue="1" renderAsPopup="true" 
+                                                     renderMonthAsDropdown="true" renderYearAsDropdown="true"
+                                             value="#{controllerAgregarMantenimientos.command.eventoFecha}" >
+                                    <f:convertDateTime pattern="#{controllerAgregarMantenimientos.command.datePattern}"  timeZone="#{controllerAgregarMantenimientos.command.timeZone}" />
+                                </ice:selectInputDate>
+                            </div>
+                        </div>
+                    </div>   
+                    
                     <div class="row"  style="margin-top: 20px; margin-bottom: 20px;">
                         <div class='col-md-6'>
-                            <ice:commandButton id="btnCerrarPanelEvento" value="#{label['label.regresar']}" action="#{controllerAgregarMantenimientos.agregarEventoCancelar}" partialSubmit="false" rendered="true" style="float: left" styleClass="boton" />
+                            <ice:commandButton id="btnCerrarPanelEvento" value="#{label['label.regresar']}" action="#{controllerAgregarMantenimientos.agregarEventoCancelar}" rendered="true" style="float: left" styleClass="boton" />
                         </div>
                         <div class="col-md-6 align-content-center">
-                            <ice:commandButton id="botonAceptarEvento" value="#{label['label.aceptar']}" action="#{controllerAgregarMantenimientos.agregarEventoAceptar}" partialSubmit="true" rendered="true" style="float: right" styleClass="boton"/>
+                            <ice:commandButton id="botonAceptarEvento" value="#{label['label.aceptar']}" action="#{controllerAgregarMantenimientos.agregarEventoAceptar}" rendered="true" style="float: right" styleClass="boton"/>
                         </div>
                     </div>
                 </div>                

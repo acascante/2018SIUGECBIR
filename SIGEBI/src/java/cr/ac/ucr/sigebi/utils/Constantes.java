@@ -330,11 +330,11 @@ public final class Constantes {
     public static final String KEY_VISTA_UBICACION = "ubicaciones";
     public static final String VISTA_UBICACION = "../ubicacion/ubicacion.xhtml";
 
-    public static final String KEY_VISTA_SOLICITUD_SALIDA_LISTADO = "salidas";
+    public static final String KEY_VISTA_SOLICITUD_SALIDA_LISTADO = "salidas"; 
     public static final String VISTA_SOLICITUD_SALIDA_LISTADO = "../salidas/listarSalidas.xhtml";
     public static final String KEY_VISTA_SOLICITUD_SALIDA_DETALLE = "salidas_deta";
     public static final String VISTA_SOLICITUD_SALIDA_DETALLE = "../salidas/detalleSolicitudSalida.xhtml";
-
+ 
     
     //BIENES
     public static final String VISTA_LISTAR_BIENES = "../bienes/listarBienes.xhtml";

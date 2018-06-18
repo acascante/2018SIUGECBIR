@@ -15,18 +15,17 @@ import cr.ac.ucr.sigebi.domain.Bien;
 import cr.ac.ucr.sigebi.domain.BienReporte;
 import cr.ac.ucr.sigebi.domain.CampoBien;
 import cr.ac.ucr.sigebi.domain.CampoReporteBien;
-import cr.ac.ucr.sigebi.domain.Estado;
 import cr.ac.ucr.sigebi.domain.ReporteBien;
 import cr.ac.ucr.sigebi.domain.Tipo;
 import cr.ac.ucr.sigebi.models.BienModel;
 import cr.ac.ucr.sigebi.models.CampoBienModel;
 import cr.ac.ucr.sigebi.models.CampoReporteBienModel;
 import cr.ac.ucr.sigebi.models.ReporteBienModel;
-import java.awt.print.Book;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import javax.annotation.PostConstruct;
@@ -72,10 +71,10 @@ public class ReporteBienController extends BaseController {
     @Resource private ReporteBienModel reporteBienModel;    
     
     private Map<Long, ReporteBien> reportes;
-    private List<SelectItem> itemsReporte;
-    
+    private List<SelectItem> itemsReporte;    
     private List<SelectItem> itemsTipoReporte;
-    
+    private List<SelectItem> itemsOrden;
+ 
     private Map<Long, CampoBien> campos;
     private Map<Long, CampoBien> allCampos;
     private Map<Long, Boolean> camposSeleccionados;
@@ -163,6 +162,7 @@ public class ReporteBienController extends BaseController {
         this.allCampos = new HashMap<Long, CampoBien>();
         this.itemsReporte = new ArrayList<SelectItem>();
         this.reportes = new HashMap<Long, ReporteBien>();
+        this.itemsOrden = new ArrayList<SelectItem>();
         this.camposSeleccionados = new HashMap<Long, Boolean>();
         this.lastIdOrden = Constantes.DEFAULT_ID;
     }
@@ -293,73 +293,111 @@ public class ReporteBienController extends BaseController {
         }
     }
     
+    public void seleccionarCampoOrden(ActionEvent event) {
+        try {
+            if (!event.getPhaseId().equals(PhaseId.INVOKE_APPLICATION)) {
+                event.setPhaseId(PhaseId.INVOKE_APPLICATION);
+                event.queue();
+                return;
+            }
+            
+            List<CampoReporteBien> listCamposReporte = this.command.getListCamposReporte();
+            for (CampoReporteBien next : listCamposReporte) {
+                next.setIndicadorOrden(Boolean.FALSE);
+            }            
+        } catch (Exception err) {
+
+            
+        }
+    }
     public void generarReporte() {
         if (this.command.getIdTipoReporte().equals(Constantes.DEFAULT_ID)) {
             Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.label.reporteBien.error.tipo"));
         } else {
             Map<String, Object> parametros = new HashMap<String, Object>();
             List<CampoReporteBien> listCamposReporte = this.command.getListCamposReporte();
-            StringBuilder sql = new StringBuilder();
-            sql.append("SELECT b FROM Bien b WHERE 1=1 ");
-            for (CampoReporteBien campo : listCamposReporte) {
-                if(campo.getValor() != null && !campo.getValor().isEmpty()) {
-                    //sql.append(" AND UPPER(b.descripcion) LIKE UPPER(:descripcion) ");
-                    sql.append(" AND ");
-                    if (campo.getCampoBien().getEsTexto() == 1) {
-                        sql.append("UPPER(b.");
-                        sql.append(campo.getCampoBien().getNombreHQL());
-                        sql.append(") LIKE UPPER(:");
-                        sql.append(campo.getCampoBien().getIdColumna());
-                        sql.append(")");
-                    } else {
-                        //sql.append(" AND b.unidadEjecutora = :unidadEjecutora ");
-                        sql.append("b.");
-                        sql.append(campo.getCampoBien().getNombreHQL());
-                        sql.append(" =:");
-                        sql.append(campo.getCampoBien().getIdColumna());
+            
+            String sql = crearSQL(listCamposReporte, parametros);
+            List<CampoReporteBien> listCamposVisibles = checkCamposVisibles(listCamposReporte);
+            if (!listCamposVisibles.isEmpty()) {
+                try {
+                    String sourceFileName = cr.ac.ucr.framework.reporte.componente.utilitario.Util.ConvertirRutas("/reportes/reporteBienes.jrxml");
+                    String tempFileName = cr.ac.ucr.framework.reporte.componente.utilitario.Util.ConvertirRutas("/reportes/reporteBienesTemp.jrxml");
+                    String reportFileName = cr.ac.ucr.framework.reporte.componente.utilitario.Util.ConvertirRutas("/reportes/reporteBienes");
+
+                    this.actualizarXMLReporte(sourceFileName, tempFileName, listCamposVisibles);
+
+                    List<Bien> bienes = this.bienModel.listar(sql, parametros);
+                    List<BienReporte> bienesReporte = new ArrayList<BienReporte>();
+                    for (Bien bien : bienes) {
+                        bienesReporte.add(new BienReporte(bien));
                     }
-                    parametros.put(campo.getCampoBien().getIdColumna(), campo);
+
+                    JRBeanCollectionDataSource beanColDataSource = new JRBeanCollectionDataSource(bienesReporte);
+
+                    Map parameters = new HashMap();
+                    JasperReport jasperReport = JasperCompileManager.compileReport(tempFileName);
+                    JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, beanColDataSource);
+
+                    Tipo tipoReporte = this.tipoPorId(this.command.getIdTipoReporte());
+                    if(tipoReporte.getNombre().equals(Constantes.TIPO_REPORTE_PDF)) {
+                        JasperExportManager.exportReportToPdfFile(jasperPrint, reportFileName + Constantes.TIPO_REPORTE_PDF_EXTENSION);
+                        JavascriptContext.addJavascriptCall(FacesContext.getCurrentInstance(), "reporte('" + "reporteBienes" + "','" + Constantes.TIPO_REPORTE_PDF_EXTENSION + "');");
+                    } else {
+                        JasperExportManager.exportReportToXmlFile(jasperPrint, reportFileName + Constantes.TIPO_REPORTE_EXCELL_EXTENSION, true);
+                        JavascriptContext.addJavascriptCall(FacesContext.getCurrentInstance(), "reporte(' " + "reporteBienes" + "','" + Constantes.TIPO_REPORTE_EXCELL_EXTENSION + "');");
+                    }
+
+                    Mensaje.agregarInfo("Reporte generado exitosamente");
+                 } catch (Exception err) {
+                    Mensaje.agregarErrorAdvertencia(err.getMessage());
+                    this.mensaje = err.getMessage();
                 }
-                if(Constantes.DEFAULT_NO.equals(campo.getMostrar())) {
-                    listCamposReporte.remove(campo);
-                }
-            }
-            sql.append(" ORDER BY b.id ASC");
-
-            try {
-                String sourceFileName = cr.ac.ucr.framework.reporte.componente.utilitario.Util.ConvertirRutas("/reportes/reporteBienes.jrxml");
-                String tempFileName = cr.ac.ucr.framework.reporte.componente.utilitario.Util.ConvertirRutas("/reportes/reporteBienesTemp.jrxml");
-                String reportFileName = cr.ac.ucr.framework.reporte.componente.utilitario.Util.ConvertirRutas("/reportes/reporteBienes");
-
-                this.actualizarXMLReporte(sourceFileName, tempFileName, listCamposReporte);
-
-                List<Bien> bienes = this.bienModel.listar(sql.toString(), parametros);
-                List<BienReporte> bienesReporte = new ArrayList<BienReporte>();
-                for (Bien bien : bienes) {
-                    bienesReporte.add(new BienReporte(bien));
-                }
-
-                JRBeanCollectionDataSource beanColDataSource = new JRBeanCollectionDataSource(bienesReporte);
-
-                Map parameters = new HashMap();
-                JasperReport jasperReport = JasperCompileManager.compileReport(tempFileName);
-                JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, beanColDataSource);
-
-                Tipo tipoReporte = this.tipoPorId(this.command.getIdTipoReporte());
-                if(tipoReporte.getNombre().equals(Constantes.TIPO_REPORTE_PDF)) {
-                    JasperExportManager.exportReportToPdfFile(jasperPrint, reportFileName + Constantes.TIPO_REPORTE_PDF_EXTENSION);
-                    JavascriptContext.addJavascriptCall(FacesContext.getCurrentInstance(), "reporte('" + "reporteBienes" + "','" + Constantes.TIPO_REPORTE_PDF_EXTENSION + "');");
-                } else {
-                    JasperExportManager.exportReportToXmlFile(jasperPrint, reportFileName + Constantes.TIPO_REPORTE_EXCELL_EXTENSION, true);
-                    JavascriptContext.addJavascriptCall(FacesContext.getCurrentInstance(), "reporte(' " + "reporteBienes" + "','" + Constantes.TIPO_REPORTE_EXCELL_EXTENSION + "');");
-                }
-                
-                Mensaje.agregarInfo("Reporte generado exitosamente");
-             } catch (Exception err) {
-                Mensaje.agregarErrorAdvertencia(err.getMessage());
-                this.mensaje = err.getMessage();
+            } else {
+                Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.label.reporteBien.error.campos"));
             }
         }
+    }
+    
+    private List<CampoReporteBien> checkCamposVisibles(List<CampoReporteBien> listCamposReporte) {
+        List<CampoReporteBien> listCamposVisibles = new ArrayList<CampoReporteBien>();
+        for (CampoReporteBien campo : listCamposReporte) {
+            if (campo.getMostrar()) {
+                listCamposVisibles.add(campo);
+            }
+        }
+        return listCamposVisibles;
+    }
+        
+    private String crearSQL(List<CampoReporteBien> listCamposReporte, Map<String, Object> parametros) {
+        String campoOrden = null;
+        StringBuilder sql = new StringBuilder();
+        sql.append("SELECT b FROM Bien b WHERE 1=1 ");
+        for (CampoReporteBien campo : listCamposReporte) {
+            if(campo.getValor() != null && !campo.getValor().isEmpty()) {
+                //sql.append(" AND UPPER(b.descripcion) LIKE UPPER(:descripcion) ");
+                sql.append(" AND ");
+                if (campo.getCampoBien().getEsTexto() == 1) {
+                    sql.append("UPPER(b.");
+                    sql.append(campo.getCampoBien().getNombreHQL());
+                    sql.append(") LIKE UPPER(:");
+                    sql.append(campo.getCampoBien().getIdColumna());
+                    sql.append(")");
+                } else {
+                    //sql.append(" AND b.unidadEjecutora = :unidadEjecutora ");
+                    sql.append("b.");
+                    sql.append(campo.getCampoBien().getNombreHQL());
+                    sql.append(" =:");
+                    sql.append(campo.getCampoBien().getIdColumna());
+                }
+                parametros.put(campo.getCampoBien().getIdColumna(), campo);
+            }
+            if (campo.getIndicadorOrden() && campoOrden == null) {
+                campoOrden = " ORDER BY b. " + campo.getCampoBien().getNombreHQL() + (campo.getOrden() == 1 ? " ASC" : " DESC");
+            }
+        }
+        sql.append(campoOrden == null ? " ORDER BY b.id ASC" : campoOrden);
+        return sql.toString();
     }
     
     public void actualizarXMLReporte (String filePath, String tempFilePath, List<CampoReporteBien> campos) throws ParserConfigurationException, TransformerException, SAXException, IOException {
@@ -405,28 +443,6 @@ public class ReporteBienController extends BaseController {
         }
     }
     
-    public void seleccionarOrdenReporte(ActionEvent event) {
-        //private Map<Long, CampoReporteBien> camposReporte;
-        
-        Long idCampo = (Long) event.getComponent().getAttributes().get("campoSeleccionado");
-        if (Constantes.DEFAULT_ID.equals(this.lastIdOrden)) {
-            // First time or no other one selected
-            this.lastIdOrden = idCampo;
-        } else if (this.lastIdOrden.equals(idCampo)){
-            // Same one
-            CampoReporteBien campo = this.command.getCamposReporte().get(lastIdOrden);
-            campo.setOrden();
-            this.lastIdOrden = Constantes.DEFAULT_ID;
-        } else {
-            // Other row
-            CampoReporteBien campoPasado = this.command.getCamposReporte().get(lastIdOrden);
-            campoPasado.setOrden(Constantes.DEFAULT_NO);
-            
-            CampoReporteBien campoNuevo = this.command.getCamposReporte().get(idCampo);
-            campoNuevo.setOrden();
-        }
-    }
-    
     private void logMessage(String message) {
         System.out.println(message);
     }
@@ -446,6 +462,30 @@ public class ReporteBienController extends BaseController {
 
     public void setItemsTipoReporte(List<SelectItem> itemsTipoReporte) {
         this.itemsTipoReporte = itemsTipoReporte;
+    }
+
+    public List<SelectItem> getItemsOrden() {
+        return itemsOrden;
+    }
+
+    public void setItemsOrden(List<SelectItem> itemsOrden) {
+        this.itemsOrden = itemsOrden;
+    }
+
+    public Map<Long, CampoBien> getAllCampos() {
+        return allCampos;
+    }
+
+    public void setAllCampos(Map<Long, CampoBien> allCampos) {
+        this.allCampos = allCampos;
+    }
+
+    public Long getLastIdOrden() {
+        return lastIdOrden;
+    }
+
+    public void setLastIdOrden(Long lastIdOrden) {
+        this.lastIdOrden = lastIdOrden;
     }
 
     public List<SelectItem> getItemsReporte() {

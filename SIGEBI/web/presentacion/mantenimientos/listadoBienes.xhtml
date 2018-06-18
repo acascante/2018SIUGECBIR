@@ -26,24 +26,7 @@
                             <f:param value="#{controllerAgregarMantenimientos.listadoBienes.ultimoRegistro}"/>
                             <f:param value="#{controllerAgregarMantenimientos.listadoBienes.paginaActual}"/>
                             <f:param value="#{controllerAgregarMantenimientos.listadoBienes.cantidadPaginas}"/>
-                        </ice:outputFormat>
-                        <div>
-                            <table>
-                                <tr>
-                                    <td style="padding-right: 5px;">
-                                        <ice:outputText value="#{label['label.paginacion.cantidad.pagina']} "/>
-                                    </td>
-                                    <td>
-                                        <ice:selectOneMenu id="cantRegistroPorPagina"
-                                               value="#{controllerAgregarMantenimientos.listadoBienes.cantRegistroPorPagina}" 
-                                               valueChangeListener="#{controllerAgregarMantenimientos.listadoBienes.cambioRegistrosPorPagina}"
-                                               partialSubmit="true">
-                                                <f:selectItems id="item_pa" value="#{controllerAgregarMantenimientos.listadoBienes.listaRegistrosPagina}"/>
-                                        </ice:selectOneMenu>
-                                    </td>
-                                </tr>
-                            </table>                        
-                        </div>                    
+                        </ice:outputFormat>                   
                         <div>
                             <ice:commandButton image="./imagenes/botones/first.png" partialSubmit="true" actionListener="#{controllerAgregarMantenimientos.listadoBienes.primero}" rendered="#{controllerAgregarMantenimientos.listadoBienes.cantidadPaginas > 1}"/>
                             <ice:commandButton image="./imagenes/botones/previos.png" partialSubmit="true" actionListener="#{controllerAgregarMantenimientos.listadoBienes.anterior}" rendered="#{controllerAgregarMantenimientos.listadoBienes.cantidadPaginas > 1}"/>

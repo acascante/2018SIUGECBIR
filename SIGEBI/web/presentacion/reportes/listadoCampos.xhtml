@@ -44,37 +44,35 @@
                 <!-- LISTADO DE CAMPOS -->
                 <div class="row">
                     <div class="col-sm-12">
-                        <div>
-                            <ice:dataTable id="tblAgregarBienes" value="#{controllerReporteBien.listCampos}" var="campo" paginator="true" paginatorPosition="bottom" rows="5">
-                                <ice:column id="seleccionar" style="text-align: center;">
-                                    <f:facet name="header">
-                                        <ice:outputText value="#{label['sigebi.label.reporteBien.seleccionar.campo.sel']} "/>
-                                    </f:facet>
-                                    <h:selectBooleanCheckbox id="celSeleccionar" value="#{controllerReporteBien.camposSeleccionados[campo.id]}" />
-                                </ice:column>
-                                
-                                <ice:column id="id" style="text-align: center;">
-                                    <f:facet name="header">
-                                        <ice:outputText value="#{label['sigebi.label.reporteBien.seleccionar.campo.id']} "/>
-                                    </f:facet>
-                                    <h:outputText id="celId" value="#{campo.id}" />
-                                </ice:column>
-                                
-                                <ice:column id="nombre" style="text-align: center;">
-                                    <f:facet name="header">
-                                        <ice:outputText value="#{label['sigebi.label.reporteBien.seleccionar.campo.nombre']} "/>
-                                    </f:facet>
-                                    <h:outputText id="celNombre" value="#{campo.nombre}"/>
-                                </ice:column>
-                                
-                                <ice:column id="descripcion" style="text-align: center;">
-                                    <f:facet name="header">
-                                        <ice:outputText value="#{label['sigebi.label.reporteBien.seleccionar.campo.descripcion']} "/>
-                                    </f:facet>
-                                    <h:outputText id="celDescripcion" value="#{campo.descripcion}"/>
-                                </ice:column>
-                            </ice:dataTable>
-                        </div>
+                        <ice:dataTable id="tblAgregarBienes" value="#{controllerReporteBien.listCampos}" var="campo" paginator="true" paginatorPosition="bottom" rows="5">
+                            <ice:column id="seleccionar" style="text-align: center;">
+                                <f:facet name="header">
+                                    <ice:outputText value="#{label['sigebi.label.reporteBien.seleccionar.campo.sel']} "/>
+                                </f:facet>
+                                <h:selectBooleanCheckbox id="celSeleccionar" value="#{controllerReporteBien.camposSeleccionados[campo.id]}" />
+                            </ice:column>
+
+                            <ice:column id="id" style="text-align: center;">
+                                <f:facet name="header">
+                                    <ice:outputText value="#{label['sigebi.label.reporteBien.seleccionar.campo.id']} "/>
+                                </f:facet>
+                                <h:outputText id="celId" value="#{campo.id}" />
+                            </ice:column>
+
+                            <ice:column id="nombre" style="text-align: center;">
+                                <f:facet name="header">
+                                    <ice:outputText value="#{label['sigebi.label.reporteBien.seleccionar.campo.nombre']} "/>
+                                </f:facet>
+                                <h:outputText id="celNombre" value="#{campo.nombre}"/>
+                            </ice:column>
+
+                            <ice:column id="descripcion" style="text-align: center;">
+                                <f:facet name="header">
+                                    <ice:outputText value="#{label['sigebi.label.reporteBien.seleccionar.campo.descripcion']} "/>
+                                </f:facet>
+                                <h:outputText id="celDescripcion" value="#{campo.descripcion}"/>
+                            </ice:column>
+                        </ice:dataTable>
                     </div>
                 </div>
                 <div class="row">

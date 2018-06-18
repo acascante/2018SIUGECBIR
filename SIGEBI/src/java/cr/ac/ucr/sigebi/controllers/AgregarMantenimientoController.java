@@ -23,6 +23,7 @@ import cr.ac.ucr.sigebi.models.EventoModel;
 import cr.ac.ucr.sigebi.models.RegistroMovimientoModel;
 import cr.ac.ucr.sigebi.models.SolicitudMantenimientoModel;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -448,6 +449,7 @@ public class AgregarMantenimientoController extends BaseController {
         Estado estadoInternoNormal = this.estadoPorDominioValor(Constantes.DOMINIO_BIEN_INTERNO, Constantes.ESTADO_INTERNO_BIEN_NORMAL);
         Estado estadoActivo = this.estadoPorDominioValor(Constantes.DOMINIO_BIEN, Constantes.ESTADO_BIEN_ACTIVO);
         this.listadoBienes = new ListadoBienes(estadoInternoNormal, estadoActivo);
+        this.listadoEventos = new ListadoEventos();
         this.mensajeExito = new String();
         this.mensaje = new String();
         
@@ -580,23 +582,6 @@ public class AgregarMantenimientoController extends BaseController {
         }
         return Constantes.OK;
     }
-    
-    public void validarEventoDescripcion(FacesContext context, UIComponent component, Object value) throws ValidatorException {
-        String descripcion = value.toString();
-        if (descripcion.isEmpty()) {
-            Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.label.mantenimiento.evento.error.descripcion"));
-                ((UIInput) component).setValid(false); 
-        }
-    }
-    
-    public void validarEventoCosto(FacesContext context, UIComponent component, Object value) throws ValidatorException {
-        Double costo = (Double) value;
-        if (costo == null || costo.isNaN()) {
-            Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.label.mantenimiento.evento.error.costo"));
-                ((UIInput) component).setValid(false); 
-        }
-    }
-    
     //</editor-fold>
 
     //<editor-fold defaultstate="collapsed" desc="Movimientos sobre la Solicitud">
@@ -711,6 +696,7 @@ public class AgregarMantenimientoController extends BaseController {
     
     public void agregarEvento(ActionEvent event) {
         this.command.setEventoDescripcion("");
+        this.command.setFecha(new Date());
         this.command.setEventoCosto(0.0);
         this.visiblePanelEvento = true;
         this.bienSeleccionado = (Long) event.getComponent().getAttributes().get("bienSeleccionado");
@@ -718,8 +704,7 @@ public class AgregarMantenimientoController extends BaseController {
 
     public void verListadoEventos(ActionEvent event) {
         this.visiblePanelListadoEventos = true;
-        this.bienSeleccionado = (Long) event.getComponent().getAttributes().get("bienSeleccionado");
-        this.listadoEventos = new ListadoEventos(bienSeleccionado);  
+        this.listadoEventos.setIdDetalle((Long) event.getComponent().getAttributes().get("bienSeleccionado"));        
         this.listadoEventos.inicializarListado();
     }
     
@@ -728,9 +713,35 @@ public class AgregarMantenimientoController extends BaseController {
     }
 
     public void agregarEventoAceptar() {
-        this.eventoModel.salvar(this.command.getEvento(this.bienSeleccionado));
-        this.visiblePanelEvento = false;
-        this.mensajeExito = "Evento Almacenado Exitosamente.";
+        if (validarEventoDescripcion() && validarEventoCosto() && validarEventoFecha()) {
+            this.eventoModel.salvar(this.command.getEvento(this.bienSeleccionado));
+            this.visiblePanelEvento = false;
+            this.mensajeExito = "Evento Almacenado Exitosamente.";
+        }
+    }
+    
+    public boolean validarEventoDescripcion() {
+        if (this.command.getEventoDescripcion() == null || this.command.getEventoDescripcion().isEmpty()) {
+            Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.label.mantenimiento.evento.error.descripcion"));
+            return false;
+        }
+        return true;
+    }
+    
+    public boolean validarEventoCosto() {
+        if (this.command.getEventoCosto() == null || this.command.getEventoCosto().isNaN()) {
+            Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.label.mantenimiento.evento.error.costo"));
+            return false;
+        }
+        return true;
+    }
+    
+    public boolean validarEventoFecha() {
+        if (!(this.command.getEventoFecha() instanceof Date)) {
+            Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.label.mantenimiento.evento.error.fecha"));
+            return false;
+        }
+        return true;
     }
 
     public void agregarEventoCancelar() {

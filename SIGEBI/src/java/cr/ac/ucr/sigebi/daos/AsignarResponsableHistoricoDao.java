@@ -11,6 +11,7 @@ import cr.ac.ucr.framework.utils.FWExcepcion;
 import cr.ac.ucr.sigebi.domain.AsignarResponsableHistorico;
 import cr.ac.ucr.sigebi.domain.Bien;
 import cr.ac.ucr.sigebi.domain.UnidadEjecutora;
+import cr.ac.ucr.sigebi.domain.Usuario;
 import java.util.List;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
@@ -44,6 +45,27 @@ public class AsignarResponsableHistoricoDao extends GenericDaoImpl {
             return (List<AsignarResponsableHistorico>) query.list();
         } catch (DataAccessException e) {
             throw new FWExcepcion("sigebi.error.AsignarResponsableHistoricoDao.listarMisBienes", "Error obtener los registros " + this.getClass(), e.getCause());
+        }finally {
+            session.close();
+        }
+    }
+    
+    @Transactional(readOnly = true)
+    public List<AsignarResponsableHistorico> listarBienesUsuario(Usuario usuario, UnidadEjecutora unidadEjecutora)  throws FWExcepcion {
+        Session session = dao.getSessionFactory().openSession();
+        try {
+            String sql = "SELECT hist FROM AsignarResponsableHistorico hist "
+                    + "WHERE hist.unidadEjecutora = :unidadEjecutora "
+                    + " AND hist.responsable = :responsable "
+                    + " AND hist.fechaHasta IS NULL "
+                    + "ORDER BY hist.fechaDesde, hist.bien.descripcion"; 
+            
+            Query query = session.createQuery(sql);
+            query.setParameter("unidadEjecutora", unidadEjecutora);
+            query.setParameter("responsable", usuario);
+            return (List<AsignarResponsableHistorico>) query.list();
+        } catch (DataAccessException e) {
+            throw new FWExcepcion("sigebi.error.AsignarResponsableHistoricoDao.listarBienesUsuario", "Error obtener los bienes " + this.getClass(), e.getCause());
         }finally {
             session.close();
         }

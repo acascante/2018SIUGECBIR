@@ -24,7 +24,7 @@
 
             <!-- SELECCIONAR PROVEEDOR -->
             <div class="row" style="padding-top: 1rem">
-                <div class="col-sm-8"> 
+                <div class="col-sm-7"> 
                     <div class="form-group">
                         <ice:outputText value="#{label['sigebi.Responsable.label.Funcionario']}" /> 
                         <ice:inputText id="txtProvedor" styleClass="form-control" 
@@ -34,20 +34,29 @@
                     </div>
                 </div>
                 <div class="col-sm-2">
-                    <ice:commandButton id="botonProveedores" 
+                    <ice:commandButton id="btnUsuarios" 
                                        value="#{label['sigebi.Bien.Btn.Buscar']}" 
                                        partialSubmit="true" 
                                        styleClass="boton" 
                                        style="margin-top: 1.5rem"
                                        action="#{responsableController.mostrarPanelUsuarios}"/>
                 </div>
-                <div class="col-sm-2">
-                    <ice:commandButton id="botonProveedoresLimpiar" 
+                <div class="col-sm-1">
+                    <ice:commandButton id="btnUsuarioLimpiar" 
                                        value="#{label['sigebi.Bien.Btn.Limpiar']}" 
                                        partialSubmit="true" 
                                        styleClass="boton" 
                                        style="margin-top: 1.5rem"
                                        action="#{responsableController.limpiarUsuario}"/>
+                </div>
+                <div class="col-sm-1">
+                    <ice:commandButton id="btnUsuarioVerBienes" 
+                                       value="#{label['sigebi.Bien.Btn.VerBienesAsign']}" 
+                                       partialSubmit="true" 
+                                       rendered="#{responsableController.responsableCommand.usuarioCommand.usuario.id != null}"
+                                       styleClass="boton" 
+                                       style="margin-top: 1.5rem"
+                                       action="#{responsableController.verBienesUsuario}"/>
                 </div>
             </div>
 
@@ -297,6 +306,119 @@
                                                partialSubmit="true" 
                                                style="float: right" 
                                                styleClass="boton"/>
+                        </div>
+                    </div>
+                </div>                
+            </fieldset>       
+        </f:facet>  
+    </ice:panelPopup>
+    
+    
+    <!-- Modal Bienes de Usuario -->
+    <ice:panelPopup modal="true" 
+                    visible="#{responsableController.responsableCommand.visiblePanelBienesUsusario}" 
+                    styleClass="popup popupBien">
+        <f:facet name="body">
+            <fieldset class="panel_Container" >
+                <div class="container" style="margin-top: 20px;">
+                    <!-- Titulo -->
+                    <div class="row">
+                        <div class='col-sm-12'>
+                            <h4 style="margin: 0px;">
+                                <ice:outputFormat value="#{label['sigebi.label.prestamos.titulo.BienesAsignados']}"/>
+                            </h4>
+                        </div>                
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12" style="margin-top: 20px;">
+                            
+                            
+
+                            <ice:dataPaginator id="paginator"
+                                           for="movimientosLista" 
+                                           fastStep="1"
+                                           paginator="true"
+                                           rendered="#{responsableController.responsableCommand.cantBienesAsignados > 5}"
+                                           paginatorMaxPages="3">
+
+                                 <f:facet name="first">
+                                <h:graphicImage value="./imagenes/botones/first.png"
+                                                style="width: 25px; height: 20px; border: none; margin: 5px;"
+                                                alt="First" title="First"/>
+                                </f:facet>
+                                <f:facet name="last">
+                                    <h:graphicImage value="./imagenes/botones/last.png"
+                                                    style="width: 25px; height: 20px; border: none; margin: 5px;"
+                                                    alt="Last" title="Last"/>
+                                </f:facet>
+                                <f:facet name="previous">
+                                    <h:graphicImage value=""
+                                                    alt="Previous" title="Previous"/>
+                                </f:facet>
+                                <f:facet name="next">
+                                    <h:graphicImage value="./imagenes/botones/next.png"
+                                                    style="width: 25px; height: 20px; border: none; margin: 5px;"
+                                                    alt="Next" title="Next"/>
+                                </f:facet>
+                                <f:facet name="fastforward">
+                                    <h:graphicImage value=""
+                                                    alt="" title=""/>
+                                </f:facet>
+                                <f:facet name="fastrewind">
+                                    <h:graphicImage value="./imagenes/botones/previos.png"
+                                                    style="width: 25px; height: 20px; border: none; margin: 5px;"
+                                                    alt="Fast Rewind" title="Fast Rewind"/>
+                                </f:facet>
+
+                                </ice:dataPaginator>
+
+                                <!-- LISTAR Usuarios Responsables-->
+                                <ice:dataTable id="movimientosLista" 
+                                               value="#{responsableController.responsableCommand.asignacionesUsuario}" 
+                                               var="asignacion" 
+                                               paginator="true" 
+                                               paginatorPosition="top" 
+                                               rows="5">
+                                    <ice:column id="colBienIdentif" >
+                                        <f:facet name="header">
+                                            <ice:outputText  value="#{label['sigebi.Modal.General.Label.Identificacion']}" />
+                                        </f:facet>
+                                        <h:outputText id="estadoCelMovim" value="#{asignacion.bien.identificacion.identificacion}"/>
+                                    </ice:column>
+
+                                    <ice:column id="colDescripcion"  >
+                                        <f:facet name="header">
+                                            <ice:outputText  value="#{label['sigebi.label.vista.ubicacion.descripcion']}" />
+                                        </f:facet>
+                                        <h:outputText id="fechaCelMovim" value="#{asignacion.bien.descripcion}"/>
+                                    </ice:column>
+
+                                    <ice:column id="colEstadoMovim" >
+                                        <f:facet name="header">
+                                            <ice:outputText  value="#{label['sigebi.Responsable.Tab.ColDesde']}" />
+                                        </f:facet>
+                                        <h:outputText id="estadoCelMovim" value="#{asignacion.fechaDesde}"/>
+                                    </ice:column>
+
+                                </ice:dataTable>
+
+
+                            
+                            
+                            
+                        </div>
+                    </div>
+                    <div class="row" style="margin-top: 20px; margin-bottom: 20px;">
+                        
+                        <div class='col-md-6'></div>
+                        <div class='col-md-6'>
+                            <ice:commandButton id="btnCerrarPanelBienesUsr" 
+                                               value="#{label['sigebi.Modal.Ubicaciones.btn.Cerrar']}" 
+                                               action="#{responsableController.ocultarBienesUsuario}" 
+                                               partialSubmit="true" 
+                                               rendered="true" 
+                                               style="float: right" 
+                                               styleClass="boton" />
                         </div>
                     </div>
                 </div>                

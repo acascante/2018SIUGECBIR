@@ -25,19 +25,19 @@
                                 <label class="control-label" for="txtDetalle">
                                     <ice:outputText value="#{label['sigebi.label.mantenimiento.confirmacion.observacion']}"/> 
                                 </label>
-                                <ice:inputTextarea id="observacionConfirmacion" styleClass="form-control" cols="2" 
+                                <ice:inputTextarea id="observacionConfirmacion" styleClass="form-control" 
                                                     value="#{controllerAgregarMantenimientos.command.observacionConfirmacion}"/>
                             </div>
                         </div>    
                     </div>
                     <div class="row"  style="margin-top: 20px; margin-bottom: 20px;">
                         <div class='col-md-6'>
-                            <ice:commandButton id="btnCerrarPanel" value="#{label['label.regresar']}" action="#{controllerAgregarMantenimientos.cerrarPanelObservaciones}" partialSubmit="true" rendered="true" style="float: left" styleClass="boton" />
+                            <ice:commandButton id="btnCerrarPanel" value="#{label['label.regresar']}" action="#{controllerAgregarMantenimientos.cerrarPanelObservaciones}" rendered="true" style="float: left" styleClass="boton" />
                         </div>
                         <div class="col-md-6 align-content-center">
-                            <ice:commandButton id="botonRechazarBienObservacion" value="#{label['label.rechazar']}" action="#{controllerAgregarMantenimientos.rechazarBienObservacion}" rendered="#{controllerAgregarMantenimientos.visibleBotonRechazarBienObservacion}" partialSubmit="true" style="float: right" styleClass="boton"/>
-                            <ice:commandButton id="botonRechazarObservacion" value="#{label['label.rechazar']}" action="#{controllerAgregarMantenimientos.rechazarMantenimientoObservacion}" rendered="#{controllerAgregarMantenimientos.visibleBotonRechazarObservacion}" partialSubmit="true" style="float: right" styleClass="boton"/>
-                            <ice:commandButton id="botonSolicitarObservacion" value="#{label['label.corregir']}" action="#{controllerAgregarMantenimientos.solicitarCorreccionMantenimientoObservacion}" rendered="#{controllerAgregarMantenimientos.visibleBotonSolicitarObservacion}" partialSubmit="true" style="float: right" styleClass="boton"/>
+                            <ice:commandButton id="botonRechazarBienObservacion" value="#{label['label.rechazar']}" action="#{controllerAgregarMantenimientos.rechazarBienObservacion}" rendered="#{controllerAgregarMantenimientos.visibleBotonRechazarBienObservacion}" style="float: right" styleClass="boton"/>
+                            <ice:commandButton id="botonRechazarObservacion" value="#{label['label.rechazar']}" action="#{controllerAgregarMantenimientos.rechazarMantenimientoObservacion}" rendered="#{controllerAgregarMantenimientos.visibleBotonRechazarObservacion}" style="float: right" styleClass="boton"/>
+                            <ice:commandButton id="botonSolicitarObservacion" value="#{label['label.corregir']}" action="#{controllerAgregarMantenimientos.solicitarCorreccionMantenimientoObservacion}" rendered="#{controllerAgregarMantenimientos.visibleBotonSolicitarObservacion}" style="float: right" styleClass="boton"/>
                             
                         </div>
                     </div>

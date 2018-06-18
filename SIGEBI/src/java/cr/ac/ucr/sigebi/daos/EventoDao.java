@@ -62,10 +62,10 @@ public class EventoDao extends GenericDaoImpl {
     }
     
     @Transactional(readOnly = true)
-    public Long contar(Long idDetalle) throws FWExcepcion {
+    public Long contar(Long idBien) throws FWExcepcion {
         Session session = dao.getSessionFactory().openSession();
         try {
-            Query query = this.creaQuery(session, true, idDetalle);
+            Query query = this.creaQuery(session, true, idBien);
             return (Long)query.uniqueResult();
 
         } catch (HibernateException e) {
@@ -75,12 +75,12 @@ public class EventoDao extends GenericDaoImpl {
         }        
     }
     
-    public Double totalCosto(Long idDetalle) throws FWExcepcion {
+    public Double totalCosto(Long idBien) throws FWExcepcion {
         Session session = dao.getSessionFactory().openSession();
         try {
-            String sql = "SELECT SUM(entity.costo) FROM Evento entity WHERE entity.detalle.id = :idDetalle ";
+            String sql = "SELECT SUM(entity.costo) FROM Evento entity WHERE entity.detalle.bien.id = :idBien ";
             Query query = session.createQuery(sql);
-            query.setParameter("idDetalle", idDetalle);
+            query.setParameter("idBien", idBien);
             return (Double)query.uniqueResult();
         } catch (HibernateException e) {
             throw new FWExcepcion("sigebi.label.mantenimiento.evento.error.listar", "Error contando los registros de tipo " + this.getClass(), e.getCause());
@@ -109,10 +109,10 @@ public class EventoDao extends GenericDaoImpl {
     }
     
     @Transactional(readOnly = true)
-    public List<Evento> listar(Integer primerRegistro, Integer ultimoRegistro, Long idDetalle) throws FWExcepcion {
+    public List<Evento> listar(Integer primerRegistro, Integer ultimoRegistro, Long idBien) throws FWExcepcion {
         Session session = dao.getSessionFactory().openSession();
         try {
-            Query query = this.creaQuery(session, false, idDetalle);
+            Query query = this.creaQuery(session, false, idBien);
             if(!(primerRegistro.equals(1) && ultimoRegistro.equals(1))) {
                 query.setFirstResult(primerRegistro);
                 query.setMaxResults(ultimoRegistro - primerRegistro);
@@ -166,7 +166,7 @@ public class EventoDao extends GenericDaoImpl {
         return query;
     }
     
-    private Query creaQuery(Session session, Boolean contar, Long idDetalle) {
+    private Query creaQuery(Session session, Boolean contar, Long idBien) {
         StringBuilder sql = new StringBuilder("SELECT ");
         if (contar) {
             sql.append("COUNT(entity) FROM Evento entity ");
@@ -174,11 +174,11 @@ public class EventoDao extends GenericDaoImpl {
             sql.append("entity FROM Evento entity ");
         }
         
-        sql.append(" WHERE entity.detalle.id = :idDetalle ");
+        sql.append(" WHERE entity.detalle.bien.id = :idBien ");
         sql.append(" ORDER BY entity.fecha asc");
         
         Query query = session.createQuery(sql.toString());
-        query.setParameter("idDetalle", idDetalle);
+        query.setParameter("idBien", idBien);
         return query;
     }
 }

@@ -10,6 +10,7 @@ import cr.ac.ucr.sigebi.daos.AsignarResponsableHistoricoDao;
 import cr.ac.ucr.sigebi.domain.AsignarResponsableHistorico;
 import cr.ac.ucr.sigebi.domain.Bien;
 import cr.ac.ucr.sigebi.domain.UnidadEjecutora;
+import cr.ac.ucr.sigebi.domain.Usuario;
 import java.util.List;
 import javax.annotation.Resource;
 import org.springframework.stereotype.Service;
@@ -33,6 +34,12 @@ public class AsignarResponsableHistoricoModel {
     public List<AsignarResponsableHistorico> listarRespoansables(Bien bien, UnidadEjecutora unidad) throws FWExcepcion {
         return asignacionDao.listarRespoansables(bien, unidad);
     }
+    
+    
+    public List<AsignarResponsableHistorico> listarBienesUsuario(Usuario usuario, UnidadEjecutora unidad) throws FWExcepcion {
+        return asignacionDao.listarBienesUsuario(usuario, unidad);
+    }
+    
     
     public AsignarResponsableHistorico getHistoricoActivo(Bien bien)  throws FWExcepcion {
         return asignacionDao.getHistoricoActivo(bien);

@@ -5,8 +5,11 @@
  */
 package cr.ac.ucr.sigebi.commands;
 
+import com.sun.glass.ui.Size;
 import cr.ac.ucr.framework.vista.util.PaginacionOracle;
 import cr.ac.ucr.sigebi.controllers.BaseController;
+import cr.ac.ucr.sigebi.domain.AsignarResponsableHistorico;
+import cr.ac.ucr.sigebi.domain.Bien;
 import cr.ac.ucr.sigebi.domain.Estado;
 import cr.ac.ucr.sigebi.domain.UnidadEjecutora;
 import cr.ac.ucr.sigebi.domain.Usuario;
@@ -119,10 +122,14 @@ public class ResponsableCommand extends BaseController{
     
     private Boolean visiblePanelUsuarios;
     private Boolean visiblePanelConfirmacion;
+    private Boolean visiblePanelBienesUsusario;
     
     private Estado estadoAsignacionPendiente;
     private Estado estadoAsignacionAsignado;
     private String mensajeConfirmar;
+    
+    List<AsignarResponsableHistorico> asignacionesUsuario;
+    private int cantBienesAsignados;
     //</editor-fold>
     
     
@@ -132,6 +139,9 @@ public class ResponsableCommand extends BaseController{
         usuarioCommand = new UsuarioCommand();
         visiblePanelUsuarios = false;
         visiblePanelConfirmacion = false;
+        visiblePanelBienesUsusario = false;
+        
+        asignacionesUsuario = new ArrayList<AsignarResponsableHistorico>();
         
         estadoAsignacionPendiente = this.estadoPorDominioValor(Constantes.DOMINIO_ASIGNAR_RESPONSABLE, Constantes.ESTADO_ASIGNAR_RESPONSABLE_PENDIENTE);
         estadoAsignacionAsignado = this.estadoPorDominioValor(Constantes.DOMINIO_ASIGNAR_RESPONSABLE, Constantes.ESTADO_ASIGNAR_RESPONSABLE_ASIGNADO);
@@ -142,6 +152,32 @@ public class ResponsableCommand extends BaseController{
     
     //<editor-fold defaultstate="collapsed" desc="SETs & GETs">
 
+    public int getCantBienesAsignados() {
+        cantBienesAsignados = asignacionesUsuario.size();
+        return cantBienesAsignados;
+    }
+    
+    public Boolean getVisiblePanelBienesUsusario() {
+        return visiblePanelBienesUsusario;
+    }
+
+    public void setVisiblePanelBienesUsusario(Boolean visiblePanelBienesUsusario) {
+        this.visiblePanelBienesUsusario = visiblePanelBienesUsusario;
+    }
+
+    public List<AsignarResponsableHistorico> getAsignacionesUsuario() {
+        return asignacionesUsuario;
+    }
+
+    public void setAsignacionesUsuario(List<AsignarResponsableHistorico> asignacionesUsuario) {
+        this.asignacionesUsuario = asignacionesUsuario;
+    }
+
+    
+
+    
+    
+    
     public String getMensajeConfirmar() {
         return mensajeConfirmar;
     }

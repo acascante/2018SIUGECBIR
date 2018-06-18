@@ -59,7 +59,7 @@
             <div class="row">
                 <div class="col-sm-12">                    
                     <div>
-                        <ice:dataTable id="listadoExclusiones" value="#{controllerListarMantenimientos.solicitudesMantenimiento}" var="solicitud" paginator="true" paginatorPosition="bottom" rows="10">
+                        <ice:dataTable id="listadoMantenimientos" value="#{controllerListarMantenimientos.solicitudesMantenimiento}" var="solicitud" paginator="true" paginatorPosition="bottom" rows="10">
                             <f:facet name="header">
                                 <ice:columnGroup>
                                     <ice:headerRow>
@@ -90,8 +90,7 @@
                                     <ice:headerRow>
                                         <!-- ID -->
                                         <ice:column id="fltId" style="vertical-align:top;">
-                                            
-                                            <ice:inputText id="fltId" 
+                                            <ice:inputText id="txtFltId" partialSubmit="true"
                                                            value="#{controllerListarMantenimientos.command.fltId}" 
                                                            validator="#{controllerListarMantenimientos.validarFiltroId}"
                                                            valueChangeListener="#{controllerListarMantenimientos.cambioFiltro}"/>
@@ -100,10 +99,10 @@
                                         <!-- Fecha -->
                                         <ice:column id="fltFecha" >
                                             <ice:selectInputDate 
+                                                partialSubmit="true"
                                                 highlightClass="dateHighlightGray" 
                                                 highlightUnit="DAY_OF_WEEK" 
                                                 highlightValue="1"
-                                                partialSubmit="false" 
                                                 renderAsPopup="true" 
                                                 renderMonthAsDropdown="true" 
                                                 renderYearAsDropdown="true"
@@ -116,10 +115,9 @@
                             
                                         <!-- Estado -->
                                         <ice:column id="fltEstado" style="vertical-align:top;">                                 
-                                            <ice:selectOneMenu  id="fltEstado"
+                                            <ice:selectOneMenu  id="txtFltEstado" partialSubmit="true"
                                                                 valueChangeListener="#{controllerListarMantenimientos.cambioFiltro}"
-                                                                value="#{controllerListarMantenimientos.command.fltEstado}"
-                                                                partialSubmit="true">
+                                                                value="#{controllerListarMantenimientos.command.fltEstado}">
                                                 <f:selectItem itemLabel="N/A" itemValue="-1"/>
                                                 <f:selectItems id="slcEstadoItem" value="#{controllerListarMantenimientos.itemsEstado}"/>
                                             </ice:selectOneMenu>
@@ -128,7 +126,7 @@
                                 </ice:columnGroup>
                             </f:facet>
                             <ice:column>
-                                <h:outputText id="idExclusionCell" value="#{solicitud.id}"/>
+                                <h:outputText id="idCell" value="#{solicitud.id}"/>
                             </ice:column>
                             <ice:column>
                                 <h:outputText id="fechaCell" value="#{solicitud.fecha}" >
@@ -143,7 +141,7 @@
                             </ice:column>
 
                             <ice:column style="text-align: center;">
-                                <ice:commandButton id="botonDetalle" actionListener="#{controllerAgregarMantenimientos.detalleRegistro}" value="#{label['label.detalle']}" style="float:right;margin-top:2%" styleClass="boton" partialSubmit="true">
+                                <ice:commandButton id="botonDetalle" actionListener="#{controllerAgregarMantenimientos.detalleRegistro}" value="#{label['label.detalle']}" style="float:right;margin-top:2%" styleClass="boton">
                                     <f:attribute id="solicitudDetalle" name="#{controllerListarMantenimientos.command.key}"  value="#{solicitud.id}"/>
                                     <f:attribute id="vistaOrigen" name="#{controllerListarMantenimientos.command.keyVistaOrigen}"  value="#{controllerListarMantenimientos.vistaOrigen}"/>
                                 </ice:commandButton>

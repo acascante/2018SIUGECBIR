@@ -35,12 +35,12 @@ public class EventoModel {
         return eventoDao.totalCosto(idDetalle);
     }
     
-    public Long contar(Long idDetalle) throws FWExcepcion {
-        return eventoDao.contar(idDetalle);
+    public Long contar(Long idBien) throws FWExcepcion {
+        return eventoDao.contar(idBien);
     }
     
-    public List<Evento> listar(Integer primerRegistro, Integer ultimoRegistro, Long idDetalle) throws FWExcepcion {
-        return eventoDao.listar(primerRegistro, ultimoRegistro, idDetalle);
+    public List<Evento> listar(Integer primerRegistro, Integer ultimoRegistro, Long idBien) throws FWExcepcion {
+        return eventoDao.listar(primerRegistro, ultimoRegistro, idBien);
     }
     
     public Long contar(Long id, String descripcion, Date fecha, Double costo) throws FWExcepcion {

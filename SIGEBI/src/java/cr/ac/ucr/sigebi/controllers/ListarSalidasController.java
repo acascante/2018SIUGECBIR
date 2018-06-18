@@ -29,7 +29,7 @@ import javax.faces.event.ActionEvent;
  * @author jairo.cisneros
  */
 @Controller(value = "controllerListarSolicitudSalidas")
-@Scope("session")
+@Scope("session") 
 public class ListarSalidasController extends BaseController {
 
     //<editor-fold defaultstate="collapsed" desc="Variables Locales">

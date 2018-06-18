@@ -5,7 +5,6 @@
  */
 package cr.ac.ucr.sigebi.domain;
 
-import cr.ac.ucr.sigebi.utils.Constantes;
 import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -16,6 +15,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 /**
  *
@@ -25,16 +25,7 @@ import javax.persistence.Table;
 @Table(name = "SIGEBI_OAF.SIGB_CAMPO_REPORTE_BIEN")
 @SequenceGenerator(name="sqCampoReporteBien", sequenceName = "SIGEBI_OAF.SGB_SQ_CAMPO_REPORTE_BIEN", initialValue=1, allocationSize=1)
 public class CampoReporteBien implements Serializable {
-    
-    private static class ValoresOrden {
-        public static final int ASC = 1;
-        public static final int DESC = 2;
-        public static final int NO = 0;
-        
-        public static final String ASC_DESC = "Ascendente";
-        public static final String DESC_DESC = "Descendente";
-        
-    }
+
     //<editor-fold defaultstate="collapsed" desc="Atributos">
     @Id
     @GeneratedValue(strategy=GenerationType.SEQUENCE, generator = "sqCampoReporteBien")
@@ -58,24 +49,33 @@ public class CampoReporteBien implements Serializable {
     @Column(name = "CAMPO_ORDEN")
     private Integer orden;
     
+    @Transient
+    private Boolean indicadorOrden;
+    
     @Column(name = "MOSTRAR")
-    private Integer mostrar;
+    private Boolean mostrar;
     //</editor-fold>
     
     //<editor-fold defaultstate="collapsed" desc="Constructores">
-    public CampoReporteBien() {}
+    public CampoReporteBien() {
+        super();
+        this.mostrar = Boolean.TRUE;
+        this.indicadorOrden = Boolean.FALSE;
+    }
 
     public CampoReporteBien(CampoBien campoBien) {
+        this();
         this.campoBien = campoBien;
         this.tamanoColumna = campoBien.getTamanoColumna();
+        
     }
     
     public CampoReporteBien(ReporteBien reporteBien, CampoBien campoBien) {
+        this(campoBien);
         this.reporteBien = reporteBien;
-        this.campoBien = campoBien;
     }
     
-    public CampoReporteBien(Long id, ReporteBien reporteBien, CampoBien campoBien, String valor, Integer tamanoColumna, Integer orden, Integer mostrar) {
+    public CampoReporteBien(Long id, ReporteBien reporteBien, CampoBien campoBien, String valor, Integer tamanoColumna, Integer orden, Boolean mostrar) {
         this.id = id;
         this.reporteBien = reporteBien;
         this.campoBien = campoBien;
@@ -85,7 +85,7 @@ public class CampoReporteBien implements Serializable {
         this.mostrar = mostrar;
     }
     //</editor-fold>  
-
+    
     //<editor-fold defaultstate="collapsed" desc="GET's Set't">
     public Long getId() {
         return id;
@@ -123,43 +123,26 @@ public class CampoReporteBien implements Serializable {
         return orden;
     }
 
-    public String getDescripcionOrden() {
-        switch (orden) {
-            case ValoresOrden.ASC: return ValoresOrden.ASC_DESC;
-            case ValoresOrden.DESC: return ValoresOrden.DESC_DESC;
-        }
-        return null;
-    }
-
-    public void setOrden() {
-        switch (orden) {
-            case ValoresOrden.ASC: this.orden = ValoresOrden.DESC;
-            break;
-            
-            case ValoresOrden.DESC: this.orden = ValoresOrden.NO;
-            break;
-            
-            case ValoresOrden.NO: this.orden = ValoresOrden.ASC;
-            break;
-        }
-    }
-
     public void setOrden(Integer orden) {
         this.orden = orden;
     }
 
-    public Integer getMostrar() {
-        return mostrar;
-    }
-    
-    public Boolean getMostrarBoolean() {        
-        return Constantes.DEFAULT_SI.equals(mostrar);
+    public Boolean getIndicadorOrden() {
+        return indicadorOrden;
     }
 
-    public void setMostrar(Integer mostrar) {
+    public void setIndicadorOrden(Boolean indicadorOrden) {
+        this.indicadorOrden = indicadorOrden;
+    }    
+
+    public Boolean getMostrar() {
+        return mostrar;
+    }
+
+    public void setMostrar(Boolean mostrar) {
         this.mostrar = mostrar;
     }
-    
+
     public String getValor() {
         return valor;
     }

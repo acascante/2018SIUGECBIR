@@ -458,7 +458,21 @@ public class AsignarResponsableControlles  extends ListadoBienesGeneralControlle
     }
     
     
-    
+    public void verBienesUsuario(){
+        try {
+            responsableCommand.setAsignacionesUsuario(new ArrayList<AsignarResponsableHistorico>());
+            
+            responsableCommand.setAsignacionesUsuario(histModel.listarBienesUsuario(responsableCommand.getUsuarioCommand().getUsuario(), unidadEjecutora));
+            
+            responsableCommand.setVisiblePanelBienesUsusario(true);
+        }
+        catch(Exception err){
+            Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("Error al consultar bienes de Usuario"));
+        }
+    }
+    public void ocultarBienesUsuario(){
+        responsableCommand.setVisiblePanelBienesUsusario(false);
+    }
     //</editor-fold>
     
     

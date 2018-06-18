@@ -15,7 +15,7 @@
                     </h1>
                 </div>
                 <div class="col-sm-2">
-                    <ice:commandButton id="botonRegresar"  value="#{label['label.regresar']}" style="float:right" partialSubmit="false" styleClass="boton" 
+                    <ice:commandButton id="botonRegresar" value="#{label['label.regresar']}" style="float:right" styleClass="boton" 
                         action="#{controllerAgregarMantenimientos.regresarListado}" >
                     </ice:commandButton>
                 </div>
@@ -35,7 +35,7 @@
                 <div class="col-sm-4">
                     <div class="form-group"> 
                         <ice:outputText value="#{label['sigebi.label.mantenimiento.id']}" />
-                        <ice:inputText id="txtExclusionId" value="#{controllerAgregarMantenimientos.command.id}" styleClass="form-control" readonly="true" partialSubmit="false" />
+                        <ice:inputText id="txtExclusionId" value="#{controllerAgregarMantenimientos.command.id}" styleClass="form-control" readonly="true" />
                     </div>
                 </div>
             </div>
@@ -45,7 +45,7 @@
                 <div class="col-md-4">
                     <div class="form-group"> 
                         <ice:outputText value="#{label['sigebi.label.mantenimiento.estado']}" />
-                        <ice:inputText id="txtEstado" value="#{controllerAgregarMantenimientos.command.estado.nombre}" styleClass="form-control" readonly="true" partialSubmit="false" />
+                        <ice:inputText id="txtEstado" value="#{controllerAgregarMantenimientos.command.estado.nombre}" styleClass="form-control" readonly="true" />
                     </div>
                 </div>
             </div>
@@ -62,7 +62,7 @@
                                     </h4>
                                 </div>
                                 <div class="col-sm-2">
-                                    <ice:commandButton id="botonAgregarBienes" action="#{controllerAgregarMantenimientos.mostarPanelAgregarBienes}" value="#{label['label.agregarBienes']}" rendered="#{controllerAgregarMantenimientos.visibleBotonAgregarBienes}" style="margin-bottom: 1rem; float:right" styleClass="boton" partialSubmit="true"/>
+                                    <ice:commandButton id="botonAgregarBienes" action="#{controllerAgregarMantenimientos.mostarPanelAgregarBienes}" value="#{label['label.agregarBienes']}" rendered="#{controllerAgregarMantenimientos.visibleBotonAgregarBienes}" style="margin-bottom: 1rem; float:right" styleClass="boton"/>
                                 </div>
                             </div>
                             <div class="row" >
@@ -136,42 +136,42 @@
                                                 </ice:commandButton>
                                             </ice:column>
                                             <ice:column>
-                                                <ice:commandButton id="btnAplicarBien" partialSubmit="true" value="#{label['label.aplicar']}" style="float: right" styleClass="boton"
+                                                <ice:commandButton id="btnAplicarBien" value="#{label['label.aplicar']}" style="float: right" styleClass="boton"
                                                                     actionListener="#{controllerAgregarMantenimientos.aplicarBien}" 
                                                                     rendered="#{bien.aplicarMantenimiento and controllerAgregarMantenimientos.visibleBotonAplicarBien}">
                                                     <f:attribute id="bienSeleccionado" name="bienSeleccionado"  value="#{bien.id}"/> 
                                                 </ice:commandButton>
                                             </ice:column>
                                             <ice:column>
-                                                <ice:commandButton id="btnAceptarBien" partialSubmit="true" value="#{label['label.aceptar']}" style="float: right" styleClass="boton"
+                                                <ice:commandButton id="btnAceptarBien" value="#{label['label.aceptar']}" style="float: right" styleClass="boton"
                                                                     actionListener="#{controllerAgregarMantenimientos.aceptarBien}" 
                                                                     rendered="#{bien.aceptarMantenimiento and controllerAgregarMantenimientos.visibleBotonAceptarBien}">
                                                     <f:attribute id="bienSeleccionado" name="bienSeleccionado"  value="#{bien.id}"/> 
                                                 </ice:commandButton>
                                             </ice:column>
                                             <ice:column>
-                                                <ice:commandButton id="btnFinalizarBien" partialSubmit="true" value="#{label['label.finalizar']}" style="float: right" styleClass="boton"
+                                                <ice:commandButton id="btnFinalizarBien" value="#{label['label.finalizar']}" style="float: right" styleClass="boton"
                                                                     actionListener="#{controllerAgregarMantenimientos.finalizarBien}" 
                                                                     rendered="#{bien.finalizarMantenimiento and controllerAgregarMantenimientos.visibleBotonFinalizarBien}">
                                                     <f:attribute id="bienSeleccionado" name="bienSeleccionado"  value="#{bien.id}"/> 
                                                 </ice:commandButton>
                                             </ice:column>
                                             <ice:column>
-                                                <ice:commandButton id="btnAgregarEventoBien" partialSubmit="true" value="#{label['label.evento']}" style="float: right" styleClass="boton"
+                                                <ice:commandButton id="btnAgregarEventoBien" value="#{label['label.evento']}" style="float: right" styleClass="boton"
                                                                     actionListener="#{controllerAgregarMantenimientos.agregarEvento}"
                                                                     rendered="#{bien.agregarEventoMantenimiento and controllerAgregarMantenimientos.visibleBotonEventoBien}">
                                                     <f:attribute id="bienSeleccionado" name="bienSeleccionado"  value="#{bien.id}"/> 
                                                 </ice:commandButton>
                                             </ice:column>                                            
                                             <ice:column>
-                                                <ice:commandButton id="btnVerEventos" partialSubmit="true" value="#{label['label.ver.eventos']}" style="float: right" styleClass="boton"
+                                                <ice:commandButton id="btnVerEventos" value="#{label['label.ver.eventos']}" style="float: right" styleClass="boton"
                                                                     actionListener="#{controllerAgregarMantenimientos.verListadoEventos}"
                                                                     rendered="#{bien.agregarEventoMantenimiento and controllerAgregarMantenimientos.visibleBotonEventoBien}">
                                                     <f:attribute id="bienSeleccionado" name="bienSeleccionado"  value="#{bien.id}"/> 
                                                 </ice:commandButton>
                                             </ice:column>                                            
                                             <ice:column>
-                                                <ice:commandButton id="btnRechazarBien" partialSubmit="true" value="#{label['label.rechazar']}" style="float: right" styleClass="boton"
+                                                <ice:commandButton id="btnRechazarBien" value="#{label['label.rechazar']}" style="float: right" styleClass="boton"
                                                                     actionListener="#{controllerAgregarMantenimientos.rechazarBien}"
                                                                     rendered="#{bien.aceptarMantenimiento and controllerAgregarMantenimientos.visibleBotonRechazarBien}">
                                                     <f:attribute id="bienSeleccionado" name="bienSeleccionado"  value="#{bien.id}"/> 
@@ -191,7 +191,7 @@
                 <div class="col-md-12">
                     <div class="form-group" > 
                         <ice:outputText value="#{label['sigebi.label.mantenimiento.observacion']}" />
-                        <ice:inputTextarea id="txtObservacion" styleClass="form-control" style="resize: none" cols="4" partialSubmit="false"
+                        <ice:inputTextarea id="txtObservacion" styleClass="form-control" style="resize: none" cols="4" 
                                            value="#{controllerAgregarMantenimientos.command.observacion}">
                         </ice:inputTextarea>
                     </div>                                             
@@ -201,17 +201,17 @@
             <!--Botones -->
             <div class="row">
                 <div class="col-md-12">
-                    <ice:commandButton id="botonGuardar" value="#{label['label.guardar']}" action="#{controllerAgregarMantenimientos.confirmarSolicitud}" rendered="#{controllerAgregarMantenimientos.visibleBotonGuardar}" partialSubmit="true" style="float: right" styleClass="boton"/>
-                    <ice:commandButton id="botonAnular" value="#{label['label.anular']}" action="#{controllerAgregarMantenimientos.anularSolicitud}" rendered="#{controllerAgregarMantenimientos.visibleBotonAnular}" partialSubmit="true" style="float: right" styleClass="boton"/>
-                    <ice:commandButton id="botonAceptar" value="#{label['label.aceptar']}" action="#{controllerAgregarMantenimientos.aceptarSolicitud}" rendered="#{controllerAgregarMantenimientos.visibleBotonAceptar}" partialSubmit="true" style="float: right" styleClass="boton"/>
-                    <ice:commandButton id="botonRechazar" value="#{label['label.rechazar']}" action="#{controllerAgregarMantenimientos.rechazarMantenimiento}" rendered="#{controllerAgregarMantenimientos.visibleBotonRechazar}" partialSubmit="true" style="float: right" styleClass="boton"/>
-                    <ice:commandButton id="botonAplicar" value="#{label['label.aplicar']}" action="#{controllerAgregarMantenimientos.aplicarSolicitud}" rendered="#{controllerAgregarMantenimientos.visibleBotonAplicar}" partialSubmit="true" style="float: right" styleClass="boton"/>
-                    <ice:commandButton id="botonFinalizar" value="#{label['label.finalizar']}" action="#{controllerAgregarMantenimientos.finalizarSolicitud}" rendered="#{controllerAgregarMantenimientos.visibleBotonFinalizar}" partialSubmit="true" style="float: right" styleClass="boton"/>
+                    <ice:commandButton id="botonGuardar" value="#{label['label.guardar']}" action="#{controllerAgregarMantenimientos.confirmarSolicitud}" rendered="#{controllerAgregarMantenimientos.visibleBotonGuardar}" style="float: right" styleClass="boton"/>
+                    <ice:commandButton id="botonAnular" value="#{label['label.anular']}" action="#{controllerAgregarMantenimientos.anularSolicitud}" rendered="#{controllerAgregarMantenimientos.visibleBotonAnular}" style="float: right" styleClass="boton"/>
+                    <ice:commandButton id="botonAceptar" value="#{label['label.aceptar']}" action="#{controllerAgregarMantenimientos.aceptarSolicitud}" rendered="#{controllerAgregarMantenimientos.visibleBotonAceptar}" style="float: right" styleClass="boton"/>
+                    <ice:commandButton id="botonRechazar" value="#{label['label.rechazar']}" action="#{controllerAgregarMantenimientos.rechazarMantenimiento}" rendered="#{controllerAgregarMantenimientos.visibleBotonRechazar}" style="float: right" styleClass="boton"/>
+                    <ice:commandButton id="botonAplicar" value="#{label['label.aplicar']}" action="#{controllerAgregarMantenimientos.aplicarSolicitud}" rendered="#{controllerAgregarMantenimientos.visibleBotonAplicar}" style="float: right" styleClass="boton"/>
+                    <ice:commandButton id="botonFinalizar" value="#{label['label.finalizar']}" action="#{controllerAgregarMantenimientos.finalizarSolicitud}" rendered="#{controllerAgregarMantenimientos.visibleBotonFinalizar}" style="float: right" styleClass="boton"/>
                 </div>
             </div>
         </div>
         
-        <!-- Panel de confirmacion --> 
+        <!-- Panel de confirmacion Observacion --> 
         <ui:insert name="modalConfirmacion">
             <ui:include src="../mantenimientos/panelConfirmacion.xhtml" />
         </ui:insert>
@@ -226,7 +226,7 @@
             <ui:include src="../mantenimientos/listadoEventos.xhtml" />
         </ui:insert>
         
-        <!-- Panel de confirmacion de Solicitud--> 
+        <!-- Panel de confirmacion de Solicitud al Guardar--> 
         <ui:insert name="modalConfirmarSolicitud">
             <ui:include src="../mantenimientos/panelConfirmacionSolicitud.xhtml" />
         </ui:insert>

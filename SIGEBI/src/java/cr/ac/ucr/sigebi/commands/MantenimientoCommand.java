@@ -49,7 +49,7 @@ public class MantenimientoCommand {
     
     private String eventoDescripcion;
     private Double eventoCosto;
-    
+    private Date eventoFecha;
     //</editor-fold>
     
     //<editor-fold defaultstate="collapsed" desc="Constructores">
@@ -115,7 +115,7 @@ public class MantenimientoCommand {
         Evento evento = new Evento();
         evento.setDescripcion(this.eventoDescripcion);
         evento.setCosto(this.eventoCosto);
-        evento.setFecha(new Date());
+        evento.setFecha(this.eventoFecha);
         evento.setDetalle(this.detalles.get(idBien));
         return evento;        
     }
@@ -124,9 +124,17 @@ public class MantenimientoCommand {
     //<editor-fold defaultstate="collapsed" desc="Gets y Sets">    
     private Date getDefaultDate() {
         Date today = new Date();
-        Calendar calendar = Calendar.getInstance(Constantes.DEFAULT_TIME_ZONE);
+        Calendar calendar = Calendar.getInstance(getTimeZone());
         calendar.setTime(today);
         return calendar.getTime();
+    }
+    
+    public TimeZone getTimeZone() {
+        return Constantes.DEFAULT_TIME_ZONE;
+    }
+    
+    public String getDatePattern() {
+        return Constantes.DEFAULT_DATE_PATTERN;
     }
     
     public Long getId() {
@@ -253,6 +261,14 @@ public class MantenimientoCommand {
 
     public void setEventoCosto(Double eventoCosto) {
         this.eventoCosto = eventoCosto;
+    }
+
+    public Date getEventoFecha() {
+        return eventoFecha;
+    }
+
+    public void setEventoFecha(Date eventoFecha) {
+        this.eventoFecha = eventoFecha;
     }
     
     public String getObservacionConfirmacion() {
