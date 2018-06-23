@@ -86,6 +86,7 @@ public class ReporteBienController extends BaseController {
     private Boolean reporteRegistrado;
     private Boolean visiblePanelNombreReporte;
     private Boolean visiblePanelAgregarCampos;
+    private Boolean visiblePanelElimnarReporte;
     private Boolean visibleBotonEliminar;
     
     private Long lastIdOrden;
@@ -155,6 +156,7 @@ public class ReporteBienController extends BaseController {
         this.reporteRegistrado = false;
         this.visiblePanelNombreReporte = false;
         this.visiblePanelAgregarCampos = false;
+        this.visiblePanelElimnarReporte = false;
         this.visibleBotonEliminar = false;
         this.mensaje = "";
         this.command = new ReporteBienCommand(usuarioSIGEBI);
@@ -277,15 +279,24 @@ public class ReporteBienController extends BaseController {
         this.visiblePanelNombreReporte = false;
     }
     
-    public void eliminarReporte() {
+    public void abrirPanelEliminarReporte() {
+        this.visiblePanelElimnarReporte = true;
+    }
+    
+    public void eliminarReporteCancelar() {
+        this.visiblePanelElimnarReporte = false;
+    }
+    
+    public void eliminarReporteAceptar() {
         try {
-            Tipo tipo = this.tipoPorId(this.command.getIdTipoReporte());
-            ReporteBien reporteBien = this.command.getReporteBien(tipo);            
+            ReporteBien reporteBien = this.reportes.get(this.command.getIdReporte());
+            reporteBien.setCamposReporte(this.campoReporteBienModel.listarPorReporte(reporteBien));            
             this.campoReporteBienModel.eliminar(reporteBien.getCamposReporte());
             this.reporteBienModel.eliminar(reporteBien);
-            
-            inicializarReportes();
+            this.visiblePanelElimnarReporte = false;
             inicializarDatos();
+            inicializarReportes();
+            
             Mensaje.agregarInfo("Reporte eliminado exitosamente");
         } catch (FWExcepcion err) {
             Mensaje.agregarErrorAdvertencia(err.getMessage());
@@ -310,6 +321,7 @@ public class ReporteBienController extends BaseController {
             
         }
     }
+    
     public void generarReporte() {
         if (this.command.getIdTipoReporte().equals(Constantes.DEFAULT_ID)) {
             Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.label.reporteBien.error.tipo"));
@@ -534,6 +546,14 @@ public class ReporteBienController extends BaseController {
 
     public void setVisiblePanelNombreReporte(Boolean visiblePanelNombreReporte) {
         this.visiblePanelNombreReporte = visiblePanelNombreReporte;
+    }
+
+    public Boolean getVisiblePanelElimnarReporte() {
+        return visiblePanelElimnarReporte;
+    }
+
+    public void setVisiblePanelElimnarReporte(Boolean visiblePanelElimnarReporte) {
+        this.visiblePanelElimnarReporte = visiblePanelElimnarReporte;
     }
 
     public Boolean getReporteRegistrado() {

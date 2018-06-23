@@ -153,7 +153,7 @@ public class GenerarReporteSobrantesController extends BaseController {
             Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.label.reporteBien.error.tipo"));
         } else {
             try {
-                //reportes/reporteSobrantes.jrxml
+                //reportes/reporteSobrantes.jrxml 
                 TomaFisica tomaFisica = this.tomaFisicaModel.buscarPorId(this.command.getIdTomaFisica());
                 List<TomaFisicaSobrante> sobrantes = this.tomaFisicaSobranteModel.listarReporte(tomaFisica, this.command.getIdentificacion(),  
                         this.command.getUbicacion(), this.command.getDescripcion(), this.command.getSerie(), this.command.getMarca(), this.command.getModelo(),
@@ -172,7 +172,7 @@ public class GenerarReporteSobrantesController extends BaseController {
                         if (bienSobrante.getIdentificacion() != null && !bienSobrante.getIdentificacion().isEmpty()) {
                             Bien bien = this.bienModel.buscarPorIdentificacion(bienSobrante.getIdentificacion());
                             if (bien != null) {
-                                dato = new ReporteSobrantes(bienSobrante, bien.getEstado());
+                                dato = new ReporteSobrantes(bienSobrante, bien);
                             } else {
                                 dato = new ReporteSobrantes(bienSobrante);
                             }

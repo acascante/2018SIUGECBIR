@@ -175,6 +175,8 @@ public abstract class Solicitud extends ObjetoBase implements Serializable {
                 return Util.getEtiquetas("sigebi.TipoMovimiento.Prestamo");
             case 5:
                 return Util.getEtiquetas("sigebi.TipoMovimiento.Salida");
+            case 6:
+                return Util.getEtiquetas("sigebi.TipoMovimiento.Mantenimiento");
         }
         return "";
     }

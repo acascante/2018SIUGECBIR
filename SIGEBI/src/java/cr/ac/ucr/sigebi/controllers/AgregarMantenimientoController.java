@@ -402,6 +402,7 @@ public class AgregarMantenimientoController extends BaseController {
     private boolean visibleBotonAplicarBien;
     private boolean visibleBotonFinalizarBien;
     private boolean visibleBotonEventoBien;
+    private boolean visibleBotonListarEvento;
     
     private boolean visibleBotonAnular;
     private boolean visibleBotonSolicitarCorreccion;    
@@ -1017,6 +1018,16 @@ public class AgregarMantenimientoController extends BaseController {
         return visibleBotonEventoBien;
     }
     
+    public boolean isVisibleBotonListarEvento() {
+        this.visibleBotonListarEvento = false;
+        if (Constantes.ESTADO_MANTENIMIENTO_APROBADO.equals(this.command.getEstado().getValor()) ||
+            Constantes.ESTADO_MANTENIMIENTO_FINALIZADO.equals(this.command.getEstado().getValor()) &&
+            this.autorizadoAprobar) {    
+            this.visibleBotonListarEvento = true;
+        } 
+        return visibleBotonListarEvento;
+    }
+    
     public boolean isVisibleBotonSolicitarObservacion() {
         this.visibleBotonSolicitarObservacion = false;
         if (this.accion == ACCION_SOLICITAR_CORRECCION) {
@@ -1099,6 +1110,10 @@ public class AgregarMantenimientoController extends BaseController {
 
     public void setVisibleBotonEventoBien(boolean visibleBotonEventoBien) {
         this.visibleBotonEventoBien = visibleBotonEventoBien;
+    }
+
+    public void setVisibleBotonListarEvento(boolean visibleBotonListarEvento) {
+        this.visibleBotonListarEvento = visibleBotonListarEvento;
     }
 
     public void setVisibleBotonAnular(boolean visibleBotonAnular) {

@@ -19,26 +19,11 @@
 
         <div class="row" style="margin-top: 10px;">
             <div class="col-md-12">
-                <ice:panelGroup>
-                    <ice:panelGroup id="tabInventario" style="padding-bottom: 60px; padding-top: 10px;" styleClass="tabsContent panelTabSetContainer">
-                        <ice:panelTabSet>
-                            <!-- TAB Toma Fisica-->
-                            <ice:panelTab id="tabTomaFisica" label="#{label['sigebi.label.vista.detalleSalida.tabGeneral']}">
-                                <ui:insert name="addTomaFisica">
-                                    <ui:include src="../salidas/tabDetalleSalida.xhtml" />
-                                </ui:insert>
-                            </ice:panelTab>
+                <ui:include src="../salidas/tabDetalleSalida.xhtml" />
 
-                            <!-- TAB Toma Fisica Unitaria-->
-                            <ice:panelTab id="tabTomaFisicaUnitaria" label="#{label['sigebi.label.vista.detalleSalida.tabBienesSalidas']}" rendered="#{controllerSolicitudSalida.command.yaRegistrada}">
-                                <ui:insert name="addTomaFisicaUnitaria">
-                                    <ui:include src="../salidas/tabBienesAsociados.xhtml" />
-                                </ui:insert>
-                            </ice:panelTab>
-
-                        </ice:panelTabSet>
-                    </ice:panelGroup> 
-                </ice:panelGroup>
+                <ice:outputHtml  rendered="#{controllerSolicitudSalida.command.yaRegistrada}" id="datosTomaFisicaUnitaria">
+                    <ui:include src="../salidas/tabBienesAsociados.xhtml" />
+                </ice:outputHtml>
             </div>
         </div>
 

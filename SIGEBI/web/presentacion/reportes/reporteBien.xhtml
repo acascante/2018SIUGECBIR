@@ -123,7 +123,7 @@
             <div class="row">
                 <div class="col-md-12">
                     <ice:commandButton id="botonGuardar" value="#{label['label.guardar']}" action="#{controllerReporteBien.abrirPanelNombreReporte}" style="float: right" styleClass="boton"/>
-                    <ice:commandButton id="botonEliminar" value="#{label['label.eliminar']}" action="#{controllerReporteBien.eliminarReporte}" rendered="#{controllerReporteBien.visibleBotonEliminar}" style="float: right" styleClass="boton"/>
+                    <ice:commandButton id="botonEliminar" value="#{label['label.eliminar']}" action="#{controllerReporteBien.abrirPanelEliminarReporte}" rendered="#{controllerReporteBien.visibleBotonEliminar}" style="float: right" styleClass="boton"/>
                     <ice:commandButton id="botonReporte" value="#{label['label.reporte']}" action="#{controllerReporteBien.generarReporte}" style="float: right" styleClass="boton"/>
                 </div>
             </div>
@@ -132,11 +132,17 @@
         <!-- Panel de confirmacion --> 
         <ui:insert name="modalConfirmacion">
             <ui:include src="../reportes/panelNombreReporte.xhtml" />
-        </ui:insert>    
+        </ui:insert>
         
         <!-- Panel Agregar Bienes -->
         <ui:insert name="panelAgregarCampos">
             <ui:include src="../reportes/listadoCampos.xhtml" />
+        </ui:insert>    
+        
+        <!-- Panel Eliminar Reporte -->
+        <ui:insert name="panelEliminar Reporte">
+            <ui:include src="../reportes/panelConfirmacionEliminarReporte.xhtml" />
         </ui:insert>
+        
     </div>
 </ice:form>

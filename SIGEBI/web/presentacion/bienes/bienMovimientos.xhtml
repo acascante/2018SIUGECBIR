@@ -15,6 +15,7 @@
                 <ice:dataPaginator id="paginator"
                                for="movimientosLista" 
                                fastStep="1"
+                               rendered="#{ controllerAgregarBienes.command.cantMovimientos gt 5}"
                                paginator="true"
                                paginatorMaxPages="3">
                     

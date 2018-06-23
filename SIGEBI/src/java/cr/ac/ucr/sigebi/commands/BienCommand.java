@@ -714,6 +714,7 @@ public class BienCommand {
     private List<BienCaracteristica> caracteristicas;
     private List<Nota> notas;
     private List<Solicitud> movimientos;
+    private Integer cantMovimientos;
 
     private AccesorioCommand accesorioCommand;
     private AdjuntoCommand adjuntoCommand;
@@ -922,6 +923,11 @@ public class BienCommand {
 
     public void setFechaIngreso(Date fechaIngreso) {
         this.fechaIngreso = fechaIngreso;
+    }
+
+    public Integer getCantMovimientos() {
+        cantMovimientos = movimientos.size();
+        return cantMovimientos;
     }
     
     public List<Solicitud> getMovimientos() {

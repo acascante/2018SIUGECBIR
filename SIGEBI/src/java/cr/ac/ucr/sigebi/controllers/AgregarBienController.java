@@ -37,6 +37,7 @@ import cr.ac.ucr.sigebi.domain.Solicitud;
 import cr.ac.ucr.sigebi.domain.SolicitudDetalle;
 import cr.ac.ucr.sigebi.domain.SolicitudDonacion;
 import cr.ac.ucr.sigebi.domain.SolicitudExclusion;
+import cr.ac.ucr.sigebi.domain.SolicitudMantenimiento;
 import cr.ac.ucr.sigebi.domain.SolicitudPrestamo;
 import cr.ac.ucr.sigebi.domain.SolicitudSalida;
 import cr.ac.ucr.sigebi.domain.SolicitudTraslado;
@@ -2322,6 +2323,8 @@ public class AgregarBienController extends BaseController {
     SolicitudSalidaController sal;
     @Autowired
     AgregarPrestamoController pre;
+    @Autowired
+    AgregarMantenimientoController man;
     
     public void consultarMovimiento(ActionEvent event) {
         try {
@@ -2352,7 +2355,10 @@ public class AgregarBienController extends BaseController {
                     break;    
                 case 5:
                     sal.verDetalle( (SolicitudSalida) verMovimiento, Constantes.KEY_VISTA_DETALLE_BIEN );
-                    break;                  
+                    break;     
+                case 6:
+                    man.verDetalle( (SolicitudMantenimiento) verMovimiento, Constantes.KEY_VISTA_DETALLE_BIEN );
+                    break;               
             }
             
         } catch (Exception err) {

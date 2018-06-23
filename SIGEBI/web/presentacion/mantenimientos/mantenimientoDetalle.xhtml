@@ -166,7 +166,7 @@
                                             <ice:column>
                                                 <ice:commandButton id="btnVerEventos" value="#{label['label.ver.eventos']}" style="float: right" styleClass="boton"
                                                                     actionListener="#{controllerAgregarMantenimientos.verListadoEventos}"
-                                                                    rendered="#{bien.agregarEventoMantenimiento and controllerAgregarMantenimientos.visibleBotonEventoBien}">
+                                                                    rendered="#{bien.listarEventosMantenimiento and controllerAgregarMantenimientos.visibleBotonListarEvento}">
                                                     <f:attribute id="bienSeleccionado" name="bienSeleccionado"  value="#{bien.id}"/> 
                                                 </ice:commandButton>
                                             </ice:column>                                            

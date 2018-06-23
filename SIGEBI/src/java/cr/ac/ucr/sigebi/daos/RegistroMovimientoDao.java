@@ -46,7 +46,7 @@ public class RegistroMovimientoDao extends GenericDaoImpl {
     public List<Solicitud> movimientosPorBien(Bien bien) throws FWExcepcion {
         Session session = dao.getSessionFactory().openSession();
         try {
-            String sql = "SELECT m.solicitud FROM SolicitudDetalle m WHERE m.bien = :bien";
+            String sql = "SELECT  DISTINCT(m.solicitud) FROM SolicitudDetalle m WHERE m.bien = :bien";
 //            String sql;
 //            sql = "SELECT m FROM Solicitud m WHERE m.detalles.bien = :bien";
             Query query = session.createQuery(sql);

@@ -34,7 +34,6 @@ public class ReporteSobrantes implements Serializable {
 
     public ReporteSobrantes(TomaFisicaSobrante bienSobrante) {
         this.identificacion = bienSobrante.getIdentificacion();
-        this.funcionario = "Pendiente Definir"; 
         this.descripcion = bienSobrante.getDescripcion();
         this.marca = bienSobrante.getMarca();
         this.modelo = bienSobrante.getModelo();
@@ -45,9 +44,10 @@ public class ReporteSobrantes implements Serializable {
         this.ubicacion = bienSobrante.getUbicacion();
     }
     
-    public ReporteSobrantes(TomaFisicaSobrante bienSobrante, Estado estado) {
+    public ReporteSobrantes(TomaFisicaSobrante bienSobrante, Bien bien) {
         this(bienSobrante);
-        this.estado = estado.getNombre();
+        this.funcionario = bien.getUsuarioResponsable().getNombreCompleto();
+        this.estado = bien.getEstado().getNombre();
     }
     //</editor-fold>
     
