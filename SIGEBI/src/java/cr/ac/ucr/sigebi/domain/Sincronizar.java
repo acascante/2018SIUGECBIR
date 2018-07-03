@@ -22,7 +22,7 @@ import javax.persistence.Temporal;
  * @author jorge.serrano
  */
 @Entity(name = "Sincronizar")
-@Table(name = "SF_INTERFAZ_SIGEBI")
+@Table(name = "SIGEBI_OAF.SF_INTERFAZ_SIGEBI_2")
 @SequenceGenerator(name = "SGB_SQ_SINCRONIZAR",  sequenceName = "SIGEBI_OAF.SGB_SQ_SINCRONIZAR", initialValue = 100, allocationSize = 1)
 public class Sincronizar implements Serializable {
 
@@ -681,6 +681,7 @@ public class Sincronizar implements Serializable {
         codigoCategoria  = bien.getSubCategoria().getCategoria().getCodigoCategoria();
         idCustodio = 1000;//bien.getNumUnidadEjec();
         idProveedor = Integer.parseInt(bien.getProveedor().getNumPersona().toString());
+        indicaPlaca = bien.getCapitalizable()? 'Y': 'N';
         origen = bien.getOrigen().getValor().toString().charAt(0);
         valorInicialColones = Float.parseFloat( bien.getCosto().toString());
         valorInicialOtraMo = Float.parseFloat( bien.getCosto().toString());

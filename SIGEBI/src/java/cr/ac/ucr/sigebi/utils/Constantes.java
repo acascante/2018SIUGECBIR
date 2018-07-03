@@ -243,10 +243,10 @@ public final class Constantes {
     public static final String TIPO_REPORTE_PDF_EXTENSION = ".pdf";
     public static final String TIPO_REPORTE_EXCELL_EXTENSION = ".xlsx";
     
-    public static final String TIPO_MOVIMIENTO_SINCRONIZAR_AGREGAR = "AGREGAR";
-    public static final String TIPO_MOVIMIENTO_SINCRONIZAR_EXCLUIR = "EXCLUIR";
-    public static final String TIPO_MOVIMIENTO_SINCRONIZAR_MODIFICAR = "MODIFICAR";
-    public static final String TIPO_MOVIMIENTO_SINCRONIZAR_TRASLADAR = "TRASLADAR";    
+    public static final String TIPO_MOVIMIENTO_SINCRONIZAR_AGREGAR = "INCLUSION";
+    public static final String TIPO_MOVIMIENTO_SINCRONIZAR_EXCLUIR = "EXCLUSION";
+    public static final String TIPO_MOVIMIENTO_SINCRONIZAR_MODIFICAR = "MODIFICACION";
+    public static final String TIPO_MOVIMIENTO_SINCRONIZAR_TRASLADAR = "MODIFICACION"; // ANTES ERA TRASLADO   
     
     //TIPO CARACTERISTICA BIEN
     public static final Integer TIPO_CARACTERISTICA_SERIE = 1;

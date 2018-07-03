@@ -90,6 +90,7 @@ public class SolicitudDonacionCommand {
         this.solicitudDonacion.setTipoDonacion(new Tipo());
         this.solicitudDonacion.setUnidadReceptora(new UnidadEjecutora());
         this.solicitudDonacion.setPais(new Pais());
+        this.solicitudDonacion.setUnidadReceptora(unidadEjecutora);
     }
 
     public SolicitudDonacionCommand(SolicitudDonacion solicitudDonacion) {

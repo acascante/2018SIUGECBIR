@@ -54,6 +54,9 @@ import org.springframework.stereotype.Controller;
 @Scope("session")
 public class SolicitudDonacionController extends BaseController {
 
+    private static final String PAIS_LOCAL = "COSTA RICA";
+    private static final String TIPO_LOCAL = "LOCAL";
+    
     //<editor-fold defaultstate="collapsed" desc="Variables Locales">
     @Resource
     private SolicitudModel solicitudModel;
@@ -86,6 +89,10 @@ public class SolicitudDonacionController extends BaseController {
     boolean rolPermiteAplicar = false;
     boolean rolPermiteAnular = false;
     boolean rolPermiteRechazar = false;
+    boolean habilitarPais = true;
+    
+    Long idPaisLocal;
+    Long idTipoLocal;
 
     SolicitudDonacionCommand command;
 
@@ -162,6 +169,13 @@ public class SolicitudDonacionController extends BaseController {
         this.command = command;
     }
 
+    public boolean isHabilitarPais() {
+        return habilitarPais;
+    }
+
+    public void setHabilitarPais(boolean habilitarPais) {
+        this.habilitarPais = habilitarPais;
+    }
     //</editor-fold>
     
     //<editor-fold defaultstate="collapsed" desc="Navegación del MENÚ">
@@ -278,11 +292,18 @@ public class SolicitudDonacionController extends BaseController {
 
         //Se asocian los tipos de la pantalla
         for (Tipo item : this.tiposPorDominio(Constantes.DOMINIO_SOLI_DONACION)) {
+            if (item.getNombre().equals(TIPO_LOCAL)) {
+                idTipoLocal = item.getId();
+            }
+            
             command.getTipoDonacionOptions().add(new SelectItem(item.getId().toString(), item.getNombre()));
         }
 
         //Se asocian los paises
         for (Pais item : paisModel.listar()) {
+            if (item.getNombre().equals(PAIS_LOCAL)) {
+                idPaisLocal = item.getId();
+            }
             command.getPaisOptions().add(new SelectItem(item.getId().toString(), item.getNombre()));
             command.getPaisesDonacion().put(item.getId(), item);
         }
@@ -446,8 +467,18 @@ public class SolicitudDonacionController extends BaseController {
             // Se obtiene el id del tipoDonacion
             Long valor = command.getSolicitudDonacion().getTipoDonacion().getIdTemporal();
             if (valor > 0) {
-                command.getSolicitudDonacion().setTipoDonacion(this.tipoPorId(valor));
+                Tipo tipo = this.tipoPorId(valor);
+                command.getSolicitudDonacion().setTipoDonacion(tipo);
                 command.getSolicitudDonacion().getTipoDonacion().setIdTemporal(valor);
+                
+                if(tipo.getId().equals(idTipoLocal)) {
+                    command.getSolicitudDonacion().setPais(command.getPaisesDonacion().get(idPaisLocal));
+                    command.getSolicitudDonacion().getPais().setIdTemporal(idPaisLocal);
+                    habilitarPais = true;
+                } else {
+                    habilitarPais = false;
+                }
+                
             }
         } catch (FWExcepcion e) {
             Mensaje.agregarErrorAdvertencia(e.getError_para_usuario());

@@ -60,6 +60,12 @@
                                        action="#{controllerAgregarBienes.sincronizarBien}">
                     </ice:commandButton>
                 </div>
+                
+                <div class="col-sm-4">
+                    <ice:commandButton id="botonNuevo" style="float:right" styleClass="boton" partialSubmit="true" actionListener="#{controllerAgregarBienes.nuevoRegistro}" value="Nuevo" >
+                       <f:attribute id="vistaOrigen" name="#{controllerListarBienes.command.keyVistaOrigen}"  value="#{controllerListarBienes.vistaOrigen}"/>
+                    </ice:commandButton>
+                </div>   
             </div>
         </div>
 

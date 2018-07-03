@@ -31,7 +31,7 @@ public class PaisDao extends GenericDaoImpl {
     @Transactional(readOnly = true)
     public List<Pais> listar() throws FWExcepcion {
         try {
-            return dao.getHibernateTemplate().find("from Pais"); 
+            return dao.getHibernateTemplate().find("from Pais p order by p.nombre asc"); 
         } catch (DataAccessException e) {
             throw new FWExcepcion("sigebi.error.paisDao.listar", "Error obtener los registros de tipo " + this.getClass(), e.getCause());
         }

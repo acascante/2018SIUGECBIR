@@ -55,7 +55,12 @@
             <div class="row">
                 <div class="col-sm-12">
                     <div  style="overflow: auto; padding-bottom: 20px;">
-                        <ice:dataTable id="listadoBienes" value="#{controllerListarBienes.bienes}" var="bien" paginator="true" paginatorPosition="bottom" rows="10">
+                        <ice:dataTable id="listadoBienes" 
+                                       value="#{controllerListarBienes.bienes}" 
+                                       var="bien" 
+                                       paginator="true" 
+                                       paginatorPosition="bottom" 
+                                       rows="10">
                             <f:facet name="header">
                                 <ice:columnGroup>
                                     <ice:headerRow>
@@ -134,6 +139,18 @@
                                     </ice:headerRow>
                                 </ice:columnGroup>
                             </f:facet>
+                            
+                            <ice:column style="text-align: center;">
+                                <ice:commandButton id="botonAbrir" 
+                                                   styleClass="boton" 
+                                                   partialSubmit="true"
+                                                   actionListener="#{controllerAgregarBienes.modificarRegistro}"
+                                                   value="#{label['sigebi.Bien.Listado.Detalle']}"  >
+                                    <f:attribute id="bienSeleccionado" name="bienSeleccionado"  value="#{bien}"/>
+                                    <f:attribute id="vistaOrigen" name="#{controllerListarBienes.command.keyVistaOrigen}"  value="#{controllerListarBienes.vistaOrigen}"/>
+                                </ice:commandButton>
+                            </ice:column>
+                            
                             <ice:column>
                                 <h:outputText id="idCell" value="#{bien.id}"/>
                             </ice:column>
@@ -161,14 +178,7 @@
                             <ice:column rendered="#{controllerListarBienes.command.usuarioAdmnistrador}">
                                 <h:outputText id="tipoCell" value="#{bien.unidadEjecutora.descripcion}"/>
                             </ice:column>
-                            <ice:column style="text-align: center;">
-                                <ice:commandButton id="botonAbrir" style="float:right;margin-top:2%" styleClass="boton" partialSubmit="true" visible="false"
-                                                   actionListener="#{controllerAgregarBienes.modificarRegistro}"
-                                                   value="#{label['sigebi.Bien.Listado.Detalle']}"  >
-                                    <f:attribute id="bienSeleccionado" name="bienSeleccionado"  value="#{bien}"/>
-                                    <f:attribute id="vistaOrigen" name="#{controllerListarBienes.command.keyVistaOrigen}"  value="#{controllerListarBienes.vistaOrigen}"/>
-                                </ice:commandButton>
-                            </ice:column>
+                            
                         </ice:dataTable>
                     </div>
                 </div>

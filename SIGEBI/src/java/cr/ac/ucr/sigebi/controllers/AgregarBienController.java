@@ -370,6 +370,8 @@ public class AgregarBienController extends BaseController {
                 for (Moneda item : monedas) {
                     itemsMoneda.add(new SelectItem(item.getId(), item.getDescripcion()));
                     command.getItemCommand().getItemsMoneda().put(item.getId(), item);
+                    if(command.getIdMoneda() == null && item.getDescripcion().toUpperCase().equals("COLONES") )
+                        command.setIdMoneda(item.getId());
                 }
             }
             
@@ -476,6 +478,8 @@ public class AgregarBienController extends BaseController {
                     command.setIdentificacion(identificacion);
                     command.setUsuarioRegistra(this.usuarioSIGEBI);
                     command.setFechaIngreso(new Date());
+                    command.setInicioGarantia(command.getFechaAdquisicion());
+                    
                     bien = command.getBien(null);
 
                     Estado estadoOcupado = this.estadoPorDominioValor(Constantes.DOMINIO_IDENTIFICACION, Constantes.IDENTIFICACION_ESTADO_OCUPADA);

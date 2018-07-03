@@ -894,14 +894,22 @@ public class TrasladoController extends ListadoBienesGeneralController {
             
             //Se registra el movimiento y se actualiza el bien
             Integer telefono = lVistaUsuario.getgUsuarioActual().getTelefono1() != null ? Integer.parseInt(lVistaUsuario.getgUsuarioActual().getTelefono1()) : 0;
-            bienModel.cambiaEstadoBien(bien, bien.getEstado(), Util.getEtiquetas("sigebi.Traslado.Movimiento"), telefono, 
-                    usuarioSIGEBI, this.tipoPorDominioValor(Constantes.DOMINIO_REGISTRO_MOVIMIENTO, Constantes.TIPO_REGISTRO_MOVIMIENTO_CAMBIO_ESTADO_BIEN));
+//            bienModel.cambiaEstadoBien(bien, bien.getEstado(), Util.getEtiquetas("sigebi.Traslado.Movimiento"), telefono, 
+//                    usuarioSIGEBI, this.tipoPorDominioValor(Constantes.DOMINIO_REGISTRO_MOVIMIENTO, Constantes.TIPO_REGISTRO_MOVIMIENTO_CAMBIO_ESTADO_BIEN));
             
             //PENDIENTE SINCRONIZAR CON SIAF
             if (estaAprobada()) {
                 aprobarTraslado();
             }
-            Mensaje.agregarErrorAdvertencia("PENDIENTE SINCRONIZAR CON SIAF");        //Lo sincronizamos
+            List<Bien> bienesNuevos = new ArrayList<Bien>();
+            bienesNuevos.add(bien);
+            bienModel.sincronizarBien(bienesNuevos
+                                    , Util.getEtiquetas("sigebi.sincronizarBien.Observacion.Traslado")
+                                    , telefono
+                                    , this.usuarioSIGEBI
+                                    , this.estadoPorDominioValor(Constantes.DOMINIO_BIEN, Constantes.ESTADO_BIEN_ACTIVO)
+                                    );
+            //Mensaje.agregarErrorAdvertencia("PENDIENTE SINCRONIZAR CON SIAF");        //Lo sincronizamos
 
             cerrarConfirmacion();
 

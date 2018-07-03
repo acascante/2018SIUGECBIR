@@ -55,7 +55,6 @@
                             <div class="form-group">
                                 <label class="control-label" for="txtunidadReceptora">
                                     <ice:outputText value="#{label['sigebi.label.vista.detalleSolicitudDonacion.unidadReceptora']}" /> 
-                                    <ice:outputText value="#{label['label.requerido']}" />
                                 </label>                                               
                                 <ice:inputText id="txtunidadReceptora" 
                                                styleClass="form-control" 
@@ -64,14 +63,6 @@
                                                value="#{controllerSolicitudDonacion.command.solicitudDonacion.unidadReceptora.descripcion}" >
                                 </ice:inputText>
                             </div>
-                        </div>
-
-                        <div class="col-sm-2">
-                            <ice:commandButton id="botonBuscarUnidad" value="#{label['sigebi.label.vista.detalleSolicitudDonacion.buscar']}"  partialSubmit="true" styleClass="boton" style="margin-top: 1.5rem"
-                                               actionListener="#{controllerSolicitudDonacion.mostrarPanel}">
-                                <f:attribute id="accion" name="accion"  value="1"/>
-                            </ice:commandButton>
-                            
                         </div>
                     </div>
                 </div>
@@ -117,7 +108,8 @@
                                            styleClass="form-control"
                                            partialSubmit="true"
                                            value="#{controllerSolicitudDonacion.command.solicitudDonacion.pais.idTemporal}"
-                                           valueChangeListener="#{controllerSolicitudDonacion.cambiarPais}">
+                                           valueChangeListener="#{controllerSolicitudDonacion.cambiarPais}"
+                                           readonly="#{controllerSolicitudDonacion.habilitarPais}">
                                            <f:selectItem itemLabel="N/A" itemValue="-1"/>
                                            <f:selectItems id="slcPaisItem" value="#{controllerSolicitudDonacion.command.paisOptions}"/>
                         </ice:selectOneMenu>

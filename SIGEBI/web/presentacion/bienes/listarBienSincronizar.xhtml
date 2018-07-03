@@ -66,6 +66,19 @@
                                    paginatorPosition="bottom"
                                    rows="10">
 
+                            
+                            <ice:column style="text-align: center;">
+                                <ice:commandButton id="botonAbrir"
+                                                   style="margin: 0 auto;" 
+                                                   styleClass="boton" 
+                                                   partialSubmit="true" 
+                                                   actionListener="#{controllerAgregarBienes.modificarRegistro}"
+                                                   value="#{label['sigebi.label.vista.listarBienSincronizar.detalle']}"  >
+                                    <f:attribute id="bienSeleccionado" name="bienSeleccionado"  value="#{bien}"/>
+                                    <f:attribute id="vistaOrigenParam" name="keyVistaOrigen"  value="sincronizar"/>
+                                </ice:commandButton>
+                            </ice:column>
+                            
                             <ice:column id="idBien">                                 
                                 <f:facet name="header">
                                     <ice:columnGroup>
@@ -213,19 +226,7 @@
                             </ice:column>
                                      
                             
-                            <ice:column style="text-align: center;">
 
-                                <ice:commandButton id="botonAbrir"
-                                                   style="float:right;margin-top:2%" 
-                                                   styleClass="boton" 
-                                                   partialSubmit="true" 
-                                                   actionListener="#{controllerAgregarBienes.modificarRegistro}"
-                                                   value="#{label['sigebi.label.vista.listarBienSincronizar.detalle']}"  >
-                                    <f:attribute id="bienSeleccionado" name="bienSeleccionado"  value="#{bien}"/>
-                                    <f:attribute id="vistaOrigenParam" name="keyVistaOrigen"  value="sincronizar"/>
-                                </ice:commandButton>
-
-                                </ice:column>
                         </ice:dataTable>
 
                     </div>
