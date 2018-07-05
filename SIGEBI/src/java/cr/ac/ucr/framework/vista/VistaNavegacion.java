@@ -127,6 +127,9 @@ public class VistaNavegacion {
         //Mis Bienes
         gPaginas.put(Constantes.KEY_VISTA_MIS_BIENES, Constantes.VISTA_MIS_BIENES);
         
+        //Agregar Identificaciones
+        gPaginas.put(Constantes.VISTA_AGREGAR_IDENTIFICACIONES, Constantes.VISTA_AGREGAR_IDENTIFICACIONES_PAGINA);
+        
 
     }//fin del método inicializar
 

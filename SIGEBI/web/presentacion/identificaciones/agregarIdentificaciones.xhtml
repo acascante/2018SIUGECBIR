@@ -1,0 +1,172 @@
+<ice:form id="frmAgregarIdentificaciones" 
+          xmlns:ice="http://www.icesoft.com/icefaces/component" 
+          xmlns:h="http://java.sun.com/jsf/html" 
+          xmlns:f="http://java.sun.com/jsf/core" 
+          xmlns:ui="http://java.sun.com/jsf/facelets">
+    
+    <div class="contenido-pagina">
+        <div class="container">
+            
+            <!--Encabezado-->
+            <div class="row">
+                <div class='col-sm-10'>
+                    <h1 style="margin: 0;">
+                        <ice:outputFormat value="#{label['sigebi.label.identificaciones.titulo.agregar']} "/>
+                    </h1>
+                </div>
+            </div>
+            
+            <!--Mensaje Exito-->
+            <div class="row">
+                <div class="col-sm-12">
+                    <ice:outputText style="color: red;" value="#{controllerAgregarIdentificaciones.mensaje} "/>
+                    <h:messages style="color:red;"/>
+                </div>
+            </div>
+        
+            <!--Ultimo Registro-->
+            <div class="row">
+                <div class='col-sm-10'>
+                    <h1 style="margin: 0;">
+                        <ice:outputFormat value="#{label['sigebi.label.identificaciones.titulo.ultimo.registro']} "/>
+                    </h1>
+                </div>
+            </div>
+            
+            <div class="row">
+                <div class="col-md-2">
+                    <div class="form-group"> 
+                        <ice:outputText value="#{label['sigebi.label.identificaciones.identificacion']}" />
+                        <ice:inputText id="txtUltimaIdentificacion" value="#{controllerAgregarIdentificaciones.command.ultimoRegistro.identificacion}" partialSubmit="false" styleClass="form-control" readonly="true"/>
+                    </div>                                             
+                </div>
+            </div>
+            
+            <!-- Estado & Tipo -->
+            <div class="row">
+                <div class="col-md-2">
+                    <div class="form-group"> 
+                        <ice:outputText value="#{label['sigebi.label.identificaciones.estado']}" />
+                        <ice:inputText id="txtEstado" value="#{controllerAgregarIdentificaciones.command.estadoNuevo.nombre}" partialSubmit="false" styleClass="form-control" readonly="true"/>
+                    </div>                                             
+                </div>
+
+                <ice:panelGroup rendered="#{controllerAgregarIdentificaciones.usuarioAdministrador}">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group"> 
+                                <ice:outputText value="#{label['sigebi.label.identificaciones.tipo']}" />
+                                <ice:selectOneMenu  id="cmbTipo" partialSubmit="true" styleClass="form-control"
+                                                    value="#{controllerAgregarIdentificaciones.command.idTipo}">
+                                    <f:selectItem itemLabel="N/A" itemValue="-1"/>
+                                    <f:selectItems id="selectTipoItem" value="#{controllerAgregarIdentificaciones.command.itemsTipo}"/>
+                                </ice:selectOneMenu>
+                            </div>
+                        </div>
+                    </div>
+                </ice:panelGroup>
+            </div>
+            
+            <!-- Prefijo -->
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <ice:outputText value="#{label['sigebi.label.identificaciones.prefijo']}" /> 
+                        <ice:inputText id="txtPrefijo" styleClass="form-control" partialSubmit="true"
+                                       value="#{controllerAgregarIdentificaciones.command.prefijo}" >
+                        </ice:inputText>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Rango -->
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <ice:outputText value="#{label['sigebi.label.identificaciones.rango']}" /> 
+                        <ice:inputText id="txtRangoInicial" styleClass="form-control" partialSubmit="true"
+                                       value="#{controllerAgregarIdentificaciones.command.rangoInicial}" >
+                        </ice:inputText>
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="form-group">
+                        <ice:outputText value="#{label['sigebi.label.identificaciones.a']}" /> 
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <ice:outputText value="#{label['sigebi.label.identificaciones.prefijo']}" /> 
+                        <ice:inputText id="txtRangoFinal" styleClass="form-control" partialSubmit="true"
+                                       value="#{controllerAgregarIdentificaciones.command.rangoFinal}" >
+                        </ice:inputText>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="row">
+                <div class="col-md-4">
+                    <ice:commandButton id="botonGuardar"  value="#{label['label.guardar']}" action="#{controllerAgregarIdentificaciones.agregarIdentificaciones}" partialSubmit="true" styleClass="boton" />
+                </div>
+            </div>
+            
+            <!--Tabla Tipo-->
+            <ice:panelGroup rendered="#{controllerAgregarIdentificaciones.visibleListaIdentificaciones}">
+                <div class="row">
+                    <div class="col-sm-8">
+                        <div class="container" style="overflow: auto; padding-bottom: 20px;">
+                            <div class="row">
+                                <h4>
+                                    <ice:outputFormat value="#{label['sigebi.label.identificaciones.titulo.identificaciones.existentes']}" />
+                                </h4>
+                            </div>
+                            <div class="row" >
+                                <ice:dataTable id="listadoCampos" value="#{controllerAgregarIdentificaciones.command.identificacionesExistentes}" var="identificacion">
+                                    <ice:column id="identificacion" >
+                                        <f:facet name="header">
+                                            <ice:outputText value="#{label['sigebi.label.identificaciones.identificacion']} "/>
+                                        </f:facet>
+                                        <h:outputText id="identificacionCell" value="#{identificacion.identificacion}"/>
+                                    </ice:column>
+                                    
+                                    <ice:column id="tipo" >
+                                        <f:facet name="header">
+                                            <ice:outputText value="#{label['sigebi.label.identificaciones.tipo']} "/>
+                                        </f:facet>
+                                        <h:outputText id="tipoCell" value="#{identificacion.tipo.nombre}"/>
+                                    </ice:column>
+                                    
+                                    <ice:column id="estado" >
+                                        <f:facet name="header">
+                                            <ice:outputText value="#{label['sigebi.label.identificaciones.estado']} "/>
+                                        </f:facet>
+                                        <h:outputText id="estadoCell" value="#{identificacion.estado.nombre}"/>
+                                    </ice:column>
+                                    
+                                    <ice:column id="unidad" >
+                                        <f:facet name="header">
+                                            <ice:outputText value="#{label['sigebi.label.identificaciones.unidad']} "/>
+                                        </f:facet>
+                                        <h:outputText id="unidadCell" value="#{identificacion.unidadEjecutora.descripcion}"/>
+                                    </ice:column>
+                                    
+                                    <ice:column id="asignacion" >
+                                        <f:facet name="header">
+                                            <ice:outputText value="#{label['sigebi.label.identificaciones.asignacion']} "/>
+                                        </f:facet>
+                                        <h:outputText id="asignacionCell" value="#{identificacion.asignacionPlaca.id}"/>
+                                    </ice:column>
+                                </ice:dataTable>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </ice:panelGroup>
+        </div>
+        
+        <!-- Panel de confirmacion --> 
+        <ui:insert name="modalConfirmacion">
+            <ui:include src="../identificaciones/panelConfirmacion.xhtml" />
+        </ui:insert>        
+    </div>
+</ice:form>

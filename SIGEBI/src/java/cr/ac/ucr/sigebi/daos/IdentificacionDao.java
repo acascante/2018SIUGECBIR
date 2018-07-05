@@ -86,7 +86,6 @@ public class IdentificacionDao extends GenericDaoImpl {
         }
     }
     
-    
     @Transactional(readOnly = true)
     public List<Identificacion> listar(AsignacionPlaca asignacionPlaca, Estado estadoIdentificacion) {
         Session session = dao.getSessionFactory().openSession();
@@ -114,6 +113,28 @@ public class IdentificacionDao extends GenericDaoImpl {
         }
     }
     
+    @Transactional
+    public Boolean almacenar(Identificacion identificacion) {
+        try {
+            persist(identificacion);
+            return true;
+        } catch (Exception e) {        
+            return false;
+        }
+    }    
+    
+    @Transactional(readOnly = true)
+    public Identificacion buscarUltimoRegistro() throws FWExcepcion {
+        Session session = dao.getSessionFactory().openSession();
+        try {
+            Query query = session.createQuery("SELECT i FROM Identificacion i WHERE i.id in (SELECT MAX(i1.id) FROM Identificacion i1)");
+            return (Identificacion)query.uniqueResult();
+        } catch (HibernateException e) {
+            throw new FWExcepcion("sigebi.error.identificacionDao.siguienteDisponible", "Error contando los registros de tipo " + this.getClass(), e.getCause());
+        } finally {
+            session.close();        
+        }        
+    }    
     
     @Transactional(readOnly = true)
     public Identificacion buscarPorIdentificacion(String identificacion) throws FWExcepcion {
@@ -129,7 +150,6 @@ public class IdentificacionDao extends GenericDaoImpl {
             session.close();
         }
     }
-    
     
     @Transactional(readOnly = true)
     public Long cantidadDisponibles(UnidadEjecutora unidadEjecutora, Estado estado) throws FWExcepcion {

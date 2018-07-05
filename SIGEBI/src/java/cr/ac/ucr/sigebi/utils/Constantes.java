@@ -295,6 +295,10 @@ public final class Constantes {
     public static final String VISTA_SINCRONIZACION_BIEN = "sincronizar";
     public static final String VISTA_SINCRONIZACION_BIEN_LISTADO = "../bienes/listarBienSincronizar.xhtml";
     
+    //Agregar Identificaciones
+    public static final String VISTA_AGREGAR_IDENTIFICACIONES = "gen_identificaciones";
+    public static final String VISTA_AGREGAR_IDENTIFICACIONES_PAGINA = "../identificaciones/agregarIdentificaciones.xhtml";
+    
     public static final String VISTA_MANTENIMIENTO_LISTADO = "mantenimiento";
     public static final String VISTA_MANTENIMIENTO_LISTADO_PAGINA = "../mantenimientos/listarMantenimientos.xhtml";
     public static final String VISTA_MANTENIMIENTO_NUEVO = "mantenimiento_nueva";
@@ -395,7 +399,6 @@ public final class Constantes {
     public static final String VISTA_ASIGNACIONPLACA_DETALLE = "../asignacionPlaca/detalleAsignacionPlacas.xhtml";
     public static final String VISTA_LISTAR_ASIGNACION_PLACA = "../asignacionPlaca/listarAsignacionPlacas.xhtml";
     public static final String KEY_VISTA_LISTAR_ASIGNACION_PLACA = "sol_placas";
-    
     
     //ACCIONES TRASLADOS
     public static final String DOCUMENTO_TRASLADO = "TRASLADO";

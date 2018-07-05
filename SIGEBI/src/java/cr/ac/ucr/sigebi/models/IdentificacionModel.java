@@ -61,8 +61,16 @@ public class IdentificacionModel {
         }
     }
 
+    public Identificacion buscarUltimoRegistro() throws FWExcepcion {
+        return identificacionDao.buscarUltimoRegistro();
+    }
+    
     public void actualizar(Identificacion identificacion) {
         identificacionDao.actualizar(identificacion);
+    }
+    
+    public Boolean almacenar(Identificacion identificacion) {
+        return identificacionDao.almacenar(identificacion);
     }
     
     public Identificacion buscarPorIdentificacion(String identificacion) throws FWExcepcion{
