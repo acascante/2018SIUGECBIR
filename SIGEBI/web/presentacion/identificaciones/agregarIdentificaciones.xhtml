@@ -15,28 +15,12 @@
                     </h1>
                 </div>
             </div>
-            
-            <!--Mensaje Exito-->
-            <div class="row">
-                <div class="col-sm-12">
-                    <ice:outputText style="color: red;" value="#{controllerAgregarIdentificaciones.mensaje} "/>
-                    <h:messages style="color:red;"/>
-                </div>
-            </div>
         
             <!--Ultimo Registro-->
             <div class="row">
-                <div class='col-sm-10'>
-                    <h1 style="margin: 0;">
-                        <ice:outputFormat value="#{label['sigebi.label.identificaciones.titulo.ultimo.registro']} "/>
-                    </h1>
-                </div>
-            </div>
-            
-            <div class="row">
-                <div class="col-md-2">
+                <div class="col-md-6">
                     <div class="form-group"> 
-                        <ice:outputText value="#{label['sigebi.label.identificaciones.identificacion']}" />
+                        <ice:outputFormat value="#{label['sigebi.label.identificaciones.titulo.ultimo.registro']} "/>
                         <ice:inputText id="txtUltimaIdentificacion" value="#{controllerAgregarIdentificaciones.command.ultimoRegistro.identificacion}" partialSubmit="false" styleClass="form-control" readonly="true"/>
                     </div>                                             
                 </div>
@@ -44,27 +28,12 @@
             
             <!-- Estado & Tipo -->
             <div class="row">
-                <div class="col-md-2">
+                <div class="col-md-6">
                     <div class="form-group"> 
                         <ice:outputText value="#{label['sigebi.label.identificaciones.estado']}" />
                         <ice:inputText id="txtEstado" value="#{controllerAgregarIdentificaciones.command.estadoNuevo.nombre}" partialSubmit="false" styleClass="form-control" readonly="true"/>
                     </div>                                             
                 </div>
-
-                <ice:panelGroup rendered="#{controllerAgregarIdentificaciones.usuarioAdministrador}">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="form-group"> 
-                                <ice:outputText value="#{label['sigebi.label.identificaciones.tipo']}" />
-                                <ice:selectOneMenu  id="cmbTipo" partialSubmit="true" styleClass="form-control"
-                                                    value="#{controllerAgregarIdentificaciones.command.idTipo}">
-                                    <f:selectItem itemLabel="N/A" itemValue="-1"/>
-                                    <f:selectItems id="selectTipoItem" value="#{controllerAgregarIdentificaciones.command.itemsTipo}"/>
-                                </ice:selectOneMenu>
-                            </div>
-                        </div>
-                    </div>
-                </ice:panelGroup>
             </div>
             
             <!-- Prefijo -->
@@ -77,31 +46,42 @@
                         </ice:inputText>
                     </div>
                 </div>
+                <div class="col-md-6">
+                    <ice:panelGroup rendered="#{controllerAgregarIdentificaciones.usuarioAdministrador}">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group"> 
+                                    <ice:outputText value="#{label['sigebi.label.identificaciones.tipo']}" />
+                                    <ice:selectOneMenu  id="cmbTipo" partialSubmit="true" styleClass="form-control"
+                                                        value="#{controllerAgregarIdentificaciones.command.idTipo}">
+                                        <f:selectItems id="selectTipoItem" value="#{controllerAgregarIdentificaciones.command.itemsTipo}"/>
+                                    </ice:selectOneMenu>
+                                </div>
+                            </div>
+                        </div>
+                    </ice:panelGroup>
+                </div>
             </div>
             
             <!-- Rango -->
             <div class="row">
                 <div class="col-md-4">
-                    <div class="form-group">
-                        <ice:outputText value="#{label['sigebi.label.identificaciones.rango']}" /> 
-                        <ice:inputText id="txtRangoInicial" styleClass="form-control" partialSubmit="true"
-                                       value="#{controllerAgregarIdentificaciones.command.rangoInicial}" >
-                        </ice:inputText>
-                    </div>
+                    <ice:outputText value="#{label['sigebi.label.identificaciones.rango']}" /> 
                 </div>
-                <div class="col-md-2">
-                    <div class="form-group">
-                        <ice:outputText value="#{label['sigebi.label.identificaciones.a']}" /> 
-                    </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4">
+                    <ice:inputText id="txtRangoInicial" styleClass="form-control" 
+                                   value="#{controllerAgregarIdentificaciones.command.rangoInicial}" >
+                    </ice:inputText>
+                </div>
+                <div class="col-md-2" align="center">
+                    <ice:outputText value="#{label['sigebi.label.identificaciones.a']}" /> 
                 </div>
                 <div class="col-md-4">
-                    <div class="form-group">
-                        <ice:outputText value="#{label['sigebi.label.identificaciones.prefijo']}" /> 
-                        <ice:inputText id="txtRangoFinal" styleClass="form-control" partialSubmit="true"
-                                       value="#{controllerAgregarIdentificaciones.command.rangoFinal}" >
-                        </ice:inputText>
-                    </div>
-                </div>
+                    <ice:inputText id="txtRangoFinal" styleClass="form-control" partialSubmit="true"
+                                    value="#{controllerAgregarIdentificaciones.command.rangoFinal}" />
+                </div>                
             </div>
             
             <div class="row">

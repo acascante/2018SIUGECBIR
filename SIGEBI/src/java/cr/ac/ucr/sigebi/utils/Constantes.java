@@ -260,6 +260,7 @@ public final class Constantes {
     public static final Integer IDENTIFICACION_ESTADO_DISPONIBLE = 1;
     public static final Integer IDENTIFICACION_ESTADO_OCUPADA = 2;
     public static final Integer IDENTIFICACION_ESTADO_RESERVADA_UNIDAD = 3;
+    public static final String IDENTIFICACION_TIPO_ID_UNIDAD = "ID UNIDAD";
 
     //codigos de documentos
     public static final Integer CODIGO_AUTORIZACION_INFORME_EXCLUSION = 1;

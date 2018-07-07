@@ -18,9 +18,13 @@ import cr.ac.ucr.sigebi.models.IdentificacionModel;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
+import javax.faces.application.FacesMessage;
+import javax.faces.component.UIComponent;
+import javax.faces.component.UIInput;
 import javax.faces.component.UIViewRoot;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
+import javax.faces.validator.ValidatorException;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
@@ -55,6 +59,9 @@ public class AgregarIdentificacionesController extends BaseController {
         if (!tipos.isEmpty()) {
             for (Tipo tipo : tipos) {
                 this.command.getItemsTipo().add(new SelectItem(tipo.getId(), tipo.getNombre()));
+                if (tipo.getNombre().equals(Constantes.IDENTIFICACION_TIPO_ID_UNIDAD)) {
+                    this.command.setIdTipo(tipo.getId());
+                }
             }
         }
         
@@ -72,26 +79,38 @@ public class AgregarIdentificacionesController extends BaseController {
     }
         
     public void agregarIdentificaciones() {
-        this.visiblePanelConfirmacion = true;
+        FacesContext context = FacesContext.getCurrentInstance();
+        UIViewRoot root = context.getViewRoot();
+        String messageValidacion = validarForm(root);
+        if (Constantes.OK.equals(messageValidacion)) {
+            this.visiblePanelConfirmacion = true;
+        } else {
+            Mensaje.agregarErrorAdvertencia(messageValidacion);
+        }
     }
     
     public void agregarIdentificacionesAceptar() {
         try {
-            FacesContext context = FacesContext.getCurrentInstance();
-            UIViewRoot root = context.getViewRoot();
-            String messageValidacion = validarForm(root);
-            if (Constantes.OK.equals(messageValidacion)) {
-                Tipo tipo = this.tipoPorId(command.getIdTipo());
-                List<Identificacion> identificaciones = this.command.getIdentificaciones(tipo, unidadEjecutora);
-                for (Identificacion identificacion : identificaciones) {
-                    if (!identificacionModel.almacenar(identificacion)) {
-                        this.command.getIdentificacionesExistentes().add(identificacion);
-                    }
+            this.command.getIdentificacionesExistentes().clear();
+            Tipo tipo = this.tipoPorId(command.getIdTipo());
+            List<Identificacion> identificaciones = this.command.getIdentificaciones(tipo, unidadEjecutora);
+            Identificacion ultimaIdentificacion = null;
+            for (Identificacion identificacion : identificaciones) {
+                if (!identificacionModel.almacenar(identificacion)) {
+                    this.command.getIdentificacionesExistentes().add(identificacion);
                 }
-                Mensaje.agregarInfo("Proceso finalizado exitosamente, verifique los datos almacenados");
-                this.visiblePanelConfirmacion = false;
+                ultimaIdentificacion = identificacion;
+            }
+            this.visiblePanelConfirmacion = false;
+            if (this.command.getIdentificacionesExistentes().isEmpty()) {
+                Mensaje.agregarInfo("Datos almacenados exitosamente");
+                visibleListaIdentificaciones = false;
             } else {
-                Mensaje.agregarErrorAdvertencia(messageValidacion);
+                Mensaje.agregarInfo("Proceso finalizado exitosamente, verifique los datos almacenados");
+                visibleListaIdentificaciones = true;
+            }
+            if (ultimaIdentificacion != null) {
+                this.command.setUltimoRegistro(ultimaIdentificacion);
             }
         } catch (FWExcepcion err) {
             this.mensaje = err.getMessage();
@@ -110,7 +129,7 @@ public class AgregarIdentificacionesController extends BaseController {
         }
         return Constantes.OK;
     }
-    
+     
     //<editor-fold defaultstate="collapsed" desc="Gets y Sets">
     public IdentificacionCommand getCommand() {
         return command;
