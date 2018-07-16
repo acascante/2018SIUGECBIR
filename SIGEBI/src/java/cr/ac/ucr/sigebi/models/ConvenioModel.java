@@ -32,8 +32,8 @@ public class ConvenioModel {
         return convenioDao.buscarPorId(id);
     }
     
-    public List<Convenio> listar(Integer primerRegistro, Integer ultimoRegistro, Long id, String institucion, String responsable, String oficio, Integer estado) throws FWExcepcion {
-        return convenioDao.listar(primerRegistro, ultimoRegistro, id, institucion, responsable, oficio, estado);
+    public List<Convenio> listar(Integer primerRegistro, Integer ultimoRegistro, Long id, String institucion, String responsable, String oficio, Long idEstado) throws FWExcepcion {
+        return convenioDao.listar(primerRegistro, ultimoRegistro, id, institucion, responsable, oficio, idEstado);
     }
     
     public List<Convenio> listarActivos(UnidadEjecutora unidadEjecutora, Date fecha) throws FWExcepcion {
@@ -48,7 +48,7 @@ public class ConvenioModel {
         convenioDao.salvar(convenio);
     }
 
-    public Long contar(Long id, String institucion, String responsable, String oficio, Integer estado) throws FWExcepcion {
-        return convenioDao.contar(id, institucion, responsable, oficio, estado);
+    public Long contar(Long id, String institucion, String responsable, String oficio, Long idEstado) throws FWExcepcion {
+        return convenioDao.contar(id, institucion, responsable, oficio, idEstado);
     }
 }

@@ -20,25 +20,18 @@ public class ListarRecepcionPrestamosCommand {
     //</editor-fold>
     
     //<editor-fold defaultstate="collapsed" desc="Atributos">
-    private String fltId;
-    private String fltDescripcion;
-    private String fltIdentificacion;
-    private Long fltEstado;
-    private Long fltConvenio;
-    private Date fltFechaIngreso;
-    private Date fltFechaDevolucion;
+    private static String fltId = "";
+    private static String fltDescripcion = "";
+    private static String fltIdentificacion = "";
+    private static Long fltEstado = -1L;
+    private static Long fltConvenio = -1L;
+    private static Date fltFechaIngreso = null;
+    private static Date fltFechaDevolucion = null;
     //</editor-fold>
     
     //<editor-fold defaultstate="collapsed" desc="Constructores">
     public ListarRecepcionPrestamosCommand() { 
         super();
-        this.fltId = new String();
-        this.fltDescripcion = new String();
-        this.fltIdentificacion = new String();
-        this.fltEstado = -1L;
-        this.fltConvenio = -1L;
-        this.fltFechaIngreso = null;
-        this.fltFechaDevolucion = null;
     }
     //</editor-fold>
  
@@ -60,7 +53,7 @@ public class ListarRecepcionPrestamosCommand {
     }
     
     public Long getFltIdCodigo() {
-        if (this.fltId.isEmpty()) {
+        if (ListarRecepcionPrestamosCommand.fltId.isEmpty()) {
             return 0L;
         }
         return Long.valueOf(fltId);
@@ -71,7 +64,7 @@ public class ListarRecepcionPrestamosCommand {
     }
 
     public void setFltId(String fltId) {
-        this.fltId = fltId;
+        ListarRecepcionPrestamosCommand.fltId = fltId;
     }
 
     public String getFltDescripcion() {
@@ -79,7 +72,7 @@ public class ListarRecepcionPrestamosCommand {
     }
 
     public void setFltDescripcion(String fltDescripcion) {
-        this.fltDescripcion = fltDescripcion;
+        ListarRecepcionPrestamosCommand.fltDescripcion = fltDescripcion;
     }
 
     public String getFltIdentificacion() {
@@ -87,7 +80,7 @@ public class ListarRecepcionPrestamosCommand {
     }
 
     public void setFltIdentificacion(String fltIdentificacion) {
-        this.fltIdentificacion = fltIdentificacion;
+        ListarRecepcionPrestamosCommand.fltIdentificacion = fltIdentificacion;
     }
 
     public Long getFltEstado() {
@@ -95,7 +88,7 @@ public class ListarRecepcionPrestamosCommand {
     }
 
     public void setFltEstado(Long fltEstado) {
-        this.fltEstado = fltEstado;
+        ListarRecepcionPrestamosCommand.fltEstado = fltEstado;
     }
 
     public Long getFltConvenio() {
@@ -103,7 +96,7 @@ public class ListarRecepcionPrestamosCommand {
     }
 
     public void setFltConvenio(Long fltConvenio) {
-        this.fltConvenio = fltConvenio;
+        ListarRecepcionPrestamosCommand.fltConvenio = fltConvenio;
     }
 
     public Date getFltFechaIngreso() {
@@ -111,7 +104,7 @@ public class ListarRecepcionPrestamosCommand {
     }
 
     public void setFltFechaIngreso(Date fltFechaIngreso) {
-        this.fltFechaIngreso = fltFechaIngreso;
+        ListarRecepcionPrestamosCommand.fltFechaIngreso = fltFechaIngreso;
     }
 
     public Date getFltFechaDevolucion() {
@@ -119,7 +112,7 @@ public class ListarRecepcionPrestamosCommand {
     }
 
     public void setFltFechaDevolucion(Date fltFechaDevolucion) {
-        this.fltFechaDevolucion = fltFechaDevolucion;
+        ListarRecepcionPrestamosCommand.fltFechaDevolucion = fltFechaDevolucion;
     }
     //</editor-fold>
 }

@@ -23,6 +23,8 @@ import javax.faces.component.UIComponent;
 import javax.faces.component.UIInput;
 import javax.faces.component.UIViewRoot;
 import javax.faces.context.FacesContext;
+import javax.faces.event.PhaseId;
+import javax.faces.event.ValueChangeEvent;
 import javax.faces.model.SelectItem;
 import javax.faces.validator.ValidatorException;
 import org.springframework.context.annotation.Scope;
@@ -67,10 +69,23 @@ public class AgregarIdentificacionesController extends BaseController {
         
         this.command.setEstadoNuevo(this.estadoPorDominioValor(Constantes.DOMINIO_IDENTIFICACION, Constantes.IDENTIFICACION_ESTADO_RESERVADA_UNIDAD));
         
-        this.command.setUltimoRegistro(identificacionModel.buscarUltimoRegistro());
+        this.buscarUltimoRegistro();
         
         AutorizacionRolPersona administrador = autorizacionRolPersonaModel.buscar(Constantes.CODIGO_AUTORIZACION_ADMINISTRADOR, Constantes.CODIGO_ROL_ADMINISTRADOR_AUTORIZACION_ADMINISTRADOR, usuarioSIGEBI, unidadEjecutora);
         usuarioAdministrador = administrador == null ? false : true;
+    }
+    
+    public void buscarUltimoRegistroListener(ValueChangeEvent pEvent) {
+        if (!pEvent.getPhaseId().equals(PhaseId.INVOKE_APPLICATION)) {
+            pEvent.setPhaseId(PhaseId.INVOKE_APPLICATION);
+            pEvent.queue();
+            return;
+        }
+        buscarUltimoRegistro();
+    }
+    
+    private void buscarUltimoRegistro() {
+        this.command.setUltimoRegistro(identificacionModel.buscarUltimoRegistro(this.command.getIdTipo()));
     }
     
     private void inicializarDatos() {

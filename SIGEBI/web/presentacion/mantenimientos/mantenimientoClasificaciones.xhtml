@@ -1,0 +1,257 @@
+<ice:form id="frmDetalleBien" xmlns:ice="http://www.icesoft.com/icefaces/component" xmlns:icecore="http://www.icefaces.org/icefaces/core" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core" xmlns:ui="http://java.sun.com/jsf/facelets">
+
+    <div class="contenido-pagina">
+        
+        <div class="container">
+            <div class="row">
+                <div class='col-sm-6'>
+                    <h1 style="margin: 0;">
+                        <ice:outputFormat value="#{label['sigebi.Bien.Label.HeaderBienes']}" />
+                    </h1>
+                </div>
+            </div>
+            
+            
+            
+        <!-- ROW CATEGORIA -->
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group"> 
+                    <ice:outputText value="#{label['sigebi.Bien.Label.Categoria']}" />                                 
+                    <ice:selectOneMenu  id="selCategoria" styleClass="form-control" partialSubmit="true"
+                                        valueChangeListener="#{mantClasifController.cambioCategoria}"
+                                        value="#{mantClasifController.command.idCategoria}" >
+                            <f:selectItem itemLabel="Seleccionar Categoría" itemValue="-1"/>
+                            <f:selectItems id="optSelCategoria" value="#{mantClasifController.itemsCategoria}"/>
+                    </ice:selectOneMenu>
+                </div>                                             
+            </div>
+
+            <div class="col-md-6">
+                <div class="form-group"> 
+                    <ice:outputText value="#{label['sigebi.Bien.Label.SubCategoria']}" /> 
+                    <ice:selectOneMenu id="selSubCategoria" styleClass="form-control" partialSubmit="true"
+                                       readonly="#{mantClasifController.disableSubCategorias}"
+                                       value="#{mantClasifController.command.idSubCategoria}" 
+                                       valueChangeListener="#{mantClasifController.cambioSubCategoria}">
+                        <f:selectItem itemLabel="Seleccionar Sub Categoría" itemValue="-1"/>
+                        <f:selectItems id="optSelSubCateg" value="#{mantClasifController.itemsSubCategoria}"/>
+                    </ice:selectOneMenu>
+                </div>                                             
+            </div>
+        </div>
+
+        <!-- ROW CLASIFICACION -->
+        <div class="row">
+            <div class="col-md-6">
+                <ice:commandButton id="btnNuevaClasificacion" 
+                                   action="#{mantClasifController.btnNuevaClasificacion}" 
+                                   rendered="#{mantClasifController.command.idSubCategoria > 0}"
+                                   styleClass="boton" 
+                                   style=" float: right;" 
+                                   value="Nueva Clasificación" />
+                <br/>
+                <div class="form-group"> 
+                    <ice:outputText value="#{label['sigebi.Bien.Label.Clasificacion']}" /> 
+                    <ice:selectOneMenu id="selClasificacion" styleClass="form-control" partialSubmit="true"
+                                       readonly="#{mantClasifController.disableClasificaciones}"
+                                       value="#{mantClasifController.command.idClasificacion}" 
+                                       valueChangeListener="#{mantClasifController.cambioClasificacion}">
+                        <f:selectItem itemLabel="Seleccionar Clasificación" itemValue="-1"/>
+                        <f:selectItems id="optSelClasificacion" value="#{mantClasifController.itemsClasificacion}"/>
+                    </ice:selectOneMenu>
+                </div>  
+                
+                <ice:commandButton id="btnEditarClasificacion" 
+                                   action="#{mantClasifController.editarClasificacion}" 
+                                   styleClass="boton" 
+                                   rendered="#{mantClasifController.command.idClasificacion > 0}"
+                                   style=" float: right;" 
+                                   value="Editar" />
+            </div>
+
+            <div class="col-md-6">
+                <ice:commandButton id="btnNuevaSubClasificacion" 
+                                   action="#{mantClasifController.btnNuevaSubClasificacion}" 
+                                   rendered="#{mantClasifController.command.idClasificacion > 0}"
+                                   styleClass="boton" 
+                                   style="float: right;" 
+                                   value="Nueva Sub Clasificación" />
+                <br/>
+                <div class="form-group"> 
+                    <ice:outputText value="#{label['sigebi.Bien.Label.SubClasificacion']}" /> 
+                    <ice:selectOneMenu id="selSubClasificacion" styleClass="form-control" partialSubmit="true"
+                                       readonly="#{mantClasifController.disableSubClasificaciones}"
+                                       value="#{mantClasifController.command.idSubClasificacion}"
+                                       >
+                        <f:selectItem itemLabel="#{label['sigebi.Bien.Select.SubClasificacion']}" itemValue="-1"/>
+                        <f:selectItems id="optSelSubclasificacion" value="#{mantClasifController.itemsSubClasificacion}"/>
+                    </ice:selectOneMenu>
+                </div>  
+                
+                <ice:commandButton id="btnEditarSubClasificacion" 
+                                   action="#{mantClasifController.editarSubClasificacion}" 
+                                   rendered="#{mantClasifController.command.idSubClasificacion > 0}"
+                                   styleClass="boton" 
+                                   style=" float: right;" 
+                                   value="Editar" />
+                
+            </div>
+        </div>
+
+            
+            
+          
+        <div class="row">
+            <div class="col-md-11 align-self-md-end">
+                
+            </div>
+        </div>  
+            
+        
+        
+        
+        
+        
+        
+        
+        <!--Modal Clasificación-->
+        <ice:panelPopup modal="true" 
+                        visible="#{mantClasifController.mostrarVentClasificacion}" 
+                        styleClass="popup">
+            <f:facet name="header">
+                <ice:outputFormat value="#{label['sigebi.MantClasific.ModalClasif']}"/>
+            </f:facet> 
+
+            <f:facet name="body">
+                <fieldset class="panel_Container" >
+                    <div class="container" style="margin-top: 30px;">
+
+                        <div class="row">
+                            <div class='col-md-12'>
+                                <h5 style="margin: 0;">
+                                    <ice:outputFormat value="#{label['sigebi.MantClasific.ModalClasifNombre']}" />
+                                </h5>
+                            </div>
+                        </div>
+
+
+                        <div class="row">
+                            <div class='col-md-12'>
+                                <div class="form-group"> 
+                                    <ice:outputText value="#{label['sigebi.Bien.Label.Clasificacion']}" />
+                                    <ice:inputText id="txtClasificacionNombre" 
+                                       styleClass="form-control" 
+                                       partialSubmit="true"
+                                       value="#{mantClasifController.command.clasificacionSeleccionada.nombre}" >
+                                    </ice:inputText>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class='col-md-12'>                                 
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <ice:commandButton id="btnCerrarClasificacion" 
+                                       styleClass="boton" 
+                                       action="#{mantClasifController.cerrarVentClasificacion}"
+                                       style=" float: left;" 
+                                       value="Cerrar" />
+                            </div>
+                            <div class="col-md-6">
+                                <ice:commandButton id="btnGuardarClasificacion" 
+                                       styleClass="boton" 
+                                       action="#{mantClasifController.guardarClasificacion}"
+                                       style=" float: right;" 
+                                       value="Guardar" />
+                            </div>
+                        </div>
+
+                    </div>
+                    <br />
+                    <br />
+                </fieldset>       
+            </f:facet> 
+        </ice:panelPopup>
+
+        
+        
+        
+        
+        
+        
+        <!--Modal Sub Clasificación-->
+        <ice:panelPopup modal="true" 
+                        visible="#{mantClasifController.mostrarVentSubClasificacion}" 
+                        styleClass="popup">
+            <f:facet name="header">
+                <ice:outputFormat value="#{label['sigebi.MantClasific.ModalSubClasif']}"/>
+            </f:facet> 
+
+            <f:facet name="body">
+                <fieldset class="panel_Container" >
+                    <div class="container" style="margin-top: 30px;">
+
+                        <div class="row">
+                            <div class='col-md-12'>
+                                <h5 style="margin: 0;">
+                                    <ice:outputFormat value="#{label['sigebi.MantClasific.ModalClasifNombre']}" />
+                                </h5>
+                            </div>
+                        </div>
+
+
+                        <div class="row">
+                            <div class='col-md-12'>
+                                <div class="form-group"> 
+                                    <ice:outputText value="#{label['sigebi.Bien.Label.SubClasificacion']}" />
+                                    <ice:inputText id="txtSubClasificacionNombre" 
+                                       styleClass="form-control" 
+                                       partialSubmit="true"
+                                       value="#{mantClasifController.command.subClasificacionSeleccionada.nombre}" >
+                                    </ice:inputText>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class='col-md-12'>                                 
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <ice:commandButton id="btnCerrarSubClasificacion" 
+                                       styleClass="boton" 
+                                       action="#{mantClasifController.cerrarVentSubClasificacion}"
+                                       style=" float: left;" 
+                                       value="Cerrar" />
+                            </div>
+                            <div class="col-md-6">
+                                <ice:commandButton id="btnGuardarSubClasificacion" 
+                                       styleClass="boton" 
+                                       action="#{mantClasifController.guardarSubClasificacion}"
+                                       style=" float: right;" 
+                                       value="Guardar" />
+                            </div>
+                        </div>
+
+                    </div>
+                    <br />
+                    <br />
+                </fieldset>       
+            </f:facet> 
+        </ice:panelPopup>
+        
+        
+        
+            
+            
+        </div>
+        
+    </div>
+
+
+</ice:form>

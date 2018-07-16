@@ -124,6 +124,9 @@ public class VistaNavegacion {
         //Asignar Responsable Bienes
         gPaginas.put(Constantes.KEY_VISTA_ASIGNA_RESPONSABLE, Constantes.VISTA_ASIGNA_RESPONSABLE);
         
+        //Mantenimiento Clasificacion y Sub clasificacion
+        gPaginas.put(Constantes.KEY_VISTA_MANTENIMIENTO_CLASIFICACION, Constantes.VISTA_MANTENIMIENTO_CLASIFICACION);
+        
         //Mis Bienes
         gPaginas.put(Constantes.KEY_VISTA_MIS_BIENES, Constantes.VISTA_MIS_BIENES);
         

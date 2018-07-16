@@ -35,4 +35,11 @@ public class ClasificacionModel {
 
     public List<Clasificacion> listarPorSubCategoria(SubCategoria subCategoria) throws FWExcepcion {
         return clasificacionDao.listarPorSubCategoria(subCategoria);
-    }}
+    }
+
+    
+    public void guardar(Clasificacion valor) throws FWExcepcion {
+        clasificacionDao.guardar(valor);
+    }
+
+}

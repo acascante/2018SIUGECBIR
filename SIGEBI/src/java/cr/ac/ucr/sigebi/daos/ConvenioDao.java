@@ -106,10 +106,10 @@ public class ConvenioDao extends GenericDaoImpl {
     }
     
     @Transactional(readOnly = true)
-    public Long contar(Long id, String institucion, String responsable, String oficio, Integer estado) throws FWExcepcion {
+    public Long contar(Long id, String institucion, String responsable, String oficio, Long idEstado) throws FWExcepcion {
         Session session = dao.getSessionFactory().openSession();
         try {
-            Query query = this.creaQuery(session, true, id, institucion, responsable, oficio, estado);
+            Query query = this.creaQuery(session, true, id, institucion, responsable, oficio, idEstado);
             return (Long)query.uniqueResult();
 
         } catch (HibernateException e) {
@@ -120,10 +120,10 @@ public class ConvenioDao extends GenericDaoImpl {
     }
     
     @Transactional(readOnly = true)
-    public List<Convenio> listar(Integer primerRegistro, Integer ultimoRegistro, Long id, String institucion, String responsable, String oficio, Integer estado) throws FWExcepcion {
+    public List<Convenio> listar(Integer primerRegistro, Integer ultimoRegistro, Long id, String institucion, String responsable, String oficio, Long idEstado) throws FWExcepcion {
         Session session = dao.getSessionFactory().openSession();
         try {
-            Query query = this.creaQuery(session, false, id, institucion, responsable, oficio, estado);
+            Query query = this.creaQuery(session, false, id, institucion, responsable, oficio, idEstado);
             
             if(!(primerRegistro.equals(1) && ultimoRegistro.equals(1))) {
                 query.setFirstResult(primerRegistro);
@@ -139,7 +139,7 @@ public class ConvenioDao extends GenericDaoImpl {
         }
     }
     
-    private Query creaQuery(Session session, Boolean contar, Long id, String institucion, String responsable, String oficio, Integer estado) {
+    private Query creaQuery(Session session, Boolean contar, Long id, String institucion, String responsable, String oficio, Long idEstado) {
         StringBuilder sql = new StringBuilder("SELECT ");
         if (contar) {
             sql.append("COUNT(entity) FROM Convenio entity ");
@@ -160,8 +160,8 @@ public class ConvenioDao extends GenericDaoImpl {
             if(oficio != null && oficio.length() > 0){
                 sql.append(" AND UPPER(entity.oficio) like upper(:oficio) ");
             }
-            if(estado != null && estado > 0){
-                sql.append(" AND entity.estado.id = :estado ");
+            if(idEstado != null && idEstado > 0){
+                sql.append(" AND entity.estado.id = :idEstado ");
             }
         }
         sql.append(" ORDER BY entity.id asc");
@@ -179,8 +179,8 @@ public class ConvenioDao extends GenericDaoImpl {
             if(oficio != null && oficio.length() > 0){
                 query.setParameter("oficio", '%' + oficio + '%');
             }
-            if(estado != null && estado > 0){
-                query.setParameter("estado", estado);
+            if(idEstado != null && idEstado > 0){
+                query.setParameter("idEstado", idEstado);
             }
         }
         return query;

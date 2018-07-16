@@ -134,5 +134,6 @@ public class Clasificacion extends ObjetoBase implements Serializable {
         return true;
     }
     //</editor-fold>
+    
 }
         

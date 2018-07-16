@@ -52,12 +52,12 @@ public class ListarBienSincronizarController extends BaseController {
     List<Bien> bienes;
 
     // Filtros para listar los Bienes 
-    String fltIdBien = "";
-    String fltDescripcion = "";
-    String fltMarca = "";
-    String fltModelo = "";
-    String fltSerie = "";
-    String fltEstado = "-1";
+    static String fltIdBien = "";
+    static String fltDescripcion = "";
+    static String fltMarca = "";
+    static String fltModelo = "";
+    static String fltSerie = "";
+    static String fltEstado = "-1";
 
     // comboBox subCategorias
     ArrayList<Estado> estadosFiltros;

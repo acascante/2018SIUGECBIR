@@ -43,7 +43,7 @@ public class UnidadEjecutoraDao extends GenericDaoImpl {
         Session session = dao.getSessionFactory().openSession();
         try {
             //StringBuilder sql = new StringBuilder ("select obj from UnidadEjecutora obj where idTipoUnidad = 'UCO'  ");
-            StringBuilder sql = new StringBuilder ("select obj from UnidadEjecutora obj where idTipoUnidad = 'PR'  ");
+            StringBuilder sql = new StringBuilder ("select obj from UnidadEjecutora obj where idTipoUnidad = 'UCO'  ");
             
             if(idUnidad != null && idUnidad.length() > 0){
                 sql.append(" and to_char(obj.id) like :idUnidad");

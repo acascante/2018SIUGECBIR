@@ -55,12 +55,12 @@ public class ListadoBienesGeneralController extends BaseController{
     boolean mostrarDialogBienes;
     
     
-    String fltIdBien;
-    String fltDescripcion;
-    String fltMarca;
-    String fltModelo;
-    String fltSerie;
-    Tipo fltTipo;
+    static String fltIdBien;
+    static String fltDescripcion;
+    static String fltMarca;
+    static String fltModelo;
+    static String fltSerie;
+    static Tipo fltTipo;
     
     Estado estadoIntInfTecAprobado;
     Tipo tipoInfTecDonacion;

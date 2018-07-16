@@ -59,8 +59,7 @@
                                        value="#{controllerListarBienes.bienes}" 
                                        var="bien" 
                                        paginator="true" 
-                                       paginatorPosition="bottom" 
-                                       rows="10">
+                                       paginatorPosition="bottom" >
                             <f:facet name="header">
                                 <ice:columnGroup>
                                     <ice:headerRow>
@@ -117,6 +116,7 @@
                                             </ice:selectOneMenu>
                                         </ice:column>
                                         
+                                        <!--
                                         <ice:column id="tipo" rowspan="2" style="vertical-align:top;">
                                             <ice:outputText value="#{label['sigebi.label.bien.tipo']} "/>
                                             <ice:selectOneMenu id="filtroTipo" partialSubmit="true"
@@ -126,7 +126,7 @@
                                                 <f:selectItems id="slcEstadoItem" value="#{controllerListarBienes.itemsTipo}"/>
                                             </ice:selectOneMenu>
                                         </ice:column>
-                                        
+                                        -->
                                         <ice:column id="unidadEjecutora" rowspan="2" style="vertical-align:top;" rendered="#{controllerListarBienes.command.usuarioAdmnistrador}">
                                             <ice:outputText value="#{label['sigebi.label.bien.unidadEjecutora']} "/>
                                             <ice:inputText id="fltUnidadEjecutoraAdmin" style="width: 130px;" partialSubmit="true"
@@ -152,9 +152,6 @@
                             </ice:column>
                             
                             <ice:column>
-                                <h:outputText id="idCell" value="#{bien.id}"/>
-                            </ice:column>
-                            <ice:column>
                                 <h:outputText id="identificacionCell" value="#{bien.identificacion.identificacion}"/>
                             </ice:column>
                             <ice:column>
@@ -172,9 +169,11 @@
                             <ice:column>
                                 <h:outputText id="estadoCell" value="#{bien.estado.nombre}"/>
                             </ice:column>
+                            <!--
                             <ice:column>
                                 <h:outputText id="tipoCell" value="#{bien.tipo.nombre}"/>
                             </ice:column>
+                            -->
                             <ice:column rendered="#{controllerListarBienes.command.usuarioAdmnistrador}">
                                 <h:outputText id="tipoCell" value="#{bien.unidadEjecutora.descripcion}"/>
                             </ice:column>

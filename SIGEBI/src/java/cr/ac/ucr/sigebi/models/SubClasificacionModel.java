@@ -36,4 +36,10 @@ public class SubClasificacionModel {
     public List<SubClasificacion> listar(Clasificacion clasificacion) {
         return subClasificacionDao.listar(clasificacion);
     }
+    
+    
+    public void guardar(SubClasificacion item) throws FWExcepcion {
+        subClasificacionDao.guardar(item);
+    }
+    
 }

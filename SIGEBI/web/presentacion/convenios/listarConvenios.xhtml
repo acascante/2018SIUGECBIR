@@ -59,7 +59,7 @@
             <div class="row">
                 <div class="col-sm-12">                    
                     <div>
-                        <ice:dataTable id="listadoConvenios" value="#{controllerListarConvenios.convenios}" var="convenio" paginator="true" paginatorPosition="bottom" rows="10">
+                        <ice:dataTable id="listadoConvenios" value="#{controllerListarConvenios.convenios}" var="convenio" paginator="true" paginatorPosition="bottom" >
                             <f:facet name="header">
                                 <ice:columnGroup>
                                     <ice:headerRow>
@@ -168,7 +168,7 @@
                             </ice:column>
                             <ice:column style="text-align: center;">
                                 <ice:commandButton id="botonDetalle" actionListener="#{controllerAgregarConvenios.detalleRegistro}" value="#{label['label.detalle']}"  style="float:right;margin-top:2%" styleClass="boton" partialSubmit="true">
-                                    <f:attribute id="exclusionDetalle" name="#{controllerListarConvenios.command.key}"  value="#{convenio.id}"/>
+                                    <f:attribute id="convenioDetalle" name="#{controllerListarConvenios.command.key}"  value="#{convenio.id}"/>
                                     <f:attribute id="vistaOrigen" name="#{controllerListarConvenios.command.keyVistaOrigen}"  value="#{controllerListarConvenios.vistaOrigen}"/>
                                 </ice:commandButton>
                             </ice:column>

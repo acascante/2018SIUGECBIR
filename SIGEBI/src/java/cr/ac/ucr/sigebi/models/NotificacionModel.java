@@ -72,16 +72,16 @@ public class NotificacionModel {
     @Resource
     private EstadoDao estadoDao;
     
-    public List<Notificacion> listar(Integer primerRegistro, Integer ultimoRegistro, Long id, String asunto, String destinatario, String mensaje, Date fecha, Integer estado) throws FWExcepcion {
-        return notificacionDao.listar(primerRegistro, ultimoRegistro, id, asunto, destinatario, mensaje, fecha, estado);
+    public List<Notificacion> listar(Integer primerRegistro, Integer ultimoRegistro, Long id, String asunto, String destinatario, String mensaje, Date fecha, Long idEstado) throws FWExcepcion {
+        return notificacionDao.listar(primerRegistro, ultimoRegistro, id, asunto, destinatario, mensaje, fecha, idEstado);
     }
 
     public List<Notificacion> listar(Date fecha, String dominio, Integer... estados) throws FWExcepcion {
         return notificacionDao.listar(fecha, dominio, estados);
     }
 
-    public Long contar(Long id, String asunto, String destinatario, String mensaje, Date fecha, Integer estado) throws FWExcepcion {
-        return notificacionDao.contar(id, asunto, destinatario, mensaje, fecha, estado);
+    public Long contar(Long id, String asunto, String destinatario, String mensaje, Date fecha, Long idEstado) throws FWExcepcion {
+        return notificacionDao.contar(id, asunto, destinatario, mensaje, fecha, idEstado);
     }
 
     public void salvar(Notificacion notificacion) throws FWExcepcion {

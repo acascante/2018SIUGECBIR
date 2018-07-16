@@ -48,10 +48,10 @@ public class NotificacionDao extends GenericDaoImpl {
     }
     
     @Transactional(readOnly = true)
-    public Long contar(Long id, String asunto, String destinatario, String mensaje, Date fecha, Integer estado) throws FWExcepcion {
+    public Long contar(Long id, String asunto, String destinatario, String mensaje, Date fecha, Long idEstado) throws FWExcepcion {
         Session session = dao.getSessionFactory().openSession();
         try {
-            Query query = this.creaQuery(session, true, id, asunto, destinatario, mensaje, fecha, estado);
+            Query query = this.creaQuery(session, true, id, asunto, destinatario, mensaje, fecha, idEstado);
             return (Long)query.uniqueResult();
 
         } catch (HibernateException e) {
@@ -62,10 +62,10 @@ public class NotificacionDao extends GenericDaoImpl {
     }
     
     @Transactional(readOnly = true)
-    public List<Notificacion> listar(Integer primerRegistro, Integer ultimoRegistro, Long id, String asunto, String destinatario, String mensaje, Date fecha, Integer estado) throws FWExcepcion {
+    public List<Notificacion> listar(Integer primerRegistro, Integer ultimoRegistro, Long id, String asunto, String destinatario, String mensaje, Date fecha, Long idEstado) throws FWExcepcion {
         Session session = dao.getSessionFactory().openSession();
         try {
-            Query query = this.creaQuery(session, false, id, asunto, destinatario, mensaje, fecha, estado);
+             Query query = this.creaQuery(session, false, id, asunto, destinatario, mensaje, fecha, idEstado);
             
             if(!(primerRegistro.equals(1) && ultimoRegistro.equals(1))) {
                 query.setFirstResult(primerRegistro);
@@ -85,9 +85,9 @@ public class NotificacionDao extends GenericDaoImpl {
     public List<Notificacion> listar(Date fecha, String dominio, Integer... estados) throws FWExcepcion {
         Session session = dao.getSessionFactory().openSession();
         try {
-            String sql = "SELECT ne FROM Notificacion ne WHERE ne.estado.valor IN ( :estado ) AND ne.estado.dominio = :dominio AND ne.fecha <= :fecha";
+            String sql = "SELECT ne FROM Notificacion ne WHERE ne.estado.valor IN ( :estados ) AND ne.estado.dominio = :dominio AND ne.fecha <= :fecha";
             Query query = session.createQuery(sql);
-            query.setParameterList("estado", estados);
+            query.setParameterList("estados", estados);
             query.setParameter("dominio", dominio);
             query.setParameter("fecha", fecha);
             
@@ -99,7 +99,7 @@ public class NotificacionDao extends GenericDaoImpl {
         }
     }
     
-    private Query creaQuery(Session session, Boolean contar, Long id, String asunto, String destinatario, String mensaje, Date fecha, Integer estado) {
+    private Query creaQuery(Session session, Boolean contar, Long id, String asunto, String destinatario, String mensaje, Date fecha, Long idEstado) {
         StringBuilder sql = new StringBuilder("SELECT ");
         if (contar) {
             sql.append("COUNT(ne) FROM Notificacion ne ");
@@ -123,8 +123,8 @@ public class NotificacionDao extends GenericDaoImpl {
             if(fecha != null){
                 sql.append(" AND ne.fecha = :fecha ");
             }
-            if(estado != null && estado > 0){
-                sql.append(" AND ne.estado.id = :estado ");
+            if(idEstado != null && idEstado > 0){
+                sql.append(" AND ne.estado.id = :idEstado ");
             }
         }
         sql.append(" ORDER BY ne.fecha desc");
@@ -145,8 +145,8 @@ public class NotificacionDao extends GenericDaoImpl {
             if(fecha != null){
                 query.setParameter("fecha", fecha);
             }
-            if(estado != null && estado > 0){
-                query.setParameter("estado", estado);
+            if(idEstado != null && idEstado > 0){
+                query.setParameter("idEstado", idEstado);
             }
         }
         return query;

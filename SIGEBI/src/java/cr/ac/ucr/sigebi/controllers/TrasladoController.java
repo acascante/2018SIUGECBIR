@@ -35,7 +35,6 @@ import cr.ac.ucr.sigebi.models.UsuarioModel;
 import cr.ac.ucr.sigebi.utils.Constantes;
 import cr.ac.ucr.sigebi.utils.NodoSIGEBI;
 import cr.ac.ucr.sigebi.utils.TreeUbicacionSIGEBI;
-import static java.lang.Compiler.command;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -99,7 +98,6 @@ public class TrasladoController extends ListadoBienesGeneralController {
 
     @Resource private TrasladoModel trasladoModel;
     @Resource  private EstadoModel estadoModel;
-    @Resource private TipoModel tipoModel;
     @Resource private AutorizacionModel autorizacionModel;
     @Resource private AutorizacionRolPersonaModel autorizacionRolPersonaModel;
     @Resource private UsuarioModel usuarioModel;
@@ -417,11 +415,11 @@ public class TrasladoController extends ListadoBienesGeneralController {
     //</editor-fold>
     
     //<editor-fold defaultstate="collapsed" desc="Listado Traslados">
-    String fltIdTraslado = "";
-    String fltUnidadOrigen = "";
-    String fltUnidadDestino = "";
-    String fltFecha = "";
-    String fltEstados = "";
+    static String fltIdTraslado = "";
+    static String fltUnidadOrigen = "";
+    static String fltUnidadDestino = "";
+    static String fltFecha = "";
+    static String fltEstados = "";
 
     public void listarTraslados() {
         try {
@@ -642,6 +640,11 @@ public class TrasladoController extends ListadoBienesGeneralController {
             if (validarRegistro()) {
                 
                 traslado.setUsuario(usuarioRegistradoClass);
+                
+                if(traslado.getUbicacion() == null || traslado.getUbicacion().getId() == null ){
+                    traslado.setUbicacion(null);
+                }
+                
                 trasladoModel.guardar(traslado);
 
                 //Actualizo el estado de lso Bienes que se eliminan
@@ -683,9 +686,9 @@ public class TrasladoController extends ListadoBienesGeneralController {
             }
 
             //Validar Ubicacion
-            if ((traslado.getUbicacion() == null)||(traslado.getUbicacion().getId() == null) || (traslado.getUbicacion().getId() == 0)) {
-                mensaje = Util.getEtiquetas("sigebi.Traslado.Mns.SelecUbicacion");
-            }
+//            if ((traslado.getUbicacion() == null)||(traslado.getUbicacion().getId() == null) || (traslado.getUbicacion().getId() == 0)) {
+//                mensaje = Util.getEtiquetas("sigebi.Traslado.Mns.SelecUbicacion");
+//            }
             
 
             if (!mensaje.equals("")) {

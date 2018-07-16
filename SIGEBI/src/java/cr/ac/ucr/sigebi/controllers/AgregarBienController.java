@@ -100,13 +100,13 @@ public class AgregarBienController extends BaseController {
     //<editor-fold defaultstate="collapsed" desc="Variables de la Clase">
     private List<SelectItem> itemsCategoria;
     private List<SelectItem> itemsCaracteristica;
+    private List<SelectItem> itemsSubCategoria;
+    private List<SelectItem> itemsSubClasificacion;
     private List<SelectItem> itemsClasificacion;
     private List<SelectItem> itemsLote;
     private List<SelectItem> itemsMoneda;
     private List<SelectItem> itemsUnidades;
     private List<SelectItem> itemsOrigen;
-    private List<SelectItem> itemsSubCategoria;
-    private List<SelectItem> itemsSubClasificacion;
     private List<SelectItem> itemsTipo;
     private List<SelectItem> itemsUbicacion;
 

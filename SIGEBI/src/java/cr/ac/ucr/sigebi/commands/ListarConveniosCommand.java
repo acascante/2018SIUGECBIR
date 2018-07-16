@@ -18,21 +18,16 @@ public class ListarConveniosCommand {
     //</editor-fold>
     
     //<editor-fold defaultstate="collapsed" desc="Atributos">
-    private String fltId;
-    private String fltInstitucion;
-    private String fltResponsable;
-    private String fltOficio;
-    private Integer fltEstado;
+    private static String fltId = "";
+    private static String fltInstitucion = "";
+    private static String fltResponsable = "";
+    private static String fltOficio = "";
+    private static Long fltEstado = -1L;
     //</editor-fold>
     
     //<editor-fold defaultstate="collapsed" desc="Constructores">
     public ListarConveniosCommand() { 
         super();
-        this.fltId = new String();
-        this.fltInstitucion = new String();
-        this.fltResponsable = new String();
-        this.fltOficio = new String();
-        this.fltEstado = -1;
     }
     //</editor-fold>
  
@@ -46,7 +41,7 @@ public class ListarConveniosCommand {
     }
     
     public Long getFltIdCodigo() {
-        if (this.fltId.isEmpty()) {
+        if (ListarConveniosCommand.fltId.isEmpty()) {
             return 0L;
         }
         return Long.valueOf(fltId);
@@ -57,7 +52,7 @@ public class ListarConveniosCommand {
     }
 
     public void setFltId(String fltId) {
-        this.fltId = fltId;
+        ListarConveniosCommand.fltId = fltId;
     }
 
     public String getFltInstitucion() {
@@ -65,7 +60,7 @@ public class ListarConveniosCommand {
     }
 
     public void setFltInstitucion(String fltInstitucion) {
-        this.fltInstitucion = fltInstitucion;
+        ListarConveniosCommand.fltInstitucion = fltInstitucion;
     }
 
     public String getFltResponsable() {
@@ -73,7 +68,7 @@ public class ListarConveniosCommand {
     }
 
     public void setFltResponsable(String fltResponsable) {
-        this.fltResponsable = fltResponsable;
+        ListarConveniosCommand.fltResponsable = fltResponsable;
     }
 
     public String getFltOficio() {
@@ -81,15 +76,15 @@ public class ListarConveniosCommand {
     }
 
     public void setFltOficio(String fltOficio) {
-        this.fltOficio = fltOficio;
+        ListarConveniosCommand.fltOficio = fltOficio;
     }
 
-    public Integer getFltEstado() {
+    public Long getFltEstado() {
         return fltEstado;
     }
 
-    public void setFltEstado(Integer fltEstado) {
-        this.fltEstado = fltEstado;
+    public void setFltEstado(Long fltEstado) {
+        ListarConveniosCommand.fltEstado = fltEstado;
     }
     //</editor-fold>
 }

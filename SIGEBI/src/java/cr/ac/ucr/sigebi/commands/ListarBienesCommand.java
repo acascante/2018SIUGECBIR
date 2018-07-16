@@ -15,29 +15,21 @@ import java.util.TimeZone;
 public class ListarBienesCommand {
     
     //<editor-fold defaultstate="collapsed" desc="Atributos">
-    private String fltIdBien;
-    private String fltIdentificacion;
-    private String fltDescripcion;
-    private String fltMarca;
-    private String fltModelo;
-    private String fltSerie;
-    private Integer fltEstado;
-    private Integer fltTipo;
-    private String fltUnidadEjecutoraAdmin;
+    private static String fltIdBien = "";
+    private static String fltIdentificacion = "";
+    private static String fltDescripcion = "";
+    private static String fltMarca = "";
+    private static String fltModelo = "";
+    private static String fltSerie = "";
+    private static Long fltEstado = -1L;
+    private static Long fltTipo = -1L;
+    private static String fltUnidadEjecutoraAdmin = "";
     private Boolean usuarioAdmnistrador;
     //</editor-fold>
     
     //<editor-fold defaultstate="collapsed" desc="Constructores">
     public ListarBienesCommand() {
         super();
-        this.fltIdBien =  new String();
-        this.fltIdentificacion =  new String();
-        this.fltDescripcion =  new String();
-        this.fltMarca =  new String();
-        this.fltSerie =  new String();
-        this.fltEstado = -1;
-        this.fltTipo = -1;
-        this.fltUnidadEjecutoraAdmin = new String();
         this.usuarioAdmnistrador = false;
     }
     //</editor-fold>
@@ -56,7 +48,7 @@ public class ListarBienesCommand {
     }
     
     public Long getFltIdCodigo() {
-        if (this.fltIdBien.isEmpty()) {
+        if (ListarBienesCommand.fltIdBien.isEmpty()) {
             return 0L; 
         }
         return Long.valueOf(fltIdBien);
@@ -67,7 +59,7 @@ public class ListarBienesCommand {
     }
 
     public void setFltIdBien(String fltIdBien) {
-        this.fltIdBien = fltIdBien;
+        ListarBienesCommand.fltIdBien = fltIdBien;
     }
 
     public String getFltIdentificacion() {
@@ -75,7 +67,7 @@ public class ListarBienesCommand {
     }
 
     public void setFltIdentificacion(String fltIdentificacion) {
-        this.fltIdentificacion = fltIdentificacion;
+        ListarBienesCommand.fltIdentificacion = fltIdentificacion;
     }
 
     public String getFltDescripcion() {
@@ -83,7 +75,7 @@ public class ListarBienesCommand {
     }
 
     public void setFltDescripcion(String fltDescripcion) {
-        this.fltDescripcion = fltDescripcion;
+        ListarBienesCommand.fltDescripcion = fltDescripcion;
     }
 
     public String getFltMarca() {
@@ -91,7 +83,7 @@ public class ListarBienesCommand {
     }
 
     public void setFltMarca(String fltMarca) {
-        this.fltMarca = fltMarca;
+        ListarBienesCommand.fltMarca = fltMarca;
     }
 
     public String getFltModelo() {
@@ -99,7 +91,7 @@ public class ListarBienesCommand {
     }
 
     public void setFltModelo(String fltModelo) {
-        this.fltModelo = fltModelo;
+        ListarBienesCommand.fltModelo = fltModelo;
     }
 
     public String getFltSerie() {
@@ -107,23 +99,23 @@ public class ListarBienesCommand {
     }
 
     public void setFltSerie(String fltSerie) {
-        this.fltSerie = fltSerie;
+        ListarBienesCommand.fltSerie = fltSerie;
     }
 
-    public Integer getFltEstado() {
+    public Long getFltEstado() {
         return fltEstado;
     }
 
-    public void setFltEstado(Integer fltEstado) {
-        this.fltEstado = fltEstado;
+    public void setFltEstado(Long fltEstado) {
+        ListarBienesCommand.fltEstado = fltEstado;
     }
     
-    public Integer getFltTipo() {
+    public Long getFltTipo() {
         return fltTipo;
     }
 
-    public void setFltTipo(Integer fltTipo) {
-        this.fltTipo = fltTipo;
+    public void setFltTipo(Long fltTipo) {
+        ListarBienesCommand.fltTipo = fltTipo;
     }
 
     public Boolean getUsuarioAdmnistrador() {
@@ -139,9 +131,7 @@ public class ListarBienesCommand {
     }
 
     public void setFltUnidadEjecutoraAdmin(String fltUnidadEjecutoraAdmin) {
-        this.fltUnidadEjecutoraAdmin = fltUnidadEjecutoraAdmin;
+        ListarBienesCommand.fltUnidadEjecutoraAdmin = fltUnidadEjecutoraAdmin;
     }
-    
     //</editor-fold>
-
 }

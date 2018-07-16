@@ -40,11 +40,11 @@ public class ListarDonacionesController extends BaseController {
     List<Solicitud> solicitudes;
 
     // Filtros para listar las solicitudes 
-    String fltId = "";
-    String fltEstado = "-1";
-    String fltIdTipo = "-1";
-    String fltUnidadReceptora = "";
-    String fltDonante = "";
+    static String fltId = "";
+    static String fltEstado = "-1";
+    static String fltIdTipo = "-1";
+    static String fltUnidadReceptora = "";
+    static String fltDonante = "";
     
     // comboBox estados
     List<SelectItem> estadosOptions;

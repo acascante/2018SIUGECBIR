@@ -34,7 +34,8 @@
                                     <ice:outputText value="#{label['label.paginacion.cantidad.pagina']} "/>
                                 </td>
                                 <td>
-                                    <ice:selectOneMenu id="cantRegistroPorPagina" value="#{controllerListarExclusiones.cantRegistroPorPagina}"  valueChangeListener="#{controllerListarExclusiones.cambioRegistrosPorPagina}" partialSubmit="true">
+                                    <ice:selectOneMenu id="cantRegistroPorPagina" value="#{controllerListarExclusiones.cantRegistroPorPagina}" 
+                                                       valueChangeListener="#{controllerListarExclusiones.cambioRegistrosPorPagina}" partialSubmit="true">
                                         <f:selectItems id="item_pa" value="#{controllerListarExclusiones.listaRegistrosPagina}"/>
                                     </ice:selectOneMenu>
                                 </td>
@@ -59,7 +60,7 @@
             <div class="row">
                 <div class="col-sm-12">                    
                     <div>
-                        <ice:dataTable id="listadoExclusiones" value="#{controllerListarExclusiones.exclusiones}" var="exclusion" paginator="true" paginatorPosition="bottom" rows="10">
+                        <ice:dataTable id="listadoExclusiones" value="#{controllerListarExclusiones.exclusiones}" var="exclusion" paginator="true" paginatorPosition="bottom">
                             <f:facet name="header">
                                 <ice:columnGroup>
                                     <ice:headerRow>

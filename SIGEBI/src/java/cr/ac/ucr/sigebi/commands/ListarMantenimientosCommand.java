@@ -20,17 +20,14 @@ public class ListarMantenimientosCommand {
     //</editor-fold>
     
     //<editor-fold defaultstate="collapsed" desc="Atributos">
-    private String fltId;
-    private Long fltEstado;
-    private Date fltFecha;
+    private static String fltId = "";
+    private static Long fltEstado = -1L;
+    private static Date fltFecha = null;
     //</editor-fold>
     
     //<editor-fold defaultstate="collapsed" desc="Constructores">
     public ListarMantenimientosCommand() { 
         super();
-        this.fltId = new String();
-        this.fltEstado = -1L;
-        this.fltFecha = null;
     }
     //</editor-fold>
  
@@ -52,7 +49,7 @@ public class ListarMantenimientosCommand {
     }
     
     public Long getFltIdCodigo() {
-        if (this.fltId.isEmpty()) {
+        if (ListarMantenimientosCommand.fltId.isEmpty()) {
             return 0l;
         }
         return Long.valueOf(fltId);
@@ -63,7 +60,7 @@ public class ListarMantenimientosCommand {
     }
 
     public void setFltId(String fltId) {
-        this.fltId = fltId;
+        ListarMantenimientosCommand.fltId = fltId;
     }
     
     public Long getFltEstado() {
@@ -71,7 +68,7 @@ public class ListarMantenimientosCommand {
     }
 
     public void setFltEstado(Long fltEstado) {
-        this.fltEstado = fltEstado;
+        ListarMantenimientosCommand.fltEstado = fltEstado;
     }
 
     public Date getFltFecha() {
@@ -79,7 +76,7 @@ public class ListarMantenimientosCommand {
     }
 
     public void setFltFecha(Date fltFecha) {
-        this.fltFecha = fltFecha;
+        ListarMantenimientosCommand.fltFecha = fltFecha;
     }
     //</editor-fold>
 }

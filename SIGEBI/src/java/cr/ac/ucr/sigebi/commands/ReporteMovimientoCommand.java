@@ -256,13 +256,13 @@ public class ReporteMovimientoCommand {
     
     
     public String getSQL(Long unidadEjecutora){
-        String sql = "SELECT\n" +
-"            IDENTIFICACION\n" +
-"            , DESCRIPCION\n" +
-"            , ESTADO\n" +
-"            , FECHA\n" +
-"            , MOVIMIENTO\n" +
-"            FROM\n" +
+        String sql = "SELECT DISTINCT \n" +
+"            IDENTIFICACION \n" +
+"            , DESCRIPCION \n" +
+"            , ESTADO \n" +
+"            , FECHA \n" +
+"            , MOVIMIENTO \n" +
+"            FROM \n" +
 "            ("
                 + "SELECT\n" +
 "              IDEN.NUMERO_IDENTIFICACION IDENTIFICACION\n" +

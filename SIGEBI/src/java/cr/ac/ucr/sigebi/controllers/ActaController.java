@@ -458,10 +458,10 @@ public class ActaController extends ListadoBienesGeneralController {
     //<editor-fold defaultstate="collapsed" desc="Listado Actas">
     
     
-    String fltIdActa = "";
-    String fltAutorizacion = "";
-    String fltFecha = "";
-    String fltEstados = "";
+    static String fltIdActa = "";
+    static String fltAutorizacion = "";
+    static String fltFecha = "";
+    static String fltEstados = "";
     
     
     

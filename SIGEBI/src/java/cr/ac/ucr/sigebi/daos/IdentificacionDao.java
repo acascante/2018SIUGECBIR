@@ -11,6 +11,7 @@ import cr.ac.ucr.framework.utils.FWExcepcion;
 import cr.ac.ucr.sigebi.domain.AsignacionPlaca;
 import cr.ac.ucr.sigebi.domain.Estado;
 import cr.ac.ucr.sigebi.domain.Identificacion;
+import cr.ac.ucr.sigebi.domain.Tipo;
 import cr.ac.ucr.sigebi.domain.UnidadEjecutora;
 import java.util.List;
 import org.hibernate.HibernateException;
@@ -124,10 +125,11 @@ public class IdentificacionDao extends GenericDaoImpl {
     }    
     
     @Transactional(readOnly = true)
-    public Identificacion buscarUltimoRegistro() throws FWExcepcion {
+    public Identificacion buscarUltimoRegistro(Long idTipo) throws FWExcepcion {
         Session session = dao.getSessionFactory().openSession();
         try {
-            Query query = session.createQuery("SELECT i FROM Identificacion i WHERE i.id in (SELECT MAX(i1.id) FROM Identificacion i1)");
+            Query query = session.createQuery("SELECT i FROM Identificacion i WHERE i.id in (SELECT MAX(i1.id) FROM Identificacion i1 WHERE i1.tipo.id = :idTipo) ");
+            query.setParameter("idTipo", idTipo);
             return (Identificacion)query.uniqueResult();
         } catch (HibernateException e) {
             throw new FWExcepcion("sigebi.error.identificacionDao.siguienteDisponible", "Error contando los registros de tipo " + this.getClass(), e.getCause());

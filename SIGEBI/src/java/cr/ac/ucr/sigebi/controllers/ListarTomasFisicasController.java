@@ -40,12 +40,12 @@ public class ListarTomasFisicasController extends BaseController {
     List<TomaFisica> tomasFisicas;
 
     // Filtros para listar las solicitudes 
-    String fltId = "";
-    String fltTipo = "-1";
-    String fltUbicacion = "";
-    String fltDescripcion = "";
-    String fltTipoMotivo = "-1";
-    String fltEstado = "-1";
+    static String fltId = "";
+    static String fltTipo = "-1";
+    static String fltUbicacion = "";
+    static String fltDescripcion = "";
+    static String fltTipoMotivo = "-1";
+    static String fltEstado = "-1";
     
     // comboBox estados
     List<SelectItem> estadosOptions;

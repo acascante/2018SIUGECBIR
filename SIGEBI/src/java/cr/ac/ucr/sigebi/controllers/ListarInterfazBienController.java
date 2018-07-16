@@ -39,14 +39,14 @@ public class ListarInterfazBienController extends BaseController {
     List<InterfazBien> interfazBienes;
 
     // Filtros para listar las solicitudes 
-    String fltId = "";
-    String fltEstado = "-1";
-    String fltUnidadEjecutora = "";
-    String fltMarca = "";
-    String fltModelo = "";
-    String fltSerie = "";
-    String fltDescripcion = "";
-    String fltIdentificacionBien;
+    static String fltId = "";
+    static String fltEstado = "-1";
+    static String fltUnidadEjecutora = "";
+    static String fltMarca = "";
+    static String fltModelo = "";
+    static String fltSerie = "";
+    static String fltDescripcion = "";
+    static String fltIdentificacionBien;
     
     // comboBox estados
     List<SelectItem> estadosOptions;

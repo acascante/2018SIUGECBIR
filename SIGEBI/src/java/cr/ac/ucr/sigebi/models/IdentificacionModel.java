@@ -10,6 +10,7 @@ import cr.ac.ucr.sigebi.daos.IdentificacionDao;
 import cr.ac.ucr.sigebi.domain.AsignacionPlaca;
 import cr.ac.ucr.sigebi.domain.Estado;
 import cr.ac.ucr.sigebi.domain.Identificacion;
+import cr.ac.ucr.sigebi.domain.Tipo;
 import cr.ac.ucr.sigebi.domain.UnidadEjecutora;
 import cr.ac.ucr.sigebi.utils.Constantes;
 import java.util.List;
@@ -61,8 +62,8 @@ public class IdentificacionModel {
         }
     }
 
-    public Identificacion buscarUltimoRegistro() throws FWExcepcion {
-        return identificacionDao.buscarUltimoRegistro();
+    public Identificacion buscarUltimoRegistro(Long idTipo) throws FWExcepcion {
+        return identificacionDao.buscarUltimoRegistro(idTipo);
     }
     
     public void actualizar(Identificacion identificacion) {

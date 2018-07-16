@@ -7,7 +7,7 @@ public class PaginacionOracle {
 
     // <editor-fold defaultstate="collapsed" desc="Atributos">
     //Cantidad de registros por página
-    private int cantRegistroPorPagina = 5;
+    private static int cantRegistroPorPagina = 5;
     //Primer registro de la pagina
     private int primerRegistro = 1;
     //Cantidad de registros totales

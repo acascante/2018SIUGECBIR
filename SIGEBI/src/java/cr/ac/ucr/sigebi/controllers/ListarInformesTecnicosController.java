@@ -40,13 +40,12 @@ public class ListarInformesTecnicosController extends BaseController {
     List<Documento> informes;
 
     // Filtros para listar los Informes 
-    String fltIdTipo = "-1";
-    String fltEstado = "-1";
-
-    String fltIdentificacionBien = "";
-    String fltDescripcionBien = "";
-    String fltMarcaBien = "";
-    String fltModeloBien = "";
+    static String fltIdTipo = "-1";
+    static String fltEstado = "-1";
+    static String fltIdentificacionBien = "";
+    static String fltDescripcionBien = "";
+    static String fltMarcaBien = "";
+    static String fltModeloBien = "";
 
     // comboBox estados
     List<SelectItem> estadosOptions;

@@ -274,12 +274,12 @@ public class BienCommand {
         private Map<Long, Tipo> itemsCaracteristica;
         private Map<Long, Categoria> itemsCategoria;
         private Map<Long, Clasificacion> itemsClasificacion;
+        private Map<Long, SubCategoria> itemsSubCategoria;
+        private Map<Long, SubClasificacion> itemsSubClasificacion;
         private Map<Long, Lote> itemsLote;
         private Map<Long, Moneda> itemsMoneda;
         private Map<Long, UnidadEjecutora> itemsUnidad;
         private Map<Long, Tipo> itemsOrigen;
-        private Map<Long, SubCategoria> itemsSubCategoria;
-        private Map<Long, SubClasificacion> itemsSubClasificacion;
         private Map<Long, Tipo> itemsTipo;
         private Map<Long, Ubicacion> itemsUbicacion;
 

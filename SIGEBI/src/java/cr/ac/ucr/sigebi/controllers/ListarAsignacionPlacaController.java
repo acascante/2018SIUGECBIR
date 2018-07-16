@@ -39,8 +39,8 @@ public class ListarAsignacionPlacaController extends BaseController {
     List<AsignacionPlaca> asignacionPlacas;
 
     // Filtros para listar las solicitudes 
-    String fltId = "";
-    String fltEstado = "-1";
+    static String fltId = "";
+    static String fltEstado = "-1";
     
     // comboBox estados
     List<SelectItem> estadosOptions;

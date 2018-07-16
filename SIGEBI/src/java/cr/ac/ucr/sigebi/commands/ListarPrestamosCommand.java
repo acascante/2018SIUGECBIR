@@ -20,21 +20,16 @@ public class ListarPrestamosCommand {
     //</editor-fold>
     
     //<editor-fold defaultstate="collapsed" desc="Atributos">
-    private String fltId;
-    private Long fltEstado;
-    private Long fltTipoEntidad;
-    private String fltEntidad;
-    private Date fltFecha;
+    private static String fltId = "";
+    private static Long fltEstado = -1L;
+    private static Long fltTipoEntidad = -1L;
+    private static String fltEntidad = "";
+    private static Date fltFecha = null;
     //</editor-fold>
     
     //<editor-fold defaultstate="collapsed" desc="Constructores">
     public ListarPrestamosCommand() { 
         super();
-        this.fltId = new String();
-        this.fltEstado = -1L;
-        this.fltTipoEntidad = -1L;
-        this.fltFecha = null;
-        this.fltEntidad = new String();
     }
     //</editor-fold>
  
@@ -56,7 +51,7 @@ public class ListarPrestamosCommand {
     }
     
     public Long getFltIdCodigo() {
-        if (this.fltId.isEmpty()) {
+        if (ListarPrestamosCommand.fltId.isEmpty()) {
             return 0l;
         }
         return Long.valueOf(fltId);
@@ -67,7 +62,7 @@ public class ListarPrestamosCommand {
     }
 
     public void setFltId(String fltId) {
-        this.fltId = fltId;
+        ListarPrestamosCommand.fltId = fltId;
     }
     
     public Long getFltEstado() {
@@ -75,7 +70,7 @@ public class ListarPrestamosCommand {
     }
 
     public void setFltEstado(Long fltEstado) {
-        this.fltEstado = fltEstado;
+        ListarPrestamosCommand.fltEstado = fltEstado;
     }
 
     public Date getFltFecha() {
@@ -83,7 +78,7 @@ public class ListarPrestamosCommand {
     }
 
     public void setFltFecha(Date fltFecha) {
-        this.fltFecha = fltFecha;
+        ListarPrestamosCommand.fltFecha = fltFecha;
     }
     
     public Long getFltTipoEntidad() {
@@ -91,7 +86,7 @@ public class ListarPrestamosCommand {
     }
 
     public void setFltTipoEntidad(Long fltTipoEntidad) {
-        this.fltTipoEntidad = fltTipoEntidad;
+        ListarPrestamosCommand.fltTipoEntidad = fltTipoEntidad;
     }
 
     public String getFltEntidad() {
@@ -99,7 +94,7 @@ public class ListarPrestamosCommand {
     }
 
     public void setFltEntidad(String fltEntidad) {
-        this.fltEntidad = fltEntidad;
+        ListarPrestamosCommand.fltEntidad = fltEntidad;
     }
     //</editor-fold>
 }

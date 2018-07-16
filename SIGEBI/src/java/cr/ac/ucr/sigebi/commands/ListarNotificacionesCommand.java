@@ -20,23 +20,17 @@ public class ListarNotificacionesCommand {
     //</editor-fold>
     
     //<editor-fold defaultstate="collapsed" desc="Atributos">
-    private String fltId;
-    private String fltAsunto;
-    private String fltDestinatario;
-    private String fltMensaje;
-    private Integer fltEstado;
-    private Date fltFecha;
+    private static String fltId = "";
+    private static String fltAsunto = "";
+    private static String fltDestinatario = "";
+    private static String fltMensaje = "";
+    private static Long fltEstado = -1L;
+    private static Date fltFecha = null;
     //</editor-fold>
     
     //<editor-fold defaultstate="collapsed" desc="Constructores">
     public ListarNotificacionesCommand() { 
         super();
-        this.fltId = new String();
-        this.fltAsunto = new String();
-        this.fltDestinatario = new String();
-        this.fltMensaje = new String();
-        this.fltEstado = -1;
-        this.fltFecha = null;
     }
     //</editor-fold>
  
@@ -58,7 +52,7 @@ public class ListarNotificacionesCommand {
     }
     
     public Long getFltIdCodigo() {
-        if (this.fltId.isEmpty()) {
+        if (ListarNotificacionesCommand.fltId.isEmpty()) {
             return 0L;
         }
         return Long.valueOf(fltId);
@@ -69,7 +63,7 @@ public class ListarNotificacionesCommand {
     }
 
     public void setFltId(String fltId) {
-        this.fltId = fltId;
+        ListarNotificacionesCommand.fltId = fltId;
     }
 
     public String getFltAsunto() {
@@ -77,7 +71,7 @@ public class ListarNotificacionesCommand {
     }
 
     public void setFltAsunto(String fltAsunto) {
-        this.fltAsunto = fltAsunto;
+        ListarNotificacionesCommand.fltAsunto = fltAsunto;
     }
 
     public String getFltDestinatario() {
@@ -85,7 +79,7 @@ public class ListarNotificacionesCommand {
     }
 
     public void setFltDestinatario(String fltDestinatario) {
-        this.fltDestinatario = fltDestinatario;
+        ListarNotificacionesCommand.fltDestinatario = fltDestinatario;
     }
 
     public String getFltMensaje() {
@@ -93,15 +87,15 @@ public class ListarNotificacionesCommand {
     }
 
     public void setFltMensaje(String fltMensaje) {
-        this.fltMensaje = fltMensaje;
+        ListarNotificacionesCommand.fltMensaje = fltMensaje;
     }
 
-    public Integer getFltEstado() {
+    public Long getFltEstado() {
         return fltEstado;
     }
 
-    public void setFltEstado(Integer fltEstado) {
-        this.fltEstado = fltEstado;
+    public void setFltEstado(Long fltEstado) {
+        ListarNotificacionesCommand.fltEstado = fltEstado;
     }
 
     public Date getFltFecha() {
@@ -109,7 +103,7 @@ public class ListarNotificacionesCommand {
     }
 
     public void setFltFecha(Date fltFecha) {
-        this.fltFecha = fltFecha;
+        ListarNotificacionesCommand.fltFecha = fltFecha;
     }
     //</editor-fold>
 }

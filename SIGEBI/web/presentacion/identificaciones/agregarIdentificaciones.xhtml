@@ -53,7 +53,8 @@
                                 <div class="form-group"> 
                                     <ice:outputText value="#{label['sigebi.label.identificaciones.tipo']}" />
                                     <ice:selectOneMenu  id="cmbTipo" partialSubmit="true" styleClass="form-control"
-                                                        value="#{controllerAgregarIdentificaciones.command.idTipo}">
+                                                        value="#{controllerAgregarIdentificaciones.command.idTipo}"
+                                                        valueChangeListener="#{controllerAgregarIdentificaciones.buscarUltimoRegistroListener}">
                                         <f:selectItems id="selectTipoItem" value="#{controllerAgregarIdentificaciones.command.itemsTipo}"/>
                                     </ice:selectOneMenu>
                                 </div>

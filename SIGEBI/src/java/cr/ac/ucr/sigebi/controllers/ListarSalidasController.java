@@ -40,12 +40,12 @@ public class ListarSalidasController extends BaseController {
     List<SolicitudSalida> solicitudes;
 
     // Filtros para listar las solicitudes 
-    String fltId = "";
-    String fltEstado = "-1";
-    String fltIdTipo = "-1";
-    String fltCedula = "";
-    String fltNombre = "";
-    String fltFecha = "";
+    static String fltId = "";
+    static String fltEstado = "-1";
+    static String fltIdTipo = "-1";
+    static String fltCedula = "";
+    static String fltNombre = "";
+    static String fltFecha = "";
     
     // comboBox estados
     List<SelectItem> estadosOptions;

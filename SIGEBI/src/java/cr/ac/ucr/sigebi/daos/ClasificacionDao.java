@@ -68,4 +68,24 @@ public class ClasificacionDao extends GenericDaoImpl {
             session.close();
         }
     }
+
+    
+    @Transactional(readOnly = true)
+    public void guardar(Clasificacion item) throws FWExcepcion {
+        Session session = dao.getSessionFactory().openSession();
+        try {
+            session.beginTransaction();
+            session.saveOrUpdate(item);
+            session.getTransaction().commit();
+            
+        } catch (HibernateException e) {
+            throw new FWExcepcion("sigebi.error.ClasificacionDao.guardar", "Error al guardar elemento " + this.getClass(), e.getCause());
+        }
+        catch(Exception e){
+            throw new FWExcepcion("sigebi.error.ClasificacionDao.guardar", "Error al guardar elemento " + this.getClass(), e.getCause());
+        }
+        finally {
+            session.close();
+        }
+    }
 }
