@@ -9,6 +9,7 @@ import cr.ac.ucr.sigebi.domain.Estado;
 import cr.ac.ucr.sigebi.domain.Identificacion;
 import cr.ac.ucr.sigebi.domain.Tipo;
 import cr.ac.ucr.sigebi.domain.UnidadEjecutora;
+import cr.ac.ucr.sigebi.utils.Constantes;
 import java.util.ArrayList;
 import java.util.List;
 import javax.faces.model.SelectItem;
@@ -51,7 +52,7 @@ public class IdentificacionCommand {
             identificacion.setMarcado(false);
             identificacion.setSeleccionado(false);
             identificacion.setTipo(tipo);
-            identificacion.setUnidadEjecutora(unidadEjecutora);
+            identificacion.setUnidadEjecutora(Constantes.IDENTIFICACION_TIPO_PLACA.equals(tipo.getNombre()) ? null : unidadEjecutora); //Si es PLACA no se setea la Unidad Ejecutora
             identificaciones.add(identificacion);
         }        
         return identificaciones;
