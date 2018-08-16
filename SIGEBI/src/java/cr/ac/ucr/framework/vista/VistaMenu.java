@@ -4,6 +4,7 @@
  */
 package cr.ac.ucr.framework.vista;
 
+import com.icesoft.faces.component.menubar.MenuItem;
 import com.icesoft.faces.context.AbstractAttributeMap;
 import com.icesoft.faces.context.effects.JavascriptContext;
 import cr.ac.ucr.framework.seguridad.ObjetoBase;
@@ -15,8 +16,10 @@ import cr.ac.ucr.framework.vista.util.Mensaje;
 import cr.ac.ucr.framework.vista.util.MenuItemPrincipal;
 import cr.ac.ucr.framework.vista.util.Util;
 import static cr.ac.ucr.framework.vista.util.Util.obtenerVista;
+import cr.ac.ucr.sigebi.domain.Ayuda;
 import cr.ac.ucr.sigebi.domain.UnidadEjecutora;
 import cr.ac.ucr.sigebi.models.UnidadEjecutoraModel;
+import cr.ac.ucr.sigebi.models.AyudaModel;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -51,6 +54,8 @@ public class VistaMenu {
     private SeguridadMgr gSeguridadMgr;
     @Resource
     private UnidadEjecutoraModel unidadEjecutoraModel;
+    @Resource
+    private AyudaModel ayudaModel;
     
     //variable para armar el menú horizontal que le aparecera al usuario
     private List<MenuItemPrincipal> gMenuHorizontal;
@@ -84,6 +89,10 @@ public class VistaMenu {
     public static String ADMINISTRATIVA_PARCIAL = "MODULO_SIGECU_ADMINISTRATIVA_M_P";
     public static String ADMINISTRATIVA_CREACION_CARR = "MODULO_SIGECU_ADMINISTRATIVA_C_C";
     private HashMap<String, List<String>> perfilesUnidad;
+    
+    private boolean gPopAyuda;
+    private String gPopTitulo;
+    private String gPopCuerpo;
 //    	parametroMgr.findParametroById(MENU_PROPUESTA)
 //	parametroMgr.findParametroById(MENU_PROP)
 //MODULO_SIGECU_MODIFICACION_INTEGRAL	2036
@@ -104,6 +113,7 @@ public class VistaMenu {
         gMostrarPerfiles = false;
         gEtiquetaSeleccionMenu = Util.getEtiquetas("label.menu.mostrarMenuPrincipal");
         gFechaSistema = new Date();
+        gPopAyuda = false;
         cargarPerfilesParaUnidades();
     }
 
@@ -279,6 +289,40 @@ public class VistaMenu {
             lVistaUsuario.setgPopUnidades(false);
             lVistaUsuario.setgPopPerfiles(true);
         }
+    }
+    
+    public void cargarAyuda(ActionEvent event) {
+        MenuItem mi = (MenuItem) event.getSource();
+        Boolean b = false;
+        String regla;
+        
+        gPopAyuda = true;
+        gPopTitulo = "";
+        gPopCuerpo = "";
+        
+        if (mi.getValue() == null){
+            regla = "inicio";
+        }else{
+            regla = mi.getValue().toString();
+        }
+        List<Ayuda> ayudas = ayudaModel.listarPorRegla(regla);
+        
+        for (Ayuda ayuda : ayudas){
+            gPopTitulo += ayuda.getTitulo();
+            gPopCuerpo += ayuda.getCuerpo();
+            b = true;
+        }
+        
+        if (!b){
+            gPopTitulo = "Ayuda de " + regla;
+            gPopCuerpo = "Actualmente no se ha incluido ayuda para la regla de navegación " + regla;
+            gPopCuerpo += "<br>Comuniquese con el administrador para que incluya la ayuda.";
+        }
+        
+    }
+      
+    public void cerrarModalAyuda(){
+        gPopAyuda = false;
     }
 
     /**
@@ -639,5 +683,47 @@ public class VistaMenu {
         }
     }
     // </editor-fold>
+
+    /**
+     * @return the gPopAyuda
+     */
+    public boolean isgPopAyuda() {
+        return gPopAyuda;
+    }
+
+    /**
+     * @param gPopAyuda the gPopAyuda to set
+     */
+    public void setgPopAyuda(boolean gPopAyuda) {
+        this.gPopAyuda = gPopAyuda;
+    }
+
+    /**
+     * @return the gPopTitulo
+     */
+    public String getgPopTitulo() {
+        return gPopTitulo;
+    }
+
+    /**
+     * @param gPopTitulo the gPopTitulo to set
+     */
+    public void setgPopTitulo(String gPopTitulo) {
+        this.gPopTitulo = gPopTitulo;
+    }
+
+    /**
+     * @return the gPopCuerpo
+     */
+    public String getgPopCuerpo() {
+        return gPopCuerpo;
+    }
+
+    /**
+     * @param gPopCuerpo the gPopCuerpo to set
+     */
+    public void setgPopCuerpo(String gPopCuerpo) {
+        this.gPopCuerpo = gPopCuerpo;
+    }
     
 }//fin de la clase

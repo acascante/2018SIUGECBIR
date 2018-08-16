@@ -1,4 +1,5 @@
-<ice:form xmlns:ice="http://www.icesoft.com/icefaces/component" >
+<ice:form xmlns:ice="http://www.icesoft.com/icefaces/component" 
+          xmlns:f="http://java.sun.com/jsf/core">
     <script type="text/javascript">
         jQuery.noConflict();
         jQuery(document).ready(function () {
@@ -30,6 +31,16 @@
             orientation="horizontal" styleClass="menu_horizontal" noIcons="true" >
             <ice:menuItems id="opcion_menu" value="#{vistaMenu.gMenuHorizontal}" />
         </ice:menuBar>
+        <ice:menuBar
+            orientation="horizontal" styleClass="menu_horizontal menuItemAyuda" noIcons="true" >
+
+            <ice:menuItem id="ayuda" 
+                          value="#{vistaNavegacion.gReglaSeleccionada}"
+                          actionListener="#{vistaMenu.cargarAyuda}">
+            </ice:menuItem>
+
+        </ice:menuBar>
+
     </div>
     <div id="panel_menu_formulacion">
         <ice:panelGrid id="menuformulacion" style="width: 100%">
@@ -41,5 +52,42 @@
             </div>
 
         </ice:panelGrid>
-    </div>  
+    </div> 
+    
+    <ice:panelPopup
+                modal="true" visible="#{vistaMenu.gPopAyuda}"
+                rendered="true" styleClass="popup"
+                >
+                <f:facet name="header">
+                    <ice:outputText styleClass="flotar_izquierda titulo_popup" value="#{vistaMenu.gPopTitulo}"/>
+                </f:facet>
+                <br/>
+                <f:facet name="body">
+                    <fieldset class="panel_Container" >
+                        <br></br>
+                        <span class="alineado_izquierda">
+                            #{vistaMenu.gPopCuerpo}
+                            <!--ice:outputText styleClass="etiqueta" value="#{vistaMenu.gPopCuerpo}" /-->
+                        </span>
+                        <br/>
+                        <div>
+                            <br/>
+                            <span class="alineado_izquierda">
+                               
+
+                            </span>
+                        </div>
+                        <br/>
+                        <br/>
+
+                        <span class="alineado_derecha">
+                            <ice:commandButton id="btn_cancelar"
+                                               partialSubmit="true"
+                                               action="#{vistaMenu.cerrarModalAyuda}"
+                                               styleClass="boton"  value="Regresar" />
+                        </span>
+                        <br/><br/>
+                    </fieldset>       
+                </f:facet>
+            </ice:panelPopup>
 </ice:form>

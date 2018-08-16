@@ -161,15 +161,16 @@ public class ListarBienesController extends BaseController {
     private Estado[] getFltEstadoArray() {
         if (command.getFltEstado() > 0) {
             Estado[] array = {mapEstados.get(command.getFltEstado())};
+            array[0] = this.estadoPorId(command.getFltEstado());
             return array;
         }
         return null;
     }
 
     private Tipo getFltTipo() {
-        if (command.getFltTipo() > 0) {
-            return mapTipos.get(command.getFltTipo());
-        }
+//        if (command.getFltTipo() > 0) {
+//            return mapTipos.get(command.getFltTipo());
+//        }
         return null;
     }
 

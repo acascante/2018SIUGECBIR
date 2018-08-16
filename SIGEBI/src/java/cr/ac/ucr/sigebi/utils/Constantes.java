@@ -400,6 +400,10 @@ public final class Constantes {
     public static final String KEY_VISTA_MANTENIMIENTO_CLASIFICACION = "clasificacion";
     public static final String VISTA_MANTENIMIENTO_CLASIFICACION = "../mantenimientos/mantenimientoClasificaciones.xhtml";
     
+    //Ayuda
+    public static final String KEY_VISTA_LISTA_AYUDA = "ayuda";
+    public static final String VISTA_LISTA_AYUDA = "../ayuda/listarAyuda.xhtml";
+     
     //Asignacion de placas
     public static final String KEY_VISTA_ASIGNACION_PLACA_DETALLE = "asignacion_placa_detalle";
     public static final String VISTA_ASIGNACIONPLACA_DETALLE = "../asignacionPlaca/detalleAsignacionPlacas.xhtml";

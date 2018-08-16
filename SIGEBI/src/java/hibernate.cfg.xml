@@ -84,6 +84,7 @@
     <mapping class="cr.ac.ucr.sigebi.domain.AsignacionPlaca"/>
     <mapping class="cr.ac.ucr.sigebi.domain.AsignarResponsableHistorico"/>
     <mapping class="cr.ac.ucr.sigebi.domain.ViewAutorizacionRolUsuarioUnidad"/>
+    <mapping class="cr.ac.ucr.sigebi.domain.Ayuda"/>
     
   </session-factory>
 </hibernate-configuration>

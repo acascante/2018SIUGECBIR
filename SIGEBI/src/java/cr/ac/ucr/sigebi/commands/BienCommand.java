@@ -681,6 +681,8 @@ public class BienCommand {
     private Integer cantidad;
     private Boolean capitalizable;
     private Double costo;
+    private String numFactura;
+    private String numOrden;
     private Date fechaAdquisicion;
     private Integer persona;
     private Date inicioGarantia;
@@ -787,6 +789,8 @@ public class BienCommand {
         this.capitalizable = bien.getCapitalizable();
         this.resumenBien = bien.getResumenBien();
         this.costo = bien.getCosto();
+        this.numFactura = bien.getNumFactura();
+        this.numOrden = bien.getNumOrden();
         this.fechaAdquisicion = bien.getFechaAdquisicion();
         this.persona = bien.getPersona();
         this.inicioGarantia = bien.getInicioGarantia();
@@ -879,6 +883,8 @@ public class BienCommand {
         bien.setResumenBien(this.resumenBien);
         bien.setUnidadEjecutora(this.unidadEjecutora);
         bien.setCosto(this.costo);
+        bien.setNumOrden(this.numOrden);
+        bien.setNumFactura(this.numFactura);
         bien.setFechaAdquisicion(this.fechaAdquisicion);
         bien.setPersona(this.persona);
         bien.setInicioGarantia(this.inicioGarantia);
@@ -1022,6 +1028,24 @@ public class BienCommand {
         this.costo = costo;
     }
 
+    public String getNumFactura() {
+        return numFactura;
+    }
+
+    public void setNumFactura(String numFactura) {
+        this.numFactura = numFactura;
+    }
+
+    public String getNumOrden() {
+        return numOrden;
+    }
+
+    public void setNumOrden(String numOrden) {
+        this.numOrden = numOrden;
+    }
+
+    
+    
     public Date getFechaAdquisicion() {
         return fechaAdquisicion;
     }

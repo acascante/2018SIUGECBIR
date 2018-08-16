@@ -35,6 +35,7 @@ public class VistaNavegacion {
     //variable que mantiene el string con la página que se le muestra al usuario
     private String gPaginaSeleccionada;
     private String gPaginaAnterior;
+    private String gReglaSeleccionada;
     // </editor-fold>
 
     // <editor-fold defaultstate="collapsed" desc="Métodos">
@@ -157,6 +158,7 @@ public class VistaNavegacion {
                     }
                     gPaginaAnterior = gPaginaSeleccionada;
                     gPaginaSeleccionada = lReglaNavegacion.toString();
+                    setgReglaSeleccionada(temp.getRegla_navegacion());
                 }//if
             }//else
         }//if
@@ -165,6 +167,7 @@ public class VistaNavegacion {
     public void navegacionBotones(String regla) {
         gPaginaAnterior = gPaginaSeleccionada;
         gPaginaSeleccionada = gPaginas.get(regla).toString();
+        setgReglaSeleccionada(regla);
     }
     // </editor-fold>
 
@@ -193,4 +196,18 @@ public class VistaNavegacion {
         this.gPaginas = gPaginas;
     }
     // </editor-fold>
+
+    /**
+     * @return the gReglaSeleccionada
+     */
+    public String getgReglaSeleccionada() {
+        return gReglaSeleccionada;
+    }
+
+    /**
+     * @param gReglaSeleccionada the gReglaSeleccionada to set
+     */
+    public void setgReglaSeleccionada(String gReglaSeleccionada) {
+        this.gReglaSeleccionada = gReglaSeleccionada;
+    }
 }//fin de la clase

@@ -26,14 +26,14 @@
                         <ice:commandLink styleClass="btnCambioUnid" partialSubmit="true"
                                          action="#{vistaUsuario.cargarUnidades}">
                             <!--ice:outputText  id="btnCambiarUni" value="Cambiar"/-->
-                            <ice:outputText style="margin-right: 20px;" id="codUsuario" value="#{vistaUsuario.gUnidadActual.dscUnidadEjecutora}"/>
+                            <ice:outputText style="margin-right: 20px;position:absolute;" id="codUsuario" value="#{vistaUsuario.gUnidadActual.dscUnidadEjecutora}"/>
                         </ice:commandLink>
                     </strong>
                 </span>
                 <span id="usuario">
                     <strong>
                         <!--ice:outputText value=" Usuario :"/-->
-                        <ice:outputText style="margin-right: 20px;" id="codUsuario" value="#{vistaUsuario.gUsuarioActual.idUsuario}"/>
+                        <ice:outputText style="margin-right: 20px" id="codUsuario" value="#{vistaUsuario.gUsuarioActual.idUsuario}"/>
                         <ice:commandLink styleClass="btnLogout" partialSubmit="true"
                                          action="#{vistaUsuario.salir}">
                             <ice:outputText  id="btnSalir" value="Salir"/>

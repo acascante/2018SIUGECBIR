@@ -63,7 +63,12 @@
                             <f:facet name="header">
                                 <ice:columnGroup>
                                     <ice:headerRow>
-                                        <ice:column id="idDetalle" rowspan="2" style="vertical-align:top;">
+                                        <ice:column id="idBien" rowspan="2" style="vertical-align:top;">
+                                            <ice:outputText value="#{label['sigebi.label.bien.id']} "/>
+                                            <ice:inputText id="filtroId" style="width: 130px;" partialSubmit="true"                                                           
+                                                           value="#{controllerListarBienes.command.fltIdBien}"
+                                                           validator="#{controllerListarBienes.validarFiltroId}"
+                                                           valueChangeListener="#{controllerListarBienes.cambioFiltro}"/>
                                         </ice:column>
                                         
                                         <ice:column id="idIdentificacion" rowspan="2" style="vertical-align:top;">

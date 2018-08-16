@@ -610,13 +610,18 @@ public class AgregarBienController extends BaseController {
             event.queue();
             return;
         }
-        this.donacion = false;
-        this.interfaz = false;
-        Bien bienSecc = (Bien) event.getComponent().getAttributes().get("bienSeleccionado");
-        bien = modelBien.buscarPorId(bienSecc.getId());
-        inicializarDetalle(bien);
-        this.vistaOrigen = event.getComponent().getAttributes().get(Constantes.KEY_VISTA_ORIGEN).toString();
-        Util.navegar(Constantes.KEY_VISTA_DETALLE_BIEN);
+        try{
+            this.donacion = false;
+            this.interfaz = false;
+            Bien bienSecc = (Bien) event.getComponent().getAttributes().get("bienSeleccionado");
+            bien = modelBien.buscarPorId(bienSecc.getId());
+                 inicializarDetalle(bien);
+            this.vistaOrigen = event.getComponent().getAttributes().get(Constantes.KEY_VISTA_ORIGEN).toString();
+            Util.navegar(Constantes.KEY_VISTA_DETALLE_BIEN);
+        }
+        catch(Exception e){
+            Mensaje.agregarErrorAdvertencia("Error al cargar los datos");
+        }
     }
 
     public void regresarListado() {

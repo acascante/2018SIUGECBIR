@@ -229,6 +229,31 @@
             </div>
         </div>
 
+        <!-- ROW FACTURA -->
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    
+                <ice:outputText value="#{label['sigebi.Bien.Label.Factura']}"/>
+                <ice:inputText id="txtNumFactura" 
+                               styleClass="form-control" 
+                               value="#{controllerAgregarBienes.command.numFactura}" >
+                </ice:inputText>
+                </div>
+            </div>
+            
+            <div class="col-md-6">
+                <div class="form-group">
+                    
+                <ice:outputText value="#{label['sigebi.Bien.Label.Orden']}"/>
+                <ice:inputText id="txtNumOrden" 
+                               styleClass="form-control" 
+                               value="#{controllerAgregarBienes.command.numOrden}" >
+                </ice:inputText>
+                </div>
+            </div>
+            
+        </div>
 
         <!-- Panel de Ubicaciones --> 
         <ui:insert name="modalUbicaciones">

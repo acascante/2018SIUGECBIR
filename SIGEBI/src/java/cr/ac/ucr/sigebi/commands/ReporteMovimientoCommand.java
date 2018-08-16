@@ -274,6 +274,8 @@ public class ReporteMovimientoCommand {
 "               WHEN 2 THEN 'SOLICITUD DONACION'\n" +
 "               WHEN 3 THEN 'SOLICITUD TRASLADO'\n" +
 "               WHEN 4 THEN 'SOLICITUD PRESTAMO'\n" +
+"               WHEN 5 THEN 'SOLICITUD SALIDA'\n" +
+"               WHEN 6 THEN 'SOLICITUD MANTENIMIENTO'\n" +
 "               ELSE 'MOVIMIENTO NO REGISTRADO'\n" +
 "            END MOVIMIENTO\n" +
 "        FROM SIGEBI_OAF.SIGB_SOLICITUD_DETALLE SDET\n" +

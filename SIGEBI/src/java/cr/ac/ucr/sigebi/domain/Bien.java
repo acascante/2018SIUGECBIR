@@ -114,6 +114,13 @@ public class Bien extends ObjetoBase implements Serializable {
     @Column(name = "DESCRIPCION_UBICACION")
     private String descripcionUbicacion;
     
+    
+    @Column(name = "NUM_ORDEN")
+    private String numOrden;
+     
+    @Column(name = "NUM_FACTURA")
+    private String numFactura;
+    
     @ManyToOne
     @JoinColumn(name = "ID_ESTADO_INTERNO", referencedColumnName = "ID_ESTADO")
     private Estado estadoInterno;
@@ -157,6 +164,24 @@ public class Bien extends ObjetoBase implements Serializable {
 
     //<editor-fold defaultstate="collapsed" desc="GET's y SET's">
 
+    public String getNumOrden() {
+        return numOrden;
+    }
+
+    public void setNumOrden(String numOrden) {
+        this.numOrden = numOrden;
+    }
+
+    public String getNumFactura() {
+        return numFactura;
+    }
+
+    public void setNumFactura(String numFactura) {
+        this.numFactura = numFactura;
+    }
+
+    
+    
     public Usuario getUsuarioResponsable() {
         return usuarioResponsable;
     }

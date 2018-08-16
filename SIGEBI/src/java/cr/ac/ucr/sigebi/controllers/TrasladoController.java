@@ -354,7 +354,7 @@ public class TrasladoController extends ListadoBienesGeneralController {
             }
 
         } catch (Exception err) {
-            Mensaje.agregarErrorFatal(err.getMessage());
+            Mensaje.agregarErrorFatal(err.getMessage()+"No se encontró la Unidad Ejecutora");
         }
 
     }

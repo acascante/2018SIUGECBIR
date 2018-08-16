@@ -352,6 +352,24 @@ root {
     white-space: nowrap;
 }
 
+.menu_horizontal.right{
+    float: right;
+}
+
+.menu_horizontal.menuItemAyuda{
+    float: right;
+}
+
+.menu_horizontal.menuItemAyuda a{
+    background-image: url(../../imagenes/menu/help.png);
+    background-position: 0 50%;
+    width: 48px;
+} 
+
+.menu_horizontal.menuItemAyuda a .iceMnuItmLabel{
+    display: none;
+}
+
 .menu_horizontalItem{
     float: left;
     margin-right: 7pt;
