@@ -85,12 +85,16 @@
                                         </ice:column>
                                         
                                         <!-- Unidad Ejecutora -->
-                                        <ice:column id="unidadEjecutora" rowspan="2" >
+                                        <ice:column id="unidadEjecutora" rendered="#{controllerListarExclusiones.usuarioAdministrador}">
+                                            <ice:outputText value="#{label['sigebi.label.exclusiones.unidadEjecutora']} "/>
+                                        </ice:column>
+                                        
+                                        <ice:column id="unidadEjecutora" rendered="#{!controllerListarExclusiones.usuarioAdministrador}" rowspan="2" >
                                             <ice:outputText value="#{label['sigebi.label.exclusiones.unidadEjecutora']} "/>
                                         </ice:column>
                                         
                                         <ice:column id="opciones" rowspan="2" >
-                                            <ice:outputText value="#{label['sigebi.label.prestamos.opciones']} "/>
+                                            <ice:outputText value="#{label['sigebi.label.exclusiones.opciones']} "/>
                                         </ice:column>
                                     </ice:headerRow>
                                     <ice:headerRow>
@@ -143,8 +147,8 @@
                                         </ice:column>
 
                                         <!-- Unidad Ejecutora -->
-                                        <ice:panelGroup rendered="#{controllerListarExclusiones.usuarioAdministrador}" >
-                                            <ice:column id="fltUnidadEjecutora" style="vertical-align:top;">
+
+                                            <ice:column id="fltUnidadEjecutora" style="vertical-align:top;" rendered="#{controllerListarExclusiones.usuarioAdministrador}">
                                                 <ice:selectOneMenu  id="txtFltUnidadEjecutora"
                                                                     valueChangeListener="#{controllerListarExclusiones.cambioFiltro}"
                                                                     value="#{controllerListarExclusiones.command.fltUnidadEjecutora}"
@@ -153,7 +157,7 @@
                                                     <f:selectItems id="slcUnidadesItem" value="#{controllerListarExclusiones.itemsUnidadEjecutora}"/>
                                                 </ice:selectOneMenu>
                                             </ice:column>
-                                        </ice:panelGroup>
+
 
                                     </ice:headerRow>
                                 </ice:columnGroup>

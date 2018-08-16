@@ -63,7 +63,6 @@ public class ListarExclusionesController extends BaseController {
     
     @PostConstruct
     public final void inicializar() {
-        this.inicializarListado();
         List<Estado> estados = this.estadosPorDominio(Constantes.DOMINIO_EXCLUSION);
         if (!estados.isEmpty()) {
             this.itemsEstado = new ArrayList<SelectItem>();
@@ -84,7 +83,6 @@ public class ListarExclusionesController extends BaseController {
         usuarioAdministrador = administrador == null ? false : true;
 
         if (usuarioAdministrador) {
-            this.command = new ListarExclusionesCommand();
             List<UnidadEjecutora> unidadesEjecutoras = unidadEjecutoraModel.listar();
             if (!unidadesEjecutoras.isEmpty()) {
                 this.itemsUnidadEjecutora = new ArrayList<SelectItem>();
@@ -93,11 +91,14 @@ public class ListarExclusionesController extends BaseController {
                 }
             }
         } else {
-            this.command = new ListarExclusionesCommand(unidadEjecutora.getId());
+            this.command.setFltUnidadEjecutora(unidadEjecutora.getId());
         }
+        
+        this.inicializarListado();        
     }
     
     private void inicializarDatos() {
+        this.command = new ListarExclusionesCommand();
         this.vistaOrigen = Constantes.VISTA_EXCLUSION_LISTADO;
     }
     
@@ -195,6 +196,13 @@ public class ListarExclusionesController extends BaseController {
         this.usuarioAdministrador = usuarioAdministrador;
     }
 
+    public List<SelectItem> getItemsUnidadEjecutora() {
+        return itemsUnidadEjecutora;
+    }
+
+    public void setItemsUnidadEjecutora(List<SelectItem> itemsUnidadEjecutora) {
+        this.itemsUnidadEjecutora = itemsUnidadEjecutora;
+    }
     // </editor-fold>
 
     // <editor-fold defaultstate="collapsed" desc="Paginacion">

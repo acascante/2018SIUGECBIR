@@ -125,8 +125,12 @@ public class ExclusionDao extends GenericDaoImpl {
         } else {
             sql.append("exc FROM SolicitudExclusion exc ");
         }
-    
-        sql.append("WHERE exc.unidadEjecutora = :unidadEjecutora "); 
+        
+        if (unidadEjecutora == null) {
+            sql.append("WHERE 1 = 1 "); 
+        } else {
+            sql.append("WHERE exc.unidadEjecutora = :unidadEjecutora "); 
+        }
         if(id != null && id > 0){
            sql.append("AND exc.id = :id ");
         } else {
@@ -143,7 +147,9 @@ public class ExclusionDao extends GenericDaoImpl {
         sql.append(" ORDER BY exc.id asc");
         
         Query query = session.createQuery(sql.toString());
-        query.setParameter("unidadEjecutora", unidadEjecutora);
+        if (unidadEjecutora != null) {
+            query.setParameter("unidadEjecutora", unidadEjecutora);
+        }
         if(id != null && id > 0){
             query.setParameter("id", id);
         } else {

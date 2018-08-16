@@ -32,7 +32,7 @@ public class UnidadEjecutoraDao extends GenericDaoImpl {
     @Transactional(readOnly = true)
     public List<UnidadEjecutora> listar() throws FWExcepcion {
         try {
-            return dao.getHibernateTemplate().find("from UnidadEjecutora where idTipoUnidad = 'UCO'"); 
+            return dao.getHibernateTemplate().find("from UnidadEjecutora ue where ue.idTipoUnidad = 'UCO' Order by ue.descripcion"); 
         } catch (DataAccessException e) {
             throw new FWExcepcion("sigebi.error.notificacionDao.listar", "Error obtener los registros de tipo " + this.getClass(), e.getCause());
         }

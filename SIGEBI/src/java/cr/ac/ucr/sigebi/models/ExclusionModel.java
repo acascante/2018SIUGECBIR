@@ -11,6 +11,7 @@ import cr.ac.ucr.sigebi.daos.UnidadEjecutoraDao;
 import cr.ac.ucr.sigebi.domain.SolicitudDetalle;
 import cr.ac.ucr.sigebi.domain.SolicitudExclusion;
 import cr.ac.ucr.sigebi.domain.UnidadEjecutora;
+import cr.ac.ucr.sigebi.utils.Constantes;
 import java.util.Date;
 import java.util.List;
 import javax.annotation.Resource;
@@ -48,11 +49,21 @@ public class ExclusionModel {
     }
             
     public Long contar(Long idUnidadEjecutora, Long id, Date fecha, Long idEstado, Long idTipoExclusion) throws FWExcepcion {
-        return exclusionDao.contar(unidadEjecutoraDao.buscarPorId(idUnidadEjecutora), id, fecha, idEstado, idTipoExclusion);
+        if (idUnidadEjecutora.equals(Constantes.DEFAULT_ID)) {
+            return exclusionDao.contar(null, id, fecha, idEstado, idTipoExclusion);
+        }
+        else {
+            return exclusionDao.contar(unidadEjecutoraDao.buscarPorId(idUnidadEjecutora), id, fecha, idEstado, idTipoExclusion);
+        }
     }
     
     public List<SolicitudExclusion> listar(Integer primerRegistro, Integer ultimoRegistro, Long idUnidadEjecutora, Long id, Date fecha, Long idEstado, Long idTipoExclusion) throws FWExcepcion {
-        return exclusionDao.listar(primerRegistro, ultimoRegistro, unidadEjecutoraDao.buscarPorId(idUnidadEjecutora), id, fecha, idEstado, idTipoExclusion);
+        if (idUnidadEjecutora.equals(Constantes.DEFAULT_ID)) {
+            return exclusionDao.listar(primerRegistro, ultimoRegistro, null, id, fecha, idEstado, idTipoExclusion);
+        }
+        else {
+            return exclusionDao.listar(primerRegistro, ultimoRegistro, unidadEjecutoraDao.buscarPorId(idUnidadEjecutora), id, fecha, idEstado, idTipoExclusion);
+        }
     }
     
     public Long contarDetalles(SolicitudExclusion exclusion) throws FWExcepcion {
