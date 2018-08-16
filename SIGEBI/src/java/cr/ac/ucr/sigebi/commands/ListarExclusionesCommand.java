@@ -5,6 +5,7 @@
  */
 package cr.ac.ucr.sigebi.commands;
 
+import cr.ac.ucr.sigebi.domain.UnidadEjecutora;
 import cr.ac.ucr.sigebi.utils.Constantes;
 import java.util.Date;
 import java.util.TimeZone;
@@ -23,12 +24,17 @@ public class ListarExclusionesCommand {
     private static String fltId = "";
     private static Long fltEstado = -1L;
     private static Long fltTipo = -1L;
+    private static Long fltUnidadEjecutora = -1L;
     private static Date fltFecha = null;
     //</editor-fold>
     
     //<editor-fold defaultstate="collapsed" desc="Constructores">
-    public ListarExclusionesCommand() { 
+    public ListarExclusionesCommand() {
         super();
+    }
+    public ListarExclusionesCommand(Long idUnidadEjecutora) {
+        this();
+        this.fltUnidadEjecutora = idUnidadEjecutora;
     }
     //</editor-fold>
  
@@ -86,6 +92,14 @@ public class ListarExclusionesCommand {
 
     public void setFltFecha(Date fltFecha) {
         ListarExclusionesCommand.fltFecha = fltFecha;
+    }
+
+    public Long getFltUnidadEjecutora() {
+        return fltUnidadEjecutora;
+    }
+
+    public void setFltUnidadEjecutora(Long fltUnidadEjecutora) {
+        ListarExclusionesCommand.fltUnidadEjecutora = fltUnidadEjecutora;
     }
     //</editor-fold>
 }

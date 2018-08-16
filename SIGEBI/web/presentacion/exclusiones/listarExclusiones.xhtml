@@ -141,6 +141,20 @@
                                                 <f:selectItems id="slcTipoItem" value="#{controllerListarExclusiones.itemsTipo}"/>
                                             </ice:selectOneMenu>
                                         </ice:column>
+
+                                        <!-- Unidad Ejecutora -->
+                                        <ice:panelGroup rendered="#{controllerListarExclusiones.usuarioAdministrador}" >
+                                            <ice:column id="fltUnidadEjecutora" style="vertical-align:top;">
+                                                <ice:selectOneMenu  id="txtFltUnidadEjecutora"
+                                                                    valueChangeListener="#{controllerListarExclusiones.cambioFiltro}"
+                                                                    value="#{controllerListarExclusiones.command.fltUnidadEjecutora}"
+                                                                    partialSubmit="true">
+                                                    <f:selectItem itemLabel="N/A" itemValue="-1"/>
+                                                    <f:selectItems id="slcUnidadesItem" value="#{controllerListarExclusiones.itemsUnidadEjecutora}"/>
+                                                </ice:selectOneMenu>
+                                            </ice:column>
+                                        </ice:panelGroup>
+
                                     </ice:headerRow>
                                 </ice:columnGroup>
                             </f:facet>

@@ -5,19 +5,18 @@
  */
 package cr.ac.ucr.sigebi.controllers;
 
-import cr.ac.ucr.sigebi.utils.Constantes;
 import cr.ac.ucr.framework.utils.FWExcepcion;
 import cr.ac.ucr.framework.vista.util.Mensaje;
 import cr.ac.ucr.framework.vista.util.Util;
 import cr.ac.ucr.sigebi.commands.ListarExclusionesCommand;
-import cr.ac.ucr.sigebi.domain.Estado;
-import cr.ac.ucr.sigebi.domain.SolicitudExclusion;
-import cr.ac.ucr.sigebi.domain.Tipo;
+import cr.ac.ucr.sigebi.domain.*;
+import cr.ac.ucr.sigebi.models.AutorizacionRolPersonaModel;
 import cr.ac.ucr.sigebi.models.ExclusionModel;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
+import cr.ac.ucr.sigebi.models.UnidadEjecutoraModel;
+import cr.ac.ucr.sigebi.utils.Constantes;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Controller;
+
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import javax.faces.component.UIComponent;
@@ -28,8 +27,10 @@ import javax.faces.event.PhaseId;
 import javax.faces.event.ValueChangeEvent;
 import javax.faces.model.SelectItem;
 import javax.faces.validator.ValidatorException;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Controller;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
 
 /**
  *
@@ -39,7 +40,9 @@ import org.springframework.stereotype.Controller;
 @Scope("session")
 public class ListarExclusionesController extends BaseController {
 
+    @Resource private AutorizacionRolPersonaModel autorizacionRolPersonaModel;
     @Resource private ExclusionModel exclusionModel;
+    @Resource private UnidadEjecutoraModel unidadEjecutoraModel;
     
     private List<SolicitudExclusion> exclusiones;
     
@@ -48,7 +51,11 @@ public class ListarExclusionesController extends BaseController {
     private List<SelectItem> itemsEstado;
     
     private List<SelectItem> itemsTipo;
-    
+
+    private List<SelectItem> itemsUnidadEjecutora;
+
+    private boolean usuarioAdministrador;
+
     public ListarExclusionesController() {
         super();
         this.inicializarDatos();
@@ -72,10 +79,25 @@ public class ListarExclusionesController extends BaseController {
                 this.itemsTipo.add(new SelectItem(item.getId(), item.getNombre()));
             }
         }
+
+        AutorizacionRolPersona administrador = autorizacionRolPersonaModel.buscar(Constantes.CODIGO_AUTORIZACION_ADMINISTRADOR, Constantes.CODIGO_ROL_ADMINISTRADOR_AUTORIZACION_ADMINISTRADOR, usuarioSIGEBI, unidadEjecutora);
+        usuarioAdministrador = administrador == null ? false : true;
+
+        if (usuarioAdministrador) {
+            this.command = new ListarExclusionesCommand();
+            List<UnidadEjecutora> unidadesEjecutoras = unidadEjecutoraModel.listar();
+            if (!unidadesEjecutoras.isEmpty()) {
+                this.itemsUnidadEjecutora = new ArrayList<SelectItem>();
+                for (UnidadEjecutora item : unidadesEjecutoras) {
+                    this.itemsUnidadEjecutora.add(new SelectItem(item.getId(), item.getDescripcion()));
+                }
+            }
+        } else {
+            this.command = new ListarExclusionesCommand(unidadEjecutora.getId());
+        }
     }
     
     private void inicializarDatos() {
-        this.command = new ListarExclusionesCommand();
         this.vistaOrigen = Constantes.VISTA_EXCLUSION_LISTADO;
     }
     
@@ -87,7 +109,7 @@ public class ListarExclusionesController extends BaseController {
     
     private void contarExclusiones() {
         try {
-            Long contador = exclusionModel.contar(unidadEjecutora, command.getFltIdCodigo(), command.getFltFecha(), command.getFltEstado(), command.getFltTipo());
+            Long contador = exclusionModel.contar(command.getFltUnidadEjecutora(), command.getFltIdCodigo(), command.getFltFecha(), command.getFltEstado(), command.getFltTipo());
             this.setCantidadRegistros(contador.intValue());
         } catch (FWExcepcion e) {
             Mensaje.agregarErrorAdvertencia(e.getError_para_usuario());
@@ -96,7 +118,7 @@ public class ListarExclusionesController extends BaseController {
     
     private void listarExclusiones() {
         try {
-            this.exclusiones = exclusionModel.listar(this.getPrimerRegistro()-1, this.getUltimoRegistro(), unidadEjecutora, command.getFltIdCodigo(), command.getFltFecha(), command.getFltEstado(), command.getFltTipo());
+            this.exclusiones = exclusionModel.listar(this.getPrimerRegistro()-1, this.getUltimoRegistro(), command.getFltUnidadEjecutora(), command.getFltIdCodigo(), command.getFltFecha(), command.getFltEstado(), command.getFltTipo());
         } catch (FWExcepcion e) {
             Mensaje.agregarErrorAdvertencia(e.getError_para_usuario());
         }
@@ -110,6 +132,7 @@ public class ListarExclusionesController extends BaseController {
         }
         this.inicializarListado();
     }
+
 
     public void validarFiltroId(FacesContext context, UIComponent component, Object value) throws ValidatorException {
         try {
@@ -163,6 +186,15 @@ public class ListarExclusionesController extends BaseController {
     public void setItemsTipo(List<SelectItem> itemsTipo) {    
         this.itemsTipo = itemsTipo;
     }
+
+    public boolean isUsuarioAdministrador() {
+        return usuarioAdministrador;
+    }
+
+    public void setUsuarioAdministrador(boolean usuarioAdministrador) {
+        this.usuarioAdministrador = usuarioAdministrador;
+    }
+
     // </editor-fold>
 
     // <editor-fold defaultstate="collapsed" desc="Paginacion">
