@@ -5,14 +5,14 @@
  */
 package cr.ac.ucr.sigebi.controllers;
 
+import cr.ac.ucr.sigebi.domain.*;
+import cr.ac.ucr.sigebi.models.AutorizacionRolPersonaModel;
+import cr.ac.ucr.sigebi.models.UnidadEjecutoraModel;
 import cr.ac.ucr.sigebi.utils.Constantes;
 import cr.ac.ucr.framework.utils.FWExcepcion;
 import cr.ac.ucr.framework.vista.util.Mensaje;
 import cr.ac.ucr.framework.vista.util.Util;
 import cr.ac.ucr.sigebi.commands.ListarPrestamosCommand;
-import cr.ac.ucr.sigebi.domain.Estado;
-import cr.ac.ucr.sigebi.domain.SolicitudPrestamo;
-import cr.ac.ucr.sigebi.domain.Tipo;
 import cr.ac.ucr.sigebi.models.PrestamoModel;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -39,7 +39,9 @@ import org.springframework.stereotype.Controller;
 @Scope("session")
 public class ListarPrestamosController extends BaseController {
 
+    @Resource private AutorizacionRolPersonaModel autorizacionRolPersonaModel;
     @Resource private PrestamoModel prestamoModel;
+    @Resource private UnidadEjecutoraModel unidadEjecutoraModel;
     
     private List<SolicitudPrestamo> prestamos;
     
@@ -48,6 +50,10 @@ public class ListarPrestamosController extends BaseController {
     private List<SelectItem> itemsEstado;
     
     private List<SelectItem> itemsTipo;
+
+    private List<SelectItem> itemsUnidadEjecutora;
+
+    private boolean usuarioAdministrador;
     
     public ListarPrestamosController() {
         super();
@@ -56,6 +62,21 @@ public class ListarPrestamosController extends BaseController {
     
     @PostConstruct
     public final void inicializar() {
+        AutorizacionRolPersona administrador = autorizacionRolPersonaModel.buscar(Constantes.CODIGO_AUTORIZACION_ADMINISTRADOR, Constantes.CODIGO_ROL_ADMINISTRADOR_AUTORIZACION_ADMINISTRADOR, usuarioSIGEBI, unidadEjecutora);
+        usuarioAdministrador = administrador == null ? false : true;
+
+        if (usuarioAdministrador) {
+            List<UnidadEjecutora> unidadesEjecutoras = unidadEjecutoraModel.listar();
+            if (!unidadesEjecutoras.isEmpty()) {
+                this.itemsUnidadEjecutora = new ArrayList<SelectItem>();
+                for (UnidadEjecutora item : unidadesEjecutoras) {
+                    this.itemsUnidadEjecutora.add(new SelectItem(item.getId(), item.getDescripcion()));
+                }
+            }
+        } else {
+            this.command.setFltUnidadEjecutora(unidadEjecutora.getId());
+        }
+
         this.inicializarListado();
         List<Estado> estados = this.estadosPorDominio(Constantes.DOMINIO_PRESTAMO);
         if (!estados.isEmpty()) {
@@ -87,7 +108,7 @@ public class ListarPrestamosController extends BaseController {
     
     private void contarPrestamos() {
         try {
-            Long contador = prestamoModel.contar(unidadEjecutora, command.getFltIdCodigo(), command.getFltFecha(), command.getFltEstado(), command.getFltTipoEntidad(), command.getFltEntidad());
+            Long contador = prestamoModel.contar(command.getFltUnidadEjecutora(), command.getFltIdCodigo(), command.getFltFecha(), command.getFltEstado(), command.getFltTipoEntidad(), command.getFltEntidad());
             this.setCantidadRegistros(contador.intValue());
         } catch (FWExcepcion e) {
             Mensaje.agregarErrorAdvertencia(e.getError_para_usuario());
@@ -96,7 +117,7 @@ public class ListarPrestamosController extends BaseController {
     
     private void listarPrestamos() {
         try {
-            this.prestamos = prestamoModel.listar(this.getPrimerRegistro()-1, this.getUltimoRegistro(), unidadEjecutora, command.getFltIdCodigo(), command.getFltFecha(), command.getFltEstado(), command.getFltTipoEntidad(), command.getFltEntidad());
+            this.prestamos = prestamoModel.listar(this.getPrimerRegistro()-1, this.getUltimoRegistro(), command.getFltUnidadEjecutora(), command.getFltIdCodigo(), command.getFltFecha(), command.getFltEstado(), command.getFltTipoEntidad(), command.getFltEntidad());
         } catch (FWExcepcion e) {
             Mensaje.agregarErrorAdvertencia(e.getError_para_usuario());
         }

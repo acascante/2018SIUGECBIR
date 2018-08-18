@@ -12,6 +12,8 @@ import cr.ac.ucr.sigebi.domain.Documento;
 import cr.ac.ucr.sigebi.domain.DocumentoActa;
 import cr.ac.ucr.sigebi.domain.DocumentoDetalle;
 import java.util.List;
+
+import cr.ac.ucr.sigebi.domain.UnidadEjecutora;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -120,11 +122,11 @@ public class ActaDao extends GenericDaoImpl {
     
     
     @Transactional(readOnly = true)
-    public Long contarActas(Long unidadEjecutora,
-                                        String fltIdActa,
-                                        String fltAutorizacion,
-                                        String fltEstado,
-                                        String fltFecha
+    public Long contarActas(UnidadEjecutora unidadEjecutora,
+                            String fltIdActa,
+                            String fltAutorizacion,
+                            String fltEstado,
+                            String fltFecha
     ) {
         Session session = dao.getSessionFactory().openSession();
         try {
@@ -151,7 +153,7 @@ public class ActaDao extends GenericDaoImpl {
 
     
     @Transactional(readOnly = true)
-    public List<DocumentoActa> listarActas(Long unidadEjecutora,
+    public List<DocumentoActa> listarActas(UnidadEjecutora unidadEjecutora,
                                         String fltIdActa,
                                         String fltAutorizacion,
                                         String fltEstado,
@@ -187,7 +189,7 @@ public class ActaDao extends GenericDaoImpl {
     }
 
     
-    private Query creaQueryActasConsultar(Long unidadEjecutora,
+    private Query creaQueryActasConsultar(UnidadEjecutora unidadEjecutora,
                                         String fltIdActa,
                                         String fltAutorizacion,
                                         String fltEstado,
@@ -195,67 +197,49 @@ public class ActaDao extends GenericDaoImpl {
                                         Boolean contar,
                                         Session session
     ) {
-        
-        String sql;
-        if (contar) 
-            sql = "SELECT count(s) FROM DocumentoActa s ";
-         else 
-            sql = "SELECT s FROM DocumentoActa s ";
-        
-        sql = sql + " WHERE s.unidadEjecutora.id = :pnumUnidadEjec ";
-        if (fltIdActa != null && fltIdActa.length() > 0) 
-            sql = sql + " AND str( s.id  ) like :fltIdActa ";
-        if (fltAutorizacion != null && fltAutorizacion.length() > 0) 
-            sql = sql + " AND upper(s.autorizacion) like upper(:fltAutorizacion) ";
-        if (fltEstado != null && fltEstado.length() > 0) 
-            sql = sql + " AND str( s.estado.id ) = :fltEstado";
-        if(fltFecha != null && fltFecha.length() > 0)
-               sql = sql +  " AND to_char(s.fecha, 'YYYY-MM-DD') like upper(:fltFecha) ";
+        StringBuilder sql = new StringBuilder("SELECT");
 
-        Query q = session.createQuery(sql);
-        q.setParameter("pnumUnidadEjec", unidadEjecutora);
-        if (fltIdActa != null && fltIdActa.length() > 0) 
+        if (contar) {
+            sql.append(" count(s) FROM DocumentoActa s ");
+        } else {
+            sql.append(" s FROM DocumentoActa s ");
+        }
+        if (unidadEjecutora == null) {
+            sql.append("WHERE 1 = 1 ");
+        } else {
+            sql.append("WHERE s.unidadEjecutora = :pnumUnidadEjec ");
+        }
+
+        if (fltIdActa != null && fltIdActa.length() > 0) {
+            sql.append(" AND str( s.id  ) like :fltIdActa ");
+        }
+        if (fltAutorizacion != null && fltAutorizacion.length() > 0) {
+            sql.append(" AND upper(s.autorizacion) like upper(:fltAutorizacion) ");
+        }
+        if (fltEstado != null && fltEstado.length() > 0) {
+            sql.append(" AND str( s.estado.id ) = :fltEstado");
+        }
+        if(fltFecha != null && fltFecha.length() > 0) {
+            sql.append(" AND to_char(s.fecha, 'YYYY-MM-DD') like upper(:fltFecha) ");
+        }
+
+        Query q = session.createQuery(sql.toString());
+        if (unidadEjecutora == null) {
+            q.setParameter("pnumUnidadEjec", unidadEjecutora);
+        }
+        if (fltIdActa != null && fltIdActa.length() > 0) {
             q.setParameter("fltIdActa", '%' + fltIdActa + '%');
-        if (fltAutorizacion != null && fltAutorizacion.length() > 0) 
+        }
+        if (fltAutorizacion != null && fltAutorizacion.length() > 0) {
             q.setParameter("fltAutorizacion", '%' + fltAutorizacion + '%');
-        if (fltEstado != null && fltEstado.length() > 0) 
+        }
+        if (fltEstado != null && fltEstado.length() > 0) {
             q.setParameter("fltEstado", fltEstado);
-        if(fltFecha != null && fltFecha.length() > 0)
+        }
+        if(fltFecha != null && fltFecha.length() > 0) {
             q.setParameter("fltFecha", '%' + fltFecha.replace('/', '-') + '%');
-        
-        
-        
-//        String sql;
-//        if (contar) 
-//            sql = "SELECT count(s) FROM DocumentoActa s ";
-//         else 
-//            sql = "SELECT s FROM DocumentoActa s ";
-//        
-//        //Select
-//        sql = sql + " WHERE s.unidadEjecutora.id = :pnumUnidadEjec ";
-//        if (fltIdTipo != null && fltIdTipo.length() > 0) 
-//            sql = sql + " AND s.tipo.id like :fltIdTipo ";
-//        if (fltAutorizacion != null && fltAutorizacion.length() > 0) 
-//            sql = sql + " AND upper(s.autorizacion) like upper(:fltAutorizacion) ";
-//        if (fltEstado != null && fltEstado.length() > 0) 
-//            sql = sql + " AND s.estado.id = :fltEstado";
-//        if(fltFecha != null && fltFecha.length() > 0)
-//               sql = sql +  " AND upper(s.fecha) like upper(:fltFecha) ";
-//
-//        Query q = session.createQuery(sql);
-//        q.setParameter("pnumUnidadEjec", unidadEjecutora);
-//        if (fltIdTipo != null && fltIdTipo.length() > 0) 
-//            q.setParameter("fltIdTipo", '%' + fltIdTipo + '%');
-//        if (fltAutorizacion != null && fltAutorizacion.length() > 0) 
-//            q.setParameter("fltAutorizacion", '%' + fltAutorizacion + '%');
-//        if (fltEstado != null && fltEstado.length() > 0) 
-//            q.setParameter("fltEstado", Integer.parseInt(fltEstado));
-//        if(fltFecha != null && fltFecha.length() > 0)
-//            q.setParameter("fltFecha", '%' + fltFecha + '%');
-//        
+        }
+
         return q;
     }
-
-    
-    
 }

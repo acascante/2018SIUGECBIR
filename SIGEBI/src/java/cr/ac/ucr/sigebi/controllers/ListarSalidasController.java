@@ -5,6 +5,10 @@
  */
 package cr.ac.ucr.sigebi.controllers;
 
+import cr.ac.ucr.sigebi.domain.*;
+import cr.ac.ucr.sigebi.models.AutorizacionRolPersonaModel;
+import cr.ac.ucr.sigebi.models.ExclusionModel;
+import cr.ac.ucr.sigebi.models.UnidadEjecutoraModel;
 import cr.ac.ucr.sigebi.utils.Constantes;
 import cr.ac.ucr.framework.utils.FWExcepcion;
 import cr.ac.ucr.framework.vista.util.Mensaje;
@@ -17,9 +21,6 @@ import javax.faces.model.SelectItem;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import cr.ac.ucr.framework.vista.util.Util;
-import cr.ac.ucr.sigebi.domain.Estado;
-import cr.ac.ucr.sigebi.domain.SolicitudSalida;
-import cr.ac.ucr.sigebi.domain.Tipo;
 import cr.ac.ucr.sigebi.models.SolicitudModel;
 import javax.annotation.PostConstruct;
 import javax.faces.event.ActionEvent;
@@ -33,25 +34,32 @@ import javax.faces.event.ActionEvent;
 public class ListarSalidasController extends BaseController {
 
     //<editor-fold defaultstate="collapsed" desc="Variables Locales">
-    @Resource
-    private SolicitudModel solicitudModel;
+    @Resource private AutorizacionRolPersonaModel autorizacionRolPersonaModel;
+    @Resource private SolicitudModel solicitudModel;
+    @Resource private UnidadEjecutoraModel unidadEjecutoraModel;
 
     // Lista de las solicitudes
-    List<SolicitudSalida> solicitudes;
+    private List<SolicitudSalida> solicitudes;
 
     // Filtros para listar las solicitudes 
-    static String fltId = "";
-    static String fltEstado = "-1";
-    static String fltIdTipo = "-1";
-    static String fltCedula = "";
-    static String fltNombre = "";
-    static String fltFecha = "";
+    private static String fltId = "";
+    private static String fltEstado = "-1";
+    private static String fltCedula = "";
+    private static String fltIdTipo = "-1";
+    private static String fltNombre = "";
+    private static String fltFecha = "";
+    private static Long fltUnidadEjecutora = -1L;
     
     // comboBox estados
-    List<SelectItem> estadosOptions;
+    private List<SelectItem> estadosOptions;
 
     // comboBox tipos
-    List<SelectItem> tipoOptions;
+    private List<SelectItem> tipoOptions;
+
+    private List<SelectItem> itemsUnidadEjecutora;
+
+    private boolean usuarioAdministrador;
+
 
     //</editor-fold>
 
@@ -128,6 +136,30 @@ public class ListarSalidasController extends BaseController {
         this.tipoOptions = tipoOptions;
     }
 
+    public static Long getFltUnidadEjecutora() {
+        return fltUnidadEjecutora;
+    }
+
+    public static void setFltUnidadEjecutora(Long fltUnidadEjecutora) {
+        ListarSalidasController.fltUnidadEjecutora = fltUnidadEjecutora;
+    }
+
+    public List<SelectItem> getItemsUnidadEjecutora() {
+        return itemsUnidadEjecutora;
+    }
+
+    public void setItemsUnidadEjecutora(List<SelectItem> itemsUnidadEjecutora) {
+        this.itemsUnidadEjecutora = itemsUnidadEjecutora;
+    }
+
+    public boolean isUsuarioAdministrador() {
+        return usuarioAdministrador;
+    }
+
+    public void setUsuarioAdministrador(boolean usuarioAdministrador) {
+        this.usuarioAdministrador = usuarioAdministrador;
+    }
+
     //</editor-fold>
     
     //<editor-fold defaultstate="collapsed" desc="Constructor">
@@ -137,6 +169,20 @@ public class ListarSalidasController extends BaseController {
 
     @PostConstruct
     public final void inicializar() {
+        AutorizacionRolPersona administrador = autorizacionRolPersonaModel.buscar(Constantes.CODIGO_AUTORIZACION_ADMINISTRADOR, Constantes.CODIGO_ROL_ADMINISTRADOR_AUTORIZACION_ADMINISTRADOR, usuarioSIGEBI, unidadEjecutora);
+        usuarioAdministrador = administrador == null ? false : true;
+
+        if (usuarioAdministrador) {
+            List<UnidadEjecutora> unidadesEjecutoras = unidadEjecutoraModel.listar();
+            if (!unidadesEjecutoras.isEmpty()) {
+                this.itemsUnidadEjecutora = new ArrayList<SelectItem>();
+                for (UnidadEjecutora item : unidadesEjecutoras) {
+                    this.itemsUnidadEjecutora.add(new SelectItem(item.getId(), item.getDescripcion()));
+                }
+            }
+        } else {
+            this.setFltUnidadEjecutora(unidadEjecutora.getId());
+        }
 
         //Se consultan los estados por dominio
         estadosOptions = new ArrayList<SelectItem>();
@@ -191,7 +237,7 @@ public class ListarSalidasController extends BaseController {
         try {
 
             //Se cuenta la cantidad de registros
-            Long contador = solicitudModel.contarSalidas(fltId, unidadEjecutora, this.estadoPorId(Long.parseLong(fltEstado)), 
+            Long contador = solicitudModel.contarSalidas(fltId, fltUnidadEjecutora, this.estadoPorId(Long.parseLong(fltEstado)),
                             fltCedula, fltNombre, this.tipoPorId(Long.parseLong(fltIdTipo)), Constantes.DISCRIMINATOR_SOLICITUD_SALIDA, null);
 
             //Se actualiza la cantidad de registros segun los filtros
@@ -210,7 +256,7 @@ public class ListarSalidasController extends BaseController {
     private void listar() {
         try {
 
-            this.solicitudes = solicitudModel.listarSalidas(fltId, unidadEjecutora, this.estadoPorId(Long.parseLong(fltEstado)), 
+            this.solicitudes = solicitudModel.listarSalidas(fltId, fltUnidadEjecutora, this.estadoPorId(Long.parseLong(fltEstado)),
                             fltCedula, fltNombre, this.tipoPorId(Long.parseLong(fltIdTipo)), Constantes.DISCRIMINATOR_SOLICITUD_SALIDA, null, 
                             this.getPrimerRegistro() - 1, this.getUltimoRegistro());
             

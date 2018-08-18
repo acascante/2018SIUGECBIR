@@ -124,8 +124,13 @@ public class SolicitudMantenimientoDao extends GenericDaoImpl {
         } else {
             sql.append("sol FROM SolicitudMantenimiento sol ");
         }
-    
-        sql.append("WHERE sol.unidadEjecutora = :unidadEjecutora "); 
+
+        if (unidadEjecutora == null) {
+            sql.append("WHERE 1 = 1 ");
+        } else {
+            sql.append("WHERE sol.unidadEjecutora = :unidadEjecutora ");
+        }
+
         if(id != null && id > 0){
            sql.append("AND sol.id = :id ");
         } else {
@@ -139,7 +144,10 @@ public class SolicitudMantenimientoDao extends GenericDaoImpl {
         sql.append(" ORDER BY sol.id asc");
         
         Query query = session.createQuery(sql.toString());
-        query.setParameter("unidadEjecutora", unidadEjecutora);
+        if (unidadEjecutora != null) {
+            query.setParameter("unidadEjecutora", unidadEjecutora);
+        }
+
         if(id != null && id > 0){
             query.setParameter("id", id);
         } else {

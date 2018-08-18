@@ -39,25 +39,25 @@ import org.springframework.stereotype.Controller;
 @Controller(value = "controllerListarRecepcionPrestamos")
 @Scope("session")
 public class ListarRecepcionPrestamosController extends BaseController {
-    
+
     @Resource private ConvenioModel convenioModel;
     @Resource private RecepcionPrestamoModel recepcionPrestamoModel;
-    
+
     private List<SelectItem> itemsConvenio;
     private List<SelectItem> itemsEstado;
     private List<RecepcionPrestamo> prestamos;
-    
+
     private ListarRecepcionPrestamosCommand command;
-   
+
     public ListarRecepcionPrestamosController() {
         super();
         this.inicializarDatos();
     }
-    
+
     @PostConstruct
     public final void inicializar() {
         this.inicializarListado();
-        
+
         List<Estado> listEstados = this.estadosPorDominio(Constantes.DOMINIO_RECEPCION_PRESTAMO);
         if (!listEstados.isEmpty()) {
             this.itemsEstado = new ArrayList<SelectItem>();
@@ -65,7 +65,7 @@ public class ListarRecepcionPrestamosController extends BaseController {
                 this.itemsEstado.add(new SelectItem(item.getId(), item.getNombre()));  // ID + Nombre -- Usado para combo de filtro para enviar el ID al Dao para la consulta
             }
         }
-        
+
         List<Convenio> listConvenios = this.convenioModel.listarActivos(unidadEjecutora, new Date());
         if (!listConvenios.isEmpty()) {
             this.itemsConvenio = new ArrayList<SelectItem>();
@@ -74,13 +74,13 @@ public class ListarRecepcionPrestamosController extends BaseController {
             }
         }
     }
-    
+
     public void regresarListado() {
         Util.navegar(vistaOrigen);
         this.inicializarDatos();
         this.inicializarListado();
     }
-    
+
     private void inicializarDatos() {
         this.vistaOrigen = Constantes.VISTA_RECEPCION_PRESTAMO_LISTADO;
         this.command = new ListarRecepcionPrestamosCommand();
@@ -91,7 +91,7 @@ public class ListarRecepcionPrestamosController extends BaseController {
         this.contarPrestamos();
         this.listarPrestamos();
     }
-    
+
     private void contarPrestamos() {
         try {
             Long contador = recepcionPrestamoModel.contar(command.getFltIdCodigo(), command.getFltConvenio(), command.getFltDescripcion(), command.getFltIdentificacion(), command.getFltFechaIngreso(), command.getFltFechaDevolucion(), command.getFltEstado());
@@ -100,7 +100,7 @@ public class ListarRecepcionPrestamosController extends BaseController {
             Mensaje.agregarErrorAdvertencia(e.getError_para_usuario());
         }
     }
-    
+
     private void listarPrestamos() {
         try {
             this.prestamos = recepcionPrestamoModel.listar(this.getPrimerRegistro()-1, this.getUltimoRegistro(), command.getFltIdCodigo(), command.getFltConvenio(), command.getFltDescripcion(), command.getFltIdentificacion(), command.getFltFechaIngreso(), command.getFltFechaDevolucion(), command.getFltEstado());
@@ -108,7 +108,7 @@ public class ListarRecepcionPrestamosController extends BaseController {
             Mensaje.agregarErrorAdvertencia(e.getError_para_usuario());
         }
     }
-    
+
     public void cambioFiltro(ValueChangeEvent pEvent) {
         if (!pEvent.getPhaseId().equals(PhaseId.INVOKE_APPLICATION)) {
             pEvent.setPhaseId(PhaseId.INVOKE_APPLICATION);
@@ -126,7 +126,7 @@ public class ListarRecepcionPrestamosController extends BaseController {
             ((UIInput) component).setValid(false);
         }
     }
-    
+
     public void validarFiltroFecha(FacesContext context, UIComponent component, Object value) throws ValidatorException {
         try {
             Calendar calendar = Calendar.getInstance();
@@ -171,7 +171,7 @@ public class ListarRecepcionPrestamosController extends BaseController {
         this.command = command;
     }
     // </editor-fold>
-   
+
     // <editor-fold defaultstate="collapsed" desc="Paginacion">
     public void irPagina(ActionEvent pEvent) {
         if (!pEvent.getPhaseId().equals(PhaseId.INVOKE_APPLICATION)) {
@@ -230,7 +230,7 @@ public class ListarRecepcionPrestamosController extends BaseController {
             pEvent.queue();
             return;
         }
-        this.setCantRegistroPorPagina(Integer.parseInt(pEvent.getNewValue().toString()));          
+        this.setCantRegistroPorPagina(Integer.parseInt(pEvent.getNewValue().toString()));
         this.setPrimerRegistro(1);
         this.listarPrestamos();
     }

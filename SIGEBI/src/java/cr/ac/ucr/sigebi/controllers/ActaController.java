@@ -8,19 +8,8 @@ package cr.ac.ucr.sigebi.controllers;
 import cr.ac.ucr.framework.utils.FWExcepcion;
 import cr.ac.ucr.framework.vista.util.Mensaje;
 import cr.ac.ucr.framework.vista.util.Util;
-import cr.ac.ucr.sigebi.domain.DocumentoActa;
-import cr.ac.ucr.sigebi.domain.DocumentoDetalle;
-import cr.ac.ucr.sigebi.domain.Estado;
-import cr.ac.ucr.sigebi.domain.Tipo;
-import cr.ac.ucr.sigebi.domain.Usuario;
-import cr.ac.ucr.sigebi.models.ActaModel;
-import cr.ac.ucr.sigebi.domain.Bien;
-import cr.ac.ucr.sigebi.domain.DocumentoAutorizacion;
-import cr.ac.ucr.sigebi.models.TipoModel;
-import cr.ac.ucr.sigebi.models.BienModel;
-import cr.ac.ucr.sigebi.models.DocumentoAutorizacionModel;
-import cr.ac.ucr.sigebi.models.DocumentoModel;
-import cr.ac.ucr.sigebi.models.UsuarioModel;
+import cr.ac.ucr.sigebi.domain.*;
+import cr.ac.ucr.sigebi.models.*;
 import cr.ac.ucr.sigebi.utils.Constantes;
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -81,7 +70,7 @@ public class ActaController extends ListadoBienesGeneralController {
     String actaIdEstado;
     String actaNombreEstado;
 
-    DateFormat formatter;// = new SimpleDateFormat("dd/MM/yyyy");
+    DateFormat formatter;
     Date actaFecha;
 
     String fechaRegistro;
@@ -93,17 +82,17 @@ public class ActaController extends ListadoBienesGeneralController {
 
     Tipo tipoSeleccionado;
 
+    private List<SelectItem> itemsUnidadEjecutora;
 
-    //Map<Long, Rol> rolesDelUsuarioActualDesecho;
-    
-    @Resource
-    private TipoModel tipoModel;
-
+    private boolean usuarioAdministrador;
 
     @Resource private ActaModel actaModel;
-    @Resource private UsuarioModel usuarioModel;
+    @Resource private AutorizacionRolPersonaModel autorizacionRolPersonaModel;
     @Resource private BienModel bienModel;
-    
+    @Resource private TipoModel tipoModel;
+    @Resource private UnidadEjecutoraModel unidadEjecutoraModel;
+    @Resource private UsuarioModel usuarioModel;
+
     
     Usuario usuario;
     String valorDonacion;
@@ -119,6 +108,21 @@ public class ActaController extends ListadoBienesGeneralController {
     @PostConstruct
     private void incializaDatos() {
         try{
+            AutorizacionRolPersona administrador = autorizacionRolPersonaModel.buscar(Constantes.CODIGO_AUTORIZACION_ADMINISTRADOR, Constantes.CODIGO_ROL_ADMINISTRADOR_AUTORIZACION_ADMINISTRADOR, usuarioSIGEBI, unidadEjecutora);
+            usuarioAdministrador = administrador == null ? false : true;
+
+            if (usuarioAdministrador) {
+                List<UnidadEjecutora> unidadesEjecutoras = unidadEjecutoraModel.listar();
+                if (!unidadesEjecutoras.isEmpty()) {
+                    this.itemsUnidadEjecutora = new ArrayList<SelectItem>();
+                    for (UnidadEjecutora item : unidadesEjecutoras) {
+                        this.itemsUnidadEjecutora.add(new SelectItem(item.getId(), item.getDescripcion()));
+                    }
+                }
+            } else {
+                this.setFltUnidadEjecutora(unidadEjecutora.getId());
+            }
+
             // TODO manejar los estados en un List por dominio
             estadoGeneralActivo = this.estadoPorDominioValor( Constantes.DOMINIO_GENERAL, Constantes.ESTADO_GENERAL_ACTIVO );
             estadoGeneralPendiente = this.estadoPorDominioValor( Constantes.DOMINIO_GENERAL, Constantes.ESTADO_GENERAL_PENDIENTE );
@@ -380,6 +384,30 @@ public class ActaController extends ListadoBienesGeneralController {
         this.bienesActa = bienesActa;
     }
 
+    public List<SelectItem> getItemsUnidadEjecutora() {
+        return itemsUnidadEjecutora;
+    }
+
+    public void setItemsUnidadEjecutora(List<SelectItem> itemsUnidadEjecutora) {
+        this.itemsUnidadEjecutora = itemsUnidadEjecutora;
+    }
+
+    public boolean isUsuarioAdministrador() {
+        return usuarioAdministrador;
+    }
+
+    public void setUsuarioAdministrador(boolean usuarioAdministrador) {
+        this.usuarioAdministrador = usuarioAdministrador;
+    }
+
+    public static Long getFltUnidadEjecutora() {
+        return fltUnidadEjecutora;
+    }
+
+    public static void setFltUnidadEjecutora(Long fltUnidadEjecutora) {
+        ActaController.fltUnidadEjecutora = fltUnidadEjecutora;
+    }
+
     //</editor-fold>
     
     
@@ -456,13 +484,13 @@ public class ActaController extends ListadoBienesGeneralController {
     
     
     //<editor-fold defaultstate="collapsed" desc="Listado Actas">
-    
-    
-    static String fltIdActa = "";
-    static String fltAutorizacion = "";
-    static String fltFecha = "";
-    static String fltEstados = "";
-    
+
+
+    private static String fltIdActa = "";
+    private static String fltAutorizacion = "";
+    private static String fltFecha = "";
+    private static String fltEstados = "";
+    private static Long fltUnidadEjecutora = -1L;
     
     
     public void listarActas(){
@@ -470,15 +498,7 @@ public class ActaController extends ListadoBienesGeneralController {
             
             int primerReg = this.getPrimerRegistro()-1;
             int ultimoReg = this.getUltimoRegistro();
-            
-                actasRegistradas = actaModel.listarActas(unidadEjecutora.getId()
-                        , fltIdActa
-                        , fltAutorizacion
-                        , fltEstados.equals("-1") ? "" : fltEstados
-                        , fltFecha
-                        , primerReg
-                        , ultimoReg
-                         );
+            actasRegistradas = actaModel.listarActas(fltUnidadEjecutora, fltIdActa, fltAutorizacion, fltEstados.equals("-1") ? "" : fltEstados, fltFecha, primerReg, ultimoReg);
         } catch (Exception err) {
             Mensaje.agregarErrorAdvertencia(err.getCause().getMessage());
         }
@@ -502,12 +522,7 @@ public class ActaController extends ListadoBienesGeneralController {
         try{
             Long contador = 0L;
             
-            contador = actaModel.consultaCantidadRegistros(unidadEjecutora.getId()
-                        , fltIdActa
-                        , fltAutorizacion
-                        , fltEstados.equals("-1") ? "" : fltEstados
-                        , fltFecha
-                );
+            contador = actaModel.consultaCantidadRegistros(fltUnidadEjecutora, fltIdActa, fltAutorizacion, fltEstados.equals("-1") ? "" : fltEstados, fltFecha);
             
             //Se actualiza la cantidad de registros segun los filtros
             this.setCantidadRegistros(contador.intValue());

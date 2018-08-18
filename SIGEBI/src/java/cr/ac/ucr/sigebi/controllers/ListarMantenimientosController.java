@@ -5,6 +5,11 @@
  */
 package cr.ac.ucr.sigebi.controllers;
 
+import cr.ac.ucr.sigebi.domain.AutorizacionRolPersona;
+import cr.ac.ucr.sigebi.domain.UnidadEjecutora;
+import cr.ac.ucr.sigebi.models.AutorizacionRolPersonaModel;
+import cr.ac.ucr.sigebi.models.ExclusionModel;
+import cr.ac.ucr.sigebi.models.UnidadEjecutoraModel;
 import cr.ac.ucr.sigebi.utils.Constantes;
 import cr.ac.ucr.framework.utils.FWExcepcion;
 import cr.ac.ucr.framework.vista.util.Mensaje;
@@ -38,6 +43,8 @@ import org.springframework.stereotype.Controller;
 @Scope("session")
 public class ListarMantenimientosController extends BaseController {
 
+    @Resource private AutorizacionRolPersonaModel autorizacionRolPersonaModel;
+    @Resource private UnidadEjecutoraModel unidadEjecutoraModel;
     @Resource private SolicitudMantenimientoModel solicitudMantenimientoModel;
     
     private List<SolicitudMantenimiento> solicitudesMantenimiento;
@@ -45,7 +52,10 @@ public class ListarMantenimientosController extends BaseController {
     private ListarMantenimientosCommand command;
    
     private List<SelectItem> itemsEstado;
-    
+    private List<SelectItem> itemsUnidadEjecutora;
+
+    private boolean usuarioAdministrador;
+
     public ListarMantenimientosController() {
         super();
         this.inicializarDatos();
@@ -53,7 +63,23 @@ public class ListarMantenimientosController extends BaseController {
     
     @PostConstruct
     public final void inicializar() {
+        AutorizacionRolPersona administrador = autorizacionRolPersonaModel.buscar(Constantes.CODIGO_AUTORIZACION_ADMINISTRADOR, Constantes.CODIGO_ROL_ADMINISTRADOR_AUTORIZACION_ADMINISTRADOR, usuarioSIGEBI, unidadEjecutora);
+        usuarioAdministrador = administrador == null ? false : true;
+
+        if (usuarioAdministrador) {
+            List<UnidadEjecutora> unidadesEjecutoras = unidadEjecutoraModel.listar();
+            if (!unidadesEjecutoras.isEmpty()) {
+                this.itemsUnidadEjecutora = new ArrayList<SelectItem>();
+                for (UnidadEjecutora item : unidadesEjecutoras) {
+                    this.itemsUnidadEjecutora.add(new SelectItem(item.getId(), item.getDescripcion()));
+                }
+            }
+        } else {
+            this.command.setFltUnidadEjecutora(unidadEjecutora.getId());
+        }
+
         this.inicializarListado();
+
         List<Estado> estados = this.estadosPorDominio(Constantes.DOMINIO_SOLICITUD_MANTENIMIENTO);
         if (!estados.isEmpty()) {
             this.itemsEstado = new ArrayList<SelectItem>();
@@ -76,7 +102,7 @@ public class ListarMantenimientosController extends BaseController {
     
     private void contarMantenimientos() {
         try {
-            Long contador = this.solicitudMantenimientoModel.contar(this.unidadEjecutora, this.command.getFltIdCodigo(), this.command.getFltFecha(), this.command.getFltEstado());
+            Long contador = this.solicitudMantenimientoModel.contar(command.getFltUnidadEjecutora(), this.command.getFltIdCodigo(), this.command.getFltFecha(), this.command.getFltEstado());
             this.setCantidadRegistros(contador.intValue());
         } catch (FWExcepcion e) {
             Mensaje.agregarErrorAdvertencia(e.getError_para_usuario());
@@ -85,7 +111,7 @@ public class ListarMantenimientosController extends BaseController {
     
     private void listarMantenimientos() {
         try {
-            this.solicitudesMantenimiento = this.solicitudMantenimientoModel.listar(this.getPrimerRegistro()-1, this.getUltimoRegistro(), this.unidadEjecutora, this.command.getFltIdCodigo(), this.command.getFltFecha(), this.command.getFltEstado());
+            this.solicitudesMantenimiento = this.solicitudMantenimientoModel.listar(this.getPrimerRegistro()-1, this.getUltimoRegistro(), command.getFltUnidadEjecutora(), this.command.getFltIdCodigo(), this.command.getFltFecha(), this.command.getFltEstado());
         } catch (FWExcepcion e) {
             Mensaje.agregarErrorAdvertencia(e.getError_para_usuario());
         }
@@ -144,6 +170,23 @@ public class ListarMantenimientosController extends BaseController {
     public void setItemsEstado(List<SelectItem> itemsEstado) {
         this.itemsEstado = itemsEstado;
     }
+
+    public List<SelectItem> getItemsUnidadEjecutora() {
+        return itemsUnidadEjecutora;
+    }
+
+    public void setItemsUnidadEjecutora(List<SelectItem> itemsUnidadEjecutora) {
+        this.itemsUnidadEjecutora = itemsUnidadEjecutora;
+    }
+
+    public boolean isUsuarioAdministrador() {
+        return usuarioAdministrador;
+    }
+
+    public void setUsuarioAdministrador(boolean usuarioAdministrador) {
+        this.usuarioAdministrador = usuarioAdministrador;
+    }
+
     // </editor-fold>
     
     // <editor-fold defaultstate="collapsed" desc="Paginacion">

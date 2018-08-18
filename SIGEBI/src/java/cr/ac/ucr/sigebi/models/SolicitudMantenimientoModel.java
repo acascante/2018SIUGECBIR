@@ -7,6 +7,7 @@ package cr.ac.ucr.sigebi.models;
 
 import cr.ac.ucr.framework.utils.FWExcepcion;
 import cr.ac.ucr.sigebi.daos.SolicitudMantenimientoDao;
+import cr.ac.ucr.sigebi.daos.UnidadEjecutoraDao;
 import cr.ac.ucr.sigebi.domain.Evento;
 import cr.ac.ucr.sigebi.domain.SolicitudDetalle;
 import cr.ac.ucr.sigebi.domain.SolicitudMantenimiento;
@@ -14,6 +15,8 @@ import cr.ac.ucr.sigebi.domain.UnidadEjecutora;
 import java.util.Date;
 import java.util.List;
 import javax.annotation.Resource;
+
+import cr.ac.ucr.sigebi.utils.Constantes;
 import org.springframework.stereotype.Service;
 
 /**
@@ -26,7 +29,10 @@ public class SolicitudMantenimientoModel {
     
     @Resource
     private SolicitudMantenimientoDao solicitudMantenimientoDao;
-    
+
+    @Resource
+    private UnidadEjecutoraDao unidadEjecutoraDao;
+
     public List<SolicitudMantenimiento> listar() throws FWExcepcion {
         return solicitudMantenimientoDao.listar();
     }
@@ -44,12 +50,23 @@ public class SolicitudMantenimientoModel {
         return solicitudMantenimientoDao.buscarPorId(id);
     }
             
-    public Long contar(UnidadEjecutora unidadEjecutora, Long id, Date fecha, Long idEstado) throws FWExcepcion {
-        return solicitudMantenimientoDao.contar(unidadEjecutora, id, fecha, idEstado);
+    public Long contar(Long idUnidadEjecutora, Long id, Date fecha, Long idEstado) throws FWExcepcion {
+        if (idUnidadEjecutora.equals(Constantes.DEFAULT_ID)) {
+            return solicitudMantenimientoDao.contar(null, id, fecha, idEstado);
+        }
+        else {
+            return solicitudMantenimientoDao.contar(unidadEjecutoraDao.buscarPorId(idUnidadEjecutora), id, fecha, idEstado);
+        }
+
     }
     
-    public List<SolicitudMantenimiento> listar(Integer primerRegistro, Integer ultimoRegistro, UnidadEjecutora unidadEjecutora, Long id, Date fecha, Long idEstado) throws FWExcepcion {
-        return solicitudMantenimientoDao.listar(primerRegistro, ultimoRegistro, unidadEjecutora, id, fecha, idEstado);
+    public List<SolicitudMantenimiento> listar(Integer primerRegistro, Integer ultimoRegistro, Long idUnidadEjecutora, Long id, Date fecha, Long idEstado) throws FWExcepcion {
+        if (idUnidadEjecutora.equals(Constantes.DEFAULT_ID)) {
+            return solicitudMantenimientoDao.listar(primerRegistro, ultimoRegistro, null, id, fecha, idEstado);
+        }
+        else {
+            return solicitudMantenimientoDao.listar(primerRegistro, ultimoRegistro, unidadEjecutoraDao.buscarPorId(idUnidadEjecutora), id, fecha, idEstado);
+        }
     }
     
     public Long contarDetalles(SolicitudMantenimiento solicitudMantenimiento) throws FWExcepcion {

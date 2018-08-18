@@ -126,8 +126,13 @@ public class PrestamoDao extends GenericDaoImpl {
         } else {
             sql.append("entity FROM SolicitudPrestamo entity ");
         }
-    
-        sql.append("WHERE entity.unidadEjecutora = :unidadEjecutora "); 
+
+        if (unidadEjecutora == null) {
+            sql.append("WHERE 1 = 1 ");
+        } else {
+            sql.append("WHERE entity.unidadEjecutora = :unidadEjecutora ");
+        }
+
         if(id != null && id > 0){
            sql.append("AND entity.id = :id ");
         } else {
@@ -148,7 +153,10 @@ public class PrestamoDao extends GenericDaoImpl {
         sql.append(" ORDER BY entity.id asc");
         
         Query query = session.createQuery(sql.toString());
-        query.setParameter("unidadEjecutora", unidadEjecutora);
+        if (unidadEjecutora != null) {
+            query.setParameter("unidadEjecutora", unidadEjecutora);
+        }
+
         if(id != null && id > 0){
             query.setParameter("id", id);
         } else {

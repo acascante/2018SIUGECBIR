@@ -25,11 +25,17 @@ public class ListarPrestamosCommand {
     private static Long fltTipoEntidad = -1L;
     private static String fltEntidad = "";
     private static Date fltFecha = null;
+    private static Long fltUnidadEjecutora = -1L;
     //</editor-fold>
     
     //<editor-fold defaultstate="collapsed" desc="Constructores">
     public ListarPrestamosCommand() { 
         super();
+    }
+
+    public ListarPrestamosCommand(Long idUnidadEjecutora) {
+        this();
+        this.fltUnidadEjecutora = idUnidadEjecutora;
     }
     //</editor-fold>
  
@@ -96,5 +102,14 @@ public class ListarPrestamosCommand {
     public void setFltEntidad(String fltEntidad) {
         ListarPrestamosCommand.fltEntidad = fltEntidad;
     }
+
+    public static Long getFltUnidadEjecutora() {
+        return fltUnidadEjecutora;
+    }
+
+    public static void setFltUnidadEjecutora(Long fltUnidadEjecutora) {
+        ListarPrestamosCommand.fltUnidadEjecutora = fltUnidadEjecutora;
+    }
+
     //</editor-fold>
 }

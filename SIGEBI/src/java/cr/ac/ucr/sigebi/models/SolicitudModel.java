@@ -7,6 +7,7 @@ package cr.ac.ucr.sigebi.models;
 
 import cr.ac.ucr.framework.utils.FWExcepcion;
 import cr.ac.ucr.sigebi.daos.SolicitudDao;
+import cr.ac.ucr.sigebi.daos.UnidadEjecutoraDao;
 import cr.ac.ucr.sigebi.domain.AutorizacionRol;
 import cr.ac.ucr.sigebi.domain.AutorizacionRolPersona;
 import cr.ac.ucr.sigebi.domain.Bien;
@@ -51,6 +52,9 @@ public class SolicitudModel {
     @Resource
     private SolicitudAutorizacionModel solicitudAutorizacionModel;
 
+    @Resource
+    private UnidadEjecutoraDao unidadEjecutoraDao;
+
     public void agregar(Solicitud solicitud) throws FWExcepcion {
         solicitudDao.agregar(solicitud);
     }
@@ -77,13 +81,23 @@ public class SolicitudModel {
         solicitudDao.agregarDetalleSolicitud(solicitudDetalle);
     }
 
-    public Long contarDonaciones(String id, UnidadEjecutora unidadEjecutora, Estado estado, Integer tipoSolicitud, Tipo tipoDonacion, String unidadReceptora, String donante) throws FWExcepcion {
-        return solicitudDao.contarDonaciones(id, unidadEjecutora, estado, tipoSolicitud, tipoDonacion, unidadReceptora, donante);
+    public Long contarDonaciones(String id, Long idUnidadEjecutora, Estado estado, Integer tipoSolicitud, Tipo tipoDonacion, String unidadReceptora, String donante) throws FWExcepcion {
+        if (idUnidadEjecutora.equals(Constantes.DEFAULT_ID)) {
+            return solicitudDao.contarDonaciones(id, null, estado, tipoSolicitud, tipoDonacion, unidadReceptora, donante);
+        }
+        else {
+            return solicitudDao.contarDonaciones(id, unidadEjecutoraDao.buscarPorId(idUnidadEjecutora), estado, tipoSolicitud, tipoDonacion, unidadReceptora, donante);
+        }
     }
 
-    public List<Solicitud> listarDonaciones(String id, UnidadEjecutora unidadEjecutora, Estado estado, Integer tipoSolicitud, Tipo tipoDonacion, String unidadReceptora, String donante,
+    public List<Solicitud> listarDonaciones(String id, Long idUnidadEjecutora, Estado estado, Integer tipoSolicitud, Tipo tipoDonacion, String unidadReceptora, String donante,
             Integer pPrimerRegistro, Integer pUltimoRegistro) throws FWExcepcion {
-        return solicitudDao.listarDonaciones(id, unidadEjecutora, estado, tipoSolicitud, tipoDonacion, unidadReceptora, donante, pPrimerRegistro, pUltimoRegistro);
+        if (idUnidadEjecutora.equals(Constantes.DEFAULT_ID)) {
+            return solicitudDao.listarDonaciones(id, null, estado, tipoSolicitud, tipoDonacion, unidadReceptora, donante, pPrimerRegistro, pUltimoRegistro);
+        }
+        else {
+            return solicitudDao.listarDonaciones(id, unidadEjecutoraDao.buscarPorId(idUnidadEjecutora), estado, tipoSolicitud, tipoDonacion, unidadReceptora, donante, pPrimerRegistro, pUltimoRegistro);
+        }
     }
 
     public HashMap<String, SolicitudAutorizacion> obtenerSolicitudsAutorizacionPorRol(Integer codigoAutorizacion, Solicitud solicitud, Usuario usuario, UnidadEjecutora unidadEjecutora) {
@@ -131,7 +145,7 @@ public class SolicitudModel {
     
     @Transactional(readOnly = true)
     public List<SolicitudSalida> listarSalidas(String id,
-            UnidadEjecutora unidadEjecutora,
+            Long idUnidadEjecutora,
             Estado estado,
             String cedula,
             String nombre,
@@ -141,12 +155,18 @@ public class SolicitudModel {
             Integer pPrimerRegistro,
             Integer pUltimoRegistro
     ) throws FWExcepcion {
-        return solicitudDao.listarSalidas(id, unidadEjecutora, estado, cedula, nombre, tipo, tipoSolicitud, fecha, pPrimerRegistro, pUltimoRegistro);
+        if (idUnidadEjecutora.equals(Constantes.DEFAULT_ID)) {
+            return solicitudDao.listarSalidas(id, null, estado, cedula, nombre, tipo, tipoSolicitud, fecha, pPrimerRegistro, pUltimoRegistro);
+        }
+        else {
+            return solicitudDao.listarSalidas(id, unidadEjecutoraDao.buscarPorId(idUnidadEjecutora), estado, cedula, nombre, tipo, tipoSolicitud, fecha, pPrimerRegistro, pUltimoRegistro);
+        }
+
     }
     
     @Transactional(readOnly = true)
     public Long contarSalidas(String id,
-            UnidadEjecutora unidadEjecutora,
+            Long idUnidadEjecutora,
             Estado estado,
             String cedula,
             String nombre,
@@ -154,6 +174,11 @@ public class SolicitudModel {
             Integer tipoSolicitud,
             Date fecha            
     ) throws FWExcepcion {
-        return solicitudDao.contarSalidas(id, unidadEjecutora, estado, cedula, nombre, tipo, tipoSolicitud, fecha);
+        if (idUnidadEjecutora.equals(Constantes.DEFAULT_ID)) {
+            return solicitudDao.contarSalidas(id, null, estado, cedula, nombre, tipo, tipoSolicitud, fecha);
+        }
+        else {
+            return solicitudDao.contarSalidas(id, unidadEjecutoraDao.buscarPorId(idUnidadEjecutora), estado, cedula, nombre, tipo, tipoSolicitud, fecha);
+        }
     }
 }

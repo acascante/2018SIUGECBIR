@@ -5,6 +5,10 @@
  */
 package cr.ac.ucr.sigebi.controllers;
 
+import cr.ac.ucr.sigebi.domain.*;
+import cr.ac.ucr.sigebi.models.AutorizacionRolPersonaModel;
+import cr.ac.ucr.sigebi.models.ExclusionModel;
+import cr.ac.ucr.sigebi.models.UnidadEjecutoraModel;
 import cr.ac.ucr.sigebi.utils.Constantes;
 import cr.ac.ucr.framework.utils.FWExcepcion;
 import cr.ac.ucr.framework.vista.util.Mensaje;
@@ -17,9 +21,6 @@ import javax.faces.model.SelectItem;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import cr.ac.ucr.framework.vista.util.Util;
-import cr.ac.ucr.sigebi.domain.Documento;
-import cr.ac.ucr.sigebi.domain.Estado;
-import cr.ac.ucr.sigebi.domain.Tipo;
 import cr.ac.ucr.sigebi.models.DocumentoModel;
 import javax.annotation.PostConstruct;
 import javax.faces.event.ActionEvent;
@@ -33,25 +34,31 @@ import javax.faces.event.ActionEvent;
 public class ListarInformesTecnicosController extends BaseController {
 
     //<editor-fold defaultstate="collapsed" desc="Variables Locales">
-    @Resource
-    private DocumentoModel documentoModel;
+    @Resource private AutorizacionRolPersonaModel autorizacionRolPersonaModel;
+    @Resource private DocumentoModel documentoModel;
+    @Resource private UnidadEjecutoraModel unidadEjecutoraModel;
 
     // Lista de los informes
-    List<Documento> informes;
+    private List<Documento> informes;
 
     // Filtros para listar los Informes 
-    static String fltIdTipo = "-1";
-    static String fltEstado = "-1";
-    static String fltIdentificacionBien = "";
-    static String fltDescripcionBien = "";
-    static String fltMarcaBien = "";
-    static String fltModeloBien = "";
+    private static String fltIdTipo = "-1";
+    private static String fltEstado = "-1";
+    private static String fltIdentificacionBien = "";
+    private static String fltDescripcionBien = "";
+    private static String fltMarcaBien = "";
+    private static String fltModeloBien = "";
+    private static Long fltUnidadEjecutora = -1L;
 
     // comboBox estados
-    List<SelectItem> estadosOptions;
+    private List<SelectItem> estadosOptions;
 
     // comboBox tipos
-    List<SelectItem> tipoOptions;
+    private List<SelectItem> tipoOptions;
+
+    private List<SelectItem> itemsUnidadEjecutora;
+
+    private boolean usuarioAdministrador;
 
     //</editor-fold>
     
@@ -136,6 +143,30 @@ public class ListarInformesTecnicosController extends BaseController {
         this.tipoOptions = tipoOptions;
     }
 
+    public static Long getFltUnidadEjecutora() {
+        return fltUnidadEjecutora;
+    }
+
+    public static void setFltUnidadEjecutora(Long fltUnidadEjecutora) {
+        ListarInformesTecnicosController.fltUnidadEjecutora = fltUnidadEjecutora;
+    }
+
+    public List<SelectItem> getItemsUnidadEjecutora() {
+        return itemsUnidadEjecutora;
+    }
+
+    public void setItemsUnidadEjecutora(List<SelectItem> itemsUnidadEjecutora) {
+        this.itemsUnidadEjecutora = itemsUnidadEjecutora;
+    }
+
+    public boolean isUsuarioAdministrador() {
+        return usuarioAdministrador;
+    }
+
+    public void setUsuarioAdministrador(boolean usuarioAdministrador) {
+        this.usuarioAdministrador = usuarioAdministrador;
+    }
+
     //</editor-fold>
     
     //<editor-fold defaultstate="collapsed" desc="Constructor">
@@ -145,6 +176,21 @@ public class ListarInformesTecnicosController extends BaseController {
 
     @PostConstruct
     public final void inicializar() {
+        AutorizacionRolPersona administrador = autorizacionRolPersonaModel.buscar(Constantes.CODIGO_AUTORIZACION_ADMINISTRADOR, Constantes.CODIGO_ROL_ADMINISTRADOR_AUTORIZACION_ADMINISTRADOR, usuarioSIGEBI, unidadEjecutora);
+        usuarioAdministrador = administrador == null ? false : true;
+
+        if (usuarioAdministrador) {
+            List<UnidadEjecutora> unidadesEjecutoras = unidadEjecutoraModel.listar();
+            if (!unidadesEjecutoras.isEmpty()) {
+                this.itemsUnidadEjecutora = new ArrayList<SelectItem>();
+                for (UnidadEjecutora item : unidadesEjecutoras) {
+                    this.itemsUnidadEjecutora.add(new SelectItem(item.getId(), item.getDescripcion()));
+                }
+            }
+        } else {
+            this.setFltUnidadEjecutora(unidadEjecutora.getId());
+        }
+
 
         //Se consultan los estados por dominio
         estadosOptions = new ArrayList<SelectItem>();
@@ -199,7 +245,7 @@ public class ListarInformesTecnicosController extends BaseController {
     private void contarInformes() {
         try {
             //Se cuenta la cantidad de registros
-            Long contador = documentoModel.consultaCantidadRegistros(unidadEjecutora, 
+            Long contador = documentoModel.consultaCantidadRegistros(fltUnidadEjecutora,
                     this.tipoPorId(Long.parseLong(fltIdTipo)),
                     fltIdentificacionBien, 
                     fltDescripcionBien, 
@@ -223,7 +269,7 @@ public class ListarInformesTecnicosController extends BaseController {
      */
     private void listarInformes() {
         try {
-            this.informes = documentoModel.listarInformes(unidadEjecutora,
+            this.informes = documentoModel.listarInformes(fltUnidadEjecutora,
                     this.tipoPorId(Long.parseLong(fltIdTipo)) ,
                     fltIdentificacionBien,
                     fltDescripcionBien,

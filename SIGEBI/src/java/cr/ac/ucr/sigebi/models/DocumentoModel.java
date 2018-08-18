@@ -7,6 +7,7 @@ package cr.ac.ucr.sigebi.models;
 
 import cr.ac.ucr.framework.utils.FWExcepcion;
 import cr.ac.ucr.sigebi.daos.DocumentoDao;
+import cr.ac.ucr.sigebi.daos.UnidadEjecutoraDao;
 import cr.ac.ucr.sigebi.domain.AutorizacionRol;
 import cr.ac.ucr.sigebi.domain.AutorizacionRolPersona;
 import cr.ac.ucr.sigebi.domain.Bien;
@@ -51,6 +52,10 @@ public class DocumentoModel {
 
     @Resource
     private BienModel bienModel;
+
+    @Resource
+    private UnidadEjecutoraDao unidadEjecutoraDao;
+
 
     public void agregar(Documento documento) throws FWExcepcion {
         documentoDao.agregar(documento);
@@ -112,11 +117,16 @@ public class DocumentoModel {
         }
     }
 
-    public Long consultaCantidadRegistros(UnidadEjecutora unidadEjecutora, Tipo tipoInforme, String identificacionBien, String descripcionBien, String marcaBien, String modeloBien, Estado estado, Integer tipoDocumento) throws FWExcepcion {
-        return documentoDao.contar(unidadEjecutora, tipoInforme, identificacionBien, descripcionBien, marcaBien, modeloBien, estado, tipoDocumento);
+    public Long consultaCantidadRegistros(Long idUnidadEjecutora, Tipo tipoInforme, String identificacionBien, String descripcionBien, String marcaBien, String modeloBien, Estado estado, Integer tipoDocumento) throws FWExcepcion {
+        if (idUnidadEjecutora.equals(Constantes.DEFAULT_ID)) {
+            return documentoDao.contar(null, tipoInforme, identificacionBien, descripcionBien, marcaBien, modeloBien, estado, tipoDocumento);
+        }
+        else {
+            return documentoDao.contar(unidadEjecutoraDao.buscarPorId(idUnidadEjecutora), tipoInforme, identificacionBien, descripcionBien, marcaBien, modeloBien, estado, tipoDocumento);
+        }
     }
 
-    public List<Documento> listarInformes(UnidadEjecutora unidadEjecutora,
+    public List<Documento> listarInformes(Long idUnidadEjecutora,
             Tipo tipoInforme,
             String identificacionBien,
             String descripcionBien,
@@ -125,7 +135,13 @@ public class DocumentoModel {
             Estado estado,
             Integer pPrimerRegistro,
             Integer pUltimoRegistro, Integer tipoDocumento) throws FWExcepcion {
-        return documentoDao.listar(unidadEjecutora, tipoInforme, identificacionBien, descripcionBien, marcaBien, modeloBien, estado, pPrimerRegistro, pUltimoRegistro, tipoDocumento);
+        if (idUnidadEjecutora.equals(Constantes.DEFAULT_ID)) {
+            return documentoDao.listar(null, tipoInforme, identificacionBien, descripcionBien, marcaBien, modeloBien, estado, pPrimerRegistro, pUltimoRegistro, tipoDocumento);
+        }
+        else {
+            return documentoDao.listar(unidadEjecutoraDao.buscarPorId(idUnidadEjecutora), tipoInforme, identificacionBien, descripcionBien, marcaBien, modeloBien, estado, pPrimerRegistro, pUltimoRegistro, tipoDocumento);
+        }
+
     }
 
     public HashMap<String, DocumentoAutorizacion> obtenerDocumentosAutorizacionPorRolGeneral(Integer codigoAutorizacion, Documento documento, Usuario usuario, UnidadEjecutora unidadEjecutora) {

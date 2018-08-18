@@ -102,7 +102,7 @@ public class TrasladoController extends ListadoBienesGeneralController {
     @Resource private AutorizacionRolPersonaModel autorizacionRolPersonaModel;
     @Resource private UsuarioModel usuarioModel;
     @Resource private BienModel bienModel;
-    
+
     Usuario usuarioRegistradoClass;
 
 

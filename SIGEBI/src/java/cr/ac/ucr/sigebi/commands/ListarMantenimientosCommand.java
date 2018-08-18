@@ -23,6 +23,7 @@ public class ListarMantenimientosCommand {
     private static String fltId = "";
     private static Long fltEstado = -1L;
     private static Date fltFecha = null;
+    private static Long fltUnidadEjecutora = -1L;
     //</editor-fold>
     
     //<editor-fold defaultstate="collapsed" desc="Constructores">
@@ -78,5 +79,14 @@ public class ListarMantenimientosCommand {
     public void setFltFecha(Date fltFecha) {
         ListarMantenimientosCommand.fltFecha = fltFecha;
     }
+
+    public static Long getFltUnidadEjecutora() {
+        return fltUnidadEjecutora;
+    }
+
+    public static void setFltUnidadEjecutora(Long fltUnidadEjecutora) {
+        ListarMantenimientosCommand.fltUnidadEjecutora = fltUnidadEjecutora;
+    }
+
     //</editor-fold>
 }
