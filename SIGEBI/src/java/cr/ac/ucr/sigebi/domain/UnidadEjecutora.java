@@ -20,6 +20,7 @@ import javax.persistence.Table;
 @Table(name = "SIGEBI_OAF.V_SIGB_UNIDAD_EJECUTORA")
 public class UnidadEjecutora extends ObjetoBase implements Serializable {
 
+    private static final int TAMANO_DESCRIPCION_UNIDAD_EJECUTORA = 50;
     //<editor-fold defaultstate="collapsed" desc="Atributos">
     @Id
     @Column(name = "ID") 
@@ -66,7 +67,11 @@ public class UnidadEjecutora extends ObjetoBase implements Serializable {
     public String getDescripcion() {
         return descripcion;
     }
-
+    
+    public String getDescripcionSmall() {
+        return descripcion.substring(0, descripcion.length() > TAMANO_DESCRIPCION_UNIDAD_EJECUTORA ? TAMANO_DESCRIPCION_UNIDAD_EJECUTORA : descripcion.length()-1);
+    }
+    
     public void setDescripcion(String descripcion) {
         this.descripcion = descripcion;
     }

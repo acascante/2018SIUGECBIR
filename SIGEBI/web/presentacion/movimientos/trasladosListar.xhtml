@@ -128,7 +128,7 @@
                                         <ice:headerRow>
                                             <ice:outputText value="#{label['sigebi.TrasladoListar.Label.UnidadOrigen']}"/>
                                         </ice:headerRow>
-                                        <ice:headerRow>                                            
+                                        <ice:headerRow rendered="#{controllerListarExclusiones.usuarioAdministrador}">
                                             <ice:selectOneMenu  id="txtFltUnidadEjecutora"
                                                                 valueChangeListener="#{trasladoController.cambioFiltro}"
                                                                 value="#{trasladoController.fltUnidadOrigen}"

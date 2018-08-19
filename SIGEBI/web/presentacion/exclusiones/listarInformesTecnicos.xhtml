@@ -166,7 +166,7 @@
                                         <ice:headerRow>
                                             <ice:outputText value="#{label['sigebi.label.vista.listarInformeTecnico.unidadEjecutora']}"/>
                                         </ice:headerRow>
-                                        <ice:headerRow>
+                                        <ice:headerRow rendered="#{controllerListarExclusiones.usuarioAdministrador}">
                                            <ice:selectOneMenu id="filtroUnidadEjecutora"
                                                        valueChangeListener="#{controllerListarInformesTecnicos.cambioFiltro}"
                                                        value="#{controllerListarInformesTecnicos.fltUnidadEjecutora}"

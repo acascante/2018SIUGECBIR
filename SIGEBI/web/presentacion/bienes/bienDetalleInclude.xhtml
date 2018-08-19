@@ -4,7 +4,7 @@
         <div class="row">
             <div class="col-md-4">
                 <ice:outputText value="#{label['sigebi.Bien.Label.Identificacion']}" />
-                <ice:inputText id="txtBienId" styleClass="form-control" readonly="true" partialSubmit="false"
+                <ice:inputText id="txtBienId" styleClass="form-control" readonly="#{!controllerAgregarBienes.usuarioAdministrador}" partialSubmit="false"
                                value="#{controllerAgregarBienes.command.identificacion.identificacion}">
                 </ice:inputText>
             </div>                                             

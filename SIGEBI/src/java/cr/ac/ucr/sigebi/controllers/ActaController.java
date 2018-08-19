@@ -116,7 +116,7 @@ public class ActaController extends ListadoBienesGeneralController {
                 if (!unidadesEjecutoras.isEmpty()) {
                     this.itemsUnidadEjecutora = new ArrayList<SelectItem>();
                     for (UnidadEjecutora item : unidadesEjecutoras) {
-                        this.itemsUnidadEjecutora.add(new SelectItem(item.getId(), item.getDescripcion()));
+                        this.itemsUnidadEjecutora.add(new SelectItem(item.getId(), item.getDescripcionSmall()));
                     }
                 }
             } else {

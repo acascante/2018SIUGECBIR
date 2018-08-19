@@ -185,6 +185,7 @@ public class AgregarBienController extends BaseController {
     private boolean interfaz;
     private boolean visibleBotonEnviarSincronizar;
     private boolean visibleBotonActivarBien;
+    private boolean usuarioAdministrador;
 
     private Tipo tipoAdjuntoDoc;
     private Estado estadoGeneralActivo;
@@ -216,6 +217,10 @@ public class AgregarBienController extends BaseController {
     }
 
     private void inicializarBanderasBotones(Bien bien) {
+        AutorizacionRolPersona autorizado = autorizacionRolPersonaModel.buscar(Constantes.CODIGO_AUTORIZACION_ADMINISTRADOR, Constantes.CODIGO_ROL_ADMINISTRADOR_AUTORIZACION_ADMINISTRADOR, usuarioSIGEBI, unidadEjecutora);
+        this.setVisibleBotonActualizarIdentificacion(autorizado != null && !(command.getIdentificacion().getId() != null && command.getIdentificacion().getId() > 0));
+        usuarioAdministrador = autorizado == null ? false : true;
+        
         if (bien.getEstado().getValor().equals(Constantes.ESTADO_BIEN_PENDIENTE)) {
             this.setVisibleBotonSincronizar(bien.getCapitalizable());
         } else {
@@ -233,9 +238,6 @@ public class AgregarBienController extends BaseController {
         }else{
             this.setVisibleBotonEnviarSincronizar(false);
         }
-        //Verifica si puede cambiar la identificacion del bien
-        AutorizacionRolPersona autorizado = autorizacionRolPersonaModel.buscar(Constantes.CODIGO_AUTORIZACION_ADMINISTRADOR, Constantes.CODIGO_ROL_ADMINISTRADOR_AUTORIZACION_ADMINISTRADOR, usuarioSIGEBI, unidadEjecutora);
-        this.setVisibleBotonActualizarIdentificacion(autorizado != null && !(command.getIdentificacion().getId() != null && command.getIdentificacion().getId() > 0));
     }
 
 
@@ -248,6 +250,7 @@ public class AgregarBienController extends BaseController {
             this.inicializarDetalle(bien);
         }
     }
+    
 
     private void inicializarDetalle(Bien bien) {
         this.command = new BienCommand(bien);
@@ -1944,6 +1947,14 @@ public class AgregarBienController extends BaseController {
     
     //<editor-fold defaultstate="collapsed" desc="Get's y Set's">
 
+    public boolean isUsuarioAdministrador() {
+        return usuarioAdministrador;
+    }
+
+    public void setUsuarioAdministrador(boolean usuarioAdministrador) {
+        this.usuarioAdministrador = usuarioAdministrador;
+    }
+
     public boolean isVisibleBotonActivarBien() {
         
         if(bien == null){
@@ -1974,7 +1985,10 @@ public class AgregarBienController extends BaseController {
     }
 
     public void setVisibleBotonEnviarSincronizar(boolean visibleBotonEnviarSincronizar) {
-        this.visibleBotonEnviarSincronizar = visibleBotonEnviarSincronizar;
+        if (visibleBotonEnviarSincronizar && usuarioAdministrador)
+            this.visibleBotonEnviarSincronizar = true;
+        else 
+            this.visibleBotonEnviarSincronizar = false;
     }
     
     
@@ -2215,7 +2229,9 @@ public class AgregarBienController extends BaseController {
         this.visiblePanelIdentificador = visiblePanelIdentificador;
     }
 
-    public boolean isVisibleBotonSincronizar() {        
+    public boolean isVisibleBotonSincronizar() {
+        if (!usuarioAdministrador) 
+            visibleBotonSincronizar = false;
         return visibleBotonSincronizar;
     }
 
