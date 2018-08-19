@@ -7,7 +7,6 @@ package cr.ac.ucr.sigebi.controllers;
 
 import cr.ac.ucr.sigebi.domain.*;
 import cr.ac.ucr.sigebi.models.AutorizacionRolPersonaModel;
-import cr.ac.ucr.sigebi.models.ExclusionModel;
 import cr.ac.ucr.sigebi.models.UnidadEjecutoraModel;
 import cr.ac.ucr.sigebi.utils.Constantes;
 import cr.ac.ucr.framework.utils.FWExcepcion;
@@ -143,11 +142,11 @@ public class ListarInformesTecnicosController extends BaseController {
         this.tipoOptions = tipoOptions;
     }
 
-    public static Long getFltUnidadEjecutora() {
+    public Long getFltUnidadEjecutora() {
         return fltUnidadEjecutora;
     }
 
-    public static void setFltUnidadEjecutora(Long fltUnidadEjecutora) {
+    public void setFltUnidadEjecutora(Long fltUnidadEjecutora) {
         ListarInformesTecnicosController.fltUnidadEjecutora = fltUnidadEjecutora;
     }
 

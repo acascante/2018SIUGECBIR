@@ -140,9 +140,9 @@
                                     </ice:columnGroup>
                                 </f:facet>
                                 <h:outputText id="unidadReceptoraCell" value="#{solicitud.unidadReceptora.descripcion}"/>
-                            </ice:column>-->
-
-                           <ice:column id="colDonante">
+                            </ice:column>
+                            
+                            <ice:column id="colDonante">
                                 <f:facet name="header">
                                     <ice:columnGroup>
                                         <ice:headerRow>
@@ -180,6 +180,30 @@
                                 </f:facet>                                
                                 <h:outputText id="costoCell" value="#{solicitud.estado.nombre}"/>
                             </ice:column>
+                            
+                            <ice:column id="colUnidadEjecutora">                                 
+                                <f:facet name="header">
+                                    <ice:columnGroup>
+                                        <ice:headerRow>
+                                            <ice:outputText value="#{label['sigebi.label.vista.listarDonaciones.unidadEjecutora']} "/>
+                                        </ice:headerRow>
+                                        <ice:headerRow>
+                                            
+                                            <ice:column id="fltUnidadEjecutora" style="vertical-align:top;" rendered="#{controllerListarDonaciones.usuarioAdministrador}">
+                                            <ice:selectOneMenu  id="txtFltUnidadEjecutora"
+                                                                valueChangeListener="#{controllerListarDonaciones.cambioFiltro}"
+                                                                value="#{controllerListarDonaciones.fltUnidadEjecutora}"
+                                                                partialSubmit="true">
+                                                <f:selectItem itemLabel="N/A" itemValue="-1"/>
+                                                <f:selectItems id="slcUnidadesItem" value="#{controllerListarDonaciones.itemsUnidadEjecutora}"/>
+                                            </ice:selectOneMenu>
+                                        </ice:column>
+                                        </ice:headerRow>
+                                    </ice:columnGroup>
+                                </f:facet>
+                                <h:outputText id="unidadEjecutoraCell" value="#{solicitud.unidadEjecutora.descripcion}"/>
+                            </ice:column>
+                            
                             <ice:column style="text-align: center;">
 
                                  <ice:commandButton id="botonDetalle"

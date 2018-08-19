@@ -400,16 +400,15 @@ public class ActaController extends ListadoBienesGeneralController {
         this.usuarioAdministrador = usuarioAdministrador;
     }
 
-    public static Long getFltUnidadEjecutora() {
+    public Long getFltUnidadEjecutora() {
         return fltUnidadEjecutora;
     }
 
-    public static void setFltUnidadEjecutora(Long fltUnidadEjecutora) {
+    public void setFltUnidadEjecutora(Long fltUnidadEjecutora) {
         ActaController.fltUnidadEjecutora = fltUnidadEjecutora;
     }
 
     //</editor-fold>
-    
     
     //<editor-fold defaultstate="collapsed" desc="Navegar">
     
@@ -481,7 +480,6 @@ public class ActaController extends ListadoBienesGeneralController {
 
     
     //</editor-fold>
-    
     
     //<editor-fold defaultstate="collapsed" desc="Listado Actas">
 
@@ -700,7 +698,6 @@ public class ActaController extends ListadoBienesGeneralController {
     
     //</editor-fold>
     
-    
     //<editor-fold defaultstate="collapsed" desc="Metodos Registro Acta">
     
     public boolean permitirEditar() {
@@ -858,7 +855,6 @@ public class ActaController extends ListadoBienesGeneralController {
 
     //</editor-fold>
     
-    
     //<editor-fold defaultstate="collapsed" desc="Metodos Listado Bienes">
     public void cerrarListaBienes() {
         try {
@@ -880,7 +876,6 @@ public class ActaController extends ListadoBienesGeneralController {
     }
 
     //</editor-fold>
-    
     
     //<editor-fold defaultstate="collapsed" desc="Metodos Seleccionar Bien">
 
@@ -975,8 +970,6 @@ public class ActaController extends ListadoBienesGeneralController {
     
 
     // </editor-fold>
-    
-    
     
     //<editor-fold defaultstate="collapsed" desc="Aprobaciones y rechazos">
     

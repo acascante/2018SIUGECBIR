@@ -10,7 +10,6 @@ import cr.ac.ucr.sigebi.daos.ExclusionDao;
 import cr.ac.ucr.sigebi.daos.UnidadEjecutoraDao;
 import cr.ac.ucr.sigebi.domain.SolicitudDetalle;
 import cr.ac.ucr.sigebi.domain.SolicitudExclusion;
-import cr.ac.ucr.sigebi.domain.UnidadEjecutora;
 import cr.ac.ucr.sigebi.utils.Constantes;
 import java.util.Date;
 import java.util.List;

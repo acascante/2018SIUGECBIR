@@ -32,7 +32,6 @@ public class ListarPrestamosCommand {
     public ListarPrestamosCommand() { 
         super();
     }
-
     public ListarPrestamosCommand(Long idUnidadEjecutora) {
         this();
         this.fltUnidadEjecutora = idUnidadEjecutora;
@@ -103,13 +102,12 @@ public class ListarPrestamosCommand {
         ListarPrestamosCommand.fltEntidad = fltEntidad;
     }
 
-    public static Long getFltUnidadEjecutora() {
+    public Long getFltUnidadEjecutora() {
         return fltUnidadEjecutora;
     }
 
-    public static void setFltUnidadEjecutora(Long fltUnidadEjecutora) {
+    public void setFltUnidadEjecutora(Long fltUnidadEjecutora) {
         ListarPrestamosCommand.fltUnidadEjecutora = fltUnidadEjecutora;
     }
-
     //</editor-fold>
 }

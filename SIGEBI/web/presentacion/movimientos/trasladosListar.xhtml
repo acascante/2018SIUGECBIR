@@ -128,16 +128,19 @@
                                         <ice:headerRow>
                                             <ice:outputText value="#{label['sigebi.TrasladoListar.Label.UnidadOrigen']}"/>
                                         </ice:headerRow>
-                                        <ice:headerRow>
-                                            <ice:inputText id="fltUnidadOrigen"
-                                                           style="width: 130px;"
-                                                           value="#{trasladoController.fltUnidadOrigen}"                                   
-                                                           partialSubmit="true"
-                                                           valueChangeListener="#{trasladoController.trasladosCambioFiltro}"/>
+                                        <ice:headerRow>                                            
+                                            <ice:selectOneMenu  id="txtFltUnidadEjecutora"
+                                                                valueChangeListener="#{trasladoController.cambioFiltro}"
+                                                                value="#{trasladoController.fltUnidadOrigen}"
+                                                                partialSubmit="true">
+                                                <f:selectItem itemLabel="N/A" itemValue="-1"/>
+                                                <f:selectItems id="slcUnidadesItem" value="#{trasladoController.itemsUnidadEjecutora}"/>
+                                            </ice:selectOneMenu>
+                                    
                                         </ice:headerRow>
                                     </ice:columnGroup>
                                 </f:facet>
-                                <h:outputText id="txtUnidadOrigen" value="#{traslado.unidadEjecutora.descripcion}"/>
+                                <h:outputText id="txtUnidadDestino" value="#{traslado.unidadEjecutora.descripcion}"/>
                             </ice:column>
 
                             <!-- COLUMNA UNIDAD DESTINO -->

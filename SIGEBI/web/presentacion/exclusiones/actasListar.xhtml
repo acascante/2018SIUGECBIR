@@ -176,6 +176,32 @@
                                 </f:facet>                                
                                 <h:outputText id="descripcionCell" value="#{acta.fecha}"/>
                             </ice:column>
+                            
+                            <ice:column id="colUnidad">
+                                <f:facet name="header">
+                                    <ice:columnGroup>
+                                        <ice:headerRow rendered="#{actaController.usuarioAdministrador}">
+                                            <ice:outputText value="#{label['sigebi.ActaListar.Label.UnidadEjecutora']}"/>
+                                        </ice:headerRow>
+                                        
+                                        <ice:headerRow rendered="#{!actaController.usuarioAdministrador}" rowspan="2" >
+                                            <ice:outputText value="#{label['sigebi.ActaListar.Label.UnidadEjecutora']}"/>
+                                        </ice:headerRow>
+
+                                        <!-- Unidad Ejecutora -->
+                                        <ice:column id="fltUnidadEjecutora" style="vertical-align:top;" rendered="#{actaController.usuarioAdministrador}">
+                                            <ice:selectOneMenu  id="txtFltUnidadEjecutora"
+                                                                valueChangeListener="#{actaController.cambioFiltro}"
+                                                                value="#{actaController.fltUnidadEjecutora}"
+                                                                partialSubmit="true">
+                                                <f:selectItem itemLabel="N/A" itemValue="-1"/>
+                                                <f:selectItems id="slcUnidadesItem" value="#{controllerListarExclusiones.itemsUnidadEjecutora}"/>
+                                            </ice:selectOneMenu>
+                                        </ice:column>
+                                    </ice:columnGroup>
+                                </f:facet>                                
+                                <h:outputText id="descripcionCell" value="#{acta.fecha}"/>
+                            </ice:column>
 
                             <ice:column id="colDetalle">
                                 <f:facet name="header">

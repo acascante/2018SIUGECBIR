@@ -184,6 +184,22 @@ public class ListarPrestamosController extends BaseController {
     public void setItemsTipo(List<SelectItem> itemsTipo) {    
         this.itemsTipo = itemsTipo;
     }
+
+    public List<SelectItem> getItemsUnidadEjecutora() {
+        return itemsUnidadEjecutora;
+    }
+
+    public void setItemsUnidadEjecutora(List<SelectItem> itemsUnidadEjecutora) {
+        this.itemsUnidadEjecutora = itemsUnidadEjecutora;
+    }
+
+    public boolean isUsuarioAdministrador() {
+        return usuarioAdministrador;
+    }
+
+    public void setUsuarioAdministrador(boolean usuarioAdministrador) {
+        this.usuarioAdministrador = usuarioAdministrador;
+    }
     // </editor-fold>
 
     // <editor-fold defaultstate="collapsed" desc="Paginacion">

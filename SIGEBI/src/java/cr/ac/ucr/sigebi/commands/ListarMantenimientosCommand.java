@@ -80,11 +80,11 @@ public class ListarMantenimientosCommand {
         ListarMantenimientosCommand.fltFecha = fltFecha;
     }
 
-    public static Long getFltUnidadEjecutora() {
+    public Long getFltUnidadEjecutora() {
         return fltUnidadEjecutora;
     }
 
-    public static void setFltUnidadEjecutora(Long fltUnidadEjecutora) {
+    public void setFltUnidadEjecutora(Long fltUnidadEjecutora) {
         ListarMantenimientosCommand.fltUnidadEjecutora = fltUnidadEjecutora;
     }
 

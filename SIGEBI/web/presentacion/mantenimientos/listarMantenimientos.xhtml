@@ -79,7 +79,11 @@
                                         </ice:column>
                                         
                                         <!-- Unidad Ejecutora -->
-                                        <ice:column id="unidadEjecutora" rowspan="2">
+                                        <ice:column id="unidadEjecutora" rendered="#{controllerListarMantenimientos.usuarioAdministrador}">
+                                            <ice:outputText value="#{label['sigebi.label.mantenimiento.unidadEjecutora']} "/>
+                                        </ice:column>
+                                        
+                                        <ice:column id="unidadEjecutora" rendered="#{!controllerListarMantenimientos.usuarioAdministrador}" rowspan="2" >
                                             <ice:outputText value="#{label['sigebi.label.mantenimiento.unidadEjecutora']} "/>
                                         </ice:column>
                                         
@@ -120,6 +124,17 @@
                                                                 value="#{controllerListarMantenimientos.command.fltEstado}">
                                                 <f:selectItem itemLabel="N/A" itemValue="-1"/>
                                                 <f:selectItems id="slcEstadoItem" value="#{controllerListarMantenimientos.itemsEstado}"/>
+                                            </ice:selectOneMenu>
+                                        </ice:column>
+                                        
+                                        <!-- Unidad Ejecutora -->
+                                        <ice:column id="fltUnidadEjecutora" style="vertical-align:top;" rendered="#{controllerListarMantenimientos.usuarioAdministrador}">
+                                            <ice:selectOneMenu  id="txtFltUnidadEjecutora"
+                                                                valueChangeListener="#{controllerListarMantenimientos.cambioFiltro}"
+                                                                value="#{controllerListarMantenimientos.command.fltUnidadEjecutora}"
+                                                                partialSubmit="true">
+                                                <f:selectItem itemLabel="N/A" itemValue="-1"/>
+                                                <f:selectItems id="slcUnidadesItem" value="#{controllerListarMantenimientos.itemsUnidadEjecutora}"/>
                                             </ice:selectOneMenu>
                                         </ice:column>
                                     </ice:headerRow>

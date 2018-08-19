@@ -25,9 +25,9 @@ import cr.ac.ucr.sigebi.models.BienModel;
 import cr.ac.ucr.sigebi.models.AutorizacionModel;
 import cr.ac.ucr.sigebi.models.AutorizacionRolPersonaModel;
 import cr.ac.ucr.sigebi.models.EstadoModel;
+import cr.ac.ucr.sigebi.models.ExclusionModel;
 import cr.ac.ucr.sigebi.models.JustificacionModel;
 import cr.ac.ucr.sigebi.models.NotificacionModel;
-import cr.ac.ucr.sigebi.models.TipoModel;
 import cr.ac.ucr.sigebi.models.TrasladoModel;
 import cr.ac.ucr.sigebi.models.UbicacionModel;
 import cr.ac.ucr.sigebi.models.UnidadEjecutoraModel;
@@ -66,7 +66,6 @@ public class TrasladoController extends ListadoBienesGeneralController {
     Estado estadoGeneralAprobado;
     Estado estadoGeneralRechazado;
     
-    Estado estadoBienActivo;
     Estado estadoBienTraslado;
 
     //Variables Traslados
@@ -97,7 +96,7 @@ public class TrasladoController extends ListadoBienesGeneralController {
     Map<String, Usuario> usuariosRecibir;
 
     @Resource private TrasladoModel trasladoModel;
-    @Resource  private EstadoModel estadoModel;
+    @Resource private EstadoModel estadoModel;
     @Resource private AutorizacionModel autorizacionModel;
     @Resource private AutorizacionRolPersonaModel autorizacionRolPersonaModel;
     @Resource private UsuarioModel usuarioModel;
@@ -105,10 +104,28 @@ public class TrasladoController extends ListadoBienesGeneralController {
 
     Usuario usuarioRegistradoClass;
 
+    @Resource private UnidadEjecutoraModel unidadEjecutoraModel;
+    private List<SelectItem> itemsUnidadEjecutora;
+
+    private boolean usuarioAdministrador;
+
 
     //</editor-fold>
-    
     //<editor-fold defaultstate="collapsed" desc="GET's & SET's">
+    public List<SelectItem> getItemsUnidadEjecutora() {
+        return itemsUnidadEjecutora;
+    }
+
+    public void setItemsUnidadEjecutora(List<SelectItem> itemsUnidadEjecutora) {
+        this.itemsUnidadEjecutora = itemsUnidadEjecutora;
+    }
+
+    public boolean isUsuarioAdministrador() {
+        return usuarioAdministrador;
+    }
+    public void setUsuarioAdministrador(boolean usuarioAdministrador) {
+        this.usuarioAdministrador = usuarioAdministrador;
+    }
 
     public Estado getEstadoGeneralActivo() {
         return estadoGeneralActivo;
@@ -272,6 +289,21 @@ public class TrasladoController extends ListadoBienesGeneralController {
 
     @PostConstruct
     private void incializaDatos() {
+        AutorizacionRolPersona administrador = autorizacionRolPersonaModel.buscar(Constantes.CODIGO_AUTORIZACION_ADMINISTRADOR, Constantes.CODIGO_ROL_ADMINISTRADOR_AUTORIZACION_ADMINISTRADOR, usuarioSIGEBI, unidadEjecutora);
+        usuarioAdministrador = administrador == null ? false : true;
+
+        if (usuarioAdministrador) {
+            List<UnidadEjecutora> unidadesEjecutoras = unidadEjecutoraModel.listar();
+            if (!unidadesEjecutoras.isEmpty()) {
+                this.itemsUnidadEjecutora = new ArrayList<SelectItem>();
+                for (UnidadEjecutora item : unidadesEjecutoras) {
+                    this.itemsUnidadEjecutora.add(new SelectItem(item.getId(), item.getDescripcion()));
+                }
+            }
+        } else {
+            this.setFltUnidadOrigen(unidadEjecutora.getId());
+        }
+        
         try{
             //Asigno Usuario EnvÃ­a
             usuarioRegistradoClass = usuarioModel.buscarPorId(codPersonaReg);
@@ -416,7 +448,7 @@ public class TrasladoController extends ListadoBienesGeneralController {
     
     //<editor-fold defaultstate="collapsed" desc="Listado Traslados">
     static String fltIdTraslado = "";
-    static String fltUnidadOrigen = "";
+    static Long fltUnidadOrigen = -1L;
     static String fltUnidadDestino = "";
     static String fltFecha = "";
     static String fltEstados = "";
@@ -424,9 +456,8 @@ public class TrasladoController extends ListadoBienesGeneralController {
     public void listarTraslados() {
         try {
             traslados = trasladoModel.trasladosListado(
-                    unidadOrigen,
-                    fltIdTraslado,
                     fltUnidadOrigen,
+                    fltIdTraslado,
                     fltUnidadDestino,
                     fltFecha,
                     fltEstados,
@@ -458,9 +489,8 @@ public class TrasladoController extends ListadoBienesGeneralController {
             Long contador;
 
             contador = trasladoModel.contarTrasladosListado(
-                    unidadOrigen,
-                    fltIdTraslado,
                     fltUnidadOrigen,
+                    fltIdTraslado,
                     fltUnidadDestino,
                     fltFecha,
                     fltEstados
@@ -594,14 +624,6 @@ public class TrasladoController extends ListadoBienesGeneralController {
         this.fltIdTraslado = fltIdTraslado;
     }
 
-    public String getFltUnidadOrigen() {
-        return fltUnidadOrigen;
-    }
-
-    public void setFltUnidadOrigen(String fltUnidadOrigen) {
-        this.fltUnidadOrigen = fltUnidadOrigen;
-    }
-
     public String getFltUnidadDestino() {
         return fltUnidadDestino;
     }
@@ -626,6 +648,15 @@ public class TrasladoController extends ListadoBienesGeneralController {
         this.fltEstados = fltEstado;
     }
 
+    public Long getFltUnidadOrigen() {
+        return fltUnidadOrigen;
+    }
+
+    public void setFltUnidadOrigen(Long fltUnidadOrigen) {
+        TrasladoController.fltUnidadOrigen = fltUnidadOrigen;
+    }
+
+    
     //</editor-fold>
     
     //<editor-fold defaultstate="collapsed" desc="Metodos">

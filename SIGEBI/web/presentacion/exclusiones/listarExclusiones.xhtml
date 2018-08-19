@@ -147,17 +147,15 @@
                                         </ice:column>
 
                                         <!-- Unidad Ejecutora -->
-
-                                            <ice:column id="fltUnidadEjecutora" style="vertical-align:top;" rendered="#{controllerListarExclusiones.usuarioAdministrador}">
-                                                <ice:selectOneMenu  id="txtFltUnidadEjecutora"
-                                                                    valueChangeListener="#{controllerListarExclusiones.cambioFiltro}"
-                                                                    value="#{controllerListarExclusiones.command.fltUnidadEjecutora}"
-                                                                    partialSubmit="true">
-                                                    <f:selectItem itemLabel="N/A" itemValue="-1"/>
-                                                    <f:selectItems id="slcUnidadesItem" value="#{controllerListarExclusiones.itemsUnidadEjecutora}"/>
-                                                </ice:selectOneMenu>
-                                            </ice:column>
-
+                                        <ice:column id="fltUnidadEjecutora" style="vertical-align:top;" rendered="#{controllerListarExclusiones.usuarioAdministrador}">
+                                            <ice:selectOneMenu  id="txtFltUnidadEjecutora"
+                                                                valueChangeListener="#{controllerListarExclusiones.cambioFiltro}"
+                                                                value="#{controllerListarExclusiones.command.fltUnidadEjecutora}"
+                                                                partialSubmit="true">
+                                                <f:selectItem itemLabel="N/A" itemValue="-1"/>
+                                                <f:selectItems id="slcUnidadesItem" value="#{controllerListarExclusiones.itemsUnidadEjecutora}"/>
+                                            </ice:selectOneMenu>
+                                        </ice:column>
 
                                     </ice:headerRow>
                                 </ice:columnGroup>

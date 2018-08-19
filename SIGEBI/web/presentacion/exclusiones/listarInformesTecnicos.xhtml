@@ -159,6 +159,27 @@
                                 </f:facet>                                
                                 <h:outputText id="costoCell" value="#{informe.estado.nombre}"/>
                             </ice:column>
+                            
+                            <ice:column id="colUnidadEjecutora">
+                                <f:facet name="header">
+                                    <ice:columnGroup>
+                                        <ice:headerRow>
+                                            <ice:outputText value="#{label['sigebi.label.vista.listarInformeTecnico.unidadEjecutora']}"/>
+                                        </ice:headerRow>
+                                        <ice:headerRow>
+                                           <ice:selectOneMenu id="filtroUnidadEjecutora"
+                                                       valueChangeListener="#{controllerListarInformesTecnicos.cambioFiltro}"
+                                                       value="#{controllerListarInformesTecnicos.fltUnidadEjecutora}"
+                                                       partialSubmit="true"                                                       >
+                                                <f:selectItem itemLabel="N/A" itemValue="-1"/>
+                                                <f:selectItems id="slcEstadoItem" value="#{controllerListarInformesTecnicos.itemsUnidadEjecutora}"/>
+                                            </ice:selectOneMenu>
+                                        </ice:headerRow>
+                                    </ice:columnGroup>
+                                </f:facet>                                
+                                <h:outputText id="costoCell" value="#{informe.unidadEjecutora.descripcion}"/>
+                            </ice:column>
+                            
                             <ice:column style="text-align: center;">
 
                                 <ice:commandButton id="botonDetalle"

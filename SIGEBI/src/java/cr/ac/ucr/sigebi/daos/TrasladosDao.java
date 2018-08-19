@@ -151,7 +151,6 @@ public class TrasladosDao extends GenericDaoImpl {
     public List<SolicitudTraslado> trasladosListado(
               UnidadEjecutora unidadEjecutora
             , String fltIdTraslado
-            , String fltUnidadOrigen
             , String fltUnidadDestino
             , String fltFecha
             , String fltEstados
@@ -164,7 +163,6 @@ public class TrasladosDao extends GenericDaoImpl {
             Query q = prepararConsultaListado( 
                       unidadEjecutora
                     , fltIdTraslado
-                    , fltUnidadOrigen
                     , fltUnidadDestino
                     , fltFecha
                     
@@ -198,7 +196,6 @@ public class TrasladosDao extends GenericDaoImpl {
     public Long contarTrasladosListado(
               UnidadEjecutora unidadEjecutora
             , String fltIdTraslado
-            , String fltUnidadOrigen
             , String fltUnidadDestino
             , String fltFecha
             , String fltEstados
@@ -209,7 +206,6 @@ public class TrasladosDao extends GenericDaoImpl {
             Query q = prepararConsultaListado( 
                       unidadEjecutora
                     , fltIdTraslado
-                    , fltUnidadOrigen
                     , fltUnidadDestino
                     , fltFecha
                     
@@ -232,7 +228,6 @@ public class TrasladosDao extends GenericDaoImpl {
     private Query prepararConsultaListado(
               UnidadEjecutora unidadEjecutora
             , String fltIdTraslado
-            , String fltUnidadOrigen
             , String fltUnidadDestino
             , String fltFecha
             
@@ -242,36 +237,35 @@ public class TrasladosDao extends GenericDaoImpl {
     ){
         
         try{
-            String sql;
+            StringBuilder sql = new StringBuilder("SELECT ");
             if (contar) 
-                sql = "SELECT count(s) FROM SolicitudTraslado s ";
+                sql.append("count(s) FROM SolicitudTraslado s ");
              else 
-                sql = "SELECT s FROM SolicitudTraslado s ";
+                sql.append("s FROM SolicitudTraslado s ");
             
-            sql +=  " WHERE (s.unidadEjecutora = :unidadEjecutora "
-                  + " OR s.unidadEjecutoraDestino = :unidadEjecutora) ";
-            
+            if (unidadEjecutora == null) {
+                sql.append("WHERE 1 = 1 "); 
+            } else {
+                sql.append("WHERE s.unidadEjecutora = :unidadEjecutora "); 
+            }
+
             if(fltIdTraslado != null && fltIdTraslado.length() > 0)
-               sql = sql +  " AND upper(s.id) like upper(:fltIdTraslado) ";
-            
-            if(fltUnidadOrigen != null && fltUnidadOrigen.length() > 0)
-               sql = sql +  " AND upper(s.unidadEjecutora.descripcion) like upper(:fltUnidadOrigen) ";
+               sql.append(" AND upper(s.id) like upper(:fltIdTraslado) ");
             
             if(fltUnidadDestino != null && fltUnidadDestino.length() > 0)
-               sql = sql +  " AND upper(s.unidadEjecutoraDestino.descripcion) like upper(:fltUnidadDestino) ";
+               sql.append(" AND upper(s.unidadEjecutoraDestino.descripcion) like upper(:fltUnidadDestino) ");
+            
             if(fltFecha != null && fltFecha.length() > 0)
-               sql = sql +  " AND to_char(s.fecha, 'YYYY-MM-DD') like upper(:fltFecha) ";
+               sql.append(" AND to_char(s.fecha, 'YYYY-MM-DD') like upper(:fltFecha) ");
+            
             if( ! fltEstados.equals("-1") )
-               sql = sql +  " AND str(s.estado.id) = :fltEstados ";
+               sql.append(" AND str(s.estado.id) = :fltEstados ");
             
-            
-            Query q = session.createQuery(sql);
-            q.setParameter("unidadEjecutora", unidadEjecutora);
-            
+            Query q = session.createQuery(sql.toString());
+            if (unidadEjecutora == null)
+                q.setParameter("unidadEjecutora", unidadEjecutora);            
             if(fltIdTraslado != null && fltIdTraslado.length() > 0)
                 q.setParameter("fltIdTraslado", '%' + fltIdTraslado + '%');
-            if(fltUnidadOrigen != null && fltUnidadOrigen.length() > 0)
-                q.setParameter("fltUnidadOrigen", '%' + fltUnidadOrigen + '%');
             if(fltUnidadDestino != null && fltUnidadDestino.length() > 0)
                 q.setParameter("fltUnidadDestino", '%' + fltUnidadDestino + '%');
             if(fltFecha != null && fltFecha.length() > 0)

@@ -136,11 +136,11 @@ public class ListarSalidasController extends BaseController {
         this.tipoOptions = tipoOptions;
     }
 
-    public static Long getFltUnidadEjecutora() {
+    public Long getFltUnidadEjecutora() {
         return fltUnidadEjecutora;
     }
 
-    public static void setFltUnidadEjecutora(Long fltUnidadEjecutora) {
+    public void setFltUnidadEjecutora(Long fltUnidadEjecutora) {
         ListarSalidasController.fltUnidadEjecutora = fltUnidadEjecutora;
     }
 

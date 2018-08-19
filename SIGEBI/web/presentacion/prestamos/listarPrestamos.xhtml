@@ -62,7 +62,7 @@
                         <ice:dataTable id="listadoPrestamos" value="#{controllerListarPrestamos.prestamos}" var="prestamo" paginator="true" paginatorPosition="bottom">
                             <f:facet name="header">
                                 <ice:columnGroup>
-                                    <ice:headerRow>
+                                    <ice:headerRow >
                                         <!-- ID -->
                                         <ice:column id="id" style="vertical-align:top;">
                                             <ice:outputText value="#{label['sigebi.label.prestamos.id']} "/>
@@ -87,6 +87,16 @@
                                         <ice:column id="entidad" style="vertical-align:top;">                                 
                                             <ice:outputText value="#{label['sigebi.label.prestamos.entidad']} "/>
                                         </ice:column>
+                                        
+                                        <!-- Unidad Ejecutora -->
+                                        <ice:column id="unidadEjecutora" rendered="#{controllerListarPrestamos.usuarioAdministrador}">
+                                            <ice:outputText value="#{label['sigebi.label.prestamos.unidadEjecutora']} "/>
+                                        </ice:column>
+                                        
+                                        <ice:column id="unidadEjecutora" rendered="#{!controllerListarPrestamos.usuarioAdministrador}" rowspan="2" >
+                                            <ice:outputText value="#{label['sigebi.label.prestamos.unidadEjecutora']} "/>
+                                        </ice:column>
+                                        
                                         
                                         <ice:column id="opciones" rowspan="2">
                                             <ice:outputText value="#{label['sigebi.label.prestamos.opciones']} "/>
@@ -147,6 +157,17 @@
                                                            value="#{controllerListarPrestamos.command.fltEntidad}" 
                                                            valueChangeListener="#{controllerListarPrestamos.cambioFiltro}"/>
                                         </ice:column>
+                                        
+                                        <!-- Unidad Ejecutora -->
+                                        <ice:column id="fltUnidadEjecutora" style="vertical-align:top;" rendered="#{controllerListarPrestamos.usuarioAdministrador}">
+                                            <ice:selectOneMenu  id="txtFltUnidadEjecutora"
+                                                                valueChangeListener="#{controllerListarPrestamos.cambioFiltro}"
+                                                                value="#{controllerListarPrestamos.command.fltUnidadEjecutora}"
+                                                                partialSubmit="true">
+                                                <f:selectItem itemLabel="N/A" itemValue="-1"/>
+                                                <f:selectItems id="slcUnidadesItem" value="#{controllerListarPrestamos.itemsUnidadEjecutora}"/>
+                                            </ice:selectOneMenu>
+                                        </ice:column>
                                     </ice:headerRow>
                                 </ice:columnGroup>
                             </f:facet>
@@ -167,7 +188,9 @@
                             <ice:column>
                                 <h:outputText id="entidadCell" value="#{prestamo.entidad}"/>
                             </ice:column>
-
+                            <ice:column>
+                                <h:outputText id="unidadEjecutoraCell" value="#{prestamo.unidadEjecutora.descripcion}"/>
+                            </ice:column>
                             <ice:column style="text-align: center;">
                                 <ice:commandButton id="botonDetalle" actionListener="#{controllerAgregarPrestamos.detalleRegistro}" value="#{label['label.detalle']}" style="float:right;margin-top:2%" styleClass="boton" partialSubmit="true">
                                     <f:attribute id="prestamoDetalle" name="#{controllerListarPrestamos.command.key}"  value="#{prestamo.id}"/>

@@ -6,9 +6,11 @@
 package cr.ac.ucr.sigebi.models;
 
 import cr.ac.ucr.sigebi.daos.TrasladosDao;
+import cr.ac.ucr.sigebi.daos.UnidadEjecutoraDao;
 import cr.ac.ucr.sigebi.domain.UnidadEjecutora;
 import cr.ac.ucr.sigebi.domain.SolicitudDetalleTraslado;
 import cr.ac.ucr.sigebi.domain.SolicitudTraslado;
+import cr.ac.ucr.sigebi.utils.Constantes;
 import java.util.List;
 import javax.annotation.Resource;
 import org.springframework.stereotype.Service;
@@ -24,7 +26,10 @@ public class TrasladoModel {
     @Resource
     private TrasladosDao trasladoDao;
 
-    
+    @Resource
+    private UnidadEjecutoraDao unidadEjecutoraDao;
+
+        
     public void guardar(SolicitudTraslado obj) {
         trasladoDao.guardar(obj);
     }
@@ -53,45 +58,21 @@ public class TrasladoModel {
         return trasladoDao.traerBienesTraslado(traslado);
     }
     
-    public List<SolicitudTraslado> trasladosListado(
-            UnidadEjecutora unidadEjecutora
-            , String fltIdTraslado
-            , String fltUnidadOrigen
-            , String fltUnidadDestino
-            , String fltFecha
-            , String fltEstados
-            , int primerRegistro
-            , int ultimoRegistro
-    ) {
-        return trasladoDao.trasladosListado(
-                unidadEjecutora
-                , fltIdTraslado
-                , fltUnidadOrigen
-                , fltUnidadDestino
-                , fltFecha
-                , fltEstados
-                , primerRegistro
-                , ultimoRegistro
-            );
+    public List<SolicitudTraslado> trasladosListado(Long idUnidadEjecutora, String fltIdTraslado, String fltUnidadDestino, String fltFecha, String fltEstados, int primerRegistro, int ultimoRegistro) {
+        if (idUnidadEjecutora.equals(Constantes.DEFAULT_ID)) {
+            return trasladoDao.trasladosListado(null, fltIdTraslado, fltUnidadDestino, fltFecha, fltEstados, primerRegistro, ultimoRegistro);
+        }
+        else {
+            return trasladoDao.trasladosListado(unidadEjecutoraDao.buscarPorId(idUnidadEjecutora), fltIdTraslado, fltUnidadDestino, fltFecha, fltEstados, primerRegistro, ultimoRegistro);
+        }        
     }
     
-    
-    public Long contarTrasladosListado(
-              UnidadEjecutora unidadEjecutora
-            , String fltIdTraslado
-            , String fltUnidadOrigen
-            , String fltUnidadDestino
-            , String fltFecha
-            , String fltEstados
-    ){
-        return trasladoDao.contarTrasladosListado(
-                unidadEjecutora
-                , fltIdTraslado
-                , fltUnidadOrigen
-                , fltUnidadDestino
-                , fltFecha
-                , fltEstados
-            );
-    }
-    
+    public Long contarTrasladosListado(Long idUnidadEjecutora, String fltIdTraslado, String fltUnidadDestino, String fltFecha, String fltEstados){
+        if (idUnidadEjecutora.equals(Constantes.DEFAULT_ID)) {
+            return trasladoDao.contarTrasladosListado(null, fltIdTraslado, fltUnidadDestino, fltFecha, fltEstados);
+        }
+        else {
+            return trasladoDao.contarTrasladosListado(unidadEjecutoraDao.buscarPorId(idUnidadEjecutora), fltIdTraslado, fltUnidadDestino, fltFecha, fltEstados);
+        }
+    }    
 }

@@ -68,4 +68,15 @@ body {
     margin: 5px;
 }
 
+.columnS {
+    width: 100px;
+}
+
+.columnM {
+    width: 200px;
+}
+
+.columnL {
+    width: 400px;
+}
 
