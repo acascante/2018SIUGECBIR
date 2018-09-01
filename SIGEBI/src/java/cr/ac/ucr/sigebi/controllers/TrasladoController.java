@@ -279,9 +279,6 @@ public class TrasladoController extends ListadoBienesGeneralController {
     //</editor-fold>
     
     //<editor-fold defaultstate="collapsed" desc="Inicializa Datos">
-    
-    
-    
     public TrasladoController() {
         justificacion = new Justificacion();
         treeUbicacionSIGEBI = new TreeUbicacionSIGEBI(unidadEjecutora, this.estadoPorDominioValor(Constantes.DOMINIO_GENERAL, Constantes.ESTADO_GENERAL_ACTIVO));
@@ -589,15 +586,6 @@ public class TrasladoController extends ListadoBienesGeneralController {
         this.setCantRegistroPorPagina(Integer.parseInt(pEvent.getNewValue().toString()));
         this.setPrimerRegistro(1);
         this.listarTraslados();
-
-    }
-
-    public void trasladosCambioFiltro() {
-        //this.setCantRegistroPorPagina(Integer.parseInt(pEvent.getNewValue().toString()));  
-        this.setPrimerRegistro(1);
-        listadoInicializaDatos();
-
-        //Mensaje.agregarErrorAdvertencia("Cambio en filtro no parametro.");
     }
 
     public void trasladosCambioFiltro(ValueChangeEvent event) {
@@ -607,13 +595,8 @@ public class TrasladoController extends ListadoBienesGeneralController {
             return;
         }
 
-        // Obtengo el valor seleccionado
-        String valor = event.getNewValue().toString();
-        //this.setCantRegistroPorPagina(Integer.parseInt(pEvent.getNewValue().toString()));        
         this.setPrimerRegistro(1);
         listadoInicializaDatos();
-
-        //Mensaje.agregarErrorAdvertencia("Cambio en filtro.");
     }
 
     public String getFltIdTraslado() {
@@ -653,7 +636,7 @@ public class TrasladoController extends ListadoBienesGeneralController {
     }
 
     public void setFltUnidadOrigen(Long fltUnidadOrigen) {
-        TrasladoController.fltUnidadOrigen = fltUnidadOrigen;
+        this.fltUnidadOrigen = fltUnidadOrigen;
     }
 
     

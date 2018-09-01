@@ -224,7 +224,7 @@ public class ActaDao extends GenericDaoImpl {
         }
 
         Query q = session.createQuery(sql.toString());
-        if (unidadEjecutora == null) {
+        if (unidadEjecutora != null) {
             q.setParameter("pnumUnidadEjec", unidadEjecutora);
         }
         if (fltIdActa != null && fltIdActa.length() > 0) {

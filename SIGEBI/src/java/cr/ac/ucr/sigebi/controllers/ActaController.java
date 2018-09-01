@@ -55,8 +55,6 @@ public class ActaController extends ListadoBienesGeneralController {
     Estado estadoInternoActaAplicada;
     Estado estadoInternoActaRechazada;
     
-    
-    
     List<DocumentoActa> actasRegistradas;
     List<DocumentoDetalle> bienesActa;
     List<DocumentoDetalle> bienesActaEliminar;
@@ -92,13 +90,11 @@ public class ActaController extends ListadoBienesGeneralController {
     @Resource private TipoModel tipoModel;
     @Resource private UnidadEjecutoraModel unidadEjecutoraModel;
     @Resource private UsuarioModel usuarioModel;
-
     
     Usuario usuario;
     String valorDonacion;
     
     //</editor-fold>
-    
     
     //<editor-fold defaultstate="collapsed" desc="Inicializa Datos">
     public ActaController() {
@@ -135,13 +131,11 @@ public class ActaController extends ListadoBienesGeneralController {
             estadosActa.add(estadoGeneralAprobado);
             estadosActa.add(estadoGeneralRechazado);
             
-            
             //Estados Internos del Acta
             estadoInternoActaPendiente = this.estadoPorDominioValor( Constantes.DOMINIO_ACTA, Constantes.ESTADO_ACTA_PENDIENTE) ;
             estadoInternoActaProceso = this.estadoPorDominioValor( Constantes.DOMINIO_ACTA, Constantes.ESTADO_ACTA_PROCESO);
             estadoInternoActaAplicada = this.estadoPorDominioValor( Constantes.DOMINIO_ACTA, Constantes.ESTADO_ACTA_APLICADA);
             estadoInternoActaRechazada = this.estadoPorDominioValor( Constantes.DOMINIO_ACTA, Constantes.ESTADO_ACTA_RECHAZADA);
-            
             
             usuario = usuarioModel.buscarPorId(codPersonaReg);
 
@@ -164,11 +158,7 @@ public class ActaController extends ListadoBienesGeneralController {
             bienesActa = new ArrayList<DocumentoDetalle>();
             bienesActaEliminar = new ArrayList<DocumentoDetalle>();
             
-            acta = new DocumentoActa(estadoGeneralPendiente
-                                    ,null
-                                    ,""
-                                    , unidadEjecutora
-                            );
+            acta = new DocumentoActa(estadoGeneralPendiente, null,"", unidadEjecutora);
             acta.setUnidadEjecutora(unidadEjecutora);
 
             acta.setEstado(estadoGeneralPendiente);
@@ -187,10 +177,7 @@ public class ActaController extends ListadoBienesGeneralController {
             documentosAutorizacionesPorRol = new HashMap<String, DocumentoAutorizacion>(); 
             iniciaListadoBienes();
             
-            //jserrano Roles
-//            documentoRoles = new ArrayList<AutorizacionRol>();
             permitirEdicion = permitirEditar();
-
         } catch (Exception err) {
             Mensaje.agregarErrorAdvertencia(err.getMessage());
         }
@@ -214,8 +201,6 @@ public class ActaController extends ListadoBienesGeneralController {
                     bienesSeleccionados.put(valor.getBien().getId(), valor.getBien());
                     actaDetalleMap.put(valor.getBien().getId(), valor);
                 }
-            //jserrano Roles
-//                listarRolesAprobacion();
             permitirEdicion = permitirEditar();
             mostrarActivarBtn = permitirEdicion;
             
@@ -223,7 +208,6 @@ public class ActaController extends ListadoBienesGeneralController {
                 cargaRolesAprobacion();
         }
     }
-    
     
     void cargarCombos() {
         try {
@@ -252,7 +236,6 @@ public class ActaController extends ListadoBienesGeneralController {
     }
 
     //</editor-fold>
-    
     
     //<editor-fold defaultstate="collapsed" desc="GETs & SETs">
 
@@ -482,18 +465,14 @@ public class ActaController extends ListadoBienesGeneralController {
     //</editor-fold>
     
     //<editor-fold defaultstate="collapsed" desc="Listado Actas">
-
-
     private static String fltIdActa = "";
     private static String fltAutorizacion = "";
     private static String fltFecha = "";
     private static String fltEstados = "";
     private static Long fltUnidadEjecutora = -1L;
     
-    
     public void listarActas(){
         try{
-            
             int primerReg = this.getPrimerRegistro()-1;
             int ultimoReg = this.getUltimoRegistro();
             actasRegistradas = actaModel.listarActas(fltUnidadEjecutora, fltIdActa, fltAutorizacion, fltEstados.equals("-1") ? "" : fltEstados, fltFecha, primerReg, ultimoReg);
@@ -503,31 +482,18 @@ public class ActaController extends ListadoBienesGeneralController {
     }
     
     private void listadoInicializaDatos(){
-        try{
-            
-            if(fltEstados.equals("" ))
-                fltEstados = "-1";
-            
-            this.listadoCantidadRegistros();
-            this.setPrimerRegistro(1);
-            this.listarActas();
-        }catch(Exception err){
-            
+        if(fltEstados.equals("")) {
+            fltEstados = "-1";
         }
+        this.listadoCantidadRegistros();
+        this.setPrimerRegistro(1);
+        this.listarActas();
     }
     
     public void listadoCantidadRegistros(){
-        try{
-            Long contador = 0L;
-            
-            contador = actaModel.consultaCantidadRegistros(fltUnidadEjecutora, fltIdActa, fltAutorizacion, fltEstados.equals("-1") ? "" : fltEstados, fltFecha);
-            
-            //Se actualiza la cantidad de registros segun los filtros
-            this.setCantidadRegistros(contador.intValue());
-            
-        }catch(Exception err){
-            
-        }
+        Long contador = 0L;
+        contador = actaModel.consultaCantidadRegistros(fltUnidadEjecutora, fltIdActa, fltAutorizacion, fltEstados.equals("-1") ? "" : fltEstados, fltFecha);
+        this.setCantidadRegistros(contador.intValue());
     }
     
     

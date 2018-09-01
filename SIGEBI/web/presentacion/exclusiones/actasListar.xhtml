@@ -137,7 +137,6 @@
                                 <h:outputText id="idBienCell" value="#{acta.autorizacion}"/>
                             </ice:column>
 
-                            
                             <ice:column id="colEstado">                                 
                                 <f:facet name="header">
                                     <ice:columnGroup>
@@ -191,7 +190,7 @@
                                         <!-- Unidad Ejecutora -->
                                         <ice:column id="fltUnidadEjecutora" style="vertical-align:top;" rendered="#{actaController.usuarioAdministrador}">
                                             <ice:selectOneMenu  id="txtFltUnidadEjecutora"
-                                                                valueChangeListener="#{actaController.cambioFiltro}"
+                                                                valueChangeListener="#{actaController.actasCambioFiltro}"
                                                                 value="#{actaController.fltUnidadEjecutora}"
                                                                 partialSubmit="true">
                                                 <f:selectItem itemLabel="N/A" itemValue="-1"/>

@@ -440,11 +440,7 @@ public class AgregarBienController extends BaseController {
         String messageValidacion = validarForm(root, component);
         if (Constantes.OK.equals(messageValidacion)) {
             try {
-
-                //Se crea el bien
                 this.procesarBien();
-
-
             } catch (Exception exception) {
                 if (exception instanceof FWExcepcion) {
                     Mensaje.agregarErrorAdvertencia(((FWExcepcion) exception).getError_para_usuario());
@@ -462,11 +458,8 @@ public class AgregarBienController extends BaseController {
         ReentrantLock reentrantLock = new ReentrantLock();
         Boolean actualizacionSinIdentificacion = false;
         Identificacion identificacion = null; 
-        
         try {
-            
             reentrantLock.lock();
-         
             if (!bienRegistrado) {
                 //Se busca la identificacion del bien
                 identificacion = modelIdentificacion.siguienteDisponible(unidadEjecutora, command.getCapitalizable());
@@ -502,48 +495,40 @@ public class AgregarBienController extends BaseController {
                     }
                 }
             } else {
-                identificacion = command.getIdentificacion();
-                if (identificacion.getIdentificacion() == null) {
+                Identificacion nuevaIdentificacion = modelIdentificacion.buscarPorIdentificacion(command.getIdentificacion().getIdentificacion());
+                if (nuevaIdentificacion == null) {
                     Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.error.agregarBienController.identificacion.requerido"));
                     return;
-                }else{
-                    
+                } else {
                     //Si la identificacion se encuentra disponible se debe cambiar su estado
-                    if(command.getIdentificacion().getEstado().getValor().equals(Constantes.IDENTIFICACION_ESTADO_DISPONIBLE)){
-                        
+                    if(nuevaIdentificacion.getEstado().getValor().equals(Constantes.IDENTIFICACION_ESTADO_DISPONIBLE)){
                         //Se maca para rollback
                         actualizacionSinIdentificacion = true;
                                 
+                        nuevaIdentificacion.setEstado(this.estadoPorDominioValor(Constantes.DOMINIO_IDENTIFICACION, Constantes.IDENTIFICACION_ESTADO_OCUPADA));
                         //Se asigna al bien
-                        bien.setIdentificacion(command.getIdentificacion());
-
-                        //Se cambia el estado
-                        Estado estadoOcupado = this.estadoPorDominioValor(Constantes.DOMINIO_IDENTIFICACION, Constantes.IDENTIFICACION_ESTADO_OCUPADA);
-                        bien.getIdentificacion().setEstado(estadoOcupado);
-
+                        this.command.setIdentificacion(nuevaIdentificacion);
+                        
                         //Se actualiza el bien
                         modelBien.actualizar(command.getBien(bien));
 
                         //Se cambia el estado a la identificacion
-                        modelIdentificacion.actualizar(bien.getIdentificacion());                    
-                    }else{
-                        
+                        modelIdentificacion.actualizar(nuevaIdentificacion);                    
+                    } else {
                         //Solo se actualiza el bien
-                        modelBien.actualizar(command.getBien(bien));
+                        if (nuevaIdentificacion.getId().equals(command.getIdentificacion().getId())) {
+                            modelBien.actualizar(command.getBien(bien));
+                        } else {
+                            Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.error.agregarBienController.identificacion.ocupada"));
+                            return;
+                        }
                     }
-
                     //Se inicializan los datos de la pantalla
                     inicializarDetalle(bien);
                 } 
             }
-            
-            
-            
-            // Mensaje Éxito
-            Mensaje.agregarInfo(Util.getEtiquetas("sigebi.error.agregarBienController.mensaje.exito"));
-            
-        } catch (Exception exception) {
-            
+            Mensaje.agregarInfo(Util.getEtiquetas("sigebi.error.agregarBienController.mensaje.exito"));            
+        } catch (Exception exception) {            
             //Se retorna la identificacion
             if (!bienRegistrado && command.getIdentificacion() != null && command.getIdentificacion().getId() != null && command.getIdentificacion().getId() > 0) {
                 Estado estadoDispo = this.estadoPorDominioValor(Constantes.DOMINIO_IDENTIFICACION, Constantes.IDENTIFICACION_ESTADO_DISPONIBLE);

@@ -262,7 +262,7 @@ public class TrasladosDao extends GenericDaoImpl {
                sql.append(" AND str(s.estado.id) = :fltEstados ");
             
             Query q = session.createQuery(sql.toString());
-            if (unidadEjecutora == null)
+            if (unidadEjecutora != null)
                 q.setParameter("unidadEjecutora", unidadEjecutora);            
             if(fltIdTraslado != null && fltIdTraslado.length() > 0)
                 q.setParameter("fltIdTraslado", '%' + fltIdTraslado + '%');
