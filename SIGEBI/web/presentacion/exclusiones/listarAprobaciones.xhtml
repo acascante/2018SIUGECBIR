@@ -1,0 +1,201 @@
+<ice:form id="frmListarAprobaciones" 
+          xmlns:ice="http://www.icesoft.com/icefaces/component" 
+          xmlns:h="http://java.sun.com/jsf/html" 
+          xmlns:f="http://java.sun.com/jsf/core" 
+          xmlns:ui="http://java.sun.com/jsf/facelets">
+   
+    <div class="contenido-pagina">
+        <div class="container">
+            
+            <!-- Encabezado -->
+            <div class="row">
+                <div class='col-sm-6'>
+                    <h1 style="margin: 0;">
+                        <ice:outputFormat value="#{label['sigebi.label.aprobacion.titulo.listar']} "/>
+                    </h1>
+                </div>                
+            </div>
+            
+            <!-- Paginacion -->
+            <div class="row">
+                <div class="col-sm-12">
+                    <ice:outputFormat value="#{label['label.generico.paginacion.encabezado']}">
+                        <f:param value="#{controllerListarAprobaciones.cantidadRegistros}"/>
+                        <f:param value="#{controllerListarAprobaciones.cantidadRegistrosMostrados}"/>
+                        <f:param value="#{controllerListarAprobaciones.primerRegistro}"/>
+                        <f:param value="#{controllerListarAprobaciones.ultimoRegistro}"/>
+                        <f:param value="#{controllerListarAprobaciones.paginaActual}"/>
+                        <f:param value="#{controllerListarAprobaciones.cantidadPaginas}"/>
+                    </ice:outputFormat>
+                    <div>
+                        <table>
+                            <tr>
+                                <td style="padding-right: 5px;">
+                                    <ice:outputText value="#{label['label.paginacion.cantidad.pagina']} "/>
+                                </td>
+                                <td>
+                                    <ice:selectOneMenu id="cantRegistroPorPagina" value="#{controllerListarAprobaciones.cantRegistroPorPagina}"  valueChangeListener="#{controllerListarAprobaciones.cambioRegistrosPorPagina}" partialSubmit="true">
+                                        <f:selectItems id="item_pa" value="#{controllerListarAprobaciones.listaRegistrosPagina}"/>
+                                    </ice:selectOneMenu>
+                                </td>
+                            </tr>
+                        </table>                        
+                    </div>                    
+                    <div>
+                        <ice:commandButton image="./imagenes/botones/first.png" partialSubmit="true" actionListener="#{controllerListarAprobaciones.primero}" rendered="#{controllerListarAprobaciones.cantidadPaginas > 1}"/>
+                        <ice:commandButton image="./imagenes/botones/previos.png" partialSubmit="true" actionListener="#{controllerListarAprobaciones.anterior}" rendered="#{controllerListarAprobaciones.cantidadPaginas > 1}"/>
+                        <ui:repeat value="#{controllerListarAprobaciones.arregloPaginas}" var="pagina">
+                            <ice:commandLink value="#{pagina}" partialSubmit="true" actionListener="#{controllerListarAprobaciones.irPagina}">
+                                <f:param name="numPag" value="#{pagina}"/>
+                            </ice:commandLink>
+                        </ui:repeat>            
+                        <ice:commandButton image="./imagenes/botones/next.png" partialSubmit="true" actionListener="#{controllerListarAprobaciones.siguiente}" rendered="#{controllerListarAprobaciones.cantidadPaginas > 1}"/>
+                        <ice:commandButton image="./imagenes/botones/last.png" partialSubmit="true" actionListener="#{controllerListarAprobaciones.ultimo}" rendered="#{controllerListarAprobaciones.cantidadPaginas > 1}"/>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Tabla -->
+            <div class="row">
+                <div class="col-sm-12">                    
+                    <div>
+                        <ice:dataTable id="listadoAprobaciones" value="#{controllerListarAprobaciones.documentos}" var="documento" paginator="true" paginatorPosition="bottom">
+                            <f:facet name="header">
+                                <ice:columnGroup>
+                                    <ice:headerRow >
+                                        <!-- ID -->
+                                        <ice:column id="id" style="vertical-align:top;">
+                                            <ice:outputText value="#{label['sigebi.label.aprobacion.id']} "/>
+                                        </ice:column>
+                                        
+                                        <!-- Autorizacion-->
+                                        <ice:column id="autorizacion" style="vertical-align:top;">                                 
+                                            <ice:outputText value="#{label['sigebi.label.aprobacion.autorizacion']}"/>
+                                        </ice:column>
+                                        
+                                        <!-- Estado -->
+                                        <ice:column id="estado" style="vertical-align:top;">                                 
+                                            <ice:outputText value="#{label['sigebi.label.aprobacion.estado']}"/>
+                                        </ice:column>
+                                        
+                                        <!-- Fecha -->
+                                        <ice:column id="fecha" >
+                                            <ice:outputText value="#{label['sigebi.label.aprobacion.fecha']} "/>
+                                        </ice:column>
+                            
+                                        <!-- Unidad Ejecutora -->
+                                        <ice:column id="unidadEjecutora" rendered="#{controllerListarAprobaciones.usuarioAdministrador}">
+                                            <ice:outputText value="#{label['sigebi.label.aprobacion.unidadEjecutora']} "/>
+                                        </ice:column>
+                                        
+                                        <ice:column id="unidadEjecutora" rendered="#{!controllerListarAprobaciones.usuarioAdministrador}" rowspan="2" >
+                                            <ice:outputText value="#{label['sigebi.label.aprobacion.unidadEjecutora']} "/>
+                                        </ice:column>
+                                        
+                                        
+                                        <ice:column id="opciones" rowspan="2">
+                                            <ice:outputText value="#{label['sigebi.label.aprobacion.opciones']} "/>
+                                        </ice:column>
+                                    </ice:headerRow>
+                                    <ice:headerRow>
+                                        <!-- ID -->
+                                        <ice:column id="fltId" style="vertical-align:top;">
+                                            <ice:inputText id="txtFltId" 
+                                                           value="#{controllerListarAprobaciones.command.fltId}" 
+                                                           validator="#{controllerListarAprobaciones.validarFiltroId}"
+                                                           valueChangeListener="#{controllerListarAprobaciones.cambioFiltro}"/>
+                                        </ice:column>
+                                        
+                                        <!-- Autorizacion -->
+                                        <ice:column id="fltAutorizacion" style="vertical-align:top;">                                 
+                                            <ice:inputText id="txtFltAutorizacion"
+                                                           value="#{controllerListarAprobaciones.command.fltAutorizacion}" 
+                                                           valueChangeListener="#{controllerListarAprobaciones.cambioFiltro}"/>
+                                        </ice:column>
+                                        
+                                        <!-- Estado -->
+                                        <ice:column id="fltEstado" style="vertical-align:top;">                                 
+                                            <ice:selectOneMenu  id="txtFltEstado"
+                                                                valueChangeListener="#{controllerListarAprobaciones.cambioFiltro}"
+                                                                value="#{controllerListarAprobaciones.command.fltEstado}"
+                                                                partialSubmit="true">
+                                                <f:selectItem itemLabel="N/A" itemValue="-1"/>
+                                                <f:selectItems id="slcEstadoItem" value="#{controllerListarAprobaciones.itemsEstado}"/>
+                                            </ice:selectOneMenu>
+                                        </ice:column>
+                                        
+                                        <!-- Fecha -->
+                                        <ice:column id="fltFecha" >
+                                            <ice:selectInputDate 
+                                                id="fltTxtFecha" 
+                                                highlightClass="dateHighlightGray" 
+                                                highlightUnit="DAY_OF_WEEK" 
+                                                highlightValue="1"
+                                                partialSubmit="false" 
+                                                renderAsPopup="true" 
+                                                renderMonthAsDropdown="true" 
+                                                renderYearAsDropdown="true"
+                                                validator="#{controllerListarAprobaciones.validarFiltroFecha}"
+                                                value="#{controllerListarAprobaciones.command.fltFecha}" 
+                                                valueChangeListener="#{controllerListarAprobaciones.cambioFiltro}" >
+                                                <f:convertDateTime pattern="#{controllerListarAprobaciones.command.datePattern}" timeZone="#{controllerListarAprobaciones.command.timeZone}" />
+                                            </ice:selectInputDate>
+                                        </ice:column>
+                                        
+                                        <!-- Unidad Ejecutora -->
+                                        <ice:column id="fltUnidadEjecutora" style="vertical-align:top;" rendered="#{controllerListarAprobaciones.usuarioAdministrador}">
+                                            <ice:selectOneMenu  id="txtFltUnidadEjecutora"
+                                                                valueChangeListener="#{controllerListarAprobaciones.cambioFiltro}"
+                                                                value="#{controllerListarAprobaciones.command.fltUnidadEjecutora}"
+                                                                partialSubmit="true">
+                                                <f:selectItem itemLabel="N/A" itemValue="-1"/>
+                                                <f:selectItems id="slcUnidadesItem" value="#{controllerListarAprobaciones.itemsUnidadEjecutora}"/>
+                                            </ice:selectOneMenu>
+                                        </ice:column>
+                                    </ice:headerRow>
+                                </ice:columnGroup>
+                            </f:facet>
+                            <ice:column>
+                                <h:outputText id="idCell" value="#{documento.id}"/>
+                            </ice:column>
+                            
+                            <ice:column>
+                                <h:outputText id="tipoCell" value="#{documento.aprobacion}"/>
+                            </ice:column>
+                            
+                            <ice:column>
+                                <h:outputText id="estadoCell" value="#{documento.estado.nombre}"/>
+                            </ice:column>
+                            
+                            <ice:column>
+                                <h:outputText id="fechaCell" value="#{documento.fecha}" >
+                                    <f:convertDateTime type="date" pattern="#{controllerListarAprobaciones.command.datePattern}" />
+                                </h:outputText>
+                            </ice:column>
+                            
+                            <ice:column>
+                                <h:outputText id="unidadEjecutoraCell" value="#{prestamo.unidadEjecutora.descripcion}"/>
+                            </ice:column>
+                            
+                            <ice:column style="text-align: center;">
+                                <ice:commandButton id="botonDetalle" actionListener="#{controllerAgregarAprobacionExclusion.detalleRegistro}" value="#{label['label.detalle']}" style="float:right;margin-top:2%" styleClass="boton" partialSubmit="true">
+                                    <f:attribute id="prestamoDetalle" name="#{controllerListarAprobaciones.command.key}"  value="#{prestamo.id}"/>
+                                    <f:attribute id="vistaOrigen" name="#{controllerListarAprobaciones.command.keyVistaOrigen}"  value="#{controllerListarAprobaciones.vistaOrigen}"/>
+                                </ice:commandButton>
+                            </ice:column>
+                        </ice:dataTable>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Botones -->
+            <div class="row">
+                <div class='col-sm-12'>
+                   <ice:commandButton id="botonNuevo" style="float:right" styleClass="boton" partialSubmit="true" actionListener="#{controllerAgregarAprobacionExclusion.nuevoRegistro}" value="Nuevo" >
+                       <f:attribute id="vistaOrigen" name="#{controllerListarAprobaciones.command.keyVistaOrigen}"  value="#{controllerListarAprobaciones.vistaOrigen}"/>
+                    </ice:commandButton>
+                </div>
+            </div>
+        </div>
+    </div>
+</ice:form>

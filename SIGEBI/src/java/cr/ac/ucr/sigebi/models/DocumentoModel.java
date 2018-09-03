@@ -12,6 +12,7 @@ import cr.ac.ucr.sigebi.domain.AutorizacionRol;
 import cr.ac.ucr.sigebi.domain.AutorizacionRolPersona;
 import cr.ac.ucr.sigebi.domain.Bien;
 import cr.ac.ucr.sigebi.domain.Documento;
+import cr.ac.ucr.sigebi.domain.DocumentoAprobacionExclusion;
 import cr.ac.ucr.sigebi.domain.DocumentoAutorizacion;
 import cr.ac.ucr.sigebi.domain.DocumentoDetalle;
 import cr.ac.ucr.sigebi.domain.DocumentoInformeTecnico;
@@ -21,6 +22,7 @@ import cr.ac.ucr.sigebi.domain.UnidadEjecutora;
 import cr.ac.ucr.sigebi.domain.Usuario;
 import cr.ac.ucr.sigebi.utils.Constantes;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -171,4 +173,29 @@ public class DocumentoModel {
         return documentoAutorizaciones;
     }
 
+    public Long contarAprobacionesExclusion(Long idUnidadEjecutora, Long id, String autorizacion, Date fecha, Long idEstado) throws FWExcepcion {
+        if (idUnidadEjecutora.equals(Constantes.DEFAULT_ID)) {
+            return documentoDao.contarAprobacionesExclusion(null, id, autorizacion, fecha, idEstado);
+        }
+        else {
+            return documentoDao.contarAprobacionesExclusion(unidadEjecutoraDao.buscarPorId(idUnidadEjecutora), id, autorizacion, fecha, idEstado);
+        }
+    }
+
+    public List<Documento> listarAprobacionesExclusion(Long idUnidadEjecutora, Long id, String autorizacion, Date fecha, Long idEstado, Integer primerRegistro, Integer ultimoRegistro) throws FWExcepcion {
+        if (idUnidadEjecutora.equals(Constantes.DEFAULT_ID)) {
+            return documentoDao.listarAprobacionesExclusion(null, id, autorizacion, fecha, idEstado, primerRegistro, ultimoRegistro);
+        }        
+        else {
+            return documentoDao.listarAprobacionesExclusion(unidadEjecutoraDao.buscarPorId(idUnidadEjecutora), id, autorizacion, fecha, idEstado, primerRegistro, ultimoRegistro);
+        }
+    }
+    
+    public void eliminarDetalles(List<DocumentoDetalle> detalles) throws FWExcepcion {
+        documentoDao.eliminarDetalles(detalles);
+    }
+    
+    public DocumentoAprobacionExclusion buscarPorId(Long id) throws FWExcepcion {
+        return documentoDao.buscarPorId(id);
+    }
 }

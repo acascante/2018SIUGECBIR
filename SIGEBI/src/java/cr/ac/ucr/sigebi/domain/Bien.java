@@ -444,6 +444,7 @@ public class Bien extends ObjetoBase implements Serializable {
     //<editor-fold defaultstate="collapsed" desc="Metodos para visibilidad de opciones en los listados">
     public boolean getRechazar() {
         if (Constantes.ESTADO_INTERNO_BIEN_EXCLUSION_SOLICITADO.equals(this.getEstadoInterno().getValor()) ||
+            Constantes.ESTADO_INTERNO_BIEN_APROBACION_CREADA.equals(this.getEstadoInterno().getValor()) ||
             Constantes.ESTADO_INTERNO_BIEN_PRESTAMO_SOLICITADO.equals(this.getEstadoInterno().getValor())) {
             return true;
         }
@@ -478,6 +479,8 @@ public class Bien extends ObjetoBase implements Serializable {
     public boolean getEliminar() {
         if (Constantes.ESTADO_INTERNO_BIEN_EXCLUSION_SOLICITADO.equals(this.getEstadoInterno().getValor()) ||
             Constantes.ESTADO_INTERNO_BIEN_EXCLUSION_APROBADO.equals(this.getEstadoInterno().getValor()) ||
+            Constantes.ESTADO_INTERNO_BIEN_APROBACION_APLICADA.equals(this.getEstadoInterno().getValor()) ||
+            Constantes.ESTADO_INTERNO_BIEN_APROBACION_RECHAZADA.equals(this.getEstadoInterno().getValor()) ||
             Constantes.ESTADO_INTERNO_BIEN_PRESTAMO_SOLICITADO.equals(this.getEstadoInterno().getValor()) ||
             Constantes.ESTADO_INTERNO_BIEN_PRESTAMO_ANULADO.equals(this.getEstadoInterno().getValor()) ||
             Constantes.ESTADO_INTERNO_BIEN_PRESTAMO_APROBADO.equals(this.getEstadoInterno().getValor())) {

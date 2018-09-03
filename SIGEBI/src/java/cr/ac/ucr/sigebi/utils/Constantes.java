@@ -50,6 +50,9 @@ public final class Constantes {
     public static final Integer ESTADO_INTERNO_BIEN_ACTA_APROBADA = 6;
     public static final Integer ESTADO_INTERNO_BIEN_INFORME_TECNICO_CREADO = 7;
     public static final Integer ESTADO_INTERNO_BIEN_INFORME_TECNICO_APROBADO = 8;
+    public static final Integer ESTADO_INTERNO_BIEN_APROBACION_CREADA = 10;
+    public static final Integer ESTADO_INTERNO_BIEN_APROBACION_APLICADA = 101;
+    public static final Integer ESTADO_INTERNO_BIEN_APROBACION_RECHAZADA = 102;
     public static final Integer ESTADO_INTERNO_BIEN_EXCLUSION_SOLICITADO = 21;
     public static final Integer ESTADO_INTERNO_BIEN_EXCLUSION_RECHAZADO = 22;
     public static final Integer ESTADO_INTERNO_BIEN_EXCLUSION_APROBADO = 23;
@@ -112,6 +115,12 @@ public final class Constantes {
     public static final int TIPO_EXCLUSION_DESECHO = 2 ;
     public static final int TIPO_EXCLUSION_DONACION = 1;
 
+    //APROBACION EXCLUSION
+    public static final Integer ESTADO_APROBACION_EXCLUSION_PENDIENTE = 1;
+    public static final Integer ESTADO_APROBACION_EXCLUSION_PROCESO = 2;
+    public static final Integer ESTADO_APROBACION_EXCLUSION_APLICADA = 3;
+    public static final Integer ESTADO_APROBACION_EXCLUSION_RECHAZADA = 4;
+    
     // PRESTAMOS
     public static final Integer ESTADO_PRESTAMO_CREADO = 1;
     public static final Integer ESTADO_PRESTAMO_SOLICITADO = 2;
@@ -210,6 +219,7 @@ public final class Constantes {
     public static final String DOMINIO_TOMA_FISICA_MOTIVO = "TOMA_FISICA_MOTIVO";
     public static final String DOMINIO_ASIGNAR_RESPONSABLE = "ASIGNAR_RESPONSABLE";
     public static final String DOMINIO_ASIGNACION_PLACA = "ASIGNACION_PLACA";
+    public static final String DOMINIO_APROBACION_EXCLUSION = "APROBACION_EXCLUSION";
 
     //TIPO ADJUNTO
     public static final Integer TIPO_ADJUNTO_BIEN = 1;
@@ -276,6 +286,8 @@ public final class Constantes {
     public static final Integer CODIGO_AUTORIZACION_EXCLUSION_DONACION = 10;
     public static final Integer CODIGO_AUTORIZACION_PRESTAMO = 11;
     public static final Integer CODIGO_AUTORIZACION_MANTENIMIENTO = 12;
+    public static final Integer CODIGO_AUTORIZACION_APROBAR_EXCLUSION_DESECHO = 13;
+    public static final Integer CODIGO_AUTORIZACION_APROBAR_EXCLUSION_DONACION = 14;
 
     public static final String ACTA_ID_TIPO_DONACION = "26";
     public static final String ACTA_ID_TIPO_DESECHO = "27";
@@ -296,6 +308,11 @@ public final class Constantes {
     public static final String VISTA_PRESTAMO_NUEVO_PAGINA = "../prestamos/prestamoDetalle.xhtml";
     public static final String VISTA_SINCRONIZACION_BIEN = "sincronizar";
     public static final String VISTA_SINCRONIZACION_BIEN_LISTADO = "../bienes/listarBienSincronizar.xhtml";
+    
+    public static final String VISTA_APROBACION_LISTADO = "prestamos";
+    public static final String VISTA_APROBACION_LISTADO_PAGINA = "../exclusiones/listarAprobaciones.xhtml";
+    public static final String VISTA_APROBACION_NUEVO = "prestamo_nuevo";
+    public static final String VISTA_APROBACION_NUEVO_PAGINA = "../exclusiones/aprobacionDetalle.xhtml";
     
     //Agregar Identificaciones
     public static final String VISTA_AGREGAR_IDENTIFICACIONES = "gen_identificaciones";
@@ -452,6 +469,7 @@ public final class Constantes {
     public static final Integer DISCRIMINATOR_DOCUMENTO_INFORME_TECNICO = 1;
     public static final Integer DISCRIMINATOR_DOCUMENTO_ACTA = 2;
     public static final Integer DISCRIMINATOR_DOCUMENTO_TRASLADO = 3;
+    public static final Integer DISCRIMINATOR_DOCUMENTO_APROBACION = 6;
 
     //Discriminator Documento Detalle
     public static final Integer DISCRIMINATOR_DOCUMENTO_DETALLE_GENERAL = 1;

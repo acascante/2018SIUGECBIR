@@ -212,7 +212,7 @@ public class ListadoBienesGeneralController extends BaseController{
         estadoBienActivo = estadoModel.buscarPorDominioEstado(Constantes.DOMINIO_BIEN, Constantes.ESTADO_BIEN_ACTIVO);
             
         estadoIntInfTecAprobado = this.estadoPorDominioValor(Constantes.DOMINIO_BIEN_INTERNO
-                                                , Constantes.ESTADO_INTERNO_BIEN_INFORME_TECNICO_APROBADO);
+                                                , Constantes.ESTADO_INTERNO_BIEN_APROBACION_APLICADA);
         tipoInfTecDonacion = this.tipoPorDominioValor(Constantes.DOMINIO_INFORME_TECNICO, Constantes.TIPO_INFORME_TECNICO_DONAR);
         tipoInfTecDesecho = this.tipoPorDominioValor(Constantes.DOMINIO_INFORME_TECNICO, Constantes.TIPO_INFORME_TECNICO_DESECHAR);
         

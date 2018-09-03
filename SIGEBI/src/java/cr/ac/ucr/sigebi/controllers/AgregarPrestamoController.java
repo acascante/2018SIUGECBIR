@@ -593,7 +593,6 @@ public class AgregarPrestamoController extends BaseController {
         }
     }
 
-    
     public void verDetalle(SolicitudPrestamo movimiento, String vistaOrigen) {
         
         try{
@@ -606,7 +605,6 @@ public class AgregarPrestamoController extends BaseController {
             this.mensaje = err.getMessage();
         }
     }
-    
     
     public void regresarListado() {
         if (vistaOrigen != null) {
@@ -631,8 +629,7 @@ public class AgregarPrestamoController extends BaseController {
             this.registroMovimientoModel.agregar(registroMovimientoSolicitud);
         }        
     }
-    
-    
+        
     //<editor-fold defaultstate="collapsed" desc="Validaciones">
     public String validarForm(UIViewRoot root) {
         if (command.getBienes().isEmpty()) {

@@ -9,15 +9,18 @@ import cr.ac.ucr.framework.daoHibernate.DaoHelper;
 import cr.ac.ucr.framework.daoImpl.GenericDaoImpl;
 import cr.ac.ucr.framework.utils.FWExcepcion;
 import cr.ac.ucr.sigebi.domain.Documento;
+import cr.ac.ucr.sigebi.domain.DocumentoAprobacionExclusion;
 import cr.ac.ucr.sigebi.domain.DocumentoDetalle;
 import cr.ac.ucr.sigebi.domain.Estado;
 import cr.ac.ucr.sigebi.domain.Tipo;
 import cr.ac.ucr.sigebi.domain.UnidadEjecutora;
+import java.util.Date;
 import java.util.List;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -160,7 +163,6 @@ public class DocumentoDao extends GenericDaoImpl {
         //Select
         sql.append(" WHERE docu.discriminator = :tipoDocumento ");
 
-        //docu.bien.unidadEjecutora.id = :idUnidadEjecutora 
         if (tipoInforme != null) {
             sql.append(" AND docu.tipoInforme = :tipoInforme ");
         }
@@ -219,6 +221,112 @@ public class DocumentoDao extends GenericDaoImpl {
             q.setParameter("estado", estado);
         }
         return q;
+    }
+
+    @Transactional(readOnly = true)
+    public Long contarAprobacionesExclusion(UnidadEjecutora unidadEjecutora, Long id, String autorizacion, Date fecha, Long idEstado) throws FWExcepcion {
+        Session session = dao.getSessionFactory().openSession();
+        try {
+            Query q = this.creaQueryAprobacionesExclusion(unidadEjecutora, id, autorizacion, fecha, idEstado, true, session);
+            return (Long) q.uniqueResult();
+        } catch (HibernateException e) {
+            throw new FWExcepcion("sigebi.label.aprobacion.error.listar", "Error obtener los registros de tipo " + this.getClass(), e.getCause());
+        } finally {
+            session.close();
+        }
+    }
+
+    @Transactional(readOnly = true)
+    public List<Documento> listarAprobacionesExclusion(UnidadEjecutora unidadEjecutora, Long id, String autorizacion, Date fecha, Long idEstado, Integer primerRegistro, Integer ultimoRegistro) throws FWExcepcion {
+        Session session = this.dao.getSessionFactory().openSession();
+        try {
+            Query query = this.creaQueryAprobacionesExclusion(unidadEjecutora, id, autorizacion, fecha, idEstado, false, session);
+            if (!(primerRegistro.equals(1) && ultimoRegistro.equals(1))) {
+                query.setFirstResult(primerRegistro);
+                query.setMaxResults(ultimoRegistro - primerRegistro);
+            }
+            return (List<Documento>) query.list();
+
+        } catch (HibernateException e) {
+            throw new FWExcepcion("sigebi.label.aprobacion.error.listar", "Error obtener los registros de tipo " + this.getClass(), e.getCause());
+        } finally {
+            session.close();
+        }
+    }
+
+    private Query creaQueryAprobacionesExclusion(UnidadEjecutora unidadEjecutora, Long id, String autorizacion, Date fecha, Long idEstado, Boolean contar, Session session) {
+        StringBuilder sql = new StringBuilder("SELECT ");
+        if (contar) {
+            sql.append("count(entity) ");
+        } else {
+            sql.append("entity ");
+        }
+        sql.append("FROM DocumentoAprobacionExclusion entity ");
+        sql.append("WHERE 1=1 ");
+
+        if (id != null) {
+            sql.append("AND entity.id = :id ");
+        } else {
+            if (unidadEjecutora != null) {
+                sql.append("AND entity.unidadEjecutora = :unidadEjecutora ");
+            }
+            if (autorizacion != null) {
+                sql.append("AND entity.autorizacion = :autorizacion ");
+            }
+            if (fecha != null) {
+                sql.append("AND entity.fecha = :fecha ");
+            }
+            if (idEstado != null) {
+                sql.append("AND entity.estado.id = :idEstado ");
+            }
+        }
+
+        sql.append("ORDER BY entity.id desc");
+
+        Query query = session.createQuery(sql.toString());
+
+        if (id != null) {
+            query.setParameter("id", id);
+        } else {
+            if (unidadEjecutora != null) {
+                query.setParameter("unidadEjecutora", unidadEjecutora);
+            }
+            if (autorizacion != null) {
+                query.setParameter("autorizacion", autorizacion);
+            }
+            if (fecha != null) {
+                query.setParameter("fecha", fecha);
+            }
+            if (idEstado != null) {
+                query.setParameter("idEstado", idEstado);
+            }
+        }
+        return query;
+    }
+    
+    @Transactional
+    public void eliminarDetalles(List<DocumentoDetalle> detalles) throws FWExcepcion {
+        try {
+            delete(detalles.toArray());
+        } catch (DataAccessException e) {
+            throw new FWExcepcion("sigebi.label.aprobacion.error.eliminar", "Error eliminado registro de tipo " + this.getClass(), e.getCause());
+        }
+    }
+    
+    @Transactional(readOnly = true)
+    public DocumentoAprobacionExclusion buscarPorId(Long id) throws FWExcepcion {
+        Session session = dao.getSessionFactory().openSession();
+        try {
+            String sql = "SELECT entity FROM DocumentoAprobacionExclusion entity WHERE entity.id = :id";
+            Query query = session.createQuery(sql);
+            query.setParameter("id", id);
+
+            return (DocumentoAprobacionExclusion) query.uniqueResult();
+        } catch (HibernateException e) {
+            throw new FWExcepcion("sigebi.label.aprobacion.error.listar", "Error obtener los registros de tipo " + this.getClass(), e.getCause());
+        } finally {
+            session.close();
+        }
     }
 
 }

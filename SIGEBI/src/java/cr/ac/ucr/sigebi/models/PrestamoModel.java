@@ -10,7 +10,6 @@ import cr.ac.ucr.sigebi.daos.PrestamoDao;
 import cr.ac.ucr.sigebi.daos.UnidadEjecutoraDao;
 import cr.ac.ucr.sigebi.domain.SolicitudDetallePrestamo;
 import cr.ac.ucr.sigebi.domain.SolicitudPrestamo;
-import cr.ac.ucr.sigebi.domain.UnidadEjecutora;
 import java.util.Date;
 import java.util.List;
 import javax.annotation.Resource;
