@@ -97,7 +97,7 @@ public class ListarAprobacionesExclusionCommand {
         return fltAutorizacion;
     }
 
-    public static void setFltAutorizacion(String fltAutorizacion) {
+    public void setFltAutorizacion(String fltAutorizacion) {
         ListarAprobacionesExclusionCommand.fltAutorizacion = fltAutorizacion;
     }
     //</editor-fold>

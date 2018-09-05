@@ -12,6 +12,7 @@ import cr.ac.ucr.sigebi.domain.Documento;
 import cr.ac.ucr.sigebi.domain.DocumentoAprobacionExclusion;
 import cr.ac.ucr.sigebi.domain.DocumentoDetalle;
 import cr.ac.ucr.sigebi.domain.Estado;
+import cr.ac.ucr.sigebi.domain.SolicitudDetallePrestamo;
 import cr.ac.ucr.sigebi.domain.Tipo;
 import cr.ac.ucr.sigebi.domain.UnidadEjecutora;
 import java.util.Date;
@@ -44,6 +45,15 @@ public class DocumentoDao extends GenericDaoImpl {
         }
     }
 
+    @Transactional
+    public void agregarDetalles(List<DocumentoDetalle> detalles) throws FWExcepcion {
+        try {
+            persist(detalles.toArray());
+        } catch (DataAccessException e) {
+            throw new FWExcepcion("sigebi.error.documentoDao.agregarDetalle", "Error guardando registro de tipo " + this.getClass(), e.getCause());
+        }
+    }
+    
     @Transactional
     public void agregarDetalle(DocumentoDetalle documentoDetalle) throws FWExcepcion {
         try {
@@ -237,7 +247,7 @@ public class DocumentoDao extends GenericDaoImpl {
     }
 
     @Transactional(readOnly = true)
-    public List<Documento> listarAprobacionesExclusion(UnidadEjecutora unidadEjecutora, Long id, String autorizacion, Date fecha, Long idEstado, Integer primerRegistro, Integer ultimoRegistro) throws FWExcepcion {
+    public List<DocumentoAprobacionExclusion> listarAprobacionesExclusion(UnidadEjecutora unidadEjecutora, Long id, String autorizacion, Date fecha, Long idEstado, Integer primerRegistro, Integer ultimoRegistro) throws FWExcepcion {
         Session session = this.dao.getSessionFactory().openSession();
         try {
             Query query = this.creaQueryAprobacionesExclusion(unidadEjecutora, id, autorizacion, fecha, idEstado, false, session);
@@ -245,7 +255,7 @@ public class DocumentoDao extends GenericDaoImpl {
                 query.setFirstResult(primerRegistro);
                 query.setMaxResults(ultimoRegistro - primerRegistro);
             }
-            return (List<Documento>) query.list();
+            return (List<DocumentoAprobacionExclusion>) query.list();
 
         } catch (HibernateException e) {
             throw new FWExcepcion("sigebi.label.aprobacion.error.listar", "Error obtener los registros de tipo " + this.getClass(), e.getCause());
@@ -264,19 +274,19 @@ public class DocumentoDao extends GenericDaoImpl {
         sql.append("FROM DocumentoAprobacionExclusion entity ");
         sql.append("WHERE 1=1 ");
 
-        if (id != null) {
+        if(id != null && id > 0){
             sql.append("AND entity.id = :id ");
         } else {
             if (unidadEjecutora != null) {
                 sql.append("AND entity.unidadEjecutora = :unidadEjecutora ");
             }
-            if (autorizacion != null) {
+            if (autorizacion != null && autorizacion.length() > 0) {
                 sql.append("AND entity.autorizacion = :autorizacion ");
             }
             if (fecha != null) {
                 sql.append("AND entity.fecha = :fecha ");
             }
-            if (idEstado != null) {
+            if(idEstado != null && idEstado > 0){
                 sql.append("AND entity.estado.id = :idEstado ");
             }
         }
@@ -285,19 +295,19 @@ public class DocumentoDao extends GenericDaoImpl {
 
         Query query = session.createQuery(sql.toString());
 
-        if (id != null) {
+        if(id != null && id > 0){
             query.setParameter("id", id);
         } else {
             if (unidadEjecutora != null) {
                 query.setParameter("unidadEjecutora", unidadEjecutora);
             }
-            if (autorizacion != null) {
+            if (autorizacion != null && autorizacion.length() > 0) {
                 query.setParameter("autorizacion", autorizacion);
             }
             if (fecha != null) {
                 query.setParameter("fecha", fecha);
             }
-            if (idEstado != null) {
+            if(idEstado != null && idEstado > 0){
                 query.setParameter("idEstado", idEstado);
             }
         }

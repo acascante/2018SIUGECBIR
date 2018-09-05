@@ -296,7 +296,7 @@ public class AgregarExclusionController extends BaseController {
     
     private boolean inicializarAutorizaciones() {
         Tipo tipo = this.tipoPorId(this.command.getIdTipo());
-        int codigoAutorizacion = 0;
+        int codigoAutorizacion;
         switch (tipo.getValor()) {
             case Constantes.TIPO_EXCLUSION_DESECHO:
                 codigoAutorizacion = Constantes.CODIGO_AUTORIZACION_EXCLUSION_DESECHO;

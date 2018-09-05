@@ -309,10 +309,10 @@ public final class Constantes {
     public static final String VISTA_SINCRONIZACION_BIEN = "sincronizar";
     public static final String VISTA_SINCRONIZACION_BIEN_LISTADO = "../bienes/listarBienSincronizar.xhtml";
     
-    public static final String VISTA_APROBACION_LISTADO = "prestamos";
+    public static final String VISTA_APROBACION_LISTADO = "aprobacion";
     public static final String VISTA_APROBACION_LISTADO_PAGINA = "../exclusiones/listarAprobaciones.xhtml";
-    public static final String VISTA_APROBACION_NUEVO = "prestamo_nuevo";
-    public static final String VISTA_APROBACION_NUEVO_PAGINA = "../exclusiones/aprobacionDetalle.xhtml";
+    public static final String VISTA_APROBACION_NUEVA = "aprobacion_nueva"; 
+    public static final String VISTA_APROBACION_NUEVA_PAGINA = "../exclusiones/aprobacionDetalle.xhtml";
     
     //Agregar Identificaciones
     public static final String VISTA_AGREGAR_IDENTIFICACIONES = "gen_identificaciones";

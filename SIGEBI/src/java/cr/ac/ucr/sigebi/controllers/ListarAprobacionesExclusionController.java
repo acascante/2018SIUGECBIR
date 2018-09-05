@@ -43,7 +43,7 @@ public class ListarAprobacionesExclusionController extends BaseController {
     @Resource private DocumentoModel documentoModel;
     @Resource private UnidadEjecutoraModel unidadEjecutoraModel;
     
-    private List<Documento> documentos;
+    private List<DocumentoAprobacionExclusion> documentos;
     
     private ListarAprobacionesExclusionCommand command;
    
@@ -144,11 +144,11 @@ public class ListarAprobacionesExclusionController extends BaseController {
     }
     
     // <editor-fold defaultstate="collapsed" desc="Get's y Set's">
-    public List<Documento> getDocumentos() {
+    public List<DocumentoAprobacionExclusion> getDocumentos() {
         return documentos;
     }
 
-    public void setDocumentos(List<Documento> documentos) {
+    public void setDocumentos(List<DocumentoAprobacionExclusion> documentos) {
         this.documentos = documentos;
     }
 

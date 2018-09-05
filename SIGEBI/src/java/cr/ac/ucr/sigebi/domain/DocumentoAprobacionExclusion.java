@@ -5,13 +5,10 @@
  */
 package cr.ac.ucr.sigebi.domain;
 
-import cr.ac.ucr.sigebi.utils.Constantes;
 import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
 
@@ -26,7 +23,6 @@ import javax.persistence.Table;
 public class DocumentoAprobacionExclusion extends Documento implements Serializable {
 
     //<editor-fold defaultstate="collapsed" desc="Atributos">
-    
     @Column(name = "AUTORIZACION")
     private String autorizacion;
     

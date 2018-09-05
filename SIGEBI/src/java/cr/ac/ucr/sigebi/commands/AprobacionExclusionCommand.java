@@ -128,7 +128,7 @@ public class AprobacionExclusionCommand {
         
         for (Bien bien : this.getBienesAgregar()) {
             BienDetalle bienDetalle = this.bienes.get(bien.getId());
-            listDetalles.add(new DocumentoDetalle(documento, bien));
+            listDetalles.add(new DocumentoDetalle(documento, bienDetalle.getBien()));
         }
          
         for (DocumentoDetalle detalle : listDetalles) { //Actualizo fecha de los detalles en caso que se haya modificado

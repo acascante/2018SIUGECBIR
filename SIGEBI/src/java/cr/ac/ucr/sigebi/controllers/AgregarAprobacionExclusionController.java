@@ -239,10 +239,9 @@ public class AgregarAprobacionExclusionController extends BaseController {
     private boolean visibleBotonGuardar;
     private boolean visibleBotonAgregarBienes;
     private boolean visibleBotonEliminarBien;
-    private boolean visibleBotonAprobarBien;
-    private boolean visibleBotonRechazarBien;
     
     private boolean visibleBotonRechazar;
+    private boolean visibleBotonRechazarBien;
     private boolean visibleBotonAprobar;
     
     private boolean solicitudRegistrada;
@@ -303,7 +302,7 @@ public class AgregarAprobacionExclusionController extends BaseController {
                 // Almaceno o actualizo Solicitud
                 // Se almacenan o actualizan los detalles tambien
                 DocumentoAprobacionExclusion documento = this.command.getDocumentoAprobacion();
-                this.documentoModel.agregar(documento);
+                this.documentoModel.agregarConDetalles(documento);
                 if (!this.command.getDetallesEliminar().isEmpty()) {
                     this.documentoModel.eliminarDetalles(this.command.getDetallesEliminar());
                 }
@@ -347,7 +346,7 @@ public class AgregarAprobacionExclusionController extends BaseController {
             }
             inicializarNuevo();
             this.vistaOrigen = event.getComponent().getAttributes().get(Constantes.KEY_VISTA_ORIGEN).toString();
-            Util.navegar(Constantes.VISTA_APROBACION_NUEVO);
+            Util.navegar(Constantes.VISTA_APROBACION_NUEVA);
         } catch (FWExcepcion err) {
             this.mensaje = err.getMessage();
         }
@@ -365,7 +364,7 @@ public class AgregarAprobacionExclusionController extends BaseController {
             DocumentoAprobacionExclusion documento = documentoModel.buscarPorId(id);
             inicializarDetalle(documento);
             this.vistaOrigen = event.getComponent().getAttributes().get(Constantes.KEY_VISTA_ORIGEN).toString();
-            Util.navegar(Constantes.VISTA_APROBACION_NUEVO);
+            Util.navegar(Constantes.VISTA_APROBACION_NUEVA);
         } catch (FWExcepcion err) {
             this.mensaje = err.getMessage();
         }
@@ -377,7 +376,7 @@ public class AgregarAprobacionExclusionController extends BaseController {
             this.inicializarDetalle(documento);
 
             this.vistaOrigen = vistaOrigen;
-            Util.navegar(Constantes.VISTA_APROBACION_NUEVO);
+            Util.navegar(Constantes.VISTA_APROBACION_NUEVA);
 
         } catch (FWExcepcion err) {
             this.mensaje = err.getMessage();
@@ -388,7 +387,7 @@ public class AgregarAprobacionExclusionController extends BaseController {
         if (vistaOrigen != null) {
             Util.navegar(vistaOrigen, true);
         } else {
-            Util.navegar(Constantes.VISTA_APROBACION_NUEVO, true);
+            Util.navegar(Constantes.VISTA_APROBACION_NUEVA, true);
         }
     }
     
@@ -469,12 +468,12 @@ public class AgregarAprobacionExclusionController extends BaseController {
     }
 
     public void eliminarBien(ActionEvent event) {
-        Estado estadoInternoNormal = this.estadoPorDominioValor(Constantes.DOMINIO_BIEN_INTERNO, Constantes.ESTADO_INTERNO_BIEN_NORMAL);
+        Estado estadoInternoInformeTecnicoAprobado = this.estadoPorDominioValor(Constantes.DOMINIO_BIEN_INTERNO, Constantes.ESTADO_INTERNO_BIEN_INFORME_TECNICO_APROBADO);
         Long idBien = (Long) event.getComponent().getAttributes().get("bienSeleccionado");
         Bien bien = this.listadoBienes.allBienes.containsKey(idBien) ? this.listadoBienes.allBienes.get(idBien) : this.command.getBien(idBien);
         this.command.getBienesAgregar().remove(bien); // Lo elimino de la lista de bienes a agregar
         
-        bien.setEstadoInterno(estadoInternoNormal);
+        bien.setEstadoInterno(estadoInternoInformeTecnicoAprobado);
         this.command.getBienes().remove(idBien);    // Lo saco de la lista de bienes que se muestran en pantalla
         if (this.command.getDetalles().containsKey(bien.getId())) { // Si esta en la lista de detalles, es xq se trata de un detalle existente en la BD
             this.command.getBienesEliminar().add(bien); // Lo agrego a la lista de bienes a eliminar
@@ -571,7 +570,7 @@ public class AgregarAprobacionExclusionController extends BaseController {
         this.bienSeleccionado = bienSeleccionado;
     }
     
-    boolean isVisiblePanelBienes() {
+    public boolean isVisiblePanelBienes() {
         return visiblePanelBienes;
     }
 
@@ -595,6 +594,14 @@ public class AgregarAprobacionExclusionController extends BaseController {
             this.visibleBotonRechazar = true;
         }
         return visibleBotonRechazar;
+    }
+    
+    public boolean isVisibleBotonRechazarBien() {
+        this.visibleBotonRechazarBien = false;
+        if (Constantes.ESTADO_APROBACION_EXCLUSION_PROCESO.equals(this.command.getEstado().getValor()) && this.autorizadoAprobar) {
+            this.visibleBotonRechazarBien = true;
+        }
+        return visibleBotonRechazarBien;
     }
 
     public boolean isVisibleBotonAprobar() {
@@ -628,6 +635,8 @@ public class AgregarAprobacionExclusionController extends BaseController {
         }
         return visibleBotonEliminarBien;
     }
+    
+    
 
     public void setVisibleBotonRechazar(boolean visibleBotonRechazar) {
         this.visibleBotonRechazar = visibleBotonRechazar;
@@ -635,14 +644,6 @@ public class AgregarAprobacionExclusionController extends BaseController {
 
     public void setVisibleBotonAprobar(boolean visibleBotonAprobar) {
         this.visibleBotonAprobar = visibleBotonAprobar;
-    }
-
-    public void setVisibleBotonRechazarBien(boolean visibleBotonRechazarBien) {
-        this.visibleBotonRechazarBien = visibleBotonRechazarBien;
-    }
-    
-    public void setVisibleBotonAprobarBien(boolean visibleBotonAprobarBien) {
-        this.visibleBotonAprobarBien = visibleBotonAprobarBien;
     }
 
     public void setVisibleBotonGuardar(boolean visibleBotonGuardar) {

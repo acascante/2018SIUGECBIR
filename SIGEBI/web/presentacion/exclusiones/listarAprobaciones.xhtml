@@ -68,11 +68,6 @@
                                             <ice:outputText value="#{label['sigebi.label.aprobacion.id']} "/>
                                         </ice:column>
                                         
-                                        <!-- Autorizacion-->
-                                        <ice:column id="autorizacion" style="vertical-align:top;">                                 
-                                            <ice:outputText value="#{label['sigebi.label.aprobacion.autorizacion']}"/>
-                                        </ice:column>
-                                        
                                         <!-- Estado -->
                                         <ice:column id="estado" style="vertical-align:top;">                                 
                                             <ice:outputText value="#{label['sigebi.label.aprobacion.estado']}"/>
@@ -103,13 +98,6 @@
                                             <ice:inputText id="txtFltId" 
                                                            value="#{controllerListarAprobaciones.command.fltId}" 
                                                            validator="#{controllerListarAprobaciones.validarFiltroId}"
-                                                           valueChangeListener="#{controllerListarAprobaciones.cambioFiltro}"/>
-                                        </ice:column>
-                                        
-                                        <!-- Autorizacion -->
-                                        <ice:column id="fltAutorizacion" style="vertical-align:top;">                                 
-                                            <ice:inputText id="txtFltAutorizacion"
-                                                           value="#{controllerListarAprobaciones.command.fltAutorizacion}" 
                                                            valueChangeListener="#{controllerListarAprobaciones.cambioFiltro}"/>
                                         </ice:column>
                                         
@@ -160,10 +148,6 @@
                             </ice:column>
                             
                             <ice:column>
-                                <h:outputText id="tipoCell" value="#{documento.aprobacion}"/>
-                            </ice:column>
-                            
-                            <ice:column>
                                 <h:outputText id="estadoCell" value="#{documento.estado.nombre}"/>
                             </ice:column>
                             
@@ -174,12 +158,12 @@
                             </ice:column>
                             
                             <ice:column>
-                                <h:outputText id="unidadEjecutoraCell" value="#{prestamo.unidadEjecutora.descripcion}"/>
+                                <h:outputText id="unidadEjecutoraCell" value="#{documento.unidadEjecutora.descripcion}"/>
                             </ice:column>
                             
                             <ice:column style="text-align: center;">
                                 <ice:commandButton id="botonDetalle" actionListener="#{controllerAgregarAprobacionExclusion.detalleRegistro}" value="#{label['label.detalle']}" style="float:right;margin-top:2%" styleClass="boton" partialSubmit="true">
-                                    <f:attribute id="prestamoDetalle" name="#{controllerListarAprobaciones.command.key}"  value="#{prestamo.id}"/>
+                                    <f:attribute id="prestamoDetalle" name="#{controllerListarAprobaciones.command.key}"  value="#{documento.id}"/>
                                     <f:attribute id="vistaOrigen" name="#{controllerListarAprobaciones.command.keyVistaOrigen}"  value="#{controllerListarAprobaciones.vistaOrigen}"/>
                                 </ice:commandButton>
                             </ice:column>

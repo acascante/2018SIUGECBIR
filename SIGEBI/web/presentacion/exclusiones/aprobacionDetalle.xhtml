@@ -139,13 +139,6 @@
                                                     <f:attribute id="bienSeleccionado" name="bienSeleccionado"  value="#{detalle.bien.id}"/> 
                                                 </ice:commandButton>
                                             </ice:column>
-                                            <ice:column >
-                                                <ice:commandButton id="btnRechazarBien" partialSubmit="true" value="Rechazar" style="float: right" styleClass="boton"
-                                                                    actionListener="#{controllerAgregarAprobacionExclusion.rechazarBien}"
-                                                                    rendered="#{detalle.bien.rechazar and controllerAgregarAprobacionExclusion.visibleBotonRechazarBien}">
-                                                    <f:attribute id="bienSeleccionado" name="bienSeleccionado"  value="#{detalle.bien.id}"/> 
-                                                </ice:commandButton>
-                                            </ice:column>
                                         </ice:dataTable>
                                     </div>
                                 </div>
@@ -159,8 +152,8 @@
             <div class="row">
                 <div class="col-md-12">
                     <ice:commandButton id="botonGuardar" value="#{label['label.guardar']}" action="#{controllerAgregarAprobacionExclusion.confirmarSolicitud}" rendered="#{controllerAgregarAprobacionExclusion.visibleBotonGuardar}" partialSubmit="true" style="float: right" styleClass="boton"/>
-                    <ice:commandButton id="botonRechazar" value="#{label['label.rechazar']}" action="#{controllerAgregarAprobacionExclusion.rechazarPrestamo}" rendered="#{controllerAgregarAprobacionExclusion.visibleBotonRechazar}" partialSubmit="true" style="float: right" styleClass="boton"/>
-                    <ice:commandButton id="botonAceptar" value="#{label['label.aceptar']}" action="#{controllerAgregarAprobacionExclusion.aprobarPrestamo}" rendered="#{controllerAgregarAprobacionExclusion.visibleBotonAprobar}" partialSubmit="true" style="float: right" styleClass="boton"/>                    
+                    <ice:commandButton id="botonRechazar" value="#{label['label.rechazar']}" action="#{controllerAgregarAprobacionExclusion.rechazarExclusion}" rendered="#{controllerAgregarAprobacionExclusion.visibleBotonRechazar}" partialSubmit="true" style="float: right" styleClass="boton"/>
+                    <ice:commandButton id="botonAceptar" value="#{label['label.aceptar']}" action="#{controllerAgregarAprobacionExclusion.aprobarExclusion}" rendered="#{controllerAgregarAprobacionExclusion.visibleBotonAprobar}" partialSubmit="true" style="float: right" styleClass="boton"/>                    
                 </div>
             </div>
         </div>

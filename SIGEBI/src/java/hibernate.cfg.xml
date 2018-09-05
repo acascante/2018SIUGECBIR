@@ -29,6 +29,7 @@
     <mapping class="cr.ac.ucr.sigebi.domain.Convenio"/>
     <mapping class="cr.ac.ucr.sigebi.domain.Documento"/>
     <mapping class="cr.ac.ucr.sigebi.domain.DocumentoActa"/>
+    <mapping class="cr.ac.ucr.sigebi.domain.DocumentoAprobacionExclusion"/>
     <mapping class="cr.ac.ucr.sigebi.domain.DocumentoAutorizacion"/>
     <mapping class="cr.ac.ucr.sigebi.domain.DocumentoDetalle"/>
     <mapping class="cr.ac.ucr.sigebi.domain.DocumentoInformeTecnico"/>

@@ -58,6 +58,10 @@ public class DocumentoModel {
     @Resource
     private UnidadEjecutoraDao unidadEjecutoraDao;
 
+    public void agregarConDetalles(Documento documento) throws FWExcepcion {
+        documentoDao.agregar(documento);
+        documentoDao.agregarDetalles(documento.getDetallesDocumento());        
+    }
 
     public void agregar(Documento documento) throws FWExcepcion {
         documentoDao.agregar(documento);
@@ -182,7 +186,7 @@ public class DocumentoModel {
         }
     }
 
-    public List<Documento> listarAprobacionesExclusion(Long idUnidadEjecutora, Long id, String autorizacion, Date fecha, Long idEstado, Integer primerRegistro, Integer ultimoRegistro) throws FWExcepcion {
+    public List<DocumentoAprobacionExclusion> listarAprobacionesExclusion(Long idUnidadEjecutora, Long id, String autorizacion, Date fecha, Long idEstado, Integer primerRegistro, Integer ultimoRegistro) throws FWExcepcion {
         if (idUnidadEjecutora.equals(Constantes.DEFAULT_ID)) {
             return documentoDao.listarAprobacionesExclusion(null, id, autorizacion, fecha, idEstado, primerRegistro, ultimoRegistro);
         }        

@@ -47,6 +47,9 @@ public class VistaNavegacion {
         gPaginas = new HashMap();
         gPaginaSeleccionada = "";
 
+        gPaginas.put(Constantes.VISTA_APROBACION_LISTADO, Constantes.VISTA_APROBACION_LISTADO_PAGINA);        
+        gPaginas.put(Constantes.VISTA_APROBACION_NUEVA, Constantes.VISTA_APROBACION_NUEVA_PAGINA);
+        
         //Opciones del menú  
         gPaginas.put(Constantes.KEY_VISTA_LISTAR_BIENES, Constantes.VISTA_LISTAR_BIENES);
         gPaginas.put(Constantes.KEY_VISTA_DETALLE_BIEN, Constantes.VISTA_DETALLE_BIEN);
