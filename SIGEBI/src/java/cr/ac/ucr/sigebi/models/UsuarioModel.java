@@ -34,6 +34,10 @@ public class UsuarioModel {
         return usuarioDao.listarUsuarios(idUsuario, nombreCompleto, correo, pPrimerRegistro, pUltimoRegistro);
     }
 
+    public List<Usuario> listar() throws FWExcepcion {
+        return usuarioDao.listarUsuarios(null, null, null, 1, 1);
+    }
+
     public Long contarUsuarios(String idUsuario, String nombreCompleto, String correo) throws FWExcepcion {
         return usuarioDao.contarUsuarios(idUsuario, nombreCompleto, correo);
     }
@@ -48,5 +52,9 @@ public class UsuarioModel {
 
     public Long contarUsuariosGestionProceso(String idUsuario, String nombreCompleto, String correo, AutorizacionRol autorizacionRol, UnidadEjecutora unidadEjecutora) throws FWExcepcion {
         return usuarioDao.contarUsuariosGestionProceso(idUsuario, nombreCompleto, correo, autorizacionRol, unidadEjecutora);
+    }
+    
+    public List<ViewAutorizacionRolUsuarioUnidad> listarUsuariosGestionProceso() throws FWExcepcion {
+        return usuarioDao.listarUsuariosGestionProceso();
     }
 }

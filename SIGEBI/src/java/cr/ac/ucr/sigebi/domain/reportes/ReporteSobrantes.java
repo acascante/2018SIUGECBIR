@@ -3,8 +3,13 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package cr.ac.ucr.sigebi.domain;
+package cr.ac.ucr.sigebi.domain.reportes;
 
+import cr.ac.ucr.sigebi.domain.Bien;
+import cr.ac.ucr.sigebi.domain.SubCategoria;
+import cr.ac.ucr.sigebi.domain.SubClasificacion;
+import cr.ac.ucr.sigebi.domain.TomaFisica;
+import cr.ac.ucr.sigebi.domain.TomaFisicaSobrante;
 import java.io.Serializable;
 
 /**

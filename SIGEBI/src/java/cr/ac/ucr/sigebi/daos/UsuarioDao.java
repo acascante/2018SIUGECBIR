@@ -9,6 +9,7 @@ import cr.ac.ucr.framework.daoHibernate.DaoHelper;
 import cr.ac.ucr.framework.daoImpl.GenericDaoImpl;
 import cr.ac.ucr.framework.utils.FWExcepcion;
 import cr.ac.ucr.sigebi.domain.AutorizacionRol;
+import cr.ac.ucr.sigebi.domain.Estado;
 import cr.ac.ucr.sigebi.domain.UnidadEjecutora;
 import cr.ac.ucr.sigebi.domain.Usuario;
 import cr.ac.ucr.sigebi.domain.ViewAutorizacionRolUsuarioUnidad;
@@ -17,6 +18,7 @@ import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -142,7 +144,16 @@ public class UsuarioDao extends GenericDaoImpl {
         }
     }
     
-     @Transactional(readOnly = true)
+    @Transactional(readOnly = true)
+    public List<ViewAutorizacionRolUsuarioUnidad> listarUsuariosGestionProceso() throws FWExcepcion {
+        try {
+            return dao.getHibernateTemplate().find("from ViewAutorizacionRolUsuarioUnidad");
+        } catch (DataAccessException e) {
+            throw new FWExcepcion("sigebi.error.dao.usuarioDao.listarUsuariosGestionProceso", "Error obtener los registros de estado " + this.getClass(), e.getCause());
+        }
+    }
+    
+    @Transactional(readOnly = true)
     public List<ViewAutorizacionRolUsuarioUnidad> listarUsuariosGestionProceso(String idUsuario, String nombreCompleto, String correo, AutorizacionRol autorizacionRol, UnidadEjecutora unidadEjecutora, Integer pPrimerRegistro, Integer pUltimoRegistro) throws FWExcepcion {
         Session session = this.dao.getSessionFactory().openSession();
         try {

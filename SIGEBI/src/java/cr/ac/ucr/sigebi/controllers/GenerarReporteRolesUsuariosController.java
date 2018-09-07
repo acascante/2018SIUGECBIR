@@ -8,17 +8,12 @@ package cr.ac.ucr.sigebi.controllers;
 import com.icesoft.faces.context.effects.JavascriptContext;
 import cr.ac.ucr.framework.vista.util.Mensaje;
 import cr.ac.ucr.framework.vista.util.Util;
-import cr.ac.ucr.sigebi.commands.GenerarReporteSobrantesCommand;
+import cr.ac.ucr.sigebi.commands.GenerarReporteRolesUsuariosCommand;
 import cr.ac.ucr.sigebi.utils.Constantes;
-import cr.ac.ucr.sigebi.domain.Bien;
-import cr.ac.ucr.sigebi.domain.Estado;
-import cr.ac.ucr.sigebi.domain.reportes.ReporteSobrantes;
 import cr.ac.ucr.sigebi.domain.Tipo;
-import cr.ac.ucr.sigebi.domain.TomaFisica;
-import cr.ac.ucr.sigebi.domain.TomaFisicaSobrante;
-import cr.ac.ucr.sigebi.models.BienModel;
-import cr.ac.ucr.sigebi.models.TomaFisicaModel;
-import cr.ac.ucr.sigebi.models.TomaFisicaSobranteModel;
+import cr.ac.ucr.sigebi.domain.ViewAutorizacionRolUsuarioUnidad;
+import cr.ac.ucr.sigebi.domain.reportes.ReporteRolesUsuarios;
+import cr.ac.ucr.sigebi.models.UsuarioModel;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -42,31 +37,22 @@ import org.springframework.stereotype.Controller;
  *
  * @author alvaro.cascante
  */
-@Controller(value = "controllerReporteSobrantes")
+@Controller(value = "controllerReporteRolesUsuarios")
 @Scope("session")
-public class GenerarReporteSobrantesController extends BaseController {
+public class GenerarReporteRolesUsuariosController extends BaseController {
     
     private static class Parametros {
-        private static final String IDENTIFICACION = "IDENTIFICACION";
-	private static final String DESCRIPCION = "DESCRIPCION";
-	private static final String MARCA = "MARCA";
-	private static final String MODELO = "MODELO";
-	private static final String SERIE = "SERIE";
-	private static final String UNIDAD_CUSTODIO = "UNIDAD_CUSTODIO";
+        private static final String UNIDAD_CUSTODIO = "UNIDAD_CUSTODIO";
 	private static final String USUARIO = "USUARIO";
-	private static final String TOMA_FISICA = "TOMA_FISICA";
-	private static final String UBICACION = "UBICACION";
-	private static final String UNIDAD_EJECUTORA = "UNIDAD_EJECUTORA";
         
         private static final String INSTITUCION = "INSTITUCION";
         private static final String NOMBRE_REPORTE = "NOMBRE_REPORTE";
 	private static final String VALOR_INSTITUCION = "UNIVERSIDAD DE COSTA RICA";
-        private static final String VALOR_NOMBRE_REPORTE = "Reporte de Bienes Sobrantes";
+        private static final String VALOR_NOMBRE_REPORTE = "Reporte de Roles y Usuarios";
     }
     
-    @Resource private BienModel bienModel;
-    @Resource private TomaFisicaModel tomaFisicaModel;
-    @Resource private TomaFisicaSobranteModel tomaFisicaSobranteModel;
+    @Resource
+    private UsuarioModel usuarioModel;
     
     private Map<Long, Tipo> tiposReporte;
     private List<SelectItem> itemsTipoReporte;
@@ -77,14 +63,11 @@ public class GenerarReporteSobrantesController extends BaseController {
     private Map<Long, Tipo> columnasOrdenReporte;
     private List<SelectItem> itemsColumnasOrdenReporte;
     
-    private Map<Long, Estado> estadosBien;
-    private List<SelectItem> itemsEstadoBien;
-    
-    private GenerarReporteSobrantesCommand command;
+    private GenerarReporteRolesUsuariosCommand command;
     
     private String mensaje;
 
-    public GenerarReporteSobrantesController() {
+    public GenerarReporteRolesUsuariosController() {
         super();
     }
 
@@ -111,7 +94,7 @@ public class GenerarReporteSobrantesController extends BaseController {
             }
         }
         
-        List<Tipo> tiposColumnasOrdenReporte = this.tiposPorDominio(Constantes.DOMINIO_COLUMNAS_REPORTE_SOBRANTES);
+        List<Tipo> tiposColumnasOrdenReporte = this.tiposPorDominio(Constantes.DOMINIO_COLUMNAS_REPORTE_ROLES_USUARIOS);
         if (!tiposColumnasOrdenReporte.isEmpty()) {
             this.itemsColumnasOrdenReporte = new ArrayList<SelectItem>();
             this.columnasOrdenReporte = new HashMap<Long, Tipo>();
@@ -120,25 +103,11 @@ public class GenerarReporteSobrantesController extends BaseController {
                 this.itemsColumnasOrdenReporte.add(new SelectItem(tipo.getId(), tipo.getNombre()));
             }
         }
-        
-        List<Estado> estados = this.estadosPorDominio(Constantes.DOMINIO_BIEN);
-        if (!estados.isEmpty()) {
-            this.itemsEstadoBien = new ArrayList<SelectItem>();
-            this.estadosBien = new HashMap<Long, Estado>();
-            for (Estado estado : estados) {
-                this.estadosBien.put(estado.getId(), estado);
-                this.itemsEstadoBien.add(new SelectItem(estado.getId(), estado.getNombre()));
-            }
-        }
     }
     
-    public void detalleReporteSobrantes(ActionEvent event) {
-        Long id = (Long)event.getComponent().getAttributes().get("idTomaFisica");
-
+    public void inicializarDatos(ActionEvent event) {
         this.mensaje = new String();
-        this.command = new GenerarReporteSobrantesCommand(id);
-
-        Util.navegar(Constantes.KEY_REPORTE_SOBRANTES);
+        this.command = new GenerarReporteRolesUsuariosCommand();
     }
     
     public String validarForm(UIViewRoot root) {
@@ -154,49 +123,38 @@ public class GenerarReporteSobrantesController extends BaseController {
         } else {
             try {
                 //reportes/reporteSobrantes.jrxml 
-                TomaFisica tomaFisica = this.tomaFisicaModel.buscarPorId(this.command.getIdTomaFisica());
-                List<TomaFisicaSobrante> sobrantes = this.tomaFisicaSobranteModel.listarReporte(tomaFisica, this.command.getIdentificacion(),  
-                        this.command.getUbicacion(), this.command.getDescripcion(), this.command.getSerie(), this.command.getMarca(), this.command.getModelo(),
-                        this.command.getIdOrden().equals(-1L)?null:this.tipoPorId(this.command.getIdOrden()).getNombre(),
-                        this.command.getIdOrden1().equals(-1L)?null:this.tipoPorId(this.command.getIdOrden1()).getNombre(),
-                        this.command.getIdOrden2().equals(-1L)?null:this.tipoPorId(this.command.getIdOrden2()).getNombre(),
-                        this.command.getIdOrden3().equals(-1L)?null:this.tipoPorId(this.command.getIdOrden3()).getNombre());
-                if (!sobrantes.isEmpty()) {
-                    String template = cr.ac.ucr.framework.reporte.componente.utilitario.Util.ConvertirRutas("/reportes/reporteSobrantes.jrxml");
-                    //String jasperFile = cr.ac.ucr.framework.reporte.componente.utilitario.Util.ConvertirRutas("/reportes/reporteSobrantes.jasper");
-                    String outputFile = cr.ac.ucr.framework.reporte.componente.utilitario.Util.ConvertirRutas("/reportes/reporteSobrantes");
+                
+                List<ViewAutorizacionRolUsuarioUnidad> usuarios = this.usuarioModel.listarUsuariosGestionProceso();
+                if (!usuarios.isEmpty()) {
+                    String template;
+                    String outputFile = cr.ac.ucr.framework.reporte.componente.utilitario.Util.ConvertirRutas("/reportes/reporteRolesUsuarios");
 
-                    ArrayList<ReporteSobrantes> datosReporte = new ArrayList<ReporteSobrantes>();
-                    for (TomaFisicaSobrante bienSobrante : sobrantes) {
-                        ReporteSobrantes dato;
-                        if (bienSobrante.getIdentificacion() != null && !bienSobrante.getIdentificacion().isEmpty()) {
-                            Bien bien = this.bienModel.buscarPorIdentificacion(bienSobrante.getIdentificacion());
-                            if (bien != null) {
-                                dato = new ReporteSobrantes(bienSobrante, bien);
-                            } else {
-                                dato = new ReporteSobrantes(bienSobrante);
-                            }
-                        } else {
-                            dato = new ReporteSobrantes(bienSobrante);
-                        }
-                        datosReporte.add(dato);
+                    if (this.command.getIdGrupo().equals(1)) { //USUARIO
+                        template = cr.ac.ucr.framework.reporte.componente.utilitario.Util.ConvertirRutas("/reportes/reporteUsuarioRoles.jrxml");
+                    } else {
+                        template = cr.ac.ucr.framework.reporte.componente.utilitario.Util.ConvertirRutas("/reportes/reporteRolUsuarios.jrxml");
                     }
+                    ArrayList<ReporteRolesUsuarios> datosReporte = new ArrayList<ReporteRolesUsuarios>();
+                    for (ViewAutorizacionRolUsuarioUnidad usuario : usuarios) {
+                        datosReporte.add(new ReporteRolesUsuarios(usuario));
+                    }
+                    
                     JRBeanCollectionDataSource beanColDataSource = new JRBeanCollectionDataSource(datosReporte);
                     JasperReport jasperReport = JasperCompileManager.compileReport(template);
-                    JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, generarParametros(tomaFisica), beanColDataSource);
+                    JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, generarParametros(), beanColDataSource);
 
                     Tipo tipoReporte = this.tipoPorId(this.command.getIdTipo());
                     if(tipoReporte.getNombre().equals(Constantes.TIPO_REPORTE_PDF)) {
                         JasperExportManager.exportReportToPdfFile(jasperPrint, outputFile + Constantes.TIPO_REPORTE_PDF_EXTENSION);
-                        JavascriptContext.addJavascriptCall(FacesContext.getCurrentInstance(), "reporte('reporteSobrantes','" + Constantes.TIPO_REPORTE_PDF_EXTENSION + "');");
+                        JavascriptContext.addJavascriptCall(FacesContext.getCurrentInstance(), "reporte('reporteRolesUsuarios','" + Constantes.TIPO_REPORTE_PDF_EXTENSION + "');");
                     } else {
                         JasperExportManager.exportReportToXmlFile(jasperPrint, outputFile + Constantes.TIPO_REPORTE_EXCELL_EXTENSION, true);
-                        JavascriptContext.addJavascriptCall(FacesContext.getCurrentInstance(), "reporte('reporteSobrantes','" + Constantes.TIPO_REPORTE_EXCELL_EXTENSION + "');");
+                        JavascriptContext.addJavascriptCall(FacesContext.getCurrentInstance(), "reporte('reporteRolesUsuarios','" + Constantes.TIPO_REPORTE_EXCELL_EXTENSION + "');");
                     }
 
                     Mensaje.agregarInfo("Reporte generado exitosamente");
                 } else {
-                    Mensaje.agregarErrorAdvertencia("No hay sobrantes en esta Toma");
+                    Mensaje.agregarErrorAdvertencia("No hay datos para el reporte");
                 }            
             } catch (Exception err) {
                 Mensaje.agregarErrorAdvertencia(err.getMessage());
@@ -205,21 +163,13 @@ public class GenerarReporteSobrantesController extends BaseController {
         }
     }
     
-    public Map generarParametros(TomaFisica tomaFisica) {
+    public Map generarParametros() {
         Map parametros = new HashMap();
         parametros.put(Parametros.INSTITUCION, Parametros.VALOR_INSTITUCION);
         parametros.put(Parametros.NOMBRE_REPORTE, Parametros.VALOR_NOMBRE_REPORTE);
         
-        parametros.put(Parametros.IDENTIFICACION, this.command.getIdentificacion());
-        parametros.put(Parametros.DESCRIPCION, this.command.getDescripcion());
-        parametros.put(Parametros.MARCA, this.command.getMarca());
-        parametros.put(Parametros.MODELO, this.command.getModelo());
-        parametros.put(Parametros.SERIE, this.command.getSerie());
         parametros.put(Parametros.UNIDAD_CUSTODIO, unidadEjecutora.getDescripcion());
         parametros.put(Parametros.USUARIO, this.usuarioSIGEBI.getNombreCompleto());
-        parametros.put(Parametros.TOMA_FISICA, tomaFisica.getId());
-        parametros.put(Parametros.UBICACION, null);
-        parametros.put(Parametros.UNIDAD_EJECUTORA, tomaFisica.getUnidadEjecutora() != null ? tomaFisica.getUnidadEjecutora().getDescripcion() : "");
         return parametros;
     }
     
@@ -240,30 +190,6 @@ public class GenerarReporteSobrantesController extends BaseController {
         this.itemsTipoReporte = itemsTipoReporte;
     }
 
-    public Map<Long, Estado> getEstadosBien() {
-        return estadosBien;
-    }
-
-    public void setEstadosBien(Map<Long, Estado> estadosBien) {
-        this.estadosBien = estadosBien;
-    }
-
-    public List<SelectItem> getItemsEstadoBien() {
-        return itemsEstadoBien;
-    }
-
-    public void setItemsEstadoBien(List<SelectItem> itemsEstadoBien) {
-        this.itemsEstadoBien = itemsEstadoBien;
-    }
-
-    public GenerarReporteSobrantesCommand getCommand() {
-        return command;
-    }
-
-    public void setCommand(GenerarReporteSobrantesCommand command) {
-        this.command = command;
-    }
-
     public Map<Long, Tipo> getOrdenReporte() {
         return ordenReporte;
     }
@@ -275,11 +201,7 @@ public class GenerarReporteSobrantesController extends BaseController {
     public List<SelectItem> getItemsOrdenReporte() {
         return itemsOrdenReporte;
     }
-
-    public void setItemsOrdenReporte(List<SelectItem> itemsOrdenReporte) {
-        this.itemsOrdenReporte = itemsOrdenReporte;
-    }
-
+    
     public Map<Long, Tipo> getColumnasOrdenReporte() {
         return columnasOrdenReporte;
     }
@@ -294,6 +216,14 @@ public class GenerarReporteSobrantesController extends BaseController {
 
     public void setItemsColumnasOrdenReporte(List<SelectItem> itemsColumnasOrdenReporte) {
         this.itemsColumnasOrdenReporte = itemsColumnasOrdenReporte;
+    }
+
+    public GenerarReporteRolesUsuariosCommand getCommand() {
+        return command;
+    }
+
+    public void setCommand(GenerarReporteRolesUsuariosCommand command) {
+        this.command = command;
     }
 
     public String getMensaje() {
