@@ -195,6 +195,7 @@ public final class Constantes {
     public static final String DOMINIO_CARACTERISTICA = "CARACTERISTICA";
     public static final String DOMINIO_COLUMNAS_REPORTE_SOBRANTES = "ORDEN_COLUMNA_SOBRANTES";
     public static final String DOMINIO_COLUMNAS_REPORTE_ROLES_USUARIOS = "ORDEN_COLUMNA_ROLES_USUARIOS";
+    public static final String DOMINIO_COLUMNAS_REPORTE_USUARIOS_BIENES = "ORDEN_COLUMNA_USUARIOS_BIENES";
     public static final String DOMINIO_CONVENIO = "CONVENIO";
     public static final String DOMINIO_DOCUMENTO = "DOCUMENTO";
     public static final String DOMINIO_EXCLUSION = "EXCLUSION";

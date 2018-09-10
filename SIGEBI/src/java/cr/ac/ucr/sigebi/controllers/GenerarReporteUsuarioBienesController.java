@@ -7,11 +7,13 @@ package cr.ac.ucr.sigebi.controllers;
 
 import com.icesoft.faces.context.effects.JavascriptContext;
 import cr.ac.ucr.framework.vista.util.Mensaje;
-import cr.ac.ucr.sigebi.commands.GenerarReporteRolesUsuariosCommand;
+import cr.ac.ucr.sigebi.commands.ReporteUsuarioBienesCommand;
+import cr.ac.ucr.sigebi.domain.Bien;
 import cr.ac.ucr.sigebi.utils.Constantes;
 import cr.ac.ucr.sigebi.domain.Tipo;
-import cr.ac.ucr.sigebi.domain.ViewAutorizacionRolUsuarioUnidad;
-import cr.ac.ucr.sigebi.domain.reportes.ReporteRolesUsuarios;
+import cr.ac.ucr.sigebi.domain.Usuario;
+import cr.ac.ucr.sigebi.domain.reportes.ReporteUsuarioBienes;
+import cr.ac.ucr.sigebi.models.BienModel;
 import cr.ac.ucr.sigebi.models.UsuarioModel;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -35,31 +37,36 @@ import org.springframework.stereotype.Controller;
  *
  * @author alvaro.cascante
  */
-@Controller(value = "controllerReporteRolesUsuarios")
+@Controller(value = "controllerReporteUsuarioBienes")
 @Scope("session")
-public class GenerarReporteRolesUsuariosController extends BaseController {
+public class GenerarReporteUsuarioBienesController extends BaseController {
     
     private static class Parametros {
         private static final String UNIDAD_CUSTODIO = "UNIDAD_CUSTODIO";
 	private static final String USUARIO = "USUARIO";
+        private static final String FLT_USUARIO = "FLT_USUARIO";
+        private static final String FLT_BIEN = "FLT_BIEN";
         
         private static final String INSTITUCION = "INSTITUCION";
         private static final String NOMBRE_REPORTE = "NOMBRE_REPORTE";
 	private static final String VALOR_INSTITUCION = "UNIVERSIDAD DE COSTA RICA";
-        private static final String VALOR_NOMBRE_REPORTE = "Reporte de Roles y Usuarios";
+        private static final String VALOR_NOMBRE_REPORTE = "Reporte de Usuarios y Bienes";
     }
     
-    @Resource
-    private UsuarioModel usuarioModel;
+    @Resource private BienModel bienModel;
+    @Resource private UsuarioModel usuarioModel;
     
     private Map<Long, Tipo> tiposReporte;
     private List<SelectItem> itemsTipoReporte;
     
-    private GenerarReporteRolesUsuariosCommand command;
+    private Map<String, Usuario> usuariosResponsables;
+    private List<SelectItem> itemsUsuariosResponsables;
+    
+    private ReporteUsuarioBienesCommand command;
     
     private String mensaje;
 
-    public GenerarReporteRolesUsuariosController() {
+    public GenerarReporteUsuarioBienesController() {
         super();
     }
 
@@ -75,35 +82,40 @@ public class GenerarReporteRolesUsuariosController extends BaseController {
                 this.itemsTipoReporte.add(new SelectItem(tipo.getId(), tipo.getNombre()));
             }
         }
+        
+        List<Usuario> usuarios = this.usuarioModel.listar();
+        if (!usuarios.isEmpty()) {
+            this.itemsUsuariosResponsables = new ArrayList<SelectItem>();
+            this.usuariosResponsables = new HashMap<String, Usuario>();
+            for (Usuario usuario : usuarios) {
+                this.usuariosResponsables.put(usuario.getId(), usuario);
+                this.itemsUsuariosResponsables.add(new SelectItem(usuario.getId(), usuario.getNombreCompleto()));
+            }
+        }
     }
     
     public void inicializarDatos(ActionEvent event) {
         this.mensaje = new String();
-        this.command = new GenerarReporteRolesUsuariosCommand();
+        this.command = new ReporteUsuarioBienesCommand();
     }
     
     public void generarReporte() {
         try {
             //reportes/reporteSobrantes.jrxml 
-            Tipo orden = this.tipoPorDominioValor(Constantes.DOMINIO_ORDEN_REPORTE, this.command.getIdOrden());
-            Tipo orden1 = this.tipoPorDominioValor(Constantes.DOMINIO_COLUMNAS_REPORTE_ROLES_USUARIOS, this.command.getIdOrden1());
-            Tipo orden2 = this.tipoPorDominioValor(Constantes.DOMINIO_COLUMNAS_REPORTE_ROLES_USUARIOS, this.command.getIdOrden2());
-            Tipo orden3 = this.tipoPorDominioValor(Constantes.DOMINIO_COLUMNAS_REPORTE_ROLES_USUARIOS, this.command.getIdOrden3());
-            
-            
-            List<ViewAutorizacionRolUsuarioUnidad> usuarios = this.usuarioModel.listarUsuariosGestionProceso(orden.getNombre(), orden1.getNombre(), orden2.getNombre(), orden3.getNombre());
-            if (!usuarios.isEmpty()) {
-                String template;
-                String outputFile = cr.ac.ucr.framework.reporte.componente.utilitario.Util.ConvertirRutas("/reportes/reporteRolesUsuarios");
 
-                if (this.command.getIdGrupo().equals(1)) { //USUARIO
-                    template = cr.ac.ucr.framework.reporte.componente.utilitario.Util.ConvertirRutas("/reportes/reporteUsuarioRoles.jrxml");
-                } else {
-                    template = cr.ac.ucr.framework.reporte.componente.utilitario.Util.ConvertirRutas("/reportes/reporteRolUsuarios.jrxml");
-                }
-                ArrayList<ReporteRolesUsuarios> datosReporte = new ArrayList<ReporteRolesUsuarios>();
-                for (ViewAutorizacionRolUsuarioUnidad usuario : usuarios) {
-                    datosReporte.add(new ReporteRolesUsuarios(usuario));
+            Tipo orden = this.tipoPorDominioValor(Constantes.DOMINIO_ORDEN_REPORTE, this.command.getIdOrden());
+            Tipo orden1 = this.tipoPorDominioValor(Constantes.DOMINIO_COLUMNAS_REPORTE_USUARIOS_BIENES, this.command.getIdOrden1());
+            Tipo orden2 = this.tipoPorDominioValor(Constantes.DOMINIO_COLUMNAS_REPORTE_USUARIOS_BIENES, this.command.getIdOrden2());
+            Tipo orden3 = this.tipoPorDominioValor(Constantes.DOMINIO_COLUMNAS_REPORTE_USUARIOS_BIENES, this.command.getIdOrden3());
+            
+            List<Bien> bienes = this.bienModel.listarPorResponsable(this.command.getIdUsuario(), orden.getNombre(), orden1.getNombre(), orden2.getNombre(), orden3.getNombre());
+            if (!bienes.isEmpty()) {
+                String template = cr.ac.ucr.framework.reporte.componente.utilitario.Util.ConvertirRutas("/reportes/reporteUsuarioBienes.jrxml");
+                String outputFile = cr.ac.ucr.framework.reporte.componente.utilitario.Util.ConvertirRutas("/reportes/reporteUsuarioBienes");
+
+                ArrayList<ReporteUsuarioBienes> datosReporte = new ArrayList<ReporteUsuarioBienes>();
+                for (Bien bien : bienes) {
+                    datosReporte.add(new ReporteUsuarioBienes(bien));
                 }
 
                 JRBeanCollectionDataSource beanColDataSource = new JRBeanCollectionDataSource(datosReporte);
@@ -113,10 +125,10 @@ public class GenerarReporteRolesUsuariosController extends BaseController {
                 Tipo tipoReporte = this.tipoPorId(this.command.getIdTipo());
                 if(tipoReporte.getNombre().equals(Constantes.TIPO_REPORTE_EXCELL)) {
                     JasperExportManager.exportReportToXmlFile(jasperPrint, outputFile + Constantes.TIPO_REPORTE_EXCELL_EXTENSION, true);
-                    JavascriptContext.addJavascriptCall(FacesContext.getCurrentInstance(), "reporte('reporteRolesUsuarios','" + Constantes.TIPO_REPORTE_EXCELL_EXTENSION + "');");
+                    JavascriptContext.addJavascriptCall(FacesContext.getCurrentInstance(), "reporte('reporteUsuarioBienes','" + Constantes.TIPO_REPORTE_EXCELL_EXTENSION + "');");
                 } else {
                     JasperExportManager.exportReportToPdfFile(jasperPrint, outputFile + Constantes.TIPO_REPORTE_PDF_EXTENSION);
-                    JavascriptContext.addJavascriptCall(FacesContext.getCurrentInstance(), "reporte('reporteRolesUsuarios','" + Constantes.TIPO_REPORTE_PDF_EXTENSION + "');");                    
+                    JavascriptContext.addJavascriptCall(FacesContext.getCurrentInstance(), "reporte('reporteUsuarioBienes','" + Constantes.TIPO_REPORTE_PDF_EXTENSION + "');");                    
                 }
                 Mensaje.agregarInfo("Reporte generado exitosamente");
             } else {
@@ -132,6 +144,8 @@ public class GenerarReporteRolesUsuariosController extends BaseController {
         Map parametros = new HashMap();
         parametros.put(Parametros.INSTITUCION, Parametros.VALOR_INSTITUCION);
         parametros.put(Parametros.NOMBRE_REPORTE, Parametros.VALOR_NOMBRE_REPORTE);
+        parametros.put(Parametros.FLT_USUARIO, this.command.getIdUsuario());
+        parametros.put(Parametros.FLT_BIEN, this.command.getIdentificacion());
         
         parametros.put(Parametros.UNIDAD_CUSTODIO, unidadEjecutora.getDescripcion());
         parametros.put(Parametros.USUARIO, this.usuarioSIGEBI.getNombreCompleto());
@@ -155,14 +169,31 @@ public class GenerarReporteRolesUsuariosController extends BaseController {
         this.itemsTipoReporte = itemsTipoReporte;
     }
 
-    public GenerarReporteRolesUsuariosCommand getCommand() {
+    public Map<String, Usuario> getUsuariosResponsables() {
+        return usuariosResponsables;
+    }
+
+    public void setUsuariosResponsables(Map<String, Usuario> usuariosResponsables) {
+        this.usuariosResponsables = usuariosResponsables;
+    }
+
+    public List<SelectItem> getItemsUsuariosResponsables() {
+        return itemsUsuariosResponsables;
+    }
+
+    public void setItemsUsuariosResponsables(List<SelectItem> itemsUsuariosResponsables) {
+        this.itemsUsuariosResponsables = itemsUsuariosResponsables;
+    }
+
+    public ReporteUsuarioBienesCommand getCommand() {
         return command;
     }
 
-    public void setCommand(GenerarReporteRolesUsuariosCommand command) {
+    public void setCommand(ReporteUsuarioBienesCommand command) {
         this.command = command;
     }
 
+    
     public String getMensaje() {
         return mensaje;
     }

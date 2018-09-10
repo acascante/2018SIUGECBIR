@@ -6,6 +6,7 @@
  */
 package cr.ac.ucr.sigebi.controllers;
 
+import com.icesoft.faces.context.effects.JavascriptContext;
 import cr.ac.ucr.sigebi.utils.Constantes;
 import cr.ac.ucr.framework.utils.FWExcepcion;
 import cr.ac.ucr.framework.vista.util.Mensaje;
@@ -23,6 +24,7 @@ import cr.ac.ucr.sigebi.domain.RegistroMovimientoSolicitud;
 import cr.ac.ucr.sigebi.domain.SolicitudPrestamo;
 import cr.ac.ucr.sigebi.domain.Tipo;
 import cr.ac.ucr.sigebi.domain.UnidadEjecutora;
+import cr.ac.ucr.sigebi.domain.reportes.ReporteBienDetalle;
 import cr.ac.ucr.sigebi.models.AutorizacionRolPersonaModel;
 import cr.ac.ucr.sigebi.models.BienModel;
 import cr.ac.ucr.sigebi.models.ConvenioModel;
@@ -47,6 +49,12 @@ import javax.faces.event.PhaseId;
 import javax.faces.event.ValueChangeEvent;
 import javax.faces.model.SelectItem;
 import javax.faces.validator.ValidatorException;
+import net.sf.jasperreports.engine.JasperCompileManager;
+import net.sf.jasperreports.engine.JasperExportManager;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.JasperReport;
+import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
@@ -57,6 +65,22 @@ import org.springframework.stereotype.Controller;
 @Controller(value = "controllerAgregarPrestamos")
 @Scope("session")
 public class AgregarPrestamoController extends BaseController {
+    
+    private static class ParametrosReporte {
+        private static final String UNIDAD_CUSTODIO = "UNIDAD_CUSTODIO";
+	private static final String USUARIO = "USUARIO";
+        
+        private static final String INSTITUCION = "INSTITUCION";
+        private static final String NOMBRE_REPORTE = "NOMBRE_REPORTE";
+	private static final String VALOR_INSTITUCION = "UNIVERSIDAD DE COSTA RICA";
+        private static final String VALOR_NOMBRE_REPORTE = "Reporte de Roles y Usuarios";
+        
+        private static final String ID = "ID";
+        private static final String TIPO_ENTIDAD = "TIPO_ENTIDAD";
+        private static final String ENTIDAD = "ENTIDAD";
+        private static final String FECHA = "FECHA";
+    }
+    
     
     private final int ACCION_RECHAZAR = 1;
     private final int ACCION_REVISAR = 2;
@@ -1001,6 +1025,55 @@ public class AgregarPrestamoController extends BaseController {
         this.visiblePanelBuscarPersonas = false;
     }
 
+    //</editor-fold>
+    
+    //<editor-fold defaultstate="collapsed" desc="Generar Reporte">
+    public void generarReporte() {
+        try {
+            //reportes/reporteSobrantes.jrxml 
+            
+            List<PrestamoCommand.BienDetalle> detalles = this.command.getListBienesDetalle();
+            if (!detalles.isEmpty()) {
+                String template = cr.ac.ucr.framework.reporte.componente.utilitario.Util.ConvertirRutas("/reportes/reportePrestamo.jrxml");;
+                String outputFile = cr.ac.ucr.framework.reporte.componente.utilitario.Util.ConvertirRutas("/reportes/reportePrestamo");
+
+                ArrayList<ReporteBienDetalle> datosReporte = new ArrayList<ReporteBienDetalle>();
+                for (PrestamoCommand.BienDetalle detalle : detalles) {
+                    datosReporte.add(new ReporteBienDetalle(detalle));
+                }
+
+                JRBeanCollectionDataSource beanColDataSource = new JRBeanCollectionDataSource(datosReporte);
+                JasperReport jasperReport = JasperCompileManager.compileReport(template);
+                JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, generarParametros(), beanColDataSource);
+
+                JasperExportManager.exportReportToPdfFile(jasperPrint, outputFile + Constantes.TIPO_REPORTE_PDF_EXTENSION);
+                JavascriptContext.addJavascriptCall(FacesContext.getCurrentInstance(), "reporte('reportePrestamo','" + Constantes.TIPO_REPORTE_PDF_EXTENSION + "');");                    
+
+                Mensaje.agregarInfo("Reporte generado exitosamente");
+            } else {
+                Mensaje.agregarErrorAdvertencia("No hay datos para el reporte");
+            }            
+        } catch (Exception err) {
+            Mensaje.agregarErrorAdvertencia(err.getMessage());
+            this.mensaje = err.getMessage();
+        }
+    }
+    
+    public Map generarParametros() {
+        Map parametros = new HashMap();
+        parametros.put(ParametrosReporte.INSTITUCION, ParametrosReporte.VALOR_INSTITUCION);
+        parametros.put(ParametrosReporte.NOMBRE_REPORTE, ParametrosReporte.VALOR_NOMBRE_REPORTE);
+        parametros.put(ParametrosReporte.UNIDAD_CUSTODIO, unidadEjecutora.getDescripcion());
+        parametros.put(ParametrosReporte.USUARIO, this.usuarioSIGEBI.getNombreCompleto());
+        
+        Tipo tipo = this.tipoPorId(this.command.getIdTipoEntidad());
+        parametros.put(ParametrosReporte.ID, this.command.getId());
+        parametros.put(ParametrosReporte.TIPO_ENTIDAD, tipo.getNombre());
+        parametros.put(ParametrosReporte.ENTIDAD, this.command.getEntidad());
+        parametros.put(ParametrosReporte.FECHA, this.command.getFecha());
+        return parametros;
+    }
+    
     //</editor-fold>
     
     //<editor-fold defaultstate="collapsed" desc="Gets y Sets">

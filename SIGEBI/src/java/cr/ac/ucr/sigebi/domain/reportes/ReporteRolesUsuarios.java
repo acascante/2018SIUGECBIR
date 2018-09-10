@@ -5,11 +5,6 @@
  */
 package cr.ac.ucr.sigebi.domain.reportes;
 
-import cr.ac.ucr.sigebi.domain.Bien;
-import cr.ac.ucr.sigebi.domain.SubCategoria;
-import cr.ac.ucr.sigebi.domain.SubClasificacion;
-import cr.ac.ucr.sigebi.domain.TomaFisica;
-import cr.ac.ucr.sigebi.domain.TomaFisicaSobrante;
 import cr.ac.ucr.sigebi.domain.ViewAutorizacionRolUsuarioUnidad;
 import java.io.Serializable;
 

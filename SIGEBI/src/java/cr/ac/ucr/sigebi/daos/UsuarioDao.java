@@ -9,10 +9,12 @@ import cr.ac.ucr.framework.daoHibernate.DaoHelper;
 import cr.ac.ucr.framework.daoImpl.GenericDaoImpl;
 import cr.ac.ucr.framework.utils.FWExcepcion;
 import cr.ac.ucr.sigebi.domain.AutorizacionRol;
+import cr.ac.ucr.sigebi.domain.Bien;
 import cr.ac.ucr.sigebi.domain.Estado;
 import cr.ac.ucr.sigebi.domain.UnidadEjecutora;
 import cr.ac.ucr.sigebi.domain.Usuario;
 import cr.ac.ucr.sigebi.domain.ViewAutorizacionRolUsuarioUnidad;
+import cr.ac.ucr.sigebi.utils.Constantes;
 import java.util.List;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
@@ -145,11 +147,33 @@ public class UsuarioDao extends GenericDaoImpl {
     }
     
     @Transactional(readOnly = true)
-    public List<ViewAutorizacionRolUsuarioUnidad> listarUsuariosGestionProceso() throws FWExcepcion {
+    public List<ViewAutorizacionRolUsuarioUnidad> listarUsuariosGestionProceso(String orden, String orden1, String orden2, String orden3) throws FWExcepcion {
+        Session session = dao.getSessionFactory().openSession();
         try {
-            return dao.getHibernateTemplate().find("from ViewAutorizacionRolUsuarioUnidad");
-        } catch (DataAccessException e) {
+            StringBuilder sql = new StringBuilder("SELECT entity from ViewAutorizacionRolUsuarioUnidad entity ");
+            if (orden1 != null && orden1.length() > 0) {
+                sql.append(" ORDER BY entity.");
+                sql.append(orden1.toLowerCase());
+                if (orden2 != null && orden2.length() > 0) {
+                    sql.append(", entity.");
+                    sql.append(orden2.toLowerCase());
+                    if (orden3 != null && orden3.length() > 0) {
+                        sql.append(", entity.");
+                        sql.append(orden3.toLowerCase());            
+                    }
+                }
+                sql.append(" ");
+                sql.append(orden);
+            } else {
+                sql.append(" ORDER BY entity.id asc ");
+            }
+            
+            Query query = session.createQuery(sql.toString());
+            return (List<ViewAutorizacionRolUsuarioUnidad>) query.list();
+        } catch (HibernateException e) {
             throw new FWExcepcion("sigebi.error.dao.usuarioDao.listarUsuariosGestionProceso", "Error obtener los registros de estado " + this.getClass(), e.getCause());
+        } finally {
+            session.close();
         }
     }
     

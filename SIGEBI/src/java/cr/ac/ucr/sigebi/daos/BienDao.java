@@ -16,6 +16,7 @@ import cr.ac.ucr.sigebi.domain.Sincronizar;
 import cr.ac.ucr.sigebi.domain.Tipo;
 import cr.ac.ucr.sigebi.domain.UnidadEjecutora;
 import cr.ac.ucr.sigebi.domain.Usuario;
+import cr.ac.ucr.sigebi.utils.Constantes;
 import java.util.List;
 import java.util.Map;
 import org.hibernate.HibernateException;
@@ -67,6 +68,45 @@ public class BienDao extends GenericDaoImpl {
         }
     }
 
+    @Transactional(readOnly = true)
+    public List<Bien> listarPorResponsable(String usuarioResponsable, String orden, String orden1, String orden2, String orden3) throws FWExcepcion {
+        Session session = dao.getSessionFactory().openSession();
+        try {
+            StringBuilder sql = new StringBuilder("SELECT b FROM Bien b ");
+            if (!usuarioResponsable.equals(Constantes.DEFAULT_ID.toString())) {
+                sql.append("WHERE b.usuarioResponsable = :usuarioResponsable");
+            }
+            
+            if (orden1 != null && orden1.length() > 0) {
+                sql.append(" ORDER BY obj.");
+                sql.append(orden1.toLowerCase());
+                if (orden2 != null && orden2.length() > 0) {
+                    sql.append(", obj.");
+                    sql.append(orden2.toLowerCase());
+                    if (orden3 != null && orden3.length() > 0) {
+                        sql.append(", obj.");
+                        sql.append(orden3.toLowerCase());            
+                    }
+                }
+                sql.append(" ");
+                sql.append(orden);
+            } else {
+                sql.append(" ORDER BY obj.id asc ");
+            }
+            
+            Query query = session.createQuery(sql.toString());
+            
+            if (!usuarioResponsable.equals(Constantes.DEFAULT_ID.toString())) {
+                query.setParameter("usuarioResponsable", usuarioResponsable);
+            }
+            return (List<Bien>) query.list();
+        } catch (HibernateException e) {
+            throw new FWExcepcion("sigebi.error.notificacionDao.listar", "Error obtener los registros de tipo " + this.getClass(), e.getCause());
+        } finally {
+            session.close();
+        }
+    }
+    
     
     @Transactional(readOnly = true)
     public List<Bien> listarPorUnidadEjecutora(UnidadEjecutora unidadEjecutora) throws FWExcepcion {

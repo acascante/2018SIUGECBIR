@@ -5,10 +5,12 @@
  */
 package cr.ac.ucr.sigebi.controllers;
 
+import com.icesoft.faces.context.effects.JavascriptContext;
 import cr.ac.ucr.framework.utils.FWExcepcion;
 import cr.ac.ucr.framework.vista.util.Mensaje;
 import cr.ac.ucr.sigebi.utils.Constantes;
 import cr.ac.ucr.framework.vista.util.Util;
+import cr.ac.ucr.sigebi.commands.PrestamoCommand;
 import cr.ac.ucr.sigebi.commands.SolicitudSalidaCommand;
 import cr.ac.ucr.sigebi.domain.Bien;
 import cr.ac.ucr.sigebi.domain.Persona;
@@ -16,15 +18,28 @@ import cr.ac.ucr.sigebi.domain.RegistroMovimientoSolicitud;
 import cr.ac.ucr.sigebi.domain.SolicitudDetalle;
 import cr.ac.ucr.sigebi.domain.SolicitudDetalleSalida;
 import cr.ac.ucr.sigebi.domain.SolicitudSalida;
+import cr.ac.ucr.sigebi.domain.Tipo;
+import cr.ac.ucr.sigebi.domain.reportes.ReporteBienDetalle;
 import cr.ac.ucr.sigebi.models.BienModel;
 import cr.ac.ucr.sigebi.models.PersonaModel;
 import cr.ac.ucr.sigebi.models.RegistroMovimientoModel;
 import cr.ac.ucr.sigebi.models.SolicitudModel;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import javax.annotation.Resource;
+import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 import javax.faces.event.PhaseId;
 import javax.faces.event.ValueChangeEvent;
+import net.sf.jasperreports.engine.JasperCompileManager;
+import net.sf.jasperreports.engine.JasperExportManager;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.JasperReport;
+import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
@@ -36,6 +51,22 @@ import org.springframework.stereotype.Controller;
 @Scope("session")
 public class SolicitudSalidaController extends BaseController {
 
+    private static class ParametrosReporte {
+        private static final String UNIDAD_CUSTODIO = "UNIDAD_CUSTODIO";
+	private static final String USUARIO = "USUARIO";
+        
+        private static final String INSTITUCION = "INSTITUCION";
+        private static final String NOMBRE_REPORTE = "NOMBRE_REPORTE";
+	private static final String VALOR_INSTITUCION = "UNIVERSIDAD DE COSTA RICA";
+        private static final String VALOR_NOMBRE_REPORTE = "Reporte de Roles y Usuarios";
+        
+        private static final String ID = "ID";
+        private static final String TIPO = "TIPO";
+        private static final String IDENTIFICACION = "IDENTIFICACION";
+        private static final String NOMBRE = "NOMBRE";
+        private static final String FECHA = "FECHA";
+    }
+    
     //<editor-fold defaultstate="collapsed" desc="Variables Locales">
     @Resource
     private SolicitudModel solicitudModel;
@@ -364,6 +395,7 @@ public class SolicitudSalidaController extends BaseController {
             //Se actuaizan banderas
             this.cambiaEstadoSolicitud();
 
+            
             Mensaje.agregarInfo(Util.getEtiquetas("sigebi.solicitudSalidaController.modificado.exitosamente"));
 
         } catch (FWExcepcion e) {
@@ -442,7 +474,57 @@ public class SolicitudSalidaController extends BaseController {
         }
     }
 
+    
     //</editor-fold> 
+    
+    //<editor-fold defaultstate="collapsed" desc="Generar Reporte">
+    public void generarReporte() {
+        try {
+            //reportes/reporteSobrantes.jrxml 
+            
+            List<SolicitudDetalle> detalles = this.command.getBienesDetalles();
+            if (!detalles.isEmpty()) {
+                String template = cr.ac.ucr.framework.reporte.componente.utilitario.Util.ConvertirRutas("/reportes/reporteSalida.jrxml");
+                String outputFile = cr.ac.ucr.framework.reporte.componente.utilitario.Util.ConvertirRutas("/reportes/reporteSalida");
+
+                ArrayList<ReporteBienDetalle> datosReporte = new ArrayList<ReporteBienDetalle>();
+                for (SolicitudDetalle detalle : detalles) {
+                    datosReporte.add(new ReporteBienDetalle((SolicitudDetalleSalida)detalle));
+                }
+
+                JRBeanCollectionDataSource beanColDataSource = new JRBeanCollectionDataSource(datosReporte);
+                JasperReport jasperReport = JasperCompileManager.compileReport(template);
+                JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, generarParametros(), beanColDataSource);
+
+                JasperExportManager.exportReportToPdfFile(jasperPrint, outputFile + Constantes.TIPO_REPORTE_PDF_EXTENSION);
+                JavascriptContext.addJavascriptCall(FacesContext.getCurrentInstance(), "reporte('reporteSalida','" + Constantes.TIPO_REPORTE_PDF_EXTENSION + "');");                    
+
+                Mensaje.agregarInfo("Reporte generado exitosamente");
+                
+            } else {
+                Mensaje.agregarErrorAdvertencia("No hay datos para el reporte");
+            }            
+        } catch (Exception err) {
+            Mensaje.agregarErrorAdvertencia(err.getMessage());
+        }
+    }
+    
+    public Map generarParametros() {
+        Map parametros = new HashMap();
+        parametros.put(ParametrosReporte.INSTITUCION, ParametrosReporte.VALOR_INSTITUCION);
+        parametros.put(ParametrosReporte.NOMBRE_REPORTE, ParametrosReporte.VALOR_NOMBRE_REPORTE);
+        parametros.put(ParametrosReporte.UNIDAD_CUSTODIO, unidadEjecutora.getDescripcion());
+        parametros.put(ParametrosReporte.USUARIO, this.usuarioSIGEBI.getNombreCompleto());
+        
+        parametros.put(ParametrosReporte.ID, this.command.getSolicitudSalida().getId());
+        parametros.put(ParametrosReporte.TIPO, this.command.getSolicitudSalida().getTipo().getNombre());
+        parametros.put(ParametrosReporte.IDENTIFICACION, this.command.getSolicitudSalida().getPersona().getIdentificacion());
+        parametros.put(ParametrosReporte.NOMBRE, this.command.getSolicitudSalida().getPersona().getNombre());
+        parametros.put(ParametrosReporte.FECHA, this.command.getSolicitudSalida().getFecha());
+        return parametros;
+    }
+    
+    //</editor-fold>
     
     //<editor-fold defaultstate="collapsed" desc="Busqueda y modificacion de los bienes asociados">
     

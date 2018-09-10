@@ -9,23 +9,22 @@ package cr.ac.ucr.sigebi.commands;
  *
  * @author alvaro.cascante
  */
-public class GenerarReporteRolesUsuariosCommand {
+public class ReporteUsuarioBienesCommand {
         
     //<editor-fold defaultstate="collapsed" desc="Atributos">
     private Long idTipo;
-    private Long idGrupo;
     private Integer idOrden;
     private Integer idOrden1;
     private Integer idOrden2;
     private Integer idOrden3;
-    private String usuario;
+    private String idUsuario;
+    private String identificacion;
     //</editor-fold>
     
     //<editor-fold defaultstate="collapsed" desc="Constructores">
-    public GenerarReporteRolesUsuariosCommand() { 
+    public ReporteUsuarioBienesCommand() { 
         super();
         this.idTipo = -1L;
-        this.idGrupo = -1L;
         this.idOrden = -1;
         this.idOrden1 = -1;
         this.idOrden2 = -1;
@@ -40,14 +39,6 @@ public class GenerarReporteRolesUsuariosCommand {
 
     public void setIdTipo(Long idTipo) {
         this.idTipo = idTipo;
-    }
-
-    public Long getIdGrupo() {
-        return idGrupo;
-    }
-
-    public void setIdGrupo(Long idGrupo) {
-        this.idGrupo = idGrupo;
     }
 
     public Integer getIdOrden() {
@@ -82,12 +73,20 @@ public class GenerarReporteRolesUsuariosCommand {
         this.idOrden3 = idOrden3;
     }
 
-    public String getUsuario() {
-        return usuario;
+    public String getIdentificacion() {
+        return identificacion;
     }
 
-    public void setUsuario(String usuario) {
-        this.usuario = usuario;
+    public void setIdentificacion(String identificacion) {
+        this.identificacion = identificacion;
+    }
+
+    public String getIdUsuario() {
+        return idUsuario;
+    }
+
+    public void setIdUsuario(String idUsuario) {
+        this.idUsuario = idUsuario;
     }
     //</editor-fold>
 }
