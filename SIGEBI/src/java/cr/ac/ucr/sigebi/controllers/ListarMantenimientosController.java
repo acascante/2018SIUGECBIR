@@ -91,7 +91,7 @@ public class ListarMantenimientosController extends BaseController {
     
     private void inicializarDatos() {
         this.command = new ListarMantenimientosCommand();
-        this.vistaOrigen = Constantes.VISTA_MANTENIMIENTO_LISTADO;
+        this.vistaOrigen = Constantes.KEY_VISTA_MANTENIMIENTO_LISTADO;
     }
     
     private void inicializarListado() {

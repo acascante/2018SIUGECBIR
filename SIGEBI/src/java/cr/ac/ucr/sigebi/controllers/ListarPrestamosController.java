@@ -97,7 +97,7 @@ public class ListarPrestamosController extends BaseController {
     
     private void inicializarDatos() {
         this.command = new ListarPrestamosCommand();
-        this.vistaOrigen = Constantes.VISTA_PRESTAMO_LISTADO;
+        this.vistaOrigen = Constantes.KEY_VISTA_PRESTAMO_LISTADO;
     }
     
     private void inicializarListado() {

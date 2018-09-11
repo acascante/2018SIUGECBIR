@@ -7,6 +7,7 @@
 	<parameter name="USUARIO" class="java.lang.String"/>
 	<parameter name="NOMBRE_REPORTE" class="java.lang.String"/>
 	<parameter name="FLT_USUARIO" class="java.lang.String"/>
+	<parameter name="FLT_BIEN" class="java.lang.String"/>
 	<field name="idUsuario" class="java.lang.String"/>
 	<field name="identificacion" class="java.lang.String"/>
 	<field name="descripcion" class="java.lang.String"/>
@@ -17,6 +18,9 @@
 		<groupExpression><![CDATA[$F{idUsuario}]]></groupExpression>
 		<groupHeader>
 			<band height="40">
+				<line>
+					<reportElement x="10" y="5" width="780" height="1" uuid="7b59352d-0806-4f95-bc8c-adfeb23bbcd9"/>
+				</line>
 				<staticText>
 					<reportElement x="5" y="10" width="100" height="20" uuid="c1f55ad4-e9c7-40d6-94bd-46adb9031d08"/>
 					<textElement verticalAlignment="Middle">
@@ -56,6 +60,9 @@
 					</textElement>
 					<text><![CDATA[TOTAL]]></text>
 				</staticText>
+				<line>
+					<reportElement x="10" y="35" width="780" height="1" uuid="b4a6e4fc-7d89-4569-a58a-076c732b3f27"/>
+				</line>
 			</band>
 		</groupFooter>
 	</group>
@@ -63,7 +70,7 @@
 		<band splitType="Stretch"/>
 	</background>
 	<title>
-		<band height="170" splitType="Stretch">
+		<band height="200" splitType="Stretch">
 			<rectangle>
 				<reportElement x="5" y="50" width="790" height="20" uuid="b4872d5a-d491-4f0a-b6ac-fd69abfc9faf"/>
 			</rectangle>
@@ -116,16 +123,6 @@
 				</textElement>
 				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
 			</textField>
-			<line>
-				<reportElement x="5" y="160" width="790" height="1" uuid="7b665dbd-db69-4c4c-9eb9-ffeb540b580a"/>
-			</line>
-			<staticText>
-				<reportElement x="490" y="130" width="100" height="20" uuid="13b33bf8-88dd-4a48-acce-0bd766e892e4"/>
-				<textElement verticalAlignment="Middle">
-					<font fontName="SansSerif" isBold="true"/>
-				</textElement>
-				<text><![CDATA[USUARIO]]></text>
-			</staticText>
 			<textField pattern="">
 				<reportElement x="590" y="130" width="200" height="20" forecolor="#000000" uuid="ee93d66a-4a6a-4e3d-9aba-1fcc1e9bd58e"/>
 				<textElement verticalAlignment="Middle">
@@ -133,6 +130,30 @@
 				</textElement>
 				<textFieldExpression><![CDATA[$P{FLT_USUARIO}]]></textFieldExpression>
 			</textField>
+			<staticText>
+				<reportElement x="490" y="130" width="100" height="20" uuid="13b33bf8-88dd-4a48-acce-0bd766e892e4"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="SansSerif" isBold="true"/>
+				</textElement>
+				<text><![CDATA[USUARIO]]></text>
+			</staticText>
+			<line>
+				<reportElement x="5" y="190" width="790" height="1" uuid="7b665dbd-db69-4c4c-9eb9-ffeb540b580a"/>
+			</line>
+			<textField pattern="">
+				<reportElement x="590" y="160" width="200" height="20" forecolor="#000000" uuid="8b608db7-5f4f-40d3-b5ed-8c70fa84d56d"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="SansSerif" size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{FLT_BIEN}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="440" y="160" width="150" height="20" uuid="58d01e26-7b03-4d37-b8f4-77d8cc3c403e"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="SansSerif" isBold="true"/>
+				</textElement>
+				<text><![CDATA[IDENTIFICACION BIEN]]></text>
+			</staticText>
 		</band>
 	</title>
 	<pageHeader>

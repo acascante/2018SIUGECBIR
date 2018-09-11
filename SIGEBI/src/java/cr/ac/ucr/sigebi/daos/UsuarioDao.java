@@ -9,18 +9,14 @@ import cr.ac.ucr.framework.daoHibernate.DaoHelper;
 import cr.ac.ucr.framework.daoImpl.GenericDaoImpl;
 import cr.ac.ucr.framework.utils.FWExcepcion;
 import cr.ac.ucr.sigebi.domain.AutorizacionRol;
-import cr.ac.ucr.sigebi.domain.Bien;
-import cr.ac.ucr.sigebi.domain.Estado;
 import cr.ac.ucr.sigebi.domain.UnidadEjecutora;
 import cr.ac.ucr.sigebi.domain.Usuario;
 import cr.ac.ucr.sigebi.domain.ViewAutorizacionRolUsuarioUnidad;
-import cr.ac.ucr.sigebi.utils.Constantes;
 import java.util.List;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -147,27 +143,21 @@ public class UsuarioDao extends GenericDaoImpl {
     }
     
     @Transactional(readOnly = true)
-    public List<ViewAutorizacionRolUsuarioUnidad> listarUsuariosGestionProceso(String orden, String orden1, String orden2, String orden3) throws FWExcepcion {
+    public List<ViewAutorizacionRolUsuarioUnidad> listarUsuariosGestionProceso(String grupo, String orden, String orden1, String orden2, String orden3) throws FWExcepcion {
         Session session = dao.getSessionFactory().openSession();
         try {
             StringBuilder sql = new StringBuilder("SELECT entity from ViewAutorizacionRolUsuarioUnidad entity ");
+            sql.append(" ORDER BY entity.").append(grupo);
             if (orden1 != null && orden1.length() > 0) {
-                sql.append(" ORDER BY entity.");
-                sql.append(orden1.toLowerCase());
+                sql.append(" , entity.").append(orden1.toLowerCase());
                 if (orden2 != null && orden2.length() > 0) {
-                    sql.append(", entity.");
-                    sql.append(orden2.toLowerCase());
+                    sql.append(" , entity.").append(orden2.toLowerCase());
                     if (orden3 != null && orden3.length() > 0) {
-                        sql.append(", entity.");
-                        sql.append(orden3.toLowerCase());            
+                        sql.append(" , entity.").append(orden3.toLowerCase());            
                     }
                 }
-                sql.append(" ");
-                sql.append(orden);
-            } else {
-                sql.append(" ORDER BY entity.id asc ");
-            }
-            
+            }            
+            sql.append(" ").append(orden);
             Query query = session.createQuery(sql.toString());
             return (List<ViewAutorizacionRolUsuarioUnidad>) query.list();
         } catch (HibernateException e) {
@@ -228,7 +218,7 @@ public class UsuarioDao extends GenericDaoImpl {
         //Select
         sql = sql + " WHERE obj.autorizacionRol = :autorizacionRol and obj.unidadEjecutora = :unidadEjecutora";
         if (idUsuario != null && idUsuario.length() > 0) {
-            sql = sql + " AND upper(obj.usuarioSeguridad.id) like upper(:idUsuario) ";
+            sql = sql + " AND upper(obj.usuarioSeguridad.idUsuario) like upper(:idUsuario) ";
         }
         if (nombreCompleto != null && nombreCompleto.length() > 0) {
             sql = sql + " AND upper(obj.usuarioSeguridad.nombreCompleto) like upper(:nombreCompleto) ";

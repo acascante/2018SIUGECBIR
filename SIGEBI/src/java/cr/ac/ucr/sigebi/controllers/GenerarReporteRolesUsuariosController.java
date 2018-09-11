@@ -8,10 +8,12 @@ package cr.ac.ucr.sigebi.controllers;
 import com.icesoft.faces.context.effects.JavascriptContext;
 import cr.ac.ucr.framework.vista.util.Mensaje;
 import cr.ac.ucr.sigebi.commands.GenerarReporteRolesUsuariosCommand;
+import cr.ac.ucr.sigebi.domain.AutorizacionRol;
 import cr.ac.ucr.sigebi.utils.Constantes;
 import cr.ac.ucr.sigebi.domain.Tipo;
 import cr.ac.ucr.sigebi.domain.ViewAutorizacionRolUsuarioUnidad;
 import cr.ac.ucr.sigebi.domain.reportes.ReporteRolesUsuarios;
+import cr.ac.ucr.sigebi.models.AutorizacionRolModel;
 import cr.ac.ucr.sigebi.models.UsuarioModel;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -20,7 +22,6 @@ import java.util.Map;
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import javax.faces.context.FacesContext;
-import javax.faces.event.ActionEvent;
 import javax.faces.model.SelectItem;
 import net.sf.jasperreports.engine.JasperCompileManager;
 import net.sf.jasperreports.engine.JasperExportManager;
@@ -49,18 +50,17 @@ public class GenerarReporteRolesUsuariosController extends BaseController {
         private static final String VALOR_NOMBRE_REPORTE = "Reporte de Roles y Usuarios";
     }
     
-    @Resource
-    private UsuarioModel usuarioModel;
+    @Resource private AutorizacionRolModel autorizacionRolModel;
+    @Resource private UsuarioModel usuarioModel;
     
     private Map<Long, Tipo> tiposReporte;
     private List<SelectItem> itemsTipoReporte;
     
     private GenerarReporteRolesUsuariosCommand command;
-    
-    private String mensaje;
 
     public GenerarReporteRolesUsuariosController() {
         super();
+        inicializarDatos();
     }
 
     @PostConstruct
@@ -77,21 +77,21 @@ public class GenerarReporteRolesUsuariosController extends BaseController {
         }
     }
     
-    public void inicializarDatos(ActionEvent event) {
-        this.mensaje = new String();
+    private void inicializarDatos() {
         this.command = new GenerarReporteRolesUsuariosCommand();
     }
     
     public void generarReporte() {
         try {
             //reportes/reporteSobrantes.jrxml 
+            Tipo grupo = this.tipoPorDominioValor(Constantes.DOMINIO_GRUPO_REPORTE_ROLES_USUARIOS, this.command.getIdGrupo());
             Tipo orden = this.tipoPorDominioValor(Constantes.DOMINIO_ORDEN_REPORTE, this.command.getIdOrden());
             Tipo orden1 = this.tipoPorDominioValor(Constantes.DOMINIO_COLUMNAS_REPORTE_ROLES_USUARIOS, this.command.getIdOrden1());
             Tipo orden2 = this.tipoPorDominioValor(Constantes.DOMINIO_COLUMNAS_REPORTE_ROLES_USUARIOS, this.command.getIdOrden2());
             Tipo orden3 = this.tipoPorDominioValor(Constantes.DOMINIO_COLUMNAS_REPORTE_ROLES_USUARIOS, this.command.getIdOrden3());
             
-            
-            List<ViewAutorizacionRolUsuarioUnidad> usuarios = this.usuarioModel.listarUsuariosGestionProceso(orden.getNombre(), orden1.getNombre(), orden2.getNombre(), orden3.getNombre());
+            List<ViewAutorizacionRolUsuarioUnidad> usuarios = this.usuarioModel.listarUsuariosGestionProceso(grupo.getNombre(), orden.getNombre(), 
+                    orden1 != null ? orden1.getNombre() : null, orden2 != null ? orden3.getNombre() : null, orden3 != null ? orden3.getNombre() : null);
             if (!usuarios.isEmpty()) {
                 String template;
                 String outputFile = cr.ac.ucr.framework.reporte.componente.utilitario.Util.ConvertirRutas("/reportes/reporteRolesUsuarios");
@@ -123,8 +123,7 @@ public class GenerarReporteRolesUsuariosController extends BaseController {
                 Mensaje.agregarErrorAdvertencia("No hay datos para el reporte");
             }            
         } catch (Exception err) {
-            Mensaje.agregarErrorAdvertencia(err.getMessage());
-            this.mensaje = err.getMessage();
+            Mensaje.agregarErrorAdvertencia("No se puede generar el reporte en este momento, intente de nuevo");
         }
     }
     
@@ -161,14 +160,6 @@ public class GenerarReporteRolesUsuariosController extends BaseController {
 
     public void setCommand(GenerarReporteRolesUsuariosCommand command) {
         this.command = command;
-    }
-
-    public String getMensaje() {
-        return mensaje;
-    }
-
-    public void setMensaje(String mensaje) {
-        this.mensaje = mensaje;
     }
     //</editor-fold>
 }

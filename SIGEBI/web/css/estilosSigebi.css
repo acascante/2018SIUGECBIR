@@ -69,3 +69,44 @@ body {
 }
 
 
+.frmPreingreso{
+    margin-top: 60px;
+    width: 60% !important;
+    top: 270px !important;
+    left: 20% !important;
+}
+
+.frmPreingreso table{
+    width: 100% !important;
+}
+
+.ui-autocomplete{
+    background-color: white;
+    max-width: 400px;
+    overflow-x: auto;
+}
+
+.ui-autocomplete li{
+    background-color: white;
+    text-decoration: none;
+    list-style: none;
+}
+
+.ui-autocomplete li a{
+    text-decoration: none;
+    color: #666666;
+    cursor: pointer;
+}
+
+
+.ui-autocomplete li a:hover{
+    font-weight: bolder;
+}
+
+.ui-autocomplete li:hover{
+    background-color: #cccccc;
+}
+
+.ui-helper-hidden-accessible{
+    display: none;
+}

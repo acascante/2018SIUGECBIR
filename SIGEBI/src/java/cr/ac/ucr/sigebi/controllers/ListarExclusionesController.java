@@ -99,7 +99,7 @@ public class ListarExclusionesController extends BaseController {
     
     private void inicializarDatos() {
         this.command = new ListarExclusionesCommand();
-        this.vistaOrigen = Constantes.VISTA_EXCLUSION_LISTADO;
+        this.vistaOrigen = Constantes.KEY_VISTA_EXCLUSION_LISTADO;
     }
     
     private void inicializarListado() {

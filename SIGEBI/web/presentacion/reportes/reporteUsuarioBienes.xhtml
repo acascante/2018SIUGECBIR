@@ -29,7 +29,6 @@
                                     <div class='col-sm-9'>
                                         <ice:selectOneMenu id="tipoReporte" styleClass="form-control"
                                                            value="#{controllerReporteUsuarioBienes.command.idTipo}" >
-                                            <f:selectItem itemLabel="N/A" itemValue="-1"/>
                                             <f:selectItems id="optSelTipoBien" value="#{controllerReporteUsuarioBienes.itemsTipoReporte}"/>
                                          </ice:selectOneMenu>                                        
                                    </div>
@@ -43,16 +42,14 @@
                                     </div>
                                     <div class='col-sm-3'>
                                         <ice:outputText value="#{label['sigebi.reporte.usuarios.bienes.filtro.usuario']}" />
-                                        <ice:selectOneMenu id="usuario" styleClass="form-control"
-                                                           value="#{controllerReporteUsuarioBienes.command.idUsuario}" >
-                                            <f:selectItem itemLabel="N/A" itemValue="-1"/>
-                                            <f:selectItems id="optSelTipoBien" value="#{controllerReporteUsuarioBienes.itemsUsuariosResponsables}"/>
-                                        </ice:selectOneMenu>
+                                        <ice:inputText id="txtIdUsuario" styleClass="form-control" maxlength="30" partialSubmit="false"
+                                                       value="#{controllerReporteUsuarioBienes.command.idUsuario}" >
+                                        </ice:inputText> 
                                     </div>
                                     
                                     <div class='col-sm-3'>
-                                        <ice:outputText  value="#{label['sigebi.reporte.usuarios.bienes.filtro.usuario']}" />
-                                        <ice:inputText id="txtIdentificacion" styleClass="form-control" maxlength="10" partialSubmit="false"
+                                        <ice:outputText  value="#{label['sigebi.reporte.usuarios.bienes.filtro.bien']}" />
+                                        <ice:inputText id="txtIdentificacion" styleClass="form-control" maxlength="100" partialSubmit="false"
                                                        value="#{controllerReporteUsuarioBienes.command.identificacion}" >
                                         </ice:inputText> 
                                    </div>

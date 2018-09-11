@@ -1,0 +1,359 @@
+<ice:form id="frmPreIngreso" 
+          xmlns:ice="http://www.icesoft.com/icefaces/component"
+          xmlns:h="http://java.sun.com/jsf/html"
+          xmlns:f="http://java.sun.com/jsf/core"
+          xmlns:ui="http://java.sun.com/jsf/facelets"
+          >
+    <div class="contenido-pagina">
+
+        <div class="container"> 
+            
+            <!-- Titulo -->
+            <div class="row">
+                 <div class='col-sm-1'>
+                    
+                </div> 
+                
+                <div class='col-sm-6'>
+                    
+                    <h1 class="align-middle">
+                        <ice:outputFormat value="#{label['sigebi.Preliminar.Titulo']}"/>
+                    </h1>
+                </div>    
+                 <div class='col-sm-6'>
+                    
+                </div>   
+                
+            </div>
+
+            
+            <!-- Botones para generar -->
+            <div class="row">  
+                 <div class='col-sm-1'>
+                    
+                </div> 
+                 <div class='col-sm-10'>
+                     <ice:commandButton id="btnReporteMovimiento"
+                                       styleClass="boton"
+                                       style="float: right"
+                                       partialSubmit="true" 
+                                       action="#{controllerPreliminar.mostrarPanel}"
+                                       value="#{label['sigebi.Bien.Btn.Nuevo']}">
+                    </ice:commandButton>
+                </div>   
+                 <div class='col-sm-1'>
+                    
+                </div> 
+            </div>
+            
+            
+        <!-- Paginacion -->
+        <div class="row">
+            <div class="col-sm-12">
+                <ice:outputFormat value="#{label['label.generico.paginacion.encabezado']}">
+                    <f:param value="#{controllerPreliminar.cantidadRegistros}"/>
+                    <f:param value="#{controllerPreliminar.cantidadRegistrosMostrados}"/>
+                    <f:param value="#{controllerPreliminar.primerRegistro}"/>
+                    <f:param value="#{controllerPreliminar.ultimoRegistro}"/>
+                    <f:param value="#{controllerPreliminar.paginaActual}"/>
+                    <f:param value="#{controllerPreliminar.cantidadPaginas}"/>
+                </ice:outputFormat>
+                <div>
+                    <table>
+                        <tr>
+                            <td style="padding-right: 5px;">
+                                <ice:outputText value="#{label['label.paginacion.cantidad.pagina']} "/>
+                            </td>
+                            <td>
+
+                                <ice:selectOneMenu id="cantRegistroPorPagina"
+                                       value="#{controllerPreliminar.cantRegistroPorPagina}" 
+                                       valueChangeListener="#{controllerPreliminar.actaCambioRegistrosPorPagina}"
+                                       partialSubmit="true">
+                                        <f:selectItems id="item_pa" value="#{controllerPreliminar.listaRegistrosPagina}"/>
+                                </ice:selectOneMenu>    
+
+                            </td>
+                        </tr>
+                    </table>                        
+                </div>                    
+                <div>
+                    <ice:commandButton image="./imagenes/botones/first.png" 
+                                       partialSubmit="true" 
+                                       actionListener="#{controllerPreliminar.actaPrimero}" 
+                                       rendered="#{controllerPreliminar.cantidadPaginas > 1}"/>
+                    <ice:commandButton image="./imagenes/botones/previos.png" 
+                                       partialSubmit="true" 
+                                       actionListener="#{controllerPreliminar.actaAnterior}" 
+                                       rendered="#{controllerPreliminar.cantidadPaginas > 1}"/>
+                    <ui:repeat value="#{controllerPreliminar.arregloPaginas}" 
+                               var="pagina">
+                        <ice:commandLink value="#{pagina}" 
+                                         partialSubmit="true" 
+                                         actionListener="#{controllerPreliminar.actaIrPagina}">
+                            <f:param name="numPag" value="#{pagina}"/>
+                        </ice:commandLink>
+                    </ui:repeat>            
+                    <ice:commandButton image="./imagenes/botones/next.png" 
+                                       partialSubmit="true" 
+                                       actionListener="#{controllerPreliminar.actaSiguiente}" 
+                                       rendered="#{controllerPreliminar.cantidadPaginas > 1}"/>
+                    <ice:commandButton image="./imagenes/botones/last.png" 
+                                       partialSubmit="true" 
+                                       actionListener="#{controllerPreliminar.actaUltimo}" 
+                                       rendered="#{controllerPreliminar.cantidadPaginas > 1}"/>
+                </div>
+            </div>
+        </div>
+        
+
+        </div>    
+
+
+            
+        <div class="container" style="overflow: auto; padding-bottom: 20px;">
+
+            <!-- Data Table -->
+            <div class="row" >
+                <div class="col-sm-12">
+                    <div>
+                        <ice:dataTable id="preliminares"
+                                       value="#{controllerPreliminar.command.preliminares}"
+                                   var="preliminar"
+                                   paginator="true"
+                                   paginatorPosition="bottom"
+                                   rows="10">
+                            
+                            <ice:column id="colIdentificacion">
+                                <f:facet name="header">
+                                    <ice:columnGroup>
+                                        <ice:headerRow>
+                                            <ice:outputText value="#{label['sigebi.Preliminar.Label.Identificacion']}"/>
+                                        </ice:headerRow>
+                                        
+                                        <ice:headerRow>
+                                            <ice:inputText id="txtFltIdentificacion"
+                                                           style="width: 130px;"
+                                                           value="#{controllerPreliminar.fltIdentificacion}"                                   
+                                                           partialSubmit="true"
+                                                           valueChangeListener="#{controllerPreliminar.cambioFiltro}"/>
+                                        </ice:headerRow>
+                                        
+                                    </ice:columnGroup>
+                                </f:facet>                                
+                                <h:outputText id="costoCell" value="#{preliminar.identificacion}"/>
+                            </ice:column>
+                            
+                            <ice:column id="colDescripcion">
+                                <f:facet name="header">
+                                    <ice:columnGroup>
+                                        <ice:headerRow>
+                                            <ice:outputText value="#{label['sigebi.Preliminar.Label.Descripcion']}"/>
+                                        </ice:headerRow>
+                                        
+                                        <ice:headerRow>
+                                            <ice:inputText id="txtFltDescripcion"
+                                                           style="width: 130px;"
+                                                           value="#{controllerPreliminar.fltDescripcion}"                                   
+                                                           partialSubmit="true"
+                                                           valueChangeListener="#{controllerPreliminar.cambioFiltro}"/>
+                                        </ice:headerRow>
+                                        
+                                    </ice:columnGroup>
+                                </f:facet>                                
+                                <h:outputText id="costoCell" value="#{preliminar.descripcion}"/>
+                            </ice:column>
+                            
+                            <ice:column id="colUnidad">
+                                <f:facet name="header">
+                                    <ice:columnGroup>
+                                        <ice:headerRow>
+                                            <ice:outputText value="#{label['sigebi.Preliminar.Label.Unidad']}"/>
+                                        </ice:headerRow>
+                                        
+                                        <ice:headerRow>
+                                            <ice:inputText id="txtFltUnidad"
+                                                           style="width: 130px;"
+                                                           value="#{controllerPreliminar.fltUnidad}"                                   
+                                                           partialSubmit="true"
+                                                           valueChangeListener="#{controllerPreliminar.cambioFiltro}"/>
+                                        </ice:headerRow>
+                                        
+                                    </ice:columnGroup>
+                                </f:facet>                                
+                                <h:outputText id="costoCell" value="#{preliminar.unidad.descripcion}"/>
+                            </ice:column>
+                            
+                            
+                            <ice:column id="colMarca">
+                                <f:facet name="header">
+                                    <ice:columnGroup>
+                                        <ice:headerRow>
+                                            <ice:outputText value="#{label['sigebi.Preliminar.Label.Marca']}"/>
+                                        </ice:headerRow>
+                                        
+                                        <ice:headerRow>
+                                            <ice:inputText id="txtFltMarca"
+                                                           style="width: 130px;"
+                                                           value="#{controllerPreliminar.fltMarca}"                                   
+                                                           partialSubmit="true"
+                                                           valueChangeListener="#{controllerPreliminar.cambioFiltro}"/>
+                                        </ice:headerRow>
+                                        
+                                    </ice:columnGroup>
+                                </f:facet>                                
+                                <h:outputText id="costoCell" value="#{preliminar.marca}"/>
+                            </ice:column>
+                            
+                            <ice:column id="colFactura">
+                                <f:facet name="header">
+                                    <ice:columnGroup>
+                                        <ice:headerRow>
+                                            <ice:outputText value="#{label['sigebi.Preliminar.Label.Factura']}"/>
+                                        </ice:headerRow>
+                                        
+                                        <ice:headerRow>
+                                            <ice:inputText id="txtFltFactura"
+                                                           style="width: 130px;"
+                                                           value="#{controllerPreliminar.fltFactura}"                                   
+                                                           partialSubmit="true"
+                                                           valueChangeListener="#{controllerPreliminar.cambioFiltro}"/>
+                                        </ice:headerRow>
+                                        
+                                    </ice:columnGroup>
+                                </f:facet>                                
+                                <h:outputText id="costoCell" value="#{preliminar.factura}"/>
+                            </ice:column>
+                            
+                            
+                            <ice:column id="colDetalle">
+                                <f:facet name="header">
+                                    <ice:columnGroup>
+                                        <ice:headerRow>
+                                            <ice:outputText value="#{label['sigebi.ActaListar.Label.DETALLE']}"/>
+                                        </ice:headerRow>
+                                    </ice:columnGroup>
+                                </f:facet>                                
+                                
+                                <ice:commandButton id="btnDetalle"
+                                                   style="float:right;margin-top:2%" 
+                                                   styleClass="boton" 
+                                                   partialSubmit="true"
+                                                   actionListener="#{controllerPreliminar.verDetalle}"  
+                                                   value="#{label['sigebi.ActaListar.Label.VER']}"  >    
+                                    <f:attribute id="itemSeleccionado" name="itemSeleccionado"  value="#{preliminar}"/> 
+                                </ice:commandButton>
+                                
+                            </ice:column>
+
+                            
+                            
+                        </ice:dataTable>
+
+                    </div>
+                </div>
+            </div>
+
+            
+            
+
+            <div class="row" style="display: none">
+
+                <div class="col-sm-12" style="display: none">
+                    <div>
+                        
+                        <ice:dataTable id="unidades"
+                                       value="#{controllerPreliminar.unidadesEjecutoras}"
+                                   var="unidad"
+                                   styleClass="unidades"
+                                   paginator="false"
+                                   >
+                            <ice:column id="colUniId">          
+                                <h:outputText id="colUnidId" value="#{unidad.id}"/>
+                            </ice:column>
+                            <ice:column id="colUniDesc">          
+                                <h:outputText id="colUniDescripcion" value="#{unidad.descripcion}"/>
+                            </ice:column>
+                        </ice:dataTable>
+
+                        
+                    </div>
+                </div>
+                        
+            </div>
+            
+            
+            
+        </div>  
+        
+        
+        
+        <!-- Panel de Proveedores --> 
+        <ui:insert name="modalAgregar">
+            <ui:include src="../ingreso/preliminarModal.xhtml" />
+        </ui:insert>
+        
+        <script>
+            
+            
+            var $ = jQuery.noConflict();
+            
+            $(document).ready(function(){
+                //alert("Hola esta es la pantalla  Preliminar.");
+                $("#callAjax").click(function (){
+                    //
+                    $.ajax({
+                        url: "${pageContext.request.contextPath}/preliminar/listaUnidades",
+                        type: "POST",
+
+                        beforeSend: function(xhr) {
+                            alert( "${pageContext.request.contextPath}/preliminar/listaUnidades");
+                        },
+                        success: function(resp) {
+                            alert("A cachete! "+resp);
+                        },
+                        error: function (request, status, error) {
+                            alert(request.responseText);
+                        }
+                    });
+                    
+                });
+                
+                
+                llenar();
+
+                $( ".unidadesAutoComplete" ).autocomplete({
+                    source: unidades
+                });
+            
+            
+            });
+            
+            var unidades =  new Array();
+            
+            function llenar(){
+                
+                $('.unidades tr').each(function (){
+                    var valor = "";
+                    $(this).find("td").each(function(){
+                        valor = valor + $(this).text() + "-";
+                    });
+                    
+                    
+                    unidades.push(valor.substring(0, valor.length-1));
+                    
+                });
+                
+                //alert( "Encontradas "+unidades.size() );
+                
+            }
+            
+        </script>
+        
+    </div>
+
+
+</ice:form>
+
+
+

@@ -44,8 +44,8 @@ public class BienModel {
         return bienDao.listar();
     }
     
-    public List<Bien> listarPorResponsable(String usuario, String orden, String orden1, String orden2, String orden3) throws FWExcepcion {
-        return bienDao.listarPorResponsable(usuario, orden, orden1, orden2, orden3);
+    public List<Bien> listarPorResponsable(String usuarioResponsable, String identificacionBien, String orden, String orden1, String orden2, String orden3) throws FWExcepcion {
+        return bienDao.listarPorResponsable(usuarioResponsable, identificacionBien, orden, orden1, orden2, orden3);
     }
     
     public List<Bien> listar(String sql, Map<String, Object> parametros) throws FWExcepcion {

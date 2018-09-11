@@ -10,16 +10,13 @@
 	<parameter name="TIPO" class="java.lang.String"/>
 	<parameter name="IDENTIFICACION" class="java.lang.String"/>
 	<parameter name="NOMBRE" class="java.lang.String"/>
-	<parameter name="FECHA" class="java.lang.String"/>
-	<field name="fecha" class="java.lang.String"/>
+	<parameter name="FECHA" class="java.util.Date"/>
 	<field name="identificacion" class="java.lang.String"/>
 	<field name="marca" class="java.lang.String"/>
 	<field name="modelo" class="java.lang.String"/>
 	<field name="serie" class="java.lang.String"/>
-	<field name="fechaInicio" class="java.lang.String"/>
-	<field name="fechaFin" class="java.lang.String"/>
-	<field name="identificacionPersona" class="java.lang.String"/>
-	<field name="nombre" class="java.lang.String"/>
+	<field name="fechaInicio" class="java.util.Date"/>
+	<field name="fechaFin" class="java.util.Date"/>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
@@ -92,63 +89,63 @@
 				<textFieldExpression><![CDATA[$P{NOMBRE_REPORTE}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="10" y="40" width="100" height="20" uuid="e66b7737-81a4-4f9d-a710-f322869489bb"/>
+				<reportElement x="10" y="40" width="150" height="20" uuid="e66b7737-81a4-4f9d-a710-f322869489bb"/>
 				<textElement verticalAlignment="Middle">
 					<font fontName="SansSerif" isBold="true"/>
 				</textElement>
 				<text><![CDATA[ID]]></text>
 			</staticText>
 			<textField pattern="" isBlankWhenNull="true">
-				<reportElement x="110" y="40" width="100" height="20" forecolor="#000000" uuid="cd15c613-6be5-4412-bc13-a84cf3213da6"/>
+				<reportElement x="160" y="40" width="100" height="20" forecolor="#000000" uuid="cd15c613-6be5-4412-bc13-a84cf3213da6"/>
 				<textElement verticalAlignment="Middle">
 					<font fontName="SansSerif" size="9"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{ID}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="10" y="70" width="100" height="20" uuid="d1e2f768-9384-4b0e-822f-751404390d28"/>
+				<reportElement x="10" y="70" width="150" height="20" uuid="d1e2f768-9384-4b0e-822f-751404390d28"/>
 				<textElement verticalAlignment="Middle">
 					<font fontName="SansSerif" isBold="true"/>
 				</textElement>
 				<text><![CDATA[FECHA GENERACION:]]></text>
 			</staticText>
 			<textField pattern="dd/MM/yyyy" isBlankWhenNull="true">
-				<reportElement x="110" y="70" width="200" height="20" forecolor="#000000" uuid="18f7c6f9-e588-438b-960f-00c2e2c36dc4"/>
+				<reportElement x="160" y="70" width="200" height="20" forecolor="#000000" uuid="18f7c6f9-e588-438b-960f-00c2e2c36dc4"/>
 				<textElement verticalAlignment="Middle">
 					<font fontName="SansSerif" size="9"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{FECHA}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="10" y="100" width="100" height="20" uuid="1f2514c0-085b-41e5-8a17-ebde4ba1ad05"/>
+				<reportElement x="10" y="100" width="150" height="20" uuid="1f2514c0-085b-41e5-8a17-ebde4ba1ad05"/>
 				<textElement verticalAlignment="Middle">
 					<font fontName="SansSerif" isBold="true"/>
 				</textElement>
 				<text><![CDATA[IDENTIFICACION]]></text>
 			</staticText>
 			<textField pattern="" isBlankWhenNull="true">
-				<reportElement x="110" y="100" width="100" height="20" forecolor="#000000" uuid="dd917d02-f200-4eaf-b5fd-55230f1cc0da"/>
+				<reportElement x="160" y="100" width="100" height="20" forecolor="#000000" uuid="dd917d02-f200-4eaf-b5fd-55230f1cc0da"/>
 				<textElement verticalAlignment="Middle">
 					<font fontName="SansSerif" size="9"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{IDENTIFICACION}]]></textFieldExpression>
 			</textField>
 			<textField pattern="" isBlankWhenNull="true">
-				<reportElement x="210" y="100" width="550" height="20" forecolor="#000000" uuid="f8410167-f6f5-4e7b-8f60-239d59968843"/>
+				<reportElement x="260" y="100" width="500" height="20" forecolor="#000000" uuid="f8410167-f6f5-4e7b-8f60-239d59968843"/>
 				<textElement verticalAlignment="Middle">
 					<font fontName="SansSerif" size="9"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{NOMBRE}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="320" y="70" width="100" height="20" uuid="da6a5af6-b74d-4241-943e-93771220e0ae"/>
+				<reportElement x="370" y="70" width="100" height="20" uuid="da6a5af6-b74d-4241-943e-93771220e0ae"/>
 				<textElement verticalAlignment="Middle">
 					<font fontName="SansSerif" isBold="true"/>
 				</textElement>
 				<text><![CDATA[TIPO]]></text>
 			</staticText>
 			<textField pattern="" isBlankWhenNull="true">
-				<reportElement x="420" y="70" width="200" height="20" forecolor="#000000" uuid="83766f94-4190-4b0c-bf0b-5e42139433ed"/>
+				<reportElement x="470" y="70" width="200" height="20" forecolor="#000000" uuid="83766f94-4190-4b0c-bf0b-5e42139433ed"/>
 				<textElement verticalAlignment="Middle">
 					<font fontName="SansSerif" size="9"/>
 				</textElement>

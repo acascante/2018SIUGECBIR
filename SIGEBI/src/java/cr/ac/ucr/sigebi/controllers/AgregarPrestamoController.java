@@ -73,12 +73,12 @@ public class AgregarPrestamoController extends BaseController {
         private static final String INSTITUCION = "INSTITUCION";
         private static final String NOMBRE_REPORTE = "NOMBRE_REPORTE";
 	private static final String VALOR_INSTITUCION = "UNIVERSIDAD DE COSTA RICA";
-        private static final String VALOR_NOMBRE_REPORTE = "Reporte de Roles y Usuarios";
+        private static final String VALOR_NOMBRE_REPORTE = "Comprobante de Solicitud de Prestamo";
         
         private static final String ID = "ID";
         private static final String TIPO_ENTIDAD = "TIPO_ENTIDAD";
         private static final String ENTIDAD = "ENTIDAD";
-        private static final String FECHA = "FECHA";
+        private static final String FECHA = "FECHA_CREACION";
     }
     
     
@@ -593,7 +593,7 @@ public class AgregarPrestamoController extends BaseController {
             }
             inicializarNuevo();
             this.vistaOrigen = event.getComponent().getAttributes().get(Constantes.KEY_VISTA_ORIGEN).toString();
-            Util.navegar(Constantes.VISTA_PRESTAMO_NUEVO);
+            Util.navegar(Constantes.KEY_VISTA_PRESTAMO_NUEVO);
         } catch (FWExcepcion err) {
             this.mensaje = err.getMessage();
         }
@@ -611,7 +611,7 @@ public class AgregarPrestamoController extends BaseController {
             SolicitudPrestamo prestamo = prestamoModel.buscarPorId(id);
             inicializarDetalle(prestamo);
             this.vistaOrigen = event.getComponent().getAttributes().get(Constantes.KEY_VISTA_ORIGEN).toString();
-            Util.navegar(Constantes.VISTA_PRESTAMO_NUEVO);
+            Util.navegar(Constantes.KEY_VISTA_PRESTAMO_NUEVO);
         } catch (FWExcepcion err) {
             this.mensaje = err.getMessage();
         }
@@ -623,7 +623,7 @@ public class AgregarPrestamoController extends BaseController {
             this.inicializarDetalle(movimiento);
 
             this.vistaOrigen = vistaOrigen;
-            Util.navegar(Constantes.VISTA_PRESTAMO_NUEVO);
+            Util.navegar(Constantes.KEY_VISTA_PRESTAMO_NUEVO);
 
         } catch (FWExcepcion err) {
             this.mensaje = err.getMessage();
@@ -634,7 +634,7 @@ public class AgregarPrestamoController extends BaseController {
         if (vistaOrigen != null) {
             Util.navegar(vistaOrigen, true);
         } else {
-            Util.navegar(Constantes.VISTA_PRESTAMO_LISTADO, true);
+            Util.navegar(Constantes.KEY_VISTA_PRESTAMO_LISTADO, true);
         }
     }
     
@@ -719,6 +719,7 @@ public class AgregarPrestamoController extends BaseController {
     
     public void aprobarPrestamo() {  // Cambia bienes a estado aprobado
         movimientoPrestamo(Constantes.ESTADO_PRESTAMO_APROBADO, Constantes.ESTADO_INTERNO_BIEN_PRESTAMO_APROBADO);
+        generarReporte();
     }
 
     public void revisarPrestamo() { // Abre ventana de confirmacion
@@ -1030,11 +1031,9 @@ public class AgregarPrestamoController extends BaseController {
     //<editor-fold defaultstate="collapsed" desc="Generar Reporte">
     public void generarReporte() {
         try {
-            //reportes/reporteSobrantes.jrxml 
-            
             List<PrestamoCommand.BienDetalle> detalles = this.command.getListBienesDetalle();
             if (!detalles.isEmpty()) {
-                String template = cr.ac.ucr.framework.reporte.componente.utilitario.Util.ConvertirRutas("/reportes/reportePrestamo.jrxml");;
+                String template = cr.ac.ucr.framework.reporte.componente.utilitario.Util.ConvertirRutas("/reportes/reportePrestamo.jrxml");
                 String outputFile = cr.ac.ucr.framework.reporte.componente.utilitario.Util.ConvertirRutas("/reportes/reportePrestamo");
 
                 ArrayList<ReporteBienDetalle> datosReporte = new ArrayList<ReporteBienDetalle>();

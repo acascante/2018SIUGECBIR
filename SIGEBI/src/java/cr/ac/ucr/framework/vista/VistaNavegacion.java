@@ -46,98 +46,92 @@ public class VistaNavegacion {
     private void inicializar() {
         gPaginas = new HashMap();
         gPaginaSeleccionada = "";
-
-        gPaginas.put(Constantes.VISTA_APROBACION_LISTADO, Constantes.VISTA_APROBACION_LISTADO_PAGINA);        
-        gPaginas.put(Constantes.VISTA_APROBACION_NUEVA, Constantes.VISTA_APROBACION_NUEVA_PAGINA);
         
-        //Opciones del menú  
+        //<editor-fold defaultstate="collapsed" desc="Menu Inclusion">
         gPaginas.put(Constantes.KEY_VISTA_LISTAR_BIENES, Constantes.VISTA_LISTAR_BIENES);
-        gPaginas.put(Constantes.KEY_VISTA_DETALLE_BIEN, Constantes.VISTA_DETALLE_BIEN);
-        gPaginas.put(Constantes.KEY_VISTA_DETALLE_BIEN_DONACION, Constantes.VISTA_DETALLE_BIEN_DONACION);
-        gPaginas.put(Constantes.KEY_VISTA_DETALLE_BIEN_INTERFAZ, Constantes.VISTA_DETALLE_BIEN_INTERFAZ);
-
-        gPaginas.put(Constantes.VISTA_SINCRONIZACION_BIEN, Constantes.VISTA_SINCRONIZACION_BIEN_LISTADO);
-
-        gPaginas.put(Constantes.VISTA_NOTIFICACION_LISTADO, Constantes.VISTA_NOTIFICACION_LISTADO_PAGINA);
-        gPaginas.put(Constantes.VISTA_NOTIFICACION_NUEVA, Constantes.VISTA_NOTIFICACION_NUEVA_PAGINA);
-
-        gPaginas.put(Constantes.VISTA_CONVENIO_LISTADO, Constantes.VISTA_CONVENIO_LISTADO_PAGINA);
-        gPaginas.put(Constantes.VISTA_CONVENIO_NUEVO, Constantes.VISTA_CONVENIO_NUEVO_PAGINA);
-
-        gPaginas.put(Constantes.VISTA_EXCLUSION_LISTADO, Constantes.VISTA_EXCLUSION_LISTADO_PAGINA);
-        gPaginas.put(Constantes.VISTA_EXCLUSION_NUEVA, Constantes.VISTA_EXCLUSION_NUEVA_PAGINA);
-
-        gPaginas.put(Constantes.VISTA_MANTENIMIENTO_LISTADO, Constantes.VISTA_MANTENIMIENTO_LISTADO_PAGINA);
-        gPaginas.put(Constantes.VISTA_MANTENIMIENTO_NUEVO, Constantes.VISTA_MANTENIMIENTO_NUEVA_PAGINA);
-
-        gPaginas.put(Constantes.VISTA_PRESTAMO_LISTADO, Constantes.VISTA_PRESTAMO_LISTADO_PAGINA);
-        gPaginas.put(Constantes.VISTA_PRESTAMO_NUEVO, Constantes.VISTA_PRESTAMO_NUEVO_PAGINA);
-
-        gPaginas.put(Constantes.VISTA_RECEPCION_PRESTAMO_LISTADO, Constantes.VISTA_RECEPCION_PRESTAMO_LISTADO_PAGINA);
-        gPaginas.put(Constantes.VISTA_RECEPCION_PRESTAMO_NUEVO, Constantes.VISTA_RECEPCION_PRESTAMO_NUEVO_PAGINA);
         
-        gPaginas.put(Constantes.KEY_VISTA_TIPOS, Constantes.KEY_VISTA_TIPOS_PAGINA);
+        gPaginas.put(Constantes.KEY_VISTA_SOLICITUD_DONACION_LISTADO, Constantes.VISTA_SOLICITUD_DONACION_LISTADO);
+        gPaginas.put(Constantes.KEY_VISTA_SOLICITUD_DONACION_DETALLE, Constantes.VISTA_SOLICITUD_DONACION_DETALLE);
         
-        gPaginas.put(Constantes.VISTA_INFORME_TECNICO, Constantes.VISTA_INFORME_TECNICO_LISTADO);
-        gPaginas.put(Constantes.VISTA_INFORME_TECNICO_DET, Constantes.VISTA_INFORME_TECNICO_DETALLE);
-
-        //Gestion de procesos 
-        gPaginas.put(Constantes.VISTA_PROCESOS, Constantes.VISTA_PROCESO_DIRECCION);
-
-        //ACTAS
-        gPaginas.put(Constantes.KEY_VISTA_ACTA, Constantes.VISTA_ACTA);
+        gPaginas.put(Constantes.KEY_VISTA_INTERFAZ_BIEN_LISTADO, Constantes.VISTA_INTERFAZ_BIEN_LISTADO);
+        //</editor-fold>
+        
+        //<editor-fold defaultstate="collapsed" desc="Menu Exclusion">
+        gPaginas.put(Constantes.KEY_VISTA_EXCLUSION_LISTADO, Constantes.VISTA_EXCLUSION_LISTADO_PAGINA);
+        gPaginas.put(Constantes.KEY_VISTA_EXCLUSION_NUEVA, Constantes.VISTA_EXCLUSION_NUEVA_PAGINA);
+        
+        gPaginas.put(Constantes.KEY_VISTA_INFORME_TECNICO, Constantes.VISTA_INFORME_TECNICO_LISTADO);
+        gPaginas.put(Constantes.KEY_VISTA_INFORME_TECNICO_DET, Constantes.VISTA_INFORME_TECNICO_DETALLE);
+        
+        gPaginas.put(Constantes.KEY_VISTA_APROBACION_LISTADO, Constantes.VISTA_APROBACION_LISTADO_PAGINA);        
+        gPaginas.put(Constantes.KEY_VISTA_APROBACION_NUEVA, Constantes.VISTA_APROBACION_NUEVA_PAGINA);
+        
         gPaginas.put(Constantes.KEY_VISTA_LISTAR_ACTAS, Constantes.VISTA_LISTAR_ACTAS);
-
-        //TRASLADOS
+        gPaginas.put(Constantes.KEY_VISTA_ACTA, Constantes.VISTA_ACTA);
+        //</editor-fold>
+        
+        //<editor-fold defaultstate="collapsed" desc="Menu Movimientos">
+        gPaginas.put(Constantes.KEY_VISTA_RECEPCION_PRESTAMO_LISTADO, Constantes.VISTA_RECEPCION_PRESTAMO_LISTADO_PAGINA);
+        gPaginas.put(Constantes.KEY_VISTA_RECEPCION_PRESTAMO_NUEVO, Constantes.VISTA_RECEPCION_PRESTAMO_NUEVO_PAGINA);
+        
+        gPaginas.put(Constantes.KEY_VISTA_LISTAR_ASIGNACION_PLACA, Constantes.VISTA_LISTAR_ASIGNACION_PLACA);
         gPaginas.put(Constantes.KEY_VISTA_TRASLADOS_LISTAR, Constantes.VISTA_TRASLADOS_LISTAR);
         gPaginas.put(Constantes.KEY_VISTA_TRASLADO_DETALLE, Constantes.VISTA_TRASLADO_DETALLE);
         gPaginas.put(Constantes.KEY_VISTA_TRASLADO_PERMISOS, Constantes.VISTA_TRASLADO_PERMISOS);
-
-        //Donaciones
-        gPaginas.put(Constantes.KEY_VISTA_SOLICITUD_DONACION_LISTADO, Constantes.VISTA_SOLICITUD_DONACION_LISTADO);
-        gPaginas.put(Constantes.KEY_VISTA_SOLICITUD_DONACION_DETALLE, Constantes.VISTA_SOLICITUD_DONACION_DETALLE);
-
-        //Salidas
-        gPaginas.put(Constantes.KEY_VISTA_SOLICITUD_SALIDA_LISTADO, Constantes.VISTA_SOLICITUD_SALIDA_LISTADO);
-        gPaginas.put(Constantes.KEY_VISTA_SOLICITUD_SALIDA_DETALLE, Constantes.VISTA_SOLICITUD_SALIDA_DETALLE);
-
-        //REPORTES
-        gPaginas.put(Constantes.KEY_VISTA_REPORTE_TRASLADO, Constantes.VISTA_REPORTE_TRASLADO);
-        gPaginas.put(Constantes.KEY_VISTA_REPORTE_MOVIMIENTOS, Constantes.VISTA_REPORTE_MOVIMIENTOS);
-        gPaginas.put(Constantes.KEY_VISTA_REPORTE_BIENES, Constantes.VISTA_REPORTE_BIENES);
-        gPaginas.put(Constantes.KEY_REPORTE_INVENT_FALTANTES, Constantes.VISTA_REPORTE_INVENT_FALTANTES);
-        gPaginas.put(Constantes.KEY_REPORTE_SOBRANTES, Constantes.VISTA_REPORTE_SOBRANTES);
-
-        //Interfaz Bien
-        gPaginas.put(Constantes.KEY_VISTA_INTERFAZ_BIEN_LISTADO, Constantes.VISTA_INTERFAZ_BIEN_LISTADO);
-        gPaginas.put(Constantes.KEY_VISTA_INTERFAZ_BIEN_DETALLE, Constantes.VISTA_INTERFAZ_BIEN_DETALLE);
-
-        //Inventarios
-        gPaginas.put(Constantes.KEY_VISTA_LISTAR_TOMA_FISICA, Constantes.VISTA_LISTAR_TOMA_FISICA);
-        gPaginas.put(Constantes.KEY_VISTA_TOMA_FISICA_DETALLE, Constantes.VISTA_TOMA_FISICA_DETALLE);
-
-        //Asignacion placas
-        gPaginas.put(Constantes.KEY_VISTA_LISTAR_ASIGNACION_PLACA, Constantes.VISTA_LISTAR_ASIGNACION_PLACA);
-        gPaginas.put(Constantes.KEY_VISTA_ASIGNACION_PLACA_DETALLE, Constantes.VISTA_ASIGNACIONPLACA_DETALLE);
-
-        gPaginas.put("inicio", "../inicio.xhtml");
-
-        //Ubicaciones
-        gPaginas.put(Constantes.KEY_VISTA_UBICACION, Constantes.VISTA_UBICACION);
         
-        //Asignar Responsable Bienes
+        gPaginas.put(Constantes.KEY_VISTA_PRESTAMO_LISTADO, Constantes.VISTA_PRESTAMO_LISTADO_PAGINA);
+        gPaginas.put(Constantes.KEY_VISTA_PRESTAMO_NUEVO, Constantes.VISTA_PRESTAMO_NUEVO_PAGINA);
+        
+        gPaginas.put(Constantes.KEY_VISTA_MANTENIMIENTO_LISTADO, Constantes.VISTA_MANTENIMIENTO_LISTADO_PAGINA);
+        gPaginas.put(Constantes.KEY_VISTA_MANTENIMIENTO_NUEVO, Constantes.VISTA_MANTENIMIENTO_NUEVA_PAGINA);
+        gPaginas.put(Constantes.KEY_VISTA_SOLICITUD_SALIDA_LISTADO, Constantes.VISTA_SOLICITUD_SALIDA_LISTADO);        
+        gPaginas.put(Constantes.KEY_VISTA_SOLICITUD_SALIDA_DETALLE, Constantes.VISTA_SOLICITUD_SALIDA_DETALLE);        
+        //</editor-fold>
+        
+        //<editor-fold defaultstate="collapsed" desc="Menu Reportes">
+        gPaginas.put(Constantes.KEY_VISTA_REPORTE_DONACIONES, Constantes.VISTA_REPORTE_DONACIONES);
+        gPaginas.put(Constantes.KEY_VISTA_REPORTE_BIENES_POR_USUARIO, Constantes.VISTA_REPORTE_BIENES_POR_USUARIO);
+        gPaginas.put(Constantes.KEY_VISTA_REPORTE_MOVIMIENTOS, Constantes.VISTA_REPORTE_MOVIMIENTOS);
+        gPaginas.put(Constantes.KEY_VISTA_REPORTE_BIENES_EXCLUIR, Constantes.VISTA_REPORTE_BIENES_EXCLUIR);
+        gPaginas.put(Constantes.KEY_VISTA_REPORTE_ROLES_POR_USUARIO, Constantes.VISTA_REPORTE_ROLES_POR_USUARIO);
+        gPaginas.put(Constantes.KEY_VISTA_REPORTE_TRASLADO, Constantes.VISTA_REPORTE_TRASLADO);
+        gPaginas.put(Constantes.KEY_VISTA_REPORTE_EXCLUSIONES, Constantes.VISTA_REPORTE_EXCLUSIONES);
+        gPaginas.put(Constantes.KEY_VISTA_REPORTE_BIENES, Constantes.VISTA_REPORTE_BIENES);        
+        //</editor-fold>
+        
+        //<editor-fold defaultstate="collapsed" desc="Menu Administracion">
+        gPaginas.put(Constantes.KEY_VISTA_MIS_BIENES, Constantes.VISTA_MIS_BIENES);
+        gPaginas.put(Constantes.KEY_VISTA_SINCRONIZACION_BIEN, Constantes.VISTA_SINCRONIZACION_BIEN_LISTADO);
         gPaginas.put(Constantes.KEY_VISTA_ASIGNA_RESPONSABLE, Constantes.VISTA_ASIGNA_RESPONSABLE);
         
-        //Mantenimiento Clasificacion y Sub clasificacion
-        gPaginas.put(Constantes.KEY_VISTA_MANTENIMIENTO_CLASIFICACION, Constantes.VISTA_MANTENIMIENTO_CLASIFICACION);
+        gPaginas.put(Constantes.KEY_VISTA_CONVENIO_LISTADO, Constantes.VISTA_CONVENIO_LISTADO_PAGINA);
+        gPaginas.put(Constantes.KEY_VISTA_CONVENIO_NUEVO, Constantes.VISTA_CONVENIO_NUEVO_PAGINA);
         
-        //Mis Bienes
-        gPaginas.put(Constantes.KEY_VISTA_MIS_BIENES, Constantes.VISTA_MIS_BIENES);
+        gPaginas.put(Constantes.KEY_VISTA_UBICACION, Constantes.VISTA_UBICACION);
         
-        //Agregar Identificaciones
-        gPaginas.put(Constantes.VISTA_AGREGAR_IDENTIFICACIONES, Constantes.VISTA_AGREGAR_IDENTIFICACIONES_PAGINA);
+        gPaginas.put(Constantes.KEY_VISTA_LISTAR_TOMA_FISICA, Constantes.VISTA_LISTAR_TOMA_FISICA);
+        gPaginas.put(Constantes.KEY_VISTA_TOMA_FISICA_DETALLE, Constantes.VISTA_TOMA_FISICA_DETALLE);
+        gPaginas.put(Constantes.KEY_VISTA_REPORTE_INVENT_FALTANTES, Constantes.VISTA_REPORTE_INVENT_FALTANTES);
+        gPaginas.put(Constantes.KEY_VISTA_REPORTE_SOBRANTES, Constantes.VISTA_REPORTE_SOBRANTES);
         
-
+        gPaginas.put(Constantes.KEY_VISTA_PROCESOS, Constantes.VISTA_PROCESO_DIRECCION);
+        
+        gPaginas.put(Constantes.KEY_VISTA_PREINGRESO, Constantes.VISTA_PREINGRESO);
+        
+        gPaginas.put(Constantes.KEY_VISTA_TIPOS, Constantes.VISTA_TIPOS_PAGINA);
+        gPaginas.put(Constantes.KEY_VISTA_AGREGAR_IDENTIFICACIONES, Constantes.VISTA_AGREGAR_IDENTIFICACIONES_PAGINA);
+        
+        gPaginas.put(Constantes.KEY_VISTA_ASIGNACION_PLACA_DETALLE, Constantes.VISTA_ASIGNACIONPLACA_DETALLE);
+        
+        gPaginas.put(Constantes.KEY_VISTA_NOTIFICACION_LISTADO, Constantes.VISTA_NOTIFICACION_LISTADO_PAGINA);
+        gPaginas.put(Constantes.KEY_VISTA_NOTIFICACION_NUEVA, Constantes.VISTA_NOTIFICACION_NUEVA_PAGINA);
+        //</editor-fold>
+        
+        gPaginas.put("inicio", "../inicio.xhtml");        
+        gPaginas.put(Constantes.KEY_VISTA_INTERFAZ_BIEN_DETALLE, Constantes.VISTA_INTERFAZ_BIEN_DETALLE);
+        gPaginas.put(Constantes.KEY_VISTA_DETALLE_BIEN, Constantes.VISTA_DETALLE_BIEN);
+        gPaginas.put(Constantes.KEY_VISTA_DETALLE_BIEN_DONACION, Constantes.VISTA_DETALLE_BIEN_DONACION);
+        gPaginas.put(Constantes.KEY_VISTA_DETALLE_BIEN_INTERFAZ, Constantes.VISTA_DETALLE_BIEN_INTERFAZ);
     }//fin del método inicializar
 
     /**

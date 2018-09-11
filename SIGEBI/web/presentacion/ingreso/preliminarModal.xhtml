@@ -1,0 +1,173 @@
+<ice:outputHtml id="frmModalPreingreso"
+                xmlns:ice="http://www.icesoft.com/icefaces/component" 
+                xmlns:icecore="http://www.icefaces.org/icefaces/core" 
+                xmlns:h="http://java.sun.com/jsf/html" 
+                xmlns:f="http://java.sun.com/jsf/core" 
+                xmlns:ui="http://java.sun.com/jsf/facelets" 
+                xmlns:c="http://java.sun.com/jstl/core">
+
+    <ice:panelPopup modal="true" 
+                    visible="#{controllerPreliminar.modalVisible}" 
+                    rendered="#{controllerPreliminar.modalVisible}" 
+                    styleClass="popup frmPreingreso">
+
+        <f:facet name="header">
+            <h4>
+                <ice:outputFormat value="#{label['sigebi.Preliminar.Titulo.Modal']}"/>
+            </h4>
+            
+        </f:facet>
+        <br/>
+
+        <f:facet name="body">
+            <fieldset class="panel_Container" style="width: 100% !important;">
+                <br/>
+                <br/>
+                
+                <div style="padding: 15px;">
+                
+                <div class="row">
+                    
+                    <div class="col-md-6">
+                        <div class="form-group"> 
+                            <label class="control-label" for="txtIdentificacion">
+                                <ice:outputText value="#{label['sigebi.Preliminar.Label.Identificacion']}" />
+                            </label>
+                            <ice:inputText id="txtIdentificacion" partialSubmit="false" styleClass="form-control"
+                                           maxlength="15"
+                                           value="#{controllerPreliminar.command.preliminar.identificacion}" />
+                        </div>                                             
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="form-group"> 
+                            <label class="control-label" for="txtDescripcion">
+                                <ice:outputText value="#{label['sigebi.Preliminar.Label.Descripcion']}" />
+                            </label>
+                            <ice:inputText id="txtDescripcion" partialSubmit="false" styleClass="form-control"
+                                           maxlength="200"
+                                           value="#{controllerPreliminar.command.preliminar.descripcion}" />
+                        </div>    
+
+                    </div>
+
+                </div>
+                
+                <div class="row">
+                    
+                    <div class="col-md-6">
+                        <div class="form-group"> 
+                            <label class="control-label" for="txtUnidadEjecutora">
+                                <ice:outputText value="#{label['sigebi.Preliminar.Label.Unidad']}" />
+                            </label>
+                            <ice:inputText id="txtUnidadEjecutora" 
+                                           partialSubmit="false" 
+                                           styleClass="form-control unidadesAutoComplete"
+                                           maxlength="100"
+                                           readonly="#{!controllerPreliminar.usuarioAdmin}"
+                                           value="#{controllerPreliminar.command.unidadString}" />
+                        </div>                                             
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="form-group"> 
+                            <label class="control-label" for="txtMarca">
+                                <ice:outputText value="#{label['sigebi.Preliminar.Label.Marca']}" />
+                            </label>
+                            <ice:inputText id="txtMarca" partialSubmit="false" styleClass="form-control"
+                                           maxlength="50"
+                                           value="#{controllerPreliminar.command.preliminar.marca}" />
+                        </div>                                             
+                    </div>                
+                
+                </div>
+
+                <div class="row">
+                    
+                    <div class="col-md-6">
+                        <div class="form-group"> 
+                            <label class="control-label" for="txtModelo">
+                                <ice:outputText value="#{label['sigebi.Preliminar.Label.Modelo']}" />
+                            </label>
+                            <ice:inputText id="txtModelo" partialSubmit="false" styleClass="form-control"
+                                           maxlength="50"
+                                           value="#{controllerPreliminar.command.preliminar.modelo}" />
+                        </div>                                             
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="form-group"> 
+                            <label class="control-label" for="txtSerie">
+                                <ice:outputText value="#{label['sigebi.Preliminar.Label.Serie']}" />
+                            </label>
+                            <ice:inputText id="txtSerie" partialSubmit="false" styleClass="form-control"
+                                           maxlength="50"
+                                           value="#{controllerPreliminar.command.preliminar.serie}" />
+                        </div>                                             
+                    </div>                
+                
+                </div>
+
+                <div class="row">
+                    
+                    <div class="col-md-6">
+                        <div class="form-group"> 
+                            <label class="control-label" for="txtFactura">
+                                <ice:outputText value="#{label['sigebi.Preliminar.Label.Factura']}" />
+                            </label>
+                            <ice:inputText id="txtFactura" partialSubmit="false" styleClass="form-control"
+                                           maxlength="30"
+                                           value="#{controllerPreliminar.command.preliminar.factura}" />
+                        </div>                                             
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="form-group"> 
+                            <label class="control-label" for="txtOrden">
+                                <ice:outputText value="#{label['sigebi.Preliminar.Label.OrdenCompra']}" />
+                            </label>
+                            <ice:inputText id="txtOrden" partialSubmit="false" styleClass="form-control"
+                                           maxlength="30"
+                                           value="#{controllerPreliminar.command.preliminar.orden}" />
+                        </div>                                             
+                    </div>                
+                
+                </div>
+
+                </div>
+                
+                <br/>
+                
+                <div class="row">
+                    
+                    <div class="col-md-6">
+                        
+                <span>
+                    <ice:commandButton id="btn_cancelar" 
+                                       partialSubmit="true" 
+                                       action="#{controllerPreliminar.cerrarPanel}" 
+                                       styleClass="boton"  
+                                       value="#{label['label.cancelar']}" />
+                </span>                                         
+                    </div>
+
+                    <div class="col-md-6">
+                       
+                <span class="alineado_derecha">
+                    <ice:commandButton id="btnGuardar" 
+                                       partialSubmit="true" 
+                                       action="#{controllerPreliminar.guardarPreliminar}" 
+                                       styleClass="boton"  
+                                       value="#{label['label.guardar']}" />
+                </span>                                        
+                    </div>                
+                
+                </div>
+
+                
+                <br/>
+                <br/><br/>
+            </fieldset>       
+        </f:facet>
+    </ice:panelPopup>
+</ice:outputHtml>

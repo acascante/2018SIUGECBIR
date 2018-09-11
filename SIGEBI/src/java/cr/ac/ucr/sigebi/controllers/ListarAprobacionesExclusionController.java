@@ -88,7 +88,7 @@ public class ListarAprobacionesExclusionController extends BaseController {
     
     private void inicializarDatos() {
         this.command = new ListarAprobacionesExclusionCommand();
-        this.vistaOrigen = Constantes.VISTA_APROBACION_LISTADO;
+        this.vistaOrigen = Constantes.KEY_VISTA_APROBACION_LISTADO;
     }
     
     private void inicializarListado() {

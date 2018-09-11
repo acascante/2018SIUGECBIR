@@ -995,8 +995,7 @@ public class TrasladoController extends ListadoBienesGeneralController {
     //</editor-fold>
     
     //<editor-fold defaultstate="collapsed" desc="Buscar Unidades">
-    @Resource
-    UnidadEjecutoraModel unidadModel;
+    @Resource UnidadEjecutoraModel unidadModel;
 
     public void mostrarUnidades(ActionEvent pEvent) {
         try {

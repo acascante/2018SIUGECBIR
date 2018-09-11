@@ -69,35 +69,38 @@ public class BienDao extends GenericDaoImpl {
     }
 
     @Transactional(readOnly = true)
-    public List<Bien> listarPorResponsable(String usuarioResponsable, String orden, String orden1, String orden2, String orden3) throws FWExcepcion {
+    public List<Bien> listarPorResponsable(String usuarioResponsable, String identificacionBien, String orden, String orden1, String orden2, String orden3) throws FWExcepcion {
         Session session = dao.getSessionFactory().openSession();
         try {
-            StringBuilder sql = new StringBuilder("SELECT b FROM Bien b ");
-            if (!usuarioResponsable.equals(Constantes.DEFAULT_ID.toString())) {
-                sql.append("WHERE b.usuarioResponsable = :usuarioResponsable");
+            StringBuilder sql = new StringBuilder("SELECT entity FROM Bien entity WHERE 1 = 1 ");
+            if (!usuarioResponsable.isEmpty()) {
+                sql.append("AND entity.usuarioResponsable.id = :usuarioResponsable ");
             }
+            if (!identificacionBien.isEmpty()) {
+                sql.append("AND entity.identificacion.identificacion = :identificacionBien ");
+            }           
             
+            sql.append(" ORDER BY entity.usuarioResponsable ");
             if (orden1 != null && orden1.length() > 0) {
-                sql.append(" ORDER BY obj.");
+                sql.append(", entity.");
                 sql.append(orden1.toLowerCase());
                 if (orden2 != null && orden2.length() > 0) {
-                    sql.append(", obj.");
+                    sql.append(", entity.");
                     sql.append(orden2.toLowerCase());
                     if (orden3 != null && orden3.length() > 0) {
-                        sql.append(", obj.");
+                        sql.append(", entity.");
                         sql.append(orden3.toLowerCase());            
                     }
                 }
-                sql.append(" ");
-                sql.append(orden);
-            } else {
-                sql.append(" ORDER BY obj.id asc ");
+                sql.append(" ").append(orden);
             }
             
             Query query = session.createQuery(sql.toString());
-            
-            if (!usuarioResponsable.equals(Constantes.DEFAULT_ID.toString())) {
+            if (!usuarioResponsable.isEmpty()) {
                 query.setParameter("usuarioResponsable", usuarioResponsable);
+            }
+            if (!identificacionBien.isEmpty()) {
+                query.setParameter("identificacionBien", identificacionBien);
             }
             return (List<Bien>) query.list();
         } catch (HibernateException e) {

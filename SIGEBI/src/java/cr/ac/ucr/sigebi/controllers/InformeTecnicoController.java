@@ -254,7 +254,7 @@ public class InformeTecnicoController extends BaseController {
             }
             this.cargaDatos();
 
-            Util.navegar(Constantes.VISTA_INFORME_TECNICO_DET);
+            Util.navegar(Constantes.KEY_VISTA_INFORME_TECNICO_DET);
         } catch (FWExcepcion e) {
             Mensaje.agregarErrorAdvertencia(e.getError_para_usuario());
         } catch (Exception e) {
@@ -636,4 +636,6 @@ public class InformeTecnicoController extends BaseController {
     }
 
     //</editor-fold>
+
+
 }

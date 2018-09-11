@@ -13,7 +13,7 @@ public class GenerarReporteRolesUsuariosCommand {
         
     //<editor-fold defaultstate="collapsed" desc="Atributos">
     private Long idTipo;
-    private Long idGrupo;
+    private Integer idGrupo;
     private Integer idOrden;
     private Integer idOrden1;
     private Integer idOrden2;
@@ -25,7 +25,7 @@ public class GenerarReporteRolesUsuariosCommand {
     public GenerarReporteRolesUsuariosCommand() { 
         super();
         this.idTipo = -1L;
-        this.idGrupo = -1L;
+        this.idGrupo = -1;
         this.idOrden = -1;
         this.idOrden1 = -1;
         this.idOrden2 = -1;
@@ -42,11 +42,11 @@ public class GenerarReporteRolesUsuariosCommand {
         this.idTipo = idTipo;
     }
 
-    public Long getIdGrupo() {
+    public Integer getIdGrupo() {
         return idGrupo;
     }
 
-    public void setIdGrupo(Long idGrupo) {
+    public void setIdGrupo(Integer idGrupo) {
         this.idGrupo = idGrupo;
     }
 
