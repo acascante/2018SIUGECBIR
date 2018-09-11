@@ -196,6 +196,7 @@ public final class Constantes {
     public static final String DOMINIO_COLUMNAS_REPORTE_SOBRANTES = "ORDEN_COLUMNA_SOBRANTES";
     public static final String DOMINIO_COLUMNAS_REPORTE_ROLES_USUARIOS = "ORDEN_COLUMNA_ROLES_USUARIOS";
     public static final String DOMINIO_COLUMNAS_REPORTE_USUARIOS_BIENES = "ORDEN_COLUMNA_USUARIOS_BIENES";
+    public static final String DOMINIO_GRUPO_REPORTE_ROLES_USUARIOS = "GRUPO_REPORTE_ROLES_USUARIOS";
     public static final String DOMINIO_CONVENIO = "CONVENIO";
     public static final String DOMINIO_DOCUMENTO = "DOCUMENTO";
     public static final String DOMINIO_EXCLUSION = "EXCLUSION";
@@ -296,138 +297,121 @@ public final class Constantes {
 
     //Vistas de Navegacion"
     public static final String KEY_VISTA_ORIGEN = "keyVistaOrigen";
-    public static final String VISTA_NOTIFICACION_LISTADO = "notificacion";
-    public static final String VISTA_NOTIFICACION_LISTADO_PAGINA = "../notificaciones/listarNotificaciones.xhtml";
-    public static final String VISTA_NOTIFICACION_NUEVA = "notificacion_nueva";
-    public static final String VISTA_NOTIFICACION_NUEVA_PAGINA = "../notificaciones/notificacionDetalle.xhtml";
-    public static final String VISTA_EXCLUSION_LISTADO = "exclusion";
-    public static final String VISTA_EXCLUSION_LISTADO_PAGINA = "../exclusiones/listarExclusiones.xhtml";
-    public static final String VISTA_EXCLUSION_NUEVA = "exclusion_nueva";
-    public static final String VISTA_EXCLUSION_NUEVA_PAGINA = "../exclusiones/exclusionDetalle.xhtml";
-    public static final String VISTA_PRESTAMO_LISTADO = "prestamos";
-    public static final String VISTA_PRESTAMO_LISTADO_PAGINA = "../prestamos/listarPrestamos.xhtml";
-    public static final String VISTA_PRESTAMO_NUEVO = "prestamo_nuevo";
-    public static final String VISTA_PRESTAMO_NUEVO_PAGINA = "../prestamos/prestamoDetalle.xhtml";
-    public static final String VISTA_SINCRONIZACION_BIEN = "sincronizar";
-    public static final String VISTA_SINCRONIZACION_BIEN_LISTADO = "../bienes/listarBienSincronizar.xhtml";
-    
-    public static final String VISTA_APROBACION_LISTADO = "aprobacion";
-    public static final String VISTA_APROBACION_LISTADO_PAGINA = "../exclusiones/listarAprobaciones.xhtml";
-    public static final String VISTA_APROBACION_NUEVA = "aprobacion_nueva"; 
-    public static final String VISTA_APROBACION_NUEVA_PAGINA = "../exclusiones/aprobacionDetalle.xhtml";
-    
-    //Agregar Identificaciones
-    public static final String VISTA_AGREGAR_IDENTIFICACIONES = "gen_identificaciones";
-    public static final String VISTA_AGREGAR_IDENTIFICACIONES_PAGINA = "../identificaciones/agregarIdentificaciones.xhtml";
-    
-    public static final String VISTA_MANTENIMIENTO_LISTADO = "mantenimiento";
-    public static final String VISTA_MANTENIMIENTO_LISTADO_PAGINA = "../mantenimientos/listarMantenimientos.xhtml";
-    public static final String VISTA_MANTENIMIENTO_NUEVO = "mantenimiento_nueva";
-    public static final String VISTA_MANTENIMIENTO_NUEVA_PAGINA = "../mantenimientos/mantenimientoDetalle.xhtml";
-    
-    public static final String KEY_VISTA_SOLICITUD_DONACION_LISTADO = "donacion";
-    public static final String VISTA_SOLICITUD_DONACION_LISTADO = "../inclusiones/listarDonaciones.xhtml";
-    public static final String KEY_VISTA_SOLICITUD_DONACION_DETALLE = "donacion_deta";
-    public static final String VISTA_SOLICITUD_DONACION_DETALLE = "../inclusiones/detalleSolicitudDonacion.xhtml";
-
-    public static final String KEY_VISTA_INTERFAZ_BIEN_LISTADO = "pre_ingreso";
-    public static final String VISTA_INTERFAZ_BIEN_LISTADO = "../interfazBien/listarInterfazBien.xhtml";
-    public static final String KEY_VISTA_INTERFAZ_BIEN_DETALLE = "pre_ingreso_deta";
-    public static final String VISTA_INTERFAZ_BIEN_DETALLE = "../interfazBien/detalleInterfazBien.xhtml";
-
-    public static final String VISTA_CONVENIO_LISTADO = "convenios";
-    public static final String VISTA_CONVENIO_LISTADO_PAGINA = "../convenios/listarConvenios.xhtml";
-    public static final String VISTA_CONVENIO_NUEVO = "convenio_nuevo";
-    public static final String VISTA_CONVENIO_NUEVO_PAGINA = "../convenios/convenioDetalle.xhtml";
-
-    public static final String VISTA_RECEPCION_PRESTAMO_LISTADO = "rec_prestamo";
-    public static final String VISTA_RECEPCION_PRESTAMO_LISTADO_PAGINA = "../prestamos/listarRecepcionPrestamos.xhtml";
-    public static final String VISTA_RECEPCION_PRESTAMO_NUEVO = "rec_prestamo_nuevo";
-    public static final String VISTA_RECEPCION_PRESTAMO_NUEVO_PAGINA = "../prestamos/recepcionPrestamoDetalle.xhtml";
-
-    public static final String VISTA_INFORME_TECNICO = "informe";
-    public static final String VISTA_INFORME_TECNICO_LISTADO = "../exclusiones/listarInformesTecnicos.xhtml";
-    public static final String VISTA_INFORME_TECNICO_DET = "informe_detalle";
-    public static final String VISTA_INFORME_TECNICO_DETALLE = "../exclusiones/detalleInformeTecnico.xhtml";
-    public static final String VISTA_PROCESOS = "proceso";
-    public static final String VISTA_PROCESO_DIRECCION = "../gestionProceso/gestionProceso.xhtml";
-
+    public static final String KEY_VISTA_NOTIFICACION_LISTADO = "notificacion";
     public static final String KEY_VISTA_UBICACION = "ubicaciones";
-    public static final String VISTA_UBICACION = "../ubicacion/ubicacion.xhtml";
-
     public static final String KEY_VISTA_SOLICITUD_SALIDA_LISTADO = "salidas"; 
-    public static final String VISTA_SOLICITUD_SALIDA_LISTADO = "../salidas/listarSalidas.xhtml";
     public static final String KEY_VISTA_SOLICITUD_SALIDA_DETALLE = "salidas_deta";
-    public static final String VISTA_SOLICITUD_SALIDA_DETALLE = "../salidas/detalleSolicitudSalida.xhtml";
- 
-    
-    //BIENES
-    public static final String VISTA_LISTAR_BIENES = "../bienes/listarBienes.xhtml";
     public static final String KEY_VISTA_LISTAR_BIENES = "reg_manual";
-    public static final String VISTA_DETALLE_BIEN = "../bienes/bienDetalle.xhtml";
     public static final String KEY_VISTA_DETALLE_BIEN = "bien_nuevo";
     public static final String KEY_VISTA_DETALLE_BIEN_DONACION = "bien_nuevo_donacion";
-    public static final String VISTA_DETALLE_BIEN_DONACION = "../bienes/bienAgregarDonacion.xhtml";
     public static final String KEY_VISTA_DETALLE_BIEN_INTERFAZ = "bien_nuevo_interfaz";
-    public static final String VISTA_DETALLE_BIEN_INTERFAZ = "../bienes/bienAgregarInterfaz.xhtml";
-
-    //ACTAS
     public static final String KEY_VISTA_ACTA = "actaDetalle";
-    public static final String VISTA_ACTA = "../exclusiones/acta.xhtml";
     public static final String KEY_VISTA_LISTAR_ACTAS = "acta";
-    public static final String VISTA_LISTAR_ACTAS = "../exclusiones/actasListar.xhtml";
-
-    //TIPOS
     public static final String KEY_VISTA_TIPOS = "tipos";
-    public static final String KEY_VISTA_TIPOS_PAGINA = "../tipos/agregarTipos.xhtml";
-
-    //TRASLADOS
-    public static final String KEY_VISTA_TRASLADOS_LISTAR = "traslados";
-    public static final String VISTA_TRASLADOS_LISTAR = "../movimientos/trasladosListar.xhtml";
-    public static final String KEY_VISTA_TRASLADO_DETALLE = "trasladoDetalle";
-    public static final String VISTA_TRASLADO_DETALLE = "../movimientos/trasladoDetalle.xhtml";
-
-    //REPORTES
-    public static final String KEY_VISTA_REPORTE_TRASLADO = "rep_traslados";
-    public static final String VISTA_REPORTE_TRASLADO = "../reportes/reporteTraslados.xhtml";
+    
+    public static final String KEY_VISTA_REPORTE_DONACIONES = "rep_donaciones";
+    public static final String KEY_VISTA_REPORTE_BIENES_POR_USUARIO = "rep_por_usuario";
     public static final String KEY_VISTA_REPORTE_MOVIMIENTOS = "rep_movimientos";
-    public static final String VISTA_REPORTE_MOVIMIENTOS = "../reportes/reporteMovimientos.xhtml";
+    public static final String KEY_VISTA_REPORTE_BIENES_EXCLUIR = "rep_por_excluir";
+    public static final String KEY_VISTA_REPORTE_ROLES_POR_USUARIO = "rep_roles";
+    public static final String KEY_VISTA_REPORTE_TRASLADO = "rep_traslados";
+    public static final String KEY_VISTA_REPORTE_EXCLUSIONES = "rep_exclusiones";
     public static final String KEY_VISTA_REPORTE_BIENES = "rep_bienes";
-    public static final String VISTA_REPORTE_BIENES = "../reportes/reporteBien.xhtml";
-    public static final String KEY_REPORTE_INVENT_FALTANTES = "rep_invent_faltantes";
-    public static final String VISTA_REPORTE_INVENT_FALTANTES = "../reportes/reporteInvertFaltantes.xhtml";
-    public static final String KEY_REPORTE_SOBRANTES = "rep_sobrantes"; 
-    public static final String VISTA_REPORTE_SOBRANTES = "../reportes/reporteSobrantes.xhtml";
+    public static final String KEY_VISTA_REPORTE_INVENT_FALTANTES = "rep_invent_faltantes";
+    public static final String KEY_VISTA_REPORTE_SOBRANTES = "rep_sobrantes"; 
     
-    //PERMISOS TRASLADOS
+    public static final String KEY_VISTA_TRASLADO_DETALLE = "trasladoDetalle";
+    public static final String KEY_VISTA_TRASLADOS_LISTAR = "traslados";
     public static final String KEY_VISTA_TRASLADO_PERMISOS = "permisosMovimientos";
-    public static final String VISTA_TRASLADO_PERMISOS = "../movimientos/permisosMovimientos.xhtml";
-    
-    //Toma Fisica
     public static final String KEY_VISTA_TOMA_FISICA_DETALLE = "inventario_detalle";
-    public static final String VISTA_TOMA_FISICA_DETALLE = "../inventario/detalleInventario.xhtml";
-    public static final String VISTA_LISTAR_TOMA_FISICA = "../inventario/listarInventarios.xhtml";
     public static final String KEY_VISTA_LISTAR_TOMA_FISICA = "inventario";
-
-    //Navegación Asignació Responsable Bienes
     public static final String KEY_VISTA_ASIGNA_RESPONSABLE = "asignacion";
-    public static final String VISTA_ASIGNA_RESPONSABLE = "../bienes/asignarResponsable.xhtml";
     public static final String KEY_VISTA_MIS_BIENES = "mis_bienes";
-    public static final String VISTA_MIS_BIENES = "../bienes/asignarResponsableMisBienes.xhtml";
-    
-    //Navegación Asignació Responsable Bienes
     public static final String KEY_VISTA_MANTENIMIENTO_CLASIFICACION = "clasificacion";
-    public static final String VISTA_MANTENIMIENTO_CLASIFICACION = "../mantenimientos/mantenimientoClasificaciones.xhtml";
-    
-    //Ayuda
     public static final String KEY_VISTA_LISTA_AYUDA = "ayuda";
-    public static final String VISTA_LISTA_AYUDA = "../ayuda/listarAyuda.xhtml";
-     
-    //Asignacion de placas
     public static final String KEY_VISTA_ASIGNACION_PLACA_DETALLE = "asignacion_placa_detalle";
+    public static final String KEY_VISTA_LISTAR_ASIGNACION_PLACA = "sol_placas";
+    public static final String KEY_VISTA_NOTIFICACION_NUEVA = "notificacion_nueva";
+    public static final String KEY_VISTA_EXCLUSION_LISTADO = "exclusion";
+    public static final String KEY_VISTA_EXCLUSION_NUEVA = "exclusion_nueva";
+    public static final String KEY_VISTA_PRESTAMO_LISTADO = "prestamos";
+    public static final String KEY_VISTA_PRESTAMO_NUEVO = "prestamo_nuevo";
+    public static final String KEY_VISTA_SINCRONIZACION_BIEN = "sincronizar";
+    public static final String KEY_VISTA_APROBACION_LISTADO = "aprobacion";
+    public static final String KEY_VISTA_APROBACION_NUEVA = "aprobacion_nueva"; 
+    public static final String KEY_VISTA_AGREGAR_IDENTIFICACIONES = "gen_identificaciones";
+    public static final String KEY_VISTA_MANTENIMIENTO_LISTADO = "mantenimiento";
+    public static final String KEY_VISTA_MANTENIMIENTO_NUEVO = "mantenimiento_nueva";
+    public static final String KEY_VISTA_SOLICITUD_DONACION_LISTADO = "donacion";
+    public static final String KEY_VISTA_SOLICITUD_DONACION_DETALLE = "donacion_deta";
+    public static final String KEY_VISTA_INTERFAZ_BIEN_LISTADO = "pre_ingreso";
+    public static final String KEY_VISTA_INTERFAZ_BIEN_DETALLE = "pre_ingreso_deta";
+    public static final String KEY_VISTA_CONVENIO_LISTADO = "convenios";
+    public static final String KEY_VISTA_CONVENIO_NUEVO = "convenio_nuevo";
+    public static final String KEY_VISTA_RECEPCION_PRESTAMO_LISTADO = "rec_prestamo";
+    public static final String KEY_VISTA_RECEPCION_PRESTAMO_NUEVO = "rec_prestamo_nuevo";
+    public static final String KEY_VISTA_INFORME_TECNICO = "informe";
+    public static final String KEY_VISTA_INFORME_TECNICO_DET = "informe_detalle";
+    public static final String KEY_VISTA_PROCESOS = "proceso";
+    public static final String KEY_VISTA_PREINGRESO = "preliminar";
+
+    public static final String VISTA_PREINGRESO = "../ingreso/preliminar.xhtml";
+    public static final String VISTA_LISTA_AYUDA = "../ayuda/listarAyuda.xhtml";
     public static final String VISTA_ASIGNACIONPLACA_DETALLE = "../asignacionPlaca/detalleAsignacionPlacas.xhtml";
     public static final String VISTA_LISTAR_ASIGNACION_PLACA = "../asignacionPlaca/listarAsignacionPlacas.xhtml";
-    public static final String KEY_VISTA_LISTAR_ASIGNACION_PLACA = "sol_placas";
+    public static final String VISTA_DETALLE_BIEN_DONACION = "../bienes/bienAgregarDonacion.xhtml";
+    public static final String VISTA_DETALLE_BIEN_INTERFAZ = "../bienes/bienAgregarInterfaz.xhtml";
+    public static final String VISTA_ASIGNA_RESPONSABLE = "../bienes/asignarResponsable.xhtml";
+    public static final String VISTA_MIS_BIENES = "../bienes/asignarResponsableMisBienes.xhtml";
+    public static final String VISTA_DETALLE_BIEN = "../bienes/bienDetalle.xhtml";
+    public static final String VISTA_LISTAR_BIENES = "../bienes/listarBienes.xhtml";
+    public static final String VISTA_SINCRONIZACION_BIEN_LISTADO = "../bienes/listarBienSincronizar.xhtml";
+    public static final String VISTA_CONVENIO_NUEVO_PAGINA = "../convenios/convenioDetalle.xhtml";
+    public static final String VISTA_CONVENIO_LISTADO_PAGINA = "../convenios/listarConvenios.xhtml";
+    public static final String VISTA_EXCLUSION_LISTADO_PAGINA = "../exclusiones/listarExclusiones.xhtml";
+    public static final String VISTA_EXCLUSION_NUEVA_PAGINA = "../exclusiones/exclusionDetalle.xhtml";
+    public static final String VISTA_APROBACION_LISTADO_PAGINA = "../exclusiones/listarAprobaciones.xhtml";
+    public static final String VISTA_APROBACION_NUEVA_PAGINA = "../exclusiones/aprobacionDetalle.xhtml";
+    public static final String VISTA_INFORME_TECNICO_LISTADO = "../exclusiones/listarInformesTecnicos.xhtml";
+    public static final String VISTA_INFORME_TECNICO_DETALLE = "../exclusiones/detalleInformeTecnico.xhtml";
+    public static final String VISTA_ACTA = "../exclusiones/acta.xhtml";
+    public static final String VISTA_LISTAR_ACTAS = "../exclusiones/actasListar.xhtml";
+    public static final String VISTA_PROCESO_DIRECCION = "../gestionProceso/gestionProceso.xhtml";
+    public static final String VISTA_AGREGAR_IDENTIFICACIONES_PAGINA = "../identificaciones/agregarIdentificaciones.xhtml";
+    public static final String VISTA_SOLICITUD_DONACION_LISTADO = "../inclusiones/listarDonaciones.xhtml";
+    public static final String VISTA_SOLICITUD_DONACION_DETALLE = "../inclusiones/detalleSolicitudDonacion.xhtml";
+    public static final String VISTA_INTERFAZ_BIEN_LISTADO = "../interfazBien/listarInterfazBien.xhtml";
+    public static final String VISTA_INTERFAZ_BIEN_DETALLE = "../interfazBien/detalleInterfazBien.xhtml";
+    public static final String VISTA_TOMA_FISICA_DETALLE = "../inventario/detalleInventario.xhtml";
+    public static final String VISTA_LISTAR_TOMA_FISICA = "../inventario/listarInventarios.xhtml";
+    public static final String VISTA_MANTENIMIENTO_CLASIFICACION = "../mantenimientos/mantenimientoClasificaciones.xhtml";
+    public static final String VISTA_MANTENIMIENTO_LISTADO_PAGINA = "../mantenimientos/listarMantenimientos.xhtml";
+    public static final String VISTA_MANTENIMIENTO_NUEVA_PAGINA = "../mantenimientos/mantenimientoDetalle.xhtml";
+    public static final String VISTA_TRASLADO_PERMISOS = "../movimientos/permisosMovimientos.xhtml";
+    public static final String VISTA_TRASLADOS_LISTAR = "../movimientos/trasladosListar.xhtml";
+    public static final String VISTA_TRASLADO_DETALLE = "../movimientos/trasladoDetalle.xhtml";
+    public static final String VISTA_NOTIFICACION_LISTADO_PAGINA = "../notificaciones/listarNotificaciones.xhtml";
+    public static final String VISTA_NOTIFICACION_NUEVA_PAGINA = "../notificaciones/notificacionDetalle.xhtml";
+    public static final String VISTA_PRESTAMO_LISTADO_PAGINA = "../prestamos/listarPrestamos.xhtml";
+    public static final String VISTA_PRESTAMO_NUEVO_PAGINA = "../prestamos/prestamoDetalle.xhtml";
+    public static final String VISTA_RECEPCION_PRESTAMO_LISTADO_PAGINA = "../prestamos/listarRecepcionPrestamos.xhtml";
+    public static final String VISTA_RECEPCION_PRESTAMO_NUEVO_PAGINA = "../prestamos/recepcionPrestamoDetalle.xhtml";
+    
+    public static final String VISTA_REPORTE_DONACIONES = "../reportes/reporteDonaciones.xhtml";
+    public static final String VISTA_REPORTE_BIENES_POR_USUARIO = "../reportes/reporteUsuarioBienes.xhtml";
+    public static final String VISTA_REPORTE_MOVIMIENTOS = "../reportes/reporteMovimientos.xhtml";
+    public static final String VISTA_REPORTE_BIENES_EXCLUIR = "../reportes/reporteBienesExcluir.xhtml";
+    public static final String VISTA_REPORTE_ROLES_POR_USUARIO = "../reportes/reporteRolesUsuarios.xhtml";
+    public static final String VISTA_REPORTE_TRASLADO = "../reportes/reporteTraslados.xhtml";
+    public static final String VISTA_REPORTE_EXCLUSIONES = "../reportes/reporteExclusiones.xhtml";
+    public static final String VISTA_REPORTE_BIENES = "../reportes/reporteBien.xhtml";
+    public static final String VISTA_REPORTE_INVENT_FALTANTES = "../reportes/reporteInvertFaltantes.xhtml";
+    public static final String VISTA_REPORTE_SOBRANTES = "../reportes/reporteSobrantes.xhtml";
+    
+    public static final String VISTA_SOLICITUD_SALIDA_LISTADO = "../salidas/listarSalidas.xhtml";
+    public static final String VISTA_SOLICITUD_SALIDA_DETALLE = "../salidas/detalleSolicitudSalida.xhtml";
+    public static final String VISTA_TIPOS_PAGINA = "../tipos/agregarTipos.xhtml";    
+    public static final String VISTA_UBICACION = "../ubicacion/ubicacion.xhtml";
     
     //ACCIONES TRASLADOS
     public static final String DOCUMENTO_TRASLADO = "TRASLADO";
@@ -511,5 +495,4 @@ public final class Constantes {
     //Acciones asignacion de placas
     public static final Integer ACCION_ASIGNACION_PLACA_RECHAZAR = 1;
     public static final Integer ACCION_ASIGNACION_PLACA_ACEPTAR = 2;
-    
 }

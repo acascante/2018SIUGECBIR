@@ -89,7 +89,7 @@ public class AgregarNotificaionController extends BaseController {
             }
             inicializar();
             this.vistaOrigen = event.getComponent().getAttributes().get(Constantes.KEY_VISTA_ORIGEN).toString();
-            Util.navegar(Constantes.VISTA_NOTIFICACION_NUEVA);
+            Util.navegar(Constantes.KEY_VISTA_NOTIFICACION_NUEVA);
         } catch (FWExcepcion err) {
             this.mensaje = err.getMessage();
         }

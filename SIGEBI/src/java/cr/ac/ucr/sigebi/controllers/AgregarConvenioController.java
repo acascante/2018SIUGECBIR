@@ -108,7 +108,7 @@ public class AgregarConvenioController extends BaseController {
             }
             inicializarNuevo();
             this.vistaOrigen = event.getComponent().getAttributes().get(Constantes.KEY_VISTA_ORIGEN).toString();
-            Util.navegar(Constantes.VISTA_CONVENIO_NUEVO);
+            Util.navegar(Constantes.KEY_VISTA_CONVENIO_NUEVO);
         } catch (FWExcepcion err) {
             this.mensaje = err.getMessage();
         }
@@ -125,7 +125,7 @@ public class AgregarConvenioController extends BaseController {
         Convenio convenio = this.convenioModel.buscarPorId(id);
         inicializarDetalle(convenio);
         this.vistaOrigen = event.getComponent().getAttributes().get(Constantes.KEY_VISTA_ORIGEN).toString();
-        Util.navegar(Constantes.VISTA_CONVENIO_NUEVO);
+        Util.navegar(Constantes.KEY_VISTA_CONVENIO_NUEVO);
     }
     
     //<editor-fold defaultstate="collapsed" desc="Almacenar Observacion">  

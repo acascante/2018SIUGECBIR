@@ -164,7 +164,7 @@ public class ReporteController extends BaseController {
     public void reporteFaltantes() {
         try {
             //inicializaDatos();
-            Util.navegar(Constantes.KEY_REPORTE_INVENT_FALTANTES);
+            Util.navegar(Constantes.KEY_VISTA_REPORTE_INVENT_FALTANTES);
 
         } catch (Exception err) {
             Mensaje.agregarErrorAdvertencia(err.getCause().getMessage());
@@ -182,7 +182,7 @@ public class ReporteController extends BaseController {
         commandInventarioFaltantes.setTomaSeleccionada(toma);
         commandInventarioFaltantes.setTomaFisica(toma.getId());
         
-        Util.navegar(Constantes.KEY_REPORTE_INVENT_FALTANTES);
+        Util.navegar(Constantes.KEY_VISTA_REPORTE_INVENT_FALTANTES);
     }
     // </editor-fold>
     

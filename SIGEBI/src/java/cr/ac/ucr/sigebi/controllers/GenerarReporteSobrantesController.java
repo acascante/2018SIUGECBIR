@@ -138,7 +138,7 @@ public class GenerarReporteSobrantesController extends BaseController {
         this.mensaje = new String();
         this.command = new GenerarReporteSobrantesCommand(id);
 
-        Util.navegar(Constantes.KEY_REPORTE_SOBRANTES);
+        Util.navegar(Constantes.KEY_VISTA_REPORTE_SOBRANTES);
     }
     
     public String validarForm(UIViewRoot root) {

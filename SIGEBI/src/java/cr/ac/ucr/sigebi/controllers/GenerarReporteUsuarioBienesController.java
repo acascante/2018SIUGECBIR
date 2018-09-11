@@ -11,10 +11,8 @@ import cr.ac.ucr.sigebi.commands.ReporteUsuarioBienesCommand;
 import cr.ac.ucr.sigebi.domain.Bien;
 import cr.ac.ucr.sigebi.utils.Constantes;
 import cr.ac.ucr.sigebi.domain.Tipo;
-import cr.ac.ucr.sigebi.domain.Usuario;
 import cr.ac.ucr.sigebi.domain.reportes.ReporteUsuarioBienes;
 import cr.ac.ucr.sigebi.models.BienModel;
-import cr.ac.ucr.sigebi.models.UsuarioModel;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -22,7 +20,6 @@ import java.util.Map;
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import javax.faces.context.FacesContext;
-import javax.faces.event.ActionEvent;
 import javax.faces.model.SelectItem;
 import net.sf.jasperreports.engine.JasperCompileManager;
 import net.sf.jasperreports.engine.JasperExportManager;
@@ -54,20 +51,15 @@ public class GenerarReporteUsuarioBienesController extends BaseController {
     }
     
     @Resource private BienModel bienModel;
-    @Resource private UsuarioModel usuarioModel;
     
     private Map<Long, Tipo> tiposReporte;
     private List<SelectItem> itemsTipoReporte;
     
-    private Map<String, Usuario> usuariosResponsables;
-    private List<SelectItem> itemsUsuariosResponsables;
-    
     private ReporteUsuarioBienesCommand command;
-    
-    private String mensaje;
 
     public GenerarReporteUsuarioBienesController() {
         super();
+        inicializarDatos();
     }
 
     @PostConstruct
@@ -82,20 +74,9 @@ public class GenerarReporteUsuarioBienesController extends BaseController {
                 this.itemsTipoReporte.add(new SelectItem(tipo.getId(), tipo.getNombre()));
             }
         }
-        
-        List<Usuario> usuarios = this.usuarioModel.listar();
-        if (!usuarios.isEmpty()) {
-            this.itemsUsuariosResponsables = new ArrayList<SelectItem>();
-            this.usuariosResponsables = new HashMap<String, Usuario>();
-            for (Usuario usuario : usuarios) {
-                this.usuariosResponsables.put(usuario.getId(), usuario);
-                this.itemsUsuariosResponsables.add(new SelectItem(usuario.getId(), usuario.getNombreCompleto()));
-            }
-        }
     }
     
-    public void inicializarDatos(ActionEvent event) {
-        this.mensaje = new String();
+    private void inicializarDatos() {
         this.command = new ReporteUsuarioBienesCommand();
     }
     
@@ -108,7 +89,8 @@ public class GenerarReporteUsuarioBienesController extends BaseController {
             Tipo orden2 = this.tipoPorDominioValor(Constantes.DOMINIO_COLUMNAS_REPORTE_USUARIOS_BIENES, this.command.getIdOrden2());
             Tipo orden3 = this.tipoPorDominioValor(Constantes.DOMINIO_COLUMNAS_REPORTE_USUARIOS_BIENES, this.command.getIdOrden3());
             
-            List<Bien> bienes = this.bienModel.listarPorResponsable(this.command.getIdUsuario(), orden.getNombre(), orden1.getNombre(), orden2.getNombre(), orden3.getNombre());
+            List<Bien> bienes = this.bienModel.listarPorResponsable(this.command.getIdUsuario(), this.command.getIdentificacion(), orden.getNombre(), 
+                    orden1 != null ? orden1.getNombre() : null, orden2 != null ? orden3.getNombre() : null, orden3 != null ? orden3.getNombre() : null);
             if (!bienes.isEmpty()) {
                 String template = cr.ac.ucr.framework.reporte.componente.utilitario.Util.ConvertirRutas("/reportes/reporteUsuarioBienes.jrxml");
                 String outputFile = cr.ac.ucr.framework.reporte.componente.utilitario.Util.ConvertirRutas("/reportes/reporteUsuarioBienes");
@@ -135,8 +117,7 @@ public class GenerarReporteUsuarioBienesController extends BaseController {
                 Mensaje.agregarErrorAdvertencia("No hay datos para el reporte");
             }            
         } catch (Exception err) {
-            Mensaje.agregarErrorAdvertencia(err.getMessage());
-            this.mensaje = err.getMessage();
+            Mensaje.agregarErrorAdvertencia("No se puede generar el reporte en este momento, intente de nuevo");
         }
     }
     
@@ -169,37 +150,12 @@ public class GenerarReporteUsuarioBienesController extends BaseController {
         this.itemsTipoReporte = itemsTipoReporte;
     }
 
-    public Map<String, Usuario> getUsuariosResponsables() {
-        return usuariosResponsables;
-    }
-
-    public void setUsuariosResponsables(Map<String, Usuario> usuariosResponsables) {
-        this.usuariosResponsables = usuariosResponsables;
-    }
-
-    public List<SelectItem> getItemsUsuariosResponsables() {
-        return itemsUsuariosResponsables;
-    }
-
-    public void setItemsUsuariosResponsables(List<SelectItem> itemsUsuariosResponsables) {
-        this.itemsUsuariosResponsables = itemsUsuariosResponsables;
-    }
-
     public ReporteUsuarioBienesCommand getCommand() {
         return command;
     }
 
     public void setCommand(ReporteUsuarioBienesCommand command) {
         this.command = command;
-    }
-
-    
-    public String getMensaje() {
-        return mensaje;
-    }
-
-    public void setMensaje(String mensaje) {
-        this.mensaje = mensaje;
     }
     //</editor-fold>
 }

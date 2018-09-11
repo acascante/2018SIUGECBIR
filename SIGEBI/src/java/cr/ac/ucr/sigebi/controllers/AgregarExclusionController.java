@@ -399,7 +399,7 @@ public class AgregarExclusionController extends BaseController {
             }
             inicializarNuevo();
             this.vistaOrigen = event.getComponent().getAttributes().get(Constantes.KEY_VISTA_ORIGEN).toString();
-            Util.navegar(Constantes.VISTA_EXCLUSION_NUEVA);
+            Util.navegar(Constantes.KEY_VISTA_EXCLUSION_NUEVA);
         } catch (FWExcepcion err) {
             mensaje = err.getMessage();
         }
@@ -417,7 +417,7 @@ public class AgregarExclusionController extends BaseController {
             SolicitudExclusion exclusion = exclusionModel.buscarPorId(id);
             inicializarDetalle(exclusion);
             this.vistaOrigen = event.getComponent().getAttributes().get(Constantes.KEY_VISTA_ORIGEN).toString();
-            Util.navegar(Constantes.VISTA_EXCLUSION_NUEVA);
+            Util.navegar(Constantes.KEY_VISTA_EXCLUSION_NUEVA);
         } catch (FWExcepcion err) {
             mensaje = err.getMessage();
         }
@@ -427,7 +427,7 @@ public class AgregarExclusionController extends BaseController {
         if (vistaOrigen != null) {
             Util.navegar(vistaOrigen, true);
         } else {
-            Util.navegar(Constantes.VISTA_EXCLUSION_LISTADO, true);
+            Util.navegar(Constantes.KEY_VISTA_EXCLUSION_LISTADO, true);
         }
     }    
     
@@ -450,7 +450,7 @@ public class AgregarExclusionController extends BaseController {
     public void verDetalle(SolicitudExclusion exclusion, String vistaOrigen) {
         inicializarDetalle(exclusion);
         this.vistaOrigen = vistaOrigen;
-        Util.navegar(Constantes.VISTA_EXCLUSION_NUEVA);
+        Util.navegar(Constantes.KEY_VISTA_EXCLUSION_NUEVA);
     }
     
     //<editor-fold defaultstate="collapsed" desc="Validaciones">

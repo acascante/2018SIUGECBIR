@@ -68,7 +68,7 @@ public class ListarNotificacionesController extends BaseController {
     }
     
     private void inicializarDatos() {
-        this.vistaOrigen = Constantes.VISTA_NOTIFICACION_LISTADO;
+        this.vistaOrigen = Constantes.KEY_VISTA_NOTIFICACION_LISTADO;
         this.command = new ListarNotificacionesCommand();
     }
     

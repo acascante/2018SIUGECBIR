@@ -30,7 +30,8 @@ public class ReporteRolesUsuarios implements Serializable {
 
     public ReporteRolesUsuarios(ViewAutorizacionRolUsuarioUnidad usuarioRol) {
         this.rol = usuarioRol.getAutorizacionRol().getRol().getNombre();
-        this.idUsuario = usuarioRol.getId();
+        this.idUsuario = usuarioRol.getUsuarioSeguridad().getId();
+        this.nombreUsuario = usuarioRol.getUsuarioSeguridad().getNombreCompleto();
         this.autorizacion = usuarioRol.getAutorizacionRol().getAutorizacion().getNombre();
         this.proceso = usuarioRol.getAutorizacionRol().getAutorizacion().getTipoProceso().getNombre();
         this.unidadEjecutora = usuarioRol.getUnidadEjecutora().getDescripcion();

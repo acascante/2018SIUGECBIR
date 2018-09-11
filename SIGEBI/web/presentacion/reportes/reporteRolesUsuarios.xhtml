@@ -19,7 +19,7 @@
                  <div class='col-sm-11'>
                      <ice:panelGroup style="margin: 20px 0px">
                          <ice:panelTabSet>
-                             <ice:panelTab id="tabFiltros" label="#{label['sigebi.reporte.roles.usuarios.tab.configuracion']}">
+                             <ice:panelTab id="tabConfiguracion" label="#{label['sigebi.reporte.roles.usuarios.tab.configuracion']}">
                                 <div class="row">
                                     <div class='col-sm-3 align-middle'>
                                         <h4 class="align-middle" style="margin-top: 15px">
@@ -29,7 +29,6 @@
                                     <div class='col-sm-9'>
                                         <ice:selectOneMenu id="tipoReporte" styleClass="form-control"
                                                            value="#{controllerReporteRolesUsuarios.command.idTipo}" >
-                                            <f:selectItem itemLabel="N/A" itemValue="-1"/>
                                             <f:selectItems id="optSelTipoBien" value="#{controllerReporteRolesUsuarios.itemsTipoReporte}"/>
                                          </ice:selectOneMenu>                                        
                                    </div>
@@ -42,7 +41,7 @@
                                         </h4>
                                     </div>
                                     <div class='col-sm-9'>
-                                        <ice:selectOneMenu id="tipoReporte" styleClass="form-control"
+                                        <ice:selectOneMenu id="grupoReporte" styleClass="form-control"
                                                            value="#{controllerReporteRolesUsuarios.command.idGrupo}" >
                                             <f:selectItem itemLabel="USUARIO" itemValue="1"/>
                                             <f:selectItem itemLabel="ROL" itemValue="2"/>
@@ -117,7 +116,7 @@
                                     </div>
                                 </div>
                             </ice:panelTab> 
-                        </ice:panelTabSet>     
+                        </ice:panelTabSet>
                     </ice:panelGroup>
                 </div>
             </div>

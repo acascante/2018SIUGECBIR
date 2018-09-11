@@ -6,7 +6,6 @@
 package cr.ac.ucr.sigebi.domain.reportes;
 
 import cr.ac.ucr.sigebi.domain.Bien;
-import cr.ac.ucr.sigebi.domain.ViewAutorizacionRolUsuarioUnidad;
 import java.io.Serializable;
 
 /**
@@ -17,8 +16,7 @@ public class ReporteUsuarioBienes implements Serializable {
     
     //<editor-fold defaultstate="collapsed" desc="Atributos">
     private String idUsuario;
-    private String nombreUsuario;
-    
+    private String nombreUsuario;    
     private String identificacion;
     private String descripcion;
     private String estado;
@@ -29,21 +27,11 @@ public class ReporteUsuarioBienes implements Serializable {
     public ReporteUsuarioBienes() {
         super();
     }
-
-    
-    public ReporteUsuarioBienes(String idUsuario, String nombreUsuario, String identificacion, String descripcion, String estado, String unidadEjecutora) {
-        this.idUsuario = idUsuario;
-        this.nombreUsuario = nombreUsuario;
-        this.identificacion = identificacion;
-        this.descripcion = descripcion;
-        this.estado = estado;
-        this.unidadEjecutora = unidadEjecutora;
-    }
     
     public ReporteUsuarioBienes(Bien bien) {
-        this.idUsuario = bien.getUsuarioResponsable().getId();
-        this.nombreUsuario = bien.getUsuarioResponsable().getNombreCompleto();
-        this.identificacion = bien.getIdentificacion().getIdentificacion();
+        this.idUsuario = bien.getUsuarioResponsable() != null ? bien.getUsuarioResponsable().getId() : "Sin Definir";
+        this.nombreUsuario = bien.getUsuarioResponsable() != null ? bien.getUsuarioResponsable().getNombreCompleto() : "Sin Definir";
+        this.identificacion = bien.getIdentificacion()!= null ? bien.getIdentificacion().getIdentificacion() : null;
         this.descripcion = bien.getDescripcion();
         this.estado = bien.getEstado().getNombre();
         this.unidadEjecutora = bien.getUnidadEjecutora().getDescripcion();

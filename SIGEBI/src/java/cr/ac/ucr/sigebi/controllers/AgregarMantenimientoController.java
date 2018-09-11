@@ -23,7 +23,6 @@ import cr.ac.ucr.sigebi.models.EventoModel;
 import cr.ac.ucr.sigebi.models.RegistroMovimientoModel;
 import cr.ac.ucr.sigebi.models.SolicitudMantenimientoModel;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -31,14 +30,11 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.Resource;
-import javax.faces.component.UIComponent;
-import javax.faces.component.UIInput;
 import javax.faces.component.UIViewRoot;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 import javax.faces.event.PhaseId;
 import javax.faces.event.ValueChangeEvent;
-import javax.faces.validator.ValidatorException;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
@@ -522,7 +518,7 @@ public class AgregarMantenimientoController extends BaseController {
             }
             inicializarNuevo();
             this.vistaOrigen = event.getComponent().getAttributes().get(Constantes.KEY_VISTA_ORIGEN).toString();
-            Util.navegar(Constantes.VISTA_MANTENIMIENTO_NUEVO);
+            Util.navegar(Constantes.KEY_VISTA_MANTENIMIENTO_NUEVO);
         } catch (FWExcepcion err) {
             mensaje = err.getMessage();
         }
@@ -540,7 +536,7 @@ public class AgregarMantenimientoController extends BaseController {
             SolicitudMantenimiento solicitud = mantenimientoModel.buscarPorId(id);
             inicializarDetalle(solicitud);
             this.vistaOrigen = event.getComponent().getAttributes().get(Constantes.KEY_VISTA_ORIGEN).toString();
-            Util.navegar(Constantes.VISTA_MANTENIMIENTO_NUEVO);
+            Util.navegar(Constantes.KEY_VISTA_MANTENIMIENTO_NUEVO);
         } catch (FWExcepcion err) {
             mensaje = err.getMessage();
         }
@@ -550,7 +546,7 @@ public class AgregarMantenimientoController extends BaseController {
         if (vistaOrigen != null) {
             Util.navegar(vistaOrigen, true);
         } else {
-            Util.navegar(Constantes.VISTA_MANTENIMIENTO_LISTADO, true);
+            Util.navegar(Constantes.KEY_VISTA_MANTENIMIENTO_LISTADO, true);
         }
     }    
     
@@ -573,7 +569,7 @@ public class AgregarMantenimientoController extends BaseController {
     public void verDetalle(SolicitudMantenimiento solicitud, String vistaOrigen) {
         inicializarDetalle(solicitud);
         this.vistaOrigen = vistaOrigen;
-        Util.navegar(Constantes.VISTA_MANTENIMIENTO_NUEVO);
+        Util.navegar(Constantes.KEY_VISTA_MANTENIMIENTO_NUEVO);
     }
     
     //<editor-fold defaultstate="collapsed" desc="Validaciones">

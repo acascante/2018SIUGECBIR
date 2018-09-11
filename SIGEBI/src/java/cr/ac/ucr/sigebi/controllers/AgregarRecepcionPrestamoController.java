@@ -131,7 +131,7 @@ public class AgregarRecepcionPrestamoController extends BaseController {
             }
             inicializarNuevo();
             this.vistaOrigen = event.getComponent().getAttributes().get(Constantes.KEY_VISTA_ORIGEN).toString();
-            Util.navegar(Constantes.VISTA_RECEPCION_PRESTAMO_NUEVO);
+            Util.navegar(Constantes.KEY_VISTA_RECEPCION_PRESTAMO_NUEVO);
         } catch (FWExcepcion err) {
             this.mensaje = err.getMessage();
         }
@@ -148,7 +148,7 @@ public class AgregarRecepcionPrestamoController extends BaseController {
         RecepcionPrestamo prestamo = this.recepcionPrestamoModel.buscarPorId(id);
         inicializarDetalle(prestamo);
         this.vistaOrigen = event.getComponent().getAttributes().get(Constantes.KEY_VISTA_ORIGEN).toString();
-        Util.navegar(Constantes.VISTA_RECEPCION_PRESTAMO_NUEVO);
+        Util.navegar(Constantes.KEY_VISTA_RECEPCION_PRESTAMO_NUEVO);
     }
     
     //<editor-fold defaultstate="collapsed" desc="Almacenar Observacion">  

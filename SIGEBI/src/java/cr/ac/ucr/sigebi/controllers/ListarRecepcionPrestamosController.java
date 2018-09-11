@@ -82,7 +82,7 @@ public class ListarRecepcionPrestamosController extends BaseController {
     }
 
     private void inicializarDatos() {
-        this.vistaOrigen = Constantes.VISTA_RECEPCION_PRESTAMO_LISTADO;
+        this.vistaOrigen = Constantes.KEY_VISTA_RECEPCION_PRESTAMO_LISTADO;
         this.command = new ListarRecepcionPrestamosCommand();
     }
 

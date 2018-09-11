@@ -42,6 +42,7 @@
     <mapping class="cr.ac.ucr.sigebi.domain.Nota"/>
     <mapping class="cr.ac.ucr.sigebi.domain.Notificacion"/>
     <mapping class="cr.ac.ucr.sigebi.domain.Proveedor"/>
+    <mapping class="cr.ac.ucr.sigebi.domain.Preliminar"/>
     <mapping class="cr.ac.ucr.sigebi.domain.RecepcionPrestamo"/>
     <mapping class="cr.ac.ucr.sigebi.domain.RegistroMovimiento"/>
     <mapping class="cr.ac.ucr.sigebi.domain.RegistroMovimientoBien"/>

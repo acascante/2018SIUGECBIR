@@ -22,8 +22,8 @@ import javax.persistence.Table;
 @Entity(name = "ViewAutorizacionRolUsuarioUnidad")
 @Table(name = "SIGEBI_OAF.V_SIGB_UNID_USUA_AUTO_ROL_PERS")
 public class ViewAutorizacionRolUsuarioUnidad extends ObjetoBase implements Serializable {    
-    //<editor-fold defaultstate="collapsed" desc="Atributos">
     
+    //<editor-fold defaultstate="collapsed" desc="Atributos">
     @Id
     @Column(name = "ID")
     private String id;

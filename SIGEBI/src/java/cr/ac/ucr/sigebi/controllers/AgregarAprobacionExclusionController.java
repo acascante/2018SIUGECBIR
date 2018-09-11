@@ -346,7 +346,7 @@ public class AgregarAprobacionExclusionController extends BaseController {
             }
             inicializarNuevo();
             this.vistaOrigen = event.getComponent().getAttributes().get(Constantes.KEY_VISTA_ORIGEN).toString();
-            Util.navegar(Constantes.VISTA_APROBACION_NUEVA);
+            Util.navegar(Constantes.KEY_VISTA_APROBACION_NUEVA);
         } catch (FWExcepcion err) {
             this.mensaje = err.getMessage();
         }
@@ -364,7 +364,7 @@ public class AgregarAprobacionExclusionController extends BaseController {
             DocumentoAprobacionExclusion documento = documentoModel.buscarPorId(id);
             inicializarDetalle(documento);
             this.vistaOrigen = event.getComponent().getAttributes().get(Constantes.KEY_VISTA_ORIGEN).toString();
-            Util.navegar(Constantes.VISTA_APROBACION_NUEVA);
+            Util.navegar(Constantes.KEY_VISTA_APROBACION_NUEVA);
         } catch (FWExcepcion err) {
             this.mensaje = err.getMessage();
         }
@@ -376,7 +376,7 @@ public class AgregarAprobacionExclusionController extends BaseController {
             this.inicializarDetalle(documento);
 
             this.vistaOrigen = vistaOrigen;
-            Util.navegar(Constantes.VISTA_APROBACION_NUEVA);
+            Util.navegar(Constantes.KEY_VISTA_APROBACION_NUEVA);
 
         } catch (FWExcepcion err) {
             this.mensaje = err.getMessage();
@@ -387,7 +387,7 @@ public class AgregarAprobacionExclusionController extends BaseController {
         if (vistaOrigen != null) {
             Util.navegar(vistaOrigen, true);
         } else {
-            Util.navegar(Constantes.VISTA_APROBACION_NUEVA, true);
+            Util.navegar(Constantes.KEY_VISTA_APROBACION_NUEVA, true);
         }
     }
     

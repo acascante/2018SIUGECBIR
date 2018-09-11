@@ -10,7 +10,6 @@ import cr.ac.ucr.framework.utils.FWExcepcion;
 import cr.ac.ucr.framework.vista.util.Mensaje;
 import cr.ac.ucr.sigebi.utils.Constantes;
 import cr.ac.ucr.framework.vista.util.Util;
-import cr.ac.ucr.sigebi.commands.PrestamoCommand;
 import cr.ac.ucr.sigebi.commands.SolicitudSalidaCommand;
 import cr.ac.ucr.sigebi.domain.Bien;
 import cr.ac.ucr.sigebi.domain.Persona;
@@ -18,7 +17,6 @@ import cr.ac.ucr.sigebi.domain.RegistroMovimientoSolicitud;
 import cr.ac.ucr.sigebi.domain.SolicitudDetalle;
 import cr.ac.ucr.sigebi.domain.SolicitudDetalleSalida;
 import cr.ac.ucr.sigebi.domain.SolicitudSalida;
-import cr.ac.ucr.sigebi.domain.Tipo;
 import cr.ac.ucr.sigebi.domain.reportes.ReporteBienDetalle;
 import cr.ac.ucr.sigebi.models.BienModel;
 import cr.ac.ucr.sigebi.models.PersonaModel;
@@ -58,7 +56,7 @@ public class SolicitudSalidaController extends BaseController {
         private static final String INSTITUCION = "INSTITUCION";
         private static final String NOMBRE_REPORTE = "NOMBRE_REPORTE";
 	private static final String VALOR_INSTITUCION = "UNIVERSIDAD DE COSTA RICA";
-        private static final String VALOR_NOMBRE_REPORTE = "Reporte de Roles y Usuarios";
+        private static final String VALOR_NOMBRE_REPORTE = "Boleta de Autorizacion de Salida";
         
         private static final String ID = "ID";
         private static final String TIPO = "TIPO";
@@ -394,7 +392,7 @@ public class SolicitudSalidaController extends BaseController {
 
             //Se actuaizan banderas
             this.cambiaEstadoSolicitud();
-
+            generarReporte();
             
             Mensaje.agregarInfo(Util.getEtiquetas("sigebi.solicitudSalidaController.modificado.exitosamente"));
 
@@ -480,8 +478,6 @@ public class SolicitudSalidaController extends BaseController {
     //<editor-fold defaultstate="collapsed" desc="Generar Reporte">
     public void generarReporte() {
         try {
-            //reportes/reporteSobrantes.jrxml 
-            
             List<SolicitudDetalle> detalles = this.command.getBienesDetalles();
             if (!detalles.isEmpty()) {
                 String template = cr.ac.ucr.framework.reporte.componente.utilitario.Util.ConvertirRutas("/reportes/reporteSalida.jrxml");

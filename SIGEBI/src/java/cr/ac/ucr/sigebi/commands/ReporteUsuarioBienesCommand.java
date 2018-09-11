@@ -29,6 +29,8 @@ public class ReporteUsuarioBienesCommand {
         this.idOrden1 = -1;
         this.idOrden2 = -1;
         this.idOrden3 = -1;
+        this.idUsuario = "";
+        this.identificacion = "";
     }
     //</editor-fold>
     

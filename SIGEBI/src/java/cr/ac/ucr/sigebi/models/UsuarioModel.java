@@ -54,7 +54,7 @@ public class UsuarioModel {
         return usuarioDao.contarUsuariosGestionProceso(idUsuario, nombreCompleto, correo, autorizacionRol, unidadEjecutora);
     }
     
-    public List<ViewAutorizacionRolUsuarioUnidad> listarUsuariosGestionProceso(String orden, String orden1, String orden2, String orden3) throws FWExcepcion {
-        return usuarioDao.listarUsuariosGestionProceso(orden, orden1, orden2, orden3);
+    public List<ViewAutorizacionRolUsuarioUnidad> listarUsuariosGestionProceso(String grupo, String orden, String orden1, String orden2, String orden3) throws FWExcepcion {
+        return usuarioDao.listarUsuariosGestionProceso(grupo, orden, orden1, orden2, orden3);
     }
 }

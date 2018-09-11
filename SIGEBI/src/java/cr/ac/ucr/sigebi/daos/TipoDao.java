@@ -50,8 +50,8 @@ public class TipoDao extends GenericDaoImpl {
     @Transactional(readOnly = true)
     public List<Tipo> listar() throws FWExcepcion {
         try {
-            return dao.getHibernateTemplate().find("from Tipo");
-        } catch (DataAccessException e) {
+            return dao.getHibernateTemplate().find("SELECT entity FROM Tipo entity ORDER BY entity.valor");
+        } catch (Exception e) {
             throw new FWExcepcion("sigebi.label.tipo.error.listar", "Error obtener los registros de estado " + this.getClass(), e.getCause());
         }
     }

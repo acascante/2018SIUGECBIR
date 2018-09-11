@@ -69,7 +69,7 @@ public class ListarConveniosController extends BaseController {
     }
     
     private void inicializarDatos() {
-        this.vistaOrigen = Constantes.VISTA_CONVENIO_LISTADO;
+        this.vistaOrigen = Constantes.KEY_VISTA_CONVENIO_LISTADO;
         this.command = new ListarConveniosCommand();
     }
     
