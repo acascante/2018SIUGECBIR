@@ -239,7 +239,6 @@ public class SolicitudDao extends GenericDaoImpl {
         }
     }
     
-    
     @Transactional(readOnly = true)
     public SolicitudDetalle listarDetallesSolicitud(Solicitud solicitud, Bien bien) throws FWExcepcion {
         Session session = dao.getSessionFactory().openSession();
@@ -256,7 +255,6 @@ public class SolicitudDao extends GenericDaoImpl {
         }
     }
     
-    
     @Transactional
     public void eliminarDetalleSolicitud(SolicitudDetalle obj) throws FWExcepcion {
         try {
@@ -266,8 +264,6 @@ public class SolicitudDao extends GenericDaoImpl {
                     "Error obtener los registros de tipo " + this.getClass(), e.getCause());
         }
     }
-    
-    
     
     @Transactional(readOnly = true)
     public List<Solicitud> movimientosPorBien(Bien bien) throws FWExcepcion {
@@ -286,7 +282,61 @@ public class SolicitudDao extends GenericDaoImpl {
         }
     }
     
-    
+    @Transactional(readOnly = true)
+    public List<SolicitudDetalle> listarDetallesSalidas(Long id, String identificacionBien, Date fechaInicio, Date fechaFin, String orden, String orden1, String orden2, String orden3) throws FWExcepcion {
+        Session session = dao.getSessionFactory().openSession();
+        try {
+            StringBuilder sql = new StringBuilder("SELECT entity FROM SolicitudDetalle entity WHERE entity.solicitud IN ");
+            
+            if(fechaInicio != null && fechaFin != null){
+                sql.append(" (SELECT sa.solicitud FROM SolicitudAutorizacion sa WHERE sa.fecha BETWEEN :fechaInicio AND :fechaFin) ");
+            } else {
+                sql.append(" (SELECT sa.solicitud FROM SolicitudAutorizacion sa) ");
+            }
+            
+            if(id != null && id > 0) {
+                sql.append(" AND entity.id = :id ");
+            } else {
+                if(identificacionBien != null && identificacionBien.length() > 0){
+                    sql.append(" AND UPPER(entity.bien.identificacion.identificacion) = UPPER(:identificacionBien) ");
+                }
+            }
+            sql.append(" ORDER BY entity.solicitud ");
+            if (orden1 != null && orden1.length() > 0) {
+                sql.append(", entity.");
+                sql.append(orden1);
+                if (orden2 != null && orden2.length() > 0) {
+                    sql.append(", entity.");
+                    sql.append(orden2);
+                    if (orden3 != null && orden3.length() > 0) {
+                        sql.append(", entity.");
+                        sql.append(orden3);
+                    }
+                }
+                sql.append(" ").append(orden);
+            }
+            
+            Query query = session.createQuery(sql.toString());
+            
+            if(fechaInicio != null && fechaFin != null) {
+                query.setParameter("fechaInicio", fechaInicio);
+                query.setParameter("fechaFin", fechaFin);
+            }
+            if(id != null && id > 0) {
+                query.setParameter("id", id);
+            } else {
+                if(identificacionBien != null && identificacionBien.length() > 0) {
+                    query.setParameter("identificacionBien", identificacionBien);
+                }                
+            }
+            return (List<SolicitudDetalle>) query.list();
+        } catch (HibernateException e) {
+            throw new FWExcepcion("sigebi.error.solicitudDao.listarDetallesSolicitud", "Error obtener los registros de tipo " + this.getClass(), e.getCause());
+        } finally {
+            session.close();
+        }
+    }
+        
     @Transactional(readOnly = true)
     public List<SolicitudSalida> listarSalidas(String id,
             UnidadEjecutora unidadEjecutora,

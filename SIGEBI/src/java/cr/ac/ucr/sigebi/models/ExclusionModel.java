@@ -8,8 +8,10 @@ package cr.ac.ucr.sigebi.models;
 import cr.ac.ucr.framework.utils.FWExcepcion;
 import cr.ac.ucr.sigebi.daos.ExclusionDao;
 import cr.ac.ucr.sigebi.daos.UnidadEjecutoraDao;
+import cr.ac.ucr.sigebi.domain.Estado;
 import cr.ac.ucr.sigebi.domain.SolicitudDetalle;
 import cr.ac.ucr.sigebi.domain.SolicitudExclusion;
+import cr.ac.ucr.sigebi.domain.Tipo;
 import cr.ac.ucr.sigebi.utils.Constantes;
 import java.util.Date;
 import java.util.List;
@@ -71,5 +73,9 @@ public class ExclusionModel {
     
     public List<SolicitudDetalle> listarDetalles(SolicitudExclusion exclusion) throws FWExcepcion {
         return exclusionDao.listarDetalles(exclusion);
+    }
+    
+    public List<SolicitudDetalle> listarDetalles(Tipo tipoExclusion, Estado estado, Date fechaInicio, Date fechaFin, String orden, String orden1, String orden2, String orden3) throws FWExcepcion {
+        return exclusionDao.listarDetalles(tipoExclusion, estado, fechaInicio, fechaFin, orden, orden1, orden2, orden3);
     }
 }

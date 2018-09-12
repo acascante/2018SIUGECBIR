@@ -143,6 +143,10 @@ public class SolicitudModel {
         return solicitudDao.movimientosPorBien(bien);
     }
     
+    public List<SolicitudDetalle> listarDetallesSalidas(Long id, String identificacionBien, Date fechaInicio, Date fechaFin, String orden, String orden1, String orden2, String orden3) throws FWExcepcion {
+        return solicitudDao.listarDetallesSalidas(id, identificacionBien, fechaInicio, fechaFin, orden, orden1, orden2, orden3);
+    }
+    
     @Transactional(readOnly = true)
     public List<SolicitudSalida> listarSalidas(String id,
             Long idUnidadEjecutora,

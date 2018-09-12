@@ -6,6 +6,7 @@
 package cr.ac.ucr.sigebi.domain.reportes;
 
 import cr.ac.ucr.sigebi.commands.PrestamoCommand;
+import cr.ac.ucr.sigebi.domain.SolicitudDetalle;
 import cr.ac.ucr.sigebi.domain.SolicitudDetalleSalida;
 import java.io.Serializable;
 import java.util.Date;

@@ -11,9 +11,13 @@ import cr.ac.ucr.framework.utils.FWExcepcion;
 import cr.ac.ucr.sigebi.domain.Documento;
 import cr.ac.ucr.sigebi.domain.DocumentoActa;
 import cr.ac.ucr.sigebi.domain.DocumentoDetalle;
+import cr.ac.ucr.sigebi.domain.Estado;
+import cr.ac.ucr.sigebi.domain.SolicitudDetalle;
 import java.util.List;
 
 import cr.ac.ucr.sigebi.domain.UnidadEjecutora;
+import java.util.Date;
+import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -80,6 +84,61 @@ public class ActaDao extends GenericDaoImpl {
         }
     }
     
+    @Transactional(readOnly = true)
+    public List<DocumentoDetalle> listarDetalles(Estado estado, Long id, String identificacionBien, Date fechaInicio, Date fechaFin, String orden, String orden1, String orden2, String orden3) throws FWExcepcion {
+        Session session = dao.getSessionFactory().openSession();
+        try {
+            StringBuilder sql = new StringBuilder("SELECT entity FROM DocumentoDetalle entity WHERE entity.documento IN ");
+            
+            if(fechaInicio != null && fechaFin != null){
+                sql.append(" (SELECT da.documento FROM DocumentoAutorizacion da WHERE da.fecha BETWEEN :fechaInicio AND :fechaFin) ");
+            } else {
+                sql.append(" (SELECT da.documento FROM DocumentoAutorizacion da) ");
+            }
+            
+            sql.append(" AND entity.documento.estado = :estado AND entity.discriminador = 2");
+            if(id != null && id > 0) {
+                sql.append(" AND entity.documento.id = :id ");
+            } else {
+                if(identificacionBien != null && identificacionBien.length() > 0){
+                    sql.append(" AND UPPER(entity.bien.identificacion.identificacion) = UPPER(:identificacionBien) ");
+                }
+            }
+            sql.append(" ORDER BY entity.documento ");
+            if (orden1 != null && orden1.length() > 0) {
+                sql.append(", entity.");
+                sql.append(orden1);
+                if (orden2 != null && orden2.length() > 0) {
+                    sql.append(", entity.");
+                    sql.append(orden2);
+                    if (orden3 != null && orden3.length() > 0) {
+                        sql.append(", entity.");
+                        sql.append(orden3);
+                    }
+                }
+                sql.append(" ").append(orden);
+            }
+            
+            Query query = session.createQuery(sql.toString());
+            
+            if(fechaInicio != null && fechaFin != null) {
+                query.setParameter("fechaInicio", fechaInicio);
+                query.setParameter("fechaFin", fechaFin);
+            }
+            if(id != null && id > 0) {
+                query.setParameter("id", id);
+            } else {
+                if(identificacionBien != null && identificacionBien.length() > 0) {
+                    query.setParameter("identificacionBien", identificacionBien);
+                }                
+            }
+            return (List<DocumentoDetalle>) query.list();
+        } catch (HibernateException e) {
+            throw new FWExcepcion("sigebi.error.dao.informeTecnico.listarInformes", "Error obtener los registros de tipo " + this.getClass(), e.getCause());
+        } finally {
+            session.close();
+        }
+    }
     
     @Transactional
     public void guardar(DocumentoActa valor) {

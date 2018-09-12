@@ -8,8 +8,10 @@ package cr.ac.ucr.sigebi.daos;
 import cr.ac.ucr.framework.daoHibernate.DaoHelper;
 import cr.ac.ucr.framework.daoImpl.GenericDaoImpl;
 import cr.ac.ucr.framework.utils.FWExcepcion;
+import cr.ac.ucr.sigebi.domain.Estado;
 import cr.ac.ucr.sigebi.domain.SolicitudExclusion;
 import cr.ac.ucr.sigebi.domain.SolicitudDetalle;
+import cr.ac.ucr.sigebi.domain.Tipo;
 import cr.ac.ucr.sigebi.domain.UnidadEjecutora;
 import java.util.Date;
 import java.util.List;
@@ -226,4 +228,59 @@ public class ExclusionDao extends GenericDaoImpl {
         query.setParameter("solicitud", solicitud);
         return query;
     }
+    
+    @Transactional(readOnly = true)
+    public List<SolicitudDetalle> listarDetalles(Tipo tipoExclusion, Estado estado, Date fechaInicio, Date fechaFin, String orden, String orden1, String orden2, String orden3) throws FWExcepcion {
+        Session session = dao.getSessionFactory().openSession();
+        try {
+            StringBuilder sql = new StringBuilder("SELECT entity FROM SolicitudDetalle entity, SolicitudExclusion se WHERE entity.solicitud.discriminador = 1");
+            sql.append(" AND entity.solicitud = se ");
+            if(fechaInicio != null && fechaFin != null) {
+                sql.append(" AND entity.solicitud.fecha BETWEEN :fechaInicio AND :fechaFin ");
+            }
+
+            if(estado != null) {
+                sql.append(" AND entity.estado = :estado ");
+            }
+            if(tipoExclusion != null) {
+                sql.append(" AND se.tipoExclusion = :tipoExclusion ");
+            }
+
+            sql.append(" ORDER BY entity.solicitud.id ");
+            if (orden1 != null && orden1.length() > 0) {
+                sql.append(", entity.");
+                sql.append(orden1);
+                if (orden2 != null && orden2.length() > 0) {
+                    sql.append(", entity.");
+                    sql.append(orden2);
+                    if (orden3 != null && orden3.length() > 0) {
+                        sql.append(", entity.");
+                        sql.append(orden3);
+                    }
+                }
+                sql.append(" ").append(orden);
+            }
+            
+            Query query = session.createQuery(sql.toString());
+            
+            if(tipoExclusion != null) {
+                query.setParameter("tipoExclusion", tipoExclusion);
+            } 
+            if(estado != null) {
+                query.setParameter("estado", estado);
+            }
+            if(fechaInicio != null && fechaFin != null) {
+                query.setParameter("fechaInicio", fechaInicio);
+                query.setParameter("fechaFin", fechaFin);
+            }
+
+            return (List<SolicitudDetalle>) query.list();
+        } catch (HibernateException e) {
+            throw new FWExcepcion("sigebi.label.exclusiones.error.listar", "Error obtener los registros de tipo " + this.getClass(), e.getCause());
+        }finally{
+            session.close();        
+        }        
+    }
+    
+
 }

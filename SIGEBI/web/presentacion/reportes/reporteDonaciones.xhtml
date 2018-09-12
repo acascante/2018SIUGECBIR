@@ -1,0 +1,156 @@
+<ice:form id="frmReporteDonaciones" 
+          xmlns:ice="http://www.icesoft.com/icefaces/component"
+          xmlns:h="http://java.sun.com/jsf/html"
+          xmlns:f="http://java.sun.com/jsf/core"
+          xmlns:ui="http://java.sun.com/jsf/facelets" >
+    <div class="contenido-pagina">
+        <div class="container"> 
+            
+            <!-- Titulo -->
+            <div class="row">
+                <div class='col-sm-7 align-middle'>
+                    <h1 class="align-middle">
+                        <ice:outputFormat value="#{label['sigebi.reporte.donaciones.titulo']}"/>
+                    </h1>
+                </div>    
+            </div>
+
+            <div class="row justify-content-md-center">
+                 <div class='col-sm-11'>
+                     <ice:panelGroup style="margin: 20px 0px">
+                         <ice:panelTabSet>
+                             <ice:panelTab id="tabConfiguracion" label="#{label['sigebi.reporte.donaciones.tab.configuracion']}">
+                                <div class="row">
+                                    <div class='col-sm-3 align-middle'>
+                                        <h4 class="align-middle" style="margin-top: 15px">
+                                            <ice:outputFormat value="#{label['sigebi.reporte.donaciones.tipoReporte']}"/>
+                                        </h4>
+                                    </div>
+                                    <div class='col-sm-9'>
+                                        <ice:selectOneMenu id="tipoReporte" styleClass="form-control"
+                                                           value="#{controllerReporteDonaciones.command.idTipo}" >
+                                            <f:selectItems id="optSelTipoBien" value="#{controllerReporteDonaciones.itemsTipoReporte}"/>
+                                         </ice:selectOneMenu>                                        
+                                   </div>
+                                </div>
+                                
+                                <div class="row">
+                                    <div class='col-sm-3 align-middle'>
+                                        <h4 class="align-middle" style="margin-top: 15px">
+                                            <ice:outputFormat value="#{label['sigebi.reporte.donaciones.filtro']}"/>
+                                        </h4>
+                                    </div>
+                                    <div class='col-sm-3'>
+                                        <ice:outputText value="#{label['sigebi.reporte.donaciones.filtro.idSolicitud']}" />
+                                        <ice:inputText id="txtIdSolicitud" styleClass="form-control" maxlength="30" partialSubmit="false"
+                                                       value="#{controllerReporteDonaciones.command.fltIdSolicitud}" >
+                                        </ice:inputText> 
+                                    </div>
+                                    
+                                    <div class='col-sm-3'>
+                                        <ice:outputText  value="#{label['sigebi.reporte.donaciones.filtro.bien']}" />
+                                        <ice:inputText id="txtIdentificacion" styleClass="form-control" maxlength="100" partialSubmit="false"
+                                                       value="#{controllerReporteDonaciones.command.fltIdentificaionBien}" >
+                                        </ice:inputText> 
+                                   </div>
+                                </div>
+                                 <div class="row">
+                                    <div class='col-sm-3 align-middle'>
+                                    </div>
+                                    <div class='col-sm-3'>
+                                        <ice:outputText value="#{label['sigebi.reporte.donaciones.filtro.fechaInicio']}" />
+                                        <ice:selectInputDate id="txtFecInic" partialSubmit="false" styleClass="form-control" renderAsPopup="true" renderMonthAsDropdown="true" 
+                                                            title="Fecha Inicial"
+                                                            value="#{controllerReporteDonaciones.command.fltFechaInicio}">
+                                           <f:convertDateTime pattern="dd/MM/yyyy" timeZone="GMT-6:00" />
+                                       </ice:selectInputDate>
+                                    </div>
+                                    
+                                    <div class='col-sm-3'>
+                                        <ice:outputText  value="#{label['sigebi.reporte.donaciones.filtro.fechaFin']}" />
+                                        <ice:selectInputDate id="txtFecInic" partialSubmit="false" styleClass="form-control" renderAsPopup="true" renderMonthAsDropdown="true" 
+                                                            title="Fecha Inicial"
+                                                            value="#{controllerReporteDonaciones.command.fltFechaFin}">
+                                           <f:convertDateTime pattern="dd/MM/yyyy" timeZone="GMT-6:00" />
+                                       </ice:selectInputDate>
+                                   </div>
+                                </div>
+                                 
+                                <div class="row">
+                                    <div class='col-sm-3 align-middle'>
+                                        <h4 class="align-middle" style="margin-top: 15px">
+                                            <ice:outputFormat value="#{label['sigebi.reporte.donaciones.orden']}"/>
+                                        </h4>
+                                    </div>
+                                
+                                    <div class='col-sm-3'>
+                                        <div class="form-group ">
+                                            <ice:outputText  value="#{label['sigebi.reporte.donaciones.orden.tipo']}" />
+                                            <ice:selectOneMenu id="selTipoOrden" styleClass="form-control"
+                                                               value="#{controllerReporteDonaciones.command.idOrden}" >
+                                                <f:selectItem itemLabel="ASC" itemValue="1"/>
+                                                <f:selectItem itemLabel="DESC" itemValue="2"/>
+                                             </ice:selectOneMenu>
+                                        </div>
+                                    </div>
+                                </div>
+                             
+                                <div class="row">
+                                    <div class='col-sm-3 align-middle' />
+                                    <div class='col-sm-3'>
+                                        <div class="form-group ">
+                                            <ice:outputText  value="#{label['sigebi.reporte.donaciones.orden.tipo1']}" />
+                                            <ice:selectOneMenu id="selOrden1" styleClass="form-control" partialSubmit="true"
+                                                               value="#{controllerReporteDonaciones.command.idOrden1}" >
+                                                <f:selectItem itemLabel="N/A" itemValue="-1"/>
+                                                <f:selectItem itemLabel="IDENTIFICACION" itemValue="1"/>
+                                                <f:selectItem itemLabel="DESCRIPCION" itemValue="2"/>
+                                                <f:selectItem itemLabel="ESTADO" itemValue="3"/>
+                                                <f:selectItem itemLabel="UNIDAD EJECUTORA" itemValue="4"/>
+                                            </ice:selectOneMenu>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="col-md-3">
+                                        <div class="form-group ">
+                                            <ice:outputText value="#{label['sigebi.reporte.donaciones.orden.tipo2']}" />
+                                            <ice:selectOneMenu id="selOrden2" styleClass="form-control" partialSubmit="true"
+                                                               value="#{controllerReporteDonaciones.command.idOrden2}" >
+                                                <f:selectItem itemLabel="N/A" itemValue="-1"/>
+                                                <f:selectItem itemLabel="IDENTIFICACION" itemValue="1"/>
+                                                <f:selectItem itemLabel="DESCRIPCION" itemValue="2"/>
+                                                <f:selectItem itemLabel="ESTADO" itemValue="3"/>
+                                                <f:selectItem itemLabel="UNIDAD EJECUTORA" itemValue="4"/>
+                                            </ice:selectOneMenu>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="col-md-3">
+                                        <div class="form-group ">
+                                            <ice:outputText value="#{label['sigebi.reporte.donaciones.orden.tipo3']}" />
+                                            <ice:selectOneMenu id="selOrden3" styleClass="form-control" partialSubmit="true"
+                                                               value="#{controllerReporteDonaciones.command.idOrden3}" >
+                                                <f:selectItem itemLabel="N/A" itemValue="-1"/>
+                                                <f:selectItem itemLabel="IDENTIFICACION" itemValue="1"/>
+                                                <f:selectItem itemLabel="DESCRIPCION" itemValue="2"/>
+                                                <f:selectItem itemLabel="ESTADO" itemValue="3"/>
+                                                <f:selectItem itemLabel="UNIDAD EJECUTORA" itemValue="4"/>
+                                            </ice:selectOneMenu>
+                                        </div>
+                                    </div>
+                                </div>
+                            </ice:panelTab> 
+                        </ice:panelTabSet>     
+                    </ice:panelGroup>
+                </div>
+            </div>
+            
+            <!-- Botones para generar -->
+            <div class="row">
+                <ice:commandButton id="btnReporte" style="float: right" styleClass="boton" partialSubmit="true" value="Generar Reporte"
+                                   action="#{controllerReporteDonaciones.generarReporte}">
+                </ice:commandButton>
+            </div>  
+        </div>    
+    </div>
+</ice:form>

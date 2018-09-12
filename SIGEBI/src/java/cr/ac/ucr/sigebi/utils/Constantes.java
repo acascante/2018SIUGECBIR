@@ -196,6 +196,8 @@ public final class Constantes {
     public static final String DOMINIO_COLUMNAS_REPORTE_SOBRANTES = "ORDEN_COLUMNA_SOBRANTES";
     public static final String DOMINIO_COLUMNAS_REPORTE_ROLES_USUARIOS = "ORDEN_COLUMNA_ROLES_USUARIOS";
     public static final String DOMINIO_COLUMNAS_REPORTE_USUARIOS_BIENES = "ORDEN_COLUMNA_USUARIOS_BIENES";
+    public static final String DOMINIO_COLUMNAS_REPORTE_DONACIONES = "ORDEN_COLUMNA_USUARIOS_BIENES";
+    public static final String DOMINIO_COLUMNAS_REPORTE_EXCLUSIONES = "ORDEN_COLUMNA_USUARIOS_BIENES";
     public static final String DOMINIO_GRUPO_REPORTE_ROLES_USUARIOS = "GRUPO_REPORTE_ROLES_USUARIOS";
     public static final String DOMINIO_CONVENIO = "CONVENIO";
     public static final String DOMINIO_DOCUMENTO = "DOCUMENTO";
@@ -250,6 +252,9 @@ public final class Constantes {
     public static final Integer TIPO_REGISTRO_MOVIMIENTO_CAMBIO_CONVENIO = 5;
     public static final Integer TIPO_REGISTRO_MOVIMIENTO_RECHAZO_ASIGNACION_PLACA = 6;
     public static final Integer TIPO_REGISTRO_MOVIMIENTO_CAMBIO_RECEPCION_PRESTAMO = 7;
+    public static final Integer TIPO_REGISTRO_MOVIMIENTO_EJECUCION_ACTA_EXCLLUSION = 8;
+    public static final Integer TIPO_REGISTRO_MOVIMIENTO_EJECUCION_DONACION = 9;
+    
 
     public static final String TIPO_REPORTE_PDF = "PDF";
     public static final String TIPO_REPORTE_EXCELL = "EXCELL";

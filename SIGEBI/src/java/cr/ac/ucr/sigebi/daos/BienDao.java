@@ -83,13 +83,13 @@ public class BienDao extends GenericDaoImpl {
             sql.append(" ORDER BY entity.usuarioResponsable ");
             if (orden1 != null && orden1.length() > 0) {
                 sql.append(", entity.");
-                sql.append(orden1.toLowerCase());
+                sql.append(orden1);
                 if (orden2 != null && orden2.length() > 0) {
                     sql.append(", entity.");
-                    sql.append(orden2.toLowerCase());
+                    sql.append(orden2);
                     if (orden3 != null && orden3.length() > 0) {
                         sql.append(", entity.");
-                        sql.append(orden3.toLowerCase());            
+                        sql.append(orden3);
                     }
                 }
                 sql.append(" ").append(orden);
@@ -523,84 +523,6 @@ public class BienDao extends GenericDaoImpl {
         return q;
     }
 
-    
-    private Query creaQueryBienesActa_OLD(Boolean contar,
-             Session session,
-             UnidadEjecutora unidadEjecutora,
-             Long id,
-             String identificacion,
-             String descripcion,
-             String marca,
-             String modelo,
-             String serie,
-             Tipo tipo,
-             Estado... estados) {
-        StringBuilder sql = new StringBuilder(" ");
-        if (contar) {
-            sql.append("SELECT count(b) FROM DocumentoInformeTecnico b ");
-        } else {
-            sql.append("SELECT b.bien FROM DocumentoInformeTecnico b ");
-        }
-        
-        sql.append("WHERE b.bien.estadoInterno IN (:estados) ");
-        sql.append(" AND b.tipoInforme = :tipoInforme ");
-        
-        if (unidadEjecutora != null) {
-            sql.append(" AND b.bien.unidadEjecutora = :unidadEjecutora ");
-        }
-        if (id != null && id > 0) {
-            sql.append(" AND str( b.bien.id ) like :id ");
-        } else {
-            if (identificacion != null && identificacion.length() > 0) {
-                sql.append(" AND UPPER(b.bien.identificacion.identificacion) LIKE UPPER(:identificacion) ");
-            }
-            if (descripcion != null && descripcion.length() > 0) {
-                sql.append(" AND UPPER(b.bien.descripcion) LIKE UPPER(:descripcion) ");
-            }
-            if (marca != null && marca.length() > 0) {
-                sql.append(" AND UPPER(b.bien.resumenBien.marca) LIKE UPPER(:marca) ");
-            }
-            if (modelo != null && modelo.length() > 0) {
-                sql.append(" AND UPPER(b.bien.resumenBien.modelo) LIKE UPPER(:modelo) ");
-            }
-            if (serie != null && serie.length() > 0) {
-                sql.append(" AND UPPER(b.bien.resumenBien.serie) LIKE UPPER(:serie) ");
-            }
-        }
-        sql.append(" ORDER BY b.bien.identificacion.identificacion ASC ");
-        Query q = session.createQuery(sql.toString());
-        //
-        q.setParameterList("estados", estados);
-        q.setParameter("tipoInforme", tipo);
-            
-        if (unidadEjecutora != null) {
-            q.setParameter("unidadEjecutora", unidadEjecutora);
-        }
-        if (id != null && id > 0) {
-            q.setParameter("id", '%' + id.toString() + '%');
-        } 
-        else {
-            if (identificacion != null && identificacion.length() > 0) {
-                q.setParameter("identificacion", '%' + identificacion + '%');
-            }
-            if (descripcion != null && descripcion.length() > 0) {
-                q.setParameter("descripcion", '%' + descripcion + '%');
-            }
-            if (marca != null && marca.length() > 0) {
-                q.setParameter("marca", '%' + marca + '%');
-            }
-            if (modelo != null && modelo.length() > 0) {
-                q.setParameter("modelo", '%' + modelo + '%');
-            }
-            if (serie != null && serie.length() > 0) {
-                q.setParameter("serie", '%' + serie + '%');
-            }
-            
-        }
-        return q;
-    }
-
-    
     
     @Transactional
     public void sincronizarBien(Sincronizar sincronizar) throws FWExcepcion, Exception {

@@ -10,10 +10,12 @@ import cr.ac.ucr.sigebi.daos.ActaDao;
 import cr.ac.ucr.sigebi.daos.UnidadEjecutoraDao;
 import cr.ac.ucr.sigebi.domain.DocumentoActa;
 import cr.ac.ucr.sigebi.domain.DocumentoDetalle;
+import cr.ac.ucr.sigebi.domain.Estado;
 import java.util.List;
 import javax.annotation.Resource;
 
 import cr.ac.ucr.sigebi.utils.Constantes;
+import java.util.Date;
 import org.springframework.stereotype.Service;
 
 /**
@@ -49,7 +51,9 @@ public class ActaModel {
         return actaDao.traerBienesActa(acta);
     }
     
-    
+    public List<DocumentoDetalle> listarDetalles(Estado estado, Long id, String identificacionBien, Date fechaInicio, Date fechaFin, String orden, String orden1, String orden2, String orden3) throws FWExcepcion {
+        return actaDao.listarDetalles(estado, id, identificacionBien, fechaInicio, fechaFin, orden, orden1, orden2, orden3);
+    }
     public Long consultaCantidadRegistros(Long idUnidadEjecutora, String fltIdActa, String fltAutorizacion, String fltEstado, String fltFecha){
         try{
             if (idUnidadEjecutora.equals(Constantes.DEFAULT_ID)) {
@@ -65,6 +69,10 @@ public class ActaModel {
             throw new FWExcepcion("sigebi.error.model.Actas.Consultar Cant Reg",
                     "Error al obtener los datos, error generado en la clase " + this.getClass(), ex);
         }
+    }
+    
+    public List<DocumentoActa> listarActas(String fltEstado) {
+        return actaDao.listarActas(null, null, null, fltEstado, null,  1, 1);
     }
     
     public List<DocumentoActa> listarActas(Long idUnidadEjecutora,

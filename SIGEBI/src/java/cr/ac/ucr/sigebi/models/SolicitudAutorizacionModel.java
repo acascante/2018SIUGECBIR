@@ -35,5 +35,4 @@ public class SolicitudAutorizacionModel {
     public SolicitudAutorizacion buscar(AutorizacionRol autorizacionRol, Solicitud solicitud) throws FWExcepcion {
         return solicitudAutorizacionDao.buscar(autorizacionRol, solicitud);
     }
-
 }
