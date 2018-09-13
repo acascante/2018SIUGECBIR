@@ -233,7 +233,7 @@ public class ExclusionDao extends GenericDaoImpl {
     public List<SolicitudDetalle> listarDetalles(Tipo tipoExclusion, Estado estado, Date fechaInicio, Date fechaFin, String orden, String orden1, String orden2, String orden3) throws FWExcepcion {
         Session session = dao.getSessionFactory().openSession();
         try {
-            StringBuilder sql = new StringBuilder("SELECT entity FROM SolicitudDetalle entity, SolicitudExclusion se WHERE entity.solicitud.discriminador = 1");
+            StringBuilder sql = new StringBuilder("SELECT entity FROM SolicitudDetalle entity, SolicitudExclusion se WHERE entity.solicitud.discriminator = 1");
             sql.append(" AND entity.solicitud = se ");
             if(fechaInicio != null && fechaFin != null) {
                 sql.append(" AND entity.solicitud.fecha BETWEEN :fechaInicio AND :fechaFin ");

@@ -9,6 +9,7 @@ import com.icesoft.faces.context.effects.JavascriptContext;
 import cr.ac.ucr.framework.vista.util.Mensaje;
 import cr.ac.ucr.sigebi.commands.ReporteDonacionesCommand;
 import cr.ac.ucr.sigebi.domain.SolicitudDetalle;
+import cr.ac.ucr.sigebi.domain.SolicitudDonacion;
 import cr.ac.ucr.sigebi.utils.Constantes;
 import cr.ac.ucr.sigebi.domain.Tipo;
 import cr.ac.ucr.sigebi.domain.reportes.ReporteDonaciones;
@@ -100,7 +101,8 @@ public class GenerarReporteDonacionesController extends BaseController {
 
                 ArrayList<ReporteDonaciones> datosReporte = new ArrayList<ReporteDonaciones>();
                 for (SolicitudDetalle detalle : detalles) {
-                    datosReporte.add(new ReporteDonaciones(detalle));
+                    SolicitudDonacion solicitudDonacion = (SolicitudDonacion)solicitudModel.buscarPorId(detalle.getSolicitud().getId());
+                    datosReporte.add(new ReporteDonaciones(detalle, solicitudDonacion));
                 }
 
                 JRBeanCollectionDataSource beanColDataSource = new JRBeanCollectionDataSource(datosReporte);

@@ -10,6 +10,7 @@ import cr.ac.ucr.sigebi.utils.Constantes;
 import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -36,8 +37,8 @@ public class DocumentoDetalle extends ObjetoBase implements Serializable {
     @Column(name = "ID_DOCUMENTO_DETALLE")
     private Long id;
 
-    @ManyToOne
     @JoinColumn(name = "ID_DOCUMENTO", referencedColumnName = "ID_DOCUMENTO")
+    @ManyToOne(fetch = FetchType.EAGER)
     private Documento documento;
 
     @ManyToOne

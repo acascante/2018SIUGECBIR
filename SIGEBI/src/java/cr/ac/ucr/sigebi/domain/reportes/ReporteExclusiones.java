@@ -31,8 +31,7 @@ public class ReporteExclusiones implements Serializable {
         super();
     }
     
-    public ReporteExclusiones(DocumentoDetalle detalle) {
-        DocumentoActa documento = (DocumentoActa)detalle.getDocumento();
+    public ReporteExclusiones(DocumentoDetalle detalle, DocumentoActa documento) {
         this.idDocumento = documento.getId();
         this.autorizacion = documento.getAutorizacion();
         this.identificacion = detalle.getBien().getIdentificacion()!= null ? detalle.getBien().getIdentificacion().getIdentificacion() : null;

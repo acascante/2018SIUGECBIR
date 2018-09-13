@@ -405,7 +405,7 @@ public final class Constantes {
     public static final String VISTA_REPORTE_DONACIONES = "../reportes/reporteDonaciones.xhtml";
     public static final String VISTA_REPORTE_BIENES_POR_USUARIO = "../reportes/reporteUsuarioBienes.xhtml";
     public static final String VISTA_REPORTE_MOVIMIENTOS = "../reportes/reporteMovimientos.xhtml";
-    public static final String VISTA_REPORTE_BIENES_EXCLUIR = "../reportes/reporteBienesExcluir.xhtml";
+    public static final String VISTA_REPORTE_BIENES_EXCLUIR = "../reportes/reporteExclusionesPendientes.xhtml";
     public static final String VISTA_REPORTE_ROLES_POR_USUARIO = "../reportes/reporteRolesUsuarios.xhtml";
     public static final String VISTA_REPORTE_TRASLADO = "../reportes/reporteTraslados.xhtml";
     public static final String VISTA_REPORTE_EXCLUSIONES = "../reportes/reporteExclusiones.xhtml";

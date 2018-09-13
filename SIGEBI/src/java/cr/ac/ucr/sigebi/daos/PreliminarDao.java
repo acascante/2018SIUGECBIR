@@ -177,18 +177,21 @@ public class PreliminarDao extends GenericDaoImpl  {
         if(id != null && id > 0){
            sql.append(" AND entity.id = :id ");
         } else {
-//            if(institucion != null && institucion.length() > 0){
-//                sql.append(" AND UPPER(entity.institucion) LIKE UPPER(:institucion) ");
-//            }
-//            if(responsable != null && responsable.length() > 0){
-//                sql.append(" AND UPPER(entity.responsable) LIKE UPPER(:responsable) ");
-//            }
-//            if(oficio != null && oficio.length() > 0){
-//                sql.append(" AND UPPER(entity.oficio) like upper(:oficio) ");
-//            }
-//            if(idEstado != null && idEstado > 0){
-//                sql.append(" AND entity.estado.id = :idEstado ");
-//            }
+            if(identificacion != null && identificacion.length() > 0){
+                sql.append(" AND UPPER(entity.identificacion) LIKE UPPER(:identificacion) ");
+            }
+            if(descripcion != null && descripcion.length() > 0){
+                sql.append(" AND UPPER(entity.descripcion) LIKE UPPER(:descripcion) ");
+            }
+            if(marca != null && marca.length() > 0){
+                sql.append(" AND UPPER(entity.marca) like upper(:marca) ");
+            }
+            if(factura != null && factura.length() > 0){
+                sql.append(" AND entity.factura like upper(:factura) ");
+            }
+            if(unidad != null && unidad.length() > 0){
+                sql.append(" AND entity.unidadEjecutora.descripcion like upper(:unidad) ");
+            }
         }
         //sql.append(" ORDER BY entity.id asc");
         
@@ -196,18 +199,21 @@ public class PreliminarDao extends GenericDaoImpl  {
         if(id != null && id > 0){
             query.setParameter("id", id);
         } else {
-//            if(institucion != null && institucion.length() > 0){
-//                query.setParameter("institucion", '%' + institucion + '%');
-//            }
-//            if(responsable != null && responsable.length() > 0){
-//                query.setParameter("responsable", '%' + responsable + '%');
-//            }
-//            if(oficio != null && oficio.length() > 0){
-//                query.setParameter("oficio", '%' + oficio + '%');
-//            }
-//            if(idEstado != null && idEstado > 0){
-//                query.setParameter("idEstado", idEstado);
-//            }
+            if(identificacion != null && identificacion.length() > 0){
+                query.setParameter("identificacion", '%' + identificacion + '%');
+            }
+            if(descripcion != null && descripcion.length() > 0){
+                query.setParameter("descripcion", '%' + descripcion + '%');
+            }
+            if(marca != null && marca.length() > 0){
+                query.setParameter("marca", '%' + marca + '%');
+            }
+            if(factura != null && factura.length() > 0){
+                query.setParameter("factura", '%' + factura + '%');
+            }
+            if(unidad != null && unidad.length() > 0){
+                query.setParameter("unidad", '%' + unidad + '%');
+            }
         }
         return query;
     }

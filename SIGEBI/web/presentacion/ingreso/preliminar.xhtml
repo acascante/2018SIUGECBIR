@@ -80,27 +80,27 @@
                 <div>
                     <ice:commandButton image="./imagenes/botones/first.png" 
                                        partialSubmit="true" 
-                                       actionListener="#{controllerPreliminar.actaPrimero}" 
+                                       actionListener="#{controllerPreliminar.listaPrimero}" 
                                        rendered="#{controllerPreliminar.cantidadPaginas > 1}"/>
                     <ice:commandButton image="./imagenes/botones/previos.png" 
                                        partialSubmit="true" 
-                                       actionListener="#{controllerPreliminar.actaAnterior}" 
+                                       actionListener="#{controllerPreliminar.listaAnterior}" 
                                        rendered="#{controllerPreliminar.cantidadPaginas > 1}"/>
                     <ui:repeat value="#{controllerPreliminar.arregloPaginas}" 
                                var="pagina">
                         <ice:commandLink value="#{pagina}" 
                                          partialSubmit="true" 
-                                         actionListener="#{controllerPreliminar.actaIrPagina}">
+                                         actionListener="#{controllerPreliminar.listaIrPagina}">
                             <f:param name="numPag" value="#{pagina}"/>
                         </ice:commandLink>
                     </ui:repeat>            
                     <ice:commandButton image="./imagenes/botones/next.png" 
                                        partialSubmit="true" 
-                                       actionListener="#{controllerPreliminar.actaSiguiente}" 
+                                       actionListener="#{controllerPreliminar.listaSiguiente}" 
                                        rendered="#{controllerPreliminar.cantidadPaginas > 1}"/>
                     <ice:commandButton image="./imagenes/botones/last.png" 
                                        partialSubmit="true" 
-                                       actionListener="#{controllerPreliminar.actaUltimo}" 
+                                       actionListener="#{controllerPreliminar.listaUltimo}" 
                                        rendered="#{controllerPreliminar.cantidadPaginas > 1}"/>
                 </div>
             </div>

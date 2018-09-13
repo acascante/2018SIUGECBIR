@@ -29,8 +29,7 @@ public class ReporteDonaciones implements Serializable {
         super();
     }
     
-    public ReporteDonaciones(SolicitudDetalle detalle) {
-        SolicitudDonacion solicitud = (SolicitudDonacion)detalle.getSolicitud();
+    public ReporteDonaciones(SolicitudDetalle detalle, SolicitudDonacion solicitud) {
         this.idSolicitud = solicitud.getId();
         this.donante = solicitud.getDonante();
         this.identificacion = detalle.getBien().getIdentificacion()!= null ? detalle.getBien().getIdentificacion().getIdentificacion() : null;

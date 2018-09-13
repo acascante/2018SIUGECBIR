@@ -86,21 +86,21 @@ public class GenerarReporteExclusionesPendientesController extends BaseControlle
             }
         }
         
-        List<Tipo> tiposExclusion = this.tiposPorDominio(Constantes.DOMINIO_EXCLUSION);
-        if (!tiposExclusion.isEmpty()) {
+        List<Tipo> tiposE = this.tiposPorDominio(Constantes.DOMINIO_EXCLUSION);
+        if (!tiposE.isEmpty()) {
             this.itemsTipoExclusion = new ArrayList<SelectItem>();
             this.tiposExclusion = new HashMap<Long, Tipo>();
-            for (Tipo tipo : tiposExclusion) {
+            for (Tipo tipo : tiposE) {
                 this.tiposExclusion.put(tipo.getId(), tipo);
                 this.itemsTipoExclusion.add(new SelectItem(tipo.getId(), tipo.getNombre()));
             }
         }
         
-        List<Estado> estadosExclusion = this.estadosPorDominio(Constantes.DOMINIO_EXCLUSION);
-        if (!estadosExclusion.isEmpty()) {
+        List<Estado> estadosE = this.estadosPorDominio(Constantes.DOMINIO_EXCLUSION);
+        if (!estadosE.isEmpty()) {
             this.itemsEstadosExclusion = new ArrayList<SelectItem>();
             this.estadosExclusion = new HashMap<Long, Estado>();
-            for (Estado estado : estadosExclusion) {
+            for (Estado estado : estadosE) {
                 this.estadosExclusion.put(estado.getId(), estado);
                 this.itemsEstadosExclusion.add(new SelectItem(estado.getId(), estado.getNombre()));
             }
@@ -120,15 +120,15 @@ public class GenerarReporteExclusionesPendientesController extends BaseControlle
             Tipo orden2 = this.tipoPorDominioValor(Constantes.DOMINIO_COLUMNAS_REPORTE_EXCLUSIONES, this.command.getIdOrden2());
             Tipo orden3 = this.tipoPorDominioValor(Constantes.DOMINIO_COLUMNAS_REPORTE_EXCLUSIONES, this.command.getIdOrden3());
             
-            Tipo tipoExclusion = this.tipoPorId(this.command.getFltIdTipo().equals(Constantes.DEFAULT_ID) ? null : this.command.getFltIdTipo());
+            Tipo tipoExclusion = this.tipoPorId(this.command.getFltIdTipo());
             Estado estado =  this.estadoPorId(this.command.getFltIdEstado());
             
             List<SolicitudDetalle> detalles = this.exclusionModel.listarDetalles(tipoExclusion, estado, this.command.getFltFechaInicio(), this.command.getFltFechaFin(), orden.getNombre(), 
                     orden1 != null ? orden1.getNombre() : null, orden2 != null ? orden3.getNombre() : null, orden3 != null ? orden3.getNombre() : null);
             
             if (!detalles.isEmpty()) {
-                String template = cr.ac.ucr.framework.reporte.componente.utilitario.Util.ConvertirRutas("/reportes/reporteExclusiones.jrxml");
-                String outputFile = cr.ac.ucr.framework.reporte.componente.utilitario.Util.ConvertirRutas("/reportes/reporteExclusiones");
+                String template = cr.ac.ucr.framework.reporte.componente.utilitario.Util.ConvertirRutas("/reportes/reporteExclusionesPendientes.jrxml");
+                String outputFile = cr.ac.ucr.framework.reporte.componente.utilitario.Util.ConvertirRutas("/reportes/reporteExclusionesPendientes");
 
                 ArrayList<ReporteExclusionesPendientes> datosReporte = new ArrayList<ReporteExclusionesPendientes>();
                 for (SolicitudDetalle detalle : detalles) {
@@ -142,10 +142,10 @@ public class GenerarReporteExclusionesPendientesController extends BaseControlle
                 Tipo tipoReporte = this.tipoPorId(this.command.getIdTipo());
                 if(tipoReporte.getNombre().equals(Constantes.TIPO_REPORTE_EXCELL)) {
                     JasperExportManager.exportReportToXmlFile(jasperPrint, outputFile + Constantes.TIPO_REPORTE_EXCELL_EXTENSION, true);
-                    JavascriptContext.addJavascriptCall(FacesContext.getCurrentInstance(), "reporte('reporteExclusiones','" + Constantes.TIPO_REPORTE_EXCELL_EXTENSION + "');");
+                    JavascriptContext.addJavascriptCall(FacesContext.getCurrentInstance(), "reporte('reporteExclusionesPendientes','" + Constantes.TIPO_REPORTE_EXCELL_EXTENSION + "');");
                 } else {
                     JasperExportManager.exportReportToPdfFile(jasperPrint, outputFile + Constantes.TIPO_REPORTE_PDF_EXTENSION);
-                    JavascriptContext.addJavascriptCall(FacesContext.getCurrentInstance(), "reporte('reporteExclusiones','" + Constantes.TIPO_REPORTE_PDF_EXTENSION + "');");                    
+                    JavascriptContext.addJavascriptCall(FacesContext.getCurrentInstance(), "reporte('reporteExclusionesPendientes','" + Constantes.TIPO_REPORTE_PDF_EXTENSION + "');");                    
                 }
                 Mensaje.agregarInfo("Reporte generado exitosamente");
             } else {

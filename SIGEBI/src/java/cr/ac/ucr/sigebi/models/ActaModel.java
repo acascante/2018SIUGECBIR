@@ -8,6 +8,7 @@ package cr.ac.ucr.sigebi.models;
 import cr.ac.ucr.framework.utils.FWExcepcion;
 import cr.ac.ucr.sigebi.daos.ActaDao;
 import cr.ac.ucr.sigebi.daos.UnidadEjecutoraDao;
+import cr.ac.ucr.sigebi.domain.Documento;
 import cr.ac.ucr.sigebi.domain.DocumentoActa;
 import cr.ac.ucr.sigebi.domain.DocumentoDetalle;
 import cr.ac.ucr.sigebi.domain.Estado;
@@ -43,8 +44,8 @@ public class ActaModel {
         actaDao.guardarBienes(valores);
     }
     
-    public DocumentoActa traerActa(Integer actaId) {
-        return actaDao.traerPorId(actaId);
+    public Documento buscarPorId(Long id) {
+        return actaDao.buscarPorId(id);
     }
     
     public List<DocumentoDetalle> traerBienesActa(DocumentoActa acta) {

@@ -39,7 +39,7 @@ public class SolicitudDetalle extends ObjetoBase implements Serializable {
     private Long id;
 
     @JoinColumn(name = "ID_SOLICITUD", referencedColumnName = "ID_SOLICITUD")
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     private Solicitud solicitud;
 
     @JoinColumn(name = "ID_BIEN", referencedColumnName = "ID_BIEN")

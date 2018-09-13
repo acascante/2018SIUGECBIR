@@ -8,8 +8,10 @@ package cr.ac.ucr.sigebi.controllers;
 import com.icesoft.faces.context.effects.JavascriptContext;
 import cr.ac.ucr.framework.vista.util.Mensaje;
 import cr.ac.ucr.sigebi.commands.ReporteExclusionesCommand;
+import cr.ac.ucr.sigebi.domain.DocumentoActa;
 import cr.ac.ucr.sigebi.domain.DocumentoDetalle;
 import cr.ac.ucr.sigebi.domain.Estado;
+import cr.ac.ucr.sigebi.domain.SolicitudExclusion;
 import cr.ac.ucr.sigebi.utils.Constantes;
 import cr.ac.ucr.sigebi.domain.Tipo;
 import cr.ac.ucr.sigebi.domain.reportes.ReporteExclusiones;
@@ -103,7 +105,8 @@ public class GenerarReporteExclusionesController extends BaseController {
 
                 ArrayList<ReporteExclusiones> datosReporte = new ArrayList<ReporteExclusiones>();
                 for (DocumentoDetalle detalle : detalles) {
-                    datosReporte.add(new ReporteExclusiones(detalle));
+                    DocumentoActa documento = (DocumentoActa)actaModel.buscarPorId(detalle.getDocumento().getId());
+                    datosReporte.add(new ReporteExclusiones(detalle, documento));
                 }
 
                 JRBeanCollectionDataSource beanColDataSource = new JRBeanCollectionDataSource(datosReporte);

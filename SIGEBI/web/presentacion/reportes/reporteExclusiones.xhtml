@@ -59,20 +59,20 @@
                                     </div>
                                     <div class='col-sm-3'>
                                         <ice:outputText value="#{label['sigebi.reporte.exclusiones.filtro.fechaInicio']}" />
-                                        <ice:selectInputDate id="txtFecInic" partialSubmit="false" styleClass="form-control" renderAsPopup="true" renderMonthAsDropdown="true" 
-                                                            title="Fecha Inicial"
-                                                            value="#{controllerReporteExclusiones.command.fltFechaInicio}">
-                                           <f:convertDateTime pattern="dd/MM/yyyy" timeZone="GMT-6:00" />
-                                       </ice:selectInputDate>
+                                        <ice:selectInputDate id="txtFecInic" highlightClass="dateHighlightGray" highlightUnit="DAY_OF_WEEK" 
+                                             highlightValue="1" renderAsPopup="true" renderMonthAsDropdown="true" renderYearAsDropdown="true" partialSubmit="false"
+                                             value="#{controllerReporteExclusiones.command.fltFechaInicio}" >
+                                            <f:convertDateTime pattern="#{controllerReporteExclusiones.command.datePattern}" timeZone="#{controllerReporteExclusiones.command.timeZone}" />
+                                        </ice:selectInputDate>
                                     </div>
                                     
                                     <div class='col-sm-3'>
                                         <ice:outputText  value="#{label['sigebi.reporte.exclusiones.filtro.fechaFin']}" />
-                                        <ice:selectInputDate id="txtFecInic" partialSubmit="false" styleClass="form-control" renderAsPopup="true" renderMonthAsDropdown="true" 
-                                                            title="Fecha Inicial"
-                                                            value="#{controllerReporteExclusiones.command.fltFechaFin}">
-                                           <f:convertDateTime pattern="dd/MM/yyyy" timeZone="GMT-6:00" />
-                                       </ice:selectInputDate>
+                                        <ice:selectInputDate id="txtFecFin" highlightClass="dateHighlightGray" highlightUnit="DAY_OF_WEEK" 
+                                             highlightValue="1" renderAsPopup="true" renderMonthAsDropdown="true" renderYearAsDropdown="true" partialSubmit="false"
+                                             value="#{controllerReporteExclusiones.command.fltFechaFin}" >
+                                            <f:convertDateTime pattern="#{controllerReporteExclusiones.command.datePattern}" timeZone="#{controllerReporteExclusiones.command.timeZone}" />
+                                        </ice:selectInputDate>
                                    </div>
                                 </div>
                                  

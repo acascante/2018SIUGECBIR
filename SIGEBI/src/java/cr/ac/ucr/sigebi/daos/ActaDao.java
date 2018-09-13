@@ -36,7 +36,7 @@ public class ActaDao extends GenericDaoImpl {
     @Autowired
     private DaoHelper dao;
     
-    @Transactional
+        @Transactional
     public DocumentoActa traerPorId(Integer pId) {
         Session session = dao.getSessionFactory().openSession();
         DocumentoActa resp = new DocumentoActa();
@@ -58,7 +58,23 @@ public class ActaDao extends GenericDaoImpl {
         }
     }
     
-    @Transactional
+    @Transactional(readOnly = true)
+    public Documento buscarPorId(Long id) {
+        Session session = dao.getSessionFactory().openSession();
+        try {
+            String sql = "SELECT entity FROM Documento entity where entity.id = :id";
+            Query query = session.createQuery(sql);
+            query.setParameter("id", id);
+            
+            return (Documento) query.uniqueResult();
+        } catch (Exception e) {
+            throw new FWExcepcion("sigebi.error.ActaDao.listar", "Error obtener los registros " + this.getClass(), e.getCause());
+        }finally {
+            session.close();
+        }
+    }
+    
+    @Transactional(readOnly = true)
     public List<DocumentoActa> listar(Long unidadEjecutora) {
         try {
             return dao.getHibernateTemplate().find("from Acta"); 
@@ -67,7 +83,7 @@ public class ActaDao extends GenericDaoImpl {
         }
     }
     
-    @Transactional
+    @Transactional(readOnly = true)
     public List<DocumentoDetalle> traerBienesActa(Documento acta) {
         Session session = dao.getSessionFactory().openSession();
         try {
@@ -88,7 +104,7 @@ public class ActaDao extends GenericDaoImpl {
     public List<DocumentoDetalle> listarDetalles(Estado estado, Long id, String identificacionBien, Date fechaInicio, Date fechaFin, String orden, String orden1, String orden2, String orden3) throws FWExcepcion {
         Session session = dao.getSessionFactory().openSession();
         try {
-            StringBuilder sql = new StringBuilder("SELECT entity FROM DocumentoDetalle entity WHERE entity.documento IN ");
+            StringBuilder sql = new StringBuilder("SELECT entity FROM DocumentoDetalle entity WHERE entity.documento.estado = :estado AND entity.documento.discriminator = 2 AND entity.documento IN ");
             
             if(fechaInicio != null && fechaFin != null){
                 sql.append(" (SELECT da.documento FROM DocumentoAutorizacion da WHERE da.fecha BETWEEN :fechaInicio AND :fechaFin) ");
@@ -96,7 +112,6 @@ public class ActaDao extends GenericDaoImpl {
                 sql.append(" (SELECT da.documento FROM DocumentoAutorizacion da) ");
             }
             
-            sql.append(" AND entity.documento.estado = :estado AND entity.discriminador = 2");
             if(id != null && id > 0) {
                 sql.append(" AND entity.documento.id = :id ");
             } else {
@@ -121,6 +136,7 @@ public class ActaDao extends GenericDaoImpl {
             
             Query query = session.createQuery(sql.toString());
             
+            query.setParameter("estado", estado);
             if(fechaInicio != null && fechaFin != null) {
                 query.setParameter("fechaInicio", fechaInicio);
                 query.setParameter("fechaFin", fechaFin);

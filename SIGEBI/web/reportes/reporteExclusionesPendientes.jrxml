@@ -8,8 +8,8 @@
 	<parameter name="NOMBRE_REPORTE" class="java.lang.String"/>
 	<parameter name="TIPO" class="java.lang.String"/>
 	<parameter name="ESTADO" class="java.lang.String"/>
-	<parameter name="FECHA_INICIO" class="java.lang.String"/>
-	<parameter name="FECHA_FIN" class="java.lang.String"/>
+	<parameter name="FECHA_INICIO" class="java.util.Date"/>
+	<parameter name="FECHA_FIN" class="java.util.Date"/>
 	<field name="idSolicitud" class="java.lang.String"/>
 	<field name="identificacion" class="java.lang.String"/>
 	<field name="descripcion" class="java.lang.String"/>
@@ -117,7 +117,7 @@
 				</textElement>
 				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
 			</textField>
-			<textField pattern="">
+			<textField pattern="" isBlankWhenNull="true">
 				<reportElement x="160" y="190" width="200" height="20" forecolor="#000000" uuid="8b608db7-5f4f-40d3-b5ed-8c70fa84d56d"/>
 				<textElement verticalAlignment="Middle">
 					<font fontName="SansSerif" size="9"/>
@@ -134,7 +134,7 @@
 			<line>
 				<reportElement x="5" y="220" width="790" height="1" uuid="7b665dbd-db69-4c4c-9eb9-ffeb540b580a"/>
 			</line>
-			<textField pattern="">
+			<textField pattern="dd/MM/yyyy" isBlankWhenNull="true">
 				<reportElement x="590" y="190" width="200" height="20" forecolor="#000000" uuid="01e5addd-412e-4d17-abab-67a14b70966d"/>
 				<textElement verticalAlignment="Middle">
 					<font fontName="SansSerif" size="9"/>
@@ -155,7 +155,7 @@
 				</textElement>
 				<text><![CDATA[FECHA FINAL]]></text>
 			</staticText>
-			<textField pattern="">
+			<textField pattern="dd/MM/yyyy" isBlankWhenNull="true">
 				<reportElement x="590" y="160" width="200" height="20" forecolor="#000000" uuid="a75a61a8-f5fa-4482-b5d3-3e0270ce0e7b"/>
 				<textElement verticalAlignment="Middle">
 					<font fontName="SansSerif" size="9"/>
@@ -169,7 +169,7 @@
 				</textElement>
 				<text><![CDATA[TIPO]]></text>
 			</staticText>
-			<textField pattern="dd/MM/yyyy">
+			<textField pattern="" isBlankWhenNull="true">
 				<reportElement x="160" y="160" width="200" height="20" forecolor="#000000" uuid="d7a1a49f-1355-4d76-a227-010ca1a783d5"/>
 				<textElement verticalAlignment="Middle">
 					<font fontName="SansSerif" size="9"/>

@@ -286,7 +286,7 @@ public class SolicitudDao extends GenericDaoImpl {
     public List<SolicitudDetalle> listarDetallesSalidas(Long id, String identificacionBien, Date fechaInicio, Date fechaFin, String orden, String orden1, String orden2, String orden3) throws FWExcepcion {
         Session session = dao.getSessionFactory().openSession();
         try {
-            StringBuilder sql = new StringBuilder("SELECT entity FROM SolicitudDetalle entity WHERE entity.solicitud IN ");
+            StringBuilder sql = new StringBuilder("SELECT entity FROM SolicitudDetalle entity WHERE entity.solicitud.discriminator = 2 AND entity.solicitud IN ");
             
             if(fechaInicio != null && fechaFin != null){
                 sql.append(" (SELECT sa.solicitud FROM SolicitudAutorizacion sa WHERE sa.fecha BETWEEN :fechaInicio AND :fechaFin) ");
@@ -295,13 +295,15 @@ public class SolicitudDao extends GenericDaoImpl {
             }
             
             if(id != null && id > 0) {
-                sql.append(" AND entity.id = :id ");
+                sql.append(" AND entity.solicitud.id = :id ");
             } else {
                 if(identificacionBien != null && identificacionBien.length() > 0){
                     sql.append(" AND UPPER(entity.bien.identificacion.identificacion) = UPPER(:identificacionBien) ");
                 }
             }
+            
             sql.append(" ORDER BY entity.solicitud ");
+            
             if (orden1 != null && orden1.length() > 0) {
                 sql.append(", entity.");
                 sql.append(orden1);

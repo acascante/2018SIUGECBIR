@@ -79,6 +79,10 @@ public class PreliminarCommand {
     }
 
     public String getUnidadString() {
+        
+        if( unidadString != null && unidadString.length() > 0)
+            return unidadString;
+        
         if(preliminar != null && preliminar.getUnidad() != null){
             unidadString = preliminar.getUnidad().getId()+ "-" + preliminar.getUnidad().getDescripcion();
         }

@@ -114,14 +114,11 @@ public class PreliminarController extends BaseController  {
             
             autorizado = autorizacionRolPersonaModel.buscar(Constantes.CODIGO_AUTORIZACION_ADMINISTRADOR, Constantes.CODIGO_ROL_ADMINISTRADOR_AUTORIZACION_ADMINISTRADOR, usuarioSIGEBI, unidadEjecutora);
         
-            usuarioAdmin = ( (autorizado != null) && (autorizado.getAutorizacionRol().getId() == Constantes.CODIGO_AUTORIZACION_ADMINISTRADOR.longValue()) );
+            usuarioAdmin = ( (autorizado != null) && (autorizado.getAutorizacionRol().getId() != null) );
             
             
-            if(usuarioAdmin){
-                
-            }
             
-            listarActas();
+            listar();
             consultarUnidades();
             
         } catch (FWExcepcion e) {
@@ -150,20 +147,13 @@ public class PreliminarController extends BaseController  {
         return usuarioAdmin;
     }
     
-    public Long getFltId() {
-        return fltId;
-    }
-
-    public  void setFltId(Long fltId) {
-        fltId = fltId;
-    }
 
     public  String getFltIdentificacion() {
         return fltIdentificacion;
     }
 
     public  void setFltIdentificacion(String fltIdentificacion) {
-        fltIdentificacion = fltIdentificacion;
+        this.fltIdentificacion = fltIdentificacion;
     }
 
     public  String getFltDescripcion() {
@@ -171,7 +161,7 @@ public class PreliminarController extends BaseController  {
     }
 
     public  void setFltDescripcion(String fltDescripcion) {
-        fltDescripcion = fltDescripcion;
+        this.fltDescripcion = fltDescripcion;
     }
 
     public  String getFltUnidad() {
@@ -179,7 +169,7 @@ public class PreliminarController extends BaseController  {
     }
 
     public  void setFltUnidad(String fltUnidad) {
-        fltUnidad = fltUnidad;
+        this.fltUnidad = fltUnidad;
     }
 
     public  String getFltMarca() {
@@ -187,7 +177,7 @@ public class PreliminarController extends BaseController  {
     }
 
     public  void setFltMarca(String fltMarca) {
-        fltMarca = fltMarca;
+        this.fltMarca = fltMarca;
     }
 
     public  String getFltModelo() {
@@ -195,7 +185,7 @@ public class PreliminarController extends BaseController  {
     }
 
     public  void setFltModelo(String fltModelo) {
-        fltModelo = fltModelo;
+        this.fltModelo = fltModelo;
     }
 
     public  String getFltSerie() {
@@ -203,7 +193,7 @@ public class PreliminarController extends BaseController  {
     }
 
     public  void setFltSerie(String fltSerie) {
-        fltSerie = fltSerie;
+        this.fltSerie = fltSerie;
     }
 
     public  String getFltOrden() {
@@ -211,7 +201,7 @@ public class PreliminarController extends BaseController  {
     }
 
     public  void setFltOrden(String fltOrden) {
-        fltOrden = fltOrden;
+        this.fltOrden = fltOrden;
     }
 
     public  String getFltFactura() {
@@ -219,16 +209,9 @@ public class PreliminarController extends BaseController  {
     }
 
     public  void setFltFactura(String fltFactura) {
-        fltFactura = fltFactura;
+        this.fltFactura = fltFactura;
     }
 
-    public  Long getFltIdEstado() {
-        return fltIdEstado;
-    }
-
-    public  void setFltIdEstado(Long fltIdEstado) {
-        fltIdEstado = fltIdEstado;
-    }
 
     public PreliminarCommand getCommand() {
         return command;
@@ -270,7 +253,7 @@ public class PreliminarController extends BaseController  {
     }
     
     
-    public void listarActas(){
+    public void listar(){
         try{
             
             Long cantReg = preliminarModel.contar(fltId
@@ -312,6 +295,98 @@ public class PreliminarController extends BaseController  {
     }
     
     
+    
+    
+    /**
+     * Cambia la cantidad de registros por página
+     *
+     * @param pEvent
+     */
+    public void actaCambioRegistrosPorPagina(ValueChangeEvent pEvent) {
+        if (!pEvent.getPhaseId().equals(PhaseId.INVOKE_APPLICATION)) {
+            pEvent.setPhaseId(PhaseId.INVOKE_APPLICATION);
+            pEvent.queue();
+            return;
+        }
+        int cantReg = Integer.parseInt(pEvent.getNewValue().toString());
+        this.setCantRegistroPorPagina(cantReg);        
+        this.setPrimerRegistro(1);
+        this.listar();
+
+    }
+    
+    
+    public void cambioFiltro(ValueChangeEvent pEvent) {
+        if (!pEvent.getPhaseId().equals(PhaseId.INVOKE_APPLICATION)) {
+            pEvent.setPhaseId(PhaseId.INVOKE_APPLICATION);
+            pEvent.queue();
+            return;
+        }
+        
+        this.setPrimerRegistro(1);
+        this.listar();
+        
+    }
+    
+    public void listaPrimero(ActionEvent pEvent) {
+        if (!pEvent.getPhaseId().equals(PhaseId.INVOKE_APPLICATION)) {
+            pEvent.setPhaseId(PhaseId.INVOKE_APPLICATION);
+            pEvent.queue();
+            return;
+        }
+        this.setPrimerRegistro(1);
+        this.listar();
+    }
+    
+    
+    public void listaAnterior(ActionEvent pEvent) {
+        if (!pEvent.getPhaseId().equals(PhaseId.INVOKE_APPLICATION)) {
+            pEvent.setPhaseId(PhaseId.INVOKE_APPLICATION);
+            pEvent.queue();
+            return;
+        }
+        this.getPaginaAnterior();
+        this.listar();
+    }
+    
+    
+    
+    public void listaIrPagina(ActionEvent pEvent) {
+        if (!pEvent.getPhaseId().equals(PhaseId.INVOKE_APPLICATION)) {
+            pEvent.setPhaseId(PhaseId.INVOKE_APPLICATION);
+            pEvent.queue();
+            return;
+        }
+        int numeroPagina = Integer.parseInt(Util.getRequestParameter("numPag"));
+        this.getPrimerRegistroPagina(numeroPagina);
+        this.listar();
+    }
+    
+    
+    
+    public void listaSiguiente(ActionEvent pEvent) {
+        if (!pEvent.getPhaseId().equals(PhaseId.INVOKE_APPLICATION)) {
+            pEvent.setPhaseId(PhaseId.INVOKE_APPLICATION);
+            pEvent.queue();
+            return;
+        }
+        this.getSiguientePagina();
+        this.listar();
+    }
+
+    
+    public void listaUltimo(ActionEvent pEvent) {
+        if (!pEvent.getPhaseId().equals(PhaseId.INVOKE_APPLICATION)) {
+            pEvent.setPhaseId(PhaseId.INVOKE_APPLICATION);
+            pEvent.queue();
+            return;
+        }
+        this.getPrimerRegistroUltimaPagina();
+        this.listar();
+    }
+
+    
+    
     //</editor-fold>
     
     
@@ -339,10 +414,23 @@ public class PreliminarController extends BaseController  {
     
     public void guardarPreliminar(){
         try{
+            String string = command.getUnidadString();
+                UnidadEjecutora unidad = null;
+            if (string.contains("-")) {
+                try{
+                    String[] parts = string.split("-");
+                    String part1 = parts[0]; // 004
+                    Long idUnidad = Long.parseLong(part1);
+
+                    unidad = unidadEjecutoraModel.buscarPorId(idUnidad);
+                }
+                catch(Exception err){
+                }
+            } else {
+                throw new IllegalArgumentException("String " + string + " does not contain -");
+            }
             
-            
-            
-            
+            command.getPreliminar().setUnidad(unidad);
             
             
             preliminarModel.guardar(command.getPreliminar());
@@ -357,7 +445,7 @@ public class PreliminarController extends BaseController  {
             command.setPreliminar(preliminar);
             
             
-            this.listarActas();
+            this.listar();
             this.cerrarPanel();
             
             Mensaje.agregarInfo(Util.getEtiquetas("sigebi.Preliminar.Mns.ExitoGuardar"));
@@ -385,16 +473,6 @@ public class PreliminarController extends BaseController  {
         }
         
     }
-    
-    public void cambioFiltro(ValueChangeEvent pEvent) {
-        if (!pEvent.getPhaseId().equals(PhaseId.INVOKE_APPLICATION)) {
-            pEvent.setPhaseId(PhaseId.INVOKE_APPLICATION);
-            pEvent.queue();
-            return;
-        }
-        this.listarActas();
-    }
-    
     
     //</editor-fold>
     

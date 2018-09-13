@@ -5,14 +5,17 @@
  */
 package cr.ac.ucr.sigebi.commands;
 
+import cr.ac.ucr.sigebi.utils.Constantes;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.TimeZone;
 
 /**
  *
  * @author alvaro.cascante
  */
 public class ReporteDonacionesCommand {
-        
+    
     //<editor-fold defaultstate="collapsed" desc="Atributos">
     private Long idTipo;
     private Integer idOrden;
@@ -38,6 +41,14 @@ public class ReporteDonacionesCommand {
         this.fltFechaFin = null;
     }
     //</editor-fold>
+       
+    public String getDatePattern() {
+        return Constantes.DEFAULT_DATE_PATTERN;
+    }
+    
+    public TimeZone getTimeZone() {
+        return Constantes.DEFAULT_TIME_ZONE;
+    }
     
     //<editor-fold defaultstate="collapsed" desc="Gets y Sets">
     public Long getIdTipo() {
