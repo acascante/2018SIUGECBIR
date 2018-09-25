@@ -105,9 +105,9 @@ public class GenerarReporteUsuarioBienesController extends BaseController {
                 JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, generarParametros(), beanColDataSource);
 
                 Tipo tipoReporte = this.tipoPorId(this.command.getIdTipo());
-                if(tipoReporte.getNombre().equals(Constantes.TIPO_REPORTE_EXCELL)) {
-                    JasperExportManager.exportReportToXmlFile(jasperPrint, outputFile + Constantes.TIPO_REPORTE_EXCELL_EXTENSION, true);
-                    JavascriptContext.addJavascriptCall(FacesContext.getCurrentInstance(), "reporte('reporteUsuarioBienes','" + Constantes.TIPO_REPORTE_EXCELL_EXTENSION + "');");
+                if(tipoReporte.getNombre().equals(Constantes.TIPO_REPORTE_EXCEL)) {
+                    JasperExportManager.exportReportToXmlFile(jasperPrint, outputFile + Constantes.TIPO_REPORTE_XLS_EXTENSION, true);
+                    JavascriptContext.addJavascriptCall(FacesContext.getCurrentInstance(), "reporte('reporteUsuarioBienes','" + Constantes.TIPO_REPORTE_XLS_EXTENSION + "');");
                 } else {
                     JasperExportManager.exportReportToPdfFile(jasperPrint, outputFile + Constantes.TIPO_REPORTE_PDF_EXTENSION);
                     JavascriptContext.addJavascriptCall(FacesContext.getCurrentInstance(), "reporte('reporteUsuarioBienes','" + Constantes.TIPO_REPORTE_PDF_EXTENSION + "');");                    

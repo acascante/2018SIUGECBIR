@@ -26,6 +26,7 @@ public final class Constantes {
     public static final Integer DEFAULT_SI = 1;
     public static final Integer DEFAULT_NO = 0;
     public static final String DEFAULT_COMBO_MESSAGE = "Seleccione una Opcion";
+    public static final String RUTA_REPORTES = "C:\\Reportes\\";
 
     // Estados de un bien
     public static final Integer ESTADO_BIEN_PRE_INGRESO = 1;
@@ -257,9 +258,9 @@ public final class Constantes {
     
 
     public static final String TIPO_REPORTE_PDF = "PDF";
-    public static final String TIPO_REPORTE_EXCELL = "EXCELL";
+    public static final String TIPO_REPORTE_EXCEL = "EXCEL";
     public static final String TIPO_REPORTE_PDF_EXTENSION = ".pdf";
-    public static final String TIPO_REPORTE_EXCELL_EXTENSION = ".xlsx";
+    public static final String TIPO_REPORTE_XLS_EXTENSION = ".xlsx";
     
     public static final String TIPO_MOVIMIENTO_SINCRONIZAR_AGREGAR = "INCLUSION";
     public static final String TIPO_MOVIMIENTO_SINCRONIZAR_EXCLUIR = "EXCLUSION";

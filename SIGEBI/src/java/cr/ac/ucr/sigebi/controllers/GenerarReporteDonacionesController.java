@@ -14,6 +14,8 @@ import cr.ac.ucr.sigebi.utils.Constantes;
 import cr.ac.ucr.sigebi.domain.Tipo;
 import cr.ac.ucr.sigebi.domain.reportes.ReporteDonaciones;
 import cr.ac.ucr.sigebi.models.SolicitudModel;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -22,12 +24,21 @@ import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
+import javax.jnlp.FileContents;
+import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JasperCompileManager;
 import net.sf.jasperreports.engine.JasperExportManager;
 import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.JasperReport;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
+import net.sf.jasperreports.engine.export.JRPdfExporter;
+import net.sf.jasperreports.engine.export.JRXlsExporter;
+import net.sf.jasperreports.export.SimpleExporterInput;
+import net.sf.jasperreports.export.SimpleOutputStreamExporterOutput;
+import net.sf.jasperreports.export.SimplePdfExporterConfiguration;
+import net.sf.jasperreports.export.SimpleXlsExporterConfiguration;
+import net.sf.jasperreports.export.SimpleXlsReportConfiguration;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
@@ -98,25 +109,26 @@ public class GenerarReporteDonacionesController extends BaseController {
             if (!detalles.isEmpty()) {
                 String template = cr.ac.ucr.framework.reporte.componente.utilitario.Util.ConvertirRutas("/reportes/reporteDonaciones.jrxml");
                 String outputFile = cr.ac.ucr.framework.reporte.componente.utilitario.Util.ConvertirRutas("/reportes/reporteDonaciones");
-
                 ArrayList<ReporteDonaciones> datosReporte = new ArrayList<ReporteDonaciones>();
                 for (SolicitudDetalle detalle : detalles) {
                     SolicitudDonacion solicitudDonacion = (SolicitudDonacion)solicitudModel.buscarPorId(detalle.getSolicitud().getId());
                     datosReporte.add(new ReporteDonaciones(detalle, solicitudDonacion));
                 }
-
-                JRBeanCollectionDataSource beanColDataSource = new JRBeanCollectionDataSource(datosReporte);
+                
                 JasperReport jasperReport = JasperCompileManager.compileReport(template);
+                JRBeanCollectionDataSource beanColDataSource = new JRBeanCollectionDataSource(datosReporte);
                 JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, generarParametros(), beanColDataSource);
-
+                
                 Tipo tipoReporte = this.tipoPorId(this.command.getIdTipo());
-                if(tipoReporte.getNombre().equals(Constantes.TIPO_REPORTE_EXCELL)) {
-                    JasperExportManager.exportReportToXmlFile(jasperPrint, outputFile + Constantes.TIPO_REPORTE_EXCELL_EXTENSION, true);
-                    JavascriptContext.addJavascriptCall(FacesContext.getCurrentInstance(), "reporte('reporteDonaciones','" + Constantes.TIPO_REPORTE_EXCELL_EXTENSION + "');");
+                
+                if(tipoReporte.getNombre().equals(Constantes.TIPO_REPORTE_EXCEL)) {
+                    generarReporteXls(jasperPrint, outputFile + Constantes.TIPO_REPORTE_XLS_EXTENSION);
+                    JavascriptContext.addJavascriptCall(FacesContext.getCurrentInstance(), "reporte('reporteDonaciones','" + Constantes.TIPO_REPORTE_XLS_EXTENSION + "');");
                 } else {
-                    JasperExportManager.exportReportToPdfFile(jasperPrint, outputFile + Constantes.TIPO_REPORTE_PDF_EXTENSION);
-                    JavascriptContext.addJavascriptCall(FacesContext.getCurrentInstance(), "reporte('reporteDonaciones','" + Constantes.TIPO_REPORTE_PDF_EXTENSION + "');");                    
+                    generarReportePdf(jasperPrint, outputFile + Constantes.TIPO_REPORTE_PDF_EXTENSION);
+                    JavascriptContext.addJavascriptCall(FacesContext.getCurrentInstance(), "reporte('reporteDonaciones','" + Constantes.TIPO_REPORTE_PDF_EXTENSION + "');");
                 }
+                
                 Mensaje.agregarInfo("Reporte generado exitosamente");
             } else {
                 Mensaje.agregarErrorAdvertencia("No hay datos para el reporte");
@@ -124,6 +136,29 @@ public class GenerarReporteDonacionesController extends BaseController {
         } catch (Exception err) {
             Mensaje.agregarErrorAdvertencia("No se puede generar el reporte en este momento, intente de nuevo");
         }
+    }
+    
+    private void generarReportePdf(JasperPrint print, String file) throws JRException  {
+        JRPdfExporter exporter = new JRPdfExporter();
+        exporter.setExporterInput(new SimpleExporterInput(print));
+        exporter.setExporterOutput(new SimpleOutputStreamExporterOutput(file));
+        
+        SimplePdfExporterConfiguration configuration = new SimplePdfExporterConfiguration();
+        exporter.setConfiguration(configuration);
+        exporter.exportReport();
+    }
+    
+    private void generarReporteXls(JasperPrint print, String file) throws JRException  {
+        JRXlsExporter exporter = new JRXlsExporter();
+        exporter.setExporterInput(new SimpleExporterInput(print));
+        exporter.setExporterOutput(new SimpleOutputStreamExporterOutput(file));
+        
+        SimpleXlsReportConfiguration configuration = new SimpleXlsReportConfiguration();
+        configuration.setOnePagePerSheet(Boolean.TRUE);
+        configuration.setDetectCellType(Boolean.TRUE);
+        configuration.setCollapseRowSpan(Boolean.FALSE);
+        exporter.setConfiguration(configuration);
+        exporter.exportReport();
     }
     
     public Map generarParametros() {

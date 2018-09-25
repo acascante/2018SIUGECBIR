@@ -190,8 +190,8 @@ public class GenerarReporteSobrantesController extends BaseController {
                         JasperExportManager.exportReportToPdfFile(jasperPrint, outputFile + Constantes.TIPO_REPORTE_PDF_EXTENSION);
                         JavascriptContext.addJavascriptCall(FacesContext.getCurrentInstance(), "reporte('reporteSobrantes','" + Constantes.TIPO_REPORTE_PDF_EXTENSION + "');");
                     } else {
-                        JasperExportManager.exportReportToXmlFile(jasperPrint, outputFile + Constantes.TIPO_REPORTE_EXCELL_EXTENSION, true);
-                        JavascriptContext.addJavascriptCall(FacesContext.getCurrentInstance(), "reporte('reporteSobrantes','" + Constantes.TIPO_REPORTE_EXCELL_EXTENSION + "');");
+                        JasperExportManager.exportReportToXmlFile(jasperPrint, outputFile + Constantes.TIPO_REPORTE_XLS_EXTENSION, true);
+                        JavascriptContext.addJavascriptCall(FacesContext.getCurrentInstance(), "reporte('reporteSobrantes','" + Constantes.TIPO_REPORTE_XLS_EXTENSION + "');");
                     }
 
                     Mensaje.agregarInfo("Reporte generado exitosamente");

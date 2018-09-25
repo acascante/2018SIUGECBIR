@@ -356,8 +356,8 @@ public class ReporteBienController extends BaseController {
                         JasperExportManager.exportReportToPdfFile(jasperPrint, reportFileName + Constantes.TIPO_REPORTE_PDF_EXTENSION);
                         JavascriptContext.addJavascriptCall(FacesContext.getCurrentInstance(), "reporte('" + "reporteBienes" + "','" + Constantes.TIPO_REPORTE_PDF_EXTENSION + "');");
                     } else {
-                        JasperExportManager.exportReportToXmlFile(jasperPrint, reportFileName + Constantes.TIPO_REPORTE_EXCELL_EXTENSION, true);
-                        JavascriptContext.addJavascriptCall(FacesContext.getCurrentInstance(), "reporte(' " + "reporteBienes" + "','" + Constantes.TIPO_REPORTE_EXCELL_EXTENSION + "');");
+                        JasperExportManager.exportReportToXmlFile(jasperPrint, reportFileName + Constantes.TIPO_REPORTE_XLS_EXTENSION, true);
+                        JavascriptContext.addJavascriptCall(FacesContext.getCurrentInstance(), "reporte(' " + "reporteBienes" + "','" + Constantes.TIPO_REPORTE_XLS_EXTENSION + "');");
                     }
 
                     Mensaje.agregarInfo("Reporte generado exitosamente");

@@ -296,9 +296,10 @@
         <script>
             
             
-            var $ = jQuery.noConflict();
+            var unidades =  new Array();
+            jQuery.noConflict();
             
-            $(document).ready(function(){
+            jQuery(document).ready(function($){
                 //alert("Hola esta es la pantalla  Preliminar.");
                 $("#callAjax").click(function (){
                     //
@@ -327,10 +328,6 @@
                 });
             
             
-            });
-            
-            var unidades =  new Array();
-            
             function llenar(){
                 
                 $('.unidades tr').each(function (){
@@ -347,6 +344,9 @@
                 //alert( "Encontradas "+unidades.size() );
                 
             }
+            
+            
+            });
             
         </script>
         

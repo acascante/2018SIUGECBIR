@@ -32,7 +32,7 @@ public class Preliminar extends ObjetoBase implements Serializable {
     //<editor-fold defaultstate="collapsed" desc="Atributos">
     @Id
     @GeneratedValue(strategy=GenerationType.SEQUENCE, generator = "sqPreliminar")
-    @Column(name = "ID_PREINGESO")
+    @Column(name = "ID_PRELIMINAR")
     private Long id;
     
     @Column(name = "ID_IDENTIFICACION")
