@@ -156,7 +156,7 @@
                         <div class="col-sm-1"></div>
                         <div class="col-sm-11">
                             <div class="form-group"> 
-                                <label class="control-label" for="txtAdjuntoNombre">Nombre: </label>
+                                <label class="control-label" for="txtAdjuntoNombre">Nombre1: </label>
                                 <ice:inputText id="txtAdjuntoNombre" styleClass="form-control" readonly="true" partialSubmit="false"
                                                value="#{controllerAgregarBienes.command.adjunto.nombre}">
                                 </ice:inputText>
@@ -196,7 +196,7 @@
                                 <ice:graphicImage alt="Registro no encontrado" url="#{controllerAgregarBienes.adjuntoMostrar}" style="border:0; max-height: 90px; max-width: 130px;"/>
                             </ice:outputLink>
                             <ice:commandButton id="btnAdjuntoDescargar" value="Download" styleClass="boton center-block" partialSubmit="true" 
-                                               action="#{controllerAgregarBienes.downloadFile}" />
+                                               action="#{controllerAgregarBienes.downloadFileFtp}" />
                         </div>
                     </div>
 

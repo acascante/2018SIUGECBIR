@@ -149,11 +149,11 @@ public class UsuarioDao extends GenericDaoImpl {
             StringBuilder sql = new StringBuilder("SELECT entity from ViewAutorizacionRolUsuarioUnidad entity ");
             sql.append(" ORDER BY entity.").append(grupo);
             if (orden1 != null && orden1.length() > 0) {
-                sql.append(" , entity.").append(orden1.toLowerCase());
+                sql.append(" , entity.").append(orden1);
                 if (orden2 != null && orden2.length() > 0) {
-                    sql.append(" , entity.").append(orden2.toLowerCase());
+                    sql.append(" , entity.").append(orden2);
                     if (orden3 != null && orden3.length() > 0) {
-                        sql.append(" , entity.").append(orden3.toLowerCase());            
+                        sql.append(" , entity.").append(orden3);            
                     }
                 }
             }            

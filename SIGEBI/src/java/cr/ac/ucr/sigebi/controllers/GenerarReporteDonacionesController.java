@@ -14,8 +14,6 @@ import cr.ac.ucr.sigebi.utils.Constantes;
 import cr.ac.ucr.sigebi.domain.Tipo;
 import cr.ac.ucr.sigebi.domain.reportes.ReporteDonaciones;
 import cr.ac.ucr.sigebi.models.SolicitudModel;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -24,10 +22,8 @@ import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
-import javax.jnlp.FileContents;
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JasperCompileManager;
-import net.sf.jasperreports.engine.JasperExportManager;
 import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.JasperReport;
@@ -37,7 +33,6 @@ import net.sf.jasperreports.engine.export.JRXlsExporter;
 import net.sf.jasperreports.export.SimpleExporterInput;
 import net.sf.jasperreports.export.SimpleOutputStreamExporterOutput;
 import net.sf.jasperreports.export.SimplePdfExporterConfiguration;
-import net.sf.jasperreports.export.SimpleXlsExporterConfiguration;
 import net.sf.jasperreports.export.SimpleXlsReportConfiguration;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
@@ -105,7 +100,7 @@ public class GenerarReporteDonacionesController extends BaseController {
             Tipo orden3 = this.tipoPorDominioValor(Constantes.DOMINIO_COLUMNAS_REPORTE_DONACIONES, this.command.getIdOrden3());
             
             List<SolicitudDetalle> detalles = this.solicitudModel.listarDetallesSalidas(this.command.getFltIdSolicitud(), this.command.getFltIdentificaionBien(), this.command.getFltFechaInicio(), this.command.getFltFechaFin(), orden.getNombre(), 
-                    orden1 != null ? orden1.getNombre() : null, orden2 != null ? orden3.getNombre() : null, orden3 != null ? orden3.getNombre() : null);
+                    orden1 != null ? orden1.getNombre() : null, orden2 != null ? orden2.getNombre() : null, orden3 != null ? orden3.getNombre() : null);
             if (!detalles.isEmpty()) {
                 String template = cr.ac.ucr.framework.reporte.componente.utilitario.Util.ConvertirRutas("/reportes/reporteDonaciones.jrxml");
                 String outputFile = cr.ac.ucr.framework.reporte.componente.utilitario.Util.ConvertirRutas("/reportes/reporteDonaciones");
@@ -122,7 +117,10 @@ public class GenerarReporteDonacionesController extends BaseController {
                 Tipo tipoReporte = this.tipoPorId(this.command.getIdTipo());
                 
                 if(tipoReporte.getNombre().equals(Constantes.TIPO_REPORTE_EXCEL)) {
-                    generarReporteXls(jasperPrint, outputFile + Constantes.TIPO_REPORTE_XLS_EXTENSION);
+                    JRXlsExporter exporter = new JRXlsExporter();
+                    exporter.setExporterInput(new SimpleExporterInput(jasperPrint));
+                    exporter.setExporterOutput(new SimpleOutputStreamExporterOutput(outputFile + Constantes.TIPO_REPORTE_XLS_EXTENSION));
+                    exporter.exportReport();
                     JavascriptContext.addJavascriptCall(FacesContext.getCurrentInstance(), "reporte('reporteDonaciones','" + Constantes.TIPO_REPORTE_XLS_EXTENSION + "');");
                 } else {
                     generarReportePdf(jasperPrint, outputFile + Constantes.TIPO_REPORTE_PDF_EXTENSION);
