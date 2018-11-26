@@ -28,6 +28,9 @@ import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.JasperReport;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
+import net.sf.jasperreports.engine.export.JRXlsExporter;
+import net.sf.jasperreports.export.SimpleExporterInput;
+import net.sf.jasperreports.export.SimpleOutputStreamExporterOutput;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
@@ -124,7 +127,7 @@ public class GenerarReporteExclusionesPendientesController extends BaseControlle
             Estado estado =  this.estadoPorId(this.command.getFltIdEstado());
             
             List<SolicitudDetalle> detalles = this.exclusionModel.listarDetalles(tipoExclusion, estado, this.command.getFltFechaInicio(), this.command.getFltFechaFin(), orden.getNombre(), 
-                    orden1 != null ? orden1.getNombre() : null, orden2 != null ? orden3.getNombre() : null, orden3 != null ? orden3.getNombre() : null);
+                    orden1 != null ? orden1.getNombre() : null, orden2 != null ? orden2.getNombre() : null, orden3 != null ? orden3.getNombre() : null);
             
             if (!detalles.isEmpty()) {
                 String template = cr.ac.ucr.framework.reporte.componente.utilitario.Util.ConvertirRutas("/reportes/reporteExclusionesPendientes.jrxml");
@@ -140,9 +143,12 @@ public class GenerarReporteExclusionesPendientesController extends BaseControlle
                 JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, generarParametros(), beanColDataSource);
 
                 Tipo tipoReporte = this.tipoPorId(this.command.getIdTipo());
-                if(tipoReporte.getNombre().equals(Constantes.TIPO_REPORTE_EXCELL)) {
-                    JasperExportManager.exportReportToXmlFile(jasperPrint, outputFile + Constantes.TIPO_REPORTE_EXCELL_EXTENSION, true);
-                    JavascriptContext.addJavascriptCall(FacesContext.getCurrentInstance(), "reporte('reporteExclusionesPendientes','" + Constantes.TIPO_REPORTE_EXCELL_EXTENSION + "');");
+                if(tipoReporte.getNombre().equals(Constantes.TIPO_REPORTE_EXCEL)) {
+                    JRXlsExporter exporter = new JRXlsExporter();
+                    exporter.setExporterInput(new SimpleExporterInput(jasperPrint));
+                    exporter.setExporterOutput(new SimpleOutputStreamExporterOutput(outputFile + Constantes.TIPO_REPORTE_XLS_EXTENSION));
+                    exporter.exportReport();
+                    JavascriptContext.addJavascriptCall(FacesContext.getCurrentInstance(), "reporte('reporteExclusionesPendientes','" + Constantes.TIPO_REPORTE_XLS_EXTENSION + "');");
                 } else {
                     JasperExportManager.exportReportToPdfFile(jasperPrint, outputFile + Constantes.TIPO_REPORTE_PDF_EXTENSION);
                     JavascriptContext.addJavascriptCall(FacesContext.getCurrentInstance(), "reporte('reporteExclusionesPendientes','" + Constantes.TIPO_REPORTE_PDF_EXTENSION + "');");                    
@@ -164,8 +170,8 @@ public class GenerarReporteExclusionesPendientesController extends BaseControlle
         Tipo tipo = this.tipoPorId(this.command.getFltIdTipo());
         Estado estado = this.estadoPorId(this.command.getFltIdEstado());
         
-        parametros.put(Parametros.TIPO, tipo);
-        parametros.put(Parametros.ESTADO, estado);
+        if (tipo != null) parametros.put(Parametros.TIPO, tipo.getNombre());
+        if (estado != null) parametros.put(Parametros.ESTADO, estado.getNombre());
         parametros.put(Parametros.FECHA_INICIO, this.command.getFltFechaInicio());
         parametros.put(Parametros.FECHA_FIN, this.command.getFltFechaFin());
         

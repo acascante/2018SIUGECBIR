@@ -8,7 +8,6 @@ package cr.ac.ucr.sigebi.controllers;
 import com.icesoft.faces.context.effects.JavascriptContext;
 import cr.ac.ucr.framework.vista.util.Mensaje;
 import cr.ac.ucr.sigebi.commands.GenerarReporteRolesUsuariosCommand;
-import cr.ac.ucr.sigebi.domain.AutorizacionRol;
 import cr.ac.ucr.sigebi.utils.Constantes;
 import cr.ac.ucr.sigebi.domain.Tipo;
 import cr.ac.ucr.sigebi.domain.ViewAutorizacionRolUsuarioUnidad;
@@ -29,6 +28,9 @@ import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.JasperReport;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
+import net.sf.jasperreports.engine.export.JRXlsExporter;
+import net.sf.jasperreports.export.SimpleExporterInput;
+import net.sf.jasperreports.export.SimpleOutputStreamExporterOutput;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
@@ -50,7 +52,6 @@ public class GenerarReporteRolesUsuariosController extends BaseController {
         private static final String VALOR_NOMBRE_REPORTE = "Reporte de Roles y Usuarios";
     }
     
-    @Resource private AutorizacionRolModel autorizacionRolModel;
     @Resource private UsuarioModel usuarioModel;
     
     private Map<Long, Tipo> tiposReporte;
@@ -91,7 +92,7 @@ public class GenerarReporteRolesUsuariosController extends BaseController {
             Tipo orden3 = this.tipoPorDominioValor(Constantes.DOMINIO_COLUMNAS_REPORTE_ROLES_USUARIOS, this.command.getIdOrden3());
             
             List<ViewAutorizacionRolUsuarioUnidad> usuarios = this.usuarioModel.listarUsuariosGestionProceso(grupo.getNombre(), orden.getNombre(), 
-                    orden1 != null ? orden1.getNombre() : null, orden2 != null ? orden3.getNombre() : null, orden3 != null ? orden3.getNombre() : null);
+                    orden1 != null ? orden1.getNombre() : null, orden2 != null ? orden2.getNombre() : null, orden3 != null ? orden3.getNombre() : null);
             if (!usuarios.isEmpty()) {
                 String template;
                 String outputFile = cr.ac.ucr.framework.reporte.componente.utilitario.Util.ConvertirRutas("/reportes/reporteRolesUsuarios");
@@ -111,9 +112,12 @@ public class GenerarReporteRolesUsuariosController extends BaseController {
                 JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, generarParametros(), beanColDataSource);
 
                 Tipo tipoReporte = this.tipoPorId(this.command.getIdTipo());
-                if(tipoReporte.getNombre().equals(Constantes.TIPO_REPORTE_EXCELL)) {
-                    JasperExportManager.exportReportToXmlFile(jasperPrint, outputFile + Constantes.TIPO_REPORTE_EXCELL_EXTENSION, true);
-                    JavascriptContext.addJavascriptCall(FacesContext.getCurrentInstance(), "reporte('reporteRolesUsuarios','" + Constantes.TIPO_REPORTE_EXCELL_EXTENSION + "');");
+                if(tipoReporte.getNombre().equals(Constantes.TIPO_REPORTE_EXCEL)) {
+                    JRXlsExporter exporter = new JRXlsExporter();
+                    exporter.setExporterInput(new SimpleExporterInput(jasperPrint));
+                    exporter.setExporterOutput(new SimpleOutputStreamExporterOutput(outputFile + Constantes.TIPO_REPORTE_XLS_EXTENSION));
+                    exporter.exportReport();
+                    JavascriptContext.addJavascriptCall(FacesContext.getCurrentInstance(), "reporte('reporteRolesUsuarios','" + Constantes.TIPO_REPORTE_XLS_EXTENSION + "');");
                 } else {
                     JasperExportManager.exportReportToPdfFile(jasperPrint, outputFile + Constantes.TIPO_REPORTE_PDF_EXTENSION);
                     JavascriptContext.addJavascriptCall(FacesContext.getCurrentInstance(), "reporte('reporteRolesUsuarios','" + Constantes.TIPO_REPORTE_PDF_EXTENSION + "');");                    

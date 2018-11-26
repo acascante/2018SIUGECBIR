@@ -26,7 +26,15 @@ public final class Constantes {
     public static final Integer DEFAULT_SI = 1;
     public static final Integer DEFAULT_NO = 0;
     public static final String DEFAULT_COMBO_MESSAGE = "Seleccione una Opcion";
+    public static final String RUTA_REPORTES = "C:\\Reportes\\";
 
+    // Directorios FTP
+    public static final String FTP_BIENES = "Bienes/";
+    public static final String FTP_INFORMES_TECNICOS = "Informes/";
+    public static final String FTP_DONACIONES = "Donaciones/";
+    public static final String FTP_CONVENIOS = "Convenios/";
+    public static final String FTP_PRESTAMOS = "Prestamos/";
+    
     // Estados de un bien
     public static final Integer ESTADO_BIEN_PRE_INGRESO = 1;
     public static final Integer ESTADO_BIEN_PENDIENTE = 2;
@@ -196,8 +204,8 @@ public final class Constantes {
     public static final String DOMINIO_COLUMNAS_REPORTE_SOBRANTES = "ORDEN_COLUMNA_SOBRANTES";
     public static final String DOMINIO_COLUMNAS_REPORTE_ROLES_USUARIOS = "ORDEN_COLUMNA_ROLES_USUARIOS";
     public static final String DOMINIO_COLUMNAS_REPORTE_USUARIOS_BIENES = "ORDEN_COLUMNA_USUARIOS_BIENES";
-    public static final String DOMINIO_COLUMNAS_REPORTE_DONACIONES = "ORDEN_COLUMNA_USUARIOS_BIENES";
-    public static final String DOMINIO_COLUMNAS_REPORTE_EXCLUSIONES = "ORDEN_COLUMNA_USUARIOS_BIENES";
+    public static final String DOMINIO_COLUMNAS_REPORTE_DONACIONES = "ORDEN_COLUMNA_USUARIOS_DETALLES";
+    public static final String DOMINIO_COLUMNAS_REPORTE_EXCLUSIONES = "ORDEN_COLUMNA_USUARIOS_DETALLES";
     public static final String DOMINIO_GRUPO_REPORTE_ROLES_USUARIOS = "GRUPO_REPORTE_ROLES_USUARIOS";
     public static final String DOMINIO_CONVENIO = "CONVENIO";
     public static final String DOMINIO_DOCUMENTO = "DOCUMENTO";
@@ -257,9 +265,9 @@ public final class Constantes {
     
 
     public static final String TIPO_REPORTE_PDF = "PDF";
-    public static final String TIPO_REPORTE_EXCELL = "EXCELL";
+    public static final String TIPO_REPORTE_EXCEL = "EXCEL";
     public static final String TIPO_REPORTE_PDF_EXTENSION = ".pdf";
-    public static final String TIPO_REPORTE_EXCELL_EXTENSION = ".xlsx";
+    public static final String TIPO_REPORTE_XLS_EXTENSION = ".xlsx";
     
     public static final String TIPO_MOVIMIENTO_SINCRONIZAR_AGREGAR = "INCLUSION";
     public static final String TIPO_MOVIMIENTO_SINCRONIZAR_EXCLUIR = "EXCLUSION";

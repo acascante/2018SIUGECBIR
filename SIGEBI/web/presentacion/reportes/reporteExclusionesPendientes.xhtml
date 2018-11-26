@@ -41,25 +41,21 @@
                                         </h4>
                                     </div>
                                     <div class='col-sm-3'>
-                                        <div class='col-sm-9'>
-                                            <ice:outputText  value="#{label['sigebi.reporte.exclusiones.pendientes.filtro.estado']}" />
-                                            <ice:selectOneMenu id="fltEstadoSolicitud" styleClass="form-control"
-                                                               value="#{controllerReporteExclusionesPendientes.command.fltIdEstado}" >
-                                                <f:selectItem itemLabel="N/A" itemValue="-1"/>
-                                                <f:selectItems id="optSelTipoBien" value="#{controllerReporteExclusionesPendientes.itemsEstadosExclusion}"/>
-                                             </ice:selectOneMenu>                                        
-                                        </div>
+                                        <ice:outputText  value="#{label['sigebi.reporte.exclusiones.pendientes.filtro.estado']}" />
+                                        <ice:selectOneMenu id="fltEstadoSolicitud" styleClass="form-control"
+                                                           value="#{controllerReporteExclusionesPendientes.command.fltIdEstado}" >
+                                            <f:selectItem itemLabel="N/A" itemValue="-1"/>
+                                            <f:selectItems id="optSelTipoBien" value="#{controllerReporteExclusionesPendientes.itemsEstadosExclusion}"/>
+                                         </ice:selectOneMenu>                                        
                                     </div>
                                     
                                     <div class='col-sm-3'>
                                         <ice:outputText  value="#{label['sigebi.reporte.exclusiones.pendientes.filtro.tipo']}" />
-                                        <div class='col-sm-9'>
-                                            <ice:selectOneMenu id="fltTipoSolicitud" styleClass="form-control"
-                                                               value="#{controllerReporteExclusionesPendientes.command.fltIdTipo}" >
-                                                <f:selectItem itemLabel="N/A" itemValue="-1"/>
-                                                <f:selectItems id="optSelTipoBien" value="#{controllerReporteExclusionesPendientes.itemsTipoExclusion}"/>
-                                             </ice:selectOneMenu>                                        
-                                        </div>
+                                        <ice:selectOneMenu id="fltTipoSolicitud" styleClass="form-control"
+                                                           value="#{controllerReporteExclusionesPendientes.command.fltIdTipo}" >
+                                            <f:selectItem itemLabel="N/A" itemValue="-1"/>
+                                            <f:selectItems id="optSelTipoBien" value="#{controllerReporteExclusionesPendientes.itemsTipoExclusion}"/>
+                                         </ice:selectOneMenu>                                        
                                    </div>
                                 </div>
                                  <div class="row">

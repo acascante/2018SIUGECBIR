@@ -24,6 +24,7 @@ import cr.ac.ucr.sigebi.domain.SolicitudDetalle;
 import cr.ac.ucr.sigebi.domain.SolicitudDonacion;
 import cr.ac.ucr.sigebi.domain.UnidadEjecutora;
 import cr.ac.ucr.sigebi.models.AdjuntoModel;
+import cr.ac.ucr.sigebi.models.ArchivoFtpModel;
 import cr.ac.ucr.sigebi.models.BienModel;
 import cr.ac.ucr.sigebi.models.FacturaModel;
 import cr.ac.ucr.sigebi.models.PaisModel;
@@ -37,6 +38,7 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+import java.util.regex.Pattern;
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import javax.faces.event.ActionEvent;
@@ -74,6 +76,9 @@ public class SolicitudDonacionController extends BaseController {
     private PaisModel paisModel;
 
     @Resource
+    private ArchivoFtpModel archivoFtpModel;
+    
+    @Resource
     private AdjuntoModel adjuntoModel;
 
     @Resource
@@ -101,10 +106,10 @@ public class SolicitudDonacionController extends BaseController {
     SolicitudDetalle detalleEliminar;
 
     SolicitudAutorizacion autorizacionRechazar;
-    
     //</editor-fold>
     
     //<editor-fold defaultstate="collapsed" desc="Get's & Set's">
+
     public boolean isAprobacionRealizada() {
         return aprobacionRealizada;
     }
@@ -839,11 +844,17 @@ public class SolicitudDonacionController extends BaseController {
                 adjunto.setEstado(this.estadoPorDominioValor(Constantes.DOMINIO_GENERAL, Constantes.ESTADO_GENERAL_ACTIVO));
                 adjunto.setTipo(command.getTipoAdjunto());
                 adjunto.setIdReferencia(command.getSolicitudDonacion().getId());
-                adjunto.setUrl("upload/solicitudDonacion/" + fileInfo.getFileName());
                 if (adjunto.getDetalle() == null || (adjunto.getDetalle() != null && adjunto.getDetalle().length() == 0)) {
                     adjunto.setDetalle(fileInfo.getFileName());
                 }
-
+                adjunto.setUrl(fileInfo.getPhysicalPath());
+                adjunto.setNombre(Constantes.FTP_DONACIONES + fileInfo.getFileName());
+                adjunto.setTamano(fileInfo.getSize() / 1024); // pasar a bites 
+                adjunto.setTipoMime(fileInfo.getContentType());
+                String[] extencion = (String[]) adjunto.getNombre().split(Pattern.quote("."));
+                int cant = extencion.length;
+                adjunto.setExtension(extencion[cant - 1]);
+                adjunto.setUrl(fileInfo.getPhysicalPath());
                 adjuntoModel.agregar(adjunto);
                 command.getAdjuntosDonacion().put(adjunto.getId(), adjunto);
                 command.setAdjunto(new Adjunto());
@@ -855,7 +866,19 @@ public class SolicitudDonacionController extends BaseController {
             Mensaje.agregarErrorAdvertencia(e, Util.getEtiquetas("sigebi.error.solicitudDonacionController.agregarAdjunto"));
         }
     }
+    
+    public void downloadFileFtp(ActionEvent pEvent){
+        try {
+            Adjunto adjunto = (Adjunto) pEvent.getComponent().getAttributes().get("adjuntoSeleccionado");
 
+            archivoFtpModel.downloadFile(adjunto.getUrl(), adjunto.getNombre());
+            Mensaje.agregarInfo(Util.getEtiquetas("sigebi.error.solicitudDonacionController.adjunto.descargar.exitosamente"));
+        } 
+        catch (Exception err) {
+            Mensaje.agregarInfo(err.getMessage());
+        }
+    }
+    
     /**
      * Eliminar adjunto al solicitud
      *

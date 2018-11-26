@@ -23,6 +23,7 @@ import cr.ac.ucr.sigebi.models.ConvenioModel;
 import cr.ac.ucr.sigebi.models.RegistroMovimientoModel;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.regex.Pattern;
 import javax.annotation.Resource;
 import javax.faces.component.UIComponent;
 import javax.faces.component.UIInput;
@@ -145,18 +146,23 @@ public class AgregarConvenioController extends BaseController {
     public void agregarAdjunto(ActionEvent event) {
         try {
             InputFile inputFile = (InputFile) event.getSource();
-            FileInfo fileInfo = inputFile.getFileInfo();
-            if (fileInfo.getFileName() != null) {
-                // TODO Buscar tipo correcto
+            FileInfo fileInfo = inputFile.getFileInfo();            
+            Adjunto adjunto = new Adjunto();
+            if (fileInfo.isSaved()) {
                 Tipo tipoAdjunto = this.tipoPorDominioValor(Constantes.DOMINIO_ADJUNTO, Constantes.TIPO_ADJUNTO_CONVENIO);
-                Adjunto adjunto = new Adjunto();
+                adjunto.setUrl(fileInfo.getPhysicalPath());
+                adjunto.setNombre(Constantes.FTP_CONVENIOS + fileInfo.getFileName());
+                adjunto.setTamano(fileInfo.getSize() / 1024); // pasar a bites 
+                adjunto.setTipoMime(fileInfo.getContentType());
+                String[] extencion = (String[]) adjunto.getNombre().split(Pattern.quote("."));
+                int cant = extencion.length;
+                adjunto.setExtension(extencion[cant - 1]);
                 adjunto.setEstado(this.estadoPorDominioValor(Constantes.DOMINIO_GENERAL, Constantes.ESTADO_GENERAL_ACTIVO));
                 adjunto.setTipo(tipoAdjunto);
                 adjunto.setIdReferencia(this.command.getId());
-                adjunto.setUrl("upload/convenios/" + fileInfo.getFileName());
                 adjunto.setDetalle(fileInfo.getFileName());
                 this.adjuntoModel.agregar(adjunto);
-                this.mensajeExito = "Los archivo se adjunto con exito.";
+                this.mensajeExito = "El archivo se adjunto con exito.";
             }
         } catch (FWExcepcion e) {
             Mensaje.agregarErrorAdvertencia(e.getError_para_usuario());

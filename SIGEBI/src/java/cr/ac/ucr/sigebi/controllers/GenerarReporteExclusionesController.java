@@ -11,7 +11,6 @@ import cr.ac.ucr.sigebi.commands.ReporteExclusionesCommand;
 import cr.ac.ucr.sigebi.domain.DocumentoActa;
 import cr.ac.ucr.sigebi.domain.DocumentoDetalle;
 import cr.ac.ucr.sigebi.domain.Estado;
-import cr.ac.ucr.sigebi.domain.SolicitudExclusion;
 import cr.ac.ucr.sigebi.utils.Constantes;
 import cr.ac.ucr.sigebi.domain.Tipo;
 import cr.ac.ucr.sigebi.domain.reportes.ReporteExclusiones;
@@ -30,6 +29,9 @@ import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.JasperReport;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
+import net.sf.jasperreports.engine.export.JRXlsExporter;
+import net.sf.jasperreports.export.SimpleExporterInput;
+import net.sf.jasperreports.export.SimpleOutputStreamExporterOutput;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
@@ -48,7 +50,7 @@ public class GenerarReporteExclusionesController extends BaseController {
         private static final String IDENTIFICACION_BIEN = "IDENTIFICACION_BIEN";
         private static final String FECHA_INICIO = "FECHA_INICIO";
         private static final String FECHA_FIN = "FECHA_FIN";
-        private static final String ID_SOLICITUD = "ID_SOLICITUD";
+        private static final String ID_DOCUMENTO = "ID_DOCUMENTO";
         
         private static final String INSTITUCION = "INSTITUCION";
         private static final String NOMBRE_REPORTE = "NOMBRE_REPORTE";
@@ -97,7 +99,7 @@ public class GenerarReporteExclusionesController extends BaseController {
             
             Estado estadoActaAprobada = this.estadoPorDominioValor( Constantes.DOMINIO_GENERAL, Constantes.ESTADO_GENERAL_APROBADO );
             List<DocumentoDetalle> detalles = this.actaModel.listarDetalles(estadoActaAprobada, this.command.getFltIdSolicitud(), this.command.getFltIdentificaionBien(), this.command.getFltFechaInicio(), this.command.getFltFechaFin(), orden.getNombre(), 
-                    orden1 != null ? orden1.getNombre() : null, orden2 != null ? orden3.getNombre() : null, orden3 != null ? orden3.getNombre() : null);
+                    orden1 != null ? orden1.getNombre() : null, orden2 != null ? orden2.getNombre() : null, orden3 != null ? orden3.getNombre() : null);
             
             if (!detalles.isEmpty()) {
                 String template = cr.ac.ucr.framework.reporte.componente.utilitario.Util.ConvertirRutas("/reportes/reporteExclusiones.jrxml");
@@ -114,9 +116,12 @@ public class GenerarReporteExclusionesController extends BaseController {
                 JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, generarParametros(), beanColDataSource);
 
                 Tipo tipoReporte = this.tipoPorId(this.command.getIdTipo());
-                if(tipoReporte.getNombre().equals(Constantes.TIPO_REPORTE_EXCELL)) {
-                    JasperExportManager.exportReportToXmlFile(jasperPrint, outputFile + Constantes.TIPO_REPORTE_EXCELL_EXTENSION, true);
-                    JavascriptContext.addJavascriptCall(FacesContext.getCurrentInstance(), "reporte('reporteExclusiones','" + Constantes.TIPO_REPORTE_EXCELL_EXTENSION + "');");
+                if(tipoReporte.getNombre().equals(Constantes.TIPO_REPORTE_EXCEL)) {
+                    JRXlsExporter exporter = new JRXlsExporter();
+                    exporter.setExporterInput(new SimpleExporterInput(jasperPrint));
+                    exporter.setExporterOutput(new SimpleOutputStreamExporterOutput(outputFile + Constantes.TIPO_REPORTE_XLS_EXTENSION));
+                    exporter.exportReport();
+                    JavascriptContext.addJavascriptCall(FacesContext.getCurrentInstance(), "reporte('reporteExclusiones','" + Constantes.TIPO_REPORTE_XLS_EXTENSION + "');");
                 } else {
                     JasperExportManager.exportReportToPdfFile(jasperPrint, outputFile + Constantes.TIPO_REPORTE_PDF_EXTENSION);
                     JavascriptContext.addJavascriptCall(FacesContext.getCurrentInstance(), "reporte('reporteExclusiones','" + Constantes.TIPO_REPORTE_PDF_EXTENSION + "');");                    
@@ -138,7 +143,7 @@ public class GenerarReporteExclusionesController extends BaseController {
         parametros.put(Parametros.IDENTIFICACION_BIEN, this.command.getFltIdentificaionBien());
         parametros.put(Parametros.FECHA_INICIO, this.command.getFltFechaInicio());
         parametros.put(Parametros.FECHA_FIN, this.command.getFltFechaFin());
-        parametros.put(Parametros.ID_SOLICITUD, this.command.getFltIdSolicitud());
+        parametros.put(Parametros.ID_DOCUMENTO, this.command.getFltIdSolicitud());
         
         parametros.put(Parametros.UNIDAD_CUSTODIO, unidadEjecutora.getDescripcion());
         parametros.put(Parametros.USUARIO, this.usuarioSIGEBI.getNombreCompleto());

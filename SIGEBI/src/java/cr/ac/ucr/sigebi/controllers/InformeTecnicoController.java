@@ -20,6 +20,7 @@ import cr.ac.ucr.sigebi.domain.AutorizacionRolPersona;
 import cr.ac.ucr.sigebi.domain.DocumentoAutorizacion;
 import cr.ac.ucr.sigebi.models.DocumentoModel;
 import cr.ac.ucr.sigebi.models.AdjuntoModel;
+import cr.ac.ucr.sigebi.models.ArchivoFtpModel;
 import cr.ac.ucr.sigebi.models.AutorizacionRolPersonaModel;
 import cr.ac.ucr.sigebi.models.DocumentoAutorizacionModel;
 import cr.ac.ucr.sigebi.models.UsuarioModel;
@@ -30,6 +31,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.regex.Pattern;
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import javax.faces.event.ActionEvent;
@@ -59,7 +61,10 @@ public class InformeTecnicoController extends BaseController {
 
     @Resource
     private AdjuntoModel adjuntoModel;
-
+    
+    @Resource
+    private ArchivoFtpModel archivoFtpModel;
+    
     @Resource
     UsuarioModel usuarioModel;
 
@@ -580,10 +585,16 @@ public class InformeTecnicoController extends BaseController {
                 Mensaje.agregarErrorAdvertencia(Util.getEtiquetas("sigebi.error.informeTecnicoController.adjunto.requerido"));
             } else {
                 Adjunto adjunto = new Adjunto();
-                adjunto.setEstado(this.estadoPorDominioValor(Constantes.DOMINIO_GENERAL, Constantes.ESTADO_GENERAL_ACTIVO));
                 adjunto.setTipo(tipoAdjunto);
-                adjunto.setIdReferencia(informe.getId());
-                adjunto.setUrl("upload/informesTecnicos/" + fileInfo.getFileName());
+                adjunto.setUrl(fileInfo.getPhysicalPath());
+                adjunto.setNombre(Constantes.FTP_INFORMES_TECNICOS + fileInfo.getFileName());
+                adjunto.setTamano(fileInfo.getSize() / 1024); // pasar a bites 
+                adjunto.setTipoMime(fileInfo.getContentType());
+                String[] extencion = (String[]) adjunto.getNombre().split(Pattern.quote("."));
+                int cant = extencion.length;
+                adjunto.setExtension(extencion[cant - 1]);
+                adjunto.setEstado(this.estadoPorDominioValor(Constantes.DOMINIO_GENERAL, Constantes.ESTADO_GENERAL_ACTIVO));
+                if (informe != null) adjunto.setIdReferencia(informe.getId());
                 if (detalleAdjunto != null && detalleAdjunto.length() > 0) {
                     adjunto.setDetalle(detalleAdjunto);
                 } else {
@@ -593,7 +604,7 @@ public class InformeTecnicoController extends BaseController {
                 detalleAdjunto = "";
                 adjuntos.add(adjunto);
 
-                Mensaje.agregarInfo(Util.getEtiquetas("sigebi.error.informeTecnicoController.adjunto.agregar.exitosamente"));
+                Mensaje.agregarInfo("Archivo agregado exitosamente");
             }
         } catch (FWExcepcion e) {
             Mensaje.agregarErrorAdvertencia(e.getError_para_usuario());
@@ -602,6 +613,18 @@ public class InformeTecnicoController extends BaseController {
         }
     }
 
+    public void downloadFileFtp(ActionEvent pEvent){
+        try {
+            Adjunto adjunto = (Adjunto) pEvent.getComponent().getAttributes().get("adjuntoEliminarSel");
+
+            archivoFtpModel.downloadFile(adjunto.getUrl(), adjunto.getNombre());
+            Mensaje.agregarInfo("Archivo descargado de forma exitosa");
+        } 
+        catch (Exception err) {
+            Mensaje.agregarInfo(err.getMessage());
+        }
+    }
+    
     /**
      * Eliminar adjunto al documento
      *

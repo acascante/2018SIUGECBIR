@@ -47,6 +47,7 @@ import cr.ac.ucr.sigebi.domain.Ubicacion;
 import cr.ac.ucr.sigebi.domain.UnidadEjecutora;
 import cr.ac.ucr.sigebi.models.AccesorioModel;
 import cr.ac.ucr.sigebi.models.AdjuntoModel;
+import cr.ac.ucr.sigebi.models.ArchivoFtpModel;
 import cr.ac.ucr.sigebi.models.AsignarResponsableHistoricoModel;
 import cr.ac.ucr.sigebi.models.AutorizacionRolPersonaModel;
 import cr.ac.ucr.sigebi.models.BienCaracteristicaModel;
@@ -114,6 +115,9 @@ public class AgregarBienController extends BaseController {
     private AccesorioModel modelAccesorio;
     @Resource
     private AdjuntoModel modelAdjunto;
+    @Resource
+    private ArchivoFtpModel archivoFtpModel;
+    
     @Resource
     private BienModel modelBien;
     @Resource
@@ -1499,7 +1503,7 @@ public class AgregarBienController extends BaseController {
             if (fileInfo.isSaved()) {
                 if (inputFile.getId().endsWith("2")) {
                     adjunto.setUrl(fileInfo.getPhysicalPath());
-                    adjunto.setNombre(fileInfo.getFileName());
+                    adjunto.setNombre(Constantes.FTP_BIENES + fileInfo.getFileName());
                     adjunto.setTamano(fileInfo.getSize() / 1024); // pasar a bites 
                     adjunto.setTipoMime(fileInfo.getContentType());
                     String[] extencion = (String[]) adjunto.getNombre().split(Pattern.quote("."));
@@ -1595,7 +1599,26 @@ public class AgregarBienController extends BaseController {
 
         }
     }
+    
+    public void downloadFileFtp(){
+        try {
+            archivoFtpModel.downloadFile(command.getAdjunto().getUrl(), command.getAdjunto().getNombre());
+            mensajeAdjunto = "Archivo descargado de forma exitosa";
+            
+            HttpServletResponse response = (HttpServletResponse) FacesContext.getCurrentInstance().getExternalContext().getResponse();
 
+            response.setContentType("application/octet-stream");
+
+            response.setHeader("Content-Disposition", "attachment;filename=" + command.getAdjuntoCommand().getNombre());
+            response.getOutputStream().flush();
+            response.getOutputStream().close();
+            FacesContext.getCurrentInstance().responseComplete();
+        } 
+        catch (Exception err) {
+            mensajeAdjunto = err.getMessage();
+        }
+    }
+    
     public void downloadFile() throws FileNotFoundException, IOException {
         try {
 
