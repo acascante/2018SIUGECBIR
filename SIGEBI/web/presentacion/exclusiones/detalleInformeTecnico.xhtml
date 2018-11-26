@@ -123,7 +123,7 @@
                         </div>
                         <div class="col-md-12">
                             <ice:inputFile id="inputFileComponent2"
-                                           uploadDirectory="upload/informesTecnicos/"
+                                           uploadDirectory="upload/Informes/"
                                            styleClass="boton input_loadFile"
                                            actionListener="#{controllerInformeTecnico.agregarAdjunto}"
                                            submitOnUpload="preAndPostUpload">
@@ -153,13 +153,13 @@
                                     <h:outputText id="colRolTxt" value="#{adjunto.detalle}"/>
                                 </ice:column>
                                 <ice:column style="text-align: center;">
-                                    <ice:outputLink id="imgFichero" 
-                                                    value="#{adjunto.url}"                                                       
-                                                    target="_blank">
-                                        <ice:graphicImage alt="Registro no encontrado" 
-                                                          url="/imagenes/botones/descargar_archivo.png"
-                                                          styleClass="btnRevisar_adjunto"/>
-                                    </ice:outputLink>
+                                    <ice:commandButton id="btnAdjuntoDescargar"
+                                                       style="margin-top:2%" 
+                                                       styleClass="btnDescargarArchivo" 
+                                                       partialSubmit="true"
+                                                       actionListener="#{controllerInformeTecnico.downloadFileFtp}" >
+                                        <f:attribute id="adjuntoEliminarSel" name="adjuntoEliminarSel"  value="#{adjunto}"/>  
+                                    </ice:commandButton>
                                     <ice:commandButton id="botonEliminarAdjunto"
                                                        style="margin-top:2%" 
                                                        styleClass="btnEliminar_adjunto" 

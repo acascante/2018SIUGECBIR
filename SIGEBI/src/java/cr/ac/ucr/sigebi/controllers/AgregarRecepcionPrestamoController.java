@@ -29,6 +29,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Pattern;
 import javax.annotation.Resource;
 import javax.faces.component.UIComponent;
 import javax.faces.component.UIInput;
@@ -174,10 +175,16 @@ public class AgregarRecepcionPrestamoController extends BaseController {
                 // TODO Buscar tipo correcto
                 Tipo tipoAdjunto = this.tipoPorDominioValor(Constantes.DOMINIO_ADJUNTO, Constantes.TIPO_ADJUNTO_RECEPCION_PRESTAMO);
                 Adjunto adjunto = new Adjunto();
+                adjunto.setUrl(fileInfo.getPhysicalPath());
+                adjunto.setNombre(Constantes.FTP_PRESTAMOS + fileInfo.getFileName());
+                adjunto.setTamano(fileInfo.getSize() / 1024); // pasar a bites 
+                adjunto.setTipoMime(fileInfo.getContentType());
+                String[] extencion = (String[]) adjunto.getNombre().split(Pattern.quote("."));
+                int cant = extencion.length;
+                adjunto.setExtension(extencion[cant - 1]);
                 adjunto.setEstado(this.estadoPorDominioValor(Constantes.DOMINIO_GENERAL, Constantes.ESTADO_GENERAL_ACTIVO));
                 adjunto.setTipo(tipoAdjunto);
                 adjunto.setIdReferencia(this.command.getId());
-                adjunto.setUrl("upload/recepcionPrestamos/" + fileInfo.getFileName());
                 adjunto.setDetalle(fileInfo.getFileName());
                 this.adjuntoModel.agregar(adjunto);
                 this.mensajeExito = "Los archivo se adjunto con exito.";

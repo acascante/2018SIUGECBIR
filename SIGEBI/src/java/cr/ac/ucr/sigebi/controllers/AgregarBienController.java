@@ -1503,7 +1503,7 @@ public class AgregarBienController extends BaseController {
             if (fileInfo.isSaved()) {
                 if (inputFile.getId().endsWith("2")) {
                     adjunto.setUrl(fileInfo.getPhysicalPath());
-                    adjunto.setNombre(fileInfo.getFileName());
+                    adjunto.setNombre(Constantes.FTP_BIENES + fileInfo.getFileName());
                     adjunto.setTamano(fileInfo.getSize() / 1024); // pasar a bites 
                     adjunto.setTipoMime(fileInfo.getContentType());
                     String[] extencion = (String[]) adjunto.getNombre().split(Pattern.quote("."));
@@ -1604,6 +1604,15 @@ public class AgregarBienController extends BaseController {
         try {
             archivoFtpModel.downloadFile(command.getAdjunto().getUrl(), command.getAdjunto().getNombre());
             mensajeAdjunto = "Archivo descargado de forma exitosa";
+            
+            HttpServletResponse response = (HttpServletResponse) FacesContext.getCurrentInstance().getExternalContext().getResponse();
+
+            response.setContentType("application/octet-stream");
+
+            response.setHeader("Content-Disposition", "attachment;filename=" + command.getAdjuntoCommand().getNombre());
+            response.getOutputStream().flush();
+            response.getOutputStream().close();
+            FacesContext.getCurrentInstance().responseComplete();
         } 
         catch (Exception err) {
             mensajeAdjunto = err.getMessage();

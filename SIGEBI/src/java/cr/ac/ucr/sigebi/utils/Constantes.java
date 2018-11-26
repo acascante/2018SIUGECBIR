@@ -28,6 +28,13 @@ public final class Constantes {
     public static final String DEFAULT_COMBO_MESSAGE = "Seleccione una Opcion";
     public static final String RUTA_REPORTES = "C:\\Reportes\\";
 
+    // Directorios FTP
+    public static final String FTP_BIENES = "Bienes/";
+    public static final String FTP_INFORMES_TECNICOS = "Informes/";
+    public static final String FTP_DONACIONES = "Donaciones/";
+    public static final String FTP_CONVENIOS = "Convenios/";
+    public static final String FTP_PRESTAMOS = "Prestamos/";
+    
     // Estados de un bien
     public static final Integer ESTADO_BIEN_PRE_INGRESO = 1;
     public static final Integer ESTADO_BIEN_PENDIENTE = 2;
